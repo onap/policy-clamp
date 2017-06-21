@@ -1,0 +1,190 @@
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  font-size: 12px;
+
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.fa-2x {
+	font-size: 2em
+}
+
+a:link {
+  text-decoration: none;
+}
+
+.content,
+.content > div {
+  width: 100%;
+  height: 100%;
+}
+
+.content > .message {
+  text-align: center;
+  display: table;
+
+  font-size: 16px;
+  color: #111;
+}
+
+.content > .message .note {
+  vertical-align: middle;
+  text-align: center;
+  display: table-cell;
+}
+
+.content .error .details {
+  max-width: 500px;
+  font-size: 12px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+.content .error pre {
+  border: solid 1px #CCC;
+  background: #EEE;
+  padding: 10px;
+}
+
+.content:not(.with-error) .error,
+.content.with-error .intro,
+.content.with-diagram .intro {
+  display: none;
+}
+
+.canvas{
+	margin-top: -20px;
+}
+.content .canvas,
+.content.with-error .canvas {
+  visibility: hidden;
+}
+
+.content.with-diagram .canvas {
+  visibility: visible;
+}
+
+.buttons {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.buttons > li {
+  display: inline-block;
+  margin-right: 10px;
+  visibility: hidden;
+}
+.buttons > li > a {
+  background: #DDD;
+  border: solid 1px #666;
+  display: inline-block;
+  padding: 5px;
+}
+
+.buttons a {
+  opacity: -0.7;
+}
+
+.buttons a.active {
+  opacity: 1.0;
+}
+svg:not(:root) {
+    margin-top: 40px;
+}
+.clds-edit-properties:before{ 
+	content: url('../images/clds-prop-icon.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/
+} /* '' */
+.import-schema:before{ 
+	content: url('../images/ImportSchema.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/
+} /* '' */
+.define-modify-schema:before{ 
+	content: url('../images/DefineModifySchema.png');
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/
+	opacity:0.5;
+} /* '' */
+.define-schema:before{ 
+	content: url('../images/DefineModifySchema.png');
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/
+	
+} /* '' */
+.upgrade-schema:before{ 
+	content: url('../images/UpgradeSchema.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/	
+	opacity:0.5;
+	cursor: none;
+} /* '' */
+.upgradeSchema:before{ 
+	content: url('../images/UpgradeSchema.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/	
+} /* '' */
+.set-default-values:before{ 
+	content: url('../images/SetDefaultValues.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/	
+	opacity: 0.5;
+	cursor: none;
+} /* '' */
+.set-values:before{ 
+	content: url('../images/SetDefaultValues.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/		
+} /* '' */
+/* .define-service-acronym:before{ 
+	content: url('../images/DefineServiceAcronym.png'); 
+	position:relative; or absolute
+	z-index:100000; a number that's more than the modal box		
+	cursor: none;		
+}  *//* '' */
+/* .define-pid:before{ 
+	content: url('../images/DefinePID.png'); 
+	position:relative; or absolute
+	z-index:100000; a number that's more than the modal box		
+	cursor: none;
+} */ /* '' */
+.true-false-condition:before{ 
+	content: url('../images/TrueFalseCondition.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/	
+	
+} /* '' */
+
+.define-path:before{ 
+	content: url('../images/DefinePath.png'); 
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/
+} /* '' */
+.define-decision:before{ 
+	content: url('../images/DefineDecision.png');
+	position:relative; /*or absolute*/
+	z-index:100000; /*a number that's more than the modal box*/
+} /* '' */
+.icon-initial-node:before{ content: url('../images/InitialProcess.png'); } /* '' */
+.icon-collector-node:before{ content: url('../images/clds-collector-icon.png'); } /* '' */
+.icon-stringmatch-node:before{ content: url('../images/clds-string-match-icon.png'); } /* '' */
+.icon-tca-node:before{ content: url('../images/clds-tca-icon.png'); } /* '' */
+.icon-policy-node:before{ content: url('../images/clds-policy-icon.png'); } /* '' */
+.icon-goc-node:before{ content: url('../images/GOC.png'); } /* '' */
+.icon-parent-node:before{ content: url('../images/ParentNode.png'); }
+.icon-process-call:before{ content: url('../images/ProcessCall.png'); }
+.icon-multi-branch-connector:before{ content: url('../images/MultiBranchConnector.png'); }

@@ -1,0 +1,150 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * ONAP CLAMP
+ * ================================================================================
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ *                             reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END============================================
+ * ===================================================================
+ * ECOMP is a trademark and service mark of AT&T Intellectual Property.
+ */
+
+a, a:visited {
+	color: #3fabff;
+	text-decoration: none;
+}
+
+a:hover 
+{
+	color: #008af5;
+}
+
+h1 
+{
+	margin: 0;
+	font-weight: 300;
+	font-size: 35px;
+	letter-spacing: -1px;
+}
+h2 
+{
+	font-size: 15px;
+	color: #a0a0a0;
+	margin: 30px 0;
+}
+label {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+p, .control-group {
+	margin: 0 0 10px 0;
+}
+.demo {
+	border-bottom: 1px solid #e8e8e8;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.demo:last-child {
+	border-bottom: 0 none;
+}
+.demo select, .demo input, .demo .selectize-control {
+	width: 100%;
+}
+.demo > *:first-child {
+	margin-top: 0;
+}
+.demo > *:last-child {
+	margin-bottom: 0;
+}
+.demo .value {
+	margin: 0 0 10px 0;
+	font-size: 12px;
+}
+.demo .value span {
+	font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+}
+.theme-selector {
+	margin-top: 5px;
+	font-size: 13px;
+}
+.theme-selector:before {
+	content: 'Themes: ';
+}
+.theme-selector a {
+	margin: 0 5px;
+}
+.theme-selector a.active {
+	color: #202020;
+	font-weight: bold;
+}
+#wrapper {
+	margin: 0;
+}
+#wrapper > * {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+pre {
+	background: #f8f8f8;
+	border: 1px solid #f2f2f2;
+	padding: 10px;
+	font-size: 12px;
+	font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+input[type=button] {
+	margin: 0 10px 0 0;
+	padding: 6px 10px;
+	color: #606060;
+	background: #e0e0e0;
+	border: 0 none;
+	width: auto;
+	display: inline-block;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-font-smoothing: antialiased;
+}
+.buttons {
+	margin: 0 0 25px 0;
+}
+input[type=button]:hover {
+	background: #dadada;
+}
+
+@media only screen and (max-width : 320px) {
+	body {
+		margin: 20px 0;
+	}
+	#wrapper {
+		margin: 0;
+	}
+	#wrapper > * {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.demo {
+		padding: 20px;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
+	}
+}

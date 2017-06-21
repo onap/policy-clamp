@@ -1,0 +1,29 @@
+<configuration scan="true" scanPeriod="3 seconds" debug="false">
+
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+
+    <property resource="application.properties"/>
+
+    <property name="defaultPattern"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} $ threadId: {PID:- } %-5level  namespace:${namespace} %logger{20} [ hostname: %X{hostname} serviceName: %X{serviceName} version: %X{version} transactionId: %X{transactionId} requestTimeStamp: %X{requestTimestamp}  responseTimeStamp: %X{responseTimestamp} duration: %X{duration}] %m%n"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>root.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>${defaultPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${defaultPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

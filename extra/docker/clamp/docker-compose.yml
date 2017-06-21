@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:10.1.11
+    volumes:
+      - "/var/lib/mysql"
+      - "../mariadb/conf1:/etc/mysql/conf.d:ro"
+      - "../../sql/:/docker-entrypoint-initdb.d:ro"
+    environment:
+      - MYSQL_ROOT_PASSWORD=strong_pitchou
+    ports:
+      - "3306:3306"
+
+  clamp:
+    image: onap/clamp
+    depends_on:
+      - db
+    env_file:
+      - clamp.env
+    ports:
+      - "8080:8080"

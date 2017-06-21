@@ -1,0 +1,133 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<style>
+    .fileUpload {
+        position: relative;
+        overflow: hidden;
+        margin: 10px;
+    }
+    .fileUpload input.upload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        float:left;
+    }
+    .fileDisplay {
+
+        display: inline-block;
+        overflow: hidden;
+        float: right;
+        margin-left: 0px;
+        z-index: initial;
+        text-align: center;
+        margin-top: 17px;
+    }
+
+
+</style>
+
+
+<div attribute-test="templatemodel" id="configure-widgets"  >
+    <div attribute-test="templatemodelh" class="modal-header">
+        <button type="button" class="close" ng-click="close(false)" aria-hidden="true" style="margin-top: -3px">&times;</button>
+        <h4>'Template'</h4>
+    </div>
+    <div class="modal-body" style="height: 280px">
+        <div style="height: 10px">
+        </div>
+        <form id="saveProps" name="t" class="form-horizontal">
+
+            <div>
+                <div class="form-group">
+                    <label for="schemaLocation" class="col-sm-4 control-label">ID</label>
+
+                    <div class="col-sm-8">
+                        <input class="form-control" type="text" focus="true" name="_id"  id="_id" readonly>
+                           <div hidden id="warnings_">Special Characters are not allowed in template id.</span> <!-- <span ng-show="nameinUse" style="color: red"> Model Name Already In Use</span> --></div>
+                        </input>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div attribute-test="templatemodelf" class="modal-footer">
+        <button  id="savePropsBtn" class="btn btn-primary" ng-disabled="t._id.$error.pattern" >Close</button>
+        <button ng-click="close(true)" id="close_button" class="btn btn-primary">Cancel</button>
+
+    </div>
+    <script>
+    loadPropertyWindow("template");
+    var el=elementMap[lastElementSelected];
+    //console.log(el)
+    //console.log(lastElementSelected)
+    //$("#id").val("lolololol")
+   // $('.modal-header > h4').html($('.djs-visual > text').val());
+    if(el!==undefined){
+    	
+        for(var i=0;i<el.length;i++){   
+        	console.log(el.length)
+        	console.log(el[i].name)
+        	console.log(el[i].value)
+            $("#"+el[i].name).val(el[i].value);
+        }
+    }
+     $("#_id").keyup(function(){
+        var pattern=/^\s*[\w\-]*\s*$/
+        if( !pattern.test($(this).val()) && !$(this).is("[disabled]")){
+            $("#savePropsBtn").attr("disabled","");
+            $("#warnings_").removeAttr("hidden")
+            console.log("remove hidden")
+        }
+        else{
+            //console.log($(this).is("[disabled]"))
+            console.log("add hidden ")
+            if($("#savePropsBtn").is("[disabled]")){
+                $("#savePropsBtn").removeAttr("disabled");
+                 $("#warnings_").attr("hidden", "");
+            console.log("add hidden if")
+            }
+           
+        }
+    })
+    
+    $("#saveProps").on('submit', function (event) {
+    	//console.log(lastElementSelected)
+        saveProperties($(this).serializeArray())
+        event.preventDefault();
+        $("#close_button").click();
+    })
+    
+    $("#savePropsBtn").click(function (event) {
+        $("#saveProps").submit();
+    })
+</script>
+</div>
+
+

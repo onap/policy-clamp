@@ -1,0 +1,839 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<style>
+.Row1 {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+	border-spacing: 0px;
+}
+
+.Column1 {
+	display: table-cell;
+}
+.visible
+{
+display:none;
+}
+
+.table-tree{
+	border: 0px solid black;
+    table-layout: fixed;
+	width: 600px;
+}
+.selectedFile{
+background-color: #337ab7;
+color: #fff;
+}
+
+.selectedcolor{
+color:#0000FF;
+}
+.td-label-tree {
+	border: 0px solid black;
+    overflow: hidden;
+    width: 250px;
+    vertical-align: bottom;
+}
+
+.table-level1-tree{
+	border: 0px solid black;
+    table-layout: fixed;
+    width: 580px;
+}
+
+.td-level1-label-tree {
+    overflow: hidden;
+    width: 230px;
+}
+
+.table-level2-tree{
+    table-layout: fixed;
+    width: 560px;
+}
+
+.td-level2-label-tree {
+    overflow: hidden;
+    width: 210px;
+}
+
+.table-level3-tree{
+    table-layout: fixed;
+    width: 540px;
+}
+
+.td-level3-label-tree {
+    overflow: hidden;
+    width: 190px;
+}
+
+.table-level4-tree{
+    table-layout: fixed;
+    width: 520px;
+}
+
+.td-level4-label-tree {
+    overflow: hidden;
+    width: 170px;
+}
+
+.table-level5-tree{
+    table-layout: fixed;
+    width: 500px;
+}
+
+.td-level5-label-tree {
+    overflow: hidden;
+    width: 150px;
+}
+
+.table-level6-tree{
+    table-layout: fixed;
+    width: 480px;
+}
+
+.td-level6-label-tree {
+    overflow: hidden;
+    width: 130px;
+}
+
+.table-level7-tree{
+    table-layout: fixed;
+    width: 460px;
+}
+
+.td-level7-label-tree {
+    overflow: hidden;
+    width: 110px;
+}
+
+.table-level8-tree{
+    table-layout: fixed;
+    width: 440px;
+}
+
+.td-level8-label-tree {
+    overflow: hidden;
+    width: 90px;
+}
+
+
+.table-level9-tree{
+    table-layout: fixed;
+    width: 420px;
+}
+
+.td-level9-label-tree {
+    overflow: hidden;
+    width: 70px;
+}
+
+
+.table-level10-tree{
+    table-layout: fixed;
+    width: 400px;
+}
+
+.td-level10-label-tree {
+    overflow: hidden;
+    width: 50px;
+}
+
+
+.td-default_value-tree {
+	border: 0px solid black;
+    overflow: hidden;
+    width: 180px !important;
+    vertical-align: bottom; 
+    text-align: left !important;    
+}
+
+.td-blank{
+width: 30px;
+
+}
+
+.td-button{
+width: 14px;
+}
+
+.td-tree {
+	border: 0px solid black;
+    overflow: hidden;
+    width: 100px;
+    vertical-align: top;
+    text-align: center !important;
+}
+
+/* #contextmenu-node{
+    position: absolute;
+    background-color: white;
+    border: solid #CCCCCC 1px;
+    margin-left:60px;   
+}
+
+.contextmenu-item{
+    margin: 0.5em;
+    padding-left: 0.5em;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.contextmenu-item:hover{
+    background-color: #3c8dbc;
+    cursor: default;
+    color:#fff;
+}
+ */
+ #contextmenu-node{
+    position: absolute;
+    background-color: white;
+    border: solid #CCCCCC 1px;
+    margin-top:-60px;
+  
+}
+
+.contextmenu-item{
+    margin: 0.5em;
+    padding-left: 0.5em;
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+
+.contextmenu-item:hover{
+    background-color: #3c8dbc;
+    cursor: default;
+    color:#fff;
+}
+
+</style>
+<div attribute-test="cldsmodelling" class="container-fluid" ng-controller="ActivityModellingCtrl" style="height: 90vh;margin:0;padding:0;overflow: hidden;">
+	<div id="utm-splitter" class="k-content"  style="height: 90vh;overflow: hidden;">
+	<!-- clds: size 0% rather than 30% -->
+	<!-- div id="UTMdashboard" kendo-splitter
+		k-panes="[  { collapsible: true, collapsedSize: '0%',size:'30%'},{}]"
+		k-orientation="orientation" k-rebind="orientation"
+		ng-class="{hidden:testsetgendashboard}" style="height: 90vh;overflow: hidden;margin-left: 2px;margin-right: 2px;" -->
+	<div attribute-test="cldsmodelling2" id="UTMdashboard" kendo-splitter
+		k-panes="[  { collapsible: true, collapsedSize: '0%',size:'0%'},{}]"
+		k-orientation="orientation" k-rebind="orientation"
+		ng-class="{hidden:testsetgendashboard}" style="height: 90vh;overflow: hidden;margin-left: 2px;margin-right: 2px;">
+		<div style="display: none;" id="projectExplorer">
+		<!-- clds: remove project explorer - use display: none -->
+		<!-- div style="width: 30%; height: 90vh;overflow: hidden;" id="projectExplorer" -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div style="color: white;">
+
+						<span class="pull-left"> <span>Project Explorer</span>
+						</span> <span class="pull-right" ng-click="showUTMView=!showUTMView"><i
+							ng-class="showUTMView == true ?'fa fa-plus-circle':'fa fa-minus-circle'"></i></span>
+					</div>
+
+					<div class="clearfix"></div>
+				</div>
+				<div ng-class="{hidden:showUTMView,chaldean:showUTMView}">
+					<div class="panel-body" style="height: 79vh; overflow: auto;">
+						<div ng-if="projectName != null" >
+							<div>
+								<h6>
+									<span class="pull-left"
+										ng-click="showUTMViewMain=!showUTMViewMain"> <i
+										ng-class="showUTMViewMain == true ?'fa fa-plus-circle':'fa fa-minus-circle'"></i>
+									</span> <b>{{projectName}} </b>
+								</h6>
+
+
+							</div>
+							<div style="margin-left: 5px"
+								ng-class="{hidden:showUTMViewMain,chaldean:showUTMViewMain}">
+
+								<div>
+									<h6>
+										<span class="pull-left"
+											ng-click="showUTMViewModel=!showUTMViewModel"> <i
+											ng-class="showUTMViewModel == true ?'fa fa-plus-circle':'fa fa-minus-circle'">
+										</i>
+										</span><b>Model</b>
+									</h6>
+								</div>
+								<div style="margin-left: 15px"
+									ng-class="{hidden:showUTMViewModel,chaldean:showUTMViewModel}">									
+									
+									<div id="div_models" ng-include="'model_renderer.html'">
+										
+									</div>
+								</div>
+
+								<div>
+									<h6>
+										<span class="pull-left"
+											ng-click="showUTMViewService=!showUTMViewService"> <i
+											ng-class="showUTMViewService == true ?'fa fa-plus-circle':'fa fa-minus-circle'">
+										</i>
+										</span><b>Service</b>
+									</h6>
+								</div>
+
+								<div style="margin-left: 10px"
+									ng-class="{hidden:showUTMViewService,chaldean:showUTMViewService}">
+
+									<div style="width: 190px;">
+										<h6>
+											<span class="pull-left"
+												ng-click="showUTMViewDtl=!showUTMViewDtl"> <i
+												ng-class="showUTMViewDtl == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+											</i>
+											</span><b>Service Details</b>
+										</h6>
+									</div>
+
+									<div style="margin-left: 10px"
+										ng-class="{hidden:!showUTMViewDtl,chaldean:!showUTMViewDtl}">
+
+
+										<div ng-show="serviceInfo != null">
+											<h6>
+												<span class="pull-left"
+													ng-click="showUTMViewServiceName=!showUTMViewServiceName">
+													<i
+													ng-class="showUTMViewServiceName == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+												</i>
+												</span><b>Service Name</b>
+											</h6>
+											<div style="margin-left: 10px"
+												ng-class="{hidden:!showUTMViewServiceName,chaldean:!showUTMViewServiceName}">
+												<div style="margin-left: 10px">
+													{{serviceInfo.service.name}}</div>
+											</div>
+
+										</div>
+
+										<div ng-show="serviceInfo != null">
+											<h6>
+												<span class="pull-left"
+													ng-click="showUTMViewPortName=!showUTMViewPortName">
+													<i
+													ng-class="showUTMViewPortName == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+												</i>
+												</span><b>Port Name</b>
+											</h6>
+											<div style="margin-left: 10px"
+												ng-class="{hidden:!showUTMViewPortName,chaldean:!showUTMViewPortName}">
+												<div style="margin-left: 10px">
+													{{serviceInfo.service.ports[0].name}}</div>
+											</div>
+										</div>
+
+										<div ng-show="serviceInfo != null">
+											<h6>
+												<span class="pull-left"
+													ng-click="showUTMViewBindingName=!showUTMViewBindingName">
+													<i
+													ng-class="showUTMViewBindingName == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+												</i>
+												</span><b> Binding Name</b>
+											</h6>
+											<div style="margin-left: 10px"
+												ng-class="{hidden:!showUTMViewBindingName,chaldean:!showUTMViewBindingName}">
+												<div style="margin-left: 10px">
+													{{serviceInfo.bindingInfo.binding.name}}</div>
+											</div>
+										</div>
+
+										<div ng-show="serviceInfo != null">
+											<h6>
+												<span class="pull-left"
+													ng-click="showUTMViewBindingPortType=!showUTMViewBindingPortType">
+													<i ng-class="showUTMViewBindingPortType == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+												</i>
+												</span><b>Binding Port Type</b>
+											</h6>
+											<div style="margin-left: 10px"
+												ng-class="{hidden:!showUTMViewBindingPortType,chaldean:!showUTMViewBindingPortType}">
+												<div style="margin-left: 10px">
+													{{serviceInfo.bindingInfo.portTypeInfo.portType.name}}</div>
+											</div>
+										</div>
+
+										<div ng-show="serviceInfo != null">
+											<h6>
+												<span class="pull-left"
+													ng-click="showUTMViewOperation=!showUTMViewOperation">
+													<i
+													ng-class="showUTMViewOperation == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+												</i>
+												</span><b>Operation Name</b>
+											</h6>
+											<div style="margin-left: 10px"
+												ng-class="{hidden:!showUTMViewOperation,chaldean:!showUTMViewOperation}">
+												<div style="margin-left: 10px">
+													{{serviceInfo.bindingInfo.portTypeInfo.operationInfo[0].operation.name}}</div>
+											</div>
+										</div>
+									</div>
+
+									<table class="table-tree">
+										<tr>
+											<td class="td-label-tree" style="margin-top: 30px;">
+											    <table>
+											       <tr>
+											            <td>   </td>
+											       </tr>
+											       <tr>
+											            <td>   </td>
+											       </tr>
+											       <tr>
+											           <td>
+											               <h6>
+															   <span class="pull-left" 	ng-click="showUTMViewInput=!showUTMViewInput"> 
+																	<i ng-class="showUTMViewInput == true ?'fa fa-plus-circle':'fa fa-minus-circle'">
+																	</i>
+															  </span>
+															  <b>Service Input</b>
+														  </h6>
+											           </td>
+											       </tr>											    
+											    </table>
+											</td>
+											
+											<td class="td-default_value-tree" >
+											    <table  style="margin-top: 30px;">
+											       <tr>
+											           <td></td>
+											       </tr>
+											       <tr>
+											           <td></td>
+											       </tr>
+											       
+											       <tr>
+											       	   <td class="td-blank"></td>   
+											       </tr>
+											    </table>
+											</td>
+											
+											<td>
+												<div ng-show="isModel">
+													<table style="margin-top: -10px;width: 260px;margin-left: -116px;">
+														<tr>
+															<td class="td-default_value-tree">
+																<input type="radio" ng-model="utmModelSchemaExtension.radioSelection"
+																		ng-click="requiredOnly()"
+																		value="Required Only"><b>Required Only</b>
+															</td>									
+															
+															
+															<!-- <td class="td-default_value-tree">
+															    <h6> <b>Default Value</b></h6>        		
+															</td> -->
+															
+														</tr>
+														<tr>
+																								
+															<td style="text-align: left;" class="td-default_value-tree">
+																<input type="radio" ng-model="utmModelSchemaExtension.radioSelection"
+																			ng-click="selectAll()"
+																			value="Select All"> <b>Select All</b>
+															</td>
+															<td></td>
+															
+														</tr>
+														<tr>
+																									
+															<td style="text-align: left;" class="td-default_value-tree">
+																<input type="radio" ng-model="utmModelSchemaExtension.radioSelection"
+																		ng-click="unSelectAll()"
+																		value="Unselect All">  <b>Unselect All</b>
+															</td>
+															
+															
+															<td></td>
+														</tr>
+													</table>														
+												</div>
+											</td>
+											
+											<!-- <td class="td-blank"></td>
+											<td class="td-blank"></td> -->
+											<td class="td-default_value-tree">
+															    <h6> <b>Default Value</b></h6>        		
+															</td>
+											
+											
+											
+											
+											
+										</tr>
+								    </table>
+									<div style="margin-left: 20px;margin-top: -12px;"
+										ng-class="{hidden:showUTMViewInput,chaldean:showUTMViewInput}">
+									
+										<div ng-show="serviceInputPartInfo.length>0" >										
+											<h6>
+										        <!-- <div ng-repeat="inputInfo in serviceInputPartInfo">	
+										        		 inputInfo :: {{inputInfo}}								 
+									        		<div ng-repeat="schemaElement in inputInfo.schemaElements"   ng-include="'service_tree_element_renderer.html'" ng-init="currentElementName= inputInfo.part.name;parentName='ServiceInput'; parentElement=inputInfo; heirarchyLevel=1">
+									        		  
+									        		</div>
+									        									   			
+												</div> -->
+												<div ng-repeat="inputInfo in serviceInputPartInfo">
+													<div class="inputInfoClass" ng-init="currentElementName= inputInfo.part.name;parentName='ServiceInput'; parentElement=inputInfo; heirarchyLevel=1;infoType=inputInfo"></div>
+												</div>	
+											</h6>
+											
+										</div>
+									
+									</div>
+
+									<table class="table-tree" style="margin-top: -12px;>
+										<tr>
+											<td class="td-label-tree">
+												<h6>
+													<span class="pull-left"
+															ng-click="showUTMViewOutput=!showUTMViewOutput"> 
+														<i
+															ng-class="showUTMViewOutput == true ?'fa fa-plus-circle':'fa fa-minus-circle'">
+														</i>
+													</span>
+													<b>Service Output</b>
+												</h6>
+											</td>
+											
+											<td class="td-default_value-tree">
+											</td>
+											<td class="td-tree">
+											</td>
+										</tr>
+							      	</table>
+								  	<div style="margin-left: 20px;"
+										ng-class="{hidden:showUTMViewOutput,chaldean:showUTMViewOutput}">
+										<div ng-show="serviceOutputPartInfo.length>0" style="width: 250px">
+											<h6>
+										        <!-- <div ng-repeat="outputInfo in serviceOutputPartInfo" >
+										        	  outputInfo:::	{{outputInfo}}
+									        		<div ng-repeat="schemaElement in outputInfo.schemaElements" ng-include="'service_tree_element_renderer.html'" ng-init="currentElementName=outputInfo.part.name;parentName='ServiceOutput'; parentElement=outputInfo; heirarchyLevel=1">
+									   				</div>
+												</div> -->	
+												<div ng-repeat="outputInfo in serviceOutputPartInfo">
+													<div class="inputInfoClass" ng-init="currentElementName=outputInfo.part.name;parentName='ServiceOutput'; parentElement=outputInfo; heirarchyLevel=1; infoType=outputInfo"></div>
+												</div>	
+											</h6>
+										</div>
+									</div>
+								
+									<table class="table-tree" style="margin-top: -12px;">
+										<tr>
+											<td class="td-label-tree" >
+												<h6>
+													<span class="pull-left"
+														ng-click="showUTMViewFault=!showUTMViewFault"> 
+														<i ng-class="showUTMViewFault == true ?'fa fa-plus-circle':'fa fa-minus-circle'">
+														</i>
+													</span>
+													<b>Service Fault</b>
+												</h6>
+											</td>
+											<td class="td-default_value-tree">
+											</td>
+											<td class="td-tree">
+											</td>
+										</tr>
+							      	</table>
+									<div style="margin-left: 20px;"
+										ng-class="{hidden:showUTMViewFault,chaldean:showUTMViewFault}">
+										
+										<div ng-show="servicefaultPartInfo.length>0" style="width: 250px">
+											<h6>
+										        <!-- <div ng-repeat="faultInfo in servicefaultPartInfo" style="margin-top: -12px;">
+										        faultInfo ::::{{faultInfo}}
+									        		<div ng-repeat="schemaElement in faultInfo.schemaElements" ng-include="'service_tree_element_renderer.html'" ng-init="currentElementName=faultInfo.schemaElements[0].name;parentName='ServiceFault'; parentElement=faultInfo; heirarchyLevel=1">
+									   				</div>
+												</div>	 -->
+												<div ng-repeat="faultInfo in servicefaultPartInfo">
+													<div class="inputInfoClass" ng-init="currentElementName=faultInfo.part.name;parentName='ServiceFault'; parentElement=faultInfo; heirarchyLevel=1; infoType=faultInfo"></div>
+												</div>	
+											</h6>
+										</div>
+									</div>	
+								</div>
+								
+							
+								<div>
+									<div>
+										<h6>
+											<span class="pull-left"
+												ng-click="showUTMViewTestSet=!showUTMViewTestSet"> 
+												<i
+												ng-class="showUTMViewTestSet == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+												</i>
+											</span>
+											<b ng-click="selectActivityTestSet()">Test Set</b>
+										</h6>
+									</div>
+									<div style="margin-left: 15px;"
+											ng-class="{hidden:!showUTMViewTestSet,chaldean:!showUTMViewTestSet}">
+										<div ng-show=" modeltestset.activityTestCases.length>0" style="width: 250px">
+											<div ng-repeat="activityTestCase in modeltestset.activityTestCases">
+											
+												<div ng-if="activityTestCase.version ==null">
+												<h6>
+										        		<div ng-mouseover="selectTC(activityTestCase)"><b id="{{activityTestCase.testCaseName}}" data-stuff='{{activityTestCase}}' data-model='{{utmModels}}' class="TCS" style="cursor:pointer;">{{activityTestCase.testCaseName}}</b></div>
+									        	</h6>
+									        	</div>
+									        	<div ng-if="activityTestCase.version !=null">
+												<h6>
+													<div ng-mouseover="selectTC(activityTestCase)"><b id="{{activityTestCase.testCaseName}}" data-stuff='{{activityTestCase}}' data-model='{{utmModels}}' class="TCS" style="cursor:pointer;">{{activityTestCase.testCaseName + "_" + activityTestCase.version}}</b></div>
+									        	</h6>
+									        	</div>
+											</div>	
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- clds: width 100 instead of 70 -->
+		<div style="width: 100%;height:90vh" id="activity_modeler">
+		<!-- div style="width: 70%;height:90vh" id="activity_modeler" -->
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div style="color: white;">
+
+						<span class="pull-left"> <span id="modeler_name">Closed Loop Modeler</span>
+
+						</span> <span class="pull-right" ng-click="showTDRView=!showTDRView"><i
+							ng-class="showTDRView == true ?'fa fa-plus-circle':'fa fa-minus-circle'"></i></span>
+					</div>
+
+					<div class="clearfix"></div>
+				</div>
+				<div ng-class="{hidden:showTDRView,chaldean:showTDRView}">
+					<div style="height: 83.5vh; width: 100%;">
+					 	<div class="panel-body" style="height: 83.5vh;padding: 0px;">
+							<div  id="paletteDiv" style="width: 100%;height: 83.5vh;"
+								ng-show="isPalette" ng-include="'./modeler/dist/index.html'">
+
+							</div>
+                        
+                            <!--Commented becoz i m not able to find the htmls-->
+    				   		<!-- <div  ng-show="isTestset && !isPalette && !isRequirementCoverage" style="width: 100%;height: 83.5vh;" ng-include src="'partials/portfolios/generate_testset.html'" ></div>
+    				   		<div  ng-show="!isTestset && !isPalette && isRequirementCoverage" style="width: 100%;height: 83.5vh;" ng-include src="'partials/portfolios/requirement_coverage.html'" ></div> -->
+    				  </div>
+                        
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<!-- <div id="propertyExplorer" style="width: 20%;height:90vh" >
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<div style="color: white;">
+
+						<span class="pull-left"> <span>Property Explorer</span>
+
+						</span> <span class="pull-right" ng-click="showTDRView=!showTDRView"><i
+							ng-class="showTDRView == true ?'fa fa-plus-circle':'fa fa-minus-circle'"></i></span>
+					</div>
+
+					<div class="clearfix"></div>
+				</div>
+				<div ng-class="{hidden:showTDRView,chaldean:showTDRView}">
+					<div class="panel-body" style="height: 79vh; overflow: auto;">
+					
+				   
+					
+    				<div id="propertyDiv"  ng-show="ispropertyExplorer" ng-include  src="'./partials/portfolios/Property_Explorer.html'"></div>
+    		
+    				  
+				</div>
+			</div>
+
+		</div>
+
+	</div> -->
+	
+  </div>								
+</div>
+<div ng-show ="isResult">	</div>
+<script type="text/ng-template"  id="service_tree_element_renderer.html">
+   
+
+
+	<div ng-show="schemaElement.complexType != null">
+
+      	
+		<div ng-if="currentElementName == ''">
+			<div ng-init="currentElementName = schemaElement.complexType.name">
+				
+			</div>
+		</div>  
+  
+      <div ng-init="ParentKey=parentName + '_' + currentElementName + (schemaElement.repeatableHierarchicalPrefix != null ? schemaElement.repeatableHierarchicalPrefix : ''); parElement=schemaElement;tableStyle='table-level' + heirarchyLevel + '-tree'; tdLabelStyle='td-level' + heirarchyLevel + '-label-tree'; heirLevel=heirarchyLevel ;">		
+		
+		<table class="{{tableStyle}}"> <tr>
+		<td class="{{tdLabelStyle}}">
+		<span class="pull-left" ng-click="showUTMViewMsgHeader=!showUTMViewMsgHeader">
+			<i
+			ng-class="showUTMViewMsgHeader == true ?'fa fa-plus-circle':'fa fa-minus-circle'">
+			</i>
+		</span>
+		<b>	
+				{{currentElementName}}   
+					
+		</b>
+        </td>
+	<td class="td-tree"></td>
+	<td class="td-tree"></td>
+	<td class="td-tree"></td>
+	<td class="td-blank"></td>	
+	<td class="td-default_value-tree"> </td>
+	
+      </tr></table>
+       
+       
+		<div style="margin-left: 10px"
+				ng-class="{hidden:showUTMViewMsgHeader,chaldean:showUTMViewMsgHeader}">
+
+			<div style="margin-left: 10px"
+					ng-repeat="schemaElement in schemaElement.elements"  ng-init="currentElementName=objectName;parentName=ParentKey; parentElement=parElement; heirarchyLevel = heirLevel + 1" ng-include="'service_tree_element_renderer.html'">
+
+			</div>
+		</div>
+
+      </div>
+	</div>
+
+	<div ng-show="schemaElement.element.name != null">
+      <div  ng-init = "elementKey=parentName + '_' + schemaElement.element.name + (schemaElement.repeatableHierarchicalPrefix != null ? schemaElement.repeatableHierarchicalPrefix : ''); tableStyle='table-level' + heirarchyLevel + '-tree'; tdLabelStyle='td-level' + heirarchyLevel +'-label-tree'" id="elementKey">
+		    <table class="{{tableStyle}}"> 
+				<tr>
+					<td style="text-align: left;vertical-align: top;" class="{{tdLabelStyle}}">
+					 <div ng-mouseover="getContextMenu(schemaElement,elementKey)" context-menu="myContextDiv">	
+						<span class="pull-left" ng-click="showUTMViewMsgHeader=!showUTMViewMsgHeader" ng-style="(schemaElement.type.recursive ||schemaElement.list) && {'color':'#0000FF'} || {'color': '#444444'}">
+							<i ng-class="showUTMViewMsgHeader == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
+							</i>									
+							{{schemaElement.element.name}}                          
+						</span>
+					  </div>							
+					</td>
+			
+			<div ng-if= "repeatableHeirarchicalElementMap !=null">
+				<div ng-if="repeatableHeirarchicalElementMap[elementKey] != null">
+					<div ng-repeat="repeatableElement in repeatableHeirarchicalElementMap[elementKey].repeatableElements">
+						<div ng-init="addRepeatableElement1(schemaElement, parentElement, elementKey, $index)">
+						</div>
+					</div>
+					<div ng-repeat="heirarchicalElement in repeatableHeirarchicalElementMap[elementKey].heirarchicalElements">
+						<div ng-init="addHierarchicalElement1(schemaElement, parentElement, elementKey, $index)">
+						</div>
+					</div>
+				</div>
+			</div>
+   			       
+			<td class="td-blank"></td>
+			
+			<td style="text-align: right;" class="td-tree">
+                       <div ng-show="schemaElement.type.complexType == null">
+						   <input type="checkbox" id="{{elementKey + '_checkbox'}}" ng-model="utmModelSchemaExtension.utmSchemaExtentionMap[elementKey].checked" ng-init="requiredValues[elementKey]=schemaElement.element.minOccurs;utmModelSchemaExtension.utmSchemaExtentionMap[elementKey].checked=(utmModelSchemaExtension.radioSelection == 'Required Only' && schemaElement.element.minOccurs !=0) || utmModelSchemaExtension.radioSelection == 'Select All' || utmModelSchemaExtension.utmSchemaExtentionMap[elementKey].checked" ng-change="onChange()"/>
+                       </div>                        
+			</td>
+			<td class="td-blank"></td>
+			<td class="td-blank"></td>
+			<td style="text-align:center;word-wrap: break-word" class="td-default_value-tree"><label id="{{elementKey + '_label'}}"/>{{utmModelSchemaExtension.utmSchemaExtentionMap[elementKey].defaultValue}}</td>
+			</tr></table> 
+            <div style="margin-left: 10px"
+				ng-class="{hidden:!showUTMViewMsgHeader,chaldean:!showUTMViewMsgHeader}">
+            	<div ng-if = "schemaElement.type != null && schemaElement.type.restriction != null">
+					<div ng-repeat="object in filteredObjects = (schemaElement.type.restriction.minExclusivesAndMinInclusivesAndMaxExclusives | filter: {name : 'enumeration'})">
+						{{object.value.value}}
+			       </div>
+            	</div>            	
+        	</div>      
+      </div>
+	</div>
+   	<div ng-show="schemaElement.type.complexType != null">  
+      <div ng-init="parKey=parentName + '_' + schemaElement.element.name + (schemaElement.repeatableHierarchicalPrefix != null ? schemaElement.repeatableHierarchicalPrefix : ''); heirLevel=heirarchyLevel; parElement=schemaElement">		
+			<div style="margin-left: 10px"
+				ng-class="{hidden:!showUTMViewMsgHeader,chaldean:!showUTMViewMsgHeader}">
+                 
+			<div style="margin-left: 10px"
+					ng-repeat="schemaElement in schemaElement.type.elements"  ng-init="currentElementName=schemaElement.element.name;parentName=parKey; parentElement=parElement; heirarchyLevel=heirLevel+1 ;" ng-include="'service_tree_element_renderer.html'">
+			</div>
+		</div>
+     </div>
+	</div>
+   	
+</script>
+
+<script type="text/ng-template" id="model_renderer.html">
+
+<div ng-show="utmModels != null && utmModels.name != null">
+      <div>		
+		<table class="{{tableStyle}}"> <tr>
+			<td class="{{tdLabelStyle}}">
+				<span class="pull-left" ng-click="showUTMViewModel=!showUTMViewModel">
+				<i
+				ng-class="showUTMViewModel == true ?'fa fa-plus-circle':'fa fa-minus-circle'">
+				</i>
+				</span>				
+        	</td>
+            <td>
+				<b>
+                    <label ng-click="onSelectActivityModel($event.target.attributes.data.value)"  data="{{utmModels.name}}" class="models" style="cursor:pointer;width:260px;" id="{{utmModels.name}}" ng-right-click="createSubModel(utmModels)" context-menu="mySubModelContext"> {{utmModels.name}} </label>
+				</b>
+            </td>    
+			<td class="td-tree"></td>	
+			<td class="td-default_value-tree"> </td>	
+      		</tr></table>       
+				<div style="margin-left: 10px"
+				ng-class="{hidden:showUTMViewModel,chaldean:showUTMViewModel}">
+					<div style="margin-left: 10px"
+						ng-repeat="utmModels in utmModels.subModels" ng-include="'model_renderer.html'">
+
+					</div>
+				</div>
+      		</div>
+		</div>
+</script>

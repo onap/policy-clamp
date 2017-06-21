@@ -1,0 +1,190 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<style>
+.navbar-custom {
+	background-color: #229922;
+	color: #ffffff;
+	border-radius: 0;
+}
+
+.red {
+	color: red;
+}
+
+.logo {
+	font-family: 'Trebuchet MS', cursive;
+	font-size: 20px;
+	font-weight: 500;
+	text-align: center;
+}
+
+.logo_name {
+	display: block;
+	float: left;
+	font-family: 'Trebuchet MS', cursive;
+	font-size: 15px;
+	font-weight: 500;
+	height: 50px;
+	text-align: center;
+}
+
+.ThisLink {
+	pointer-events: none;
+	cursor: default;
+	disabled: true;
+	/*   background-color:#e7e7e7; */
+	color: #A09B9B !important;
+}
+
+.ThisLink a.blur:hover,.ThisLink a.blur:focus {
+	color: #933;
+}
+
+.fileUpload {
+	position: relative;
+	overflow: hidden;
+	margin: 10px;
+}
+
+.fileUpload input.upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	float: left;
+}
+
+.fileDisplay {
+	display: inline-block;
+	overflow: hidden;
+	float: right;
+	margin-left: 0px;
+	z-index: initial;
+	text-align: center;
+	margin-top: 17px;
+}
+</style>
+
+<nav attribute-test="menu" class="navbar navbar-default navbar-fixed-top" role="navigation"
+	style="margin-left: 2px; margin-right: 2px;">
+
+	<div attribute-test="menuc" class="container-fluid">
+
+		<div class="col-md-4 col-lg-4">
+			<img class="onap_logo" src="images/logo_onap_2017.png" height="50px"
+				width="234px" style="display: inline-block; float: left">
+			<div class="navbar-brand logo" ng-href=""
+				style="display: inline-block; float: left">
+				&nbsp;&nbsp;<b>Closed Loop Definition</b>
+			</div>
+		</div>
+
+
+		<div style="float: right; padding-right: 50px;"
+			class="col-md-2 navbar-header navbar-primary navbar-fixed-right hidden-sm hidden-md hidden-lg">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" ng-href=""></a>
+		</div>
+
+		<div id="navbar" class="navbar-collapse collapse col-md-10 col-lg-10">
+			<ul class="nav navbar-nav">
+
+				<li class="dropdown" ng-repeat="dropDownName in keyList"
+					style="height: inherit"><a active-link="active"
+					class="dropdown-toggle dropdownTitle" role="button"
+					data-toggle="dropdown"
+					style="height: inherit; font-weight: bold; color: #000">{{dropDownName}}
+						<span class="caret"></span>
+				</a>
+					<ul class="dropdown-menu" role="menu">
+						
+						<li ng-repeat="section in tabs[dropDownName]"
+							ng-if="section.name==='Create CL'"><a
+							id="{{section.name}}" role="presentation"
+							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
+						</li>
+						
+						<li ng-repeat="section in tabs[dropDownName]"
+							ng-if="section.name==='Open CL'"><a
+							id="{{section.name}}" role="presentation"
+							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
+						</li>
+						
+						<li ng-repeat="section in tabs[dropDownName]"
+							ng-if="section.name==='Create Template'"><a
+							id="{{section.name}}" role="presentation"
+							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
+						</li>
+						
+						<li ng-repeat="section in tabs[dropDownName]"
+							ng-if="section.name==='Open Template'"><a
+							id="{{section.name}}" role="presentation"
+							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
+						</li>
+											
+						<li ng-repeat="section in tabs[dropDownName]"
+							ng-if="section.name != 'Create CL' && section.name != 'Create Template' && section.name != 'Open CL' && section.name != 'Open Template' && section.name != 'ONAP User Guide - Design Overview' && section.name != 'ONAP User Guide - Closed Loop Design' && section.name != 'ONAP User Guide - CLAMP'"><a
+							id="{{section.name}}" role="presentation"
+							ng-click="emptyMenuClick(section.link,section.name)"
+							class="ThisLink">{{section.name}}</a>
+					   </li>
+					   
+					   <li ng-repeat="section in tabs[dropDownName]"
+							ng-if="section.name == 'ONAP User Guide - Design Overview' || section.name == 'ONAP User Guide - Closed Loop Design' || section.name == 'ONAP User Guide - CLAMP'"><a
+							id="{{section.name}}" role="presentation"
+							ng-href="{{section.link}}"
+							target="_blank"
+							>{{section.name}}</a>
+					   </li>
+
+					</ul></li>
+
+			</ul>
+
+		</div>
+
+
+
+		<div attribute-test="menuid" id="navbar" class="navbar-collapse collapse pull-right">
+			<ul class="nav navbar-nav">
+				<li class="dropdown" style="height: inherit"><a
+					class="navbar-brand logo_name" active-link="active"
+					class="dropdown-toggle dropdownTitle" role="button"
+					data-toggle="dropdown" style="height: inherit;">Hello:
+						{{loginuser}} </a></li>
+			</ul>
+		</div>
+
+	</div>
+</nav>

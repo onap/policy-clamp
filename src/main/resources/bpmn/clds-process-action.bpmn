@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="_-A31MBMpEea185sFktMJ7Q" targetNamespace="http://camunda.org/schema/1.0/bpmn" exporter="Camunda Modeler" exporterVersion="1.7.2" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:collaboration id="_Collaboration_2">
+    <bpmn2:participant id="_Participant_2" name="Process Action" processRef="clds-process-action-wf" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="clds-process-action-wf" name="CLDS Process Action Workflow" isExecutable="true">
+    <bpmn2:laneSet id="LaneSet_1" name="Lane Set 1">
+      <bpmn2:lane id="Lane_1" name="Submit or Resubmit">
+        <bpmn2:flowNodeRef>ExclusiveGateway_2</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>insEvent</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ExclusiveGateway_3</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>sendOpPolicyReqDistribute</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ServiceTask_0x8ypxf</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>sendStringMatchingReqDistribute</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>sendTcaReqDistribute</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_5" name="Delete">
+        <bpmn2:flowNodeRef>sendStringMatchingReqDelete</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>sendOpPolicyReqDelete</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>sendTcaReqDelete</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_4" name="Update">
+        <bpmn2:flowNodeRef>sendOpPolicyReqUpdate</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>sendStringMatchingReqUpdate</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>sendTcaReqUpdate</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_6" name="Stop">
+        <bpmn2:flowNodeRef>sendOpPolicyReqStop</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_7" name="Restart">
+        <bpmn2:flowNodeRef>sendOpPolicyReqRestart</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_2">
+      <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_4</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_27</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_29</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_31</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_1xlfq66</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_4" name="" sourceRef="ExclusiveGateway_2" targetRef="ServiceTask_0x8ypxf">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'SUBMIT' || actionCd == 'RESUBMIT' }]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:endEvent id="EndEvent_1">
+      <bpmn2:incoming>SequenceFlow_16</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:serviceTask id="insEvent" name="Insert Event to indicate that the action was completed" camunda:delegateExpression="${cldsEventDelegate}">
+      <bpmn2:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="actionStateCd">SENT</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_16</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_16" name="" sourceRef="insEvent" targetRef="EndEvent_1" />
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_3">
+      <bpmn2:incoming>SequenceFlow_10</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_28</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_30</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_32</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_6</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_7</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="SequenceFlow_7" name="" sourceRef="ExclusiveGateway_3" targetRef="insEvent" />
+    <bpmn2:sequenceFlow id="SequenceFlow_14" name="" sourceRef="sendStringMatchingReqDistribute" targetRef="sendTcaReqDistribute" />
+    <bpmn2:serviceTask id="sendOpPolicyReqDistribute" name="Send Operation Policy Request [Submit]" camunda:delegateExpression="${operationalPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_1rga27p</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_10</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_10" name="" sourceRef="sendOpPolicyReqDistribute" targetRef="ExclusiveGateway_3" />
+    <bpmn2:serviceTask id="sendOpPolicyReqUpdate" name="Send Operation Policy Request [Update]" camunda:delegateExpression="${operationalPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_1kegg6u</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_28</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_26" name="" sourceRef="sendStringMatchingReqUpdate" targetRef="sendTcaReqUpdate" />
+    <bpmn2:sequenceFlow id="SequenceFlow_27" name="" sourceRef="ExclusiveGateway_2" targetRef="sendStringMatchingReqUpdate">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'UPDATE' }]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_28" name="" sourceRef="sendOpPolicyReqUpdate" targetRef="ExclusiveGateway_3" />
+    <bpmn2:serviceTask id="sendOpPolicyReqStop" name="Send Operation Policy Request [Stop]" camunda:delegateExpression="${operationalPolicyDeleteDelegate}">
+      <bpmn2:incoming>SequenceFlow_29</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_30</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_29" name="" sourceRef="ExclusiveGateway_2" targetRef="sendOpPolicyReqStop">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'STOP' }]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_30" name="" sourceRef="sendOpPolicyReqStop" targetRef="ExclusiveGateway_3" />
+    <bpmn2:serviceTask id="sendOpPolicyReqRestart" name="Send Operation Policy Request [Restart]" camunda:delegateExpression="${operationalPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_31</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_32</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_31" name="" sourceRef="ExclusiveGateway_2" targetRef="sendOpPolicyReqRestart">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'RESTART' }]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_32" name="" sourceRef="sendOpPolicyReqRestart" targetRef="ExclusiveGateway_3" />
+    <bpmn2:startEvent id="StartEvent_1">
+      <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="SequenceFlow_2" name="" sourceRef="StartEvent_1" targetRef="ExclusiveGateway_2" />
+    <bpmn2:serviceTask id="sendStringMatchingReqDelete" name="Send String Match Micro Service request to Policy [Delete]" camunda:delegateExpression="${stringMatchPolicyDeleteDelegate}">
+      <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_23</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_23" name="" sourceRef="sendStringMatchingReqDelete" targetRef="sendTcaReqDelete" />
+    <bpmn2:sequenceFlow id="SequenceFlow_6" name="" sourceRef="sendOpPolicyReqDelete" targetRef="ExclusiveGateway_3" />
+    <bpmn2:sequenceFlow id="SequenceFlow_15" name="" sourceRef="ExclusiveGateway_2" targetRef="sendStringMatchingReqDelete">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'DELETE' }]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_0w39hon" sourceRef="ServiceTask_0x8ypxf" targetRef="sendStringMatchingReqDistribute" />
+    <bpmn2:sequenceFlow id="SequenceFlow_1xlfq66" sourceRef="ExclusiveGateway_2" targetRef="ServiceTask_0x8ypxf">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'SUBMIT' || actionCd == 'RESUBMIT' }]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:serviceTask id="ServiceTask_0x8ypxf" name="Send to SDC [Submit]" camunda:delegateExpression="${sdcSendReqDelegate}">
+      <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_1xlfq66</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0w39hon</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:serviceTask id="sendStringMatchingReqDistribute" name="Send String Match Micro Service request to Policy [Submit]" camunda:delegateExpression="${stringMatchPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_0w39hon</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1rga27p" sourceRef="sendTcaReqDistribute" targetRef="sendOpPolicyReqDistribute" />
+    <bpmn2:serviceTask id="sendTcaReqDistribute" name="Send Tca Micro Service request to Policy [Submit]" camunda:delegateExpression="${tcaPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1rga27p</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:serviceTask id="sendOpPolicyReqDelete" name="Send Operation Policy Request [Delete]" camunda:delegateExpression="${operationalPolicyDeleteDelegate}">
+      <bpmn2:incoming>SequenceFlow_0tpegxf</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_0tpegxf" sourceRef="sendTcaReqDelete" targetRef="sendOpPolicyReqDelete" />
+    <bpmn2:serviceTask id="sendTcaReqDelete" name="Send Tca Micro Service request to Policy [Delete]" camunda:delegateExpression="${tcaPolicyDeleteDelegate}">
+      <bpmn2:incoming>SequenceFlow_23</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_0tpegxf</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:serviceTask id="sendStringMatchingReqUpdate" name="Send String Match Micro Service request to Policy [Update]" camunda:delegateExpression="${stringMatchPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_27</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_26</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_1kegg6u" sourceRef="sendTcaReqUpdate" targetRef="sendOpPolicyReqUpdate" />
+    <bpmn2:serviceTask id="sendTcaReqUpdate" name="Send Tca Micro Service request to Policy [Update]" camunda:delegateExpression="${tcaPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_26</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_1kegg6u</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="_Collaboration_2">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_4" bpmnElement="StartEvent_1">
+        <dc:Bounds x="72" y="220" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="90" y="261" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_EndEvent_104" bpmnElement="EndEvent_1">
+        <dc:Bounds x="1320" y="216" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1338" y="257" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ScriptTask_8" bpmnElement="sendStringMatchingReqDistribute">
+        <dc:Bounds x="615" y="89" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_6" bpmnElement="sendOpPolicyReqDistribute">
+        <dc:Bounds x="912" y="89" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="_BPMNShape_ScriptTask_8" targetElement="_BPMNShape_ServiceTask_6">
+        <di:waypoint xsi:type="dc:Point" x="715" y="129" />
+        <di:waypoint xsi:type="dc:Point" x="761" y="129" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="881" y="192" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_7" bpmnElement="insEvent">
+        <dc:Bounds x="1188" y="194" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_16" sourceElement="_BPMNShape_ServiceTask_7" targetElement="_BPMNShape_EndEvent_104">
+        <di:waypoint xsi:type="dc:Point" x="1288" y="234" />
+        <di:waypoint xsi:type="dc:Point" x="1320" y="234" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1295" y="234" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Participant_2" bpmnElement="_Participant_2" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="1369" height="833" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_2" bpmnElement="Lane_1" isHorizontal="true">
+        <dc:Bounds x="30" y="0" width="1339" height="289" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_6" bpmnElement="Lane_5" isHorizontal="true">
+        <dc:Bounds x="30" y="288" width="1339" height="197" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_3" bpmnElement="ExclusiveGateway_2" isMarkerVisible="true">
+        <dc:Bounds x="144" y="212" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="169" y="267" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="_BPMNShape_StartEvent_4" targetElement="_BPMNShape_ExclusiveGateway_3">
+        <di:waypoint xsi:type="dc:Point" x="108" y="238" />
+        <di:waypoint xsi:type="dc:Point" x="126" y="238" />
+        <di:waypoint xsi:type="dc:Point" x="126" y="237" />
+        <di:waypoint xsi:type="dc:Point" x="144" y="237" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="128" y="237" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ExclusiveGateway_4" bpmnElement="ExclusiveGateway_3" isMarkerVisible="true">
+        <dc:Bounds x="1104" y="208" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1129" y="263" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="_BPMNShape_ExclusiveGateway_4" targetElement="_BPMNShape_ServiceTask_7">
+        <di:waypoint xsi:type="dc:Point" x="1154" y="233" />
+        <di:waypoint xsi:type="dc:Point" x="1188" y="234" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1175" y="234" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="_BPMNShape_ServiceTask_6" targetElement="_BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="1012" y="127" />
+        <di:waypoint xsi:type="dc:Point" x="1052" y="125" />
+        <di:waypoint xsi:type="dc:Point" x="1052" y="229" />
+        <di:waypoint xsi:type="dc:Point" x="1104" y="232" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1049" y="192" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_11" bpmnElement="sendStringMatchingReqDelete">
+        <dc:Bounds x="348" y="385" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_12" bpmnElement="sendOpPolicyReqDelete">
+        <dc:Bounds x="645" y="385" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_23" bpmnElement="SequenceFlow_23" sourceElement="_BPMNShape_ServiceTask_11" targetElement="_BPMNShape_ServiceTask_12">
+        <di:waypoint xsi:type="dc:Point" x="448" y="425" />
+        <di:waypoint xsi:type="dc:Point" x="496" y="425" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="467" y="425" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_9" bpmnElement="Lane_4" isHorizontal="true">
+        <dc:Bounds x="30" y="484" width="1339" height="117" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_14" bpmnElement="sendStringMatchingReqUpdate">
+        <dc:Bounds x="615" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_15" bpmnElement="sendOpPolicyReqUpdate">
+        <dc:Bounds x="912" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_26" bpmnElement="SequenceFlow_26" sourceElement="_BPMNShape_ServiceTask_14" targetElement="_BPMNShape_ServiceTask_15">
+        <di:waypoint xsi:type="dc:Point" x="715" y="540" />
+        <di:waypoint xsi:type="dc:Point" x="761" y="540" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="887" y="540" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_27" bpmnElement="SequenceFlow_27" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ServiceTask_14">
+        <di:waypoint xsi:type="dc:Point" x="169" y="262" />
+        <di:waypoint xsi:type="dc:Point" x="169" y="540" />
+        <di:waypoint xsi:type="dc:Point" x="615" y="540" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="139" y="398" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_28" bpmnElement="SequenceFlow_28" sourceElement="_BPMNShape_ServiceTask_15" targetElement="_BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="1012" y="539" />
+        <di:waypoint xsi:type="dc:Point" x="1058" y="538" />
+        <di:waypoint xsi:type="dc:Point" x="1058" y="230" />
+        <di:waypoint xsi:type="dc:Point" x="1104" y="232" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1055" y="381" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_10" bpmnElement="Lane_6" isHorizontal="true">
+        <dc:Bounds x="30" y="600" width="1339" height="117" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_16" bpmnElement="sendOpPolicyReqStop">
+        <dc:Bounds x="912" y="619" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_29" bpmnElement="SequenceFlow_29" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ServiceTask_16">
+        <di:waypoint xsi:type="dc:Point" x="169" y="262" />
+        <di:waypoint xsi:type="dc:Point" x="169" y="659" />
+        <di:waypoint xsi:type="dc:Point" x="912" y="659" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="139" y="457.5" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_30" bpmnElement="SequenceFlow_30" sourceElement="_BPMNShape_ServiceTask_16" targetElement="_BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="1012" y="658" />
+        <di:waypoint xsi:type="dc:Point" x="1058" y="658" />
+        <di:waypoint xsi:type="dc:Point" x="1058" y="233" />
+        <di:waypoint xsi:type="dc:Point" x="1104" y="233" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1055" y="441" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_Lane_11" bpmnElement="Lane_7" isHorizontal="true">
+        <dc:Bounds x="30" y="716" width="1339" height="117" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_ServiceTask_17" bpmnElement="sendOpPolicyReqRestart">
+        <dc:Bounds x="912" y="735" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_31" bpmnElement="SequenceFlow_31" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ServiceTask_17">
+        <di:waypoint xsi:type="dc:Point" x="169" y="262" />
+        <di:waypoint xsi:type="dc:Point" x="169" y="775" />
+        <di:waypoint xsi:type="dc:Point" x="912" y="775" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="139" y="515.5" width="90" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_32" bpmnElement="SequenceFlow_32" sourceElement="_BPMNShape_ServiceTask_17" targetElement="_BPMNShape_ExclusiveGateway_4">
+        <di:waypoint xsi:type="dc:Point" x="1012" y="775" />
+        <di:waypoint xsi:type="dc:Point" x="1058" y="775" />
+        <di:waypoint xsi:type="dc:Point" x="1058" y="232" />
+        <di:waypoint xsi:type="dc:Point" x="1104" y="233" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1055" y="500" width="6" height="6" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ServiceTask_11">
+        <di:waypoint xsi:type="dc:Point" x="169" y="262" />
+        <di:waypoint xsi:type="dc:Point" x="169" y="425" />
+        <di:waypoint xsi:type="dc:Point" x="348" y="425" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="139" y="333.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0x8ypxf_di" bpmnElement="ServiceTask_0x8ypxf">
+        <dc:Bounds x="204" y="89" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0w39hon_di" bpmnElement="SequenceFlow_0w39hon">
+        <di:waypoint xsi:type="dc:Point" x="304" y="129" />
+        <di:waypoint xsi:type="dc:Point" x="615" y="129" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="414.5" y="114" width="90" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1xlfq66_di" bpmnElement="SequenceFlow_1xlfq66">
+        <di:waypoint xsi:type="dc:Point" x="169" y="212" />
+        <di:waypoint xsi:type="dc:Point" x="169" y="129" />
+        <di:waypoint xsi:type="dc:Point" x="204" y="129" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="184" y="170.5" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1rga27p_di" bpmnElement="SequenceFlow_1rga27p">
+        <di:waypoint xsi:type="dc:Point" x="861" y="129" />
+        <di:waypoint xsi:type="dc:Point" x="912" y="129" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="841.5" y="119" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_1r1brt6_di" bpmnElement="sendTcaReqDistribute">
+        <dc:Bounds x="760.715" y="89" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0tpegxf_di" bpmnElement="SequenceFlow_0tpegxf">
+        <di:waypoint xsi:type="dc:Point" x="596" y="425" />
+        <di:waypoint xsi:type="dc:Point" x="645" y="425" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="575.5" y="415" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0y2gwy4_di" bpmnElement="sendTcaReqDelete">
+        <dc:Bounds x="495.71500000000003" y="385" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1kegg6u_di" bpmnElement="SequenceFlow_1kegg6u">
+        <di:waypoint xsi:type="dc:Point" x="861" y="540" />
+        <di:waypoint xsi:type="dc:Point" x="912" y="540" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="841.5" y="530" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_08pqhb3_di" bpmnElement="sendTcaReqUpdate">
+        <dc:Bounds x="761" y="500" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

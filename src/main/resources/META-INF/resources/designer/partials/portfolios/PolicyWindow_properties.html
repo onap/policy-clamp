@@ -1,0 +1,749 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<style>
+#deletePolicy{
+	height:34px;
+	background-color:#dddd;
+}
+
+.disabled{
+	background-color: #dddd;
+}
+.fileUpload {
+	position: relative;
+	overflow: hidden;
+	margin: 10px;
+}
+
+.fileUpload input.upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	float: left;
+}
+
+.fileDisplay {
+	display: inline-block;
+	overflow: hidden;
+	float: right;
+	margin-left: 0px;
+	z-index: initial;
+	text-align: center;
+	margin-top: 17px;
+}
+
+.form-group {
+/* 	height:24px; */
+/* 	box-sizing:border-box; */
+	margin-bottom:20px;
+}
+
+.glyphicon-search{
+	position:absolute; 
+	padding: 25px 12px;
+}
+
+label{
+	text-align:right;
+	vertical-align:middle;
+}
+
+.leftPolicyPanel{
+	padding: 0 10px 0 0;
+}
+
+#createNewPolicy{
+	height:34px;
+	width:120px; /*84*/
+	background-color:#f2bfab;
+}
+
+#pname{
+	height:28px; 
+	margin-left:-5px;
+}
+
+.policyPanel{
+	background-color: #f5f5f5;
+	padding: 10px 5px;
+}
+
+#policySearch{
+	height: 33px;
+	font-size: 12px;
+	padding: 2px 2px 2px 30px;
+	margin-bottom: 5px;
+	width:100%;
+}
+#policyTable{
+	cursor: pointer;
+	width:100%;
+}
+
+#policyTable tr{
+	border-bottom: 1px solid #ddd;
+	border-collapse: collapse;
+	text-align: left;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#policyTable td{
+	padding: 8px 10px;
+}
+
+#policyTable tr.highlight{
+	background-color: #f5f5f5;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+#policyTableHolder{
+	height:200px; 
+	width: 100%; 
+	overflow:auto;
+}
+
+#timeout{
+	height:28px; 
+	margin-left:10px;
+}
+
+</style>
+
+<script type="text/javascript">
+	function disablefile() {
+
+		document.getElementById("fileUpload").disabled = true;
+
+	}
+
+	function disableSVN() {
+		var selectLength = document.querySelectorAll(".disabled-block-container .tab-close-popup");
+		if(selectLength && selectLength.length>0){
+			for(var i = 0; i< selectLength.length ; i++){
+				selectLength[i].disabled = true;
+			}	
+		}
+
+		document.getElementById("schemaLocation").disabled = true;
+		document.getElementById("userID").disabled = true;
+		document.getElementById("password").disabled = true;
+
+	}
+</script>
+
+
+	<div attribute-test="policywindowproperties" id="configure-widgets" 
+		class="disabled-block-container">
+	<div attribute-test="policywindowpropertiesh" class="modal-header">
+		<button type="button" class="close" ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>Operational Policy</h4>
+	</div>	
+	
+	
+	<div class="container">
+	<div attribute-test="policywindowpropertiesb" class="modal-body row">
+		
+		<div class="leftPolicyPanel">
+			<div class="panel panel-default">
+				<i class="glyphicon glyphicon-search"></i>
+				<input type="text" id="policySearch" onkeyup="searchPolicyList()"
+					placeholder="Search ...">
+				<div id="policyTableHolder">
+					<table id="policyTable"></table>
+				</div>
+			</div>
+			<div style="float:left">
+				<button type="button" id="createNewPolicy" class="btn btn-sm">New Policy</button></span>
+			</div>
+			<div style="float:right">
+				<button type="button" id="deletePolicy" class="btn btn-sm glyphicon glyphicon-trash" disabled></button></span>
+			</div>
+		</div>
+		
+		<div class="panel panel-default col-sm-9 policyPanel" style="display:none;">
+			<form id="Timeoutform" class="form-horizontal">
+				<div>
+					<div class="form-group clearfix row">
+						<label style="margin-top:5px;" class="col-sm-2">Name</label>
+						<input type="text" id="pname"; name="pname"; class="col-sm-4"></span>
+						
+						<label for="userID" class="col-sm-3" style="margin-top:5px; padding:0px;">Overall Time Limit</label>
+						<input type="text" class="col-sm-2" id="timeout" name="timeout">
+					</div>
+				</div>
+			</form>
+			<div class="panel-heading" style="background-color: white;">
+				<ul id="nav_Tabs" class="nav nav-tabs">
+					<li class><a id="add_one_more" href="#desc_tab"><span
+							class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+				</ul>
+			</div>
+			<div class="panel-body">
+				<div class="tab-content">
+					<div id="properties_tab" class="tab-pane fade in active"></div>
+				</div>
+			</div>
+		</div>
+		
+		<span id="formSpan" style="display: none">
+			<form class="saveProps" class="form-horizontal">
+				<div>
+					<div class="form-group clearfix" >
+						<label for="recipe" class="col-sm-4 control-label" >Recipe</label>
+						<div class="col-sm-8">
+							<select class="form-control" name="recipe" id="recipe" enableFilter="false"></select>
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="maxRetries" class="col-sm-4 control-label">
+							Max Retries</label>
+						<div class="col-sm-8">
+							<input type="number" min="0" class="form-control" id="maxRetries"
+								name="maxRetries"> </input>
+						</div>
+					</div>
+					<br />
+					<div class="form-group clearfix" >
+						<label for="retryTimeLimit" class="col-sm-4 control-label" >
+							Retry Time Limit</label>
+						<div class="col-sm-8">
+							<input type="number" min="0" class="form-control" id="retryTimeLimit"
+								name="retryTimeLimit"></input>
+						</div>
+					</div>
+					<div hidden class="form-group clearfix">
+						<label for="_id" class="col-sm-4 control-label">
+							PolicyID</label>
+						<div class="col-sm-8">
+							<input type="text" onkeydown="return false;"  class="form-control" id="_id"
+								name="_id" value=""></input>
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="parentPolicy" class="col-sm-4 control-label">
+							Parent Policy</label>
+						<div class="col-sm-8">
+							<select  class="form-control" id="parentPolicy"
+								name="parentPolicy" enableFilter="false"><option value=""></option></select>
+						</div>
+					</div>			
+					<div class="form-group clearfix">
+						<label for="parentPolicyConditions" class="col-sm-4 control-label">
+							Parent Policy Conditions</label>
+						<div class="col-sm-8">
+							<select  class="form-control" id="parentPolicyConditions"
+								name="parentPolicyConditions" multiple size=2></select>
+						</div>
+					</div>
+				</div>
+			</form>
+		</span>
+	</div>
+	</div>
+
+	<div attribute-test="policywindowpropertiesf" class="modal-footer">
+		<!--<button ng-click="reset()" class="btn btn-primary" style="float:left">Reset</button>-->
+		<button id="savePropsBtn" class="btn btn-primary">Close</button>
+		<button ng-click="close(true)" id="close_button"
+			class="btn btn-primary">Cancel</button>
+	</div>
+	
+	<script>
+		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
+		// css attribute display:none
+		$("#add_one_more").click(function(event) {
+			event.preventDefault();
+			add_one_more();
+			setMultiSelect();
+		});
+		loadPropertyWindow("policy")
+		
+		// by default, parentPolicyConditions is disabled
+		$("#parentPolicyConditions").prop('disabled', 'disabled');
+		var parent_policy={}
+		var policy_ids={}
+		var loadingId=false;
+		var allPolicies={};
+		
+		//Grab saved values for dropdowns
+		var obj = elementMap[lastElementSelected];
+		
+		if (!($.isEmptyObject(obj))){
+			allPolicies = jQuery.extend({}, obj);			
+			for (var x in allPolicies){
+				$("#policyTable").prepend("<tr id='"+x+"'><td>"+x+"</td></tr>");
+			}
+		}
+		
+		//load recipes for a chosen policy
+		function disperseConfig(policyObj, id){
+			//remove old gui forms
+			for (var i=1; i<($(".formId").length + 1); i++){
+				$("#go_properties_tab"+i).parent().remove();
+			}
+			$(".formId").remove();
+			
+			if (policyObj !== undefined) {
+				var el = policyObj[id][2]['policyConfigurations']
+				for (var i = 0; i < el.length; i++) {
+					loadingId=true;
+					var num = add_one_more();
+					loadingId=false;
+					for (var j = 0; j < el[i].length; j++) {
+						if(el[i][j].hasOwnProperty("name")){
+							$("#formId" + num + " #" + el[i][j].name).val(
+									el[i][j].value);
+							if(el[i][j].name==="_id")
+								policy_ids["#formId" + num]=el[i][j].value
+							if(el[i][j].name==='parentPolicy')
+								parent_policy[num]=el[i][j].value 
+							if(el[i][j].name==='recipe' && el[i][j].value.toString()!==''){
+								$("#go_properties_tab"+num).text(el[i][j].value)
+							}	
+						}
+					}
+				}
+				
+				//Adding all the ids for parent policy options
+				for(var i=1;i<=$(".formId").length;i++){
+					for(k in policy_ids){
+						if($("#formId"+i+" #_id").val()!==policy_ids[k].toString()  && $(k+" #recipe").val()!==undefined && $(k+" #recipe").val()!==""){
+							$("#formId"+i+" #parentPolicy").append("<option value=\""+policy_ids[k]+"\">" +$(k+" #recipe").val()+"</option>");
+						}
+					}
+				}
+				
+				for(k in parent_policy){
+					$("#formId"+k+" #parentPolicy").val(parent_policy[k]);
+					// force the change event
+					$("#formId"+k+" #parentPolicy").change();
+				}
+				
+				if(policyObj[id][0] && policyObj[id][1]){
+					$("#" + policyObj[id][0].name).val(policyObj[id][0].value);
+					$("#" + policyObj[id][1].name).val(policyObj[id][1].value);
+				}
+			}
+			
+			setMultiSelect();
+		}
+		
+		
+		//This is ensure there are no repeated keys in the map
+		function noRepeats(form) {
+			//triggered per policy.
+			var select = {};
+			for (var i = 0; i < form.length; i++) {
+				if (select[form[i].name] === undefined)
+					select[form[i].name] = []
+				select[form[i].name].push(form[i].value);
+			}
+			var arr = []
+			for (s in select) {
+				var f = {}
+				f.name = s
+				f.value = select[s]
+				arr.push(f)
+			}
+			return arr
+		}
+		
+		$("#savePropsBtn").click(function(event) {
+
+			//Saves edits
+			if ($("#policyTable .highlight").length > 0){
+				saveLastPolicyLocally($("#policyTable .highlight").attr("id"));
+			}
+			
+			//Removes outdated (deleted) policies by checking against left menu
+			var finalSaveList = {};
+			$("#policyTable td").each(function(){
+				var tableVal = $(this).text();
+				if (tableVal in allPolicies){
+					finalSaveList[tableVal] = allPolicies[tableVal];
+				}
+			});
+			
+			saveProperties(finalSaveList);
+			$("#close_button").click();
+		})		
+
+		function add_one_more() {
+			$("#nav_Tabs li").removeClass("active");
+			
+			//FormSpan contains a block of the form that is not being displayed. We will create clones of that and add them to tabs
+			var form = $($("#formSpan").children()[0]).clone()
+			var count = 0;
+			//Each new tab will have the formId class attached to it. This way we can track how many forms we currently have out there and assign listeners to them
+			if ($(".formId").length > 0) {
+				var greatest = 0;
+				var s = $(".formId");
+				for (var i = 0; i < s.length; i++) {
+					if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
+						greatest = parseInt($(s[i]).attr("id").substring(6))
+					}
+				}
+				count = greatest + 1;
+				$("#properties_tab").append(
+						('<span class="formId" id="formId'+count+'"></span>'));
+			} else {
+				count++;
+				$("#properties_tab").append(
+						'<span class="formId" id="formId1"></span>');
+			}
+			
+			//$(form).find("#policyName").val("Recipe "+makid(2))
+			//TODO change up how we auto assign policyName. There could be the case where we do this and it will have repeats
+			//alert($(form).find("#_id").val())
+			//policyNameChangeListener(form)
+			$("#add_one_more")
+					.parent()
+					.before(
+							' <li class="active"><a id="go_properties_tab'+count+'">Policy</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
+			$("#formId" + count).append(form);
+			$(".formId").not($("#formId" + count)).css("display", "none")
+			addCustListen(count)
+			addTabListen(count)
+			// This is for when the process is not loading from map but being created
+			if(!loadingId){
+				var l=makeid()
+				$(form).find("#_id").val(l)
+				policy_ids["#formId" + count]=l
+				var answers={}
+				
+				for(var i=1;i<=greatestIdNum();i++){
+					if($("#formId"+i).length>0){
+
+						answers["#formId"+i+" #parentPolicy"]=$("#formId"+i+" #parentPolicy").val()
+						$("#formId"+i+" #parentPolicy").empty();
+						for(k in policy_ids){
+							if($("#formId"+i+" #_id").val().toString()!==policy_ids[k] && $(k+" #recipe").val()!==undefined && $(k+" #recipe").val()!==""){
+								$("#formId"+i+" #parentPolicy").append("<option value='"+policy_ids[k]+"''> "+$(k+" #recipe").val()+"</option>")
+							}
+						}
+						$("#formId"+i+" #parentPolicy").prepend("<option value=''></option>")
+					}
+				}
+				for(k in answers){
+					$(k).val(answers[k])
+				}
+			}
+			return count;
+		}
+		
+		function add_new_policy(issueNewNames) {	
+			//remove old gui forms
+			for (var i=1; i<($(".formId").length + 1); i++){
+				$("#go_properties_tab"+i).parent().remove();
+			}
+			$(".formId").remove();
+			
+			//Reset header
+			var ms = new Date().getTime();
+			var defPolName = "Policy" + ms;
+			$("#pname").val(defPolName);
+			$("#timeout").val(defaults_props.policy.timeout);
+			
+			//FormSpan contains a block of the form that is not being displayed. We will create clones of that and add them to tabs
+			var form = $($("#formSpan").children()[0]).clone()
+			var count = 0;
+			//Each new tab will have the formId class attached to it. This way we can track how many forms we currently have out there and assign listeners to them
+			if ($(".formId").length > 0) {
+				var greatest = 0;
+				var s = $(".formId");
+				//for every recipe
+				for (var i = 0; i < s.length; i++) {
+					if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
+						greatest = parseInt($(s[i]).attr("id").substring(6))
+					}
+				}
+				count = greatest + 1;
+				$("#properties_tab").append(
+						('<span class="formId" id="formId'+count+'"></span>'));
+			} else {
+				count++;
+				$("#properties_tab").append(
+						'<span class="formId" id="formId1"></span>');
+			}
+			
+			//$(form).find("#policyName").val("Recipe "+makid(2))
+			//TODO change up how we auto assign policyName. There could be the case where we do this and it will have repeats
+			//alert($(form).find("#_id").val())
+			//policyNameChangeListener(form)
+			$("#add_one_more")
+					.parent()
+					.before(
+							' <li class="active"><a id="go_properties_tab'+count+'">Policy</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
+			$("#formId" + count).append(form);
+			$(".formId").not($("#formId" + count)).css("display", "none")
+			addCustListen(count)
+			addTabListen(count)
+			// This is for when the process is not loading from map but being created
+			if(!loadingId){
+				var l=makeid()
+				$(form).find("#_id").val(l)
+				policy_ids["#formId" + count]=l
+				var answers={}
+				
+				for(var i=1;i<=greatestIdNum();i++){
+					if($("#formId"+i).length>0){
+
+						answers["#formId"+i+" #parentPolicy"]=$("#formId"+i+" #parentPolicy").val()
+						$("#formId"+i+" #parentPolicy").empty();
+						for(k in policy_ids){
+							if($("#formId"+i+" #_id").val().toString()!==policy_ids[k] && $(k+" #recipe").val()!==undefined && $(k+" #recipe").val()!==""){
+								$("#formId"+i+" #parentPolicy").append("<option value='"+policy_ids[k]+"''> "+$(k+" #recipe").val()+"</option>")
+							}
+						}
+						$("#formId"+i+" #parentPolicy").prepend("<option value=''></option>")
+					}
+				}
+				for(k in answers){
+					$(k).val(answers[k])
+				}
+			}
+			
+			
+			
+			setMultiSelect();
+			return defPolName;
+		}
+		
+	
+		//listener will change the tab name to the recipe
+		function addTabListen(count){
+			$("#formId"+count+" #recipe").on("change",function(){
+				if($("#formId"+count+" #recipe").val().toString()!==""){
+					$('#go_properties_tab' + count).text($("#formId"+count+" #recipe").val())
+				}
+				else
+					$('#go_properties_tab' + count).text("Policy");
+				
+				var answers={}
+				
+				for(var i=1;i<=greatestIdNum();i++){
+					if($("#formId"+i).length>0){
+						
+						answers["#formId"+i+" #parentPolicy"]=$("#formId"+i+" #parentPolicy").val()
+						$("#formId"+i+" #parentPolicy").empty();
+						
+						for(k in policy_ids){
+							if($("#formId"+i+" #_id").val().toString()!==policy_ids[k] && $(k+" #recipe").val()!=='undefined' && $(k+" #recipe").val()!==""){
+								$("#formId"+i+" #parentPolicy").append("<option value='"+policy_ids[k]+"''> "+$(k+" #recipe").val()+"</option>")
+							}
+						}
+						$("#formId"+i+" #parentPolicy").prepend("<option value=''></option>")
+					}
+				}
+				for(k in answers){
+					$(k).val(answers[k])
+				}
+			})
+			
+			// disable parentPolicyConditions when a parentPolicy is not selected
+			$("#formId"+count+" #parentPolicy").on("change",function(){
+				if($("#formId"+count+" #parentPolicy").val().toString()==""){
+					// deselect all options
+					$("#formId"+count+" #parentPolicyConditions option:selected").prop("selected", false);
+					// disable the select box
+					$("#formId"+count+" #parentPolicyConditions").prop('disabled', 'disabled');
+				} else {
+					$("#formId"+count+" #parentPolicyConditions").prop('disabled', false);
+				}
+			})
+		}
+		
+		
+		function addCustListen(count) {
+			$('#go_properties_tab' + count).click(function(event) {
+				$("#nav_Tabs li").removeClass("active");
+				$(this).parent().addClass("active");
+				$("#formId" + count).css("display", "")
+				$(".formId").not($("#formId" + count)).css("display", "none")
+
+			})
+			$('#tab_close' + count).click(function(event) {
+				if(document.getElementById("timeout").disabled){
+					return false;
+				}
+				$(this).parent().remove();
+				for(var i=1;i<=greatestIdNum();i++){
+					if(	$("#formId"+i).length>0){
+						//alert("fudge")
+						if(i!==count ){
+							if(	$("#formId"+i+" #parentPolicy").val()===$("#formId"+count+" #_id").val().toString())
+								$("#formId"+i+" #parentPolicy").val("")
+							$("#formId"+i+" #parentPolicy option[value='"+$("#formId"+count+" #_id").val().toString()+"']").remove();
+						}
+					}
+				}
+				delete policy_ids["#formId" + count + " #_id"]
+				$("#formId" + count).remove();
+			})
+		}
+		
+		function greatestIdNum(){
+			var greatest = 0;
+			var s = $(".formId");
+			for (var i = 0; i < s.length; i++) {
+				if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
+					greatest = parseInt($(s[i]).attr("id").substring(6))
+				}
+			}
+			return greatest;
+		}
+		
+		//Generate random id for each policy
+		//Also made sure ids couldnt be repeated
+		function makeid(num)
+		{
+			
+		    var text = "";
+		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			if(num==null)
+				num=7;
+		    for( var i=0; i < 7; i++ )
+		        text += possible.charAt(Math.floor(Math.random() * possible.length));
+		    var hasValue=false;
+		    for(k in policy_ids){
+		    	if(text===policy_ids[k])
+		    		hasValue=true
+		    }
+		    if (hasValue)
+				return makeid(num);
+			else
+				return text
+		}
+		
+		var ParentPolicy=function(id,name){
+			this.id=id
+			this.name=name
+		}
+		
+		//Policy table search filter
+		function searchPolicyList() {
+			var search = document.getElementById("policySearch");
+			var row = document.getElementsByTagName("td");
+			for (var i=0; i<row.length; i++){
+				if (row[i].innerHTML.toUpperCase().indexOf(search.value.toUpperCase()) > -1){
+					row[i].style.display = "";
+				} else {
+					row[i].style.display = "none";
+				}
+			}
+		}
+		
+		function saveLastPolicyLocally(lastPolicyId){
+			var polForm = []
+			
+			var properties = $(".saveProps").not("#formSpan .saveProps")
+			var timeoutForm = $("#Timeoutform").serializeArray();
+			
+			for (var i=0; i<timeoutForm.length; i++){
+				polForm.push(timeoutForm[i]);
+			}
+			
+			var d = {}
+			d["policyConfigurations"] = [];
+			for (var i = 0; i < properties.length; i++) {
+				var ser = $(properties[i]).serializeArray();
+				var s = noRepeats(ser)
+				d["policyConfigurations"].push(s);
+			}
+			polForm.push(d);
+			allPolicies[lastPolicyId] = polForm;
+		}
+		
+		$("#deletePolicy").on('click', function(){
+			var deleteId = $("#policyTable .highlight").attr("id");
+			delete allPolicies.deleteId;
+			$("#policyTable .highlight").remove();
+			expandTable();
+		});
+		
+		$('#policyTable').on('click', 'tr', function(event) {
+			startNextItem();
+			
+			$(this).addClass('highlight').siblings().removeClass('highlight');
+			disperseConfig(allPolicies, $(this).attr("id"));
+		});
+		
+		$('#createNewPolicy').on('click', function(){
+			startNextItem();
+			
+			var defPolName = add_new_policy();
+			
+			if (("#policyTable .highlight").length > 0){
+				$('#policyTable tr.highlight').removeClass('highlight');
+			}
+            $("#policyTable").prepend("<tr class='highlight' id='" +defPolName+ "''><td>"+defPolName+"</td></tr>");
+		});
+		
+		function startNextItem(){
+			//save last item before transitioning
+			var lastItem = $("#policyTable .highlight");
+			if (lastItem.length > 0){
+				saveLastPolicyLocally($("#pname").val());
+				
+				lastItem.attr("id",$("#pname").val());
+				$("#"+lastItem.attr("id")+" td").html($("#pname").val());
+			} else{
+				collapseTable();
+			}
+			
+			//allow deleting
+			if ($("#deletePolicy").prop("disabled")){
+				$("#deletePolicy").prop("disabled", false);
+			}
+		}
+		
+		//Show table panel only
+		function expandTable(){
+			$(".policyPanel").css("display","none");
+			$(".leftPolicyPanel").removeClass("col-sm-3");
+			$(".glyphicon-search").css("padding", "25px 12px");
+			if (!($("#deletePolicy").prop("disabled"))){
+				$("#deletePolicy").prop("disabled", true);
+			}
+		}
+		
+		//Show both menus
+		function collapseTable(){
+			$(".leftPolicyPanel").addClass("col-sm-3");
+			$(".glyphicon-search").css("padding", "10px 12px");
+			$(".policyPanel").css("display","unset");
+		}
+			
+	</script>
+</div>
+

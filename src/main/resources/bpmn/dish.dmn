@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn11.xsd" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="simpleDishDecisionTable" name="SimpleDishDecisionTable">
+    <decisionTable id="decisionTable">
+      <input id="input1" label="Season">
+        <inputExpression id="inputExpression1" typeRef="string">        <text>season</text>
+</inputExpression>
+      </input>
+      <output id="output1" label="Dish" name="desiredDish" typeRef="string" />
+      <rule id="row-72464069-3">
+        <inputEntry id="UnaryTests_0zmcdq6">        <text><![CDATA["Fall"]]></text>
+</inputEntry>
+        <outputEntry id="LiteralExpression_1ehb89n">        <text><![CDATA["Pad Thai"]]></text>
+</outputEntry>
+      </rule>
+      <rule id="row-72464069-4">
+        <inputEntry id="UnaryTests_0g5512k">        <text><![CDATA["Winter"]]></text>
+</inputEntry>
+        <outputEntry id="LiteralExpression_0v3t89p">        <text><![CDATA["Lamb Jalfrazie, Mutter Paneer, and Nan"]]></text>
+</outputEntry>
+      </rule>
+      <rule id="row-72464069-5">
+        <inputEntry id="UnaryTests_0582crg">        <text><![CDATA["Spring"]]></text>
+</inputEntry>
+        <outputEntry id="LiteralExpression_100afca">        <text><![CDATA["Chicken Moghlai, Baingan Bhartha, and Nan"]]></text>
+</outputEntry>
+      </rule>
+      <rule id="row-72464069-6">
+        <inputEntry id="UnaryTests_0fha0sl">        <text><![CDATA["Summer"]]></text>
+</inputEntry>
+        <outputEntry id="LiteralExpression_06dk8fw">        <text><![CDATA["Satay and Laab"]]></text>
+</outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

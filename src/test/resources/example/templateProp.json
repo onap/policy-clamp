@@ -1,0 +1,10 @@
+{
+  "global":[
+    {
+      "name":"service",
+      "value":[
+        "tosca_definitions_version: cloudify_dsl_1_2\r\n\r\nimports:\r\n - http:\/\/www.getcloudify.org\/spec\/cloudify\/3.3.1\/types.yaml\r\n - http:\/\/127.0.0.1\/1607_prod\/type_files\/cdap_app.yaml\r\n\r\nnode_templates:\r\n  SM:\r\n    type: dcae.nodes.cdap_app\r\n    properties:\r\n      service_name: \"cdap-string-matching\"\r\n      deployment_JSON: |-\r\n          {\r\n            \"clusterService\": {\"$ref\": \"\/services\/vm-cdap-cluster-central\/instances\/rdm2-central\"},\r\n            \"$class\": \"com.att.ecomp.dcae.controller.service.cdap.CdapServiceInstance\",\r\n            \"namespace\": \"<%= dcae_target_name %>\",\r\n            \"appNames\": [ \"SM\" ],\r\n            \"flowNames\": [ \"SM.SimpleFlow\" ],\r\n            \"apps\": {\r\n              \"SM\": {\r\n                \"jarFile\": \"\/opt\/app\/dcae-analytics-closed-loop-stringmatching-jars\/lib\/CdapClosedLoopSnmpTrapStringMatcher-0.1.jar\",\r\n                \"artifactName\": \"CdapClosedLoopSnmpTrapStringMatcher\",\r\n                \"version\": \"0.1\"\r\n              }\r\n            },\r\n          \r\n            \"configuration\": {\r\n             \"$class\": \"com.att.ecomp.dcae.clamp.common.StringMatchingConfiguration\",\r\n              \"messageReaderConsumerID\":\"4699\",\r\n              \"messageReaderConsumerGroup\": \"<%= dcae_target_name %>\",\r\n              \"aaiURL\": \"http:\/\/REPLACE_THIS_WITH_IP_PORT_FROM_BOOTED_DOCKER\/tenant\/\",\r\n              \"closedLoopEventClient\": \"configuration.dcae.microservice.stringmatcher.xml\",\r\n              \"dcae_target_name\": \"<%= dcae_target_name %>\",\r\n              \"dcae_target_type\": \"VM\",\r\n          \r\n              \"serviceConfigurations\": {}\r\n            }\r\n          }}}"
+      ]
+    }
+  ]
+}

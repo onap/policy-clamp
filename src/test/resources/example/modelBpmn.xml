@@ -1,0 +1,110 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0ex3w2w</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:collector id="Collector_">
+      <bpmn:incoming>SequenceFlow_0ex3w2w</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_185iyma</bpmn:outgoing>
+    </bpmn:collector>
+    <bpmn:stringMatch id="StringMatch_">
+      <bpmn:incoming>SequenceFlow_185iyma</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_092429t</bpmn:outgoing>
+    </bpmn:stringMatch>
+    <bpmn:policy id="Policy_">
+      <bpmn:incoming>SequenceFlow_092429t</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hghw7g</bpmn:outgoing>
+    </bpmn:policy>
+    <bpmn:tCA id="TCA_">
+      <bpmn:incoming>SequenceFlow_08j3fsl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0hghw7g</bpmn:outgoing>
+    </bpmn:tCA>
+    <bpmn:endEvent id="EndEvent_0lg612k">
+      <bpmn:incoming>SequenceFlow_0hghw7g</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0ex3w2w" sourceRef="StartEvent_1" targetRef="Collector_" />
+    <bpmn:sequenceFlow id="SequenceFlow_185iyma" sourceRef="Collector_" targetRef="StringMatch_" />
+    <bpmn:sequenceFlow id="SequenceFlow_092429t" sourceRef="StringMatch_" targetRef="Policy_" />
+    <bpmn:sequenceFlow id="SequenceFlow_0hghw7g" sourceRef="Policy_" targetRef="EndEvent_0lg612k" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="60" y="25" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="33" y="61" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Collector__di" bpmnElement="Collector_">
+        <dc:Bounds x="169" y="140" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StringMatch__di" bpmnElement="StringMatch_">
+        <dc:Bounds x="578" y="140" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Policy__di" bpmnElement="Policy_">
+        <dc:Bounds x="768" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0lg612k_di" bpmnElement="EndEvent_0lg612k">
+        <dc:Bounds x="949" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="922" y="198" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ex3w2w_di" bpmnElement="SequenceFlow_0ex3w2w">
+        <di:waypoint xsi:type="dc:Point" x="96" y="43" />
+        <di:waypoint xsi:type="dc:Point" x="128" y="43" />
+        <di:waypoint xsi:type="dc:Point" x="128" y="180" />
+        <di:waypoint xsi:type="dc:Point" x="169" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="83" y="101.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_185iyma_di" bpmnElement="SequenceFlow_185iyma">
+        <di:waypoint xsi:type="dc:Point" x="500" y="180" />
+        <di:waypoint xsi:type="dc:Point" x="578" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="494" y="170" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_092429t_di" bpmnElement="SequenceFlow_092429t">
+        <di:waypoint xsi:type="dc:Point" x="698" y="180" />
+        <di:waypoint xsi:type="dc:Point" x="768" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="688" y="170" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0hghw7g_di" bpmnElement="SequenceFlow_0hghw7g">
+        <di:waypoint xsi:type="dc:Point" x="868" y="180" />
+        <di:waypoint xsi:type="dc:Point" x="907" y="180" />
+        <di:waypoint xsi:type="dc:Point" x="907" y="180" />
+        <di:waypoint xsi:type="dc:Point" x="949" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="862" y="170" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

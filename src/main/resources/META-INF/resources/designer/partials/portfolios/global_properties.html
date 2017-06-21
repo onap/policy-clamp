@@ -1,0 +1,262 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<style>
+.fileUpload {
+	position: relative;
+	overflow: hidden;
+	margin: 10px;
+}
+
+.fileUpload input.upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	float: left;
+}
+
+.fileDisplay {
+	display: inline-block;
+	overflow: hidden;
+	float: right;
+	margin-left: 0px;
+	z-index: initial;
+	text-align: center;
+	margin-top: 17px;
+}
+ #paramsWarn {
+      display: none;
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script type="text/javascript">
+	function disablefile() {
+
+		document.getElementById("fileUpload").disabled = true;
+
+	}
+
+	function disableSVN() {
+
+		document.getElementById("schemaLocation").disabled = true;
+		document.getElementById("userID").disabled = true;
+		document.getElementById("password").disabled = true;
+
+	}
+
+</script>
+
+
+<div id="configure-widgets">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>Model Properties</h4>
+	</div>
+	<div class="modal-body" style="height: 280px">
+		<div style="height: 10px"></div>
+		<form id="saveProps" >
+				<div class="alert alert-danger" role="alert" id='paramsWarn'> 
+							<strong>Ooops!</strong> Unable to load properties for <span id='servName'>. Would you like to</span>
+							<a href="javascript:void(0);" class="btn-link"  id='paramsRetry'>Retry </a> /
+							<a href="javascript:void(0);" class="btn-link" id='paramsCancel'>Cancel</a>
+						</div>
+						<div>					
+					
+					<div class="form-group clearfix">
+						<label for="services" class="col-sm-4 control-label" >Services</label>
+	
+						<div class="col-sm-8">
+							<select  class="form-control" 
+								name="service" id="service" >
+<!-- 								 <option ng-repeat="(key, value) in services" value="{{key}}">{{value}}</option>  -->
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="vf" class="col-sm-4 control-label">
+							Resource-VF</label>
+
+						<div class="col-sm-8">
+							<select class="form-control" id="vf" name="vf" >
+
+							</select>
+
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="location" class="col-sm-4 control-label">
+							Location</label>
+
+						<div class="col-sm-8">
+							<select class="form-control" id="location" name="location" multiple size=2>
+
+							</select>
+
+						</div>
+					</div>
+				</div>
+
+		</form>
+	<i hidden id="ridinSpinners" class="fa fa-spinner fa-spin" style="display:none;width:100%;text-align:center;font-size:24px;color:black;"></i>
+
+	</div>
+	<div class="modal-footer">
+		<!--<button ng-click="reset()" class="btn btn-primary" style="float:left">Reset</button>-->
+		<button id="savePropsBtn" class="btn btn-primary">Close</button>
+		<button ng-click="close(true)" id="close_button"
+			class="btn btn-primary">Cancel</button>
+
+	</div>
+  <!-- <select id="vUSP_vfc" disabled hidden></select>
+	<select id="vUSP_location" disabled hidden></select>
+	<select id="vUSP_recipe" disabled hidden></select>
+	<select id="vUSP_vf" disabled hidden></select>
+	
+	<select id="Trinity_vfc" disabled hidden></select>
+	<select id="Trinity_location" disabled hidden></select>
+	<select id="Trinity_recipe" disabled hidden></select>
+	<select id="Trinity_vf" disabled hidden></select>
+	
+	
+	<select id="vSCP_vfc" disabled hidden></select>
+	<select id="vSCP_location" disabled hidden></select>
+	<select id="vSCP_recipe" disabled hidden></select>
+	<select id="vSCP_vf" disabled hidden></select>
+	
+	<select id="vProbes_vfc" disabled hidden></select>
+	<select id="vProbes_location" disabled hidden></select>
+	<select id="vProbes_recipe" disabled hidden></select>	
+	<select id="vProbes_vf" disabled hidden></select>	-->
+	
+
+	<script> 
+// 		$.ajax({
+// 			async:false,
+// 		    dataType: "json",
+// 		    url: '/restservices/clds/v1/jaxrsClds/clds/asdc/services/',
+// 		    success: function(data){
+// 		    	vf_Services=data;
+// 		    },
+// 		    error:function(s,a,err){
+// 		    	console.log(err)
+// 		    	console.log(s)
+// 		    	console.log(a)
+// 		    },
+// 		    timeout:100000
+// 		});
+// 		var services=vf_Services.service
+// 		console.log(elementMap["global"])
+// 		for(k in services){
+// 			console.log("lol")
+// 			$("#service").append("<option value="+k+">"+services[k]+"</option>")
+// 		}
+// 		loadSharedPropertyByService()
+// 		var el = elementMap["global"];
+// 		$("#status").val($("#activity_modeler").text())
+// 		if (el !== undefined) {
+// 			for (var i = 0; i < el.length; i++) {
+// 				$("#" + el[i].name).val(el[i].value);
+// 			}
+//		}   
+
+
+      
+
+         (function () {
+			
+		    var previous;
+		    $("#paramsWarn").hide();
+		    /*Below service method is called for checking the service is being loaded or not*/
+			loadSharedPropertyByService();
+
+		    $("#service").on('focus', function () {
+		        // Store the current value on focus and on change
+		        previous = this.value;
+		        
+		    }).change(function(){
+				$("#ridinSpinners").css("display","")
+				var bool=loadSharedPropertyByService($(this).val())
+				$("#ridinSpinners").css("display","none")
+				if(!bool)
+					$(this).val(previous)
+		    });
+			$("#paramsRetry").on('click', function () {
+				//$("#paramsWarn").hide();
+				var currentValue = $("#service").val() == null ? previous : $("#service").val();
+				$("#ridinSpinners").css("display","")
+				var bool=loadSharedPropertyByService(currentValue);
+				$("#ridinSpinners").css("display","none")
+			});
+			$("#paramsCancel").on('click', function () {
+				loadSharedPropertyByServiceProperties();
+				$("#paramsWarn").hide();
+				
+			});
+		})();
+// 		$("#service").on("change",function(){
+// 			$("#ridinSpinners").css("display","")
+// 			loadSharedPropertyByService($(this).val())
+// 			$("#ridinSpinners").css("display","none")
+// 		})
+		function noRepeats(form){
+			var select={};
+			for(var i=0;i<form.length;i++){
+				if(form[i].hasOwnProperty("name")){
+						if(select[form[i].name]===undefined)
+							select[form[i].name]=[]
+						select[form[i].name].push(form[i].value);
+					}
+			}
+			var arr=[]
+			for(s in select){
+				var f={}
+				f.name=s
+				f.value=select[s]
+				arr.push(f)
+			}
+			return arr
+		}
+		
+		$("#saveProps").on('submit', function(event) {
+			saveGlobalProperties(noRepeats($(this).serializeArray()))
+			event.preventDefault();
+			
+			$("#close_button").click();
+
+		})
+		$("#savePropsBtn").click(function(event) {
+			//alert($("#CProp_Target").val())
+			$("#saveProps").submit();
+		})
+
+
+	</script>
+</div>
+

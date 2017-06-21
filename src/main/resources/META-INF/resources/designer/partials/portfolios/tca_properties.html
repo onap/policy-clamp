@@ -1,0 +1,392 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<style>
+.fileUpload {
+	position: relative;
+	overflow: hidden;
+	margin: 10px;
+}
+
+.fileUpload input.upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	float: left;
+}
+
+.fileDisplay {
+	display: inline-block;
+	overflow: hidden;
+	float: right;
+	margin-left: 0px;
+	z-index: initial;
+	text-align: center;
+	margin-top: 17px;
+}
+
+.form-group {
+	margin-bottom:20px;
+}
+
+</style>
+
+<script type="text/javascript">
+	function disablefile() {
+
+		document.getElementById("fileUpload").disabled = true;
+
+	}
+
+	function disableSVN() {
+		var selectLength =  document.querySelectorAll(".disabled-block-container .tab-close-popup");
+		if(selectLength && selectLength.length>0){
+			for(var i = 0; i< selectLength.length ; i++){
+				selectLength[i].disabled = true;
+			}	
+		}
+	
+		document.getElementById("schemaLocation").disabled = true;
+		document.getElementById("userID").disabled = true;
+		document.getElementById("password").disabled = true;
+
+	}
+</script>
+
+
+<div id="configure-widgets" class="disabled-block-container">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>TCA Micro Services</h4>
+	</div>
+	<div class="modal-body">
+		<div style="height: 10px"></div>
+		<div class="panel panel-default">
+			<form id="topicPublish" class="form-horizontal">
+				<div>
+
+					<div class="form-group">
+						<label for="userID" class="col-sm-4 control-label"> Topic Publishes</label>
+
+						<div class="col-sm-8">
+							<select class="form-control" id="topicPublishes"
+								name="topicPublishes">
+							</select>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="panel-heading">
+				<ul id="nav_Tabs" class="nav nav-tabs">
+					<li class><a id="add_one_more" href="#desc_tab"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+				</ul>
+			</div>
+			<div class="panel-body">
+				<div class="tab-content">
+					<div id="properties_tab" class="tab-pane fade in active"></div>
+
+				</div>
+
+			</div>
+		</div>
+		<span id="formSpan" style="display: none">
+			<form class="saveProps" class="form-horizontal">
+				<div>
+
+					<div class="form-group">
+						<label class="col-sm-4 control-label">Field Path / Counter</label>
+						<div class="col-sm-8">
+							<select class="form-control" id="fieldPath" name="fieldPath"></select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-4 control-label">Threshold</label>
+						<div class="col-sm-8">
+							<input type="number" min="0" class="form-control" 
+								name="threshold" id="threshold">
+							</input>
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<label class="col-sm-4 control-label">Operator</label>
+						<div class="col-sm-8">
+							<select class="form-control" id="operator" name="operator"></select>
+						</div>
+					</div>
+					
+					
+
+					<div class="form-group">
+						<label class="col-sm-4 control-label">Ops Policy</label>
+
+						<div class="col-sm-8">
+							<select  class="form-control" id="opsPolicy" name="opsPolicy" 
+							enableFilter="false" ></select>
+						</div>
+					</div>
+				</div>
+
+			</form>
+		</span>
+	</div>
+
+	<div class="modal-footer">
+		<!--<button ng-click="reset()" class="btn btn-primary" style="float:left">Reset</button>-->
+		<button id="savePropsBtn" class="btn btn-primary">Close</button>
+		<button ng-click="close(true)" id="close_button"
+			class="btn btn-primary">Cancel</button>
+
+	</div>
+	<script>
+		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
+		// css attribute display:none
+		$("#add_one_more").click(function(event) {		
+			event.preventDefault();
+			add_one_more();	
+			setMultiSelect();
+		})
+		loadPropertyWindow("tca")
+		setASDCFields();
+		var arr = elementMap[lastElementSelected];
+		var vfc_temp=""
+		var alarm_conditions_temp=""
+		var event_severity_temp=""
+		var event_type_source_temp=""
+		if (arr !== undefined) {
+			//arr[0]
+			var el=arr[1]['serviceConfigurations']
+			for (var i = 0; i < el.length; i++) {
+				var num=add_one_more();
+				for(var j=0;j<el[i].length;j++){
+					if(el[i][j].name==="vfc"){
+						vfc_temp=el[i][j].value
+					}else if(el[i][j].name==="alarmCondition"){
+						alarm_conditions_temp=el[i][j].value
+					}else if(el[i][j].name==="eventSeverity"){
+						event_severity_temp=el[i][j].value;
+					}else if(el[i][j].name==="eventSourceType"){
+						event_type_source_temp=el[i][j].value;
+					}
+					else
+						$("#formId"+num+" #" + el[i][j].name).val(el[i][j].value);
+					
+					
+				}
+				
+				set_vfc_alarm_event(num)
+				vfc_temp=""
+				alarm_conditions_temp=""
+				event_severity_temp=""
+				event_type_source_temp=""
+				
+			}
+			
+			$("#"+ arr[0][0].name).val(arr[0][0].value);
+			
+			
+		}
+
+		function set_vfc_alarm_event (count){
+			if(vfc_temp!=="" && vfc_temp!==undefined){
+				$("#formId"+count+" #vfc").val(vfc_temp)
+				
+				if(alarm_conditions_temp!=="" && alarm_conditions_temp!==undefined){
+					setAlarmConditions(vfc_temp,count)
+					$("#formId"+count+" #alarmCondition").val(alarm_conditions_temp)
+
+					if(event_severity_temp!=="" && event_severity_temp!==undefined){
+						setEventSourceType(alarm_conditions_temp,count)
+						$("#formId"+count+" #eventSeverity").val(event_severity_temp)
+						if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
+							$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
+						}
+					}
+					if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
+						setEventSourceType(alarm_conditions_temp,count)
+						$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
+						if(event_severity_temp!=="" && event_severity_temp!==undefined){
+							$("#formId"+count+" #eventSeverity").val(event_severity_temp)
+						}
+					}
+				}
+			}
+			
+			
+		}
+
+		
+		function noRepeats(form){
+			var select={};
+			for(var i=0;i<form.length;i++){
+				if(select[form[i].name]===undefined)
+					select[form[i].name]=[]
+				select[form[i].name].push(form[i].value);
+			}
+			var arr=[]
+			for(s in select){
+				var f={}
+				f.name=s
+				f.value=select[s]
+				arr.push(f)
+			}
+			return arr
+		}
+	
+		$("#savePropsBtn").click(function(event) {
+			var form=[]
+			var properties=$(".saveProps").not("#formSpan .saveProps")
+			var topicP=$("#topicPublish").serializeArray()
+			form.push(topicP)
+			var d={}
+			d["serviceConfigurations"]=[];
+			
+			for(var i=0;i<properties.length;i++){
+				var ser=$(properties[i]).serializeArray();
+				var s=noRepeats(ser)
+				
+
+				d["serviceConfigurations"].push(s)
+			}
+			form.push(d)
+			saveProperties(form)
+
+			$("#close_button").click();
+			
+		})
+		
+		
+		function add_one_more(){
+			$("#nav_Tabs li").removeClass("active");
+			var form=$($("#formSpan").children()[0]).clone()
+			var count=0;
+			if($(".formId").length>0){
+				var greatest=0;
+				var s=$(".formId");
+				for(var i=0;i<s.length; i++){
+					if(parseInt($(s[i]).attr("id").substring(6))>greatest){
+						greatest=parseInt($(s[i]).attr("id").substring(6))
+					}
+				}
+				count=greatest+1;
+				$("#properties_tab").append(('<span class="formId" id="formId'+count+'"></span>'));
+			}else{
+				count++;
+				$("#properties_tab").append('<span class="formId" id="formId1"></span>');
+			}
+			$("#add_one_more").parent().before(' <li class="active"><a id="go_properties_tab'+count+'">Condition</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
+			$("#formId"+count).append(form);
+			$(".formId").not($("#formId"+count)).css("display","none")
+			addCustListen(count)
+			add_vfc_alarm_event_listener(count)
+			return count;
+		}
+
+		function addCustListen(count) {
+			$('#go_properties_tab' + count).click(function(event) {
+				$("#nav_Tabs li").removeClass("active");
+				$(this).parent().addClass("active");
+				$("#formId"+count).css("display","")
+				$(".formId").not($("#formId"+count)).css("display","none")
+
+			})
+			$('#tab_close'+count).click(function(event){
+				if(document.getElementById("topicPublishes").disabled){
+					return false;
+				}
+				$(this).parent().remove();
+				$("#formId"+count).remove();
+			})
+		}
+
+function setAlarmConditions(vfcID, count){
+        var alarmCondition={}
+
+        /*if($("#formId"+count+" #vfc").val()!=="")
+                alarmCondition=vf_Services['shared']['byVfc'][vfcID]['alarmCondition']*/
+
+        if($("#formId"+count+" #vfc").val()!==""){
+        	if(vf_Services && vf_Services['shared'] && vf_Services['shared']['byVfc'] && vf_Services['shared']['byVfc'][vfcID]){
+        		alarmCondition=vf_Services['shared']['byVfc'][vfcID]['alarmCondition'];	
+        	}
+        }
+
+        $("#formId"+count+" #alarmCondition").empty();
+        $("#formId"+count+" #alarmCondition").append("<option value=\"\"></opton>")
+        if(alarmCondition && _.keys(alarmCondition).length>0){
+		        for(key in alarmCondition){
+		                var safestring = $('<div>').text(key).html();
+		                $("#formId"+count+" #alarmCondition").append("<option value='"+safestring+"'>"+alarmCondition[key]+"</opton>")
+
+		    }	
+        }
+        
+}
+
+function setEventSourceType(alarm, count){
+        var eventSourceTypSeverity={}
+        if($("#formId"+count+" #alarmCondition").val()!=="") {
+        	if(vf_Services && vf_Services['shared'] && vf_Services['shared']['byAlarmCondition'] && vf_Services['shared']['byAlarmCondition'][alarm]){
+
+                eventSourceTypSeverity=vf_Services['shared']['byAlarmCondition'][alarm]
+        	}
+        }
+
+        $("#formId"+count+" #eventSourceType").val(eventSourceTypSeverity.eventSourceType);
+        $("#formId"+count+" #eventSeverity").val(eventSourceTypSeverity.eventSeverity);
+
+}
+
+		function add_vfc_alarm_event_listener(count) {
+					
+			 $("#formId"+count+" #vfc").on('focus', function () {
+			        // Store the current value on focus and on change
+			        previous = this.value;
+			    }).change(function(){
+					
+					setAlarmConditions($("#formId"+count+" #vfc").val(), count);
+					$("#formId"+count+" #eventSourceType").val("");
+					$("#formId"+count+" #eventSeverity").val("")
+
+				});
+			 
+			 $("#formId"+count+" #alarmCondition").on('focus', function () {
+			        // Store the current value on focus and on change
+			        previous = this.value;
+			    }).change(function(){
+					
+					
+			    	setEventSourceType($("#formId"+count+" #alarmCondition").val().toString(),count);
+				});
+				};
+	</script>
+</div>
+

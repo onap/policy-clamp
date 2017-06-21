@@ -1,0 +1,226 @@
+
+<!-- Do not delete below line: This code helped to display worning on IE8 -->
+<!--[if lte IE 8 ]>
+	  <meta http-equiv="refresh" content="0;url=/utm-ui/unsupportedbrowser.html"/>		
+    <![endif]-->
+
+
+<!DOCTYPE html>
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+
+
+<html lang="en" ng-app="clds-app">
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="shortcut icon" href="images/favicon.png">
+
+<title>CLDS</title>
+
+
+<!-- bootstrap css and plugins -->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+ 
+
+<!-- DataTables CSS -->
+<link href="css/dataTables.bootstrap.css" rel="stylesheet">
+<link href="css/jquery.dataTables.css" rel="stylesheet">
+
+<link href="css/dataTables.tableTools.css" rel="stylesheet">
+<link href="css/dataTables.fixedColumns.css" rel="stylesheet">
+
+
+<link href="css/loading-bar.css" rel="stylesheet">
+<link href="css/jasny-bootstrap.css" rel="stylesheet">
+<link href="css/navmenu.css" rel="stylesheet">
+<link href="css/dialogs.css" rel="stylesheet">
+
+
+
+
+<link href="css/plugins/morris.css" rel="stylesheet">
+<link href="fonts/font-awesome-4.1.0/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+
+<link href="css/carousel/slick.css" rel="stylesheet">
+<link href="css/utm_custom_style.css" rel="stylesheet">
+<link href="css/AdminLTE.css" rel="stylesheet" type="text/css" />
+<link href="css/angucomplete.css" rel="stylesheet" type="text/css" />
+
+<link href="css/ui-grid.css" rel="stylesheet">
+<link href="css/ui-grid-stable.css" rel="stylesheet">
+<link href="css/ui-grid-unstable.css" rel="stylesheet">
+<link href="css/multi-select.css" rel="stylesheet">
+</head>
+
+
+<body>
+<button id="cldsopendiagrambtn" style="display:none"/>
+<button id="cldsgetdiagrambtn" style="display:none"/>
+
+
+	
+
+
+	<div ng-controller="dialogCtrl" style="display: none;">
+		<div class="row">
+			<div class="col-md-12">
+				<button class="btn btn-danger" ng-click="launch('error')" style="display:none">Error
+					Dialog</button>
+				<button class="btn btn-primary" ng-click="launch('wait')" style="display:none">Wait
+					Dialog</button>
+				<button class="btn btn-primary" ng-click="launch('customwait')" style="display:none">"Custom"
+					Wait Dialog</button>
+				<button class="btn btn-default" ng-click="launch('notify')" style="display:none">Notify
+					Dialog</button>
+				<button class="btn btn-success" ng-click="launch('confirm')" style="display:none">Confirm
+					Dialog</button>
+			</div>
+		</div>
+	</div>
+
+
+	<div ng-controller="AuthenticateCtrl" ng-include="getInclude()"
+		style="width: 100%; height: 100%"></div>
+ 
+    
+	<script src="lib/jquery.min.js"></script>
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/angular-cookies.js"></script>
+
+	<!--  <script src="lib/angular.min.js"></script>-->
+	<script src="lib/angular-route.js"></script>
+	<script src="lib/angular-resource.min.js"></script>
+
+	<!-- jQuery Include and Bootstrap -->
+
+	
+	<script src="lib/bootstrap.min.js"></script>
+
+	<script type="text/javascript" src="lib/angular-sanitize.js"></script>
+	<script type="text/javascript" src="lib/angular-touch.min.js"></script>
+	<script type="text/javascript" src="lib/angular-animate.js"></script>
+	<script type="text/javascript" src="lib/lodash.min.js"></script>
+	<script type="text/javascript" src="lib/angular-highlightjs.js"></script>
+	<script type="text/javascript" src="lib/ui-bootstrap-tpls.js"></script>
+
+
+	<script src="lib/angular-vs-repeat.js"></script>
+
+	<script src="lib/angularjs-dropdown-multiselect.js"></script>
+	<script src="lib/angularjs-dropdown-multiselect-new.js"></script>
+	<script src="lib/angularjs-dropdown-multiselect-old.js"></script>
+
+	<script src="lib/moment.min.js"></script>
+	<script src="lib/loading-bar.js"></script>
+	<!-- <script src="lib/jasny-bootstrap.js"></script> -->
+
+	<script src="lib/dialogs.js"></script>
+	<script src="lib/ui-grid-stable.js"></script>
+	<script src="lib/ui-grid-unstable.js"></script>
+	<script src="lib/multiselect.js"></script>
+	<script type="text/javascript" src="lib/angucomplete.js"></script>
+
+	<!-- Start Up Files -->
+	<script src="scripts/app.js"></script>
+	<script src="scripts/route_ctrl.js"></script>
+	<script src="scripts/authcontroller.js"></script>
+	
+
+	
+	<script src="scripts/query_params_handler_ctrl.js"></script>
+	
+	 <script src="scripts/under_construction_ctrl.js"></script> 
+	 
+	
+
+	<script src="scripts/DashboardCtrl.js"></script>
+
+	<!--    File Upload start -->
+	<script src="scripts/FileUploadService.js"></script>
+	<script src="scripts/FileUploadCtrl.js"></script>
+	<!--    File Upload end -->
+
+	
+	<!--    Export File  start -->
+	<script src="scripts/ExportFileService.js"></script>
+	<script src="scripts/ExportFileCtrl.js"></script>
+	<!--    Export File end -->
+	
+	
+	
+	<!--  Activity Modelling start -->
+	<script src="scripts/ActivityModellingCtrl.js"></script>
+	<!--  Activity Modelling end -->
+	
+	<!--  Property Explorer Controller start -->
+	<script src="scripts/propertyExplorerCtrl.js"></script>
+	<!--  Property Explorer Controller end -->
+	
+	
+	
+	<!--    dialog box ctl start -->
+	<script type="text/javascript" src="scripts/common_variables.js"></script>
+	<!-- <script src="scripts/ImportProjectCtrl.js"></script> -->
+     <script src="scripts/CldsOpenModelCtrl.js"></script>
+     <script src="scripts/CldsModelService.js"></script>
+     
+     <script src="scripts/ImportSchemaCtrl.js"></script>
+     
+     <script src="scripts/importSchemaService.js"></script>
+     
+     <script src="scripts/UpgradeSchemaCtrl.js"></script>
+     
+     <script src="scripts/commonService.js"></script>
+     
+     <script src="scripts/soapRequestService.js"></script>
+    
+     <script src="scripts/dataFactory.js"></script>
+     
+     <script src="scripts/textAreaCtrl.js"></script>
+     
+     <script src="scripts/AutosaveProjectCtrl.js"></script>
+     <script src="scripts/userPreferencesService.js"></script>
+     
+     <script src="scripts/saveConfirmationModalPopUpCtrl.js"></script>
+     <script src="scripts/CldsTemplateService.js"></script>
+     <script src="scripts/CldsOpenTemplateCtrl.js"></script>
+     <script src="scripts/GlobalPropertiesCtrl.js"></script>
+     <script src="scripts/AlertService.js"></script>
+
+    <!--    dialog box ctl end -->
+    <link rel="stylesheet" href="css/kendo.material.min.css">
+    <link rel="stylesheet" href="css/kendo.common-material.core.css">
+    <script src="scripts/kendo.custom.min.js"></script>
+    <script src="./index.js"></script>
+    <script src="scripts/aOnBoot.js"></script>
+ 	 
+ 	 
+</body>

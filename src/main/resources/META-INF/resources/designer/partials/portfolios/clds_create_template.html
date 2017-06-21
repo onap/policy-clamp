@@ -1,0 +1,51 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<div attribute-test="cldscreatetemplate" id="configure-widgets">
+	<div attribute-test="cldscreatetemplate1" class="modal-header">
+		<button type="button" class="close" ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>Create Template</h4>
+	</div>
+	<div attribute-test="cldscreatetemplate2" class="modal-body" style="height: 150px">
+		<div style="height: 30px"></div>
+		<div ng-show="error.flag">{{error.message}} </div>
+
+	<form attribute-test="cldscreatetemplate3" name="model" class="form-horizontal">
+			<div class="form-group">
+				<label for="modelName" class="col-sm-3 control-label">Template Name</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="modelName" name="modelName"
+						ng-model="modelName" placeholder="Model Name" ng-change="checkExisting()" autofocus="autofocus" ng-pattern="/^\s*[\w\-]*\s*$/" required ng-trim="true">
+						<div role="alert"><span ng-show="model.modelName.$error.pattern" style="color: red">Special Characters are not allowed in Model name.</span> <span ng-show="nameinUse" style="color: red"> Model Name Already In Use</span></div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+
+		<button ng-click="createNewTemplate()" class="btn btn-primary" ng-disabled="model.modelName.$error.pattern || nameinUse" class="btn btn-primary">OK</button>
+		<button ng-click="close(true)" class="btn btn-primary">Cancel</button>
+	</div>
+</div>
+

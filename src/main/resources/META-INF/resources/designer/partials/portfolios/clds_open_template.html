@@ -1,0 +1,72 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<div attribute-test="cldsopentemplate" id="configure-widgets">
+	<div attribute-test="cldsopentemplate2" class="modal-header">
+		<button type="button" class="close" ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>Open Template</h4>
+	</div>
+	<div attribute-test="cldsopentemplate" class="modal-body" style="height: 150px">
+		<div style="height: 30px"></div>
+
+	<form name="model" class="form-horizontal">
+			<div class="form-group">
+				<label for="modelName" class="col-sm-3 control-label">Model	Name</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="modelName" name="modelName"
+						 autofocus="autofocus" required ng-trim="true">
+						<option ng-repeat="x in modelNamel" value="{{x}}">{{x}}</option>
+						</select>
+						<div role="alert"><span ng-show="model.modelName.$error.pattern" style="color: red">Special Characters are not allowed in Model name.</span></div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+
+		<button ng-click="openTemplate()" class="btn btn-primary" ng-disabled="model.modelName.$error.pattern" class="btn btn-primary">OK</button>
+		<button ng-click="close(true)" class="btn btn-primary">Cancel</button>
+	</div>
+	<script>
+	
+	/*$.get("/restservices/clds/v1/jaxrsClds/clds/model-names",function(data) {
+		var mySelect = $('#modelName');
+		mySelect.empty();
+		mySelect.append("<option value=''>New Diagram</option>")
+		var map={}
+		for(var i=0;i<data.length;i++){
+			map[i]=data[i].value
+		}
+		console.log(map)
+		$.each(map, function(val, text) {
+		    mySelect.append(
+		        $('<option></option>').val(text).html(text)
+		    );
+		});
+		
+		console.log(data)
+	})*/
+	</script>
+</div>
+

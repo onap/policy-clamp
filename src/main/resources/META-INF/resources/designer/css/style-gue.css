@@ -1,0 +1,399 @@
+@font-face {
+	font-family: Glyphicons Halflings;
+	src: url(../../fonts/glyphicons-halflings-regular.eot?#iefix)
+		format("embedded-opentype"),
+		url(../../fonts/glyphicons-halflings-regular.woff) format("woff"),
+		url(../../fonts/glyphicons-halflings-regular.ttf) format("truetype"),
+		url(../../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular)
+		format("svg");
+}
+
+@font-face {
+	font-family: Omnes Regular;
+	src: url(../../fonts/omnes-regular-webfont.eot?#iefix)
+		format("embedded-opentype"),
+		url(../../fonts/omnes-regular-webfont.woff) format("woff"),
+		url(../../fonts/omnes-regular-webfont.ttf) format("truetype"),
+		url(../../fonts/omnes-regular-webfont.svg#omnes_regular) format("svg");
+}
+
+@font-face {
+	font-family: Omnes Regular Italic;
+	src: url(../../fonts/omnes-regularitalic-webfont.eot?#iefix)
+		format("embedded-opentype"),
+		url(../../fonts/omnes-regularitalic-webfont.woff) format("woff"),
+		url(../../fonts/omnes-regularitalic-webfont.ttf) format("truetype"),
+		url(../../fonts/omnes-regularitalic-webfont.svg#omnes_regularitalic)
+		format("svg");
+}
+
+@font-face {
+	font-family: Omnes Medium;
+	src: url(../../fonts/omnes-medium-webfont.eot?#iefix)
+		format("embedded-opentype"),
+		url(../../fonts/omnes-medium-webfont.woff) format("woff"),
+		url(../../fonts/omnes-medium-webfont.ttf) format("truetype"),
+		url(../../fonts/omnes-medium-webfont.svg#omnes_medium) format("svg");
+}
+
+.caretup {
+	BORDER-BOTTOM: 4px solid;
+	BORDER-LEFT: transparent 4px solid;
+	WIDTH: 0px;
+	DISPLAY: inline-block;
+	HEIGHT: 0px;
+	MARGIN-LEFT: 2px;
+	VERTICAL-ALIGN: middle;
+	BORDER-RIGHT: transparent 4px solid
+}
+
+.my-activities .row .activityhead .caretup {
+	MARGIN-TOP: -6px
+}
+
+.activity-list .sort .caretup {
+	MARGIN-TOP: -7px;
+	MARGIN-LEFT: 5px
+}
+
+DL {
+	MARGIN-BOTTOM: 0px !important
+}
+
+.dropdown_sourceFilter {
+	MARGIN-TOP: 10px;
+	FONT-FAMILY: "Omnes Regular", Arial, Serif
+}
+
+.dropdown_sourceFilter A {
+	OUTLINE-STYLE: none;
+	OUTLINE-COLOR: invert;
+	OUTLINE-WIDTH: medium;
+	COLOR: #067ab4;
+	TEXT-DECORATION: none
+}
+
+.dropdown_sourceFilter A:visited {
+	OUTLINE-STYLE: none;
+	OUTLINE-COLOR: invert;
+	OUTLINE-WIDTH: medium;
+	COLOR: #067ab4;
+	TEXT-DECORATION: none
+}
+
+.dropdown_sourceFilter DT {
+	HEIGHT: 37px
+}
+
+.dropdown_sourceFilter DT A {
+	Z-INDEX: 9999;
+	BORDER-BOTTOM: #bbbbbb 1px solid;
+	BORDER-LEFT: #bbbbbb 1px solid;
+	WIDTH: 100%;
+	DISPLAY: block;
+	BACKGROUND: white;
+	OVERFLOW: visible;
+	BORDER-TOP: #bbbbbb 1px solid;
+	BORDER-RIGHT: #bbbbbb 1px solid;
+	border-radius: 4px
+}
+
+.dropdown_sourceFilter DT A SPAN {
+	PADDING-BOTTOM: 5px !important;
+	PADDING-LEFT: 5px !important;
+	PADDING-RIGHT: 5px !important;
+	DISPLAY: block;
+	HEIGHT: 32px;
+	CURSOR: pointer;
+	PADDING-TOP: 6px !important
+}
+
+.dropdown_sourceFilter DT A SPAN .glyphicon-chevron-down {
+	MARGIN-TOP: -5px;
+	FLOAT: right;
+	COLOR: #666666
+}
+
+.dropdown_sourceFilter DD {
+	Z-INDEX: 1;
+	POSITION: relative;
+	OVERFLOW: visible
+}
+
+.dropdown_sourceFilter DD UL {
+	BORDER-BOTTOM: #bbbbbb 1px solid;
+	POSITION: absolute;
+	BORDER-LEFT: #bbbbbb 1px solid;
+	LIST-STYLE-TYPE: none;
+	MARGIN-TOP: -5px;
+	WIDTH: 100%;
+	DISPLAY: none;
+	BACKGROUND: #fff;
+	COLOR: #444444;
+	OVERFLOW: hidden;
+	BORDER-TOP: #bbbbbb 1px solid;
+	LIST-STYLE-IMAGE: none;
+	BORDER-RIGHT: #bbbbbb 1px solid;
+	LEFT: 0px;
+	border-radius: 0 0 4px 4px
+}
+
+.dropdown_sourceFilter DD UL LI {
+	BORDER-BOTTOM: #bbbbbb 1px solid
+}
+
+.dropdown_sourceFilter DD UL LI A {
+	PADDING-BOTTOM: 7px;
+	PADDING-LEFT: 7px;
+	PADDING-RIGHT: 7px;
+	DISPLAY: block;
+	PADDING-TOP: 7px
+}
+
+.dropdown_sourceFilter DD UL LI A:hover {
+	BACKGROUND: #ef6f00;
+	COLOR: white
+}
+
+.dropdown_sourceFilter DD {
+	PADDING-BOTTOM: 0px;
+	MARGIN: 0px;
+	PADDING-LEFT: 0px;
+	PADDING-RIGHT: 0px;
+	PADDING-TOP: 0px
+}
+
+.dropdown_sourceFilter DT {
+	PADDING-BOTTOM: 0px;
+	MARGIN: 0px;
+	PADDING-LEFT: 0px;
+	PADDING-RIGHT: 0px;
+	PADDING-TOP: 0px
+}
+
+.dropdown_sourceFilter UL {
+	PADDING-BOTTOM: 0px;
+	MARGIN: 0px;
+	PADDING-LEFT: 0px;
+	PADDING-RIGHT: 0px;
+	PADDING-TOP: 0px
+}
+
+.dropdown_sourceFilter SPAN.value {
+	DISPLAY: none
+}
+
+BODY.modal-open {
+	OVERFLOW: auto !important
+}
+
+header .profile-name .pname {
+	LINE-HEIGHT: 25px !important
+}
+
+.claimed-activities .pt-heading-image {
+	BORDER-BOTTOM: #ccc 1px solid;
+	BORDER-LEFT: #ccc 1px solid;
+	PADDING-BOTTOM: 10px;
+	BACKGROUND-COLOR: #f3f3f3;
+	MARGIN: 15px 20px;
+	OVERFLOW: hidden;
+	BORDER-TOP: #ccc 1px solid;
+	BORDER-RIGHT: #ccc 1px solid;
+	border-radius: 5px
+}
+
+.claimed-activities .pt-heading-image-initial {
+	BORDER-BOTTOM: #fff 1px solid;
+	BORDER-LEFT: #fff 1px solid;
+	PADDING-BOTTOM: 10px;
+	BACKGROUND-COLOR: #fff;
+	BORDER-TOP: #fff 1px solid;
+	BORDER-RIGHT: #fff 1px solid;
+	border-radius: 0px
+}
+
+.claimed-activities .progress-timeline .pt-heading {
+	MARGIN: 3px 20px
+}
+
+.claimed-activities .pt-prism-content {
+	BORDER-BOTTOM: #ccc 1px solid;
+	BORDER-LEFT: #ccc 1px solid;
+	PADDING-BOTTOM: 3px;
+	BACKGROUND-COLOR: #f3f3f3;
+	MARGIN: 0px 20px;
+	PADDING-LEFT: 3px;
+	PADDING-RIGHT: 3px;
+	COLOR: rgb(6, 122, 180);
+	BORDER-TOP: #ccc 1px solid;
+	BORDER-RIGHT: #ccc 1px solid;
+	PADDING-TOP: 3px;
+	border-radius: 5px
+}
+
+.claimed-activities .pt-prism-content SPAN {
+	COLOR: #067ab4
+}
+
+.claimed-activities .pt-prism-content A:visited {
+	TEXT-DECORATION: none
+}
+
+.claimed-activities .pt-prism-content A:hover {
+	TEXT-DECORATION: none
+}
+
+.claimed-activities .pt-prism-content A:focus {
+	TEXT-DECORATION: none
+}
+
+.claimed-activities .pt-application-content {
+	PADDING-BOTTOM: 3px;
+	MARGIN: 0px 20px;
+	PADDING-LEFT: 3px;
+	PADDING-RIGHT: 3px;
+	COLOR: rgb(76, 76, 76);
+	PADDING-TOP: 3px
+}
+
+.tab-sdc .tab-content .newsitem>DIV {
+	PADDING-TOP: 10px
+}
+
+.tab-sdc .tab-content .headline {
+	OVERFLOW: hidden
+}
+
+.tab-sdc .tab-content .headline H4 {
+	WHITE-SPACE: nowrap
+}
+
+.tab-sdc .tab-content .pic {
+	BACKGROUND-COLOR: #fff !important;
+	PADDING-LEFT: 0px
+}
+
+#modalDisclaimer .modal-body .row-content P {
+	PADDING-BOTTOM: 5px;
+	PADDING-LEFT: 5px;
+	PADDING-RIGHT: 5px;
+	PADDING-TOP: 5px
+}
+
+footer {
+	MARGIN-TOP: 30px
+}
+
+.activity-detail-link-warning {
+	PADDING-LEFT: 10px;
+	DISPLAY: none;
+	COLOR: red
+}
+
+#divLightbox {
+	BACKGROUND-IMAGE: url(../sdcImages/1x1blk50.png);
+	Z-INDEX: 1000;
+	POSITION: absolute;
+	BOTTOM: 0px;
+	DISPLAY: none;
+	TOP: 0px;
+	RIGHT: 0px;
+	LEFT: 0px
+}
+
+#divLightboxContent {
+	Z-INDEX: 1100;
+	BORDER-BOTTOM: black 1px solid;
+	POSITION: absolute;
+	TEXT-ALIGN: center;
+	BORDER-LEFT: black 1px solid;
+	PADDING-BOTTOM: 10px;
+	BACKGROUND-COLOR: white;
+	MARGIN: auto;
+	PADDING-LEFT: 10px;
+	PADDING-RIGHT: 10px;
+	DISPLAY: none;
+	OVERFLOW: hidden;
+	BORDER-TOP: black 1px solid;
+	RIGHT: 0px;
+	BORDER-RIGHT: black 1px solid;
+	PADDING-TOP: 10px;
+	LEFT: 0px
+}
+
+#divLightboxInstall {
+	DISPLAY: none
+}
+
+#divLightboxUpdate {
+	DISPLAY: none
+}
+
+#arcadeOverview .left INPUT {
+	BORDER-BOTTOM: #808080 1px solid;
+	BORDER-LEFT: #808080 1px solid;
+	BORDER-TOP: #808080 1px solid;
+	BORDER-RIGHT: #808080 1px solid
+}
+
+#arcadeOverview .left TEXTAREA {
+	BORDER-BOTTOM: #808080 1px solid;
+	BORDER-LEFT: #808080 1px solid;
+	BORDER-TOP: #808080 1px solid;
+	BORDER-RIGHT: #808080 1px solid
+}
+
+#arcadeOverview .right INPUT {
+	BORDER-BOTTOM: #808080 1px solid;
+	BORDER-LEFT: #808080 1px solid;
+	BORDER-TOP: #808080 1px solid;
+	BORDER-RIGHT: #808080 1px solid
+}
+
+#arcadeOverview .right TEXTAREA {
+	BORDER-BOTTOM: #808080 1px solid;
+	BORDER-LEFT: #808080 1px solid;
+	BORDER-TOP: #808080 1px solid;
+	BORDER-RIGHT: #808080 1px solid
+}
+
+.unsuppored-browser {
+	BACKGROUND-COLOR: #fff !important;
+	OVERFLOW: hidden
+}
+
+.unsuppored-browser .browswer-support-help-text H2 {
+	TEXT-ALIGN: left;
+	MARGIN-BOTTOM: 0px !important
+}
+
+.unsuppored-browser .browswer-support-help-text P {
+	TEXT-ALIGN: left;
+	PADDING-TOP: 10px
+}
+
+.unsuppored-browser .browswer-support-help-text H2:first-child {
+	TEXT-ALIGN: left;
+	MARGIN-BOTTOM: -15px !important
+}
+
+.unsuppored-browser .browswer-support-help-text {
+	DISPLAY: inline-block
+}
+
+.unsuppored-browser .unsupported-image-bg {
+	PADDING-BOTTOM: 15px;
+	BACKGROUND-COLOR: rgb(243, 243, 243);
+	MARGIN-TOP: 75px
+}
+
+.unsuppored-browser .container-fluid .unsupported-image-align {
+	TEXT-ALIGN: center
+}
+
+.modal.notifications #notifications_list_div_id .modal-dialog .modal-body .row BUTTON
+	{
+	MARGIN-TOP: 5px !important;
+	MARGIN-BOTTOM: 10px !important
+}

@@ -1,0 +1,76 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<html>
+<head>
+    <title>bpmn-js modeler demo</title>
+    <link rel="stylesheet" href="css/diagram-js.css"/>
+    <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+    <script type="text/javascript" src="./scripts/app.js"></script>
+</head>
+<body>
+
+<button id="uploadmodel" style="display:none"></button>
+<button id="openmodel" style="display:none"></button>
+<div class="content" id="js-drop-zone" id="div_content" ng-app="clds-app" ng-controller="MenuCtrl">
+    <div class="message error">
+        <div class="note">
+            <p>Ooops, we could not display the Closed Loop Model.</p>
+            <div class="details">
+                <span>cause of the problem</span>
+                <pre></pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="canvas" id="js-canvas"></div>
+</div>
+
+<ul class="buttons">
+    <li>
+        <a id="js-download-diagram" href title="download BPMN diagram">
+            UTM diagram
+        </a>
+    </li>
+    <li>
+        <a id="js-download-svg" href title="download as SVG image">
+            SVG image
+        </a>
+    </li>
+    <li>
+        <div>
+            Import Diagram:
+            <input type="file" id="fileInput">
+        </div>
+    </li>
+    <li>
+        <div>
+            <a id="file_generate_test_case" href title="Generate Test Case">
+                Generate Test Cases
+            </a>
+        </div>
+</ul>
+</body>
+<script src="index.js"></script>
+</html>

@@ -1,0 +1,585 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  -->
+
+<style>
+.fileUpload {
+	position: relative;
+	overflow: hidden;
+	margin: 10px;
+}
+
+.fileUpload input.upload {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	float: left;
+}
+
+.fileDisplay {
+	display: inline-block;
+	overflow: hidden;
+	float: right;
+	margin-left: 0px;
+	z-index: initial;
+	text-align: center;
+	margin-top: 17px;
+}
+
+.form-group {
+	/* 	height:24px; */
+	/* 	box-sizing:border-box; */
+	margin-bottom: 20px;
+	
+}
+ #paramsWarn {
+      display: none;
+}
+
+label{text-align:right;
+ padding-top:8px;
+ } 
+
+
+</style>
+
+<script type="text/javascript">
+	function disablefile() {
+
+		document.getElementById("fileUpload").disabled = true;
+
+	}
+
+	function disableSVN() {
+		var selectLength =  document.querySelectorAll(".disabled-block-container .tab-close-popup");
+		if(selectLength && selectLength.length>0){
+			for(var i = 0; i< selectLength.length ; i++){
+				selectLength[i].disabled = true;
+			}	
+		}
+			
+
+
+		document.getElementById("schemaLocation").disabled = true;
+		document.getElementById("userID").disabled = true;
+		document.getElementById("password").disabled = true;
+
+	}
+</script>
+
+
+<div attribute-test="stringmatchproperties" id="configure-widgets"  class="disabled-block-container">
+	<div attribute-test="stringmatchpropertiesh" class="modal-header">
+		<button type="button" class="close" ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>String Matching Micro Service</h4>
+	</div>
+	<div attribute-test="stringmatchpropertiesb" class="modal-body">
+	<div class="alert alert-danger" role="alert" id='paramsWarn'> 
+							<strong>Ooops!</strong> Unable to load properties for <span id='servName'>. Would you like to</span>
+							<a href="javascript:void(0);" class="btn-link"  id='paramsRetry'>Retry </a> /
+							<a href="javascript:void(0);" class="btn-link" id='paramsCancel'>Cancel</a>
+						</div>
+		<div style="height: 10px"></div>
+		<div class="panel panel-default">
+			<form id="topicPublish" class="form-horizontal">
+				<div>
+
+					<div class="form-group">
+						<label for="userID" class="col-sm-4 control-label"> Topic
+							Publishes</label>
+
+						<div class="col-sm-8">
+							<select class="form-control" id="topicPublishes"
+								name="topicPublishes">
+							</select>
+						</div>
+					</div>
+				</div>
+			</form>
+			<div class="panel-heading">
+				<ul id="nav_Tabs" class="nav nav-tabs">
+					<li class><a id="add_one_more" href="#desc_tab"><span
+							class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+				</ul>
+			</div>
+			<div class="panel-body">
+				<div class="tab-content">
+					<div id="properties_tab" class="tab-pane fade in active"></div>
+
+				</div>
+
+			</div>
+		</div>
+		<span id="formSpan" style="display: none">
+			<form class="saveProps" class="form-horizontal clearfix">
+				<div>
+					<div class="form-group clearfix">
+						<label for="aaiMatchingFields" class="col-sm-4 control-label">AAI
+							Fields Matching </label>
+						<div class="col-sm-8">
+							<select type="text" class="form-control "
+								name="aaiMatchingFields" id="aaiMatchingFields" multiple="" size=2></select>
+
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="aaiSendFields" class="col-sm-4 control-label">
+							AAI Fields Send (Select Multiple)</label>
+
+						<div class="col-sm-8 ">
+							<select class="form-control"
+								id="aaiSendFields" name="aaiSendFields" multiple size=2>
+
+							</select>
+
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="groupNumber" class="col-sm-4 control-label">
+							Resource-Group</label>
+
+						<div class="col-sm-8">
+							<input type="number" class="form-control" id="groupNumber" name="groupNumber" min="0" >
+
+							</input>
+
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="vfc" class="col-sm-4 control-label">
+							Resource-VFC</label>
+
+						<div class="col-sm-8">
+							<select class="form-control" id="vfc" name="vfc">
+
+							</select>
+
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="alarmCondition" class="col-sm-4 control-label">
+							Alarm Condition</label>
+
+						<div class="col-sm-8">
+							<select class="form-control" id="alarmCondition"
+								name="alarmCondition"></select>
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="eventSeverity" class="col-sm-4 control-label">
+							Event Severity</label>
+						<div class="col-sm-8">
+							<select class="form-control" id="eventSeverity"
+								name="eventSeverity" enableFilter="false"></select>
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="eventSourceType" class="col-sm-4 control-label">
+							Event Source Type</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="eventSourceType"
+								name="eventSourceType" readOnly  ></input>
+						</div>
+					</div>
+
+					<div class="form-group clearfix">
+						<label for="timeWindow" class="col-sm-4 control-label">
+							Time Window</label>
+
+						<div class="col-sm-8">
+							<input type="number" min="0" class="form-control" id="timeWindow"
+								name="timeWindow" />
+
+
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="ageLimit" class="col-sm-4 control-label"> Age
+							Limit</label>
+
+						<div class="col-sm-8">
+							<input type="number" min="0" class="form-control" id="ageLimit"
+								name="ageLimit" />
+						</div>
+					</div>
+					<div class="form-group clearfix">
+						<label for="createClosedLoopEventId"
+							class="col-sm-4 control-label"> Create CL Event ID</label>
+						<div class="col-sm-8">
+							<select class="form-control" id="createClosedLoopEventId"
+								name="createClosedLoopEventId" enableFilter="false">
+							</select>
+
+						</div>
+					</div>
+
+					<div class="form-group clearfix">
+						<label for="outputEventName" class="col-sm-4 control-label">
+							Output Event Name</label>
+
+						<div class="col-sm-8">
+							<select class="form-control" id="outputEventName" 
+								name="outputEventName" enableFilter="false"></select>
+
+						</div>
+					</div>
+				</div>
+			</form>
+		</span>
+	</div>
+
+	<div attribute-test="stringmatchpropertiesf" class="modal-footer">
+		<!--<button ng-click="reset()" class="btn btn-primary" style="float:left">Reset</button>-->
+		<button id="savePropsBtn" class="btn btn-primary">Close</button>
+		<button ng-click="close(true)" id="close_button"
+			class="btn btn-primary">Cancel</button>
+
+	</div>
+	<script>
+		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
+		// css attribute display:none
+		$("#paramsRetry").on('click', function () {
+			$("#paramsWarn").hide();
+			$("#ridinSpinners").css("display","")
+			var bool=loadSharedPropertyByService();
+			$("#ridinSpinners").css("display","none")
+		});
+		$("#paramsCancel").on('click', function () {
+			loadSharedPropertyByServiceProperties();
+			$("#paramsWarn").hide();
+			
+		});
+
+
+
+		$("#add_one_more").click(function(event) {
+			//alert("lol");
+			event.preventDefault();
+			add_one_more();
+			//I have uncomment the below code becoz there is no refreshItems method.
+			
+			//refreshItems();
+			setMultiSelect();
+	
+		})
+		loadPropertyWindow("string_match")
+		setASDCFields();
+		var arr = elementMap[lastElementSelected];
+		var vfc_temp=""
+		var alarm_conditions_temp=""
+		var event_severity_temp=""
+		var event_type_source_temp=""
+		if (arr !== undefined && arr[1]!==undefined) {
+			var el = arr[1]['serviceConfigurations']
+			for (var i = 0; i < el.length; i++) {
+				var num = add_one_more();
+				for (var j = 0; j < el[i].length; j++) {
+					if (el[i][j]["stringSet"] !== undefined) {
+						var ss = el[i][j]["stringSet"]
+						for (var o = 0; o < ss.length; o++) {
+							if(ss[o].hasOwnProperty("name")){
+								if(ss[o].name==="alarmCondition"){
+									alarm_conditions_temp=ss[o].value
+								}else if(ss[o].name==="eventSeverity"){
+									event_severity_temp=ss[o].value;
+								}else if(ss[o].name==="eventSourceType"){
+									event_type_source_temp=ss[o].value;
+								}
+								else 
+								$("#formId" + num + " #" + ss[o].name).val(ss[o].value);	
+							}
+							
+						}
+					}else if(el[i][j].hasOwnProperty("name") && el[i][j].name==="vfc"){
+						//alert(el[i][j].value)
+						vfc_temp=el[i][j].value
+					}
+					else {
+						if(el[i][j].hasOwnProperty("name")){
+							$("#formId" + num + " #" + el[i][j].name).val(
+									el[i][j].value);
+						}
+					}
+				}
+				changeTab(num);
+				set_vfc_alarm_event(num)
+				vfc_temp=""
+				alarm_conditions_temp=""
+				event_severity_temp=""
+				event_type_source_temp=""
+
+			}
+			if(arr[0] &&  arr[0][0] &&  arr[0][0].name){
+				$("#" + arr[0][0].name).val(arr[0][0].value);
+			}
+
+		}
+		
+		//this will populate alarmcondition,vfc,eventtypesource if they are saved in elementmap
+		function set_vfc_alarm_event (count){
+			//alert("lol")
+			//alert(alarm_conditions_temp)
+			//alert(alarm_conditions_temp!=="" && alarm_conditions_temp!==undefined)
+			if(vfc_temp!=="" && vfc_temp!==undefined){
+				$("#formId"+count+" #vfc").val(vfc_temp)
+				
+				if(alarm_conditions_temp!=="" && alarm_conditions_temp!==undefined){
+					setAlarmConditions(vfc_temp,count)
+					$("#formId"+count+" #alarmCondition").val(alarm_conditions_temp)
+					
+					if(event_severity_temp!=="" && event_severity_temp!==undefined){
+						setEventSourceType(alarm_conditions_temp,count)
+						$("#formId"+count+" #eventSeverity").val(event_severity_temp)
+						if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
+							$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
+						}
+					}
+					if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
+						setEventSourceType(alarm_conditions_temp,count)
+						$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
+						if(event_severity_temp!=="" && event_severity_temp!==undefined){
+							$("#formId"+count+" #eventSeverity").val(event_severity_temp)
+						}
+					}
+				}
+			}
+			
+			
+		}
+		
+		
+		function noRepeats(form) {
+			var select = {};
+			for (var i = 0; i < form.length; i++) {
+				if(form[i].hasOwnProperty("name")){
+				if (select[form[i].name] === undefined)
+					select[form[i].name] = []
+				select[form[i].name].push(form[i].value);
+			}
+			}
+			var arr = []
+			for (s in select) {
+				var f = {}
+				f.name = s
+				f.value = select[s]
+				arr.push(f)
+			}
+			return arr
+		}
+		function setStringSet(form) {
+			var arr = []
+			var alarmCondition = {}
+			var eventSeverity = {}
+			var eventSourceType = {}
+			for (var i = 0; i < form.length; i++) {
+				if (form[i].name === "alarmCondition") {
+					alarmCondition = form[i]
+				} else if (form[i].name === "eventSeverity") {
+					eventSeverity = form[i];
+				} else if (form[i].name === "eventSourceType") {
+					eventSourceType = form[i];
+				} else {
+
+					arr.push(form[i])
+				}
+
+			}
+			var stringSet = {};
+			stringSet['stringSet'] = []
+			stringSet['stringSet'].push(alarmCondition);
+			stringSet['stringSet'].push(eventSeverity);
+			stringSet['stringSet'].push(eventSourceType);
+			arr.push(stringSet)
+
+			return arr;
+		}
+		$("#savePropsBtn").click(function(event) {
+
+			var form = []
+			var properties = $(".saveProps").not("#formSpan .saveProps")
+			var topicP = $("#topicPublish").serializeArray()
+			form.push(topicP)
+			var d = {}
+			d["serviceConfigurations"] = [];
+
+			for (var i = 0; i < properties.length; i++) {
+				var ser = $(properties[i]).serializeArray();
+				var s = noRepeats(ser)
+				var newSer = setStringSet(s)
+
+				d["serviceConfigurations"].push(newSer)
+			}
+			form.push(d)
+			saveProperties(form)
+
+			$("#close_button").click();
+
+		})
+		
+		
+		
+		
+		
+		function add_one_more() {
+			$("#nav_Tabs li").removeClass("active");
+			var form = $($("#formSpan").children()[0]).clone()
+			var count = 0;
+			//alert($(".formId").length>0)
+			if ($(".formId").length > 0) {
+				var greatest = 0;
+				var s = $(".formId");
+				//alert("here1")
+				for (var i = 0; i < s.length; i++) {
+					if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
+						greatest = parseInt($(s[i]).attr("id").substring(6))
+					}
+				}
+				count = greatest + 1;
+				//alert(count)
+				$("#properties_tab").append(
+						('<span class="formId" id="formId'+count+'"></span>'));
+			} else {
+				//alert("here2")
+				count++;
+				$("#properties_tab").append(
+						'<span class="formId" id="formId1"></span>');
+			}
+			$("#add_one_more")
+					.parent()
+					.before(
+							' <li class="active"><a id="go_properties_tab'+count+'">Condition</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
+			$("#formId" + count).append(form);
+			$(".formId").not($("#formId" + count)).css("display", "none")
+			addCustListen(count)
+			addEventNameList(count)
+			add_vfc_alarm_event_listener(count);
+			return count;
+		}
+
+		function addCustListen(count) {
+			$('#go_properties_tab' + count).click(function(event) {
+				$("#nav_Tabs li").removeClass("active");
+				$(this).parent().addClass("active");
+				$("#formId" + count).css("display", "")
+				$(".formId").not($("#formId" + count)).css("display", "none")
+
+			})
+			$('#tab_close' + count).click(function(event) {
+				if(document.getElementById("topicPublishes").disabled){
+					return false;
+				}
+				$(this).parent().remove();
+				$("#formId" + count).remove();
+			})
+		}
+
+		function changeTab(count){
+			var output = $('#formId' + count + " #outputEventName");
+			var group = $('#formId' + count + " #groupNumber");
+			var outputValue="";
+			var groupValue="";
+			if(output.val()!=="")
+				outputValue=output.val();
+			if(output.val()!=="" && group.val()!=="")
+				groupValue=group.val()+":";
+			else if(group.val()!=="")
+				groupValue=group.val();
+			
+			var tabText="Condition"
+			if(groupValue+outputValue!=="")
+				tabText=groupValue+outputValue;
+			$("#go_properties_tab" + count).text(tabText);	
+		}
+		
+		function addEventNameList(count) {
+			
+			$('#formId' + count + " #outputEventName").on('change',function(){changeTab(count)})
+			$('#formId' + count + " #groupNumber").on('change',function(){changeTab(count)});
+
+		}
+		
+		
+function setAlarmConditions(vfcID, count){
+	var alarmCondition={}
+	
+	if($("#formId"+count+" #vfc").val()!==""){
+		if(vf_Services['shared'] && vf_Services['shared']['byVfc'] && vf_Services['shared']['byVfc'][vfcID]){
+			alarmCondition=vf_Services['shared']['byVfc'][vfcID]['alarmCondition']	
+		}
+		
+	}
+	
+	$("#formId"+count+" #alarmCondition").empty();
+	$("#formId"+count+" #alarmCondition").append("<option value=\"\"></opton>")
+	 if(alarmCondition && _.keys(alarmCondition).length>0){
+		for(key in alarmCondition){
+			var safestring = $('<div>').text(key).html();
+			$("#formId"+count+" #alarmCondition").append("<option value='"+safestring+"'>"+alarmCondition[key]+"</opton>")		
+		}
+	}
+}
+
+function setEventSourceType(alarm, count){
+	var eventSourceTypSeverity={}
+	if($("#formId"+count+" #alarmCondition").val()!==""){
+		if(vf_Services && vf_Services['shared'] && vf_Services['shared']['byAlarmCondition'] && vf_Services['shared']['byAlarmCondition'][alarm]){
+			eventSourceTypSeverity=vf_Services['shared']['byAlarmCondition'][alarm]	
+		}
+		
+	}
+	
+	$("#formId"+count+" #eventSourceType").val(eventSourceTypSeverity.eventSourceType);
+	$("#formId"+count+" #eventSeverity").val(eventSourceTypSeverity.eventSeverity);
+	
+}
+function add_vfc_alarm_event_listener(count) {
+			
+	 $("#formId"+count+" #vfc").on('focus', function () {
+	        // Store the current value on focus and on change
+	        previous = this.value;
+	    }).change(function(){
+			
+			setAlarmConditions($("#formId"+count+" #vfc").val(), count);
+			$("#formId"+count+" #eventSourceType").val("");
+			$("#formId"+count+" #eventSeverity").val("")
+
+		});
+	 
+	 $("#formId"+count+" #alarmCondition").on('focus', function () {
+	        // Store the current value on focus and on change
+	        previous = this.value;
+	    }).change(function(){
+			
+			
+	    	setEventSourceType($("#formId"+count+" #alarmCondition").val().toString(),count);
+		});
+		};
+	</script>
+</div>
+
