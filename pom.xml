@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.onap.clamp</groupId>
 	<artifactId>clds</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>ONAP CLAMP</name>
 
 	<properties>
@@ -35,7 +35,7 @@
 		<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
 		<sonar.projectVersion>${project.version}</sonar.projectVersion>
 
-		<clamp.registry>localhost:5000</clamp.registry>
+		<docker.push.registry>localhost:5000</docker.push.registry>
 		<skip.docker.build>true</skip.docker.build>
 		<skip.docker.tag>true</skip.docker.tag>
 		<skip.docker.push>true</skip.docker.push>
@@ -684,7 +684,7 @@
 						</goals>
 						<configuration>
 							<image>onap/clamp</image>
-							<newName>${clamp.registry}/onap/clamp</newName>
+							<newName>${docker.push.registry}/onap/clamp</newName>
 							<pushImage>true</pushImage>
 							<skipDockerTag>${skip.docker.tag}</skipDockerTag>
 						</configuration>
