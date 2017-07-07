@@ -754,7 +754,7 @@
 								</volumes>
 								<wait>
 									<log>socket: '/var/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution</log>
-									<time>60000</time>
+									<time>300000</time>
 								</wait>
 								<ports>
 									<port>${docker.mariadb.port.host}:3306</port>
