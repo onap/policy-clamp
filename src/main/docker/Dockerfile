@@ -15,7 +15,7 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     apt-get -y dist-upgrade &&  \
     apt-get install -y openjdk-8-jre-headless
 
-ADD clds-0.0.1-SNAPSHOT.jar /opt/clamp/app.jar
+ADD clds-1.0.0-SNAPSHOT.jar /opt/clamp/app.jar
 VOLUME /etc
 ADD /etc/ /etc/
 ADD startService.sh /opt/clamp/startService.sh
