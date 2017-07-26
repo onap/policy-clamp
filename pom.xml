@@ -646,7 +646,7 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>0.4.11</version>
 				<configuration>
-					<imageName>onap/clamp</imageName>
+					<imageName>${docker.push.registry}/onap/clamp</imageName>
 					<dockerDirectory>src/main/docker</dockerDirectory>
 					<serverId>docker-hub</serverId>
 					<imageTags>
