@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.openecomp.policy.api.AttributeType;
+import org.onap.policy.api.AttributeType;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;

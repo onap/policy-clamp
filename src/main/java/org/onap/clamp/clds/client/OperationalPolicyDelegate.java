@@ -26,7 +26,7 @@ package org.onap.clamp.clds.client;
 import org.onap.clamp.clds.client.req.OperationalPolicyReq;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
-import org.openecomp.policy.api.AttributeType;
+import org.onap.policy.api.AttributeType;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;

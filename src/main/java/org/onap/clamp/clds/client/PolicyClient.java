@@ -25,7 +25,7 @@ package org.onap.clamp.clds.client;
 
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
-import org.openecomp.policy.api.*;
+import org.onap.policy.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -106,7 +106,7 @@ public class PolicyClient {
 
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-        policyParameters.setEcompName(refProp.getStringValue("policy.ecomp.name"));
+        policyParameters.setOnapName(refProp.getStringValue("policy.onap.name"));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
 
         policyParameters.setConfigBody(policyJson);
