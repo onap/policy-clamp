@@ -27,17 +27,17 @@ import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Policy;
 import org.onap.clamp.clds.model.prop.PolicyItem;
-import org.openecomp.policy.controlloop.policy.TargetType;
-import org.openecomp.policy.controlloop.policy.PolicyResult;
-import org.openecomp.policy.controlloop.policy.Target;
-import org.openecomp.policy.controlloop.policy.builder.BuilderException;
-import org.openecomp.policy.controlloop.policy.builder.ControlLoopPolicyBuilder;
-import org.openecomp.policy.controlloop.policy.builder.Message;
-import org.openecomp.policy.controlloop.policy.builder.Results;
-import org.openecomp.policy.api.AttributeType;
-import org.openecomp.policy.asdc.Resource;
-import org.openecomp.policy.asdc.ResourceType;
-import org.openecomp.policy.asdc.Service;
+import org.onap.policy.controlloop.policy.TargetType;
+import org.onap.policy.controlloop.policy.PolicyResult;
+import org.onap.policy.controlloop.policy.Target;
+import org.onap.policy.controlloop.policy.builder.BuilderException;
+import org.onap.policy.controlloop.policy.builder.ControlLoopPolicyBuilder;
+import org.onap.policy.controlloop.policy.builder.Message;
+import org.onap.policy.controlloop.policy.builder.Results;
+import org.onap.policy.api.AttributeType;
+import org.onap.policy.asdc.Resource;
+import org.onap.policy.asdc.ResourceType;
+import org.onap.policy.asdc.Service;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.jboss.resteasy.spi.BadRequestException;
 
@@ -155,10 +155,10 @@ public class OperationalPolicyReq {
         builder.addResource(vfcResources);
 
         // process each policy
-        HashMap<String, org.openecomp.policy.controlloop.policy.Policy> policyObjMap = new HashMap<>();
+        HashMap<String, org.onap.policy.controlloop.policy.Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = orderParentFirst(policy.getPolicyItems());
         for (int i = 0; i < policyItemList.size(); i++) {
-            org.openecomp.policy.controlloop.policy.Policy policyObj;
+            org.onap.policy.controlloop.policy.Policy policyObj;
             PolicyItem policyItem = policyItemList.get(i);
             String policyName = policyItem.getRecipe() + " Policy";
             if (i == 0) {
@@ -173,7 +173,7 @@ public class OperationalPolicyReq {
                         policyItem.getMaxRetries(),
                         policyItem.getRetryTimeLimit());
             } else {
-                org.openecomp.policy.controlloop.policy.Policy parentPolicyObj = policyObjMap.get(policyItem.getParentPolicy());
+                org.onap.policy.controlloop.policy.Policy parentPolicyObj = policyObjMap.get(policyItem.getParentPolicy());
                 String policyDescription = policyItem.getRecipe() + " Policy - triggered conditionally by " + parentPolicyObj.getName() + " - created by CLDS";
                 policyObj = builder.setPolicyForPolicyResult(
                         policyName,
