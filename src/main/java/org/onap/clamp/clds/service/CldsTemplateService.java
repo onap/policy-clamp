@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,32 +23,43 @@
 
 package org.onap.clamp.clds.service;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.annotation.PostConstruct;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.xml.transform.TransformerException;
+
+import org.camunda.bpm.engine.RuntimeService;
+import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.model.CldsTemplate;
+import org.onap.clamp.clds.model.ValueItem;
+import org.onap.clamp.clds.model.prop.ModelBpmn;
+import org.onap.clamp.clds.transform.XslTransformer;
+import org.onap.clamp.clds.util.LoggingUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import com.att.ajsc.common.AjscService;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.onap.clamp.clds.dao.CldsDao;
-import org.onap.clamp.clds.model.CldsTemplate;
-import org.onap.clamp.clds.model.ValueItem;
-import org.onap.clamp.clds.model.prop.ModelBpmn;
-import org.onap.clamp.clds.transform.XslTransformer;
-import org.camunda.bpm.engine.RuntimeService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.xml.transform.TransformerException;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Service to save and retrieve the CLDS model attributes.
@@ -57,31 +68,44 @@ import java.util.Map.Entry;
 @Path("/cldsTempate")
 public class CldsTemplateService extends SecureServiceBase {
 
-    private static final Logger logger = LoggerFactory.getLogger(CldsTemplateService.class);
+    protected static final EELFLogger logger         = EELFManager.getInstance().getLogger(CldsTemplateService.class);
+    protected static final EELFLogger auditLogger    = EELFManager.getInstance().getAuditLogger();
 
-    private static final String collectorKey = "Collector";
-    private static final String stringMatchKey = "StringMatch";
-    private static final String policyKey = "Policy";
+    private static final String     collectorKey   = "Collector";
+    private static final String     stringMatchKey = "StringMatch";
+    private static final String     policyKey      = "Policy";
 
-    private static final String CLDS_PERMISSION_TYPE_TEMPLATE = System.getProperty("CLDS_PERMISSION_TYPE_TEMPLATE");
-    private static final String CLDS_PERMISSION_INSTANCE = System.getProperty("CLDS_PERMISSION_INSTANCE");
+    @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
+    private String                  cldsPermissionTypeTemplate;
 
-    private static final SecureServicePermission PERMISSION_READ_TEMPLATE = SecureServicePermission.create(CLDS_PERMISSION_TYPE_TEMPLATE, CLDS_PERMISSION_INSTANCE, "read");
-    private static final SecureServicePermission PERMISSION_UPDATE_TEMPLATE = SecureServicePermission.create(CLDS_PERMISSION_TYPE_TEMPLATE, CLDS_PERMISSION_INSTANCE, "update");
+    @Value("${CLDS_PERMISSION_INSTANCE:dev}")
+    private String                  cldsPermissionInstance;
+
+    private SecureServicePermission permissionReadTemplate;
+
+    private SecureServicePermission permissionUpdateTemplate;
+
+    @PostConstruct
+    private final void afterConstruction() {
+        permissionReadTemplate = SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance,
+                "read");
+        permissionUpdateTemplate = SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance,
+                "update");
+    }
 
     @Autowired
-    private CldsDao cldsDao;
+    private CldsDao        cldsDao;
     @Autowired
     private RuntimeService runtimeService;
     @Autowired
     private XslTransformer cldsBpmnTransformer;
 
-    private static String userid;
+    private static String  userid;
 
     /**
-     * REST service that retrieves BPMN for a CLDS template name from the database.
-     * This is subset of the json getModel.
-     * This is only expected to be used for testing purposes, not by the UI.
+     * REST service that retrieves BPMN for a CLDS template name from the
+     * database. This is subset of the json getModel. This is only expected to
+     * be used for testing purposes, not by the UI.
      *
      * @param templateName
      * @return bpmn xml text - content of bpmn given name
@@ -90,16 +114,22 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template/bpmn/{templateName}")
     @Produces(MediaType.TEXT_XML)
     public String getBpmnTemplate(@PathParam("templateName") String templateName) {
-        isAuthorized(PERMISSION_READ_TEMPLATE);
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsTemplateService: GET template bpmn", getPrincipalName());
+        isAuthorized(permissionReadTemplate);
         logger.info("GET bpmnText for templateName=" + templateName);
         CldsTemplate template = CldsTemplate.retrieve(cldsDao, templateName, false);
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Get template bpmn success", this.getClass().getName());
+        auditLogger.info("GET template bpmn completed");
         return template.getBpmnText();
     }
 
     /**
      * REST service that saves BPMN for a CLDS template by name in the database.
-     * This is subset of the json putModel.
-     * This is only expected to be used for testing purposes, not by the UI.
+     * This is subset of the json putModel. This is only expected to be used for
+     * testing purposes, not by the UI.
      *
      * @param templateName
      * @param bpmnText
@@ -108,19 +138,25 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template/bpmn/{templateName}")
     @Consumes(MediaType.TEXT_XML)
     public String putBpmnTemplateXml(@PathParam("templateName") String templateName, String bpmnText) {
-        isAuthorized(PERMISSION_UPDATE_TEMPLATE);
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsTemplateService: PUT template bpmn", getPrincipalName());
+        isAuthorized(permissionUpdateTemplate);
         logger.info("PUT bpmnText for templateName=" + templateName);
         logger.info("PUT bpmnText=" + bpmnText);
         CldsTemplate cldsTemplate = CldsTemplate.retrieve(cldsDao, templateName, true);
         cldsTemplate.setBpmnText(bpmnText);
         cldsTemplate.save(cldsDao, userid);
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Put template bpmn success", this.getClass().getName());
+        auditLogger.info("PUT template bpm completed");
         return "wrote bpmnText for templateName=" + templateName;
     }
 
     /**
-     * REST service that retrieves image for a CLDS template name from the database.
-     * This is subset of the json getModel.
-     * This is only expected to be used for testing purposes, not by the UI.
+     * REST service that retrieves image for a CLDS template name from the
+     * database. This is subset of the json getModel. This is only expected to
+     * be used for testing purposes, not by the UI.
      *
      * @param templateName
      * @return image xml text - content of image given name
@@ -129,16 +165,22 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template/image/{templateName}")
     @Produces(MediaType.TEXT_XML)
     public String getImageXml(@PathParam("templateName") String templateName) {
-        isAuthorized(PERMISSION_READ_TEMPLATE);
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsTemplateService: GET template image", getPrincipalName());
+        isAuthorized(permissionReadTemplate);
         logger.info("GET imageText for templateName=" + templateName);
         CldsTemplate template = CldsTemplate.retrieve(cldsDao, templateName, false);
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Get template image success", this.getClass().getName());
+        auditLogger.info("GET template image completed");
         return template.getImageText();
     }
 
     /**
-     * REST service that saves image for a CLDS template by name in the database.
-     * This is subset of the json putModel.
-     * This is only expected to be used for testing purposes, not by the UI.
+     * REST service that saves image for a CLDS template by name in the
+     * database. This is subset of the json putModel. This is only expected to
+     * be used for testing purposes, not by the UI.
      *
      * @param templateName
      * @param imageText
@@ -147,12 +189,18 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template/image/{templateName}")
     @Consumes(MediaType.TEXT_XML)
     public String putImageXml(@PathParam("templateName") String templateName, String imageText) {
-        isAuthorized(PERMISSION_UPDATE_TEMPLATE);
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsTemplateService: PUT template image", getPrincipalName());
+        isAuthorized(permissionUpdateTemplate);
         logger.info("PUT iamgeText for modelName=" + templateName);
         logger.info("PUT imageText=" + imageText);
         CldsTemplate cldsTemplate = CldsTemplate.retrieve(cldsDao, templateName, true);
         cldsTemplate.setImageText(imageText);
         cldsTemplate.save(cldsDao, userid);
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Put template image success", this.getClass().getName());
+        auditLogger.info("PUT template image completed");
         return "wrote imageText for modelName=" + templateName;
     }
 
@@ -166,9 +214,17 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template/{templateName}")
     @Produces(MediaType.APPLICATION_JSON)
     public CldsTemplate getTemplate(@PathParam("templateName") String templateName) {
-        isAuthorized(PERMISSION_READ_TEMPLATE);
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsTemplateService: GET template", getPrincipalName());
+        isAuthorized(permissionReadTemplate);
         logger.info("GET model for  templateName=" + templateName);
-        return CldsTemplate.retrieve(cldsDao, templateName, false);
+        CldsTemplate template = CldsTemplate.retrieve(cldsDao, templateName, false);
+        template.setUserAuthorizedToUpdate(isAuthorizedNoException(permissionUpdateTemplate));
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Get template success", this.getClass().getName());
+        auditLogger.info("GET template completed");
+        return template;
     }
 
     /**
@@ -183,8 +239,12 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template/{templateName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CldsTemplate putTemplate(@PathParam("templateName") String templateName, CldsTemplate cldsTemplate) throws TransformerException, IOException {
-        isAuthorized(PERMISSION_UPDATE_TEMPLATE);
+    public CldsTemplate putTemplate(@PathParam("templateName") String templateName, CldsTemplate cldsTemplate)
+            throws TransformerException, IOException {
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsTemplateService: PUT template", getPrincipalName());
+        isAuthorized(permissionUpdateTemplate);
+
         logger.info("PUT Template for  templateName=" + templateName);
         logger.info("PUT bpmnText=" + cldsTemplate.getBpmnText());
         logger.info("PUT propText=" + cldsTemplate.getPropText());
@@ -208,6 +268,12 @@ public class CldsTemplateService extends SecureServiceBase {
         logger.info(" Image Text : " + cldsTemplate.getImageText());
         logger.info(" Prop Text : " + cldsTemplate.getPropText());
         cldsTemplate.save(cldsDao, userid);
+
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Put template success", this.getClass().getName());
+        auditLogger.info("PUT template completed");
+
         return cldsTemplate;
     }
 
@@ -220,15 +286,22 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template-names")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ValueItem> getTemplateNames() {
-        isAuthorized(PERMISSION_READ_TEMPLATE);
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsTemplateService: GET template names", getPrincipalName());
+        isAuthorized(permissionReadTemplate);
         logger.info("GET list of template names");
-        return cldsDao.getTemplateNames();
+        List<ValueItem> names = cldsDao.getTemplateNames();
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Get template names success", this.getClass().getName());
+        auditLogger.info("GET template names completed");
+        return names;
     }
 
-
-    private Map<String, String> getNewBpmnIdsMap(String bpmnText, String propText) throws TransformerException, IOException {
+    private Map<String, String> getNewBpmnIdsMap(String bpmnText, String propText)
+            throws TransformerException, IOException {
         /**
-         *  Test sample code start
+         * Test sample code start
          */
         String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmnText);
         ModelBpmn templateBpmn = ModelBpmn.create(bpmnJson);
@@ -247,7 +320,8 @@ public class CldsTemplateService extends SecureServiceBase {
                 for (String currElementId : bpmnElementIds) {
                     if (keyPropName != null && keyPropName.equalsIgnoreCase(currElementId)) {
                         ArrayNode arrayNode = (ArrayNode) entry.getValue();
-                        // process each id/from object, like: {"id":"Collector_11r50j1", "from":"StartEvent_1"}
+                        // process each id/from object, like:
+                        // {"id":"Collector_11r50j1", "from":"StartEvent_1"}
                         for (JsonNode anArrayNode : arrayNode) {
                             ObjectNode node = (ObjectNode) anArrayNode;
                             String valueNode = node.get("value").asText();
@@ -268,7 +342,7 @@ public class CldsTemplateService extends SecureServiceBase {
         }
         logger.info("value of hashmap:" + bpmnIoIdsMap);
         /**
-         *  Test sample code end
+         * Test sample code end
          */
         return bpmnIoIdsMap;
     }

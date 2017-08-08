@@ -24,14 +24,15 @@
 package org.onap.clamp.clds.service;
 
 /**
- * Permission class that can be instantiated easily using constructor or factory methods.
+ * Permission class that can be instantiated easily using constructor or factory
+ * methods.
  */
 public class SecureServicePermission {
     public final static String ALL = "*";
 
-    private String type;
-    private String instance;
-    private String action;
+    private String             type;
+    private String             instance;
+    private String             action;
 
     /**
      * Factory method to create permission given type, instance, and action.
@@ -46,24 +47,26 @@ public class SecureServicePermission {
     }
 
     /**
-     * Factory method to create permission given type and instance.  Default action to ALL/*.
+     * Factory method to create permission given type and instance. Default
+     * action to ALL/*.
      *
      * @param type
      * @param instance
      * @return
      */
     public static SecureServicePermission create(String type, String instance) {
-        return new SecureServicePermission(type, instance);
+        return new SecureServicePermission(type, instance, ALL);
     }
 
     /**
-     * Factory method to create permission given type.  Default instance and action to ALL/*.
+     * Factory method to create permission given type. Default instance and
+     * action to ALL/*.
      *
      * @param type
      * @return
      */
     public static SecureServicePermission create(String type) {
-        return new SecureServicePermission(type);
+        return new SecureServicePermission(type, ALL, ALL);
     }
 
     /**
@@ -80,37 +83,32 @@ public class SecureServicePermission {
     }
 
     /**
-     * Instantiate permission given type and instance.  Default action to ALL/*.
+     * Instantiate permission given type from concatenated string
      *
-     * @param type
-     * @param instance
+     * @param concatenatedString
+     *            the string type|instance|action, less than 3 params can be
+     *            provided (e.g. "permission-type-cl", "permission-type-cl|dev",
+     *            "permission-type-cl|dev|update" )
      */
-    public SecureServicePermission(String type, String instance) {
-        this.type = type;
-        this.instance = instance;
-        this.action = ALL;
-    }
-
-    /**
-     * Instantiate permission given type.  Default instance and action to ALL/*.
-     *
-     * @param type
-     */
-    public SecureServicePermission(String type) {
-        this.type = type;
-        this.instance = ALL;
-        this.action = ALL;
+    public SecureServicePermission(String concatenatedString) {
+        String[] userInfo = concatenatedString.split("[|]");
+        // We should have at least 1 string
+        this.type = userInfo[0];
+        this.instance = (userInfo.length > 1 ? userInfo[1] : ALL);
+        this.action = (userInfo.length > 2 ? userInfo[2] : ALL);
     }
 
     /**
      * Override toString - return permission in key format
      */
+    @Override
     public String toString() {
         return getKey();
     }
 
     /**
-     * Return Permission in Key format = type, instance, and action separate by pipe character.
+     * Return Permission in Key format = type, instance, and action separate by
+     * pipe character.
      *
      * @return
      */
@@ -119,7 +117,8 @@ public class SecureServicePermission {
     }
 
     /**
-     * Return Permission in Key format = type, all instance, and action separate by pipe character.
+     * Return Permission in Key format = type, all instance, and action separate
+     * by pipe character.
      *
      * @return
      */
@@ -128,7 +127,8 @@ public class SecureServicePermission {
     }
 
     /**
-     * Return Permission in Key format = type, all instance, and all action separate by pipe character.
+     * Return Permission in Key format = type, all instance, and all action
+     * separate by pipe character.
      *
      * @return
      */
@@ -137,7 +137,8 @@ public class SecureServicePermission {
     }
 
     /**
-     * Return Permission in Key format = type, instance, and all action separate by pipe character.
+     * Return Permission in Key format = type, instance, and all action separate
+     * by pipe character.
      *
      * @return
      */
@@ -153,7 +154,8 @@ public class SecureServicePermission {
     }
 
     /**
-     * @param type the type to set
+     * @param type
+     *            the type to set
      */
     public void setType(String type) {
         this.type = type;
@@ -167,7 +169,8 @@ public class SecureServicePermission {
     }
 
     /**
-     * @param instance the instance to set
+     * @param instance
+     *            the instance to set
      */
     public void setInstance(String instance) {
         this.instance = instance;
@@ -181,7 +184,8 @@ public class SecureServicePermission {
     }
 
     /**
-     * @param action the action to set
+     * @param action
+     *            the action to set
      */
     public void setAction(String action) {
         this.action = action;

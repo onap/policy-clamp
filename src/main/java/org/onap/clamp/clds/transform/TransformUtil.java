@@ -38,11 +38,9 @@ public class TransformUtil {
      * @return resource - resource as stream
      */
     public static InputStream getResourceAsStream(String name) {
-        InputStream is = Thread.currentThread().getContextClassLoader()
-                .getResourceAsStream(name);
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
         if (is == null) {
-            throw new IllegalArgumentException("Unable to find resource: "
-                    + name);
+            throw new IllegalArgumentException("Unable to find resource: " + name);
         }
         return is;
     }
@@ -56,9 +54,9 @@ public class TransformUtil {
     public static String getResourceAsString(String name) throws IOException {
         InputStream is = getResourceAsStream(name);
         java.util.Scanner scanner = new java.util.Scanner(is);
-        java.util.Scanner s = scanner.useDelimiter("\\A");
-        String text = s.hasNext() ? s.next() : "";
-        s.close();
+        java.util.Scanner delimitedScanner = scanner.useDelimiter("\\A");
+        String text = delimitedScanner.hasNext() ? delimitedScanner.next() : "";
+        delimitedScanner.close();
         scanner.close();
         is.close();
         return text;

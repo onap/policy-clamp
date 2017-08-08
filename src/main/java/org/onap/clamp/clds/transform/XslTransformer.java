@@ -23,11 +23,16 @@
 
 package org.onap.clamp.clds.transform;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 import java.io.StringWriter;
+
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 /**
  * XSL Transformer.
@@ -51,8 +56,7 @@ public class XslTransformer {
         StringWriter output = new StringWriter(4000);
 
         Transformer transformer = templates.newTransformer();
-        transformer.transform(new StreamSource(new StringReader(xml)),
-                new StreamResult(output));
+        transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(output));
         return output.toString();
     }
 

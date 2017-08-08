@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,34 +23,38 @@
 
 package org.onap.clamp.clds.model.refprop;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Holds reference properties.
  */
 public class RefProp {
-    private static final Logger logger = Logger.getLogger(RefProp.class.getName());
+    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(RefProp.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
     @Autowired
-    private ApplicationContext appContext;
-    
-    private Properties prop;
+    private ApplicationContext      appContext;
+
+    private Properties              prop;
 
     @Value("${org.onap.clamp.config.files.cldsReference:'classpath:/clds/clds-reference.properties'}")
-    private String cldsReferenceValuesFile;
+    private String                  cldsReferenceValuesFile;
 
     /**
      * Load reference properties via null constructor
@@ -59,9 +63,9 @@ public class RefProp {
      */
     public RefProp() throws IOException {
     }
-    
+
     @PostConstruct
-    public void loadConfig () throws IOException {
+    public void loadConfig() throws IOException {
         prop = new Properties();
         Resource resource = appContext.getResource(cldsReferenceValuesFile);
         prop.load(resource.getInputStream());
@@ -78,7 +82,8 @@ public class RefProp {
     }
 
     /**
-     * get property value for a combo key (key1 + "." + key2).  If not found just use key1.
+     * get property value for a combo key (key1 + "." + key2). If not found just
+     * use key1.
      *
      * @param key1
      * @param key2
@@ -105,7 +110,8 @@ public class RefProp {
     }
 
     /**
-     * Return json as objects that can be updated.  First try with combo key (key1 + "." + key2), otherwise default to just key1.
+     * Return json as objects that can be updated. First try with combo key
+     * (key1 + "." + key2), otherwise default to just key1.
      *
      * @param key1
      * @param key2
@@ -118,7 +124,8 @@ public class RefProp {
     }
 
     /**
-     * Get list of values for a property field containing json and a field/keyword within that json.
+     * Get list of values for a property field containing json and a
+     * field/keyword within that json.
      *
      * @param fieldName
      * @param value
