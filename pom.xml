@@ -7,6 +7,12 @@
 	<version>1.0.1-SNAPSHOT</version>
 	<name>ONAP CLAMP</name>
 
+    <parent>
+        <groupId>org.onap.oparent</groupId>
+        <artifactId>oparent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
 	<description>
            This project build the ONAP CLAMP JAR that contains AJSC + CLAMP code.
 
