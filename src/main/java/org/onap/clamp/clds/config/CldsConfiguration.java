@@ -23,9 +23,27 @@
 
 package org.onap.clamp.clds.config;
 
-import com.att.ajsc.common.AjscProvider;
-import com.att.ajsc.common.AjscService;
-import org.onap.clamp.clds.client.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+import javax.xml.transform.TransformerConfigurationException;
+
+import org.onap.clamp.clds.client.CldsEventDelegate;
+import org.onap.clamp.clds.client.DcaeDispatcherServices;
+import org.onap.clamp.clds.client.DcaeInventoryServices;
+import org.onap.clamp.clds.client.DcaeReqDelegate;
+import org.onap.clamp.clds.client.DcaeReqDeleteDelegate;
+import org.onap.clamp.clds.client.OperationalPolicyDelegate;
+import org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate;
+import org.onap.clamp.clds.client.PolicyClient;
+import org.onap.clamp.clds.client.SdcCatalogServices;
+import org.onap.clamp.clds.client.SdcSendReqDelegate;
+import org.onap.clamp.clds.client.StringMatchPolicyDelegate;
+import org.onap.clamp.clds.client.StringMatchPolicyDeleteDelegate;
+import org.onap.clamp.clds.client.TcaPolicyDelegate;
+import org.onap.clamp.clds.client.TcaPolicyDeleteDelegate;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.transform.XslTransformer;
@@ -37,11 +55,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import javax.sql.DataSource;
-import javax.xml.transform.TransformerConfigurationException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.att.ajsc.common.AjscProvider;
+import com.att.ajsc.common.AjscService;
 
 @Configuration
 @Profile("clamp-default")
@@ -54,20 +69,18 @@ public class CldsConfiguration {
      * Clds Identity databse DataSource configuration
      */
     @Bean(name = "cldsDataSource")
-    @ConfigurationProperties(prefix = "spring.cldsdatasource")
+    @ConfigurationProperties(prefix = "spring.datasource.cldsdb")
     public DataSource cldsDataSource() {
-        return DataSourceBuilder
-                .create()
-                .build();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "jaxrsProviders")
-    public List jaxrsProviders() {
+    public List<?> jaxrsProviders() {
         return new ArrayList(context.getBeansWithAnnotation(AjscProvider.class).values());
     }
 
     @Bean(name = "jaxrsServices")
-    public List jaxrsServices() {
+    public List<?> jaxrsServices() {
         return new ArrayList(context.getBeansWithAnnotation(AjscService.class).values());
     }
 
@@ -136,7 +149,28 @@ public class CldsConfiguration {
     }
 
     @Bean(name = "sdcCatalogServices")
-    public SdcCatalogServices getAsdcCatalogServices() {
+    public SdcCatalogServices getSdcCatalogServices() {
         return new SdcCatalogServices();
     }
+
+    @Bean(name = "dcaeDispatcherServices")
+    public DcaeDispatcherServices getDcaeDispatcherServices() {
+        return new DcaeDispatcherServices();
+    }
+
+    @Bean(name = "dcaeInventoryServices")
+    public DcaeInventoryServices getDcaeInventoryServices() {
+        return new DcaeInventoryServices();
+    }
+
+    @Bean(name = "tcaPolicyDelegate")
+    public TcaPolicyDelegate getTcaPolicyDelegate() {
+        return new TcaPolicyDelegate();
+    }
+
+    @Bean(name = "tcaPolicyDeleteDelegate")
+    public TcaPolicyDeleteDelegate getTcaPolicyDeleteDelegate() {
+        return new TcaPolicyDeleteDelegate();
+    }
+
 }

@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,25 +23,10 @@
 
 package org.onap.clamp.clds.service;
 
-import com.att.ajsc.camunda.core.AttCamundaHistoryEvent;
-import com.att.ajsc.camunda.core.AttCamundaService;
-import com.att.ajsc.logging.AjscEelfManager;
-import com.att.eelf.configuration.EELFLogger;
-import com.google.gson.Gson;
-import org.onap.clamp.clds.common.LogMessages;
-import org.apache.commons.mail.Email;
-import org.apache.commons.mail.SimpleEmail;
-import org.apache.cxf.jaxrs.ext.MessageContext;
-import org.camunda.bpm.engine.HistoryService;
-import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.history.HistoricActivityInstance;
-import org.camunda.bpm.engine.impl.history.event.HistoricActivityInstanceEventEntity;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Service;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -50,20 +35,41 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.core.Context;
-import java.util.*;
+
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.SimpleEmail;
+import org.apache.cxf.jaxrs.ext.MessageContext;
+import org.camunda.bpm.engine.HistoryService;
+import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.history.HistoricActivityInstance;
+import org.camunda.bpm.engine.impl.history.event.HistoricActivityInstanceEventEntity;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.onap.clamp.clds.common.LogMessages;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Service;
+
+import com.att.ajsc.camunda.core.AttCamundaHistoryEvent;
+import com.att.ajsc.camunda.core.AttCamundaService;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.google.gson.Gson;
 
 @Service
 public class LogServiceImpl implements LogService {
-    private static final EELFLogger logger = AjscEelfManager.getInstance().getLogger(LogServiceImpl.class);
+    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(LogServiceImpl.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
     @Autowired
-    private RuntimeService runtimeService;
+    private RuntimeService          runtimeService;
 
     @Autowired
-    private HistoryService historyService;
+    private HistoryService          historyService;
 
     @Context
-    private MessageContext context;
+    private MessageContext          context;
 
     public void setRuntimeService(RuntimeService runtimeService) {
         this.runtimeService = runtimeService;
@@ -93,7 +99,9 @@ public class LogServiceImpl implements LogService {
         }
 
         // BEGIN - added for send mail testing
-        // also added the following to the method signature: , @QueryParam("javamail") String javamail, @QueryParam("springmail") String springmail, @QueryParam("commonsmail") String commonsmail
+        // also added the following to the method signature: ,
+        // @QueryParam("javamail") String javamail, @QueryParam("springmail")
+        // String springmail, @QueryParam("commonsmail") String commonsmail
         // if javamail parameter provided, assume it contains an email address.
         // use Java Mail to send an email from that address, to that address
         if (javamail != null && javamail.length() > 0) {
@@ -104,11 +112,11 @@ public class LogServiceImpl implements LogService {
                 Session session = Session.getInstance(props);
                 MimeMessage msg = new MimeMessage(session);
 
-                msg.setFrom(new InternetAddress(javamail)); //eMail.setFrom
+                msg.setFrom(new InternetAddress(javamail)); // eMail.setFrom
 
-                InternetAddress[] fromAddresses = {new InternetAddress(javamail)};
-                msg.setReplyTo(fromAddresses); //eMail.addReplyTo
-                msg.setSubject("test message using javax.mail"); //eMail.setSubject
+                InternetAddress[] fromAddresses = { new InternetAddress(javamail) };
+                msg.setReplyTo(fromAddresses); // eMail.addReplyTo
+                msg.setSubject("test message using javax.mail"); // eMail.setSubject
                 msg.setText(logMessageText); // eMail.setMsg
 
                 msg.addRecipient(Message.RecipientType.TO, new InternetAddress(javamail)); // eMail.addTo
@@ -118,7 +126,8 @@ public class LogServiceImpl implements LogService {
             }
         }
 
-        // if springmail parameter provided, assume it contains an email address.
+        // if springmail parameter provided, assume it contains an email
+        // address.
         // use Spring Mail to send an email from that address, to that address
         if (springmail != null && springmail.length() > 0) {
             variables.put("springmail", springmail);
@@ -127,9 +136,9 @@ public class LogServiceImpl implements LogService {
 
             try {
                 sender.setHost("smtp.sbc.com"); // eMail.setHostName
-                smsg.setFrom(springmail); //eMail.setFrom
-                smsg.setReplyTo(springmail); //eMail.addReplyTo
-                smsg.setSubject("test message using spring mail"); //eMail.setSubject
+                smsg.setFrom(springmail); // eMail.setFrom
+                smsg.setReplyTo(springmail); // eMail.addReplyTo
+                smsg.setSubject("test message using spring mail"); // eMail.setSubject
                 smsg.setText(logMessageText); // eMail.setMsg
                 smsg.setTo(springmail); // eMail.addTo
                 sender.send(smsg);
@@ -138,18 +147,20 @@ public class LogServiceImpl implements LogService {
             }
         }
 
-        // if commonsmail parameter provided, assume it contains an email address.
-        // use Apache Commons Mail to send an email from that address, to that address
+        // if commonsmail parameter provided, assume it contains an email
+        // address.
+        // use Apache Commons Mail to send an email from that address, to that
+        // address
         if (commonsmail != null && commonsmail.length() > 0) {
             variables.put("commonsmail", commonsmail);
-            Email eMail = new SimpleEmail();
+            Email email = new SimpleEmail();
             try {
-                eMail.setHostName("smtp.sbc.com");
-                eMail.setFrom(commonsmail);
-                eMail.addReplyTo(commonsmail);
-                eMail.setSubject("test message using commons mail");
-                eMail.setMsg(logMessageText);
-                eMail.addTo(commonsmail);
+                email.setHostName("smtp.sbc.com");
+                email.setFrom(commonsmail);
+                email.addReplyTo(commonsmail);
+                email.setSubject("test message using commons mail");
+                email.setMsg(logMessageText);
+                email.addTo(commonsmail);
                 java.net.URL classUrl = this.getClass().getResource("com.sun.mail.util.TraceInputStream");
                 if (classUrl != null) {
                     logger.info(LogMessages.LOGSERVICE_EMAIL_CLASS, classUrl.getFile());
@@ -157,7 +168,7 @@ public class LogServiceImpl implements LogService {
                     logger.info(LogMessages.LOGSERVICE_EMAIL_CLASS, classUrl.getFile());
                     logger.info(LogMessages.LOGSERVICE_EMAIL_CLASS_NULL);
                 }
-                eMail.send();
+                email.send();
             } catch (Exception e) {
                 logger.error(LogMessages.LOGSERVICE_EMAIL_ERROR, e);
             }
@@ -168,7 +179,8 @@ public class LogServiceImpl implements LogService {
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("log-message-wf", variables);
         AttCamundaService.setHttpRequest(null);
         // return text message of what was done
-        return "Started processDefinitionId=" + pi.getProcessDefinitionId() + ", processInstanceId=" + pi.getProcessInstanceId() + ", to log message: " + logMessageText;
+        return "Started processDefinitionId=" + pi.getProcessDefinitionId() + ", processInstanceId="
+                + pi.getProcessInstanceId() + ", to log message: " + logMessageText;
     }
 
     @Override
@@ -179,13 +191,17 @@ public class LogServiceImpl implements LogService {
         AttCamundaHistoryEvent attCamundaHistoryEvent = gson.fromJson(histEventList, AttCamundaHistoryEvent.class);
         if (attCamundaHistoryEvent != null && attCamundaHistoryEvent.getProcInstId() != null) {
             logger.info(LogMessages.PROCESS_INSTANCE_ID, attCamundaHistoryEvent.getProcInstId());
-            if (context != null && context.getHttpServletRequest() != null && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
+            if (context != null && context.getHttpServletRequest() != null
+                    && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
                 context.getHttpServletRequest().setAttribute("CALL_TYPE", "Testing");
-                List<HistoricActivityInstance> histActInstList = historyService.createHistoricActivityInstanceQuery().processInstanceId(attCamundaHistoryEvent.getProcInstId()).list();
+                List<HistoricActivityInstance> histActInstList = historyService.createHistoricActivityInstanceQuery()
+                        .processInstanceId(attCamundaHistoryEvent.getProcInstId()).list();
 
                 if (histActInstList != null && histActInstList.size() > 0) {
                     for (HistoricActivityInstance currHistoricActivityInstance : histActInstList) {
-                        if (currHistoricActivityInstance != null && currHistoricActivityInstance.getActivityName() != null && currHistoricActivityInstance.getStartTime() != null
+                        if (currHistoricActivityInstance != null
+                                && currHistoricActivityInstance.getActivityName() != null
+                                && currHistoricActivityInstance.getStartTime() != null
                                 && currHistoricActivityInstance.getEndTime() != null) {
                             logger.info("value of serviceTrack:" + currHistoricActivityInstance);
                             message = "Log Entry Created";
@@ -193,10 +209,13 @@ public class LogServiceImpl implements LogService {
                         }
                     }
                 }
-                if (attCamundaHistoryEvent.getHistoryEventList() != null && attCamundaHistoryEvent.getHistoryEventList().size() > 0) {
-                    List<HistoricActivityInstanceEventEntity> historyEventList = attCamundaHistoryEvent.getHistoryEventList();
+                if (attCamundaHistoryEvent.getHistoryEventList() != null
+                        && attCamundaHistoryEvent.getHistoryEventList().size() > 0) {
+                    List<HistoricActivityInstanceEventEntity> historyEventList = attCamundaHistoryEvent
+                            .getHistoryEventList();
                     for (HistoricActivityInstanceEventEntity actiEvent : historyEventList) {
-                        //  resolve null pointer exception if actiEvent.getActivityName()
+                        // resolve null pointer exception if
+                        // actiEvent.getActivityName()
                         message = "Log Entry Created";
                     }
                 }
@@ -209,12 +228,17 @@ public class LogServiceImpl implements LogService {
     public String createLogMessage(String startTime, String endTime, String serviceName) {
         String message = "no logs Created";
 
-        if (context != null && context.getHttpServletRequest() != null && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
+        if (context != null && context.getHttpServletRequest() != null
+                && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
             context.getHttpServletRequest().setAttribute("X-CSI-ClientApp", "AJSC-CSI~sdsds");
-    		/*PerformanceTrackingBean trackingBean =(PerformanceTrackingBean) context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN");
-    		PerformanceTracking.addInvokeServiceTrack(trackingBean,
-					serviceName, Long.valueOf(startTime), Long.valueOf(endTime), "Completed",
-					500, 1000) ;*/
+            /*
+             * PerformanceTrackingBean trackingBean =(PerformanceTrackingBean)
+             * context.getHttpServletRequest().getAttribute(
+             * "PERFORMANCE_TRACKER_BEAN");
+             * PerformanceTracking.addInvokeServiceTrack(trackingBean,
+             * serviceName, Long.valueOf(startTime), Long.valueOf(endTime),
+             * "Completed", 500, 1000) ;
+             */
             message = "Log Entry Created";
         }
         // return text message of what was done
@@ -226,13 +250,16 @@ public class LogServiceImpl implements LogService {
         String message = "no logs Created";
         logger.info("value of history events:" + histEventList);
         logger.info("value of events:" + histEventList + ":" + histEventList);
-        if (context != null && context.getHttpServletRequest() != null && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
+        if (context != null && context.getHttpServletRequest() != null
+                && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
             context.getHttpServletRequest().setAttribute("CALL_TYPE", "Testing");
-            List<HistoricActivityInstance> histActInstList = historyService.createHistoricActivityInstanceQuery().processInstanceId(procInstId).list();
+            List<HistoricActivityInstance> histActInstList = historyService.createHistoricActivityInstanceQuery()
+                    .processInstanceId(procInstId).list();
 
             if (histActInstList != null && histActInstList.size() > 0) {
                 for (HistoricActivityInstance currHistoricActivityInstance : histActInstList) {
-                    if (currHistoricActivityInstance != null && currHistoricActivityInstance.getActivityName() != null && currHistoricActivityInstance.getStartTime() != null
+                    if (currHistoricActivityInstance != null && currHistoricActivityInstance.getActivityName() != null
+                            && currHistoricActivityInstance.getStartTime() != null
                             && currHistoricActivityInstance.getEndTime() != null) {
                         logger.info("value of serviceTrack:" + currHistoricActivityInstance);
                         message = "Log Entry Created";
@@ -247,12 +274,15 @@ public class LogServiceImpl implements LogService {
     @Override
     public String CreateHistLog(String procInstId) {
         String message = "no logs Created";
-        if (context != null && context.getHttpServletRequest() != null && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
-            List<HistoricActivityInstance> histActInstList = historyService.createHistoricActivityInstanceQuery().processInstanceId(procInstId).list();
+        if (context != null && context.getHttpServletRequest() != null
+                && context.getHttpServletRequest().getAttribute("PERFORMANCE_TRACKER_BEAN") != null) {
+            List<HistoricActivityInstance> histActInstList = historyService.createHistoricActivityInstanceQuery()
+                    .processInstanceId(procInstId).list();
 
             if (histActInstList != null && histActInstList.size() > 0) {
                 for (HistoricActivityInstance currHistoricActivityInstance : histActInstList) {
-                    if (currHistoricActivityInstance != null && currHistoricActivityInstance.getActivityName() != null && currHistoricActivityInstance.getStartTime() != null
+                    if (currHistoricActivityInstance != null && currHistoricActivityInstance.getActivityName() != null
+                            && currHistoricActivityInstance.getStartTime() != null
                             && currHistoricActivityInstance.getEndTime() != null) {
                         logger.info("value of serviceTrack:" + currHistoricActivityInstance);
                         context.getHttpServletRequest().setAttribute("X-CSI-ClientApp", "AJSC-CSI~sdsds");
@@ -262,15 +292,5 @@ public class LogServiceImpl implements LogService {
             }
         }
         return message;
-    }
-
-    private String getActivityInstanceState(int activityInstanceState) {
-        String activityState = "Default";
-        if (activityInstanceState == 1) {
-            activityState = "Complete";
-        } else if (activityInstanceState == 2) {
-            activityState = "Cancelled";
-        }
-        return activityState;
     }
 }
