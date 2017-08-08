@@ -20,7 +20,6 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 app.service('exportService', ['$http', '$q', function ($http, $q) {
     console.log("/////////exportService");
     this.exportToUrl = function(testsetValue, formatValue, exporturl){
@@ -72,31 +71,6 @@ app.service('exportService', ['$http', '$q', function ($http, $q) {
            	 	def.reject("Export file not successful");
             });
         }
-        return def.promise;
-    };
-    
-    this.exportToUTMTestSet = function(almqcExport, exporturl){
-    console.log("exportToUTMTestSet");    	
-    	var def = $q.defer();
-    	var sets = [];
-        //var almqcExport =  almqcExport;       
-        $http({
-            url: exporturl,     method: "POST",     data: almqcExport,
-             responseType: 'arraybuffer' }).success(function (data, status, headers, config) {
-             console.log("success");            	 
-            	 var results = [];
-                 results.data = data;
-                 results.headers = headers();
-                 results.status = status;
-                 results.config = config;
-                 def.resolve(results); 
-        })
-        .error(function(data){
-            console.log("data");
-    	 	      
-       	 	def.reject("Export file not successful");
-        });        
-        
         return def.promise;
     };
 }]);

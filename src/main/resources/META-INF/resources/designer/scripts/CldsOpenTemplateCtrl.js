@@ -20,11 +20,10 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 app.controller('CldsOpenTemplateCtrl',
 	['$scope', '$rootScope', '$modalInstance','$window','cldsTemplateService', '$location', 'dialogs',
 		function($scope, $rootScope, $modalInstance,$window, cldsTemplateService, $location,dialogs) {
-			console.log("////////////CldsOpenTemplateCtrl");	
+				
 			$scope.error = {
 				flag : false,
 				message: ""
@@ -39,14 +38,14 @@ app.controller('CldsOpenTemplateCtrl',
 					//console.log($scope.modelNamel[i])
 				}
 				setTimeout(function(){
-		        console.log("setTimeout");
+		        
 
 		     setMultiSelect(); }, 100);
 				
 				
 			});
 			function contains(a, obj) {
-				console.log("contains");
+				
 			    var i = a.length;
 			    while (i--) {
 			       if (a[i].toLowerCase() === obj.toLowerCase()) {
@@ -56,7 +55,7 @@ app.controller('CldsOpenTemplateCtrl',
 			    return false;
 			}
 			$scope.checkExisting=function(){
-				console.log("checkExisting");
+				
 				var name = $('#modelName').val();
 				//alert(name)
 				//console.log($scope.modelNamel)
@@ -69,14 +68,14 @@ app.controller('CldsOpenTemplateCtrl',
 			}
 			
 			$scope.closeDiagram=function(){
-				console.log("closeDiagram");
+				
 				$window.location.reload();
 			}
 			
 			
 			
 			$scope.createNewTemplate=function(){
-				console.log("createNewTemplate");
+				
 				reloadDefaultVariables(true)
 				if($(".bjs-container").is("[hidden]")){
 					$(".bjs-container").removeAttr("hidden");
@@ -87,9 +86,7 @@ app.controller('CldsOpenTemplateCtrl',
  					$scope.error.flag =true;
  					$scope.error.message = "Please enter any name for proceeding";
  				    return false;
- 				}
- 				
-				console.log("openModel: modelName=" + modelName);      
+ 				}    
 				
 				// BEGIN env
 				// init UTM items
@@ -112,6 +109,7 @@ app.controller('CldsOpenTemplateCtrl',
 		        pars.event={}
 		        pars.event.actionStateCD=""
 		        pars.newTemplate = true
+		        pars.permittedActionCd= [""];
 				cldsTemplateService.processActionResponse(modelName, pars);
     			
 				selected_model = modelName;
@@ -145,23 +143,22 @@ app.controller('CldsOpenTemplateCtrl',
 			}
 			
 			$scope.revertChanges=function(){
-				console.log("revertChanges");
+				
 				$scope.openTemplate();
 			}
 			$scope.close=function(){
-				console.log("close");
+				
 				$rootScope.isNew = false;
 				$modalInstance.close("closed");
 			}
 			$scope.openTemplate = function() {
-				console.log("openTemplate");
+				
 				reloadDefaultVariables(true)
 				if($(".bjs-container").is("[hidden]")){
 					$(".bjs-container").removeAttr("hidden");
 					$("#svgContainer").remove();
 				}
  				var modelName = document.getElementById("modelName").value;
-				console.log("openModel: modelName=" + modelName);    
 				if($scope.modelNamel.includes(document.getElementById("modelName").value)){
 
 				}
@@ -180,24 +177,19 @@ app.controller('CldsOpenTemplateCtrl',
 				
 
 				cldsTemplateService.getTemplate( modelName ).then(function(pars) {
-        			console.log("openModel: pars=");
-        			console.log(pars)
         			// process data returned
         			var bpmnText = pars.bpmnText;
         			var propText = pars.propText;
         			var status = pars.status;
         			var controlNamePrefix = pars.controlNamePrefix;
         			var controlNameUuid = pars.controlNameUuid;
-        			
+        			var authorizedToUp = pars.userAuthorizedToUpdate;
+        			pars.permittedActionCd= [""];
         			cldsTemplateService.processActionResponse(modelName, pars);
         			
         			// deserialize model properties
-        			console.log("prop text")
-        			console.log(propText)
         			if ( propText == null ) {
-            			console.log("openModel: propText is null");
         			} else {
-            			console.log("openModel: propText=" + propText);
         				elementMap =  JSON.parse(propText);
         			}
 
@@ -209,7 +201,7 @@ app.controller('CldsOpenTemplateCtrl',
         			visibility_model();
         		},
         		function(data) {
-        			console.log("data");
+        			//console.log("data");
         			//alert("getModel failed");
         		});
        

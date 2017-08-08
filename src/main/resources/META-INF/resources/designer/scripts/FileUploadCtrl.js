@@ -25,69 +25,7 @@ app.controller('fileUploadCtrl', ['$scope', '$rootScope','fileUpload', function(
     console.log("///////////fileUploadCtrl");
 	$rootScope.isAllOption = false;
 	
-    $scope.uploadSchemaFile = function(element){
-        console.log("uploadSchemaFile");
-    	  $scope.$apply(function($scope) {
-            console.log("apply");
-    	$rootScope.isStatic = true;    	
-    	$rootScope.isAllOption = true;    	
-    	$scope.requiredval= true;    	
-    	$rootScope.rightTabName ="UTM Build Configuration";
-    	$rootScope.testSet = null;
-    	$scope.parameters = null;    	
-    	$scope.constraints =null;
-    	$scope.relations =null;
-    	if($rootScope.isStatic == true){
-			document.getElementById('buidConfigBtn').style.visibility  = "hidden";
-		}
-    	
-        var file = element.files[0];/*$scope.requestSchemaFile;*/
-        console.log('file is ' + JSON.stringify(file));        
-        $rootScope.file_type="Schema";
-        
-        var uploadUrl = "/utm-service/schema_upload/uploadSchema";
-        
-    	//alert("uploadFile file::"+file + " :: " + uploadUrl);
-        
-        fileUpload.uploadFileToUrl(file, uploadUrl)
-        .then(function(pars) {
-            console.log("uploadFileToUrl");
-        	
-        	$rootScope.SUT =  pars;
-        	console.log("file name :"+pars.name);
-        	$scope.fileName = pars.name;
-        	$scope.parameters = pars.parameters;
-        	
-        	var param = pars.parameters;
-        	
-        	var paramarray = pars.parameters;
-        	var parArray1=[];
-        	for(var i=0;i<paramarray.length;i++){
-        		parArray1.push(paramarray[i].required);
-        	}
-        	
-        	$scope.parArray=parArray1;
-        	$scope.constraints =pars.constraints;
-        	$scope.relations =pars.relations;
-        	var  con  = $scope.constraints;
-        	$scope.required=pars.required;
-		$scope.required='Required Only';
-        },
-        function(data) {
-            console.log("data");
-        	//alert("File upload failed and parameters not returned");
-        });
-        
-        
-        angular.forEach(
-        	    angular.element("input[type='file']"),
-        	    function(inputElem) {
-                    console.log("inputElem");
-        	      angular.element(inputElem).val(null);
-        	    });
-        
-    	  });
-    };
+
     
 //-----For Required Radio button functionality
     
@@ -258,4 +196,3 @@ function clearFileInput(id)
 
     oldInput.parentNode.replaceChild(newInput, oldInput); 
 }
-

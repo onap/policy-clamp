@@ -46,8 +46,9 @@ function DashboardCtrl($scope,$rootScope,$resource, $http, $timeout, $location, 
 	
 
 	$interval( function(){
-	console.log("interval"); 
-		AutosaveProject($scope,$rootScope,$resource, $http, $timeout, $location, $interval, $q, Datafactory);
+		console.log("interval"); 
+		/*AutosaveProject($scope,$rootScope,$resource, $http, $timeout, $location, $interval,
+	 	$q, Datafactory);*/
 		}, $scope.autosaveInterval);
 	
 	
@@ -604,68 +605,6 @@ function DashboardCtrl($scope,$rootScope,$resource, $http, $timeout, $location, 
 		$scope.reloadTDRDashboardFromReset(name);
 		
 	};
-	
-	$rootScope.populateUTMModelArray= function(utm_models,utmModels){
-		console.log("populateUTMModelArray");
-		var modelName =utmModels.name;
-		if (utmModels != null && utmModels.name != null) {
-			if($rootScope.oldUTMModels != null  && $rootScope.oldUTMModels.length > 0){
-				for(var i=0 ;i<$rootScope.oldUTMModels.length;i++ ){
-					var tempOldName  = $rootScope.oldUTMModels[i];
-					console.log("new model name from map:"+old_new_model_name[tempOldName]);
-					if( utmModels.name ==  old_new_model_name[tempOldName]){
-						modelName = $rootScope.oldUTMModels[i];
-					}	
-				}	
-			}
-			var utm_model = {};
-			utm_model.modelName = utmModels.name;
-			utm_model.modelXML = list_models[modelName];
-			utm_model.repeatableHeirachicalSchemaElements = {};
-			utm_model.repeatableHeirachicalSchemaElements = list_model_repeatable_heirarchical_elements[modelName];
-			
-			utm_model.testManagementDetails = {};
-			utm_model.testManagementDetails = list_model_test_management_details[modelName];
-			
-			var activitytestset={};
-			activitytestset.invalidModelException=null;
-			activitytestset.serviceName=serviceName;
-			activitytestset.activityTestCases=[];
-			if (list_model_test_sets[modelName] != null && list_model_test_sets[modelName].activityTestCases != null) {
-				activitytestset.activityTestCases=angular.copy(list_model_test_sets[modelName].activityTestCases);
-			}	
-			utm_model.activityTestSet = activitytestset;
-			
-			utm_model.utmPropertyExplorer = {};
-			utm_model.utmPropertyExplorer.pathDetailsList = [];
-			if (list_model_path_details[modelName] != null) {
-				utm_model.utmPropertyExplorer.pathDetailsList = angular.copy(list_model_path_details[modelName]);
-			}
-			
-			utm_model.utmModelSchemaExtention = {};
-			utm_model.utmModelSchemaExtention.utmSchemaExtentionMap = {};
-			if (list_model_schema_extensions[modelName] != null) {
-				utm_model.utmModelSchemaExtention = angular.copy(list_model_schema_extensions[modelName]);
-			}
-			
-			utm_models.push(utm_model);
-			if(utmModels.subModels != null && utmModels.subModels.length>0){				
-				for(var i=0 ; i<utmModels.subModels.length;i++) {
-					var subModel = {};
-					subModel = utmModels.subModels[i];
-					$scope.populateUTMModelArray(utm_models,subModel);
-				 }
-			}
-		}
-	};
-	
-	
-	/*$scope.getPallette = function(){
-		alert("nothing");
-				createNewDiagram();
-				alert("after");
-	};*/
-	
 	
 }
 function changecolor(selected_model)

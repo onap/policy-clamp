@@ -24,7 +24,7 @@
 app.service('cldsTemplateService', ['alertService', '$http', '$q', function (alertService, $http, $q) {
     this.getTemplate = function(templateName){
     	
-    	console.log("///////////////cldsTemplateService");
+
     	var def = $q.defer();
     	var sets = [];
     	
@@ -32,19 +32,19 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
     	
         $http.get(svcUrl)
         .success(function(data){ 
-        console.log("success");       	
+  	
         	def.resolve(data);         	
         	
         })
         .error(function(data){  
-        console.log("error");     	 	      
+ 	 	      
        	 	def.reject("Open Model not successful");
         });
         
         return def.promise;
     };
     this.getSavedTemplate=function(){
-        console.log("getSavedTemplate");
+
     	var def = $q.defer();
     	var sets = [];
     	
@@ -52,12 +52,12 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
     	
         $http.get(svcUrl)
         .success(function(data){
-        console.log("success");        	
+         	
         	def.resolve(data);         	
         	
         })
         .error(function(data){
-        console.log("error");       	 	      
+     	 	      
        	 	def.reject("Open Model not successful");
         });
         
@@ -65,7 +65,7 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
     };
     this.setTemplate = function(templateName, controlNamePrefixIn, bpmnTextIn, propTextIn){
     	
-    	console.log("setTemplate");
+
     	var def = $q.defer();
     	var sets = [];
 
@@ -75,12 +75,12 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
     	
         $http.put(svcUrl, svcRequest)
         .success(function(data){ 
-        console.log("success");       	
+   	
         	def.resolve(data);         	
         	
         })
         .error(function(data){ 
-        console.log("error");      	 	      
+   	 	      
        	 	def.reject("Save Model not successful");
         });
         
@@ -88,23 +88,21 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
     };
     this.processAction = function(uiAction, templateName, controlNamePrefixIn, bpmnTextIn, propTextIn,svgXmlIn){
     	
-    	console.log("processAction");
+ 
     	var def = $q.defer();
     	var sets = [];
-    	console.log("Generated SVG xml File...");
-    	console.log(propTextIn);
     	var svcUrl = "/restservices/clds/v1/cldsTempate/template/"+templateName;        
     		
         var svcRequest = {name: templateName, controlNamePrefix: controlNamePrefixIn, bpmnText: bpmnTextIn, propText: propTextIn, imageText:svgXmlIn};      
         $http.put(svcUrl, svcRequest)
         .success(function(data){
-        console.log("success");        	
+     	
         	def.resolve(data);         	
         	alertService.alertMessage("Action Successful:"+uiAction,1)
 
         })
         .error(function(data){
-        console.log("error");       	 	      
+     	 	      
        	 	def.reject(" not successful");
         	alertService.alertMessage("Action Failure:"+uiAction,2)
 
@@ -113,7 +111,7 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
         return def.promise;
     };
     this.checkPermittedActionCd = function(permittedActionCd, menuText, actionCd){
-        console.log("checkPermittedActionCd");
+
        	if ( permittedActionCd.indexOf(actionCd) > -1 ) {
        		document.getElementById(menuText).classList.remove('ThisLink');
        	} else {
@@ -121,10 +119,11 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
        	}
     };        
     this.processActionResponse = function(templateName, pars){
-        console.log("processActionResponse");
+
     	// populate control name (prefix and uuid here)
        	var controlNamePrefix = pars.controlNamePrefix;
        	var controlNameUuid = pars.controlNameUuid;
+        var permittedActionCd = pars.permittedActionCd;
         
         var headerText = "Closed Loop Modeler - " + templateName;
         if ( controlNameUuid != null ) {
@@ -136,25 +135,61 @@ app.service('cldsTemplateService', ['alertService', '$http', '$q', function (ale
         	
     	document.getElementById("modeler_name").textContent = headerText;
 
-       	
-       	// enable menu options
-       	document.getElementById('Save Template').classList.remove('ThisLink');
-    	document.getElementById('Template Properties').classList.remove('ThisLink');
-    	document.getElementById('Test').classList.remove('ThisLink');
-        if(!pars.newTemplate){
-            document.getElementById('Revert Template Changes').classList.remove('ThisLink');    
-        }    	
-    	document.getElementById('Close Template').classList.remove('ThisLink');
-    	
-    	document.getElementById('Refresh Status').classList.remove('ThisLink');
-    	//disable save/properties for model
+       	//dropdown options -- always true
+    	document.getElementById('Open Template').classList.remove('ThisLink');
+    	document.getElementById('Open CL').classList.remove('ThisLink');
     	document.getElementById('Save CL').classList.add('ThisLink');
     	document.getElementById('Properties CL').classList.add('ThisLink');
     	document.getElementById('Revert Model Changes').classList.add('ThisLink');
     	document.getElementById('Close Model').classList.add('ThisLink');
-    	document.getElementById('Refresh ASDC').classList.add('ThisLink');
-    	document.getElementById('Running Instances').classList.add('ThisLink');
+  		
+       	// enable menu options
+    	if (readTOnly){
+    		//enable temp options (read only, Open Template)
+      		document.getElementById('Template Properties').classList.remove('ThisLink');
+      		document.getElementById('Close Template').classList.remove('ThisLink');
+      		
+      		//disable temp menu options (read only, Open Template)
+      		document.getElementById('Create Template').classList.add('ThisLink');
+      		document.getElementById('Save Template').classList.add('ThisLink');
+      		document.getElementById('Revert Template Changes').classList.add('ThisLink');
+      		
+      		//disable save/properties for model
+        	document.getElementById('Refresh ASDC').classList.add('ThisLink');
+    	} else {
+    		//enable temp options
+    		document.getElementById('Create Template').classList.remove('ThisLink');
+    		document.getElementById('Save Template').classList.remove('ThisLink');
+        	document.getElementById('Template Properties').classList.remove('ThisLink');
+        	document.getElementById('Validation Test').classList.remove('ThisLink');
+            if(!pars.newTemplate){
+                document.getElementById('Revert Template Changes').classList.remove('ThisLink');    
+            }    	
+        	document.getElementById('Close Template').classList.remove('ThisLink');
+        	
+        	document.getElementById('Refresh Status').classList.remove('ThisLink');
+        	
+        	//disable model options
+        	document.getElementById('Refresh ASDC').classList.add('ThisLink');
+        	
 
-       	
+    	}
+    	if (readMOnly){
+   			document.getElementById('Create CL').classList.add('ThisLink');
+   		  } else {
+   			document.getElementById('Create CL').classList.remove('ThisLink');
+   		  }
+    	
+    	// enable/disable menu options based on permittedActionCd list
+  		this.checkPermittedActionCd(permittedActionCd, 'Validation Test', 'TEST');
+        this.checkPermittedActionCd(permittedActionCd, 'Submit', 'SUBMIT');
+        this.checkPermittedActionCd(permittedActionCd, 'Resubmit', 'RESUBMIT');
+        this.checkPermittedActionCd(permittedActionCd, 'Update', 'UPDATE');
+        this.checkPermittedActionCd(permittedActionCd, 'Stop', 'STOP');
+        this.checkPermittedActionCd(permittedActionCd, 'Restart', 'RESTART');
+        this.checkPermittedActionCd(permittedActionCd, 'Delete', 'DELETE');
+        this.checkPermittedActionCd(permittedActionCd, 'Deploy', 'DEPLOY');
+        this.checkPermittedActionCd(permittedActionCd, 'UnDeploy', 'UNDEPLOY');
+
     };        
  }]);

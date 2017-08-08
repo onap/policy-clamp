@@ -20,11 +20,10 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 app.controller('CldsOpenModelCtrl',
 	['$scope', '$rootScope', '$modalInstance','cldsModelService', '$location', 'dialogs','cldsTemplateService',
 		function($scope, $rootScope, $modalInstance, cldsModelService, $location,dialogs,cldsTemplateService) {
-			console.log("/////////CldsOpenModelCtrl");
+			
 			$scope.typeModel='template';
 			$scope.error = {
 				flag : false,
@@ -38,7 +37,6 @@ app.controller('CldsOpenModelCtrl',
 					$scope.modelNamel.push(pars[i].value);		 
 				}
 				setTimeout(function(){
-		        console.log("setTimeout");
 
 		     setMultiSelect(); }, 100);
 				
@@ -69,7 +67,6 @@ app.controller('CldsOpenModelCtrl',
 					}
 				}
 			$scope.refreshASDC=function(){
-				console.log("refreshASDC");
 				$("#ridinSpinners").css("display","")
 				var bool=loadSharedPropertyByService(undefined,true,callBack);
 				$("#ridinSpinners").css("display","none");
@@ -78,17 +75,15 @@ app.controller('CldsOpenModelCtrl',
 			}
 			
 			cldsTemplateService.getSavedTemplate().then(function(pars) {
-
-				
 				$scope.templateNamel=[]
 				for(var i=0;i<pars.length;i++){
 					$scope.templateNamel.push(pars[i].value);
-					
 				}
-				
+				setTimeout(function(){
+					setMultiSelect();}, 100);
 			});
+			
 			function contains(a, obj) {
-				console.log("contains");
 			    var i = a&& a.length>0 ? a.length : 0;
 			    while (i--) {
 			       if (a[i].toLowerCase() === obj.toLowerCase()) {
@@ -98,7 +93,6 @@ app.controller('CldsOpenModelCtrl',
 			    return false;
 			}
 			$scope.checkExisting=function(){
-				console.log("checkExisting");
 				var name = $('#modelName').val();								
 				if(contains($scope.modelNamel,name)){
 					$scope.nameinUse=true;
@@ -108,7 +102,6 @@ app.controller('CldsOpenModelCtrl',
 				specialCharacters();
 			}
 			 function specialCharacters (){
-			 	console.log("specialCharacters");
 				$scope.spcl = false;
 				if(angular.element("#modelName") && 
 					angular.element("#modelName").scope().model.$error.pattern && 
@@ -119,23 +112,18 @@ app.controller('CldsOpenModelCtrl',
 
 			$scope.setTypeModel=function(_type){
 				$scope.error.flag = false;
-				console.log("setTypeModel");
 				$scope.typeModel=_type;
 			}
 			
 			$scope.close = function(){
-				console.log("close");
 				$rootScope.isNewClosed = false;
 				$modalInstance.close("closed");
 			};
 			$scope.createNewModelOffTemplate=function(formModel){
-				console.log("createNewModelOffTemplate");
-				console.log(formModel);
 				reloadDefaultVariables(false)
  				var modelName = document.getElementById("modelName").value;
  				var templateName=document.getElementById("templateName").value;
-				console.log("openModel: modelName=" + modelName);      
-				console.log("Template: templateName=" + templateName); 
+ 				
 				if(!modelName){
  					$scope.error.flag =true;
  					$scope.error.message = "Please enter any closed template name for proceeding";
@@ -155,20 +143,24 @@ app.controller('CldsOpenModelCtrl',
 				
 
 				cldsTemplateService.getTemplate( templateName ).then(function(pars) {
-        			console.log("openModel: pars=" + pars);
         			
         			var tempImageText=pars.imageText
         			var bpmnText=pars.bpmnText
+        			var authorizedToUp = pars.userAuthorizedToUpdate;
         			pars={}
         			
         			pars.imageText=tempImageText
         			pars.status= "DESIGN";
-        			pars.permittedActionCd= ["SUBMIT"];
-        			cldsModelService.processActionResponse(modelName, pars);
-        			
+        			if (readOnly || readMOnly){
+        				pars.permittedActionCd=[""];
+        			} else {
+        				pars.permittedActionCd=["TEST", "SUBMIT"];
+        			}
         			
         			selected_template= templateName
          			selected_model = modelName;
+        			
+        			cldsModelService.processActionResponse(modelName, pars);
     				
     				// set model bpmn and open diagram
         			$rootScope.isPalette = true;
@@ -178,17 +170,16 @@ app.controller('CldsOpenModelCtrl',
         		function(data) {
         			//alert("getModel failed");
         		});
-       
+				allPolicies = {};
+				elementMap = {};
 				$modalInstance.close("closed");
 			
 			}
 			
 			$scope.cloneModel=function(){
-				console.log("cloneModel");
 				reloadDefaultVariables(false)
  				var modelName = document.getElementById("modelName").value;
 				var originalModel=document.getElementById("modelList").value;
-				console.log("openModel: modelName=" + modelName);   
 				if(!modelName){
  					$scope.error.flag =true;
  					$scope.error.message = "Please enter any name for proceeding";
@@ -209,7 +200,6 @@ app.controller('CldsOpenModelCtrl',
 				
 
 				cldsModelService.getModel( originalModel ).then(function(pars) {
-        			console.log("openModel: pars=" + pars);
         			
         			// process data returned
         			var bpmnText = pars.bpmnText;
@@ -218,15 +208,26 @@ app.controller('CldsOpenModelCtrl',
         			var controlNamePrefix = pars.controlNamePrefix;
         			var controlNameUuid = pars.controlNameUuid;
         			selected_template=pars.templateName;
+        			typeID = pars.typeId;
         			pars.status="DESIGN";
+        			if (readOnly || readMOnly){
+        				pars.permittedActionCd=[""];
+        			} else {
+        				pars.permittedActionCd=["TEST", "SUBMIT"];
+        			}
         			pars.controlNameUuid="";
+        			modelEventService = pars.event;
+        			//actionCd = pars.event.actionCd;
+        			actionStateCd = pars.event.actionStateCd;
+        			deploymentId = pars.deploymentId;
+        				
+        			var authorizedToUp = pars.userAuthorizedToUpdate;
+        			
         			cldsModelService.processActionResponse(modelName, pars);
         			
         			// deserialize model properties
         			if ( propText == null ) {
-            			console.log("openModel: propText is null");
         			} else {
-            			console.log("openModel: propText=" + propText);
         				elementMap =  JSON.parse(propText);
         			}
 
@@ -244,10 +245,8 @@ app.controller('CldsOpenModelCtrl',
 				$modalInstance.close("closed");
 			}
 			$scope.createNewModel=function(){
-				console.log("createNewModel");
 				reloadDefaultVariables(false)
- 				var modelName = document.getElementById("modelName").value;
-				console.log("openModel: modelName=" + modelName);      
+ 				var modelName = document.getElementById("modelName").value;  
 				
 				// BEGIN env
 				// init UTM items
@@ -263,7 +262,7 @@ app.controller('CldsOpenModelCtrl',
 				$rootScope.utmModels = utmModels;
 				
     			// enable appropriate menu options
-    			var pars = {status: "DESIGN", permittedActionCd: ["SUBMIT"]};
+    			var pars = {status: "DESIGN"};
     			
 				cldsModelService.processActionResponse(modelName, pars);
     			
@@ -297,21 +296,14 @@ app.controller('CldsOpenModelCtrl',
     			$modalInstance.close("closed");
 			}
 			$scope.revertChanges=function(){
-				console.log("revertChanges");
 				$scope.openModel();
 			}
 			$scope.openModel = function(){
-				console.log("openModel");
 				reloadDefaultVariables(false)
-				var readonly;
 				if(document.getElementById("readOnly")){
-					readOnly=document.getElementById("readOnly").checked;	
+					readOnly=document.getElementById("readOnly").checked;
 				}
-				
-				console.log("readonly seen ")
-				console.log(readOnly)
- 				var modelName = document.getElementById("modelName").value;
-				console.log("openModel: modelName=" + modelName);      
+ 				var modelName = document.getElementById("modelName").value;    
 				
 				// init UTM items
 				$scope.utmModelsArray = [];
@@ -325,24 +317,30 @@ app.controller('CldsOpenModelCtrl',
 				utmModels.subModels = [];
 				$rootScope.utmModels = utmModels;
 				
-
 				cldsModelService.getModel( modelName ).then(function(pars) {
-        			console.log("openModel: pars=" + pars);
-        			console.log(pars)
         			// process data returned
         			var bpmnText = pars.bpmnText;
         			var propText = pars.propText;
         			var status = pars.status;
-        			var controlNamePrefix = pars.controlNamePrefix;
-        			var controlNameUuid = pars.controlNameUuid;
-        			selected_template=pars.templateName
+        			controlNamePrefix = pars.controlNamePrefix;
+        			// var controlNameUuid = pars.controlNameUuid;
+        			var authorizedToUp = pars.userAuthorizedToUpdate;
+        			typeID = pars.typeId;
+        			controlNameUuid = pars.controlNameUuid;
+        			selected_template=pars.templateName;
+        			modelEventService = pars.event;
+        			//actionCd = pars.event.actionCd;
+        			actionStateCd = pars.event.actionStateCd;
+        			deploymentId = pars.deploymentId;
+
+        			if (readMOnly || readOnly){
+        				pars.permittedActionCd= [""];
+        			}
         			cldsModelService.processActionResponse(modelName, pars);
         			
         			// deserialize model properties
         			if ( propText == null ) {
-            			console.log("openModel: propText is null");
         			} else {
-            			console.log("openModel: propText=" + propText);
         				elementMap =  JSON.parse(propText);
         			}
 
