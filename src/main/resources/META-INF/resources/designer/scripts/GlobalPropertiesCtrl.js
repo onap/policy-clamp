@@ -20,31 +20,34 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 app.controller('GlobalPropertiesCtrl',
 	['$scope', '$rootScope', '$modalInstance','cldsModelService', '$location', 'dialogs','cldsTemplateService',
-		function($scope, $rootScope, $modalInstance, cldsModelService, $location,dialogs,cldsTemplateService) {
-		console.log("////////GlobalPropertiesCtrl");							
+		function($scope, $rootScope, $modalInstance, cldsModelService, $location,dialogs,cldsTemplateService) {						
 			//cldsModelService.getASDCServices().then(function(pars) {
 			$scope.$watch('name', function(newValue, oldValue) {
-				console.log("name");
-				if(readOnly){
-					$("select,input,.nav-tabs .close").attr("disabled","");
-				}
 				var services=asdc_Services
-				console.log(asdc_Services)
 				setASDCFields()
 				for(k in services){
 		 			$("#service").append("<option value="+k+">"+services[k]+"</option>")
 		 		}
 		 		var el = elementMap["global"];
-		 		console.log(elementMap["global"])
 		 		if (el !== undefined) {
 		 			for (var i = 0; i < el.length; i++) {
 	 					$("#" + el[i].name).val(el[i].value);
 		 			}
 		 		}
 				setMultiSelect();
+				
+				if(readOnly||readMOnly){
+					$("#savePropsBtn").attr("disabled", "");
+					$('select[multiple] option').each(function() {
+			          var input = $('input[value="' + $(this).val() + '"]');
+			          input.prop('disabled', true);
+			          input.parent('li').addClass('disabled');
+			        });
+					$('input[value="multiselect-all"]').prop('disabled', true).parent('li').addClass('disabled');
+					($("select:not([multiple])")).multiselect("disable");
+				}
 			});
 			$scope.retry = function(){
 				console.log("retry");

@@ -20,7 +20,6 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 app.directive('fileModel', ['$parse', function ($parse) {
     console.log("////////fileModel");
     return {

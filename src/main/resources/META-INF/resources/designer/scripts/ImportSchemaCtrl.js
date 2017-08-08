@@ -36,10 +36,30 @@ app.controller('ImportSchemaCtrl', ['$scope', '$rootScope','$modalInstance','dat
 	$rootScope.updateServiceFault;
 	$rootScope.updateServiceInputPartInfo;
 	$rootScope.updateSchemElemant1;
+    
+
+// Below code is added to get the policyNames
+	for ( var polElement in elementMap) {
+		if (polElement.indexOf('Policy_') === 0) {
+			var obj = elementMap[polElement];
+			if (!($.isEmptyObject(obj))) {
+				allPolicies = jQuery.extend({}, obj);
+				$scope.policyNames = [];
+				for ( var policy in allPolicies) {
+					$scope.policyNames.push(policy);
+				}
+			}
+			break;
+		}
+	}
+     
+    setTimeout(function(){
+    console.log("setTimeout");
+    setMultiSelect(); }, 100);
 	
 	$scope.init = function() {
         console.log("init");
-		$scope.schemaLocation = 'svn://svnrepo:3690';
+        $scope.schemaLocation = 'svn://svnrepo:3690';
 		$scope.upgrade_schemaLocation = 'svn://svnrepo:3690';
 		$scope.userID = 'user_id';
 		$scope.password = 'password';

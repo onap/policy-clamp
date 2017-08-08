@@ -174,33 +174,3 @@ app.directive('inputInfoDVClassMember', function ($compile) {
       }
   }
 });
-
-/*app.controller('SetDefaultValueCtrl', ['$scope', '$rootScope','$modalInstance','$location', function($scope,$rootScope,$modalInstance,$location){
-    console.log("SetDefaultValueCtrl");
-	$scope.utmSchemaExts = {};
-	
-	$scope.init = function () {
-    console.log("init");		
-		//console.log("$rootScope.defValuesObject :: " + JSON.stringify(list_model_schema_extensions[selected_model]));
-		if(list_model_schema_extensions[selected_model] != null && list_model_schema_extensions[selected_model].utmSchemaExtentionMap != null) {
-			$scope.utmSchemaExts = list_model_schema_extensions[selected_model].utmSchemaExtentionMap;
-			$scope.previous_utmSchemaExts = angular.copy($scope.utmSchemaExts);
-			//console.log("$scope.defaultValuesObject :: " + $scope.utmSchemaExts);
-		}
-	};
-	
-	$scope.init();
-	
-	$scope.setDefaultValue= function(){	
-        console.log("setDefaultValue");
-		list_model_schema_extensions[selected_model].utmSchemaExtentionMap = $scope.utmSchemaExts;
-		$rootScope.isModel = true;
-		$modalInstance.close("closed");		
-	};
-
-	$scope.close = function(){
-        console.log("close");
-		list_model_schema_extensions[selected_model].utmSchemaExtentionMap = $scope.previous_utmSchemaExts;
-		$modalInstance.close("closed");
-	};
-}]);*/

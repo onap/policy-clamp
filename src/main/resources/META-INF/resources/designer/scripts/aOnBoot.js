@@ -59,27 +59,42 @@ var isObject = function(a) {
     return (!!a) && (a.constructor === Object);
 };
 
-function loadPropertyWindow(type) {    
-    if (readOnly) {
+function loadPropertyWindow(type) {
+    if (readOnly||readMOnly) {
         if ($("#add_one_more").length == 1) {
             $("#add_one_more").off();
             $("#add_one_more").click(function(event) {
                 event.preventDefault();
             })
         }
-        $("select,input").attr("disabled", "");
+        $("input,#savePropsBtn").attr("disabled", "");
+        $(".modal-body button").attr("disabled", "");
+		($("select:not([multiple])")).multiselect("disable");
+    }
+    
+    if (readTOnly){
+    	$("textarea").attr("disabled","");
+    	$("#savePropsBtn").attr("disabled", "");
     }
 
     var props = defaults_props[type];
     
     for (p in props) {
-        if (isObject(props[p])) {
+    	if (isObject(props[p])) {
             var mySelect = $('#' + p);
-            $.each(props[p], function(val, text) {
-                mySelect.append(
-                    $('<option></option>').val(val).html(text)
-                );
-            });
+            if (p=="operator"){
+            	$.each(props[p], function(val, text) {
+                    mySelect.append(
+                        $('<option></option>').val(val).html(val)
+                    );
+                });
+            } else {
+            	$.each(props[p], function(val, text) {
+                    mySelect.append(
+                        $('<option></option>').val(val).html(text)
+                    );
+                });
+            }
         } else {
         	if (p=="pname"){
         		var ms = new Date().getTime();
@@ -89,8 +104,9 @@ function loadPropertyWindow(type) {
         }
     }
     setTimeout(function(){
-
-     setMultiSelect(type); }, 100);
+    	setMultiSelect(type); }, 100);
+    
+    
      
 }
 
@@ -153,18 +169,18 @@ function setMultiSelect() {
     //refeshMultiSelect();
 }
 function loadSharedPropertyByService(onChangeUUID,refresh, callBack) {
-    var uuid = onChangeUUID
+    var uuid = onChangeUUID;
     if (uuid === undefined){
         uuid = elementMap["global"] && elementMap["global"].length>0 ? 
         elementMap["global"][0].value : "";
     } else if (uuid === "") {
         vf_Services = null
         if ($("#vf").length > 0)
-            $("#vf").empty();
+            $("#vf").empty().multiselect("refresh");
         if ($("#location").length > 0)
-            $("#location").empty();
+            $("#location").empty().multiselect("refresh");
         if ($("#alarmCondition").length > 0)
-            $("#alarmCondition").empty();
+            $("#alarmCondition").empty().multiselect("refresh");
         return true;
     }
     var share = null,
@@ -180,10 +196,10 @@ function loadSharedPropertyByService(onChangeUUID,refresh, callBack) {
         success: function(data) {
             vf_Services = data;
             setASDCFields()
-             if(refresh){
+            if(refresh){
              $("#paramsWarnrefresh").hide();   
             }
-             if($("#paramsWarn")){
+            if($("#paramsWarn")){
                 $("#paramsWarn").hide();
             }
             if(callBack && _.isFunction(callBack)){
@@ -209,6 +225,7 @@ function loadSharedPropertyByService(onChangeUUID,refresh, callBack) {
         timeout: 100000
 
     });
+    
     //vf_Services=share['shared']['byService'][uuid];
     //location_values = share['global']['location'];
 }
@@ -241,42 +258,60 @@ function setASDCFields() {
         loadSharedPropertyByService()
     } else {
         try {
-            $("#vf").empty();
-            $("#location").empty();
-            $("#vfc").empty();
+            $("#vf").empty().multiselect("refresh");
+            $("#location").empty().multiselect("refresh");
+            $("#actionSet").empty().multiselect("refresh");
+            $("#vfc").empty().multiselect("refresh");
             $("#paramsWarn").hide();
             var uuid = Object.keys(vf_Services['shared']['byService'])[0];
+            
             var vf_values = vf_Services['shared']['byService'][uuid] &&
                 vf_Services['shared']['byService'][uuid]['vf'] &&
 				_.keys(vf_Services['shared']['byService'][uuid]['vf']).length > 0  ?
                 vf_Services['shared']['byService'][uuid]['vf'] : null;
+                
             var selectedVF = {}
             for (let e in elementMap["global"]) {
                 if (elementMap['global'][e].name === "vf") {
                     selectedVF = elementMap['global'][e].value[0]
                 }
             }
-            var location_values = vf_Services['global']['location'];
+            
             var vfc_values2 = selectedVF &&
                 vf_Services['shared']['byVf'][selectedVF] &&
                 vf_Services['shared']['byVf'][selectedVF]['vfc'] &&
                  _.keys(vf_Services['shared']['byVf'][selectedVF]['vfc']).length > 0 ?
                 vf_Services['shared']['byVf'][selectedVF]['vfc'] : null;
-
+            
             if (vf_values) {
                 for (key in vf_values) {
                     if ($("#vf").length > 0) {
                         $("#vf").append("<option value=\"" + key + "\">" + vf_values[key] + "</opton>")
                     }
                 }
+                $("#vf").multiselect("rebuild");
             } 
+            
+            var location_values = vf_Services['global']['location'];
             if (location_values) {
                 for (key in location_values) {
                     if ($("#location").length > 0) {
                         $("#location").append("<option value=\"" + key + "\">" + location_values[key] + "</opton>")
                     }
                 }
-            }            
+                $("#location").multiselect("rebuild");
+            }    
+            
+            var actionSet_values = vf_Services['global']['actionSet'];
+            if (actionSet_values) {
+                for (key in actionSet_values) {
+                    if ($("#actionSet").length > 0) {
+                        $("#actionSet").append("<option value=\"" + key + "\">" + actionSet_values[key] + "</opton>")
+                    }
+                }
+                $("#actionSet").multiselect("rebuild");
+            }  
+            
             if (vfc_values2) {
             	$("#vfc").append("<option value=\"\"></opton>");
                 for (key in vfc_values2) {
@@ -284,6 +319,7 @@ function setASDCFields() {
                         $("#vfc").append("<option value=\"" + key.split("\"").join("") + "\">" + vfc_values2[key] + "</opton>")
                     }
                 }
+                $("#vfc").multiselect("rebuild");
             }
             if($("#vfc").length > 0 && !vfc_values2){
 				showWarn();
@@ -310,7 +346,6 @@ function reloadDefaultVariables(isTemp) {
     isTemplate = isTemp;
     vf_Services = null;
     readOnly = false;
-    runningInstances = {}
 }
 
 $(window).load(function() {
@@ -318,7 +353,7 @@ $(window).load(function() {
         dataType: "json",
         url: '/restservices/clds/v1/clds/properties',
         success: function(data) {
-            console.log("success");
+           
             defaults_props = data;
         },
         error: function(s, a, err) {
@@ -328,7 +363,4 @@ $(window).load(function() {
         },
         timeout: 100000
     });
-
-
-
 })

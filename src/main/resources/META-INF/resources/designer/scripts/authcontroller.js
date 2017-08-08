@@ -23,23 +23,57 @@
 
 'use strict';
 
-
-function AuthenticateCtrl($scope,$rootScope, $resource, $http, $location,$cookies) 
+function AuthenticateCtrl($scope,$rootScope,$window,$resource,$http,$location,$cookies,md5)
 {
 	console.log("//////////AuthenticateCtrl"); 
 	$scope.getInclude = function() 
 	{ 
-		console.log("getInclude"); 
-		return "utmdashboard.html"; 
-	}; 
- 
-	$scope.authenticate = function() 
-	{ 
-		console.log("authenticate"); 
+		console.log("getInclude011111111");
+		var invalidUser=$window.localStorage.getItem("isInvalidUser");
+		var isAuth=$window.localStorage.getItem("isAuth");
 
-		$rootScope.isAuth = true; 
-		$rootScope.loginuser = "somebody"; 
-		$rootScope.loginemailid = "somebody@somewhere.com"; 
-		$rootScope.attuid  = "m12349"; 
+		if(invalidUser != null && invalidUser == 'true')
+		{
+			console.log("Authentication failed");
+			$window.localStorage.removeItem("isInvalidUser");
+			window.location.href = "/designer/invalid_login.html";
+		}
+		else if(isAuth == null || isAuth == 'false')
+	    {
+			return "authenticate.html";
+	    }
+		// Reassign the login user info, to be used in menu.html 
+		$rootScope.loginuser = $window.localStorage.getItem("loginuser");
+		return "utmdashboard.html";
+	}; 
+
+	$scope.authenticate = function()
+	{
+		var username = $scope.username;
+		var pass =$scope.password;
+		if (!username || !pass) {
+			console.log("Invalid username/password");
+    		$window.localStorage.setItem("isInvalidUser", true);
+			return;
+		}
+		var hashpass = md5.createHash(pass);
+		var headers = username ? {authorization : "Basic "
+	        + btoa(username + ":" + hashpass)
+	    } : {};
+	    // send request to a test API with the username/password to verify the authorization
+	    $http.get('/restservices/clds/v1/user/testUser', {headers : headers}).success(function(data) {
+	    	if (data) {
+	    		$window.localStorage.setItem("isAuth", true);
+	    		$window.localStorage.setItem("loginuser", $scope.username);
+	    		$rootScope.loginuser = $scope.username;
+	    	} else {
+	    		$window.localStorage.removeItem("isInvalidUser", true);
+	    	}
+	    	callback && callback();
+	    }).error(function() {
+    		$window.localStorage.removeItem("isInvalidUser", true);
+	    	callback && callback();
+	    });
 	};
+	
 }

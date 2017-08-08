@@ -20,7 +20,6 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 app.directive('opentext', function ($compile, dialogs, $rootScope){
     console.log("//////////opentext");
   return {
@@ -410,74 +409,7 @@ app.controller('propertyExplorerCtrl',['$scope','$rootScope','$location','$modal
 			Datafactory.setDbDataList(dbToolRequestList);
 		}
 	};
-	
-	/*$scope.openDbToolPath = function(pathDtls) {
-        console.log("openDbToolPath");
-		$scope.pathDetails=pathDtls;
-		$scope.sendDbData($scope.pathDetails.dbToolRequestList);
-		
-		var dlg = dialogs.create('partials/SOA/dbTool_property_explorer.html','dbTool_property_explorer',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){	
-        console.log("dlg.result");			
-			$scope.pathDetails.dbToolRequestList=Datafactory.getDbDataList();
-			
-			var resetDbRequestList=[];
-			Datafactory.setDbDataList(resetDbRequestList);
-			//Datafactory.setDbDataFlag("");
-			
-		},function(){
-			
-		});
-	};
-	
-	$scope.openDbToolDecision = function(DecisionDtls) {
-        console.log("openDbToolDecision");
-		$scope.decisionIdentifier=DecisionDtls;
-		$scope.sendDbData($scope.decisionIdentifier.dbToolRequestList);		
-		
-		var dlg = dialogs.create('partials/SOA/dbTool_property_explorer.html','dbTool_property_explorer',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-        console.log("dlg.result");				
-			$scope.decisionIdentifier.dbToolRequestList=Datafactory.getDbDataList();
-			
-			var resetDbRequestList=[];
-			Datafactory.setDbDataList(resetDbRequestList);
-		},function(){
-			
-		});
-	};*/
-	//soap_client_option.html
-	/*$scope.openXMLAsserterPath = function(pathDtls){
-		$scope.pathDetails=pathDtls;
-		$scope.sendAssertData($scope.pathDetails.xmlAsserter);
-		
-		var dlg = dialogs.create('partials/SOA/XML_Assertor.html','xmlAssertorCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-			$scope.pathDetails.xmlAsserter = Datafactory.getXmlAsserter();
-			var resetXmlAsserter ={};
-			Datafactory.setXmlAsserter(resetXmlAsserter);
-		},function(){
-			
-		});
-	};*/
-	
-	/*$scope.openXMLAsserterDecision = function(DecisionDtls){
-        console.log("openXMLAsserterDecision");
-		$scope.decisionIdentifier=DecisionDtls;
-		$scope.sendAssertData($scope.decisionIdentifier.xmlAsserter);	
-		
-		var dlg = dialogs.create('partials/SOA/XML_Assertor.html','xmlAssertorCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-            console.log("dlg.result");
-			$scope.decisionIdentifier.xmlAsserter = Datafactory.getXmlAsserter();
-			var resetXmlAsserter ={};
-			Datafactory.setXmlAsserter(resetXmlAsserter);
-			
-		},function(){
-			
-		});
-	};*/
-	
+
 	$scope.sendAssertData = function(xmlAsserterRequest){
         console.log("sendAssertData");
 		if(xmlAsserterRequest!=null){
@@ -488,9 +420,8 @@ app.controller('propertyExplorerCtrl',['$scope','$rootScope','$location','$modal
 			Datafactory.setXmlAsserter(xmlAsserterRequest);
 		}
 		
-	};
-	
-	
+	};	
+
 	$scope.sendRuntimePythonScriptData = function(pathDtls){
         console.log("sendRuntimePythonScriptData");
 		if(pathDtls!=null){
@@ -502,124 +433,4 @@ app.controller('propertyExplorerCtrl',['$scope','$rootScope','$location','$modal
 		}
 		
 	};
-	
-	/*$scope.openRuntimePythonScriptDecision = function(decisionIdentifier) {
-        console.log("openRuntimePythonScriptDecision");
-		$scope.decisionIdentifier=decisionIdentifier;
-		$scope.sendRuntimePythonScriptData($scope.decisionIdentifier.runtimePythonScriptList);
-		
-		var dlg = dialogs.create('partials/SOA/runtime_python_script.html','runtimePythonScriptCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-			$scope.decisionIdentifier.runtimePythonScriptList = Datafactory.getRuntimePythonScriptList();
-			var resetRuntimePythonScript =[];
-			Datafactory.setRuntimePythonScriptList(resetRuntimePythonScript);
-			
-		},function(){
-			
-		});
-	};*/
-	
-	
-	/*$scope.openRuntimePythonScript = function(pathDtls) {
-        console.log("openRuntimePythonScript");
-		$scope.pathDetails=pathDtls;
-		$scope.sendRuntimePythonScriptData($scope.pathDetails.runtimePythonScriptList);
-		
-		var dlg = dialogs.create('partials/SOA/runtime_python_script.html','runtimePythonScriptCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-            console.log("dlg.result");
-			$scope.pathDetails.runtimePythonScriptList = Datafactory.getRuntimePythonScriptList();
-			var resetRuntimePythonScript =[];
-			Datafactory.setRuntimePythonScriptList(resetRuntimePythonScript);
-			
-		},function(){
-			
-		});
-	};
-	
-	$scope.getAsserter = function(){
-      console.log("getAsserter");  
-		var dlg = dialogs.create('partials/SOA/XML_Assertor.html','xmlAssertorCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-			
-		},function(){
-			
-		});
-		
-	};
-	
-	$scope.openXMLValidatorDecision = function(DecisionDtls){
-      console.log("open xmlValidatorRequest");
-		$scope.decisionIdentifier=DecisionDtls;
-		$scope.sendValidatorData($scope.decisionIdentifier.xmlValidators);	
-		
-		var dlg = dialogs.create('partials/SOA/xml_validator_decision.html','xmlValidatorDecisionLevelCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-			$scope.decisionIdentifier.xmlValidators = Datafactory.getXmlValidatorDecisionLevel();
-			var resetXmlValidators =[];
-			Datafactory.setXmlValidatorDecisionLevel(resetXmlValidators);
-			
-		},function(){
-			
-		});
-	};
-	
-	$scope.sendValidatorData = function(xmlValidatorRequest){
-        console.log("sendValidatorData");
-		if(xmlValidatorRequest!=null){
-			Datafactory.setXmlValidatorDecisionLevel(xmlValidatorRequest);
-		}
-		else{
-			xmlValidatorRequest=[];
-			Datafactory.setXmlValidatorDecisionLevel(xmlValidatorRequest);
-		}
-		
-	};
-	
-	$scope.sendDbSoapClientOption = function(soapClientOption){
-        console.log("sendDbSoapClientOption");
-		if(soapClientOption!=null){
-			Datafactory.setSoapClientOption(soapClientOption);
-		}
-		else{
-			soapClientOption={};
-			Datafactory.setSoapClientOption(soapClientOption);
-		}
-	};
-	
-	$scope.openSoapClientOptionPath = function(pathDetails){
-        console.log("openSoapClientOptionPath");
-		$scope.pathDetails=pathDetails;
-		$scope.sendDbSoapClientOption($scope.pathDetails.soapClientOption);
-		
-		var dlg = dialogs.create('partials/SOA/soap_client_option.html','soapClientOptionsCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){
-            console.log("dlg.result");
-			$scope.pathDetails.modelPreferenceInfo = Datafactory.getSoapClientOption();
-			var resetSoapClientOption ={};
-			Datafactory.setSoapClientOption(resetSoapClientOption);
-			
-		},function(){
-			
-		});
-	};
-	
-	$scope.openSoapClientOptionDecision = function(decisionIdentifier){
-        console.log("openSoapClientOptionDecision");
-		$scope.decisionIdentifier=decisionIdentifier;
-		$scope.sendDbSoapClientOption($scope.decisionIdentifier.soapClientOption);		
-		
-		var dlg = dialogs.create('partials/SOA/soap_client_option.html','soapClientOptionsCtrl',{},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
-		dlg.result.then(function(name){	
-        console.log("dlg.result");			
-			$scope.decisionIdentifier.modelPreferenceInfo=Datafactory.getSoapClientOption();
-			
-			var resetSoapClientOption=[];
-			Datafactory.setSoapClientOption(resetSoapClientOption);
-		},function(){
-			
-		});
-	};*/
-	
 }]);
-

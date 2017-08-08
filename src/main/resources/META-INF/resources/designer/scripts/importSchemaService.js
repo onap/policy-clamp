@@ -20,7 +20,6 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 app.service('svnservice', ['$http', '$q', function ($http, $q) {
     console.log("//////svnservice");
     this.SVNToUrl = function(schemaLocation, userID, password,svnURL,svnUploadURL){
