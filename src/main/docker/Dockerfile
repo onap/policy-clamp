@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
 MAINTAINER "The Onap Team"
-LABEL Description="This image contains an updated ubuntu 16.04 with the openjdk installed" Version="16.04-8"
+LABEL Description="This immage contains an updated ubuntu 16.04 with the openjdk installed" Version="16.04-8"
 
 ARG http_proxy
 ARG https_proxy
@@ -15,9 +15,8 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     apt-get -y dist-upgrade &&  \
     apt-get install -y openjdk-8-jre-headless
 
-ADD clds-1.0.0-SNAPSHOT.jar /opt/clamp/app.jar
+ADD clamp.jar /opt/clamp/app.jar
 VOLUME /etc
-ADD /etc/ /etc/
 ADD startService.sh /opt/clamp/startService.sh
 RUN chmod 700 /opt/clamp/startService.sh
 

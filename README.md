@@ -32,16 +32,45 @@ You can use the following command to build the clamp docker image:
 mvn clean install -P docker
 ```
 
-## Deployement
+## Deployment
 Currently, the clamp docker image can be deployed with small configuration needs. Though, you might need to make small adjustments to the configuration. As clamp is spring based, you can use the SPRING_APPLICATION_JSON environment variable to update its parameters. 
 
 ### Databases
 There are two needed datasource for Clamp. By default, both will try to connect to the localhost server using the credentials available in the example SQL files. If you need to change the default database host and/or credentials, you can do it by using the following json as SPRING_APPLICATION_JSON environment variable :
+
 ```json
-{"spring": 
+{
+    "spring.datasource.camunda.url": "jdbc:mysql://anotherDB.onap.org:3306/camundabpm?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
+    "spring.datasource.camunda.username": "admin",
+    "spring.datasource.camunda.password": "password",
+    "spring.datasource.cldsdb.url": "jdbc:mysql://anotherDB.onap.org:3306/cldsdb4?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
+    "spring.datasource.cldsdb.username": "admin",
+    "spring.datasource.cldsdb.password": "password"
+}
+```
+
+OR 
+
+```json
+{
+    "spring": 
     {
-     "datasource": {"url":"jdbc:mysql://anotherDB.onap.org:3306/camunda?autoReconnect=true", "username": "admin", "password": "admin"}, 
-     "cldsdatasource": {"url":"jdbc:mysql://anotherDB.onap.org:3306/clds?autoReconnect=true", "username": "admin", "password": "admin"}
+        "datasource": 
+        {
+            "camunda": 
+            {
+                "url": "jdbc:mysql://anotherDB.onap.org:3306/camundabpm?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
+                "username": "admin",
+                "password": "password"
+            },
+
+            "cldsdb": 
+            {
+                "url": "jdbc:mysql://anotherDB.onap.org:3306/cldsdb4?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
+                "username": "admin",
+                "password": "password"
+            }
+        }
     }
 }
 
