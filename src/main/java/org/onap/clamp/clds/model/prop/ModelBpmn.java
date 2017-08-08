@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,6 +23,18 @@
 
 package org.onap.clamp.clds.model.prop;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.onap.clamp.clds.service.CldsService;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -30,18 +42,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
-
 /**
  * Parse Model BPMN properties.
  * <p>
- * Example json: {"collector":[{"id":"Collector_11r50j1", "from":"StartEvent_1"}],"stringMatch":[{"id":"StringMatch_0h6cbdv"}],"policy":[{"id":"Policy_0oxeocn", "from":"StringMatch_0h6cbdv"}]}
+ * Example json: {"collector":[{"id":"Collector_11r50j1",
+ * "from":"StartEvent_1"}],"stringMatch":[{"id":"StringMatch_0h6cbdv"}],"policy"
+ * :[{"id":"Policy_0oxeocn", "from":"StringMatch_0h6cbdv"}]}
  */
 public class ModelBpmn {
-    private static final Logger logger = Logger.getLogger(ModelBpmn.class.getName());
+    protected static final EELFLogger                       logger        = EELFManager.getInstance()
+            .getLogger(CldsService.class);
+    protected static final EELFLogger                 auditLogger   = EELFManager.getInstance().getAuditLogger();
 
     // for each type, an array of entries
     private final Map<String, List<ModelBpmnEntry>> entriesByType = new HashMap<>();
@@ -65,7 +76,8 @@ public class ModelBpmn {
         ModelBpmn modelBpmn = new ModelBpmn();
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.readValue(modelBpmnPropText, ObjectNode.class);
-        // iterate over each entry like: "collector":[{"id":"Collector_11r50j1","from":"StartEvent_1"}]
+        // iterate over each entry like:
+        // "collector":[{"id":"Collector_11r50j1","from":"StartEvent_1"}]
         Iterator<Entry<String, JsonNode>> entryItr = root.fields();
         List<String> bpmnElementIdList = new ArrayList<>();
         while (entryItr.hasNext()) {
@@ -73,7 +85,8 @@ public class ModelBpmn {
             Entry<String, JsonNode> entry = entryItr.next();
             String type = entry.getKey();
             ArrayNode arrayNode = (ArrayNode) entry.getValue();
-            // process each id/from object, like: {"id":"Collector_11r50j1","from":"StartEvent_1"}
+            // process each id/from object, like:
+            // {"id":"Collector_11r50j1","from":"StartEvent_1"}
             for (JsonNode anArrayNode : arrayNode) {
                 ObjectNode node = (ObjectNode) anArrayNode;
                 String id = node.get("id").asText();
@@ -110,8 +123,8 @@ public class ModelBpmn {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param type
      * @return true if the element is found or false otherwise
      */
@@ -123,14 +136,22 @@ public class ModelBpmn {
      * @return the id field given the ModelElement type
      */
     public String getId(String type) {
-        return entriesByType.get(type).get(0).getId();
+        String modelElementId = "";
+        if (entriesByType.get(type) != null) {
+            modelElementId = entriesByType.get(type).get(0).getId();
+        }
+        return modelElementId;
     }
 
     /**
      * @return the fromId field given the ModelElement type
      */
     public String getFromId(String type) {
-        return entriesByType.get(type).get(0).getFromId();
+        String modelElementFromIdId = "";
+        if (entriesByType.get(type) != null) {
+            modelElementFromIdId = entriesByType.get(type).get(0).getFromId();
+        }
+        return modelElementFromIdId;
     }
 
     /**

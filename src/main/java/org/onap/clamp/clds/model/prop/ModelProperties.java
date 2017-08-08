@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,38 +23,62 @@
 
 package org.onap.clamp.clds.model.prop;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.onap.clamp.clds.model.CldsEvent;
+import org.onap.clamp.clds.model.CldsModel;
+import org.onap.clamp.clds.service.CldsService;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.CldsModel;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Parse model properties.
  */
 public class ModelProperties {
-    private static final Logger logger = Logger.getLogger(ModelProperties.class.getName());
+    protected static final EELFLogger                                 logger              = EELFManager.getInstance()
+            .getLogger(CldsService.class);
+    protected static final EELFLogger                           auditLogger         = EELFManager.getInstance()
+            .getAuditLogger();
 
-    private ModelBpmn     modelBpmn;
-    private JsonNode      modelJson;
+    private ModelBpmn                                         modelBpmn;
+    private JsonNode                                          modelJson;
 
-    private final String  modelName;
-    private final String  controlName;
-    private final String  actionCd;
+    private final String                                      modelName;
+    private final String                                      controlName;
+    private final String                                      actionCd;
+    // Flag indicate whether it is triggered by Validation Test button from UI
+    private final boolean 									  isTest;
 
-    private Global        global;
-    private Collector     collector;
-    private StringMatch   stringMatch;
-    private Policy        policy;
-    private Tca           tca;
+    private Global                                            global;
+    private Tca                                               tca;
 
-    private String        currentModelElementId;
-    private String        policyUniqueId;
+    private final Map<String, ModelElement>                   modelElements       = new ConcurrentHashMap<>();
+
+    private String                                            currentModelElementId;
+    private String                                            policyUniqueId;
+
+    private static final Object                               lock                = new Object();
+    private static Map<Class<? extends ModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
+
+    static {
+        synchronized (lock) {
+            modelElementClasses.put(Collector.class, Collector.getType());
+            modelElementClasses.put(Policy.class, Policy.getType());
+            modelElementClasses.put(StringMatch.class, StringMatch.getType());
+            modelElementClasses.put(Tca.class, Tca.getType());
+        }
+    }
 
     /**
      * Retain data required to parse the ModelElement objects. (Rather than
@@ -63,18 +87,53 @@ public class ModelProperties {
      * @param modelName
      * @param controlName
      * @param actionCd
+     * @param isTest
      * @param modelBpmnPropText
      * @param modelPropText
      * @throws JsonProcessingException
      * @throws IOException
      */
-    public ModelProperties(String modelName, String controlName, String actionCd, String modelBpmnPropText, String modelPropText) throws IOException {
+    public ModelProperties(String modelName, String controlName, String actionCd, boolean isTest, String modelBpmnPropText,
+            String modelPropText) throws IOException {
         this.modelName = modelName;
         this.controlName = controlName;
         this.actionCd = actionCd;
+        this.isTest = isTest;
         modelBpmn = ModelBpmn.create(modelBpmnPropText);
-        ObjectMapper mapper = new ObjectMapper();
-        modelJson = mapper.readTree(modelPropText);
+        modelJson = new ObjectMapper().readTree(modelPropText);
+
+        instantiateMissingModelElements();
+    }
+
+    /**
+     * This method is meant to ensure that one ModelElement instance exists for
+     * each ModelElement class.
+     *
+     * As new ModelElement classes could have been registered after
+     * instantiation of this ModelProperties, we need to build the missing
+     * ModelElement instances.
+     */
+    private final void instantiateMissingModelElements() {
+        if (modelElementClasses.size() != modelElements.size()) {
+            Set<String> missingTypes = new HashSet<>(modelElementClasses.values());
+            missingTypes.removeAll(modelElements.keySet());
+            // Parse the list of base Model Elements and build up the
+            // ModelElements
+            modelElementClasses.entrySet().stream().parallel()
+                    .filter(entry -> (ModelElement.class.isAssignableFrom(entry.getKey())
+                            && missingTypes.contains(entry.getValue())))
+                    .forEach(entry -> {
+                        try {
+                            modelElements.put(entry.getValue(),
+                                    (entry.getKey()
+                                            .getConstructor(ModelProperties.class, ModelBpmn.class, JsonNode.class)
+                                            .newInstance(this, modelBpmn, modelJson)));
+                        } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
+                                | InvocationTargetException e) {
+                            logger.warn("Unable to instantiate a ModelElement, exception follows: " + e);
+                        }
+                    });
+        }
     }
 
     /**
@@ -109,13 +168,15 @@ public class ModelProperties {
      * @throws IOException
      */
     public static ModelProperties create(DelegateExecution execution) throws IOException {
-        String modelProp = (String) execution.getVariable("modelProp");
+        // String modelProp = (String) execution.getVariable("modelProp");
+        String modelProp = new String((byte[]) execution.getVariable("modelProp"));
         String modelBpmnProp = (String) execution.getVariable("modelBpmnProp");
         String modelName = (String) execution.getVariable("modelName");
         String controlName = (String) execution.getVariable("controlName");
         String actionCd = (String) execution.getVariable("actionCd");
+        boolean isTest = (boolean)execution.getVariable("isTest");
 
-        return new ModelProperties(modelName, controlName, actionCd, modelBpmnProp, modelProp);
+        return new ModelProperties(modelName, controlName, actionCd, isTest, modelBpmnProp, modelProp);
     }
 
     /**
@@ -125,24 +186,11 @@ public class ModelProperties {
      * @return
      */
     public ModelElement getModelElementByType(String type) {
-        ModelElement me;
-        switch (type) {
-            case ModelElement.TYPE_COLLECTOR:
-                me = getCollector();
-                break;
-            case ModelElement.TYPE_STRING_MATCH:
-                me = getStringMatch();
-                break;
-            case ModelElement.TYPE_POLICY:
-                me = getPolicy();
-                break;
-            case ModelElement.TYPE_TCA:
-                me = getTca();
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid ModelElement type: " + type);
+        ModelElement modelElement = modelElements.get(type);
+        if (modelElement == null) {
+            throw new IllegalArgumentException("Invalid or not found ModelElement type: " + type);
         }
-        return me;
+        return modelElement;
     }
 
     /**
@@ -178,6 +226,13 @@ public class ModelProperties {
      */
     public String getCurrentPolicyScopeAndPolicyName() {
         return normalizePolicyScopeName(modelName + "." + getCurrentPolicyName());
+    }
+
+    /**
+     * @return the policyScopeAndNameWithUniqueId
+     */
+    public String getPolicyScopeAndNameWithUniqueId() {
+        return normalizePolicyScopeName(modelName + "." + getCurrentPolicyName() + "_" + policyUniqueId);
     }
 
     /**
@@ -233,7 +288,7 @@ public class ModelProperties {
     /**
      * When generating a policy request for a model element, must set the unique
      * id of that policy using this method. Used to generate the policy name.
-     * 
+     *
      * @param policyUniqueId
      *            the policyUniqueId to set
      */
@@ -242,21 +297,18 @@ public class ModelProperties {
     }
 
     /**
-     * @return the collector
-     */
-    public Collector getCollector() {
-        if (collector == null) {
-            collector = new Collector(this, modelBpmn, modelJson);
-        }
-        return collector;
-    }
-
-    /**
      * @return the actionCd
      */
     public String getActionCd() {
         return actionCd;
     }
+
+	/**
+	 * @return the isTest
+	 */
+	public boolean isTest() {
+		return isTest;
+	}
 
     /**
      * @return the isCreateRequest
@@ -288,24 +340,17 @@ public class ModelProperties {
         return global;
     }
 
-    /**
-     * @return the stringMatch
-     */
-    public StringMatch getStringMatch() {
-        if (stringMatch == null) {
-            stringMatch = new StringMatch(this, modelBpmn, modelJson);
+    public static final synchronized void registerModelElement(Class<? extends ModelElement> modelElementClass,
+            String type) {
+        if (!modelElementClasses.containsKey(modelElementClass.getClass())) {
+            modelElementClasses.put(modelElementClass, type);
         }
-        return stringMatch;
     }
 
-    /**
-     * @return the policy
-     */
-    public Policy getPolicy() {
-        if (policy == null) {
-            policy = new Policy(this, modelBpmn, modelJson);
-        }
-        return policy;
+    public <T extends ModelElement> T getType(Class<T> clazz) {
+        instantiateMissingModelElements();
+        String type = modelElementClasses.get(clazz);
+        return (type != null ? (T) modelElements.get(type) : null);
     }
 
     /**

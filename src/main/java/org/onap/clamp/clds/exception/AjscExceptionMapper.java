@@ -23,18 +23,19 @@
 
 package org.onap.clamp.clds.exception;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+
 import com.att.ajsc.common.AjscProvider;
 import com.att.ajsc.common.exception.ServerErrorException;
 import com.att.ajsc.common.exception.ServiceException;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 
 @AjscProvider
 public class AjscExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(final Exception exception) {
-        return exception instanceof ServiceException ? ((ServiceException) exception).toResponse() : new ServerErrorException(exception.getMessage()).toResponse();
+        return exception instanceof ServiceException ? ((ServiceException) exception).toResponse()
+                : new ServerErrorException(exception.getMessage()).toResponse();
     }
 }

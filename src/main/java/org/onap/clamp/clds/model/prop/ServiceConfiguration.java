@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,32 +23,59 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Parse serviceConfigurations from StringMatch json properties.
  * <p>
- * Example json: "StringMatch_0c2cy0c":[[{"name":"topicPublishes","value":"DCAE-CL-EVENT"}],{"serviceConfigurations":[[{"name":"aaiMatchingFields","value":["VMID"]},{"name":"aaiSendFields","value":["VNFNAME","LOCID"]},{"name":"vnf","value":["aSBG"]},{"name":"timeWindow","value":["0"]},{"name":"ageLimit","value":["1600"]},{"name":"createClosedLoopEventId","value":["Initial"]},{"name":"outputEventName","value":["OnSet"]},{"stringSet":[{"name":"alarmCondition","value":["authenticationFailure"]},{"name":"eventSeverity","value":["NORMAL"]},{"name":"eventSourceType","value":["f5BigIP"]}]}],[{"name":"aaiMatchingFields","value":["VMID"]},{"name":"aaiSendFields","value":["VMID","Identiy","VNFNAME"]},{"name":"vnf","value":["aSBG"]},{"name":"timeWindow","value":["0"]},{"name":"ageLimit","value":["1600"]},{"name":"createClosedLoopEventId","value":["Close"]},{"name":"outputEventName","value":["Abatement"]},{"stringSet":[{"name":"alarmCondition","value":["authenticationFailure"]},{"name":"eventSeverity","value":["NORMAL"]},{"name":"eventSourceType","value":["f5BigIP"]}]}]]}]
+ * Example json:
+ * {"StringMatch_0aji7go":{"Group1":[{"name":"rgname","value":"1493749598520"},{
+ * "name":"rgfriendlyname","value":"Group1"},{"name":"policyName","value":
+ * "Policy1"},{"name":"policyId","value":"1"},{"serviceConfigurations":[[{"name"
+ * :"aaiMatchingFields","value":["complex.city","vserver.vserver-name"]},{"name"
+ * :"aaiSendFields","value":["complex.city","vserver.vserver-name"]},{"name":
+ * "eventSeverity","value":["OK"]},{"name":"eventSourceType","value":[""]},{
+ * "name":"timeWindow","value":["100"]},{"name":"ageLimit","value":["100"]},{
+ * "name":"createClosedLoopEventId","value":["Initial"]},{"name":
+ * "outputEventName","value":["ONSET"]}]]}],"Group2":[{"name":"rgname","value":
+ * "1493749665149"},{"name":"rgfriendlyname","value":"Group2"},{"name":
+ * "policyName","value":"Policy2"},{"name":"policyId","value":"2"},{
+ * "serviceConfigurations":[[{"name":"aaiMatchingFields","value":[
+ * "cloud-region.identity-url","vserver.vserver-name"]},{"name":"aaiSendFields",
+ * "value":["cloud-region.identity-url","vserver.vserver-name"]},{"name":
+ * "eventSeverity","value":["NORMAL"]},{"name":"eventSourceType","value":[""]},{
+ * "name":"timeWindow","value":["1000"]},{"name":"ageLimit","value":["1000"]},{
+ * "name":"createClosedLoopEventId","value":["Initial"]},{"name":
+ * "outputEventName","value":["ONSET"]}],[{"name":"aaiMatchingFields","value":[
+ * "generic-vnf.vnf-name","vserver.vserver-name"]},{"name":"aaiSendFields",
+ * "value":["generic-vnf.vnf-name","vserver.vserver-name"]},{"name":
+ * "eventSeverity","value":["CRITICAL"]},{"name":"eventSourceType","value":[""]}
+ * ,{"name":"timeWindow","value":["3000"]},{"name":"ageLimit","value":["3000"]},
+ * {"name":"createClosedLoopEventId","value":["Initial"]},{"name":
+ * "outputEventName","value":["ABATED"]}]]}]}}
+ *
  */
 public class ServiceConfiguration {
 
-    private static final Logger logger = Logger.getLogger(ServiceConfiguration.class.getName());
+    protected static final EELFLogger         logger      = EELFManager.getInstance().getLogger(ServiceConfiguration.class);
+    protected static final EELFLogger   auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private final List<String> aaiMatchingFields;
-    private final List<String> aaiSendFields;
-    private final String groupNumber;
-    private final List<String> resourceVf;
-    private final List<String> resourceVfc;
-    private final String timeWindow;
-    private final String ageLimit;
-    private final String createClosedLoopEventId;
-    private final String outputEventName;
+    private final List<String>        aaiMatchingFields;
+    private final List<String>        aaiSendFields;
+    // private final String groupNumber;
+    private final List<String>        resourceVf;
+    private final List<String>        resourceVfc;
+    private final String              timeWindow;
+    private final String              ageLimit;
+    private final String              createClosedLoopEventId;
+    private final String              outputEventName;
     private final Map<String, String> stringSet;
 
     /**
@@ -59,7 +86,7 @@ public class ServiceConfiguration {
     public ServiceConfiguration(JsonNode node) {
         aaiMatchingFields = ModelElement.getValuesByName(node, "aaiMatchingFields");
         aaiSendFields = ModelElement.getValuesByName(node, "aaiSendFields");
-        groupNumber = ModelElement.getValueByName(node, "groupNumber");
+        // groupNumber = ModelElement.getValueByName(node, "groupNumber");
         resourceVf = ModelElement.getValuesByName(node, "vf");
         resourceVfc = ModelElement.getValuesByName(node, "vfc");
         timeWindow = ModelElement.getValueByName(node, "timeWindow");
@@ -77,7 +104,7 @@ public class ServiceConfiguration {
             String value = ssNode.path("value").path(0).asText();
             if (key.length() != 0 && value.length() != 0) {
                 // only add string set field if not null
-                logger.fine("stringSet: " + key + "=" + value);
+                logger.debug("stringSet: " + key + "=" + value);
                 stringSet.put(key, value);
             }
         }
@@ -99,11 +126,9 @@ public class ServiceConfiguration {
 
     /**
      * @return the groupNumber
-     */
-    public String getGroupNumber() {
-        return groupNumber;
-    }
-
+     */ /*
+        * public String getGroupNumber() { return groupNumber; }
+        */
     /**
      * @return the resourceVf
      */

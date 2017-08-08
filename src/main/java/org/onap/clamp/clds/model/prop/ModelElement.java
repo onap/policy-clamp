@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,38 +23,37 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Provide base ModelElement functionality.
  */
 public abstract class ModelElement {
-    private final static Logger   sLOGGER           = Logger.getLogger(ModelElement.class.getName());
-    private static final Logger logger = Logger.getLogger(ModelElement.class.getName());
+    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(ModelElement.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    public static final String    TYPE_COLLECTOR    = "collector";
-    public static final String    TYPE_STRING_MATCH = "stringMatch";
-    public static final String    TYPE_POLICY       = "policy";
-    public static final String    TYPE_TCA          = "tca";
+    public static final String      TYPE_POLICY = "policy";
+    public static final String      TYPE_TCA    = "tca";
 
-    private final String          type;
-    private final ModelBpmn       modelBpmn;
-    private final String          id;
-    protected String              topicPublishes;
-    protected final JsonNode      meNode;
-    private boolean               isFound;
+    private final String            type;
+    private final ModelBpmn         modelBpmn;
+    private final String            id;
+    protected String                topicPublishes;
+    protected final JsonNode        meNode;
+    private boolean                 isFound;
 
-    private final ModelProperties modelProp;
+    private final ModelProperties   modelProp;
 
     /**
      * Perform base parsing of properties for a ModelElement (such as,
      * Collector, StringMatch, Policy and Tca)
-     * 
+     *
      * @param type
      * @param modelProp
      * @param modelBpmn
@@ -117,9 +116,9 @@ public abstract class ModelElement {
             }
         }
         if (value == null || value.length() == 0) {
-            sLOGGER.warning(name + "=" + value);
+            logger.warn(name + "=" + value);
         } else {
-            sLOGGER.fine(name + "=" + value);
+            logger.debug(name + "=" + value);
         }
         return value;
     }
@@ -157,9 +156,9 @@ public abstract class ModelElement {
             }
         }
         if (values == null || values.size() == 0) {
-            sLOGGER.warning(name + "=" + values);
+            logger.warn(name + "=" + values);
         } else {
-            sLOGGER.fine(name + "=" + values);
+            logger.debug(name + "=" + values);
         }
         return values;
     }
@@ -228,5 +227,4 @@ public abstract class ModelElement {
     public boolean isFound() {
         return isFound;
     }
-
 }

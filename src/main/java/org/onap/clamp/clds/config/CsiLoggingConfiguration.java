@@ -23,11 +23,12 @@
 
 package org.onap.clamp.clds.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import com.att.ajsc.csilogging.common.AsyncSupport;
 import com.att.ajsc.csilogging.interceptors.CsiLoggingCamelPostInterceptor;
 import com.att.ajsc.csilogging.interceptors.CsiLoggingCamelPreInterceptor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CsiLoggingConfiguration {
