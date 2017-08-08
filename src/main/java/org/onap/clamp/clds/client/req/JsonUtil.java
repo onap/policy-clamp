@@ -41,8 +41,8 @@ public class JsonUtil {
      * @param node
      */
     public static void addListToArrayNode(List<String> list, ArrayNode node) {
-        for (String aList : list) {
-            node.add(aList);
+        for (String aString : list) {
+            node.add(aString);
         }
     }
 
