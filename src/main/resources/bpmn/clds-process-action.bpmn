@@ -28,9 +28,11 @@
       </bpmn2:lane>
       <bpmn2:lane id="Lane_6" name="Stop">
         <bpmn2:flowNodeRef>sendOpPolicyReqStop</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ServiceTask_0d5zgbw</bpmn2:flowNodeRef>
       </bpmn2:lane>
       <bpmn2:lane id="Lane_7" name="Restart">
         <bpmn2:flowNodeRef>sendOpPolicyReqRestart</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>ServiceTask_04d5jlr</bpmn2:flowNodeRef>
       </bpmn2:lane>
     </bpmn2:laneSet>
     <bpmn2:exclusiveGateway id="ExclusiveGateway_2">
@@ -83,18 +85,18 @@
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_28" name="" sourceRef="sendOpPolicyReqUpdate" targetRef="ExclusiveGateway_3" />
     <bpmn2:serviceTask id="sendOpPolicyReqStop" name="Send Operation Policy Request [Stop]" camunda:delegateExpression="${operationalPolicyDeleteDelegate}">
-      <bpmn2:incoming>SequenceFlow_29</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_17snsdc</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_30</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_29" name="" sourceRef="ExclusiveGateway_2" targetRef="sendOpPolicyReqStop">
+    <bpmn2:sequenceFlow id="SequenceFlow_29" name="" sourceRef="ExclusiveGateway_2" targetRef="ServiceTask_0d5zgbw">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'STOP' }]]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_30" name="" sourceRef="sendOpPolicyReqStop" targetRef="ExclusiveGateway_3" />
     <bpmn2:serviceTask id="sendOpPolicyReqRestart" name="Send Operation Policy Request [Restart]" camunda:delegateExpression="${operationalPolicyDelegate}">
-      <bpmn2:incoming>SequenceFlow_31</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_188n2z7</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_32</bpmn2:outgoing>
     </bpmn2:serviceTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_31" name="" sourceRef="ExclusiveGateway_2" targetRef="sendOpPolicyReqRestart">
+    <bpmn2:sequenceFlow id="SequenceFlow_31" name="" sourceRef="ExclusiveGateway_2" targetRef="ServiceTask_04d5jlr">
       <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression"><![CDATA[${ actionCd == 'RESTART' }]]></bpmn2:conditionExpression>
     </bpmn2:sequenceFlow>
     <bpmn2:sequenceFlow id="SequenceFlow_32" name="" sourceRef="sendOpPolicyReqRestart" targetRef="ExclusiveGateway_3" />
@@ -119,6 +121,16 @@
       <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
       <bpmn2:incoming>SequenceFlow_1xlfq66</bpmn2:incoming>
       <bpmn2:outgoing>SequenceFlow_0w39hon</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_188n2z7" sourceRef="ServiceTask_04d5jlr" targetRef="sendOpPolicyReqRestart" />
+    <bpmn2:serviceTask id="ServiceTask_04d5jlr" name="Send HighlandPark  Service request to Policy[Restart]" camunda:delegateExpression="${highlandParkPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_31</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_188n2z7</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="SequenceFlow_17snsdc" sourceRef="ServiceTask_0d5zgbw" targetRef="sendOpPolicyReqStop" />
+    <bpmn2:serviceTask id="ServiceTask_0d5zgbw" name="Send HighlandPark  Service request to Policy[Stop]" camunda:delegateExpression="${highlandParkPolicyDelegate}">
+      <bpmn2:incoming>SequenceFlow_29</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_17snsdc</bpmn2:outgoing>
     </bpmn2:serviceTask>
     <bpmn2:serviceTask id="sendStringMatchingReqDistribute" name="Send String Match Micro Service request to Policy [Submit]" camunda:delegateExpression="${stringMatchPolicyDelegate}">
       <bpmn2:incoming>SequenceFlow_0w39hon</bpmn2:incoming>
@@ -285,10 +297,11 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_29" bpmnElement="SequenceFlow_29" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ServiceTask_16">
         <di:waypoint xsi:type="dc:Point" x="169" y="262" />
-        <di:waypoint xsi:type="dc:Point" x="169" y="659" />
-        <di:waypoint xsi:type="dc:Point" x="912" y="659" />
+        <di:waypoint xsi:type="dc:Point" x="169" y="658" />
+        <di:waypoint xsi:type="dc:Point" x="553" y="659" />
+        <di:waypoint xsi:type="dc:Point" x="615" y="659" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="139" y="457.5" width="90" height="6" />
+          <dc:Bounds x="344" y="658" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_30" bpmnElement="SequenceFlow_30" sourceElement="_BPMNShape_ServiceTask_16" targetElement="_BPMNShape_ExclusiveGateway_4">
@@ -309,9 +322,9 @@
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_31" bpmnElement="SequenceFlow_31" sourceElement="_BPMNShape_ExclusiveGateway_3" targetElement="_BPMNShape_ServiceTask_17">
         <di:waypoint xsi:type="dc:Point" x="169" y="262" />
         <di:waypoint xsi:type="dc:Point" x="169" y="775" />
-        <di:waypoint xsi:type="dc:Point" x="912" y="775" />
+        <di:waypoint xsi:type="dc:Point" x="615" y="775" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="139" y="515.5" width="90" height="6" />
+          <dc:Bounds x="285" y="775" width="6" height="6" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_32" bpmnElement="SequenceFlow_32" sourceElement="_BPMNShape_ServiceTask_17" targetElement="_BPMNShape_ExclusiveGateway_4">
@@ -349,6 +362,26 @@
           <dc:Bounds x="184" y="170.5" width="0" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_188n2z7_di" bpmnElement="SequenceFlow_188n2z7">
+        <di:waypoint xsi:type="dc:Point" x="715" y="775" />
+        <di:waypoint xsi:type="dc:Point" x="912" y="775" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768" y="750" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_04d5jlr_di" bpmnElement="ServiceTask_04d5jlr">
+        <dc:Bounds x="615" y="735" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_17snsdc_di" bpmnElement="SequenceFlow_17snsdc">
+        <di:waypoint xsi:type="dc:Point" x="715" y="659" />
+        <di:waypoint xsi:type="dc:Point" x="912" y="659" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768.5" y="634" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0d5zgbw_di" bpmnElement="ServiceTask_0d5zgbw">
+        <dc:Bounds x="615" y="619" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1rga27p_di" bpmnElement="SequenceFlow_1rga27p">
         <di:waypoint xsi:type="dc:Point" x="861" y="129" />
         <di:waypoint xsi:type="dc:Point" x="912" y="129" />
