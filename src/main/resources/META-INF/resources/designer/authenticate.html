@@ -20,8 +20,41 @@
   ===================================================================
   ECOMP is a trademark and service mark of AT&T Intellectual Property.
   -->
+<style>
+.divRow {
+	margin-left: 5px;
+	font-size: 20px;
+	font-weight: normal;
+}
 
+.divFormRow {
+	margin-left: 5px;
+	font-size: 13px;
+	font-weight: normal;
+}
 
-<div ng-init="authenticate()"> 
-	<b>Validating Login.... Please wait....</b>
+.divRow + .divForm { 
+    margin-top:10px;
+}
+</style>
+
+<head>
+	<title>CLDS</title>
+</head>
+<div ng-controller="AuthenticateCtrl">
+	<div id='head'>
+		<div ng-include="'menu_simplified.html'"></div>
+	</div>
+
+	<div  id='main'>
+		<div class="divRow"><b>Welcome to Clamp. Please login first.</b></div>
+		<div class="divForm">
+		<form ng-submit="authenticate()">
+			<div class="divFormRow"><label>User Name :  <input type="text" ng-model="username" name="username"/> </label></div>
+			<div class="divFormRow"><label>Password:  <input type="password" ng-model="password" name="password"/> </label></div>
+			<div class="divFormRow"><input type="submit" value=" Sign In"/></div>
+		</form>
+		</div>
+	</div>
 </div>
+

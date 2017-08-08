@@ -22,6 +22,17 @@
   -->
 
 <style>
+#createNewThresh{
+	height:34px;
+	width:120px; /*84*/
+	background-color:#f2bfab;
+}
+
+#deleteThresh{
+	height:34px;
+	background-color:#dddd;
+}
+
 .fileUpload {
 	position: relative;
 	overflow: hidden;
@@ -52,7 +63,61 @@
 }
 
 .form-group {
-	margin-bottom:20px;
+	margin-bottom:15px;
+	display:-webkit-flex; 
+	display: flex; 
+	align-items: center;
+}
+
+#tcaEditHolder{
+	height:260px; 
+	background-color: #f5f5f5; 
+	padding:10px 0px; 
+	margin: 15px 15px 0 0; 
+	float: right;
+}
+.tcaErr{
+	display:none; 
+	text-align:center; 
+	margin-bottom:20px; 
+	color:red;"
+}
+
+.tcaParentItems {
+	padding-left: 20px;
+}
+
+.tcaParentItems label{
+	margin-bottom: 0px;
+}
+
+#tcaTable{
+	cursor: pointer;
+	width:100%;
+}
+
+#tcaTable tr{
+	border-bottom: 1px solid #ddd;
+	border-collapse: collapse;
+	text-align: center;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#tcaTable td{
+	padding: 8px 10px;
+}
+
+#tcaTable tr.highlight{
+	background-color: #f5f5f5;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+#tcaTableHolder{
+	height:160px; 
+	width: 100%; 
+	overflow:auto;
 }
 
 </style>
@@ -88,205 +153,340 @@
 	</div>
 	<div class="modal-body">
 		<div style="height: 10px"></div>
-		<div class="panel panel-default">
-			<form id="topicPublish" class="form-horizontal">
-				<div>
-
-					<div class="form-group">
-						<label for="userID" class="col-sm-4 control-label"> Topic Publishes</label>
-
-						<div class="col-sm-8">
-							<select class="form-control" id="topicPublishes"
-								name="topicPublishes">
-							</select>
-						</div>
-					</div>
-				</div>
-			</form>
+		<div class="panel panel-default" id="panelHolder">
+			
 			<div class="panel-heading">
 				<ul id="nav_Tabs" class="nav nav-tabs">
 					<li class><a id="add_one_more" href="#desc_tab"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
 				</ul>
 			</div>
+			
+			<span id="formSpan" style="display:none;">
 			<div class="panel-body">
-				<div class="tab-content">
-					<div id="properties_tab" class="tab-pane fade in active"></div>
-
+			
+				<form class="tcaParentItems">
+					<div class="row">
+						<div class="col-sm-8 form-group">
+							<label class="col-sm-3"> Name </label>
+							<div class="col-sm-9" style="padding:0px;">
+								<input class="form-control" type="text" maxlength="48" id="tname" name="tname"></input>
+							</div>
+						</div>
+						
+						<div class="col-sm-8 form-group" style="display:none;">
+							<label class="col-sm-3"> UUID </label>
+							<div class="col-sm-9" style="padding:0px;">
+								<input class="form-control" onkeydown="return false;" type="text" id="tuuid" name="tuuid"></input>
+							</div>
+						</div>
+						
+						<div class="col-sm-8 form-group" style="display:none;">
+							<label class="col-sm-3"> NF Code </label>
+							<div class="col-sm-9" style="padding:0px;">
+								<input class="form-control" onkeydown="return false;" type="text" id="tnfc" name="tnfc"></input>
+							</div>
+						</div>
+						
+						<div class="col-sm-3 form-group"> 
+							<label class="col-sm-8"> Enable </label>
+							<input class="col-sm-4" type="checkbox" style="height:21px; 
+								width:21px; margin:6px;" checked="checked" id="tcaEnab" name="tcaEnab"></input>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-8 form-group">
+							<label class="col-sm-3"> Policy </label>
+							<div class="col-sm-9" style="padding:0px;">
+								<select name="tcaPol" id="tcaPol" enableFilter="false"></select>
+							</div>
+						</div>
+						
+						<div class="col-sm-8 form-group" style="display:none;">
+							<label class="col-sm-3"> Policy ID </label>
+							<div class="col-sm-9" style="padding:0px;">
+								<input class="form-control" onkeydown="return false;" type="text" id="tcaPolId" name="tcaPolId"></input>
+							</div>
+						</div>
+						
+						<div class="col-sm-3 form-group"> 
+							<label class="col-sm-8">Max Intervals</label>
+							<input class="col-sm-4 form-control" style="width:80%" type="text" maxlength="3" 
+							id="tcaInt" onkeypress="return isNumberKey(event)" name="tcaInt"></input>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-8 form-group">
+							<label class="col-sm-3"> Severity </label>
+							<div class="col-sm-9" style="padding:0px;">
+								<select name="tcaSev" id="tcaSev" enableFilter="false">
+								</select>
+							</div>
+						</div>
+						
+						<div class="col-sm-3 form-group"> 
+							<label class="col-sm-8">Min Violations</label>
+							<input class="col-sm-4 form-control" style="width:80%" type="text" maxlength="3" 
+							id="tcaVio" onkeypress="return isNumberKey(event)" name="tcaVio"></input>
+						</div>
+					</div>
+				</form>
+				
+ 				<div class="tcaBody row">
+					<div class="col-sm-5" style="padding:0px 5px; margin: 15px;">
+						<div class="panel panel-default" id="tcaTableHolder">
+							<table id="tcaTable">
+							</table>
+						</div>
+						<div id="tcaError" class="tcaErr">Error: Please define/delete this new threshold</div>
+						<div id="tcaUnique" class="tcaErr">Error: Duplicate Set Name Found</div>
+						<div style="float:left">
+							<button type="button" id="createNewThresh" class="btn btn-sm">New Threshold</button>
+						</div>
+						<div style="float:right">
+							<button type="button" id="deleteThresh" class="btn btn-sm glyphicon glyphicon-trash" disabled></button>
+						</div>
+						
+					</div>
+					
+					<div id="tcaEditHolder" class="panel panel-default col-sm-6">
+						<div class="tab-content">
+							<div id="properties_tab" style="padding:10px;" class="form-horizontal">
+								<div style="margin-bottom:20px;">
+									<label class="control-label">Metric</label>
+									<div>
+										<select id="fieldPathM" name="fieldPathM"></select>
+									</div>
+								</div>
+								<div style="margin-bottom:20px;">
+									<label class="control-label">Operator</label>
+									<div>
+										<select id="operator" name="operator"></select>
+									</div>
+								</div>
+								<div style="margin-bottom:20px;">
+									<label class="control-label">Threshold</label>
+									<div>
+										<input type="text" maxlength="10" class="form-control" name="threshold" 
+										onkeypress="return isNumberKey(event)" id="threshold"></input>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-
-			</div>
+				
+			</div>		
+			</span>
+				
 		</div>
-		<span id="formSpan" style="display: none">
-			<form class="saveProps" class="form-horizontal">
-				<div>
-
-					<div class="form-group">
-						<label class="col-sm-4 control-label">Field Path / Counter</label>
-						<div class="col-sm-8">
-							<select class="form-control" id="fieldPath" name="fieldPath"></select>
-						</div>
-					</div>
-					<div class="form-group">
-						<label class="col-sm-4 control-label">Threshold</label>
-						<div class="col-sm-8">
-							<input type="number" min="0" class="form-control" 
-								name="threshold" id="threshold">
-							</input>
-						</div>
-					</div>
-					
-					
-					<div class="form-group">
-						<label class="col-sm-4 control-label">Operator</label>
-						<div class="col-sm-8">
-							<select class="form-control" id="operator" name="operator"></select>
-						</div>
-					</div>
-					
-					
-
-					<div class="form-group">
-						<label class="col-sm-4 control-label">Ops Policy</label>
-
-						<div class="col-sm-8">
-							<select  class="form-control" id="opsPolicy" name="opsPolicy" 
-							enableFilter="false" ></select>
-						</div>
-					</div>
-				</div>
-
-			</form>
-		</span>
 	</div>
+</div>
 
 	<div class="modal-footer">
 		<!--<button ng-click="reset()" class="btn btn-primary" style="float:left">Reset</button>-->
 		<button id="savePropsBtn" class="btn btn-primary">Close</button>
 		<button ng-click="close(true)" id="close_button"
 			class="btn btn-primary">Cancel</button>
-
 	</div>
+	
 	<script>
-		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
-		// css attribute display:none
-		$("#add_one_more").click(function(event) {		
-			event.preventDefault();
-			add_one_more();	
-			setMultiSelect();
-		})
-		loadPropertyWindow("tca")
-		setASDCFields();
-		var arr = elementMap[lastElementSelected];
-		var vfc_temp=""
-		var alarm_conditions_temp=""
-		var event_severity_temp=""
-		var event_type_source_temp=""
-		if (arr !== undefined) {
-			//arr[0]
-			var el=arr[1]['serviceConfigurations']
-			for (var i = 0; i < el.length; i++) {
-				var num=add_one_more();
-				for(var j=0;j<el[i].length;j++){
-					if(el[i][j].name==="vfc"){
-						vfc_temp=el[i][j].value
-					}else if(el[i][j].name==="alarmCondition"){
-						alarm_conditions_temp=el[i][j].value
-					}else if(el[i][j].name==="eventSeverity"){
-						event_severity_temp=el[i][j].value;
-					}else if(el[i][j].name==="eventSourceType"){
-						event_type_source_temp=el[i][j].value;
-					}
-					else
-						$("#formId"+num+" #" + el[i][j].name).val(el[i][j].value);
-					
-					
-				}
-				
-				set_vfc_alarm_event(num)
-				vfc_temp=""
-				alarm_conditions_temp=""
-				event_severity_temp=""
-				event_type_source_temp=""
-				
-			}
-			
-			$("#"+ arr[0][0].name).val(arr[0][0].value);
-			
-			
+		var generateTUUID = function(count){
+			var d = new Date().getTime();
+			var tuuid = 'xxxxxxxx-xxxx-txxx-xxxx-xxxxxxxxxxxx'.replace(/[x]/g, function(c){
+				var r = (d + Math.random()*16)%16 | 0;
+				d = Math.floor(d/16);
+				return (c == 'x' ? r : (r*0x3|0*8)).toString(16);
+			});
+			$("#formId" + count + " #tuuid").val(tuuid);
 		}
-
-		function set_vfc_alarm_event (count){
-			if(vfc_temp!=="" && vfc_temp!==undefined){
-				$("#formId"+count+" #vfc").val(vfc_temp)
-				
-				if(alarm_conditions_temp!=="" && alarm_conditions_temp!==undefined){
-					setAlarmConditions(vfc_temp,count)
-					$("#formId"+count+" #alarmCondition").val(alarm_conditions_temp)
-
-					if(event_severity_temp!=="" && event_severity_temp!==undefined){
-						setEventSourceType(alarm_conditions_temp,count)
-						$("#formId"+count+" #eventSeverity").val(event_severity_temp)
-						if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
-							$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
-						}
-					}
-					if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
-						setEventSourceType(alarm_conditions_temp,count)
-						$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
-						if(event_severity_temp!=="" && event_severity_temp!==undefined){
-							$("#formId"+count+" #eventSeverity").val(event_severity_temp)
-						}
-					}
-				}
-			}
-			
-			
-		}
-
 		
-		function noRepeats(form){
-			var select={};
-			for(var i=0;i<form.length;i++){
-				if(select[form[i].name]===undefined)
-					select[form[i].name]=[]
-				select[form[i].name].push(form[i].value);
+		$("#add_one_more").click(function(event) {
+			event.preventDefault();
+			if ($("#nav_Tabs li.active").length>0){
+				var oldCount = $("#nav_Tabs li.active").find("a").attr("id").slice(-1);
+				if (($('#formId'+oldCount+' #tcaTable .highlight').length > 0 ) &&
+						(!($('#formId'+oldCount+' #threshold').val()) || !($('#formId'+oldCount+' #fieldPathM').val())) ) {
+					$('#formId'+oldCount+' #tcaError').show();
+					return;
+				} else {
+					$('#formId'+oldCount+' .tcaErr').hide();
+					if ($('#formId'+oldCount+' #tcaTable .highlight').length > 0){
+						$('#formId'+oldCount+' #tcaTable .highlight td').text(
+								$('#formId'+oldCount+' #fieldPathM').val() + ' ' +
+								$('#formId'+oldCount+' #operator').val() + ' ' +
+								$('#formId'+oldCount+' #threshold').val());
+					}
+					$("#formId"+oldCount+" #tcaTable .highlight").removeClass("highlight")
+				}
 			}
-			var arr=[]
-			for(s in select){
-				var f={}
-				f.name=s
-				f.value=select[s]
-				arr.push(f)
+			var count = add_one_more();	
+			generateTUUID(count);
+		})
+		loadPropertyWindow("tca");
+		
+		//load dropdown with policy options
+ 		if (typeof allPolicies !== "undefined"){
+	       	$.each(Object.keys(allPolicies), function(val, text) {
+	       		$('#tcaPol').append($('<option></option>').val(text).html(text));
+	        });  
+		} else if (typeof elementMap !== "undefined"){
+			for (key in elementMap){
+				if (key.indexOf("Policy")>-1){
+					$.each(Object.keys(elementMap[key]), function(val, text){
+						$('#tcaPol').append(
+							$('<option></option>').val(text).html(text)
+						);
+					});
+				}
 			}
-			return arr
 		}
+		
+		setASDCFields();
+		
+		//load metrics dropdown
+		if (elementMap["global"]){
+			for (var i = 0; i < (elementMap["global"].length); i++){
+				if ((elementMap["global"][i]["name"]) == "vf"){
+					var vfSel = elementMap["global"][i]["value"];	
+					if (vf_Services["shared"]["byVf"][vfSel]["kpi"]){
+						$.each((vf_Services["shared"]["byVf"][vfSel]["kpi"]), function(val, text) {
+			                $('#fieldPathM').append(
+			                    $('<option></option>').val(val).html(text)
+			                );
+			            });
+					}
+					break;
+				};
+			};
+		};
+		
+		var arr = elementMap[lastElementSelected];
+		
+		if (arr !== undefined) {
+			for (var x in arr){
+				var num = add_one_more();
+				var setCheck = true;
+				for (var i=0; i< arr[x].length; i++){
+					if (arr[x][i].name=='tcaEnab'){
+						$("#formId" + num + " #tcaEnab").prop("checked","true");
+						setCheck = false;
+					}
+					
+					if (arr[x][i].hasOwnProperty('serviceConfigurations')){
+						for (var j=0; j<arr[x][i]["serviceConfigurations"].length; j++){
+							$("#formId" + num + " #tcaTable").prepend("<tr><td>"
+									+arr[x][i]["serviceConfigurations"][j][0]+" "
+									//+(defaults_props['tca']['operator']).getKey(arr[x][i]["serviceConfigurations"][j][1])+" "
+									+(Object.keys(defaults_props['tca']['operator']).find(key => defaults_props['tca']['operator'][key] == (arr[x][i]["serviceConfigurations"][j][1])))+ " " 
+									+arr[x][i]["serviceConfigurations"][j][2]+"</td></tr>");
+						}
+					} else {
+						$("#formId" + num + " #"+arr[x][i].name).val(arr[x][i].value);
+					}
+				}
+				if (setCheck){
+					$("#formId" + num + " #tcaEnab").prop("checked",false);
+				}
+				$('#go_properties_tab'+num).text($('#formId' +num+ ' #tname').val());
+				$("#formId"+num + " #properties_tab").hide();
+			}
+		} 
 	
 		$("#savePropsBtn").click(function(event) {
-			var form=[]
-			var properties=$(".saveProps").not("#formSpan .saveProps")
-			var topicP=$("#topicPublish").serializeArray()
-			form.push(topicP)
-			var d={}
-			d["serviceConfigurations"]=[];
-			
-			for(var i=0;i<properties.length;i++){
-				var ser=$(properties[i]).serializeArray();
-				var s=noRepeats(ser)
+			var num = $('#nav_Tabs .active a').attr('id').slice(-1);
+			var tabs = [];
+			$('#nav_Tabs li:not(:last)').each(function(){
+				tabs.push($(this).text());
+			});
+			var nonunique = uniquet(tabs);
+			if (($('#formId'+num+' #tcaTable .highlight').length > 0 ) &&
+					(!($('#formId'+num+' #threshold').val()) || !($('#formId'+num+' #fieldPathM').val())) ) {
+				$('#formId'+num+' #tcaError').show();
+				return;
+			} else if (nonunique){
+				$('#formId'+num+' #tcaUnique').show();
+				return;
+			} else {
+				$('#formId'+num+' .tcaErr').hide();
+				if ($('#formId'+num+' #tcaTable .highlight').length > 0){
+					$('#formId'+num+' #tcaTable .highlight td').text(
+							$('#formId'+num+' #fieldPathM').val() + ' ' +
+							$('#formId'+num+' #operator').val() + ' ' +
+							$('#formId'+num+' #threshold').val());
+				}
+				var saveP = {};
+				$('.formId').each(function(){
+					var count = $(this).attr('id').slice(-1);
+					var header = $(this).find('.tcaParentItems').serializeArray();
+					var sconf = {};
+					var sconfa = [];
+					var checkNF = true;
+					$('#formId' +count+' #tcaTable tr').each(function(){
+						$('td', this).each(function(){
+							var splitTd = $(this).text().split(' ');
+							splitTd[1]=defaults_props['tca']['operator'][splitTd[1]];
+							var checkByKpi = vf_Services["shared"]["byKpi"][splitTd[0].replace(/\s/g, "")];
+							if (checkByKpi["fieldPath"]){
+								splitTd.push(Object.keys(vf_Services["shared"]["byKpi"][splitTd[0].replace(/\s/g, "")]["fieldPath"])[0]);
+							};
+							if ((checkByKpi["nfNamingCode"]) && (checkNF)){
+								$.grep(header, function(e,i){ 
+									if (e.name == "tnfc"){
+										header[i]["value"] = (Object.keys(checkByKpi["nfNamingCode"])[0]);
+									}
+								});
+								checkNF = false;
+							}
+							sconfa.push(splitTd);
+						});
+						
+					});
+					var polSel = $(this).find('.tcaParentItems #tcaPol').val();
+					$.grep(header, function(e,i){
+						if (e.name == "tcaPolId"){
+							if (polSel){
+								if (typeof allPolicies !== "undefined"){
+									header[i]["value"] = allPolicies[polSel][1]["value"];
+								} else if (typeof elementMap !== "undefined"){
+									for (key in elementMap){
+										if (key.indexOf("Policy")>-1){
+											header[i]["value"] = elementMap[key][polSel][1]["value"];
+										}
+									}
+								}
+							} else {
+								header[i]["value"]="";
+							}
+						}
+					});
+					
+					sconf["serviceConfigurations"]=sconfa;
+					header.push(sconf);
+					saveP[$(this).find('.tcaParentItems #tname').val()] = header;
+				});			
 				
-
-				d["serviceConfigurations"].push(s)
+				saveProperties(saveP);
+				$("#close_button").click();
 			}
-			form.push(d)
-			saveProperties(form)
-
-			$("#close_button").click();
-			
 		})
 		
+		function uniquet(arr) {
+		    var a = [];
+		    for (var i=0, l=arr.length; i<l; i++){
+		        if (a.indexOf(arr[i]) === -1 && arr[i] !== ''){ 
+		        	 a.push(arr[i]);
+		        }
+		    }
+		    if (a.length==arr.length){
+		    	return false;
+		    } else {
+		    	return true;
+		    }
+		}
 		
 		function add_one_more(){
 			$("#nav_Tabs li").removeClass("active");
-			var form=$($("#formSpan").children()[0]).clone()
+			var form=$($("#formSpan").children()[0]).clone();
 			var count=0;
 			if($(".formId").length>0){
 				var greatest=0;
@@ -297,96 +497,127 @@
 					}
 				}
 				count=greatest+1;
-				$("#properties_tab").append(('<span class="formId" id="formId'+count+'"></span>'));
+				$("#panelHolder").append(('<span class="formId" id="formId'+count+'"></span>'));
 			}else{
 				count++;
-				$("#properties_tab").append('<span class="formId" id="formId1"></span>');
+				$("#panelHolder").append('<span class="formId" id="formId1"></span>');
 			}
-			$("#add_one_more").parent().before(' <li class="active"><a id="go_properties_tab'+count+'">Condition</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
+			
+			$("#add_one_more").parent().before(' <li class="active"><a id="go_properties_tab'+count+'">New_Set</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
 			$("#formId"+count).append(form);
-			$(".formId").not($("#formId"+count)).css("display","none")
-			addCustListen(count)
-			add_vfc_alarm_event_listener(count)
+			$('#formId'+count+ ' #properties_tab').hide();
+			$(".formId").not($("#formId"+count)).css("display","none");
+			addCustListen(count);
+			setMultiSelect();
 			return count;
 		}
-
-		function addCustListen(count) {
+		
+		function isNumberKey(event){
+			var charCode = (event.which) ? event.which : event.keyCode
+			if (charCode > 31 && (charCode < 48 || charCode > 57)){
+				return false;
+			}
+			return true;
+		};
+		
+		function addCustListen(count) {			
 			$('#go_properties_tab' + count).click(function(event) {
+				if ($("#nav_Tabs li.active").length>0){
+					var oldCount = $("#nav_Tabs li.active").find("a").attr("id").slice(-1);
+					if (($('#formId'+oldCount+' #tcaTable .highlight').length > 0 ) &&
+							(!($('#formId'+oldCount+' #threshold').val()) || !($('#formId'+oldCount+' #fieldPathM').val())) ) {
+						$('#formId'+oldCount+' #tcaError').show();
+						return;
+					} else {
+						$('#formId'+oldCount+' .tcaErr').hide();
+						if ($('#formId'+oldCount+' #tcaTable .highlight').length > 0){
+							$('#formId'+oldCount+' #tcaTable .highlight td').text(
+									$('#formId'+oldCount+' #fieldPathM').val() + ' ' +
+									$('#formId'+oldCount+' #operator').val() + ' ' +
+									$('#formId'+oldCount+' #threshold').val());
+						}
+						$("#formId"+oldCount+" #tcaTable .highlight").removeClass("highlight")
+					}
+				}
+				
 				$("#nav_Tabs li").removeClass("active");
 				$(this).parent().addClass("active");
-				$("#formId"+count).css("display","")
-				$(".formId").not($("#formId"+count)).css("display","none")
-
-			})
+				$("#formId"+count).css("display","");
+				$(".formId").not($("#formId"+count)).css("display","none");
+			});
+			
 			$('#tab_close'+count).click(function(event){
-				if(document.getElementById("topicPublishes").disabled){
-					return false;
-				}
 				$(this).parent().remove();
 				$("#formId"+count).remove();
-			})
+			});
+			
+			$('#formId'+count+' #tcaTable').on('click', 'tr', function(event){
+				if (($('#formId'+count+' #tcaTable .highlight').length > 0 ) &&
+						(!($('#formId'+count+' #threshold').val()) || !($('#formId'+count+' #fieldPathM').val())) ) {
+					$('#formId'+count+' #tcaError').show();
+					return;
+				} else {
+					$('#formId'+count+' .tcaErr').hide();
+					if ($('#formId'+count+' #tcaTable .highlight').length > 0){
+						$('#formId'+count+' #tcaTable .highlight td').text(
+								$('#formId'+count+' #fieldPathM').val() + ' ' +
+								$('#formId'+count+' #operator').val() + ' ' +
+								$('#formId'+count+' #threshold').val());
+					}
+					//$('#formId'+count+' #tcaTable .highlight').text();
+					$(this).addClass('highlight').siblings().removeClass('highlight');
+					var str = $(this).text().split(' ');
+					$('#formId'+count + ' #properties_tab').show();
+					if (str.length == 3){
+						$('#formId'+count+' #fieldPathM').val(str[0]).multiselect('refresh');
+						$('#formId'+count+' #operator').val(str[1]).multiselect('refresh');
+						$('#formId'+count+' #threshold').val(str[2]);
+					}
+					
+					if ((!(readOnly||readMOnly)) && ($('#formId'+count + ' #deleteThresh').prop('disabled'))) {
+						$('#formId'+count + ' #deleteThresh').prop('disabled', false);
+					}
+				}
+			});
+			
+			$('#formId'+count+' #deleteThresh').on('click', function(){
+				$('#formId'+num+' .tcaErr').hide();
+				$('#formId'+count+ ' #properties_tab').hide();
+				$('#formId'+count+ ' #tcaTable .highlight').remove();
+				$('#formId'+count+ ' #deleteThresh').prop('disabled', true);
+			});
+			
+			$('#formId'+count+' #createNewThresh').on('click', function(){
+				if (($('#formId'+count+' #tcaTable .highlight').length > 0 ) &&
+						(!($('#formId'+count+' #threshold').val()) || !($('#formId'+count+' #fieldPathM').val())) ){
+					$('#formId'+count+' #tcaError').show();
+					return;
+				} else {
+					$('#formId'+count+' .tcaErr').hide();
+					if ($('#formId'+count+' #tcaTable .highlight').length > 0){
+						$('#formId'+count+' #tcaTable .highlight td').text(
+								$('#formId'+count+' #fieldPathM').val() + ' ' +
+								$('#formId'+count+' #operator').val() + ' ' +
+								$('#formId'+count+' #threshold').val());
+					}
+					$('#formId'+count+ ' #properties_tab').show();
+					if (('#formId'+count+' #tcaTable .highlight').length > 0 ){
+						$('#formId'+count+' #tcaTable tr.highlight').removeClass('highlight');
+					}
+					$('#formId'+count+' #tcaTable').prepend('<tr class="highlight"><td>New Threshold</td></tr>');
+					$('#formId'+count+' #fieldPathM').prop("selectedIndex", 0).multiselect('refresh');
+					$('#formId'+count+' #operator').prop("selectedIndex", 0).multiselect('refresh');
+					$('#formId'+count+' #threshold').val("");
+					
+					if ($('#formId'+count + ' #deleteThresh').prop('disabled')) {
+						$('#formId'+count + ' #deleteThresh').prop('disabled', false);
+					}
+				}
+			});
+			
+			$('#formId'+count+' #tname').on('change',function(){
+				$('#go_properties_tab'+count).text($('#formId'+count+' #tname').val())
+			});
 		}
-
-function setAlarmConditions(vfcID, count){
-        var alarmCondition={}
-
-        /*if($("#formId"+count+" #vfc").val()!=="")
-                alarmCondition=vf_Services['shared']['byVfc'][vfcID]['alarmCondition']*/
-
-        if($("#formId"+count+" #vfc").val()!==""){
-        	if(vf_Services && vf_Services['shared'] && vf_Services['shared']['byVfc'] && vf_Services['shared']['byVfc'][vfcID]){
-        		alarmCondition=vf_Services['shared']['byVfc'][vfcID]['alarmCondition'];	
-        	}
-        }
-
-        $("#formId"+count+" #alarmCondition").empty();
-        $("#formId"+count+" #alarmCondition").append("<option value=\"\"></opton>")
-        if(alarmCondition && _.keys(alarmCondition).length>0){
-		        for(key in alarmCondition){
-		                var safestring = $('<div>').text(key).html();
-		                $("#formId"+count+" #alarmCondition").append("<option value='"+safestring+"'>"+alarmCondition[key]+"</opton>")
-
-		    }	
-        }
-        
-}
-
-function setEventSourceType(alarm, count){
-        var eventSourceTypSeverity={}
-        if($("#formId"+count+" #alarmCondition").val()!=="") {
-        	if(vf_Services && vf_Services['shared'] && vf_Services['shared']['byAlarmCondition'] && vf_Services['shared']['byAlarmCondition'][alarm]){
-
-                eventSourceTypSeverity=vf_Services['shared']['byAlarmCondition'][alarm]
-        	}
-        }
-
-        $("#formId"+count+" #eventSourceType").val(eventSourceTypSeverity.eventSourceType);
-        $("#formId"+count+" #eventSeverity").val(eventSourceTypSeverity.eventSeverity);
-
-}
-
-		function add_vfc_alarm_event_listener(count) {
-					
-			 $("#formId"+count+" #vfc").on('focus', function () {
-			        // Store the current value on focus and on change
-			        previous = this.value;
-			    }).change(function(){
-					
-					setAlarmConditions($("#formId"+count+" #vfc").val(), count);
-					$("#formId"+count+" #eventSourceType").val("");
-					$("#formId"+count+" #eventSeverity").val("")
-
-				});
-			 
-			 $("#formId"+count+" #alarmCondition").on('focus', function () {
-			        // Store the current value on focus and on change
-			        previous = this.value;
-			    }).change(function(){
-					
-					
-			    	setEventSourceType($("#formId"+count+" #alarmCondition").val().toString(),count);
-				});
-				};
 	</script>
 </div>
-

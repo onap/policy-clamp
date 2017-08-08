@@ -21,6 +21,7 @@
   ECOMP is a trademark and service mark of AT&T Intellectual Property.
   -->
 
+
 <style>
 #deletePolicy{
 	height:34px;
@@ -59,13 +60,7 @@
 	margin-top: 17px;
 }
 
-.form-group {
-/* 	height:24px; */
-/* 	box-sizing:border-box; */
-	margin-bottom:20px;
-}
-
-.glyphicon-search{
+.modelSearchBox{
 	position:absolute; 
 	padding: 25px 12px;
 }
@@ -85,14 +80,26 @@ label{
 	background-color:#f2bfab;
 }
 
-#pname{
-	height:28px; 
-	margin-left:-5px;
+.idError{
+	color:red; 
+	padding:50px 0px; 
+	text-align:center; 
+	display:none;
 }
 
 .policyPanel{
 	background-color: #f5f5f5;
-	padding: 10px 5px;
+	padding: 15px 5px 0 5px;
+}
+
+.form-group.clearfix{
+	display:-webkit-flex; 
+	display: flex; 
+	align-items: center;
+}
+
+label{
+	margin-bottom:0px; 
 }
 
 #policySearch{
@@ -131,11 +138,6 @@ label{
 	overflow:auto;
 }
 
-#timeout{
-	height:28px; 
-	margin-left:10px;
-}
-
 </style>
 
 <script type="text/javascript">
@@ -170,12 +172,12 @@ label{
 	</div>	
 	
 	
-	<div class="container">
+	<div class="modal-body">
 	<div attribute-test="policywindowpropertiesb" class="modal-body row">
 		
 		<div class="leftPolicyPanel">
 			<div class="panel panel-default">
-				<i class="glyphicon glyphicon-search"></i>
+				<i class="glyphicon glyphicon-search modelSearchBox"></i>
 				<input type="text" id="policySearch" onkeyup="searchPolicyList()"
 					placeholder="Search ...">
 				<div id="policyTableHolder">
@@ -188,17 +190,30 @@ label{
 			<div style="float:right">
 				<button type="button" id="deletePolicy" class="btn btn-sm glyphicon glyphicon-trash" disabled></button></span>
 			</div>
+			<div id="repeatIdError" class="idError">Error: This Policy name is already taken.</div>
+			<div id="newIdError" class="idError">Error: Please rename your new Policy.</div>
+			<div id="spaceError" class="idError">Error: Spaces are not allowed in the ID.</div>
 		</div>
 		
 		<div class="panel panel-default col-sm-9 policyPanel" style="display:none;">
 			<form id="Timeoutform" class="form-horizontal">
 				<div>
 					<div class="form-group clearfix row">
-						<label style="margin-top:5px;" class="col-sm-2">Name</label>
-						<input type="text" id="pname"; name="pname"; class="col-sm-4"></span>
+						<label class="col-sm-2">Name</label>
+						<div class="col-sm-3" style="padding:0px;">
+							<input type="text" id="pname" name="pname" maxlength="48" placeholder="Enter Unique Name" class="form-control">
+						</div>
 						
-						<label for="userID" class="col-sm-3" style="margin-top:5px; padding:0px;">Overall Time Limit</label>
-						<input type="text" class="col-sm-2" id="timeout" name="timeout">
+						<label class="col-sm-1">ID</label>
+						<div class="col-sm-1" style="padding:0px;">
+							<input onkeydown="return false;" type="text" id="pid" name="pid" class="form-control" readonly>
+						</div>
+						
+						<label for="userID" class="col-sm-3" style="padding-left:5px;padding-right:10px;">Overall Time Limit</label>
+						<div class="col-sm-2" style="padding-left:0px;">
+							<input type="text" maxlength="10" onkeypress="return isNumberKey(event)"
+								class="form-control" id="timeout" name="timeout">
+						</div>				
 					</div>
 				</div>
 			</form>
@@ -219,7 +234,7 @@ label{
 			<form class="saveProps" class="form-horizontal">
 				<div>
 					<div class="form-group clearfix" >
-						<label for="recipe" class="col-sm-4 control-label" >Recipe</label>
+						<label class="col-sm-4 control-label" for="recipe">Recipe</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="recipe" id="recipe" enableFilter="false"></select>
 						</div>
@@ -228,20 +243,21 @@ label{
 						<label for="maxRetries" class="col-sm-4 control-label">
 							Max Retries</label>
 						<div class="col-sm-8">
-							<input type="number" min="0" class="form-control" id="maxRetries"
+							<input type="text" maxlength="5" class="form-control" id="maxRetries"
+								onkeypress="return isNumberKey(event)"
 								name="maxRetries"> </input>
 						</div>
 					</div>
-					<br />
 					<div class="form-group clearfix" >
 						<label for="retryTimeLimit" class="col-sm-4 control-label" >
 							Retry Time Limit</label>
 						<div class="col-sm-8">
-							<input type="number" min="0" class="form-control" id="retryTimeLimit"
+							<input type="text" maxlength="5" class="form-control" id="retryTimeLimit"
+								onkeypress="return isNumberKey(event)"
 								name="retryTimeLimit"></input>
 						</div>
 					</div>
-					<div hidden class="form-group clearfix">
+					<div style="display:none;" class="form-group clearfix">
 						<label for="_id" class="col-sm-4 control-label">
 							PolicyID</label>
 						<div class="col-sm-8">
@@ -262,7 +278,7 @@ label{
 							Parent Policy Conditions</label>
 						<div class="col-sm-8">
 							<select  class="form-control" id="parentPolicyConditions"
-								name="parentPolicyConditions" multiple size=2></select>
+								name="parentPolicyConditions" multiple></select>
 						</div>
 					</div>
 				</div>
@@ -283,17 +299,18 @@ label{
 		// css attribute display:none
 		$("#add_one_more").click(function(event) {
 			event.preventDefault();
-			add_one_more();
+			var num = add_one_more();
 			setMultiSelect();
 		});
 		loadPropertyWindow("policy")
 		
 		// by default, parentPolicyConditions is disabled
-		$("#parentPolicyConditions").prop('disabled', 'disabled');
+		//$("#parentPolicyConditions").prop('disabled', 'disabled');
 		var parent_policy={}
 		var policy_ids={}
 		var loadingId=false;
 		var allPolicies={};
+		var allPolIds=[];
 		
 		//Grab saved values for dropdowns
 		var obj = elementMap[lastElementSelected];
@@ -301,12 +318,17 @@ label{
 		if (!($.isEmptyObject(obj))){
 			allPolicies = jQuery.extend({}, obj);			
 			for (var x in allPolicies){
-				$("#policyTable").prepend("<tr id='"+x+"'><td>"+x+"</td></tr>");
+				$("#policyTable").prepend("<tr><td>"+x+"</td></tr>");
+				if (allPolicies[x][1]['value']){
+					allPolIds.push(parseInt(allPolicies[x][1]['value']));
+				}
 			}
 		}
+		$("#pname").val('');		
 		
 		//load recipes for a chosen policy
 		function disperseConfig(policyObj, id){
+			parent_policy={};
 			//remove old gui forms
 			for (var i=1; i<($(".formId").length + 1); i++){
 				$("#go_properties_tab"+i).parent().remove();
@@ -314,7 +336,7 @@ label{
 			$(".formId").remove();
 			
 			if (policyObj !== undefined) {
-				var el = policyObj[id][2]['policyConfigurations']
+				var el = policyObj[id][3]['policyConfigurations']
 				for (var i = 0; i < el.length; i++) {
 					loadingId=true;
 					var num = add_one_more();
@@ -345,17 +367,33 @@ label{
 				
 				for(k in parent_policy){
 					$("#formId"+k+" #parentPolicy").val(parent_policy[k]);
+					if($("#formId"+k+" #parentPolicy").val() ==""){
+						$("#formId" +k+ " #parentPolicyConditions").multiselect("disable");
+					} else {
+						$("#formId" +k+ " #parentPolicyConditions").multiselect("enable");
+					}
 					// force the change event
 					$("#formId"+k+" #parentPolicy").change();
 				}
 				
-				if(policyObj[id][0] && policyObj[id][1]){
-					$("#" + policyObj[id][0].name).val(policyObj[id][0].value);
-					$("#" + policyObj[id][1].name).val(policyObj[id][1].value);
+				for (headInd in policyObj[id]){
+					if (!(policyObj[id][headInd].hasOwnProperty("policyConfigurations"))){
+						$("#" + policyObj[id][headInd].name).val(policyObj[id][headInd].value);
+					}
 				}
 			}
 			
 			setMultiSelect();
+			
+			if (readOnly||readMOnly){
+				$('select[multiple] option').each(function() {
+		          var input = $('input[value="' + $(this).val() + '"]');
+		          input.prop('disabled', true);
+		          input.parent('li').addClass('disabled');
+		        });
+				$('input[value="multiselect-all"]').prop('disabled', true).parent('li').addClass('disabled');
+			}
+			
 		}
 		
 		
@@ -379,11 +417,26 @@ label{
 		}
 		
 		$("#savePropsBtn").click(function(event) {
-
-			//Saves edits
-			if ($("#policyTable .highlight").length > 0){
-				saveLastPolicyLocally($("#policyTable .highlight").attr("id"));
+			$(".idError").hide();
+			if ($("#policyTable .highlight td").html() !== $("#pname").val()){
+				//repeated name
+				if ($.inArray($("#pname").val(), Object.keys(allPolicies)) > -1){
+					$("#repeatIdError").show();
+					return;
+				} else { //not repeated
+					delete allPolicies[$("#policyTable .highlight td").html()];
+				}
 			}
+			if ($("#pname").val().trim() == "New_Policy"){
+				$("#newIdError").show();
+				return;
+			}
+			
+			//Saves edits
+			/* if ($("#policyTable .highlight").length > 0){
+				saveLastPolicyLocally($("#policyTable .highlight").attr("id"));
+			} */
+			startNextItem();
 			
 			//Removes outdated (deleted) policies by checking against left menu
 			var finalSaveList = {};
@@ -433,7 +486,7 @@ label{
 			$("#formId" + count).append(form);
 			$(".formId").not($("#formId" + count)).css("display", "none")
 			addCustListen(count)
-			addTabListen(count)
+			//addTabListen(count)
 			// This is for when the process is not loading from map but being created
 			if(!loadingId){
 				var l=makeid()
@@ -443,21 +496,26 @@ label{
 				
 				for(var i=1;i<=greatestIdNum();i++){
 					if($("#formId"+i).length>0){
-
-						answers["#formId"+i+" #parentPolicy"]=$("#formId"+i+" #parentPolicy").val()
+						answers["#formId"+i+" #parentPolicy"]=$("#formId"+i+" #parentPolicy").val();
 						$("#formId"+i+" #parentPolicy").empty();
+						
 						for(k in policy_ids){
-							if($("#formId"+i+" #_id").val().toString()!==policy_ids[k] && $(k+" #recipe").val()!==undefined && $(k+" #recipe").val()!==""){
-								$("#formId"+i+" #parentPolicy").append("<option value='"+policy_ids[k]+"''> "+$(k+" #recipe").val()+"</option>")
+							if(($("#formId"+i+" #_id").val()!==policy_ids[k].toString()) && $(k+" #recipe").val()!==undefined && $(k+" #recipe").val()!==""){								
+								$("#formId"+i+" #parentPolicy").append("<option value='"+policy_ids[k]+"'>"+$(k+" #recipe").val()+"</option>")
 							}
 						}
 						$("#formId"+i+" #parentPolicy").prepend("<option value=''></option>")
 					}
 				}
+				
+				$("#formId"+count+" #parentPolicyConditions").multiselect("disable");
+				
+				//re-populate parent policy with chosen options
 				for(k in answers){
 					$(k).val(answers[k])
 				}
 			}
+			
 			return count;
 		}
 		
@@ -468,123 +526,35 @@ label{
 			}
 			$(".formId").remove();
 			
-			//Reset header
-			var ms = new Date().getTime();
-			var defPolName = "Policy" + ms;
-			$("#pname").val(defPolName);
+			//Reset headers
+			//$("#pname").val("0");
+			$("#pname").val("New_Policy");
 			$("#timeout").val(defaults_props.policy.timeout);
 			
-			//FormSpan contains a block of the form that is not being displayed. We will create clones of that and add them to tabs
-			var form = $($("#formSpan").children()[0]).clone()
-			var count = 0;
-			//Each new tab will have the formId class attached to it. This way we can track how many forms we currently have out there and assign listeners to them
-			if ($(".formId").length > 0) {
-				var greatest = 0;
-				var s = $(".formId");
-				//for every recipe
-				for (var i = 0; i < s.length; i++) {
-					if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
-						greatest = parseInt($(s[i]).attr("id").substring(6))
-					}
-				}
-				count = greatest + 1;
-				$("#properties_tab").append(
-						('<span class="formId" id="formId'+count+'"></span>'));
-			} else {
-				count++;
-				$("#properties_tab").append(
-						'<span class="formId" id="formId1"></span>');
-			}
-			
-			//$(form).find("#policyName").val("Recipe "+makid(2))
-			//TODO change up how we auto assign policyName. There could be the case where we do this and it will have repeats
-			//alert($(form).find("#_id").val())
-			//policyNameChangeListener(form)
-			$("#add_one_more")
-					.parent()
-					.before(
-							' <li class="active"><a id="go_properties_tab'+count+'">Policy</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
-			$("#formId" + count).append(form);
-			$(".formId").not($("#formId" + count)).css("display", "none")
-			addCustListen(count)
-			addTabListen(count)
-			// This is for when the process is not loading from map but being created
-			if(!loadingId){
-				var l=makeid()
-				$(form).find("#_id").val(l)
-				policy_ids["#formId" + count]=l
-				var answers={}
-				
-				for(var i=1;i<=greatestIdNum();i++){
-					if($("#formId"+i).length>0){
-
-						answers["#formId"+i+" #parentPolicy"]=$("#formId"+i+" #parentPolicy").val()
-						$("#formId"+i+" #parentPolicy").empty();
-						for(k in policy_ids){
-							if($("#formId"+i+" #_id").val().toString()!==policy_ids[k] && $(k+" #recipe").val()!==undefined && $(k+" #recipe").val()!==""){
-								$("#formId"+i+" #parentPolicy").append("<option value='"+policy_ids[k]+"''> "+$(k+" #recipe").val()+"</option>")
-							}
-						}
-						$("#formId"+i+" #parentPolicy").prepend("<option value=''></option>")
-					}
-				}
-				for(k in answers){
-					$(k).val(answers[k])
-				}
-			}
-			
-			
-			
-			setMultiSelect();
-			return defPolName;
+			$("#add_one_more").click();
 		}
 		
 	
 		//listener will change the tab name to the recipe
-		function addTabListen(count){
-			$("#formId"+count+" #recipe").on("change",function(){
-				if($("#formId"+count+" #recipe").val().toString()!==""){
-					$('#go_properties_tab' + count).text($("#formId"+count+" #recipe").val())
-				}
-				else
-					$('#go_properties_tab' + count).text("Policy");
-				
-				var answers={}
-				
-				for(var i=1;i<=greatestIdNum();i++){
-					if($("#formId"+i).length>0){
-						
-						answers["#formId"+i+" #parentPolicy"]=$("#formId"+i+" #parentPolicy").val()
-						$("#formId"+i+" #parentPolicy").empty();
-						
-						for(k in policy_ids){
-							if($("#formId"+i+" #_id").val().toString()!==policy_ids[k] && $(k+" #recipe").val()!=='undefined' && $(k+" #recipe").val()!==""){
-								$("#formId"+i+" #parentPolicy").append("<option value='"+policy_ids[k]+"''> "+$(k+" #recipe").val()+"</option>")
-							}
-						}
-						$("#formId"+i+" #parentPolicy").prepend("<option value=''></option>")
-					}
-				}
-				for(k in answers){
-					$(k).val(answers[k])
-				}
-			})
+ 		function addTabListen(count){
 			
 			// disable parentPolicyConditions when a parentPolicy is not selected
-			$("#formId"+count+" #parentPolicy").on("change",function(){
+			//don't think this is used..
+			/* $("#formId"+count+" #parentPolicy").on("change",function(){
 				if($("#formId"+count+" #parentPolicy").val().toString()==""){
 					// deselect all options
 					$("#formId"+count+" #parentPolicyConditions option:selected").prop("selected", false);
 					// disable the select box
-					$("#formId"+count+" #parentPolicyConditions").prop('disabled', 'disabled');
+					$("#formId"+count+" #parentPolicyConditions").multiselect("disable");
+					
 				} else {
-					$("#formId"+count+" #parentPolicyConditions").prop('disabled', false);
+					$("#formId"+count+" #parentPolicyConditions").multiselect("enable");
+					
 				}
-			})
+			}); */
 		}
 		
-		
-		function addCustListen(count) {
+		function addCustListen(count) {			
 			$('#go_properties_tab' + count).click(function(event) {
 				$("#nav_Tabs li").removeClass("active");
 				$(this).parent().addClass("active");
@@ -599,7 +569,6 @@ label{
 				$(this).parent().remove();
 				for(var i=1;i<=greatestIdNum();i++){
 					if(	$("#formId"+i).length>0){
-						//alert("fudge")
 						if(i!==count ){
 							if(	$("#formId"+i+" #parentPolicy").val()===$("#formId"+count+" #_id").val().toString())
 								$("#formId"+i+" #parentPolicy").val("")
@@ -612,7 +581,8 @@ label{
 			})
 		}
 		
-		function greatestIdNum(){
+		
+		function greatestIdNum() {
 			var greatest = 0;
 			var s = $(".formId");
 			for (var i = 0; i < s.length; i++) {
@@ -622,57 +592,58 @@ label{
 			}
 			return greatest;
 		}
-		
+
 		//Generate random id for each policy
 		//Also made sure ids couldnt be repeated
-		function makeid(num)
-		{
-			
-		    var text = "";
-		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-			if(num==null)
-				num=7;
-		    for( var i=0; i < 7; i++ )
-		        text += possible.charAt(Math.floor(Math.random() * possible.length));
-		    var hasValue=false;
-		    for(k in policy_ids){
-		    	if(text===policy_ids[k])
-		    		hasValue=true
-		    }
-		    if (hasValue)
+		function makeid(num) {
+
+			var text = "";
+			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			if (num == null)
+				num = 7;
+			for (var i = 0; i < 7; i++)
+				text += possible.charAt(Math.floor(Math.random()
+						* possible.length));
+			var hasValue = false;
+			for (k in policy_ids) {
+				if (text === policy_ids[k])
+					hasValue = true
+			}
+			if (hasValue)
 				return makeid(num);
 			else
 				return text
 		}
-		
-		var ParentPolicy=function(id,name){
-			this.id=id
-			this.name=name
+
+		var ParentPolicy = function(id, name) {
+			this.id = id
+			this.name = name
 		}
-		
+
 		//Policy table search filter
 		function searchPolicyList() {
 			var search = document.getElementById("policySearch");
 			var row = document.getElementsByTagName("td");
-			for (var i=0; i<row.length; i++){
-				if (row[i].innerHTML.toUpperCase().indexOf(search.value.toUpperCase()) > -1){
+			for (var i = 0; i < row.length; i++) {
+				if (row[i].innerHTML.toUpperCase().indexOf(
+						search.value.toUpperCase()) > -1) {
 					row[i].style.display = "";
 				} else {
 					row[i].style.display = "none";
 				}
 			}
 		}
-		
-		function saveLastPolicyLocally(lastPolicyId){
+
+		function saveLastPolicyLocally(lastPolicyId) {
 			var polForm = []
-			
-			var properties = $(".saveProps").not("#formSpan .saveProps")
+
+			var properties = $(".saveProps").not("#formSpan .saveProps");
 			var timeoutForm = $("#Timeoutform").serializeArray();
-			
-			for (var i=0; i<timeoutForm.length; i++){
+
+			for (var i = 0; i < timeoutForm.length; i++) {
 				polForm.push(timeoutForm[i]);
 			}
-			
+
 			var d = {}
 			d["policyConfigurations"] = [];
 			for (var i = 0; i < properties.length; i++) {
@@ -684,66 +655,179 @@ label{
 			allPolicies[lastPolicyId] = polForm;
 		}
 		
-		$("#deletePolicy").on('click', function(){
-			var deleteId = $("#policyTable .highlight").attr("id");
-			delete allPolicies.deleteId;
+		function getNextId(){
+			var newPolId;
+			allPolIds.sort();
+			if ((Math.min.apply(Math, allPolIds) == 0)
+					&& (allPolIds.length > 0)) {
+				loop1: 
+					for (var i = 1; i < allPolIds.length; i++) {
+						if ((allPolIds[i] - allPolIds[i - 1]) != 1) {
+							newPolId = (allPolIds[i - 1] + 1);
+							break loop1;
+						};
+					};
+				if (!newPolId) {
+					newPolId = (Math.max.apply(Math, allPolIds)) + 1;
+				}
+			} else {
+				newPolId = 0;
+			}
+			allPolIds.push(newPolId);
+			$("#pid").val(newPolId);
+		}
+
+		$("#deletePolicy").on('click', function() {
+			$(".idError").hide();
+			//delete policy id
+			allPolIds.splice((allPolIds.indexOf(parseInt($("#pid").val()))),1);
+			
+			//delete policy name
+			var deleteId = $("#policyTable .highlight td").html();
+			delete allPolicies[deleteId];
 			$("#policyTable .highlight").remove();
+			$("#pname").val('');
 			expandTable();
 		});
-		
+
 		$('#policyTable').on('click', 'tr', function(event) {
-			startNextItem();
-			
+			$(".idError").hide();
+			//edited name
+			if ($("#policyTable .highlight td").html() !== $("#pname").val()){
+				//repeated name
+				if ($.inArray($("#pname").val(), Object.keys(allPolicies)) > -1){
+					$("#repeatIdError").show();
+					return;
+				} else { //not repeated
+					$("#repeatIdError").hide();
+					delete allPolicies[$("#policyTable .highlight td").html()];
+				}
+			}
+			//if (parseInt($("#pname").val()) == 0){
+			if ($("#pname").val().trim() == "New_Policy"){
+				$("#newIdError").show();
+				return;
+			}
+			if (!(readOnly||readMOnly)){
+				startNextItem();
+			} else {
+				if ($("#policyTable .highlight").length == 0){
+					collapseTable();		
+				}
+			}
 			$(this).addClass('highlight').siblings().removeClass('highlight');
-			disperseConfig(allPolicies, $(this).attr("id"));
+			disperseConfig(allPolicies, $(this).find("td").html());
 		});
-		
+
 		$('#createNewPolicy').on('click', function(){
+			$(".idError").hide();
+			//edited name
+			if ($("#policyTable .highlight td").html() !== $("#pname").val()){
+				//repeated name
+				if ($.inArray($("#pname").val(), Object.keys(allPolicies)) > -1){
+					$("#repeatIdError").show();
+					return;
+				} else { //not repeated
+					$("#repeatIdError").hide();
+					delete allPolicies[$("#policyTable .highlight td").html()];
+				}
+			}
+			//if (parseInt($("#pname").val()) == 0){
+			if ($("#pname").val().trim() == "New_Policy"){
+				$("#newIdError").show();
+				return;
+			}
 			startNextItem();
-			
-			var defPolName = add_new_policy();
-			
+			add_new_policy();
 			if (("#policyTable .highlight").length > 0){
 				$('#policyTable tr.highlight').removeClass('highlight');
 			}
-            $("#policyTable").prepend("<tr class='highlight' id='" +defPolName+ "''><td>"+defPolName+"</td></tr>");
+            $("#policyTable").prepend("<tr class='highlight'><td>New_Policy</td></tr>");
+            
+            getNextId();
+		});
+
+		$('#pname').on('keypress', function(e){
+			/* var newVal = $(this).val() + String.fromCharCode(e.which);
+			if ((newVal>99) || (($(this).val().length>2) && e.keyCode != 46 && e.keyCode !=8)){
+				e.preventDefault();
+			} */
+			if (e.keyCode == 32){
+				$("#spaceError").show();
+				e.preventDefault();
+			}
 		});
 		
-		function startNextItem(){
+		function isNumberKey(event){
+			var charCode = (event.which) ? event.which : event.keyCode
+			if (charCode > 31 && (charCode < 48 || charCode > 57)){
+				return false;
+			}
+			return true;
+		}
+
+		function startNextItem() {
 			//save last item before transitioning
 			var lastItem = $("#policyTable .highlight");
-			if (lastItem.length > 0){
+			if (lastItem.length > 0) {
 				saveLastPolicyLocally($("#pname").val());
-				
-				lastItem.attr("id",$("#pname").val());
-				$("#"+lastItem.attr("id")+" td").html($("#pname").val());
-			} else{
+				//lastItem.attr("id", $("#pname").val()); 
+				lastItem.find("td").html($("#pname").val());
+			} else {
 				collapseTable();
 			}
-			
+
 			//allow deleting
-			if ($("#deletePolicy").prop("disabled")){
+			if ($("#deletePolicy").prop("disabled")) {
 				$("#deletePolicy").prop("disabled", false);
 			}
 		}
 		
+		setASDCFields();
+		
+		//load metrics dropdown
+		if (elementMap["global"]){
+			for (var i = 0; i < (elementMap["global"].length); i++){
+				if ((elementMap["global"][i]["name"]) == "actionSet"){
+					var asSel = elementMap["global"][i]["value"];
+					if (asSel == "vnfRecipe"){
+						if (vf_Services["policy"][asSel]){
+							$.each((vf_Services["policy"][asSel]), function(val, text) {
+				                $('#recipe').append(
+				                    $('<option></option>').val(val).html(text)
+				                );
+				            });
+						}
+						break;
+					} else if (asSel == "enbRecipe"){
+						if (vf_Services["policy"][asSel]){
+							$.each((vf_Services["policy"][asSel]), function(val, text) {
+				                $('#recipe').append(
+				                    $('<option></option>').val(val).html(text)
+				                );
+				            });
+						}
+						break;
+					}
+				};
+			};
+		};
+		
 		//Show table panel only
-		function expandTable(){
-			$(".policyPanel").css("display","none");
+		function expandTable() {
+			$(".policyPanel").css("display", "none");
 			$(".leftPolicyPanel").removeClass("col-sm-3");
-			$(".glyphicon-search").css("padding", "25px 12px");
-			if (!($("#deletePolicy").prop("disabled"))){
+			$(".modelSearchBox").css("padding", "25px 12px");
+			if (!($("#deletePolicy").prop("disabled"))) {
 				$("#deletePolicy").prop("disabled", true);
 			}
 		}
-		
+
 		//Show both menus
-		function collapseTable(){
+		function collapseTable() {
 			$(".leftPolicyPanel").addClass("col-sm-3");
-			$(".glyphicon-search").css("padding", "10px 12px");
-			$(".policyPanel").css("display","unset");
+			$(".modelSearchBox").css("padding", "10px 12px");
+			$(".policyPanel").css("display", "unset");
 		}
-			
 	</script>
 </div>
-

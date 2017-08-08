@@ -18,10 +18,17 @@
   limitations under the License.
   ============LICENSE_END============================================
   ===================================================================
-  ECOMP is a trademark and service mark of AT&T Intellectual Property.
+  ECOMP is a trademark and service mark of AT&T Intellectual Property.
   -->
-
 <style>
+#deleteStringMatch{
+	height:34px;
+	background-color:#dddd;
+}
+
+.disabled{
+	background-color: #dddd;
+}
 .fileUpload {
 	position: relative;
 	overflow: hidden;
@@ -52,19 +59,88 @@
 }
 
 .form-group {
-	/* 	height:24px; */
-	/* 	box-sizing:border-box; */
-	margin-bottom: 20px;
-	
-}
- #paramsWarn {
-      display: none;
+/* 	height:24px; */
+/* 	box-sizing:border-box; */
+	margin-bottom:20px;
 }
 
-label{text-align:right;
- padding-top:8px;
- } 
+.modelSearchBox{
+	position:absolute; 
+	padding: 25px 12px;
+}
 
+label{
+	text-align:right;
+	vertical-align:middle;
+}
+
+.leftStringMatchPanel{
+	padding: 0 10px 0 0;
+}
+
+#createNewStringMatch{
+	height:34px;
+	width:120px; /*84*/
+	background-color:#f2bfab;
+}
+
+.idError{
+	color:red; 
+	padding:50px 0px; 
+	text-align:center; 
+	display:none;
+}
+
+#rgname{
+	height:28px; 
+	margin-left:-5px;
+}
+
+.stringMatchPanel{
+	background-color: #f5f5f5;
+	padding: 10px 5px;
+}
+
+#stringMatchSearch{
+	height: 33px;
+	font-size: 12px;
+	padding: 2px 2px 2px 30px;
+	margin-bottom: 5px;
+	width:100%;
+}
+#stringMatchTable{
+	cursor: pointer;
+	width:100%;
+}
+
+#stringMatchTable tr{
+	border-bottom: 1px solid #ddd;
+	border-collapse: collapse;
+	text-align: left;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#stringMatchTable td{
+	padding: 8px 10px;
+}
+
+#stringMatchTable tr.highlight{
+	background-color: #f5f5f5;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+#stringMatchTableHolder{
+	height:200px; 
+	width: 100%; 
+	overflow:auto;
+}
+
+#timeout{
+	height:28px; 
+	margin-left:10px;
+}
 
 </style>
 
@@ -76,14 +152,12 @@ label{text-align:right;
 	}
 
 	function disableSVN() {
-		var selectLength =  document.querySelectorAll(".disabled-block-container .tab-close-popup");
+		var selectLength = document.querySelectorAll(".disabled-block-container .tab-close-popup");
 		if(selectLength && selectLength.length>0){
 			for(var i = 0; i< selectLength.length ; i++){
 				selectLength[i].disabled = true;
 			}	
 		}
-			
-
 
 		document.getElementById("schemaLocation").disabled = true;
 		document.getElementById("userID").disabled = true;
@@ -93,295 +167,350 @@ label{text-align:right;
 </script>
 
 
-<div attribute-test="stringmatchproperties" id="configure-widgets"  class="disabled-block-container">
-	<div attribute-test="stringmatchpropertiesh" class="modal-header">
+<div attribute-test="stringMatchwindowproperties" id="configure-widgets" class="disabled-block-container">
+	<div attribute-test="stringMatchwindowpropertiesh" class="modal-header">
 		<button type="button" class="close" ng-click="close(false)"
 			aria-hidden="true" style="margin-top: -3px">&times;</button>
 		<h4>String Matching Micro Service</h4>
 	</div>
-	<div attribute-test="stringmatchpropertiesb" class="modal-body">
-	<div class="alert alert-danger" role="alert" id='paramsWarn'> 
-							<strong>Ooops!</strong> Unable to load properties for <span id='servName'>. Would you like to</span>
-							<a href="javascript:void(0);" class="btn-link"  id='paramsRetry'>Retry </a> /
-							<a href="javascript:void(0);" class="btn-link" id='paramsCancel'>Cancel</a>
-						</div>
-		<div style="height: 10px"></div>
-		<div class="panel panel-default">
-			<form id="topicPublish" class="form-horizontal">
-				<div>
 
-					<div class="form-group">
-						<label for="userID" class="col-sm-4 control-label"> Topic
-							Publishes</label>
 
-						<div class="col-sm-8">
-							<select class="form-control" id="topicPublishes"
-								name="topicPublishes">
-							</select>
-						</div>
+	<div class="modal-body">
+		<div attribute-test="stringMatchwindowpropertiesb" class="modal-body row">
+
+			<div class="leftStringMatchPanel">
+				<div class="panel panel-default">
+					<i class="modelSearchBox"></i> <input type="text"
+						id="stringMatchSearch" onkeyup="searchStringMatchList()"
+						placeholder="Search ...">
+					<div id="stringMatchTableHolder">
+						<table id="stringMatchTable"></table>
 					</div>
 				</div>
-			</form>
-			<div class="panel-heading">
-				<ul id="nav_Tabs" class="nav nav-tabs">
-					<li class><a id="add_one_more" href="#desc_tab"><span
-							class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-				</ul>
-			</div>
-			<div class="panel-body">
-				<div class="tab-content">
-					<div id="properties_tab" class="tab-pane fade in active"></div>
-
+				<div style="float: left">
+					<button type="button" id="createNewStringMatch" class="btn btn-sm">New Group</button>
+					</span>
 				</div>
-
+				<div style="float: right">
+					<button type="button" id="deleteStringMatch" class="btn btn-sm glyphicon glyphicon-trash" disabled></button>
+					</span>
+				</div>
+				<div id="repeatIdError" class="idError">Error: This Group name is already taken.</div>
+				<div id="newIdError" class="idError">Error: Please rename your new Group.</div>
 			</div>
+
+			<div class="panel panel-default col-sm-9 stringMatchPanel"
+				style="display: none;">
+				<form id="topicPublish" class="form-horizontal">
+					<div>
+<!-- 						As per the last minute new requirements for 1707 the ID needs to be hidden and we need to have a friendly name instead -->
+							<div style="display: none;">
+								<div class="form-group clearfix">
+									<label class="col-sm-4 control-label">Resource Group Id</label>
+									<div class="col-sm-8">
+										<input class="form-control" id="rgname" name="rgname" readOnly> </input>
+									</div>
+								</div>
+							</div>
+							
+							<div>
+								<div class="form-group clearfix">
+									<label class="col-sm-4 control-label">Resource Group</label>
+									<div class="col-sm-8">
+										<input class="form-control" maxlength="48" placeholder="Enter Unique Name" id="rgfriendlyname" name="rgfriendlyname"> </input>
+									</div>
+								</div>
+							</div>							
+							
+							<!--Policy's drop down box -->
+							<div class="form-group clearfix">
+								<label class="col-sm-4 control-label">Ops Policy:</label>
+								<div class="col-sm-8">
+									<select class="form-control" id="policyName" name="policyName"
+										autofocus="autofocus" required ng-trim="true">
+										<option ng-repeat="x in policyNames" value="{{x}}">{{x}}</option>
+									</select>
+								</div>
+							</div>
+							
+					</div>
+				</form>
+				
+				<div class="panel-heading" style="background-color: white;">
+					<ul id="nav_Tabs" class="nav nav-tabs">
+						<li class><a id="add_one_more" href="#desc_tab"><span
+								class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+					</ul>
+				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						<div id="properties_tab" class="tab-pane fade in active"></div>
+					</div>
+				</div>
+			</div>
+
+			<span id="formSpan" style="display: none">
+				<form class="saveProps" class="form-horizontal">
+
+					<div>
+						<div class="form-group clearfix">
+							<label for="aaiMatchingFields" class="col-sm-4 control-label">AAI Fields Matching </label>
+							<div class="col-sm-8">
+								<select class="form-control" name="aaiMatchingFields" id="aaiMatchingFields" multiple size=2></select>
+							</div>
+													
+						</div>
+						<div class="form-group clearfix">
+							<label for="aaiSendFields" class="col-sm-4 control-label">AAI Fields Send (Select Multiple)</label>
+
+							<div class="col-sm-8 ">
+								<select class="form-control" id="aaiSendFields"
+									name="aaiSendFields" multiple size=2>
+								</select>
+
+							</div>
+						</div>
+<!-- 						<div class="form-group clearfix"> -->
+<!-- 							<label for="groupNumber" class="col-sm-4 control-label"> -->
+<!-- 								Resource-Group</label> -->
+
+<!-- 							<div class="col-sm-8"> -->
+<!-- 								<input type="number" class="form-control" id="groupNumber" -->
+<!-- 									name="groupNumber" min="0"> </input> -->
+
+<!-- 							</div> -->
+<!-- 						</div> -->
+						<div class="form-group clearfix">
+							<label for="vfc" class="col-sm-4 control-label">Resource-VFC</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="vfc" name="vfc">
+
+								</select>
+
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="alarmCondition" class="col-sm-4 control-label">Alarm Condition</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="alarmCondition" name="alarmCondition">
+								
+								</select>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="eventSeverity" class="col-sm-4 control-label">Event Severity</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="eventSeverity"
+									name="eventSeverity" enableFilter="false"></select>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="eventSourceType" class="col-sm-4 control-label">
+								Event Source Type</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" id="eventSourceType"
+									name="eventSourceType" readOnly></input>
+							</div>
+						</div>
+
+						<div class="form-group clearfix">
+							<label for="timeWindow" class="col-sm-4 control-label">
+								Time Window</label>
+
+							<div class="col-sm-8">
+								<input type="text" maxlength="5" class="form-control"
+									onkeypress="return isNumberKey(event)"
+									id="timeWindow" name="timeWindow" />
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="ageLimit" class="col-sm-4 control-label"> Age
+								Limit</label>
+
+							<div class="col-sm-8">
+								<input type="text" maxlength="5" class="form-control" id="ageLimit"
+									onkeypress="return isNumberKey(event)"
+									name="ageLimit" />
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="createClosedLoopEventId"
+								class="col-sm-4 control-label"> Create CL Event ID</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="createClosedLoopEventId"
+									name="createClosedLoopEventId" enableFilter="false">
+								</select>
+
+							</div>
+						</div>
+
+						<div class="form-group clearfix">
+							<label for="outputEventName" class="col-sm-4 control-label">
+								Output Event Name</label>
+
+							<div class="col-sm-8">
+								<select class="form-control" id="outputEventName"
+									name="outputEventName" enableFilter="false"></select>
+
+							</div>
+						</div>
+					</div>
+
+
+
+				</form>
+			</span>
 		</div>
-		<span id="formSpan" style="display: none">
-			<form class="saveProps" class="form-horizontal clearfix">
-				<div>
-					<div class="form-group clearfix">
-						<label for="aaiMatchingFields" class="col-sm-4 control-label">AAI
-							Fields Matching </label>
-						<div class="col-sm-8">
-							<select type="text" class="form-control "
-								name="aaiMatchingFields" id="aaiMatchingFields" multiple="" size=2></select>
-
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="aaiSendFields" class="col-sm-4 control-label">
-							AAI Fields Send (Select Multiple)</label>
-
-						<div class="col-sm-8 ">
-							<select class="form-control"
-								id="aaiSendFields" name="aaiSendFields" multiple size=2>
-
-							</select>
-
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="groupNumber" class="col-sm-4 control-label">
-							Resource-Group</label>
-
-						<div class="col-sm-8">
-							<input type="number" class="form-control" id="groupNumber" name="groupNumber" min="0" >
-
-							</input>
-
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="vfc" class="col-sm-4 control-label">
-							Resource-VFC</label>
-
-						<div class="col-sm-8">
-							<select class="form-control" id="vfc" name="vfc">
-
-							</select>
-
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="alarmCondition" class="col-sm-4 control-label">
-							Alarm Condition</label>
-
-						<div class="col-sm-8">
-							<select class="form-control" id="alarmCondition"
-								name="alarmCondition"></select>
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="eventSeverity" class="col-sm-4 control-label">
-							Event Severity</label>
-						<div class="col-sm-8">
-							<select class="form-control" id="eventSeverity"
-								name="eventSeverity" enableFilter="false"></select>
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="eventSourceType" class="col-sm-4 control-label">
-							Event Source Type</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" id="eventSourceType"
-								name="eventSourceType" readOnly  ></input>
-						</div>
-					</div>
-
-					<div class="form-group clearfix">
-						<label for="timeWindow" class="col-sm-4 control-label">
-							Time Window</label>
-
-						<div class="col-sm-8">
-							<input type="number" min="0" class="form-control" id="timeWindow"
-								name="timeWindow" />
-
-
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="ageLimit" class="col-sm-4 control-label"> Age
-							Limit</label>
-
-						<div class="col-sm-8">
-							<input type="number" min="0" class="form-control" id="ageLimit"
-								name="ageLimit" />
-						</div>
-					</div>
-					<div class="form-group clearfix">
-						<label for="createClosedLoopEventId"
-							class="col-sm-4 control-label"> Create CL Event ID</label>
-						<div class="col-sm-8">
-							<select class="form-control" id="createClosedLoopEventId"
-								name="createClosedLoopEventId" enableFilter="false">
-							</select>
-
-						</div>
-					</div>
-
-					<div class="form-group clearfix">
-						<label for="outputEventName" class="col-sm-4 control-label">
-							Output Event Name</label>
-
-						<div class="col-sm-8">
-							<select class="form-control" id="outputEventName" 
-								name="outputEventName" enableFilter="false"></select>
-
-						</div>
-					</div>
-				</div>
-			</form>
-		</span>
 	</div>
 
-	<div attribute-test="stringmatchpropertiesf" class="modal-footer">
+	<div attribute-test="stringMatchwindowpropertiesf" class="modal-footer">
 		<!--<button ng-click="reset()" class="btn btn-primary" style="float:left">Reset</button>-->
 		<button id="savePropsBtn" class="btn btn-primary">Close</button>
 		<button ng-click="close(true)" id="close_button"
 			class="btn btn-primary">Cancel</button>
-
 	</div>
+
 	<script>
+
 		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
 		// css attribute display:none
-		$("#paramsRetry").on('click', function () {
-			$("#paramsWarn").hide();
-			$("#ridinSpinners").css("display","")
-			var bool=loadSharedPropertyByService();
-			$("#ridinSpinners").css("display","none")
-		});
-		$("#paramsCancel").on('click', function () {
-			loadSharedPropertyByServiceProperties();
-			$("#paramsWarn").hide();
-			
-		});
-
-
-
 		$("#add_one_more").click(function(event) {
-			//alert("lol");
 			event.preventDefault();
 			add_one_more();
-			//I have uncomment the below code becoz there is no refreshItems method.
-			
-			//refreshItems();
 			setMultiSelect();
-	
-		})
-		loadPropertyWindow("string_match")
+		});
+		
+		
+		//This method will load the existing Strin Match onto the screen
+		loadPropertyWindow("string_match");
 		setASDCFields();
-		var arr = elementMap[lastElementSelected];
+
+		// By default, parentStringMatchConditions is disabled
+		$("#parentStringMatchConditions").prop('disabled', 'disabled');
+		
+		
+		var parent_stringMatch = {}
+		var stringMatch_ids = {}
+		var loadingId = false;
+		var allSMatch = {};
 		var vfc_temp=""
 		var alarm_conditions_temp=""
 		var event_severity_temp=""
-		var event_type_source_temp=""
-		if (arr !== undefined && arr[1]!==undefined) {
-			var el = arr[1]['serviceConfigurations']
-			for (var i = 0; i < el.length; i++) {
-				var num = add_one_more();
-				for (var j = 0; j < el[i].length; j++) {
-					if (el[i][j]["stringSet"] !== undefined) {
-						var ss = el[i][j]["stringSet"]
-						for (var o = 0; o < ss.length; o++) {
-							if(ss[o].hasOwnProperty("name")){
-								if(ss[o].name==="alarmCondition"){
-									alarm_conditions_temp=ss[o].value
-								}else if(ss[o].name==="eventSeverity"){
-									event_severity_temp=ss[o].value;
-								}else if(ss[o].name==="eventSourceType"){
-									event_type_source_temp=ss[o].value;
+		var event_type_source_temp=""		
+
+		//Grab saved values for dropdowns
+		var obj = elementMap[lastElementSelected];
+
+		if (!($.isEmptyObject(obj))) {
+			allSMatch = jQuery.extend({}, obj);
+			for ( var x in allSMatch) {
+				$("#stringMatchTable").prepend(
+						"<tr><td>" + x + "</td></tr>");
+			}
+		}
+
+		
+		//Load properties_tab for a chosen String Match
+		function disperseConfig(stringMatchObj, id) {			
+			//remove old gui forms
+			for (var i = 1; i < ($(".formId").length + 1); i++) {
+				$("#go_properties_tab" + i).parent().remove();
+			}
+			$(".formId").remove();
+
+			if (stringMatchObj !== undefined) {
+				var el = stringMatchObj[id][4]['serviceConfigurations']
+				for (var i = 0; i < el.length; i++) {
+					loadingId = true;
+					var num = add_one_more();
+					loadingId = false;
+					for (var j = 0; j < el[i].length; j++) {
+						if (el[i][j]["stringSet"] !== undefined) {
+							var ss = el[i][j]["stringSet"]
+							for (var o = 0; o < ss.length; o++) {
+								if(ss[o].hasOwnProperty("name")){
+									if(ss[o].name==="alarmCondition"){
+										alarm_conditions_temp=ss[o].value
+									}else if(ss[o].name==="eventSeverity"){
+										event_severity_temp=ss[o].value;
+									}else if(ss[o].name==="eventSourceType"){
+										event_type_source_temp=ss[o].value;
+									}
+									else 
+									$("#formId" + num + " #" + ss[o].name).val(ss[o].value);	
 								}
-								else 
-								$("#formId" + num + " #" + ss[o].name).val(ss[o].value);	
+								
 							}
-							
+						}else if(el[i][j].hasOwnProperty("name") && el[i][j].name==="vfc"){
+							vfc_temp=el[i][j].value
 						}
-					}else if(el[i][j].hasOwnProperty("name") && el[i][j].name==="vfc"){
-						//alert(el[i][j].value)
-						vfc_temp=el[i][j].value
+						else if (el[i][j].name === 'outputEventName' && el[i][j].value.toString() !== '') {
+							$("#go_properties_tab" + num).text(el[i][j].value);
+							$("#formId" + num + " #" + el[i][j].name).val(el[i][j].value);
+						}
+						else {
+							if(el[i][j].hasOwnProperty("name")){
+								$("#formId" + num + " #" + el[i][j].name).val(
+										el[i][j].value);
+							}
+						}
 					}
-					else {
-						if(el[i][j].hasOwnProperty("name")){
-							$("#formId" + num + " #" + el[i][j].name).val(
-									el[i][j].value);
+					set_vfc_alarm_event(num);
+					vfc_temp="";
+					alarm_conditions_temp="";
+					event_severity_temp="";
+					event_type_source_temp="";
+				}
+
+				//Adding all the ids for parent String options
+				for (var i = 1; i <= $(".formId").length; i++) {
+					for (k in stringMatch_ids) {
+						if ($("#formId" + i + " #_id").val() !== stringMatch_ids[k].toString() && $(k + " #recipe").val() !== undefined && $(k + " #recipe").val() !== "") {
+							$("#formId" + i + " #parentStringMatch").append("<option value=\""+stringMatch_ids[k]+"\">"+ $(k + " #recipe").val()+ "</option>");
 						}
 					}
 				}
-				changeTab(num);
-				set_vfc_alarm_event(num)
-				vfc_temp=""
-				alarm_conditions_temp=""
-				event_severity_temp=""
-				event_type_source_temp=""
 
-			}
-			if(arr[0] &&  arr[0][0] &&  arr[0][0].name){
-				$("#" + arr[0][0].name).val(arr[0][0].value);
-			}
+				for (k in parent_stringMatch) {
+					$("#formId" + k + " #parentStringMatch").val(parent_stringMatch[k]);
+					// force the change event
+					$("#formId" + k + " #parentStringMatch").change();
+				}
 
-		}
-		
-		//this will populate alarmcondition,vfc,eventtypesource if they are saved in elementmap
-		function set_vfc_alarm_event (count){
-			//alert("lol")
-			//alert(alarm_conditions_temp)
-			//alert(alarm_conditions_temp!=="" && alarm_conditions_temp!==undefined)
-			if(vfc_temp!=="" && vfc_temp!==undefined){
-				$("#formId"+count+" #vfc").val(vfc_temp)
+				if (stringMatchObj[id][0]) {
+					$("#" + stringMatchObj[id][0].name).val(stringMatchObj[id][0].value);
+				}
 				
-				if(alarm_conditions_temp!=="" && alarm_conditions_temp!==undefined){
-					setAlarmConditions(vfc_temp,count)
-					$("#formId"+count+" #alarmCondition").val(alarm_conditions_temp)
-					
-					if(event_severity_temp!=="" && event_severity_temp!==undefined){
-						setEventSourceType(alarm_conditions_temp,count)
-						$("#formId"+count+" #eventSeverity").val(event_severity_temp)
-						if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
-							$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
-						}
-					}
-					if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
-						setEventSourceType(alarm_conditions_temp,count)
-						$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
-						if(event_severity_temp!=="" && event_severity_temp!==undefined){
-							$("#formId"+count+" #eventSeverity").val(event_severity_temp)
-						}
-					}
+				if (stringMatchObj[id][1]) {
+					$("#" + stringMatchObj[id][1].name).val(stringMatchObj[id][1].value);
+				}		
+				
+				if (stringMatchObj[id][2]) {
+					$("#" + stringMatchObj[id][2].name).val(stringMatchObj[id][2].value);
 				}
 			}
+
+			setMultiSelect();
 			
-			
+			if (readOnly||readMOnly){
+				$('select[multiple] option').each(function() {
+		          var input = $('input[value="' + $(this).val() + '"]');
+		          input.prop('disabled', true);
+		          input.parent('li').addClass('disabled');
+		        });
+				$('input[value="multiselect-all"]').prop('disabled', true).parent('li').addClass('disabled');
+			}
 		}
-		
-		
+
+
+		//This is ensure there are no repeated keys in the map
 		function noRepeats(form) {
+			//triggered per String.
 			var select = {};
 			for (var i = 0; i < form.length; i++) {
-				if(form[i].hasOwnProperty("name")){
 				if (select[form[i].name] === undefined)
 					select[form[i].name] = []
 				select[form[i].name].push(form[i].value);
-			}
 			}
 			var arr = []
 			for (s in select) {
@@ -392,6 +521,168 @@ label{text-align:right;
 			}
 			return arr
 		}
+
+		$("#savePropsBtn").click(function(event) {
+			$(".idError").hide();
+			if ($("#stringMatchTable .highlight td").html() !== $("#rgfriendlyname").val()){
+				//repeated name
+				if ($.inArray($("#rgfriendlyname").val(), Object.keys(allSMatch)) > -1){
+					$("#repeatIdError").show();
+					return;
+				} else { //not repeated
+					delete allSMatch[$("#stringMatchTable .highlight td").html()];
+				}
+			}
+			/* //Saves edits
+			if ($("#stringMatchTable .highlight").length > 0) {
+				saveLastStringMatchLocally($("#stringMatchTable .highlight td").html());
+			} */
+			if ($("#rgfriendlyname").val().trim() == "New_Group"){
+				$("#newIdError").show();
+				return;
+			}
+			startNextItem();
+			//Removes outdated (deleted) resource Groups by checking against left menu
+			var finalSaveList = {};
+			$("#stringMatchTable td").each(function() {
+				var tableVal = $(this).text();
+				if (tableVal in allSMatch) {
+					finalSaveList[tableVal] = allSMatch[tableVal];
+				}
+			});
+
+			saveProperties(finalSaveList);
+			$("#close_button").click();
+		})
+
+		function add_one_more() {
+			$("#nav_Tabs li").removeClass("active");
+
+			//FormSpan contains a block of the form that is not being displayed. We will create clones of that and add them to tabs
+			var form = $($("#formSpan").children()[0]).clone()
+			var count = 0;
+			//Each new tab will have the formId class attached to it. This way we can track how many forms we currently have out there and assign listeners to them
+			if ($(".formId").length > 0) {
+				var greatest = 0;
+				var s = $(".formId");
+				for (var i = 0; i < s.length; i++) {
+					if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
+						greatest = parseInt($(s[i]).attr("id").substring(6))
+					}
+				}
+				count = greatest + 1;
+				$("#properties_tab").append(
+						('<span class="formId" id="formId'+count+'"></span>'));
+			} else {
+				count++;
+				$("#properties_tab").append(
+						'<span class="formId" id="formId1"></span>');
+			}
+
+			//$(form).find("#stringMatchName").val("Recipe "+makid(2))
+			//TODO change up how we auto assign stringMatchName. There could be the case where we do this and it will have repeats
+			//alert($(form).find("#_id").val())
+			//stringMatchNameChangeListener(form)
+			
+			$("#add_one_more")
+					.parent()
+					.before(
+							' <li class="active"><a id="go_properties_tab'+count+'">Condition</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
+			$("#formId" + count).append(form);
+			$(".formId").not($("#formId" + count)).css("display", "none")
+			addCustListen(count)
+			addTabListen(count)
+			
+			// This is for when the process is not loading from map but being created
+			if (!loadingId) {
+				var l = makeid()
+				$(form).find("#_id").val(l)
+				stringMatch_ids["#formId" + count] = l
+				var answers = {}
+
+				for (k in answers) {
+					$(k).val(answers[k])
+				}
+			}
+			return count;
+		}
+
+		function add_new_stringMatch(issueNewNames) {
+			//remove old gui forms
+			for (var i = 1; i < ($(".formId").length + 1); i++) {
+				$("#go_properties_tab" + i).parent().remove();
+			}
+			$(".formId").remove();
+
+			//Reset header
+			var ms = new Date().getTime();
+			var defSMatch = ms;
+			$("#rgname").val(defSMatch);
+			
+			$("#rgfriendlyname").val("New_Group");
+
+			$("#add_one_more").click();
+			return defSMatch;
+		}
+
+		//listener will change the tab name to the recipe
+		function addTabListen(count) {
+			$("#formId" + count + " #recipe").on("change",function() {
+				if ($("#formId" + count + " #recipe").val().toString() !== "") {
+					$('#go_properties_tab' + count).text($("#formId" + count + " #recipe").val())
+				} else
+					$('#go_properties_tab' + count).text("String");
+
+				var answers = {}
+
+				for (var i = 1; i <= greatestIdNum(); i++) {
+					if ($("#formId" + i).length > 0) {
+
+						answers["#formId" + i + " #parentStringMatch"] = $("#formId" + i + " #parentStringMatch").val()
+						$("#formId" + i + " #parentStringMatch").empty();
+
+						for (k in stringMatch_ids) {
+							if ($("#formId" + i + " #_id").val().toString() !== stringMatch_ids[k] && $(k + " #recipe").val() !== 'undefined' && $(k + " #recipe").val() !== "") {
+								$("#formId" + i + " #parentStringMatch").append("<option value='"+stringMatch_ids[k]+"''> "+ $(k+ " #recipe").val()+ "</option>")
+							}
+						}
+						$("#formId" + i + " #parentStringMatch").prepend("<option value=''></option>")
+					}
+				}
+				for (k in answers) {
+					$(k).val(answers[k])
+				}
+			})
+
+			// disable parentStringMatchConditions when a parentStringMatch is not selected
+			$("#formId" + count + " #parentStringMatch").on("change",function() {
+				if ($("#formId" + count + " #parentStringMatch").val().toString() == "") {
+					// deselect all options
+					$("#formId"+ count+ " #parentStringMatchConditions option:selected").prop("selected", false);
+					// disable the select box
+					$("#formId"+ count+ " #parentStringMatchConditions").prop('disabled', 'disabled');
+				} else {
+					$("#formId"+ count+ " #parentStringMatchConditions").prop('disabled', false);
+				}
+			})
+		}
+
+		function addCustListen(count) {			
+			$('#go_properties_tab' + count).click(function(event) {
+				$("#nav_Tabs li").removeClass("active");
+				$(this).parent().addClass("active");
+				$("#formId" + count).css("display", "")
+				$(".formId").not($("#formId" + count)).css("display", "none")
+
+			})
+			$('#tab_close' + count).click(function(event) {
+
+				$(this).parent().remove();
+				delete stringMatch_ids["#formId" + count + " #_id"]
+				$("#formId" + count).remove();
+			})
+		}
+		
 		function setStringSet(form) {
 			var arr = []
 			var alarmCondition = {}
@@ -419,167 +710,266 @@ label{text-align:right;
 
 			return arr;
 		}
-		$("#savePropsBtn").click(function(event) {
+		
+		//this will populate alarmcondition,vfc,eventtypesource if they are saved in elementmap
+		function set_vfc_alarm_event (count){
+			if(vfc_temp!=="" && vfc_temp!==undefined){
+				$("#formId"+count+" #vfc").val(vfc_temp)
+				
+				if(alarm_conditions_temp!=="" && alarm_conditions_temp!==undefined){
+					setAlarmConditions(vfc_temp,count)
+					$("#formId"+count+" #alarmCondition").val(alarm_conditions_temp);
+					
+					if(event_severity_temp!=="" && event_severity_temp!==undefined){
+						setEventSourceType(alarm_conditions_temp,count)
+						$("#formId"+count+" #eventSeverity").val(event_severity_temp)
+						if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
+							$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
+						}
+					}
+					if(event_type_source_temp!=="" && event_type_source_temp!==undefined){
+						setEventSourceType(alarm_conditions_temp,count)
+						$("#formId"+count+" #eventSourceType").val(event_type_source_temp)
+						if(event_severity_temp!=="" && event_severity_temp!==undefined){
+							$("#formId"+count+" #eventSeverity").val(event_severity_temp)
+						}
+					}
+				}
+			}
+		}
 
-			var form = []
+		function setAlarmConditions(vfcID, count){
+			var alarmCondition={}
+			
+			if($("#formId"+count+" #vfc").val()!==""){
+				if(vf_Services['shared'] && vf_Services['shared']['byVfc'] && vf_Services['shared']['byVfc'][vfcID]){
+					alarmCondition=vf_Services['shared']['byVfc'][vfcID]['alarmCondition']	
+				}
+			}
+			
+			$("#formId"+count+" #alarmCondition").empty();
+			$("#formId"+count+" #alarmCondition").append("<option value=\"\"></opton>");
+			 if(alarmCondition && _.keys(alarmCondition).length>0){
+				for(key in alarmCondition){
+					var safestring = $('<div>').text(key).html();
+					$("#formId"+count+" #alarmCondition").append("<option value='"+safestring+"'>"+alarmCondition[key]+"</opton>");	
+				}
+				$("#formId"+count+" #alarmCondition").multiselect("rebuild");
+			}
+		}
+
+		function setEventSourceType(alarm, count){
+			var eventSourceTypSeverity={}
+			if($("#formId"+count+" #alarmCondition").val()!==""){
+				if(vf_Services && vf_Services['shared'] && vf_Services['shared']['byAlarmCondition'] && vf_Services['shared']['byAlarmCondition'][alarm]){
+					eventSourceTypSeverity=vf_Services['shared']['byAlarmCondition'][alarm]	
+				}
+				
+			}
+			
+			$("#formId"+count+" #eventSourceType").val(eventSourceTypSeverity.eventSourceType);
+			$("#formId"+count+" #eventSeverity").val(eventSourceTypSeverity.eventSeverity);
+			$("#formId"+count+" #eventSeverity").multiselect("rebuild");
+		}		
+
+		function greatestIdNum() {
+			var greatest = 0;
+			var s = $(".formId");
+			for (var i = 0; i < s.length; i++) {
+				if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
+					greatest = parseInt($(s[i]).attr("id").substring(6))
+				}
+			}
+			return greatest;
+		}
+
+		//Generate random id for each String
+		//Also made sure ids couldnt be repeated
+		function makeid(num) {
+
+			var text = "";
+			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			if (num == null)
+				num = 7;
+			for (var i = 0; i < 7; i++)
+				text += possible.charAt(Math.floor(Math.random()
+						* possible.length));
+			var hasValue = false;
+			for (k in stringMatch_ids) {
+				if (text === stringMatch_ids[k])
+					hasValue = true
+			}
+			if (hasValue)
+				return makeid(num);
+			else
+				return text
+		}
+
+		var ParentStringMatch = function(id, name) {
+			this.id = id
+			this.name = name
+		}
+
+		//String table search filter
+		function searchStringMatchList() {
+			var search = document.getElementById("stringMatchSearch");
+			var row = document.getElementsByTagName("td");
+			for (var i = 0; i < row.length; i++) {
+				if (row[i].innerHTML.toUpperCase().indexOf(
+						search.value.toUpperCase()) > -1) {
+					row[i].style.display = "";
+				} else {
+					row[i].style.display = "none";
+				}
+			}
+		}
+
+		function saveLastStringMatchLocally(lastStringMatchId) {
+			var polForm = []
+
 			var properties = $(".saveProps").not("#formSpan .saveProps")
-			var topicP = $("#topicPublish").serializeArray()
-			form.push(topicP)
+			
+			var topicPublish = $("#topicPublish").serializeArray();
+			
+			for (var i = 0; i < topicPublish.length; i++) {
+				polForm.push(topicPublish[i]);
+			}
+			
+			//The below three lines are added to make sure resource group can be save correctly even if the policy is not present 
+			if (topicPublish.length == 2){
+				var pname = {name:"policyName", value:""};
+				polForm.push(pname);
+				var pid = {name:"policyId", value:""};
+				polForm.push(pid);
+			}else{
+				var selectedPName = topicPublish[2]["value"];
+				var pid = {name:"policyId", value:allPolicies[selectedPName][1]["value"]};
+				polForm.push(pid);
+			}
+
 			var d = {}
 			d["serviceConfigurations"] = [];
-
 			for (var i = 0; i < properties.length; i++) {
 				var ser = $(properties[i]).serializeArray();
 				var s = noRepeats(ser)
-				var newSer = setStringSet(s)
-
-				d["serviceConfigurations"].push(newSer)
+				var newSer = setStringSet(s);
+				d["serviceConfigurations"].push(newSer);
 			}
-			form.push(d)
-			saveProperties(form)
+			polForm.push(d);
+			allSMatch[lastStringMatchId] = polForm;
+		}
 
-			$("#close_button").click();
+		$("#deleteStringMatch").on('click', function() {
+			$(".idError").hide();
+			var deleteId = $("#stringMatchTable .highlight td").html();
+			delete allSMatch.deleteId;
+			$("#stringMatchTable .highlight").remove();
+			$("#rgfriendlyname").val('');
+			expandTable();
+		});
 
-		})
-		
-		
-		
-		
-		
-		function add_one_more() {
-			$("#nav_Tabs li").removeClass("active");
-			var form = $($("#formSpan").children()[0]).clone()
-			var count = 0;
-			//alert($(".formId").length>0)
-			if ($(".formId").length > 0) {
-				var greatest = 0;
-				var s = $(".formId");
-				//alert("here1")
-				for (var i = 0; i < s.length; i++) {
-					if (parseInt($(s[i]).attr("id").substring(6)) > greatest) {
-						greatest = parseInt($(s[i]).attr("id").substring(6))
-					}
+		$('#stringMatchTable').on('click', 'tr', function(event) {
+			$(".idError").hide();
+			//edited name
+			if ($("#stringMatchTable .highlight td").html() !== $("#rgfriendlyname").val()){
+				//repeated name
+				if ($.inArray($("#rgfriendlyname").val(), Object.keys(allSMatch)) > -1){
+					$("#repeatIdError").show();
+					return;
+				} else { //not repeated
+					$("#repeatIdError").hide();
+					delete allSMatch[$("#stringMatchTable .highlight td").html()];
 				}
-				count = greatest + 1;
-				//alert(count)
-				$("#properties_tab").append(
-						('<span class="formId" id="formId'+count+'"></span>'));
+			}
+			if ($("#rgfriendlyname").val().trim() == "New_Group"){
+				$("#newIdError").show();
+				return;
+			}
+			if (!(readOnly||readMOnly)){
+				startNextItem();
 			} else {
-				//alert("here2")
-				count++;
-				$("#properties_tab").append(
-						'<span class="formId" id="formId1"></span>');
-			}
-			$("#add_one_more")
-					.parent()
-					.before(
-							' <li class="active"><a id="go_properties_tab'+count+'">Condition</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
-			$("#formId" + count).append(form);
-			$(".formId").not($("#formId" + count)).css("display", "none")
-			addCustListen(count)
-			addEventNameList(count)
-			add_vfc_alarm_event_listener(count);
-			return count;
-		}
-
-		function addCustListen(count) {
-			$('#go_properties_tab' + count).click(function(event) {
-				$("#nav_Tabs li").removeClass("active");
-				$(this).parent().addClass("active");
-				$("#formId" + count).css("display", "")
-				$(".formId").not($("#formId" + count)).css("display", "none")
-
-			})
-			$('#tab_close' + count).click(function(event) {
-				if(document.getElementById("topicPublishes").disabled){
-					return false;
+				if ($("#stringMatchTable .highlight").length == 0){
+					collapseTable();		
 				}
-				$(this).parent().remove();
-				$("#formId" + count).remove();
-			})
-		}
+			}
 
-		function changeTab(count){
-			var output = $('#formId' + count + " #outputEventName");
-			var group = $('#formId' + count + " #groupNumber");
-			var outputValue="";
-			var groupValue="";
-			if(output.val()!=="")
-				outputValue=output.val();
-			if(output.val()!=="" && group.val()!=="")
-				groupValue=group.val()+":";
-			else if(group.val()!=="")
-				groupValue=group.val();
-			
-			var tabText="Condition"
-			if(groupValue+outputValue!=="")
-				tabText=groupValue+outputValue;
-			$("#go_properties_tab" + count).text(tabText);	
-		}
-		
-		function addEventNameList(count) {
-			
-			$('#formId' + count + " #outputEventName").on('change',function(){changeTab(count)})
-			$('#formId' + count + " #groupNumber").on('change',function(){changeTab(count)});
-
-		}
-		
-		
-function setAlarmConditions(vfcID, count){
-	var alarmCondition={}
-	
-	if($("#formId"+count+" #vfc").val()!==""){
-		if(vf_Services['shared'] && vf_Services['shared']['byVfc'] && vf_Services['shared']['byVfc'][vfcID]){
-			alarmCondition=vf_Services['shared']['byVfc'][vfcID]['alarmCondition']	
-		}
-		
-	}
-	
-	$("#formId"+count+" #alarmCondition").empty();
-	$("#formId"+count+" #alarmCondition").append("<option value=\"\"></opton>")
-	 if(alarmCondition && _.keys(alarmCondition).length>0){
-		for(key in alarmCondition){
-			var safestring = $('<div>').text(key).html();
-			$("#formId"+count+" #alarmCondition").append("<option value='"+safestring+"'>"+alarmCondition[key]+"</opton>")		
-		}
-	}
-}
-
-function setEventSourceType(alarm, count){
-	var eventSourceTypSeverity={}
-	if($("#formId"+count+" #alarmCondition").val()!==""){
-		if(vf_Services && vf_Services['shared'] && vf_Services['shared']['byAlarmCondition'] && vf_Services['shared']['byAlarmCondition'][alarm]){
-			eventSourceTypSeverity=vf_Services['shared']['byAlarmCondition'][alarm]	
-		}
-		
-	}
-	
-	$("#formId"+count+" #eventSourceType").val(eventSourceTypSeverity.eventSourceType);
-	$("#formId"+count+" #eventSeverity").val(eventSourceTypSeverity.eventSeverity);
-	
-}
-function add_vfc_alarm_event_listener(count) {
-			
-	 $("#formId"+count+" #vfc").on('focus', function () {
-	        // Store the current value on focus and on change
-	        previous = this.value;
-	    }).change(function(){
-			
-			setAlarmConditions($("#formId"+count+" #vfc").val(), count);
-			$("#formId"+count+" #eventSourceType").val("");
-			$("#formId"+count+" #eventSeverity").val("")
-
+			$(this).addClass('highlight').siblings().removeClass('highlight');
+			disperseConfig(allSMatch, $(this).find("td").html());
 		});
-	 
-	 $("#formId"+count+" #alarmCondition").on('focus', function () {
-	        // Store the current value on focus and on change
-	        previous = this.value;
-	    }).change(function(){
+
+		
+		$('#createNewStringMatch').on('click',	function() {
+			$(".idError").hide();
+			//edited name
+			if ($("#stringMatchTable .highlight td").html() !== $("#rgfriendlyname").val()){
+				//repeated name
+				if ($.inArray($("#rgfriendlyname").val(), Object.keys(allSMatch)) > -1){
+					$("#repeatIdError").show();
+					return;
+				} else { //not repeated
+					$("#repeatIdError").hide();
+					delete allSMatch[$("#stringMatchTable .highlight td").html()];
+				}
+			}
+			if ($("#rgfriendlyname").val().trim() == "New_Group"){
+				$("#newIdError").show();
+				return;
+			}
+			startNextItem();
+			var defSMatch = add_new_stringMatch();
+
+			if (("#stringMatchTable .highlight").length > 0) {
+				$('#stringMatchTable tr.highlight').removeClass('highlight');
+			}
+			//$("#stringMatchTable").prepend("<tr class='highlight' id='" +defSMatch+ "''><td>"+ defSMatch + "</td></tr>");
+			$("#stringMatchTable").prepend("<tr class='highlight'><td>New_Group</td></tr>");
 			
-			
-	    	setEventSourceType($("#formId"+count+" #alarmCondition").val().toString(),count);
 		});
+
+		function isNumberKey(event){
+			var charCode = (event.which) ? event.which : event.keyCode
+			if (charCode > 31 && (charCode < 48 || charCode > 57)){
+				return false;
+			}
+			return true;
 		};
+		
+		function startNextItem() {
+			//save last item before transitioning
+			var lastItem = $("#stringMatchTable .highlight");
+			
+			
+			if (lastItem.length > 0) {
+				saveLastStringMatchLocally($("#rgfriendlyname").val());
+				//lastItem.attr("id", $("#rgfriendlyname").val());
+				if($("#rgfriendlyname").val() != ''){
+					lastItem.find("td").html($("#rgfriendlyname").val());
+				}
+			} else {
+				collapseTable();
+			}
+
+			//allow deleting
+			if ($("#deleteStringMatch").prop("disabled")) {
+				$("#deleteStringMatch").prop("disabled", false);
+			}
+		}
+
+		//Show table panel only
+		function expandTable() {
+			$(".stringMatchPanel").css("display", "none");
+			$(".leftStringMatchPanel").removeClass("col-sm-3");
+			$(".modelSearchBox").css("padding", "25px 12px");
+			if (!($("#deleteStringMatch").prop("disabled"))) {
+				$("#deleteStringMatch").prop("disabled", true);
+			}
+		}
+
+		//Show both menus
+		function collapseTable() {
+			$(".leftStringMatchPanel").addClass("col-sm-3");
+			$(".glyphicon-search").css("padding", "10px 12px");
+			$(".stringMatchPanel").css("display", "unset");
+		}
 	</script>
 </div>
-

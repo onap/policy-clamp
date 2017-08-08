@@ -31,7 +31,7 @@
 		<div style="height: 30px"></div>
 
 	<form name="model" class="form-horizontal">
-			<div class="form-group">
+			<div class="form-group clearfix">
 				<label for="modelName" class="col-sm-3 control-label">Model	Name</label>
 				<div class="col-sm-8">
 					<select class="form-control" id="modelName" name="modelName"
@@ -41,7 +41,7 @@
 						<div role="alert"><span ng-show="model.modelName.$error.pattern" style="color: red">Special Characters are not allowed in Model name.</span></div>
 				</div>
 			</div>
-			<div class="form-group">
+			<div class="form-group clearfix">
 				<label for="modelName" class="col-sm-3 control-label">Read Only</label>
 				<div class="col-sm-8">
 					<input type="checkbox" class="form-control" id="readOnly"  name="readOnly"></input>

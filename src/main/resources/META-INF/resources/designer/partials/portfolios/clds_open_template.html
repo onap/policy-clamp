@@ -31,7 +31,7 @@
 		<div style="height: 30px"></div>
 
 	<form name="model" class="form-horizontal">
-			<div class="form-group">
+			<div class="form-group clearfix">
 				<label for="modelName" class="col-sm-3 control-label">Model	Name</label>
 				<div class="col-sm-8">
 					<select class="form-control" id="modelName" name="modelName"
@@ -50,7 +50,7 @@
 	</div>
 	<script>
 	
-	/*$.get("/restservices/clds/v1/jaxrsClds/clds/model-names",function(data) {
+	/*$.get("/restservices/clds/v1/clds/model-names",function(data) {
 		var mySelect = $('#modelName');
 		mySelect.empty();
 		mySelect.append("<option value=''>New Diagram</option>")

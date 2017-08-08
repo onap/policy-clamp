@@ -22,7 +22,7 @@
  */
 
 app.directive( "contextMenu", function($compile){
-    console.log("contextMenu");
+    
     contextMenu = {};
     contextMenu.restrict = "AE";
     contextMenu.link = function( lScope, lElem, lAttr ){
@@ -49,15 +49,14 @@ app.directive( "contextMenu", function($compile){
 });
 
 app.directive('ngRightClick', function($parse) {
-    console.log("ngRightClick");
-    console.log("ngRightClick");
+   
     return function(scope, element, attrs) {
-        console.log("returnfunction");
+       
         var fn = $parse(attrs.ngRightClick);
         element.bind('contextmenu', function(event) {
-            console.log("contextmenu");
+            
             scope.$apply(function() {
-                console.log("apply");
+                
                 event.preventDefault();
                 fn(scope, {$event:event});
             });
@@ -66,16 +65,16 @@ app.directive('ngRightClick', function($parse) {
 });
 
 app.directive('inputInfoClass', function ($compile) {
-    console.log("inputInfoClass");
+   
   return {
       restrict: "C",
       replace: true,
       link: function(scope,element,attrs){
-        console.log("link");
+       
     	  var elementHTML = '';
     	  scope.sourceExplorer = 'AM';
     	  angular.forEach(scope.infoType.schemaElements, function(value, key){
-            console.log("schemaElement");
+            
     		  
     		  scope.schemaElement = value;
     		  
@@ -122,12 +121,12 @@ app.directive('inputInfoClass', function ($compile) {
 });
 
 app.directive('inputInfoClassMember', function ($compile, $timeout) {
-    console.log("inputInfoClassMember");
+    
   return {
       restrict: "C",
 
       link: function(scope,element,attrs){
-        console.log("link");
+        
     	  
     	  var elementHTML = '';
     	  
@@ -254,17 +253,13 @@ app.directive('inputInfoClassMember', function ($compile, $timeout) {
 });
 
 app.directive('expandable', function ($compile) {
-    console.log("expandable");
+    
   return {
       restrict: "AE",
       link: function(scope,element,attrs){
-        console.log("link");
+        
     	  var elementHTML = '';
     	  element.bind("click", function(){
-            console.log("bindclick");
-    		 //console.log('directive clicked!!!');
-    		 //console.log(scope.sourceExplorer);
-    		 //console.log(scope.parKey);
     		 
     		 var test1 = document.getElementById(scope.parKey);
     		 
@@ -273,8 +268,6 @@ app.directive('expandable', function ($compile) {
     		 
 		    		 var htmlCount = test1.getElementsByTagName('div').length;
 		    		 var schemaElementCount = scope.schemaElement.type.elements.length;
-		    		 //console.log(htmlCount);
-		    		 //console.log(schemaElementCount);
 		    		 
 		    		 if(htmlCount<schemaElementCount){
 		    			 var x = angular.element(test1).append('<div class="inputInfoClassMember" style="margin-left: 10px" ng-repeat="schemaElement in schemaElement.type.elements" ng-init="currentElementName=schemaElement.element.name;parentName=parKey; parentElement=parElement; heirarchyLevel=heirLevel+1 ;"></div>');
@@ -290,9 +283,7 @@ app.directive('expandable', function ($compile) {
     				 if((cElements[i].getElementsByTagName('div') != null)&&(scope.schemaElement.type.elements != null)){
     					 var htmlCount = cElements[i].getElementsByTagName('div').length;
     		    		 var schemaElementCount = scope.schemaElement.type.elements.length;
-    		    		 //console.log(htmlCount);
-    		    		 //console.log(schemaElementCount);
-    		    		 //console.log(cElements[i]);
+
     		    		 if(htmlCount<schemaElementCount){
     		    			 var x = '';
     		    			 if(scope.sourceExplorer=='SDV'){
@@ -316,7 +307,7 @@ app.directive('expandable', function ($compile) {
 
 app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','dialogs', '$filter','Datafactory','soapRequestService', function($scope,$rootScope, $location,dialogs,$filter,Datafactory,soapRequestService){
 	
-	console.log("ActivityModellingCtrl");
+	
 	$scope.count=0;
 	$scope.depth=0;
 	$scope.parentElementList=[];
@@ -334,14 +325,12 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 	
 
 	$rootScope.initProjectExplorer = function () {
-		console.log("initProjectExplorer");
+		
 		if(map_model_repeatable_heirarchical_elements[selected_model] != null) {
 			$rootScope.repeatableHeirarchicalElementMap = map_model_repeatable_heirarchical_elements[selected_model];
-			////console.log("$scope.repeatableHeirarchicalElementMap :: " + $rootScope.repeatableHeirarchicalElementMap);
 		}
 			
 		
-		////console.log("$rootScope.utmModelSchemaExtension :: " + JSON.stringify(list_model_schema_extensions[selected_model]));
 		if(list_model_schema_extensions[selected_model] != null) {
 			$scope.utmModelSchemaExtension = list_model_schema_extensions[selected_model];
 			if($scope.utmModelSchemaExtension.radioSelection == null || $scope.utmModelSchemaExtension.radioSelection == '')
@@ -362,16 +351,12 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
         console.log("requiredOnly");
 		for (var key in $scope.utmModelSchemaExtension.utmSchemaExtentionMap) {
 			
-			////console.log(key);
-			
 			if ($scope.utmModelSchemaExtension.utmSchemaExtentionMap.hasOwnProperty(key)) {				
-				//$scope.utmModelSchemaExtension.utmSchemaExtentionMap[key].checked = $scope.utmModelSchemaExtension.radioSelection == "Required Only" && $rootScope.requiredValues[key] != 0;
 				$scope.utmModelSchemaExtension.utmSchemaExtentionMap[key].checked =  $rootScope.requiredValues[key] != 0;
 			}
 		}
 		angular.forEach($scope.utmModelSchemaExtension.utmSchemaExtentionMap, function(value, key) {
             console.log("forEach");
-			  //console.log(key + ': ' + value);
 		});
 	};
 	
@@ -400,17 +385,11 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		}
 	};
 	
-/*	$scope.generatedXML = function(xmlValue){
-    	$scope.generatedXMLVal=xmlValue;
-    	var dlg = dialogs.create('partials/portfolios/generatedXML.html','generateXMLCtrl',{},{size:'lg',keyboard: true,backdrop: true,windowClass: 'my-class'});
-		
-    };*/
-	
 	//Functionality for Hierarchical Elements
 	$scope.addHierarchicalElement1 = function(schemaElement, parentElement, elementKey, index){
         console.log("addHeirarchicalElement1");
 		if($rootScope.isHorR){
-		//console.log("Entering addHeirarchicalElement1");
+
 		$scope.clonedSchemaElement={};
 		angular.copy(schemaElement, $scope.clonedSchemaElement);
 		
@@ -520,15 +499,13 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 			if(schemaElement.type.complexType != null){
 				for(var i=0;i<$scope.childElements.length;i++){
 					if(angular.equals($scope.childElements[i],schemaElement)){	
-						//console.log("Complex Element List Match :" +$scope.childElements[i]);
 						$scope.childElements.splice((i+1),0,$scope.clonedSchemaElement);
 						break;
 					}
 				}
 			} else if(schemaElement.element.name !=null) {
 				for(var j=0;j<$scope.childElements.length;j++){
-					if(angular.equals($scope.childElements[j],schemaElement)){				
-						//console.log("Element List Match :" +$scope.childElements[j]);				   
+					if(angular.equals($scope.childElements[j],schemaElement)){							   
 						$scope.childElements.splice((j+1),0,$scope.clonedSchemaElement);			  
 						break;
 					}
@@ -591,24 +568,7 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 	       i++; 
 	    });
 	};
-		
-	/*$scope.renameModel = function(){
-        console.log("renameModel");
-		
-		console.log("renameModel");
-		
-		var dlg = dialogs.create('partials/portfolios/rename_model.html','CreateModelCtrl',{},{size:'lg',keyboard: true,backdrop: true,windowClass: 'my-class'});
-		dlg.result.then(function(name){	
-        console.log("dlg.result");			
-		    
-		},function(){
-			console.log("...empty");
-		});
-		
-	
-	};*/
-	
-	
+
 	$scope.addRepeatableElement = function(schemaElement, parentElement, elementKey){ 
        console.log("addRepeatableElement");		
 		$rootScope.isHorR = false;
@@ -727,17 +687,7 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 				}
 			}
 		}
-		
-		/*if(parentElement.complexType != null){
-			 var index = parentElement.elements.indexOf(schemaElement);
-			 parentElement.elements.splice(index, 1);  
-		}
-		else{
-			var index = parentElement.type.elements.indexOf(schemaElement);
-			parentElement.type.elements.splice(index, 1);  	
-		}*/
-		
-		
+	
 		if(list_model_repeatable_heirarchical_elements[selected_model] != null)
 		 {
 			for(var i=0;i<list_model_repeatable_heirarchical_elements[selected_model].repeatableHeirachicalSchemaElements.length;i++){
@@ -753,7 +703,6 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 	
 	$scope.removeRepeatableHeirarchicalMap= function(modelName,repeatableHeirachicalSchemaElement,elementKey){		
 		console.log("removeRepeatableHeirarchicalMap");
-        //console.log("child element length:"+$scope.childElements.length);
 		$scope.repeatableElements = repeatableHeirachicalSchemaElement.repeatableElements;
 		$scope.heirarchicalElements = repeatableHeirachicalSchemaElement.heirarchicalElements;
 				
@@ -876,52 +825,4 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		
 		
 	}
-	
-	//Execute and display tst results
-	/*$scope.executeTst = function(index){
-		console.log("executeTst");
-		Datafactory.setSelectedTestCase($rootScope.modeltestset.activityTestCases[index]);
-		
-		var tstInput={};
-		console.log("inside generateTST() method");
-		var executeTSTUrl ="/utm-service/soa_integration/executeTST";
-		var tempActivityTestcase= {};
-		angular.copy(Datafactory.getSelectedTestCase(),tempActivityTestcase);
-		
-		tstInput.activityTestCase = tempActivityTestcase;
-		
-		if(tstInput.activityTestCase.version != null){
-			var newTestCaseName = tstInput.activityTestCase.testCaseName + "_"+ tstInput.activityTestCase.version;
-			tstInput.activityTestCase.testCaseName = newTestCaseName;
-			
-		}
-			
-		tstInput.projectPreferenceInfo =  Datafactory.getProjectPreferenceInfo();
-		tstInput.environmentData =  $rootScope.environmentData;
-		tstInput.writeFileToolList=Datafactory.getWriteFileDataList();
-		tstInput.fileStreamWriterList=Datafactory.getFileStreamWriterList();
-		tstInput.commonPythonScriptList = Datafactory.getCommonPythonScriptList();
-		
-		
-		soapRequestService.generateTst(tstInput, executeTSTUrl)
-		.then(function(pars) {
-            console.log("pars");
-			
-			if(pars != null || pars != undefined){
-			
-			Datafactory.setExecuteResultset(pars);
-			
-			var dlg = dialogs.create('partials/SOA/execute-request.html','executeRequestCtrl',{},{size:'lg',keyboard: true,backdrop: true,windowClass: 'my-class'});
-			}
-			else{
-				dialogs.error("Some error occured during execution of tst file");
-			}
-				
-			
-			});
-			
-		
-		
-		
-	}*/
 }]);
