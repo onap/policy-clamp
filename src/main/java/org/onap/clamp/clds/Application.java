@@ -23,7 +23,12 @@
 
 package org.onap.clamp.clds;
 
-import com.att.ajsc.common.utility.SystemPropertiesLoader;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.camunda.bpm.spring.boot.starter.webapp.CamundaBpmWebappAutoConfiguration;
 import org.springframework.boot.SpringApplication;
@@ -40,19 +45,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import java.util.ArrayList;
-import java.util.Collection;
+import com.att.ajsc.common.utility.SystemPropertiesLoader;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"org.onap.clamp.clds","com.att.ajsc"})
-@EnableAutoConfiguration(exclude = {CamundaBpmWebappAutoConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class})
+@ComponentScan(basePackages = { "org.onap.clamp.clds", "com.att.ajsc" })
+@EnableAutoConfiguration(exclude = { CamundaBpmWebappAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
+        JpaRepositoriesAutoConfiguration.class, SecurityAutoConfiguration.class,
+        ManagementWebSecurityAutoConfiguration.class })
 @EnableAsync
 public class Application extends SpringBootServletInitializer {
 
     private static final String CAMEL_SERVLET_NAME = "CamelServlet";
-    private static final String CAMEL_URL_MAPPING = "/restservices/clds/v1/*";
+    private static final String CAMEL_URL_MAPPING  = "/restservices/clds/v1/*";
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

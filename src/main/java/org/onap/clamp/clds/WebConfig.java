@@ -38,7 +38,6 @@ public class WebConfig {
             public void addViewControllers(ViewControllerRegistry registry) {
                 registry.addViewController("/swagger").setViewName("redirect:/icd/index.html");
                 registry.addViewController("/icd/").setViewName("redirect:/icd/index.html");
-                registry.addViewController("/login").setViewName("login.html");
             }
         };
     }

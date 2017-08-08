@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,36 +23,43 @@
 
 package org.onap.clamp.clds.client;
 
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.prop.Policy;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.model.prop.Policy;
+import org.onap.clamp.clds.model.prop.PolicyChain;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.logging.Logger;
-
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 
 /**
  * Delete Operational Policy via policy api.
  */
 public class OperationalPolicyDeleteDelegate implements JavaDelegate {
-    // currently uses the java.util.logging.Logger like the Camunda engine
-    private static final Logger logger = Logger.getLogger(OperationalPolicyDeleteDelegate.class.getName());
+    protected static final EELFLogger logger        = EELFManager.getInstance()
+            .getLogger(OperationalPolicyDeleteDelegate.class);
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
-    private PolicyClient policyClient;
+    private PolicyClient            policyClient;
 
     /**
-     * Perform activity.  Delete Operational Policy via policy api.
+     * Perform activity. Delete Operational Policy via policy api.
      *
      * @param execution
      */
+    @Override
     public void execute(DelegateExecution execution) throws Exception {
         ModelProperties prop = ModelProperties.create(execution);
-        Policy policy = prop.getPolicy();
+        Policy policy = prop.getType(Policy.class);
         prop.setCurrentModelElementId(policy.getId());
 
-        String responseMessage = policyClient.deleteBrms(prop);
+        String responseMessage = "";
+        for (PolicyChain policyChain : policy.getPolicyChains()) {
+            prop.setPolicyUniqueId(policyChain.getPolicyId());
+            responseMessage = policyClient.deleteBrms(prop);
+        }
         if (responseMessage != null) {
             execution.setVariable("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
         }
