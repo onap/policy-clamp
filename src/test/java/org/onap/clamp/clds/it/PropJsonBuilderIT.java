@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,58 +23,59 @@
 
 package org.onap.clamp.clds.it;
 
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.onap.clamp.clds.AbstractIT;
+import org.onap.clamp.clds.client.req.SdcReq;
+import org.onap.clamp.clds.model.CldsSdcServiceDetail;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.onap.clamp.clds.AbstractIT;
-import org.onap.clamp.clds.client.req.SdcReq;
-import org.onap.clamp.clds.model.CldsAsdcServiceDetail;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
 
 /**
- * Test ASDC API - stand alone (except for some config).
- * Replicates getAsdcServices and getAsdcServicesByUUID in the CldsService
- * Adds test of putting putting an artifact to VF.
- * TODO Also needs update and perhaps delete tests.
+ * Test SDC API - stand alone (except for some config). Replicates
+ * getSdcServices and getSdcServicesByUUID in the CldsService Adds test of
+ * putting putting an artifact to VF. TODO Also needs update and perhaps delete
+ * tests.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class PropJsonBuilderIT extends AbstractIT {
 
-    private String globalPropsPartial;
+    private String       globalPropsPartial;
     private ObjectMapper mapper;
 
     @Before
     public void setUp() throws IOException {
-        String url = refProp.getStringValue("asdc.serviceUrl");
-        String catalogUrl = refProp.getStringValue("asdc.catalog.url");
-        String basicAuth = SdcReq.getAsdcBasicAuth(refProp);
+        String url = refProp.getStringValue("sdc.serviceUrl");
+        String catalogUrl = refProp.getStringValue("sdc.catalog.url");
+        String basicAuth = SdcReq.getSdcBasicAuth(refProp);
         System.out.println("value of string and basicAuth:" + url + basicAuth);
-        CldsAsdcServiceDetail cldsservicedetail = new CldsAsdcServiceDetail();
-        //	cldsservicedetail.set
+        CldsSdcServiceDetail cldsservicedetail = new CldsSdcServiceDetail();
+        // cldsservicedetail.set
         String globalProps = refProp.getStringValue("globalPropsTest");
         globalPropsPartial = refProp.getStringValue("globalPropsPartialTest");
         mapper = new ObjectMapper();
     }
 
     /**
-     * List services from ASDC.
-     * List meta data for a particular service from ASDC.
-     * Test uploading artifact to a VF in ASDC.
+     * List services from SDC. List meta data for a particular service from SDC.
+     * Test uploading artifact to a VF in SDC.
      */
     @Test
-    public void testAsdc() throws Exception {
-//		String createEmptySharedObject = createEmptySharedObject();
-//		System.out.println("value of emptySharedObject:" + createEmptySharedObject);
+    public void testSdc() throws Exception {
+        // String createEmptySharedObject = createEmptySharedObject();
+        // System.out.println("value of emptySharedObject:" +
+        // createEmptySharedObject);
         sampleJsonObject();
         System.out.println(createTestEmptySharedObject());
     }
@@ -83,8 +84,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         ArrayNode arrayNode = mapper.createArrayNode();
 
         /**
-         * Create three JSON Objects objectNode1, objectNode2, objectNode3
-         * Add all these three objects in the array
+         * Create three JSON Objects objectNode1, objectNode2, objectNode3 Add
+         * all these three objects in the array
          */
 
         ObjectNode objectNode1 = mapper.createObjectNode();
@@ -107,8 +108,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         arrayNode.add(objectNode3);
 
         /**
-         * We can directly write the JSON in the console.
-         * But it wont be pretty JSON String
+         * We can directly write the JSON in the console. But it wont be pretty
+         * JSON String
          */
         System.out.println(arrayNode.toString());
 
@@ -121,17 +122,8 @@ public class PropJsonBuilderIT extends AbstractIT {
     private String createEmptySharedObject() throws JsonProcessingException {
 
         /**
-         * "": {
-         "vf": {
-         "": ""
-         },
-         "location": {
-         "": ""
-         },
-         "alarmCondition": {
-         "": ""
-         }
-         }
+         * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
+         * "": "" } }
          */
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         emptyObjectNode.put("", "");
@@ -149,10 +141,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", samArrayNode);
 
         /**
-         * "vf": {
-         *			" ": " ",
-         *			"DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3"
-         *        }
+         * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
          *
          */
         ObjectNode vfObjectNode2 = mapper.createObjectNode();
@@ -164,11 +153,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", vfArrayNode);
 
         /**
-         * "location": {
-         "SNDGCA64": "San Diego SAN3",
-         "ALPRGAED": "Alpharetta PDK1",
-         "LSLEILAA": "Lisle DPA3"
-         },
+         * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
+         * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
         ObjectNode locationObjectNode2 = mapper.createObjectNode();
         ObjectNode sandiegoLocationNode = mapper.createObjectNode();
@@ -182,9 +168,9 @@ public class PropJsonBuilderIT extends AbstractIT {
         locationObjectNode2.putPOJO("location", locationArrayNode);
 
         /**
-         * "alarmCondition": {
-         "A+Fallback+Operation+will+soon+be+started": "A Fallback Operation will soon be started",
-         "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
+         * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
+         * "A Fallback Operation will soon be started",
+         * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
          */
         ObjectNode alarmConditionObjectNode2 = mapper.createObjectNode();
         ObjectNode alamrCondition1 = mapper.createObjectNode();
@@ -214,18 +200,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         byServiceBasicObjetNode.putPOJO("byService", byServiceBasicArrayNode);
 
         /**
-         * "byVf": {
-         "": {
-         "vfc": {
-         "": ""
-         },
-         "03596c12-c7e3-44b7-8994-5cdfeda8afdd": {
-         "vfc": {
-         " ": " "
-         }
-         }
-         }
-         }
+         * "byVf": { "": { "vfc": { "": "" },
+         * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
 
         ObjectNode byVfCBasicNode = mapper.createObjectNode();
@@ -262,17 +238,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         ObjectNode locationJsonNode = (ObjectNode) mapper.readValue(locationStringValue, JsonNode.class);
         ObjectNode alarmStringJsonNode = (ObjectNode) mapper.readValue(alarmStringValue, JsonNode.class);
         /**
-         * "": {
-         "vf": {
-         "": ""
-         },
-         "location": {
-         "": ""
-         },
-         "alarmCondition": {
-         "": ""
-         }
-         }
+         * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
+         * "": "" } }
          */
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         emptyObjectNode.put("", "");
@@ -284,10 +251,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", vfObjectNode);
 
         /**
-         * "vf": {
-         *			" ": " ",
-         *			"DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3"
-         *        }
+         * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
          *
          */
         ObjectNode vfObjectNode2 = mapper.createObjectNode();
@@ -297,43 +261,32 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", dcaeClampDemo3Node);
 
         /**
-         * "location": {
-         "SNDGCA64": "San Diego SAN3",
-         "ALPRGAED": "Alpharetta PDK1",
-         "LSLEILAA": "Lisle DPA3"
-         },
+         * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
+         * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
-//		ObjectNode sandiegoLocationNode = mapper.createObjectNode();
-//		sandiegoLocationNode.put("SNDGCA64","San Diego SAN3");
-//		sandiegoLocationNode.put("ALPRGAED","Alpharetta PDK1");	
+        // ObjectNode sandiegoLocationNode = mapper.createObjectNode();
+        // sandiegoLocationNode.put("SNDGCA64","San Diego SAN3");
+        // sandiegoLocationNode.put("ALPRGAED","Alpharetta PDK1");
         vfObjectNode2.putPOJO("location", locationJsonNode);
 
         /**
-         * "alarmCondition": {
-         "A+Fallback+Operation+will+soon+be+started": "A Fallback Operation will soon be started",
-         "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
+         * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
+         * "A Fallback Operation will soon be started",
+         * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
          */
-//		ObjectNode alamrCondition1 = mapper.createObjectNode();
-//		alamrCondition1.put("A+Fallback+Operation+will+soon+be+started","A Fallback Operation will soon be started");
-//		alamrCondition1.put("BRM%2C+Scheduled+Backup+Failed","BRM, Scheduled Backup Failed");
+        // ObjectNode alamrCondition1 = mapper.createObjectNode();
+        // alamrCondition1.put("A+Fallback+Operation+will+soon+be+started","A
+        // Fallback Operation will soon be started");
+        // alamrCondition1.put("BRM%2C+Scheduled+Backup+Failed","BRM, Scheduled
+        // Backup Failed");
         vfObjectNode2.putPOJO("alarmCondition", alarmStringJsonNode);
         emptyServiceObjectNode.putPOJO("c989a551-69f7-4b30-b10a-2e85bb227c30", vfObjectNode2);
         ObjectNode byServiceBasicObjetNode = mapper.createObjectNode();
         byServiceBasicObjetNode.putPOJO("byService", emptyServiceObjectNode);
 
         /**
-         * "byVf": {
-         "": {
-         "vfc": {
-         "": ""
-         },
-         "03596c12-c7e3-44b7-8994-5cdfeda8afdd": {
-         "vfc": {
-         " ": " "
-         }
-         }
-         }
-         }
+         * "byVf": { "": { "vfc": { "": "" },
+         * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
 
         ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
@@ -352,19 +305,10 @@ public class PropJsonBuilderIT extends AbstractIT {
         return readTree.toString();
     }
 
-    private String createCldsSharedObject(CldsAsdcServiceDetail cldsAsdcServiceDetail) throws IOException {
+    private String createCldsSharedObject(CldsSdcServiceDetail CldsSdcServiceDetail) throws IOException {
         /**
-         * "": {
-         "vf": {
-         "": ""
-         },
-         "location": {
-         "": ""
-         },
-         "alarmCondition": {
-         "": ""
-         }
-         }
+         * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
+         * "": "" } }
          */
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         emptyObjectNode.put("", "");
@@ -376,10 +320,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", vfObjectNode);
 
         /**
-         * "vf": {
-         *			" ": " ",
-         *			"DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3"
-         *        }
+         * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
          *
          */
         ObjectNode vfObjectNode2 = mapper.createObjectNode();
@@ -389,11 +330,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", dcaeClampDemo3Node);
 
         /**
-         * "location": {
-         "SNDGCA64": "San Diego SAN3",
-         "ALPRGAED": "Alpharetta PDK1",
-         "LSLEILAA": "Lisle DPA3"
-         },
+         * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
+         * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
         ObjectNode sandiegoLocationNode = mapper.createObjectNode();
         sandiegoLocationNode.put("SNDGCA64", "San Diego SAN3");
@@ -401,9 +339,9 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("location", sandiegoLocationNode);
 
         /**
-         * "alarmCondition": {
-         "A+Fallback+Operation+will+soon+be+started": "A Fallback Operation will soon be started",
-         "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
+         * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
+         * "A Fallback Operation will soon be started",
+         * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
          */
         ObjectNode alamrCondition1 = mapper.createObjectNode();
         alamrCondition1.put("A+Fallback+Operation+will+soon+be+started", "A Fallback Operation will soon be started");
@@ -414,18 +352,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         byServiceBasicObjetNode.putPOJO("byService", emptyServiceObjectNode);
 
         /**
-         * "byVf": {
-         "": {
-         "vfc": {
-         "": ""
-         },
-         "03596c12-c7e3-44b7-8994-5cdfeda8afdd": {
-         "vfc": {
-         " ": " "
-         }
-         }
-         }
-         }
+         * "byVf": { "": { "vfc": { "": "" },
+         * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
 
         ObjectNode emptyvfcobjectNode = mapper.createObjectNode();

@@ -1,1 +1,41 @@
-{"collector":[{"id":"Collector_", "from":"StartEvent_1"}],"stringMatch":[{"id":"StringMatch_", "from":"Collector_"}],"policy":[{"id":"Policy_", "from":"StringMatch_"}],"tca":[{"id":"TCA_", "from":""}]}
+{
+    "collector": 
+    [
+        {
+            "id": "Collector_",
+            "from": "StartEvent_1"
+        }
+    ],
+
+    "stringMatch": 
+    [
+        {
+            "id": "StringMatch_",
+            "from": "Collector_"
+        }
+    ],
+
+    "policy": 
+    [
+        {
+            "id": "Policy_",
+            "from": "StringMatch_"
+        }
+    ],
+
+    "tca": 
+    [
+        {
+            "id": "TCA_",
+            "from": ""
+        }
+    ],
+
+    "customType": 
+    [
+        {
+            "id": "CustomType_",
+            "from": ""
+        }
+    ]
+}

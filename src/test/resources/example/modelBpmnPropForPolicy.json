@@ -1,0 +1,26 @@
+{
+	"collector":
+	[
+	
+	],
+    "stringMatch": 
+    [
+        
+    ],
+
+    "policy": 
+    [
+        {
+            "id": "Policy_",
+            "from": "StartEvent_1"
+        }
+    ],
+
+    "tca": 
+    [
+        {
+            "id": "TCA_",
+            "from": ""
+        }
+    ]
+}

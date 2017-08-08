@@ -48,7 +48,7 @@ public class DcaeIT extends AbstractIT {
         String modelName = "example-model";
         String controlName = "ClosedLoop-FRWL-SIG-1582f840-2881-11e6-b4ec-005056a9d756";
 
-        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, modelBpmnProp, modelProp);
+        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, true, modelBpmnProp, modelProp);
         String dcaeReq = DcaeReq.format(refProp, prop);
 
         System.out.println("dcaeReq=" + dcaeReq);

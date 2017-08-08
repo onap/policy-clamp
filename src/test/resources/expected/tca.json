@@ -1,0 +1,93 @@
+{
+    "service": "MThresholdCrossingConfiguration",
+    "location": "Edge",
+    "uuid": "TestUUID",
+    "policyName": "example_model06.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_",
+    "description": "from clds",
+    "configName": "MThresholdCrossingConfiguration",
+    "templateVersion": "5.2.0.1",
+    "priority": "4",
+    "version": "5.2.0.1",
+    "policyScope": "resource=F5,service=vSCP,type=configuration,closedLoopControlName=vSCP_F5_Firewall_d925ed73-8231-4d02-9545-db4e101f88f8",
+    "content": 
+    {
+        "$class": "com.att.ecomp.dcae.clamp.common.MThresholdCrossingConfiguration",
+        "domain": "measurementsForVfScaling",
+        "policyScope": "pnf=eNodeB;type=configuration",
+        "policyName": "policy.dcae.configuration",
+        "policyVersion": "1.0.0",
+        "subscriberContentType": "application/json",
+        "subscriberConsumerId": "c13",
+        "subscriberConsumerGroup": "OpenDCAE-c13",
+        "subscriberTimeoutMS": "-1",
+        "subscriberMessageLimit": "-1",
+        "subscriberPollingInterval": "20000",
+        "publisherContentType": "application/json",
+        "publisherMaxBatchSize": "10",
+        "publisherMaxRecoveryQueueSize": "100000",
+        "publisherPollingInterval": "20000",
+        "publisherAlertWindowingTime": "86400",
+        "signatures": 
+        [
+            {
+                "nfNamingCode": "ENBE",
+                "target": "common_id",
+                "targetType": "eNodeB",
+                "useCaseName": "Narra",
+                "signatureName": "Narra_886be8da-14fe-tca1-d04b-d13b55d58df9",
+                "signatureUuid": "886be8da-14fe-tca1-d04b-d13b55d58df9",
+                "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_1",
+                "severity": "Warning",
+                "version": "1.0.2",
+                "maxInterval": 2,
+                "minMessageViolations": 3,
+                "thresholds": 
+                [
+                    {
+                        "fieldPath": "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRRCCONNESTABFAILCELLLATENCY')].Value",
+                        "thresholdName": "PMRRCCONNESTABFAILCELLLATENCY",
+                        "thresholdValue": 4,
+                        "direction": "LESS"
+                    },
+
+                    {
+                        "fieldPath": "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRAATTCBRA')].Value",
+                        "thresholdName": "PMRAATTCBRA",
+                        "thresholdValue": 30,
+                        "direction": "GREATER"
+                    }
+                ]
+            },
+
+            {
+                "nfNamingCode": "ENBE",
+                "target": "common_id",
+                "targetType": "eNodeB",
+                "useCaseName": "Srini",
+                "signatureName": "Srini_8b5ba88d-f4b4-tf0e-50b1-78a5a7dd412d",
+                "signatureUuid": "8b5ba88d-f4b4-tf0e-50b1-78a5a7dd412d",
+                "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_2",
+                "severity": "Critical",
+                "version": "1.0.2",
+                "maxInterval": 10,
+                "minMessageViolations": 5,
+                "thresholds": 
+                [
+                    {
+                        "fieldPath": "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRRCCONNESTABFAILCELLLATENCY')].Value",
+                        "thresholdName": "PMRRCCONNESTABFAILCELLLATENCY",
+                        "thresholdValue": 3,
+                        "direction": "EQUAL"
+                    },
+
+                    {
+                        "fieldPath": "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRAATTCBRA')].Value",
+                        "thresholdName": "PMRAATTCBRA",
+                        "thresholdValue": 30,
+                        "direction": "GREATER"
+                    }
+                ]
+            }
+        ]
+    }
+}
