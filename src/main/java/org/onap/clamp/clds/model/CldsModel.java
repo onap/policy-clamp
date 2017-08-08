@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,57 +23,71 @@
 
 package org.onap.clamp.clds.model;
 
-import org.onap.clamp.clds.dao.CldsDao;
-import org.jboss.resteasy.spi.BadRequestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.ws.rs.NotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.ws.rs.NotFoundException;
+
+import org.jboss.resteasy.spi.BadRequestException;
+import org.onap.clamp.clds.dao.CldsDao;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 
 /**
  * Represent a CLDS Model.
  */
 public class CldsModel {
-    private static final Logger logger = LoggerFactory.getLogger(CldsModel.class);
+    protected static final EELFLogger logger             = EELFManager.getInstance().getLogger(CldsModel.class);
+    protected static final EELFLogger metricsLogger      = EELFManager.getInstance().getMetricsLogger();
 
-    private static final int UUID_LENGTH = 36;
+    private static final int        UUID_LENGTH        = 36;
 
-    public static final String STATUS_DESIGN = "DESIGN";
-    public static final String STATUS_DISTRIBUTED = "DISTRIBUTED";
-    public static final String STATUS_ACTIVE = "ACTIVE";
-    public static final String STATUS_STOPPED = "STOPPED";
-    public static final String STATUS_DELETING = "DELETING";
-    public static final String STATUS_ERROR = "ERROR"; // manual intervention required
-    public static final String STATUS_UNKNOWN = "UNKNOWN";
+    public static final String      STATUS_DESIGN      = "DESIGN";
+    public static final String      STATUS_DISTRIBUTED = "DISTRIBUTED";
+    public static final String      STATUS_ACTIVE      = "ACTIVE";
+    public static final String      STATUS_STOPPED     = "STOPPED";
+    public static final String      STATUS_DELETING    = "DELETING";
+    public static final String      STATUS_ERROR       = "ERROR";                                             // manual
+                                                                                                              // intervention
+                                                                                                              // required
+    public static final String      STATUS_UNKNOWN     = "UNKNOWN";
 
-    private String id;
-    private String templateId;
-    private String templateName;
-    private String name;
-    private String controlNamePrefix;
-    private String controlNameUuid;
-    private String bpmnId;
-    private String bpmnUserid;
-    private String bpmnText;
-    private String propId;
-    private String propUserid;
-    private String propText;
-    private String imageId;
-    private String imageUserid;
-    private String imageText;
-    private String docId;
-    private String docUserid;
-    private String docText;
-    private String blueprintId;
-    private String blueprintUserid;
-    private String blueprintText;
-    private CldsEvent event;
-    private String status;
-    private List<String> permittedActionCd;
+    private String                  id;
+    private String                  templateId;
+    private String                  templateName;
+    private String                  name;
+    private String                  controlNamePrefix;
+    private String                  controlNameUuid;
+    private String                  bpmnId;
+    private String                  bpmnUserid;
+    private String                  bpmnText;
+    private String                  propId;
+    private String                  propUserid;
+    private String                  propText;
+    private String                  imageId;
+    private String                  imageUserid;
+    private String                  imageText;
+    private String                  docId;
+    private String                  docUserid;
+    private String                  docText;
+    private String                  blueprintId;
+    private String                  blueprintUserid;
+    private String                  blueprintText;
+    private CldsEvent               event;
+    private String                  status;
+    private List<String>            permittedActionCd;
     private List<CldsModelInstance> cldsModelInstanceList;
+
+    private String                  typeId;
+    private String                  typeName;
+
+    private String                  dispatcherResponse;
+
+    private String                  deploymentId;
+
+    private boolean                 userAuthorizedToUpdate;
 
     /**
      * Construct empty model.
@@ -100,6 +114,16 @@ public class CldsModel {
         return model;
     }
 
+    public boolean canInventoryCall() {
+        boolean canCall = false;
+        /* Below checks the clds ecent is submit/resubmit */
+
+        if ((event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT))) {
+            canCall = true;
+        }
+        return canCall;
+    }
+
     /**
      * Save model to DB.
      *
@@ -113,8 +137,8 @@ public class CldsModel {
     }
 
     /**
-     * Insert a new event for the new action.
-     * Throw IllegalArgumentException if requested actionCd is not permitted.
+     * Insert a new event for the new action. Throw IllegalArgumentException if
+     * requested actionCd is not permitted.
      *
      * @param cldsDao
      * @param userid
@@ -123,7 +147,7 @@ public class CldsModel {
      */
     public void insEvent(CldsDao cldsDao, String userid, String actionCd, String actionStateCd) {
         validateAction(actionCd);
-        event = CldsEvent.insEvent(cldsDao, this, actionCd, actionStateCd, null);
+        event = CldsEvent.insEvent(cldsDao, this, userid, actionCd, actionStateCd, null);
         determineStatus();
         determinePermittedActionCd();
     }
@@ -148,19 +172,20 @@ public class CldsModel {
             status = STATUS_DESIGN;
         } else if (event.isActionStateCd(CldsEvent.ACTION_STATE_ERROR)) {
             status = STATUS_ERROR;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_CREATE, CldsEvent.ACTION_STATE_ANY) ||
-                event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_ANY) ||
-                event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_ANY) ||
-                event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)) {
+        } else if (event.isActionAndStateCd(CldsEvent.ACTION_CREATE, CldsEvent.ACTION_STATE_ANY)
+                || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_ANY)
+                || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_ANY)
+                || event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)) {
             status = STATUS_DESIGN;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DISTRIBUTE, CldsEvent.ACTION_STATE_RECEIVED) ||
-                event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_RECEIVED)) {
+        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DISTRIBUTE, CldsEvent.ACTION_STATE_RECEIVED)
+                || event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_RECEIVED)) {
             status = STATUS_DISTRIBUTED;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_SENT)) {
             status = STATUS_DELETING;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_RECEIVED) ||
-                event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_ANY) ||
-                event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_ANY)) {
+        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_RECEIVED)
+                || event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_ANY)
+                || event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_ANY)
+                || event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_ACTIVE;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_STOP, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_STOPPED;
@@ -169,7 +194,8 @@ public class CldsModel {
     }
 
     /**
-     * Get the actionCd from current event.  If none, default value is CldsEvent.ACTION_CREATE
+     * Get the actionCd from current event. If none, default value is
+     * CldsEvent.ACTION_CREATE
      *
      * @return
      */
@@ -183,7 +209,8 @@ public class CldsModel {
     }
 
     /**
-     * Get the actionStateCd from current event.  If none, default value is CldsEvent.ACTION_STATE_COMPLETED
+     * Get the actionStateCd from current event. If none, default value is
+     * CldsEvent.ACTION_STATE_COMPLETED
      *
      * @return
      */
@@ -197,28 +224,36 @@ public class CldsModel {
     }
 
     /**
-     * Determine permittedActionCd list using the actionCd from the current event.
+     * Determine permittedActionCd list using the actionCd from the current
+     * event.
      */
     private void determinePermittedActionCd() {
         String actionCd = getCurrentActionCd();
         switch (actionCd) {
             case CldsEvent.ACTION_CREATE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST);
                 break;
             case CldsEvent.ACTION_SUBMIT:
             case CldsEvent.ACTION_RESUBMIT:
-                // for 1702 delete is not currently implemented (and resubmit requires manually deleting artifact from asdc
+                // for 1702 delete is not currently implemented (and resubmit
+                // requires manually deleting artifact from sdc
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT);
                 break;
             case CldsEvent.ACTION_DISTRIBUTE:
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT);
+                break;
             case CldsEvent.ACTION_UNDEPLOY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY);
                 break;
             case CldsEvent.ACTION_DEPLOY:
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_UPDATE,
+                        CldsEvent.ACTION_STOP);
+                break;
             case CldsEvent.ACTION_RESTART:
             case CldsEvent.ACTION_UPDATE:
                 // for 1702 delete is not currently implemented
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP,
+                        CldsEvent.ACTION_UNDEPLOY);
                 break;
             case CldsEvent.ACTION_DELETE:
                 if (getCurrentActionStateCd().equals(CldsEvent.ACTION_STATE_SENT)) {
@@ -229,7 +264,8 @@ public class CldsModel {
                 break;
             case CldsEvent.ACTION_STOP:
                 // for 1702 delete is not currently implemented
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
+                        CldsEvent.ACTION_UNDEPLOY);
                 break;
             default:
                 logger.warn("Invalid current actionCd: " + actionCd);
@@ -237,22 +273,26 @@ public class CldsModel {
     }
 
     /**
-     * Validate requestedActionCd - determine permittedActionCd and then check if contained in permittedActionCd
-     * Throw IllegalArgumentException if requested actionCd is not permitted.
+     * Validate requestedActionCd - determine permittedActionCd and then check
+     * if contained in permittedActionCd Throw IllegalArgumentException if
+     * requested actionCd is not permitted.
      *
      * @param requestedActionCd
      */
     public void validateAction(String requestedActionCd) {
         determinePermittedActionCd();
         if (!permittedActionCd.contains(requestedActionCd)) {
-            throw new IllegalArgumentException("Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: " + getCurrentActionCd() + ", the permittedActionCd: " + permittedActionCd);
+            throw new IllegalArgumentException(
+                    "Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: "
+                            + getCurrentActionCd() + ", the permittedActionCd: " + permittedActionCd);
         }
     }
 
     /**
-     * Extract the UUID portion of a given full control name (controlNamePrefix + controlNameUuid).
-     * No fields are populated other than controlNamePrefix and controlNameUuid.
-     * Throws BadRequestException if length of given control name is less than UUID_LENGTH.
+     * Extract the UUID portion of a given full control name (controlNamePrefix
+     * + controlNameUuid). No fields are populated other than controlNamePrefix
+     * and controlNameUuid. Throws BadRequestException if length of given
+     * control name is less than UUID_LENGTH.
      *
      * @param fullControlName
      * @return
@@ -265,7 +305,8 @@ public class CldsModel {
             len = fullControlName.length();
         }
         if (len < UUID_LENGTH) {
-            throw new BadRequestException("closed loop id / control name length, " + len + ", less than the minimum of: " + UUID_LENGTH);
+            throw new BadRequestException(
+                    "closed loop id / control name length, " + len + ", less than the minimum of: " + UUID_LENGTH);
         }
         CldsModel model = new CldsModel();
         model.setControlNamePrefix(fullControlName.substring(0, len - UUID_LENGTH));
@@ -291,19 +332,22 @@ public class CldsModel {
         CldsModel cldsModel = createUsingControlName(controlName);
         cldsModel = cldsDao.getModelByUuid(cldsModel.getControlNameUuid());
         cldsModel.determineStatus();
-        if (dcaeEvent.getCldsActionCd().equals(CldsEvent.ACTION_UNDEPLOY) ||
-                (dcaeEvent.getCldsActionCd().equals(CldsEvent.ACTION_DEPLOY) && (cldsModel.getStatus().equals(STATUS_DISTRIBUTED) || cldsModel.getStatus().equals(STATUS_DESIGN)))) {
-            CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userid, dcaeEvent.getCldsActionCd(), CldsEvent.ACTION_STATE_RECEIVED, null);
+        if (dcaeEvent.getCldsActionCd().equals(CldsEvent.ACTION_UNDEPLOY) || (dcaeEvent.getCldsActionCd()
+                .equals(CldsEvent.ACTION_DEPLOY)
+                && (cldsModel.getStatus().equals(STATUS_DISTRIBUTED) || cldsModel.getStatus().equals(STATUS_DESIGN)))) {
+            CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userid, dcaeEvent.getCldsActionCd(),
+                    CldsEvent.ACTION_STATE_RECEIVED, null);
         }
         cldsDao.insModelInstance(cldsModel, dcaeEvent.getInstances());
         return cldsModel;
     }
 
     /**
-     * To remove modelInstance from the database
-     * This method is defunct - DCAE Proxy will not undeploy individual instances.  It will send an empty list of
-     * deployed instances to indicate all have been removed.  Or it will send an updated list to indicate those that
-     * are still deployed with any not on the list considered undeployed.
+     * To remove modelInstance from the database This method is defunct - DCAE
+     * Proxy will not undeploy individual instances. It will send an empty list
+     * of deployed instances to indicate all have been removed. Or it will send
+     * an updated list to indicate those that are still deployed with any not on
+     * the list considered undeployed.
      *
      * @param cldsDao
      * @param dcaeEvent
@@ -311,7 +355,8 @@ public class CldsModel {
     @SuppressWarnings("unused")
     private static CldsModel removeModelInstance(CldsDao cldsDao, DcaeEvent dcaeEvent) {
         String controlName = dcaeEvent.getControlName();
-        //cldsModel = cldsDao.delModelInstance(cldsModel.getControlNameUuid(), dcaeEvent.getInstances() );
+        // cldsModel = cldsDao.delModelInstance(cldsModel.getControlNameUuid(),
+        // dcaeEvent.getInstances() );
         return createUsingControlName(controlName);
     }
 
@@ -323,10 +368,26 @@ public class CldsModel {
     }
 
     /**
-     * @param name the name to set
+     * @param name
+     *            the name to set
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the typeName
+     */
+    public String getTypeName() {
+        return typeName;
+    }
+
+    /**
+     * @param name
+     *            the typeName to set
+     */
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 
     public String getTemplateId() {
@@ -345,7 +406,8 @@ public class CldsModel {
     }
 
     /**
-     * @param controlNamePrefix the controlNamePrefix to set
+     * @param controlNamePrefix
+     *            the controlNamePrefix to set
      */
     public void setControlNamePrefix(String controlNamePrefix) {
         this.controlNamePrefix = controlNamePrefix;
@@ -359,12 +421,12 @@ public class CldsModel {
     }
 
     /**
-     * @param controlNameUuid the controlNameUuid to set
+     * @param controlNameUuid
+     *            the controlNameUuid to set
      */
     public void setControlNameUuid(String controlNameUuid) {
         this.controlNameUuid = controlNameUuid;
     }
-
 
     /**
      * @return the propUserid
@@ -374,7 +436,8 @@ public class CldsModel {
     }
 
     /**
-     * @param propUserid the propUserid to set
+     * @param propUserid
+     *            the propUserid to set
      */
     public void setPropUserid(String propUserid) {
         this.propUserid = propUserid;
@@ -388,7 +451,8 @@ public class CldsModel {
     }
 
     /**
-     * @param propText the propText to set
+     * @param propText
+     *            the propText to set
      */
     public void setPropText(String propText) {
         this.propText = propText;
@@ -426,7 +490,8 @@ public class CldsModel {
     }
 
     /**
-     * @param event the event to set
+     * @param event
+     *            the event to set
      */
     public void setEvent(CldsEvent event) {
         this.event = event;
@@ -440,7 +505,8 @@ public class CldsModel {
     }
 
     /**
-     * @param status the status to set
+     * @param status
+     *            the status to set
      */
     public void setStatus(String status) {
         this.status = status;
@@ -454,7 +520,8 @@ public class CldsModel {
     }
 
     /**
-     * @param permittedActionCd the permittedActionCd to set
+     * @param permittedActionCd
+     *            the permittedActionCd to set
      */
     public void setPermittedActionCd(List<String> permittedActionCd) {
         this.permittedActionCd = permittedActionCd;
@@ -556,6 +623,14 @@ public class CldsModel {
         this.docText = docText;
     }
 
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
+
     public List<CldsModelInstance> getCldsModelInstanceList() {
         if (cldsModelInstanceList == null) {
             cldsModelInstanceList = new ArrayList<>();
@@ -567,4 +642,28 @@ public class CldsModel {
         this.cldsModelInstanceList = cldsModelInstanceList;
     }
 
+    public void setDispatcherResponse(String dispatcherResponse) {
+        this.dispatcherResponse = dispatcherResponse;
+
+    }
+
+    public String getDispatcherResponse() {
+        return this.dispatcherResponse;
+    }
+
+    public String getDeploymentId() {
+        return deploymentId;
+    }
+
+    public void setDeploymentId(String deploymentId) {
+        this.deploymentId = deploymentId;
+    }
+
+    public boolean isUserAuthorizedToUpdate() {
+        return userAuthorizedToUpdate;
+    }
+
+    public void setUserAuthorizedToUpdate(boolean userAuthorizedToUpdate) {
+        this.userAuthorizedToUpdate = userAuthorizedToUpdate;
+    }
 }

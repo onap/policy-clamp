@@ -23,12 +23,16 @@
 
 package org.onap.clamp.clds.model;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
 
 public class CldsDBServiceCache {
 
-    private String invariantId;
-    private String serviceId;
+    private String      invariantId;
+    private String      serviceId;
     private InputStream cldsDataInstream;
 
     public String getInvariantId() {

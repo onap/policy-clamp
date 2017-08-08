@@ -27,10 +27,10 @@ import java.io.Serializable;
 
 public class CldsAlarmCondition implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    private String eventSourceType;
-    private String alarmConditionKey;
-    private String severity;
+    private static final long serialVersionUID = 4271364536747705555L;
+    private String            eventSourceType;
+    private String            alarmConditionKey;
+    private String            severity;
 
     public String getEventSourceType() {
         return eventSourceType;

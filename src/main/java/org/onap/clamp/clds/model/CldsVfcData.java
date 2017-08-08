@@ -28,10 +28,9 @@ import java.util.List;
 
 public class CldsVfcData implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    private String vfcName;
-    private String vfcInvariantResourceUUID;
+    private static final long        serialVersionUID = 406993878174183557L;
+    private String                   vfcName;
+    private String                   vfcInvariantResourceUUID;
     private List<CldsAlarmCondition> cldsAlarmConditions;
 
     public String getVfcName() {

@@ -1,6 +1,5 @@
-# 
-# Drop CLDS database objects (tables, etc.)
 #
+# Drop CLDS database objects (tables, etc.)
 #
 
 
@@ -10,7 +9,7 @@ ALTER TABLE template
     DROP FOREIGN KEY template_bpmn_id_fkey01;
 ALTER TABLE template
     DROP FOREIGN KEY template_doc_id_fkey01;
-    
+
 ALTER TABLE model
     DROP FOREIGN KEY template_id_fkey01;
 ALTER TABLE model
@@ -19,6 +18,8 @@ ALTER TABLE model
     DROP FOREIGN KEY model_blueprint_id_fkey01;
 ALTER TABLE model
     DROP FOREIGN KEY event_id_fkey01;
+
+DROP TABLE clds_service_cache;
 
 DROP TABLE model_instance;
 DROP TABLE model_blueprint;

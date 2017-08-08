@@ -1,7 +1,7 @@
-# 
+#
 # CLDS stored procedures
 #
-#
+
 USE cldsdb4;
 
 DROP PROCEDURE IF EXISTS upd_event;
@@ -10,43 +10,43 @@ DROP PROCEDURE IF EXISTS del_all_model_instances;
 DROP PROCEDURE IF EXISTS del_model_instance;
 DROP PROCEDURE IF EXISTS ins_model_instance;
 DROP PROCEDURE IF EXISTS set_model;
-DROP PROCEDURE IF EXISTS get_model;	
-DROP PROCEDURE IF EXISTS get_model_template;	
+DROP PROCEDURE IF EXISTS get_model;
+DROP PROCEDURE IF EXISTS get_model_template;
 DROP PROCEDURE IF EXISTS set_template;
-DROP PROCEDURE IF EXISTS get_template;	
+DROP PROCEDURE IF EXISTS get_template;
 DELIMITER //
 CREATE PROCEDURE get_template
   (IN v_template_name VARCHAR(80),
    OUT v_template_id VARCHAR(36),
    OUT v_template_bpmn_id VARCHAR(36),
-   OUT v_template_bpmn_userid VARCHAR(8),
+   OUT v_template_bpmn_user_id VARCHAR(80),
    OUT v_template_bpmn_text MEDIUMTEXT,
    OUT v_template_image_id VARCHAR(36),
-   OUT v_template_image_userid VARCHAR(8),
+   OUT v_template_image_user_id VARCHAR(80),
    OUT v_template_image_text MEDIUMTEXT,
    OUT v_template_doc_id VARCHAR(36),
-   OUT v_template_doc_userid VARCHAR(8),
+   OUT v_template_doc_user_id VARCHAR(80),
    OUT v_template_doc_text MEDIUMTEXT)
 BEGIN
   SELECT t.template_id,
 		 tb.template_bpmn_id,
-		 tb.userid,
+		 tb.user_id,
 		 tb.template_bpmn_text,
 		 ti.template_image_id,
-		 ti.userid,
+		 ti.user_id,
 		 ti.template_image_text,
 		 td.template_doc_id,
-		 td.userid,
+		 td.user_id,
 		 td.template_doc_text
     INTO v_template_id,
          v_template_bpmn_id,
-         v_template_bpmn_userid,
+         v_template_bpmn_user_id,
          v_template_bpmn_text,
          v_template_image_id,
-         v_template_image_userid,
+         v_template_image_user_id,
          v_template_image_text,
          v_template_doc_id,
-         v_template_doc_userid,
+         v_template_doc_user_id,
          v_template_doc_text
     FROM template t,
          template_bpmn tb,
@@ -59,17 +59,17 @@ BEGIN
 END;
 CREATE PROCEDURE set_template
   (IN v_template_name VARCHAR(80),
-   IN v_userid VARCHAR(8),
+   IN v_user_id VARCHAR(80),
    IN v_template_bpmn_text MEDIUMTEXT,
    IN v_template_image_text MEDIUMTEXT,
    IN v_template_doc_text MEDIUMTEXT,
    OUT v_template_id VARCHAR(36),
    OUT v_template_bpmn_id VARCHAR(36),
-   OUT v_template_bpmn_userid VARCHAR(8),
+   OUT v_template_bpmn_user_id VARCHAR(80),
    OUT v_template_image_id VARCHAR(36),
-   OUT v_template_image_userid VARCHAR(8),
+   OUT v_template_image_user_id VARCHAR(80),
    OUT v_template_doc_id VARCHAR(36),
-   OUT v_template_doc_userid VARCHAR(8))
+   OUT v_template_doc_user_id VARCHAR(80))
 BEGIN
   DECLARE v_old_template_bpmn_text MEDIUMTEXT;
   DECLARE v_old_template_image_text MEDIUMTEXT;
@@ -79,13 +79,13 @@ BEGIN
     v_template_name,
     v_template_id,
     v_template_bpmn_id,
-    v_template_bpmn_userid,
+    v_template_bpmn_user_id,
     v_old_template_bpmn_text,
     v_template_image_id,
-    v_template_image_userid,
+    v_template_image_user_id,
     v_old_template_image_text,
     v_template_doc_id,
-    v_template_doc_userid,
+    v_template_doc_user_id,
     v_old_template_doc_text);
   IF v_template_id IS NULL THEN
     BEGIN
@@ -98,23 +98,23 @@ BEGIN
   IF v_template_bpmn_id IS NULL OR v_template_bpmn_text <> v_old_template_bpmn_text THEN
 	SET v_template_bpmn_id = UUID();
     INSERT INTO template_bpmn
-	  (template_bpmn_id, template_id, template_bpmn_text, userid)
-	  VALUES (v_template_bpmn_id, v_template_id, v_template_bpmn_text, v_userid);
-	SET v_template_bpmn_userid = v_userid;
+	  (template_bpmn_id, template_id, template_bpmn_text, user_id)
+	  VALUES (v_template_bpmn_id, v_template_id, v_template_bpmn_text, v_user_id);
+	SET v_template_bpmn_user_id = v_user_id;
   END IF;
   IF v_template_image_id IS NULL OR v_template_image_text <> v_old_template_image_text THEN
 	SET v_template_image_id = UUID();
     INSERT INTO template_image
-	  (template_image_id, template_id, template_image_text, userid)
-	  VALUES (v_template_image_id, v_template_id, v_template_image_text, v_userid);
-	SET v_template_image_userid = v_userid;
+	  (template_image_id, template_id, template_image_text, user_id)
+	  VALUES (v_template_image_id, v_template_id, v_template_image_text, v_user_id);
+	SET v_template_image_user_id = v_user_id;
   END IF;
   IF v_template_doc_id IS NULL OR v_template_doc_text <> v_old_template_doc_text THEN
 	SET v_template_doc_id = UUID();
     INSERT INTO template_doc
-	  (template_doc_id, template_id, template_doc_text, userid)
-	  VALUES (v_template_doc_id, v_template_id, v_template_doc_text, v_userid);
-	SET v_template_doc_userid = v_userid;
+	  (template_doc_id, template_id, template_doc_text, user_id)
+	  VALUES (v_template_doc_id, v_template_id, v_template_doc_text, v_user_id);
+	SET v_template_doc_user_id = v_user_id;
   END IF;
   UPDATE template
     SET template_bpmn_id = v_template_bpmn_id,
@@ -127,52 +127,58 @@ CREATE PROCEDURE get_model
    OUT v_control_name_prefix VARCHAR(80),
    INOUT v_control_name_uuid VARCHAR(36),
    OUT v_model_id VARCHAR(36),
+   OUT v_service_type_id VARCHAR(80),
+   OUT v_deployment_id VARCHAR(80),
    OUT v_template_name VARCHAR(80),
    OUT v_template_id VARCHAR(36),
    OUT v_model_prop_id VARCHAR(36),
-   OUT v_model_prop_userid VARCHAR(8),
+   OUT v_model_prop_user_id VARCHAR(80),
    OUT v_model_prop_text MEDIUMTEXT,
    OUT v_model_blueprint_id VARCHAR(36),
-   OUT v_model_blueprint_userid VARCHAR(8),
+   OUT v_model_blueprint_user_id VARCHAR(80),
    OUT v_model_blueprint_text MEDIUMTEXT,
    OUT v_event_id VARCHAR(36),
    OUT v_action_cd VARCHAR(80),
    OUT v_action_state_cd VARCHAR(80),
    OUT v_event_process_instance_id VARCHAR(80),
-   OUT v_event_userid VARCHAR(8))
+   OUT v_event_user_id VARCHAR(80))
 BEGIN
   SELECT m.control_name_prefix,
 		 m.control_name_uuid,
 		 m.model_id,
+		 m.service_type_id,
+		 m.deployment_id,
 		 t.template_name,
 		 m.template_id,
 		 mp.model_prop_id,
-		 mp.userid,
+		 mp.user_id,
 		 mp.model_prop_text,
 		 mb.model_blueprint_id,
-		 mb.userid,
+		 mb.user_id,
 		 mb.model_blueprint_text,
 		 e.event_id,
 		 e.action_cd,
 		 e.action_state_cd,
 		 e.process_instance_id,
-		 e.userid
+		 e.user_id
     INTO v_control_name_prefix,
          v_control_name_uuid,
 		 v_model_id,
+		 v_service_type_id,
+		 v_deployment_id,
 		 v_template_name,
          v_template_id,
          v_model_prop_id,
-         v_model_prop_userid,
+         v_model_prop_user_id,
          v_model_prop_text,
          v_model_blueprint_id,
-         v_model_blueprint_userid,
+         v_model_blueprint_user_id,
          v_model_blueprint_text,
          v_event_id,
          v_action_cd,
 		 v_action_state_cd,
          v_event_process_instance_id,
-         v_event_userid
+         v_event_user_id
     FROM model m,
 		 template t,
 		 model_properties mp,
@@ -197,78 +203,84 @@ CREATE PROCEDURE get_model_template
    OUT v_control_name_prefix VARCHAR(80),
    INOUT v_control_name_uuid VARCHAR(36),
    OUT v_model_id VARCHAR(36),
+   OUT v_service_type_id VARCHAR(80),
+   OUT v_deployment_id VARCHAR(80),
    OUT v_template_name VARCHAR(80),
    OUT v_template_id VARCHAR(36),
    OUT v_model_prop_id VARCHAR(36),
-   OUT v_model_prop_userid VARCHAR(8),
+   OUT v_model_prop_user_id VARCHAR(80),
    OUT v_model_prop_text MEDIUMTEXT,
    OUT v_model_blueprint_id VARCHAR(36),
-   OUT v_model_blueprint_userid VARCHAR(8),
+   OUT v_model_blueprint_user_id VARCHAR(80),
    OUT v_model_blueprint_text MEDIUMTEXT,
    OUT v_template_bpmn_id VARCHAR(36),
-   OUT v_template_bpmn_userid VARCHAR(8),
+   OUT v_template_bpmn_user_id VARCHAR(80),
    OUT v_template_bpmn_text MEDIUMTEXT,
    OUT v_template_image_id VARCHAR(36),
-   OUT v_template_image_userid VARCHAR(8),
+   OUT v_template_image_user_id VARCHAR(80),
    OUT v_template_image_text MEDIUMTEXT,
    OUT v_template_doc_id VARCHAR(36),
-   OUT v_template_doc_userid VARCHAR(8),
+   OUT v_template_doc_user_id VARCHAR(80),
    OUT v_template_doc_text MEDIUMTEXT,
    OUT v_event_id VARCHAR(36),
    OUT v_action_cd VARCHAR(80),
    OUT v_action_state_cd VARCHAR(80),
    OUT v_event_process_instance_id VARCHAR(80),
-   OUT v_event_userid VARCHAR(8))
+   OUT v_event_user_id VARCHAR(80))
 BEGIN
   CALL get_model(
     v_model_name,
     v_control_name_prefix,
     v_control_name_uuid,
     v_model_id,
+	v_service_type_id,
+	v_deployment_id,
     v_template_name,
     v_template_id,
     v_model_prop_id,
-    v_model_prop_userid,
+    v_model_prop_user_id,
     v_model_prop_text,
     v_model_blueprint_id,
-    v_model_blueprint_userid,
+    v_model_blueprint_user_id,
     v_model_blueprint_text,
 	v_event_id,
 	v_action_cd,
 	v_action_state_cd,
 	v_event_process_instance_id,
-	v_event_userid);
+	v_event_user_id);
   CALL get_template(
     v_template_name,
     v_template_id,
     v_template_bpmn_id,
-    v_template_bpmn_userid,
+    v_template_bpmn_user_id,
     v_template_bpmn_text,
     v_template_image_id,
-    v_template_image_userid,
+    v_template_image_user_id,
     v_template_image_text,
     v_template_doc_id,
-    v_template_doc_userid,
+    v_template_doc_user_id,
     v_template_doc_text);
   END;
 CREATE PROCEDURE set_model
   (IN v_model_name VARCHAR(80),
    IN v_template_id VARCHAR(36),
-   IN v_userid VARCHAR(8),
+   IN v_user_id VARCHAR(80),
    IN v_model_prop_text MEDIUMTEXT,
    IN v_model_blueprint_text MEDIUMTEXT,
+   IN v_service_type_id VARCHAR(80),
+   IN v_deployment_id VARCHAR(80),
    INOUT v_control_name_prefix VARCHAR(80),
    INOUT v_control_name_uuid VARCHAR(36),
    OUT v_model_id VARCHAR(36),
    OUT v_model_prop_id VARCHAR(36),
-   OUT v_model_prop_userid VARCHAR(8),
+   OUT v_model_prop_user_id VARCHAR(80),
    OUT v_model_blueprint_id VARCHAR(36),
-   OUT v_model_blueprint_userid VARCHAR(8),
+   OUT v_model_blueprint_user_id VARCHAR(80),
    OUT v_event_id VARCHAR(36),
    OUT v_action_cd VARCHAR(80),
    OUT v_action_state_cd VARCHAR(80),
    OUT v_event_process_instance_id VARCHAR(80),
-   OUT v_event_userid VARCHAR(8))
+   OUT v_event_user_id VARCHAR(80))
 BEGIN
   DECLARE v_old_template_name VARCHAR(80);
   DECLARE v_old_template_id VARCHAR(36);
@@ -276,25 +288,29 @@ BEGIN
   DECLARE v_old_control_name_uuid VARCHAR(36);
   DECLARE v_old_model_prop_text MEDIUMTEXT;
   DECLARE v_old_model_blueprint_text MEDIUMTEXT;
+  DECLARE v_old_service_type_id VARCHAR(80);
+  DECLARE v_old_deployment_id VARCHAR(80);
   SET v_model_id = NULL;
   CALL get_model(
     v_model_name,
     v_old_control_name_prefix,
     v_old_control_name_uuid,
     v_model_id,
+	v_old_service_type_id,
+	v_old_deployment_id,
     v_old_template_name,
     v_old_template_id,
     v_model_prop_id,
-    v_model_prop_userid,
+    v_model_prop_user_id,
     v_old_model_prop_text,
     v_model_blueprint_id,
-    v_model_blueprint_userid,
+    v_model_blueprint_user_id,
     v_old_model_blueprint_text,
 	v_event_id,
 	v_action_cd,
 	v_action_state_cd,
 	v_event_process_instance_id,
-	v_event_userid);
+	v_event_user_id);
   IF v_model_id IS NULL THEN
     BEGIN
       # UUID can be provided initially but cannot be updated
@@ -304,16 +320,16 @@ BEGIN
 	  END IF;
       SET v_model_id = v_control_name_uuid;
       INSERT INTO model
-	    (model_id, model_name, template_id, control_name_prefix, control_name_uuid)
-	    VALUES (v_model_id, v_model_name, v_template_id, v_control_name_prefix, v_control_name_uuid);
+	    (model_id, model_name, template_id, control_name_prefix, control_name_uuid, service_type_id, deployment_id)
+	    VALUES (v_model_id, v_model_name, v_template_id, v_control_name_prefix, v_control_name_uuid, v_service_type_id, v_deployment_id);
 	  # since just created model, insert CREATED event as initial default event
 	  SET v_action_cd = 'CREATE';
 	  SET v_action_state_cd = 'COMPLETED';
-	  SET v_event_userid = v_userid;
+	  SET v_event_user_id = v_user_id;
       SET v_event_id = UUID();
       INSERT INTO event
-	    (event_id, model_id, action_cd, action_state_cd, userid)
-	    VALUES (v_event_id, v_model_id, v_action_cd, v_action_state_cd, v_event_userid);
+	    (event_id, model_id, action_cd, action_state_cd, user_id)
+	    VALUES (v_event_id, v_model_id, v_action_cd, v_action_state_cd, v_event_user_id);
 	  UPDATE model
 		SET event_id = v_event_id
 		WHERE model_id = v_model_id;
@@ -331,21 +347,23 @@ BEGIN
   IF v_model_prop_id IS NULL OR v_model_prop_text <> v_old_model_prop_text THEN
 	SET v_model_prop_id = UUID();
     INSERT INTO model_properties
-	  (model_prop_id, model_id, model_prop_text, userid)
-	  VALUES (v_model_prop_id, v_model_id, v_model_prop_text, v_userid);
-	SET v_model_prop_userid = v_userid;
+	  (model_prop_id, model_id, model_prop_text, user_id)
+	  VALUES (v_model_prop_id, v_model_id, v_model_prop_text, v_user_id);
+	SET v_model_prop_user_id = v_user_id;
   END IF;
   IF v_model_blueprint_id IS NULL OR v_model_blueprint_text <> v_old_model_blueprint_text THEN
 	SET v_model_blueprint_id = UUID();
     INSERT INTO model_blueprint
-	  (model_blueprint_id, model_id, model_blueprint_text, userid)
-	  VALUES (v_model_blueprint_id, v_model_id, v_model_blueprint_text, v_userid);
-	SET v_model_blueprint_userid = v_userid;
+	  (model_blueprint_id, model_id, model_blueprint_text, user_id)
+	  VALUES (v_model_blueprint_id, v_model_id, v_model_blueprint_text, v_user_id);
+	SET v_model_blueprint_user_id = v_user_id;
   END IF;
   UPDATE model
     SET control_name_prefix = v_control_name_prefix,
 	    model_prop_id = v_model_prop_id,
-	    model_blueprint_id = v_model_blueprint_id
+	    model_blueprint_id = v_model_blueprint_id,
+	    service_type_id = v_service_type_id,
+	    deployment_id = v_deployment_id
     WHERE model_id = v_model_id;
 END;
 CREATE PROCEDURE ins_model_instance
@@ -396,7 +414,7 @@ CREATE PROCEDURE ins_event
   (IN v_model_name VARCHAR(80),
    IN v_control_name_prefix VARCHAR(80),
    IN v_control_name_uuid VARCHAR(36),
-   IN v_userid VARCHAR(8),
+   IN v_user_id VARCHAR(80),
    IN v_action_cd VARCHAR(80),
    IN v_action_state_cd VARCHAR(80),
    IN v_process_instance_id VARCHAR(80),
@@ -413,8 +431,8 @@ BEGIN
 	  OR  m.control_name_uuid = v_control_name_uuid;
   SET v_event_id = UUID();
   INSERT INTO event
-	(event_id, model_id, action_cd, action_state_cd, prev_event_id, process_instance_id, userid)
-	VALUES (v_event_id, v_model_id, v_action_cd, v_action_state_cd, v_prev_event_id, v_process_instance_id, v_userid);
+	(event_id, model_id, action_cd, action_state_cd, prev_event_id, process_instance_id, user_id)
+	VALUES (v_event_id, v_model_id, v_action_cd, v_action_state_cd, v_prev_event_id, v_process_instance_id, v_user_id);
   UPDATE model
 	SET event_id = v_event_id
 	WHERE model_id = v_model_id;
