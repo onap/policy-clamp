@@ -1,0 +1,13 @@
+,EventSourceType,,AlarmCondition,Severity
+
+eventType,VPMS,alarmCondition,SwRestart,CRITICAL
+
+eventType,VPMS,alarmCondition,SwRestart,WARNING
+
+eventType,VPMS,alarmCondition,SwRestart,OK
+
+eventType,VPMS,alarmCondition,IsAlive,CRITICAL
+
+eventType,VPMS,alarmCondition,IsAlive,WARNING
+
+eventType,VPMS,alarmCondition,IsAlive,OK

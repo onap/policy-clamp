@@ -1,0 +1,60 @@
+{
+    "uuid": "2c8f1219-8000-4001-aa13-496a0396d40f",
+    "invariantUUID": "096ff622-d7ea-4482-b7fe-8c7d99e7d7c6",
+    "name": "CLAMP-Dev-nodes.virc_fe_be_1",
+    "version": "1.0",
+    "toscaModelURL": "/sdc/v1/catalog/resources/2c8f1219-8000-4001-aa13-496a0396d40f/toscaModel",
+    "category": "Generic",
+    "subCategory": "Abstract",
+    "resourceType": "CVFC",
+    "lifecycleState": "CERTIFIED",
+    "lastUpdaterUserId": "m08740",
+    "lastUpdaterFullName": "Zero ASDCMech",
+    "toscaResourceName": "org.openecomp.resource.vfc.ClampDev.abstract.nodes.virc_fe_be_1",
+    "resources": 
+    [
+        {
+            "resourceInstanceName": "virc_fe_be_virc_fe_be_management_0_port",
+            "resourceName": "NeutronPort",
+            "resourceInvariantUUID": "10428340-a673-4377-8696-af579a2e67a8",
+            "resourceVersion": "5.0",
+            "resoucreType": "CP",
+            "resourceUUID": "045f3be0-7398-455b-8f0d-8eff2062a187"
+        },
+
+        {
+            "resourceInstanceName": "virc_fe_be_virc_fe_be_data_1_port",
+            "resourceName": "NeutronPort",
+            "resourceInvariantUUID": "10428340-a673-4377-8696-af579a2e67a8",
+            "resourceVersion": "5.0",
+            "resoucreType": "CP",
+            "resourceUUID": "045f3be0-7398-455b-8f0d-8eff2062a187"
+        },
+
+        {
+            "resourceInstanceName": "virc_fe_be",
+            "resourceName": "ClampDev.nodes.heat.virc_fe_be",
+            "resourceInvariantUUID": "e81d960d-794c-4d86-bbc4-31a2f86141ed",
+            "resourceVersion": "1.0",
+            "resoucreType": "VFC",
+            "resourceUUID": "d7646638-2572-4a94-b497-c028ac15f9ca"
+        }
+    ],
+
+    "artifacts": 
+    [
+        {
+            "artifactName": "Fault-alarms-ASDC-vprobes-vLB.csv",
+            "artifactType": "SNMP_TRAP",
+            "artifactURL": "/sdc/v1/catalog/resources/2c8f1219-8000-4001-aa13-496a0396d40f/resourceInstances/virc_fe_be/artifacts/5138e316-0237-49aa-817a-b3d8eaf77392",
+            "artifactDescription": "Artifact created from csar",
+            "artifactChecksum": "YWY2ZTY5NjhlOTU0YjQyZThhNTIyOGFmNzI1NTRiYzQ=",
+            "artifactUUID": "5138e316-0237-49aa-817a-b3d8eaf77392",
+            "artifactVersion": "1",
+            "artifactLabel": "faultalarmsasdcvprobesvlbcsv",
+            "artifactGroupType": "DEPLOYMENT"
+        }
+    ],
+
+    "description": "Complex node type that is used as nested type in VF"
+}

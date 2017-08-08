@@ -1,0 +1,2445 @@
+[
+    {
+        "uuid": "ab168037-e654-4990-a188-e5d2f25a8768",
+        "invariantUUID": "ef673ad3-2d81-47b7-99c2-bdc69ae79d80",
+        "name": "Vcts3.nodes.heat.vCTS_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b3538c76-7d58-4e15-9a06-b51b32101965/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "da3c740a-e8af-4b85-a487-b4961b040fa3",
+        "invariantUUID": "2a477fa7-ac1b-4a62-baa1-e94c764d736b",
+        "name": "ScpTestVsp.nodes.fe_1",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/da3c740a-e8af-4b85-a487-b4961b040fa3/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "b31696d9-ad41-4cb5-bbdd-3e67845204f3",
+        "invariantUUID": "2b07e8fa-998d-4311-8ec0-61b86c798de9",
+        "name": "VpeBvRenana.nodes.vmx_vpfe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b31696d9-ad41-4cb5-bbdd-3e67845204f3/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "25b74ab6-565b-424f-bb57-b434bb2944a0",
+        "invariantUUID": "ed69ed4f-80cd-48b5-86d5-4b5de21041be",
+        "name": "VpeBvRenana.nodes.vmx_vre",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/25b74ab6-565b-424f-bb57-b434bb2944a0/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "c13dc4c4-f4cb-4a54-9198-5bce42c5df02",
+        "invariantUUID": "6a828e59-cbee-4dc2-aa67-ee35a6eafd50",
+        "name": "Dev2devnfod.nodes.VF",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c13dc4c4-f4cb-4a54-9198-5bce42c5df02/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "08e94ce5-79e8-4873-9221-eb9e869ac679",
+        "invariantUUID": "da9ea806-971a-4338-bee7-6feeea270d8a",
+        "name": "Vprobe.nodes.vprobe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/08e94ce5-79e8-4873-9221-eb9e869ac679/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "0d8f93f5-780e-47de-9b03-52ab31cb83d1",
+        "invariantUUID": "ce47044b-a00e-43d3-8aae-df047e6abe2e",
+        "name": "Vprobe.nodes.vLB",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/0d8f93f5-780e-47de-9b03-52ab31cb83d1/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "9140709a-d6a9-4690-b102-6fa96a696ce9",
+        "invariantUUID": "0c3d1be0-f4d8-4b0a-8cc8-05989de29dfc",
+        "name": "Dev2devnfod1207.nodes.VF",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/9140709a-d6a9-4690-b102-6fa96a696ce9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "6607c9fc-dc1d-4a89-ac57-b6b18fc79b69",
+        "invariantUUID": "7a17e445-0400-40bf-8bf6-91105996e19e",
+        "name": "Dev2devnfodvf.nodes.VF",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/6607c9fc-dc1d-4a89-ac57-b6b18fc79b69/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "3cb0c46c-af73-4420-ae5c-d4816b314980",
+        "invariantUUID": "0e332f76-d6f8-4e16-b2eb-bb1ccadec523",
+        "name": "volume",
+        "version": "4.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3cb0c46c-af73-4420-ae5c-d4816b314980/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "b4288e07-597a-44a2-aa98-ad36e551a39d",
+        "invariantUUID": "61dc85d2-5e17-480e-a71f-8f6d59a0ead2",
+        "name": "CinderVolume",
+        "version": "5.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b4288e07-597a-44a2-aa98-ad36e551a39d/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "156d628f-f515-4f58-bfb0-210632717ce3",
+        "invariantUUID": "cdafff07-0bbb-45f6-8a48-46ed2c98f29c",
+        "name": "VfDemor.nodes.heat.vmx_vpfe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/156d628f-f515-4f58-bfb0-210632717ce3/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "28eeb6ce-2349-4c07-80ad-f0aacbf67028",
+        "invariantUUID": "ae71f982-2393-4fd7-8a69-c0050880e7c5",
+        "name": "Dev2devipassign2407.nodes.heat.pd_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/28eeb6ce-2349-4c07-80ad-f0aacbf67028/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "f89e37a8-c5c0-4c0c-a034-f6c0ad8dd83f",
+        "invariantUUID": "59061740-4700-4800-83f1-0427f1ed1b8c",
+        "name": "Vmme1710.nodes.heat.ncb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f89e37a8-c5c0-4c0c-a034-f6c0ad8dd83f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "8263c4c5-555e-4b73-9210-ddc8dd7e42f8",
+        "invariantUUID": "a7b9db4c-685a-416c-a2ed-7711b1492cd3",
+        "name": "VnfcVspTest.nodes.heat.rdn",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8263c4c5-555e-4b73-9210-ddc8dd7e42f8/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "dd7218d7-5760-4834-b78a-33edf5eb22e7",
+        "invariantUUID": "47be1ccb-856d-4d95-9722-f9d1913fe9df",
+        "name": "VnfcVspTest.nodes.heat.prx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/dd7218d7-5760-4834-b78a-33edf5eb22e7/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "10906cdf-dbec-405a-a513-7ed2090a5adb",
+        "invariantUUID": "746709d9-38fb-40af-88b0-856f6fadeb02",
+        "name": "VfExample.nodes.heat.vmx_vpfe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/10906cdf-dbec-405a-a513-7ed2090a5adb/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "e0ee89f0-175b-47d8-8258-1ac6ea6d52a8",
+        "invariantUUID": "a0d6e34d-c260-46ff-a55f-79fbce461ec2",
+        "name": "Vmme1710.nodes.heat.fsb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e0ee89f0-175b-47d8-8258-1ac6ea6d52a8/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "e45c5438-0528-4a3d-bfa4-644b2343537c",
+        "invariantUUID": "cd1aa4fc-94bb-4e23-86b4-0e7b89c8cab8",
+        "name": "Vmme1710.nodes.heat.gpb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e45c5438-0528-4a3d-bfa4-644b2343537c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "76e5e6b8-baad-4e5e-b535-29a2ba4cb605",
+        "invariantUUID": "c76ccbe5-7087-4eb4-a0ff-2edd7d9a392c",
+        "name": "ContrailV2VirtualMachineInterface",
+        "version": "6.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/76e5e6b8-baad-4e5e-b535-29a2ba4cb605/toscaModel",
+        "category": "Generic",
+        "subCategory": "Network Elements",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "2b4c437e-9034-4ec3-b6f9-9309022673cf",
+        "invariantUUID": "39584568-5d64-4c63-9007-46b205ea4db8",
+        "name": "MadhuMdns.nodes.heat.dns",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2b4c437e-9034-4ec3-b6f9-9309022673cf/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "56cef7d0-af8c-4f18-80a2-e9aaf4366838",
+        "invariantUUID": "fab9a189-6bfa-4dfa-a4fe-2bfa4ff4e71b",
+        "name": "Alinavsp.nodes.vCTS_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/56cef7d0-af8c-4f18-80a2-e9aaf4366838/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "d7646638-2572-4a94-b497-c028ac15f9ca",
+        "invariantUUID": "e81d960d-794c-4d86-bbc4-31a2f86141ed",
+        "name": "ClampDev.nodes.heat.virc_fe_be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d7646638-2572-4a94-b497-c028ac15f9ca/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "b58f9c1a-ad21-459d-9efa-a8924147cb90",
+        "invariantUUID": "a13cd6b9-c46e-4830-88ab-2b1c710a3b51",
+        "name": "sang_AR",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b58f9c1a-ad21-459d-9efa-a8924147cb90/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "27307a62-8512-4aeb-a0ad-e8e88643c2ba",
+        "invariantUUID": "91d1bde6-eb8e-4786-b7e6-193453662014",
+        "name": "SangVsp.nodes.heat.oam",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/27307a62-8512-4aeb-a0ad-e8e88643c2ba/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "b0322a5d-b664-4c47-9827-9d7c0ca2201b",
+        "invariantUUID": "745995d0-6bf0-49d4-895f-32d554a7c333",
+        "name": "vnfConfiguration",
+        "version": "3.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b0322a5d-b664-4c47-9827-9d7c0ca2201b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "fd0e3baa-fef7-4096-be2f-a73fea2f1360",
+        "invariantUUID": "4aca7e14-e2e4-4aeb-868e-aaaecea0cc5d",
+        "name": "SangVsp.nodes.heat.prx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fd0e3baa-fef7-4096-be2f-a73fea2f1360/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "a12dad87-6120-412f-8a53-c5bb88be89a3",
+        "invariantUUID": "84a7c06f-b3a7-448b-8777-626776b0b6bd",
+        "name": "Vmme1710.nodes.heat.vlc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a12dad87-6120-412f-8a53-c5bb88be89a3/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "a14e3bbd-b04b-4924-817c-b4d13bfd8fe2",
+        "invariantUUID": "e205948e-5043-4cab-851d-e9e37f68736f",
+        "name": "VfExample.nodes.heat.vmx_vre",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a14e3bbd-b04b-4924-817c-b4d13bfd8fe2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "a902ec74-9415-4d5c-a14e-f0861a272407",
+        "invariantUUID": "40894528-2703-4652-86d0-463ac2af8c80",
+        "name": "NewVendorMdns.nodes.heat.dns",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a902ec74-9415-4d5c-a14e-f0861a272407/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "82646e24-0e94-416a-aae2-9df4b2aa6217",
+        "invariantUUID": "a966f23a-ce65-4ef1-8d9f-718510852415",
+        "name": "SangVsp.nodes.heat.rdn",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/82646e24-0e94-416a-aae2-9df4b2aa6217/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "d87ce222-309b-46ab-9be9-c2d6ef7fe65e",
+        "invariantUUID": "37fcd63a-2d6e-4c42-8d63-183711976f9b",
+        "name": "multiFlavorVFC",
+        "version": "3.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d87ce222-309b-46ab-9be9-c2d6ef7fe65e/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "c01c047d-395f-44fa-a34f-dc3f9c51c92c",
+        "invariantUUID": "23f8cb05-885d-4423-bae0-0d043f3c350c",
+        "name": "WebApplication",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c01c047d-395f-44fa-a34f-dc3f9c51c92c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "5fc1e5d4-1015-4614-b486-8727eb5e388b",
+        "invariantUUID": "19bf4492-3bdb-4d62-966d-2e2498e1891c",
+        "name": "Root",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5fc1e5d4-1015-4614-b486-8727eb5e388b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "61214be3-e560-44cc-877b-d484bcc2ee79",
+        "invariantUUID": "88a9f65b-94a0-4530-a17e-adaada70838d",
+        "name": "BlockStorage",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/61214be3-e560-44cc-877b-d484bcc2ee79/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "efb54bab-a842-48b3-842a-dffb000acf1f",
+        "invariantUUID": "cb2574f8-0b75-4ea1-8517-acba650ba72f",
+        "name": "Database",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/efb54bab-a842-48b3-842a-dffb000acf1f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Database",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "4066e7da-0dba-4d0b-b74c-c30446ed277e",
+        "invariantUUID": "75c5fbc6-4366-4163-af9c-1a43bdb90425",
+        "name": "AbstractSubstitute",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4066e7da-0dba-4d0b-b74c-c30446ed277e/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "b39e436d-47b0-4509-95d6-8a63e2c722d1",
+        "invariantUUID": "0790aa94-5b47-4100-b26a-4cabd9639698",
+        "name": "ObjectStorage",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b39e436d-47b0-4509-95d6-8a63e2c722d1/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "94b8f588-624c-4e61-9ead-32aaadd8cf65",
+        "invariantUUID": "57eecece-2079-4a5d-9627-4fde30434552",
+        "name": "ContrailNetworkRules",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/94b8f588-624c-4e61-9ead-32aaadd8cf65/toscaModel",
+        "category": "Generic",
+        "subCategory": "Rules",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "fa17c264-7f19-4919-a1d4-aab5c53b9c32",
+        "invariantUUID": "b0a7ddd2-429e-493c-ba05-fe9440b49b54",
+        "name": "SoftwareComponent",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fa17c264-7f19-4919-a1d4-aab5c53b9c32/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "76ba485f-50a3-480d-895e-5c319191bc11",
+        "invariantUUID": "cf3ccc9c-b6ea-468e-8eef-f45479978fc1",
+        "name": "Allotedresource",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/76ba485f-50a3-480d-895e-5c319191bc11/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99124"
+    },
+
+    {
+        "uuid": "1909a305-e032-46ce-9278-c751659958cc",
+        "invariantUUID": "aa9abf65-5a91-4c6f-814e-47b5fa06ccbd",
+        "name": "Allotted resource 123456",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1909a305-e032-46ce-9278-c751659958cc/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VFC",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "64fb42a4-7c3d-415b-afd0-1949abef550a",
+        "invariantUUID": "3bbcb293-24ff-4370-b46a-9233c92c1469",
+        "name": "ContrailAbstractSubstitute",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/64fb42a4-7c3d-415b-afd0-1949abef550a/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "c3ed93e4-4955-4100-8f4b-c9472cb3f28f",
+        "invariantUUID": "29e31a72-10c4-453d-99e6-76e0fe0f7a99",
+        "name": "Tuesdayvsp.nodes.vCTS_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c3ed93e4-4955-4100-8f4b-c9472cb3f28f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "a71b3246-b54e-4646-bd6f-d5a11d4878df",
+        "invariantUUID": "b91e1d84-c9de-4a37-994a-b10949a14004",
+        "name": "Monitoringvsp.nodes.vCTS_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a71b3246-b54e-4646-bd6f-d5a11d4878df/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "d36283cc-7d52-4893-8f72-fbffbbe17857",
+        "invariantUUID": "87802076-8649-4581-a540-b103ab15bd22",
+        "name": "Application",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d36283cc-7d52-4893-8f72-fbffbbe17857/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "2ef832aa-25f1-4f5a-b6d4-a6ee90011918",
+        "invariantUUID": "86ed816c-447f-477f-9810-4c07c7356c2e",
+        "name": "LoadBalancer",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2ef832aa-25f1-4f5a-b6d4-a6ee90011918/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "31060494-0c59-4c15-b4f4-34900d73b803",
+        "invariantUUID": "4950496e-6e75-47fb-8746-4895887a6d03",
+        "name": "Compute",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/31060494-0c59-4c15-b4f4-34900d73b803/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "d57e57d2-e3c6-470d-8d16-e6ea05f536c5",
+        "invariantUUID": "dd31d2de-0a7f-4198-8966-3a04100fbfe3",
+        "name": "SecurityRules",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d57e57d2-e3c6-470d-8d16-e6ea05f536c5/toscaModel",
+        "category": "Generic",
+        "subCategory": "Rules",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "db9360b9-0edb-43e1-8cf0-00bb90b7c2be",
+        "invariantUUID": "651f273d-7e1d-410c-bd88-cf8c9f713454",
+        "name": "ContrailV2NetworkRules",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/db9360b9-0edb-43e1-8cf0-00bb90b7c2be/toscaModel",
+        "category": "Generic",
+        "subCategory": "Rules",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "503948a9-03bb-4738-8464-c6e21da10792",
+        "invariantUUID": "477a2abf-10b6-4777-bd50-afdcbbe59d54",
+        "name": "Vtsbc1.nodes.heat.module_2_perimeta_sw_b_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/503948a9-03bb-4738-8464-c6e21da10792/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "e4514d83-9708-427f-a62b-f996e426ba58",
+        "invariantUUID": "5886b184-53c2-475b-8e75-b38696c10b8a",
+        "name": "GlobalCompute",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e4514d83-9708-427f-a62b-f996e426ba58/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "3ab24991-cf93-4d40-9468-52d233d36ad6",
+        "invariantUUID": "fb26e1e2-d7b0-4809-86e6-1ea31c5c6a4a",
+        "name": "FcgiOs.nodes.heat.modular_1_cgi_frwl_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3ab24991-cf93-4d40-9468-52d233d36ad6/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "930aab76-fc52-43dd-8f19-e2ce11503bb5",
+        "invariantUUID": "f66c1a6b-2ad5-43dd-8cc9-1924f7eaad0f",
+        "name": "Vtsbc1.nodes.heat.vlan_subinterface_dual",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/930aab76-fc52-43dd-8f19-e2ce11503bb5/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "fca030db-0a4b-4873-94d2-20ea6b8f259f",
+        "invariantUUID": "124d05ac-8bbc-4510-94d7-c6418ee25864",
+        "name": "Vtsbc1.nodes.heat.module_2_perimeta_sw_a_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fca030db-0a4b-4873-94d2-20ea6b8f259f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "bc74b1ae-11f7-4550-8c25-e528e749d2ea",
+        "invariantUUID": "8c0c60ea-b468-4288-9aea-3232b5e7cce7",
+        "name": "Ronytestcsar.nodes.arb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bc74b1ae-11f7-4550-8c25-e528e749d2ea/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rb844h"
+    },
+
+    {
+        "uuid": "624a7da1-68ce-4b95-9d50-6a07d645e421",
+        "invariantUUID": "7ed55927-5274-461f-8ba5-76abdcf609a8",
+        "name": "Vftest54.nodes.heat.vdns",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/624a7da1-68ce-4b95-9d50-6a07d645e421/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rb844h"
+    },
+
+    {
+        "uuid": "0c19272a-b2a2-4ffe-a6e7-ce3a683f23fc",
+        "invariantUUID": "effff7eb-737b-496d-8e23-8e31efe67dc4",
+        "name": "VmmscEca.nodes.heat.arb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/0c19272a-b2a2-4ffe-a6e7-ce3a683f23fc/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "az2497"
+    },
+
+    {
+        "uuid": "46887197-fec9-4cf5-9207-e6e7f4a6cf3a",
+        "invariantUUID": "1b8a54a2-b1ff-441c-9c6e-3aa83773e67c",
+        "name": "VfVolumeGroup.nodes.heat.sm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/46887197-fec9-4cf5-9207-e6e7f4a6cf3a/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "563ca30e-8e6f-4456-b1c0-d1a5b6b052aa",
+        "invariantUUID": "876fe041-c25a-4e71-bbd3-ce18d1951974",
+        "name": "1607MogMultiMembersVolume.nodes.heat.sm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/563ca30e-8e6f-4456-b1c0-d1a5b6b052aa/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "2437819c-3f2e-4ae8-9427-b41463a63a21",
+        "invariantUUID": "6ec6862d-1e49-479b-b792-0b02a26cf9a6",
+        "name": "VfModule2.nodes.heat.eca_trx",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2437819c-3f2e-4ae8-9427-b41463a63a21/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "3c9b6ec9-2b6a-4c81-96cd-f3e5c0264ae6",
+        "invariantUUID": "cdc19c35-bcac-4f78-a7a6-c216b374f5a3",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolumeCs.nodes.heat.nems_fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3c9b6ec9-2b6a-4c81-96cd-f3e5c0264ae6/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "612317df-67b5-487f-b592-44f5e682b0a9",
+        "invariantUUID": "3bae7612-b50d-48ed-8ae7-b6f17521395b",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolumeCs.nodes.heat.nems_be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/612317df-67b5-487f-b592-44f5e682b0a9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "77b6934c-353e-407e-aa1e-6f1288cb3969",
+        "invariantUUID": "adb87b9e-4bc2-4e96-8b1a-6176240f02a8",
+        "name": "VmogVnf1.nodes.heat.oam",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/77b6934c-353e-407e-aa1e-6f1288cb3969/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "48a5a370-d91d-4bdd-a1a0-8d82eedcced8",
+        "invariantUUID": "514ba932-1b32-447b-8655-f3a356047172",
+        "name": "VfModules.nodes.heat.mmsc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/48a5a370-d91d-4bdd-a1a0-8d82eedcced8/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "1450f9c2-b491-4ac6-a388-db4e0752a58f",
+        "invariantUUID": "5dc27c39-2540-4a2c-881c-5dab7859bbe8",
+        "name": "AppcTest.nodes.heat.be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1450f9c2-b491-4ac6-a388-db4e0752a58f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "311a159d-ea0b-494c-97dd-52683df85faf",
+        "invariantUUID": "3c28e9d7-8ccf-4249-9eab-878d6cd84dfa",
+        "name": "Ixlt1Os.nodes.heat.its",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/311a159d-ea0b-494c-97dd-52683df85faf/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "4902fae4-7f42-43c5-9472-fe12eca3f510",
+        "invariantUUID": "60d87328-e9fd-474e-aa3e-791f23e7c0fa",
+        "name": "VfVolumeGroup.nodes.heat.cm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4902fae4-7f42-43c5-9472-fe12eca3f510/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "a82e5a26-463c-4b17-9d6e-16ea1f8c0dde",
+        "invariantUUID": "dfd14d20-8d28-4ad1-a824-dd75d282f97b",
+        "name": "VfVolumeGroup.nodes.heat.ps",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a82e5a26-463c-4b17-9d6e-16ea1f8c0dde/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "d852ce5c-c883-41a1-88f9-167b8b4ff197",
+        "invariantUUID": "18f3b7e1-3dfe-4299-982a-b510c64fbfba",
+        "name": "1607MogMultiMembersVolume.nodes.heat.ps",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d852ce5c-c883-41a1-88f9-167b8b4ff197/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "b299bd46-66c1-4954-af45-2fe3188f5c5e",
+        "invariantUUID": "41aa2e0e-f003-4a03-9e9b-5dbcc968b1df",
+        "name": "VfModulesVmmsc.nodes.heat.mmsc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b299bd46-66c1-4954-af45-2fe3188f5c5e/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "f80f5252-2ecb-41e3-84d5-936586ae0a3a",
+        "invariantUUID": "d90ae454-bc1c-44ef-a680-74b6a09d3123",
+        "name": "VfModules.nodes.heat.lb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f80f5252-2ecb-41e3-84d5-936586ae0a3a/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "9e4b96d7-5701-413e-8461-4cac258365ca",
+        "invariantUUID": "1a81fcd0-d62c-4ba3-b988-40a1a5986cb0",
+        "name": "TestPort.nodes.heat.be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/9e4b96d7-5701-413e-8461-4cac258365ca/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "4d2bfb6f-9276-447b-b145-7f7856af9a6c",
+        "invariantUUID": "32a90486-5e0d-4977-b445-a9a165295841",
+        "name": "VmogVnf1.nodes.heat.pps",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4d2bfb6f-9276-447b-b145-7f7856af9a6c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "a614b20e-9c45-4163-b673-38f0068c5365",
+        "invariantUUID": "160c57a3-d87f-4f7f-a38a-7ecf6b48d42b",
+        "name": "Vmmsc.nodes.heat.nems_fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a614b20e-9c45-4163-b673-38f0068c5365/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "fbad0868-45e9-433b-ada7-070e88c09672",
+        "invariantUUID": "8242ebe6-8333-4e4a-a997-31a391cbcc1f",
+        "name": "VmogVnf1.nodes.heat.mba",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fbad0868-45e9-433b-ada7-070e88c09672/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "e50cbfd4-a860-441b-b1ff-c654c3222ad6",
+        "invariantUUID": "03c1f631-d057-4246-b276-2a0e18119a21",
+        "name": "Pxtc.nodes.heat.mon",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e50cbfd4-a860-441b-b1ff-c654c3222ad6/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "21aaf7bf-5af9-4b1a-9850-f4a5e95f185e",
+        "invariantUUID": "9bc1d654-b663-4170-89f2-e8dabb6d2342",
+        "name": "VmogVnf1.nodes.heat.ppd",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/21aaf7bf-5af9-4b1a-9850-f4a5e95f185e/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "9d4a37d7-3c9b-4dad-abb6-26b50b15da8b",
+        "invariantUUID": "419651d6-45e9-453a-95cd-4f9f0934fa9c",
+        "name": "Pxtc.nodes.heat.adm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/9d4a37d7-3c9b-4dad-abb6-26b50b15da8b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "bb8fddbf-e011-4fed-9f36-181478f4e56c",
+        "invariantUUID": "552c6aa1-0a27-45f7-a0e5-9a380a592ad4",
+        "name": "TestPort.nodes.heat.fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bb8fddbf-e011-4fed-9f36-181478f4e56c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "2bb496fb-6ede-42e0-957e-bd80fa2e8aa1",
+        "invariantUUID": "2a6f0a0e-2a76-43d1-9489-3ad4fdf82cdc",
+        "name": "Runtime",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2bb496fb-6ede-42e0-957e-bd80fa2e8aa1/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "a5226541-363b-4d78-8f52-06d421795457",
+        "invariantUUID": "3b05cf5e-5120-4aef-a213-f3d984c83efe",
+        "name": "TestPort.nodes.fe_1",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a5226541-363b-4d78-8f52-06d421795457/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "f58b4bcf-baec-4c11-a6d0-0e92d4629fd2",
+        "invariantUUID": "603b02a9-afa2-487b-a8c1-90c84c21d4cf",
+        "name": "Vpe.nodes.vmx_vre",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f58b4bcf-baec-4c11-a6d0-0e92d4629fd2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "30db70cc-17b8-4c39-a848-5f629e9a929e",
+        "invariantUUID": "2a3100da-581e-438a-915c-3c67ecbe8f9c",
+        "name": "AppcTest.nodes.fe_0",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/30db70cc-17b8-4c39-a848-5f629e9a929e/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "52398d14-90d0-4d3a-ac84-10b525e79e3c",
+        "invariantUUID": "8f061343-5507-4232-ba34-4933bb2b85d3",
+        "name": "Fdnt.nodes.heat.mod_vmsi_dnt_fw_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/52398d14-90d0-4d3a-ac84-10b525e79e3c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "d0deff85-ca52-4c86-8ca7-a02deddba983",
+        "invariantUUID": "c62a62a8-f021-4e22-85b9-45a19ddd8597",
+        "name": "Vtsbc1.nodes.heat.module_1_perimeta_sw_a_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d0deff85-ca52-4c86-8ca7-a02deddba983/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "25f77df9-f94a-4458-9699-5f483167f700",
+        "invariantUUID": "8d8675b4-88f8-43ad-aeed-3cb2e96d8f67",
+        "name": "DBMS",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/25f77df9-f94a-4458-9699-5f483167f700/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "1ce8b11c-589c-4359-9caa-590a43fb53ec",
+        "invariantUUID": "e4d4a041-38f9-416b-a97d-56eaca20cb88",
+        "name": "WebServer",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1ce8b11c-589c-4359-9caa-590a43fb53ec/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "f27b3a9c-b815-42fe-83c6-da86c18a63a6",
+        "invariantUUID": "0d4bec79-e600-4647-a9a6-35d1f1dd0802",
+        "name": "Fdnt1.nodes.heat.mod_vmsi_dnt_fw_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f27b3a9c-b815-42fe-83c6-da86c18a63a6/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "c63814fe-9d50-4283-8229-ede6a5961de9",
+        "invariantUUID": "b9ffe743-22ae-4bdc-a36a-0fd7cdab97ff",
+        "name": "Mazav.nodes.heat.mod_vmsi_dnt_fw_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c63814fe-9d50-4283-8229-ede6a5961de9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "23f4bcc5-c6e1-4fdd-b45b-29eb3f82af2f",
+        "invariantUUID": "62545a84-126c-4563-b72b-7414cb2db617",
+        "name": "Fdnt1234.nodes.heat.mod_vmsi_dnt_fw_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/23f4bcc5-c6e1-4fdd-b45b-29eb3f82af2f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "e63ef8ed-d40d-4b5f-99da-898fbe4b051b",
+        "invariantUUID": "f747ebd4-8c02-4653-b919-7fd894450970",
+        "name": "Vtsbc1.nodes.heat.module_1_perimeta_sw_b_child",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e63ef8ed-d40d-4b5f-99da-898fbe4b051b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "292d2d83-c33b-4c22-8341-4401194a6499",
+        "invariantUUID": "b27f9b4b-2188-4edb-9e05-83680b5462b2",
+        "name": "VfModules1.nodes.heat.nems_fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/292d2d83-c33b-4c22-8341-4401194a6499/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "af51c072-1754-4db3-97be-179ab7433295",
+        "invariantUUID": "b615bc4f-c4e3-4381-9467-f6674f4fe5ce",
+        "name": "VfModules1.nodes.heat.eca_trx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/af51c072-1754-4db3-97be-179ab7433295/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "5ec9fb9f-fa32-48e8-a317-8be839e15d30",
+        "invariantUUID": "ed2acd41-d9f5-475b-b696-9ff2ac93714e",
+        "name": "VmmscEca.nodes.arb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5ec9fb9f-fa32-48e8-a317-8be839e15d30/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "az2497"
+    },
+
+    {
+        "uuid": "3a8230f1-dd86-42f8-9d73-c239bc5c74e8",
+        "invariantUUID": "d7070c39-94e0-48f5-befc-c3b02a2dc1ec",
+        "name": "VfModulesVmmsc.nodes.heat.nems_be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3a8230f1-dd86-42f8-9d73-c239bc5c74e8/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "5658235d-6a1e-47fe-8e5f-9e081a11b713",
+        "invariantUUID": "7da4de5f-f610-4b0a-a57f-e76bf05e676e",
+        "name": "TestPort.nodes.fe_0",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5658235d-6a1e-47fe-8e5f-9e081a11b713/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "d4979513-3719-4076-bbc1-5a4fe040ddc6",
+        "invariantUUID": "54f5d6e1-0290-473f-b7ef-ae5e31cd9985",
+        "name": "Vpe.nodes.vmx_vpfe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d4979513-3719-4076-bbc1-5a4fe040ddc6/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "a450b1ba-2d69-44e7-8934-1d21952ba6c9",
+        "invariantUUID": "350c8017-ab5a-4633-bbe0-e7bbf71f0887",
+        "name": "TestConsol.nodes.fe_1",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a450b1ba-2d69-44e7-8934-1d21952ba6c9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "c0bd2a8b-9dc3-4819-8ab1-11175ae06ef1",
+        "invariantUUID": "427b34d8-ca6d-4c94-8e4f-06d63a1e24eb",
+        "name": "NovaServer",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c0bd2a8b-9dc3-4819-8ab1-11175ae06ef1/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "5f6ccc29-6f6c-41cf-b995-73c58e7278d2",
+        "invariantUUID": "044d46c6-e6ae-4569-b7b4-3d0f626612de",
+        "name": "1607MogMultiMembersVolume.nodes.heat.oam",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5f6ccc29-6f6c-41cf-b995-73c58e7278d2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "5d6fdb58-1166-41b6-aab7-260e494ccc58",
+        "invariantUUID": "04c36447-22a8-4039-a7ae-fe134907061e",
+        "name": "ContrailCompute",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5d6fdb58-1166-41b6-aab7-260e494ccc58/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "jh0003"
+    },
+
+    {
+        "uuid": "57d4264b-3175-4a31-9515-f23c0318930f",
+        "invariantUUID": "8e3f2465-5f4f-4c9e-9b84-5db3d5d6a3f8",
+        "name": "VmogVnf1.nodes.heat.pcm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/57d4264b-3175-4a31-9515-f23c0318930f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "dcd62b53-a045-4864-9ed3-aaf722fec10a",
+        "invariantUUID": "046a066f-8398-4271-aa1a-4ccdd46c892f",
+        "name": "VfModuleLdsa.nodes.heat.ltm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/dcd62b53-a045-4864-9ed3-aaf722fec10a/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "aa00977d-ff67-473a-acb8-bb24db037a0b",
+        "invariantUUID": "989ae5c8-e9b9-4e14-b609-1fde2ad4e165",
+        "name": "TestConsol.nodes.fe_0",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/aa00977d-ff67-473a-acb8-bb24db037a0b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "cb08bf67-6fc9-44ae-ae31-ab619cfd94af",
+        "invariantUUID": "7555d6be-ef04-4812-b58c-b00eda9e1a1b",
+        "name": "AppcTest.nodes.fe_1",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/cb08bf67-6fc9-44ae-ae31-ab619cfd94af/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "cc3a0064-e9d4-421e-ba14-ce340adb7ed9",
+        "invariantUUID": "341b0751-e9b7-4f80-935e-30aef979ea71",
+        "name": "VfModules.nodes.heat.nems_fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/cc3a0064-e9d4-421e-ba14-ce340adb7ed9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "1f927980-bd8d-4a0c-8002-8f550e52efbe",
+        "invariantUUID": "d9f0237f-acaa-411f-843c-952d4d746d9f",
+        "name": "Vmmsc.nodes.heat.eca_trx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1f927980-bd8d-4a0c-8002-8f550e52efbe/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "6d1669d1-be78-47e7-aed4-d5a2267c81d4",
+        "invariantUUID": "b2a066b5-0062-482a-af23-9e1426f7d388",
+        "name": "VfVolumeGroup.nodes.heat.pd",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/6d1669d1-be78-47e7-aed4-d5a2267c81d4/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "bd9e5061-40dc-42ca-8d77-c606a24c8bfd",
+        "invariantUUID": "a8cf5282-4c83-4540-8515-c315328af01d",
+        "name": "VfNoLicense.nodes.pcm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bd9e5061-40dc-42ca-8d77-c606a24c8bfd/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "68ea026e-c604-47b5-9cd1-524a58714a14",
+        "invariantUUID": "d0aa37ea-a1f8-41dc-9b5f-7e54f4d7a2f3",
+        "name": "VfNoLicense.nodes.pps",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/68ea026e-c604-47b5-9cd1-524a58714a14/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "bc3a8aae-7f94-4dac-b819-d37a077a08fc",
+        "invariantUUID": "0df5de75-3a9e-439a-8d03-e989ca7bfe16",
+        "name": "ScpTestVsp.nodes.fe_0",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bc3a8aae-7f94-4dac-b819-d37a077a08fc/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "8ba3f710-58d4-4d60-9384-1dad449d381a",
+        "invariantUUID": "4a34455c-b9c0-48ca-90ac-debf986ac028",
+        "name": "VfDemor.nodes.vmx_vre",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8ba3f710-58d4-4d60-9384-1dad449d381a/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "0a09e932-9fde-4e52-b7e3-2e542b61faa0",
+        "invariantUUID": "dd97be59-be12-4749-b8ca-1bf0d7336573",
+        "name": "ScpTestVsp.nodes.smp",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/0a09e932-9fde-4e52-b7e3-2e542b61faa0/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "fa6ca25b-4578-4093-b8a2-031cb8f1f481",
+        "invariantUUID": "c88282f0-608d-4aef-b12f-dda9474f55f9",
+        "name": "VscpaasTest2.nodes.fe_1",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fa6ca25b-4578-4093-b8a2-031cb8f1f481/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "f11a8681-ab58-4f0d-8387-76ecdfa31073",
+        "invariantUUID": "2a94a311-f6bb-48b6-a458-e4b1a724bfc7",
+        "name": "VscpaasTest2.nodes.smp",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f11a8681-ab58-4f0d-8387-76ecdfa31073/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "4b1cca9b-23a0-4037-aaf3-ce5cd7c91851",
+        "invariantUUID": "98e3949f-1047-4cd8-9b8b-6b6c55d51f74",
+        "name": "Vprobe.nodes.vLBAgent",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4b1cca9b-23a0-4037-aaf3-ce5cd7c91851/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "17ed7b78-1ffb-4864-a2ec-b6666a5fed16",
+        "invariantUUID": "2a6de403-c5b7-44ea-a398-ae78d53fb31a",
+        "name": "VpeAvRenana.nodes.vmx_vre",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/17ed7b78-1ffb-4864-a2ec-b6666a5fed16/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "ab89b69b-b92b-4e34-b1db-a6378d709241",
+        "invariantUUID": "dbb9b18d-e3ea-48cf-bcbd-81d8d4b22d72",
+        "name": "Vmmsc.nodes.heat.lb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ab89b69b-b92b-4e34-b1db-a6378d709241/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "d45694e4-ed86-4a44-a644-5a8a3ff89397",
+        "invariantUUID": "3eb4d8e0-2b85-4b74-bad3-2e4406f50d4d",
+        "name": "VfModules1.nodes.heat.mmsc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d45694e4-ed86-4a44-a644-5a8a3ff89397/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "5c7fd7c0-fc79-4309-bb03-85388cae45a8",
+        "invariantUUID": "7ff3e308-cf42-47ae-afc3-ecd5ef9823c0",
+        "name": "VmmscEca.nodes.heat.eca",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5c7fd7c0-fc79-4309-bb03-85388cae45a8/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "az2497"
+    },
+
+    {
+        "uuid": "f739ea35-7bd4-42ed-b9ee-1e0fd2017c72",
+        "invariantUUID": "ce4127ef-2564-40e6-b62e-6be7758f46a7",
+        "name": "Pxtc.nodes.heat.ddc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f739ea35-7bd4-42ed-b9ee-1e0fd2017c72/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "f2339431-f3ab-41c9-90c4-6c2c958e1b06",
+        "invariantUUID": "40ab991d-ad0c-4adb-9f2a-0f2eef8bb880",
+        "name": "VfModules1.nodes.heat.lb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f2339431-f3ab-41c9-90c4-6c2c958e1b06/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "15728e01-7076-4765-8002-95154ad29d5f",
+        "invariantUUID": "9814209f-7b9d-4b21-8968-f6a3638b107c",
+        "name": "1607Mog.nodes.heat.cm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/15728e01-7076-4765-8002-95154ad29d5f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "ab168037-e654-4990-a188-e5d2f25a8768",
+        "invariantUUID": "ef673ad3-2d81-47b7-99c2-bdc69ae79d80",
+        "name": "Vcts3.nodes.heat.vCTS_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ab168037-e654-4990-a188-e5d2f25a8768/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "e1d7eb6a-646d-4906-9981-44ed892dc01c",
+        "invariantUUID": "78245f38-b99a-49a8-ac5b-56737ad686db",
+        "name": "VfModulesVmmsc.nodes.heat.eca_trx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e1d7eb6a-646d-4906-9981-44ed892dc01c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "74c527c6-edb7-4bbe-a63c-d2daf5a12db0",
+        "invariantUUID": "18bc94d2-2be1-46e9-bd70-ded327b1324e",
+        "name": "VfModule2.nodes.heat.mmsc",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/74c527c6-edb7-4bbe-a63c-d2daf5a12db0/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "345459d0-ba42-45ba-9eb0-cc56e4f35ea9",
+        "invariantUUID": "5362b258-b867-4e98-a3c4-138c6d444c69",
+        "name": "VfModule2.nodes.heat.nems_be",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/345459d0-ba42-45ba-9eb0-cc56e4f35ea9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "bc40b750-56ab-4c6b-8e15-412f9be0178f",
+        "invariantUUID": "ab769637-063f-41fd-927d-771a1913235b",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolumeCs.nodes.heat.mmsc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bc40b750-56ab-4c6b-8e15-412f9be0178f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "3ff3d87f-c55f-4b4c-a8ae-29931d910359",
+        "invariantUUID": "5af2c63a-1b3e-42a5-ab4b-07e97d1dcbd2",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolume.nodes.heat.nems_be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3ff3d87f-c55f-4b4c-a8ae-29931d910359/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "2c8f1219-8000-4001-aa13-496a0396d40f",
+        "invariantUUID": "096ff622-d7ea-4482-b7fe-8c7d99e7d7c6",
+        "name": "CLAMP-Dev-nodes.virc_fe_be_1",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2c8f1219-8000-4001-aa13-496a0396d40f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "d8a2de8a-27d8-491c-bbb9-da779a4da7c6",
+        "invariantUUID": "0b4d158e-c20e-4630-b515-3ecda2ad05a4",
+        "name": "VfModules.nodes.heat.nems_be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d8a2de8a-27d8-491c-bbb9-da779a4da7c6/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "d544d6a6-4fcc-42db-97f6-e8cccc69c5ee",
+        "invariantUUID": "cd4a433e-cf76-4652-a6b8-59e657e0c5a0",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolumeCs.nodes.heat.lb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d544d6a6-4fcc-42db-97f6-e8cccc69c5ee/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "5d6e7129-d7c8-41b8-ae2a-5f1688162c7c",
+        "invariantUUID": "350d9877-894a-4ce4-a899-48df9428ff88",
+        "name": "Vieccf.nodes.heat.iox",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5d6e7129-d7c8-41b8-ae2a-5f1688162c7c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "fcc6655e-7074-48de-89ef-ef6e4a5705e3",
+        "invariantUUID": "6dd080e4-372c-44cc-8c25-868d45f2e959",
+        "name": "VfModule2.nodes.heat.nems_fe",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fcc6655e-7074-48de-89ef-ef6e4a5705e3/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "400cab12-2d1e-4a2c-a33a-d9d7b3262dd1",
+        "invariantUUID": "9ebca51b-16d0-423c-8e5f-4472c1888029",
+        "name": "VmogVnf1.nodes.heat.mbt",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/400cab12-2d1e-4a2c-a33a-d9d7b3262dd1/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "a068d0c0-06c6-4b58-bc99-6ac910700edb",
+        "invariantUUID": "f2e37302-fd97-48d7-bbdb-f0caaab5fe03",
+        "name": "1607Mog.nodes.heat.pd",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a068d0c0-06c6-4b58-bc99-6ac910700edb/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "c2e88763-87a9-4d33-b598-7811ae3f87d2",
+        "invariantUUID": "9d16cf01-c244-42c8-bcfe-faf108069e84",
+        "name": "VfModulesVmmsc.nodes.heat.nems_fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c2e88763-87a9-4d33-b598-7811ae3f87d2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "de861add-3f4a-4526-9754-8bcb69d0fd0e",
+        "invariantUUID": "67560771-ffcb-46fb-a40c-0e1dee74f43a",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolume.nodes.heat.mmsc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/de861add-3f4a-4526-9754-8bcb69d0fd0e/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "4514b4e5-f163-4011-87fd-445f4366e3c2",
+        "invariantUUID": "91c638ef-49f5-4366-8749-cda8a33ed41e",
+        "name": "VfModules.nodes.heat.eca_trx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4514b4e5-f163-4011-87fd-445f4366e3c2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "3679d10e-a1a2-46a4-97b3-4056a0920e7b",
+        "invariantUUID": "d272aa71-398a-4eff-ab00-6a4281b41c92",
+        "name": "Pxtc.nodes.heat.mda",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3679d10e-a1a2-46a4-97b3-4056a0920e7b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "f905ca32-dac5-4337-a1d7-cc2bca86b407",
+        "invariantUUID": "acbb7a13-7ae7-4ac7-b0e4-23314cbc65e2",
+        "name": "Vmmsc.nodes.heat.mmsc",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f905ca32-dac5-4337-a1d7-cc2bca86b407/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "ee10af8a-c8bf-4455-808e-5550050d4ea9",
+        "invariantUUID": "e74db59b-72fb-4734-9d48-40d8c47d292a",
+        "name": "VfModulesVmmsc.nodes.heat.lb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ee10af8a-c8bf-4455-808e-5550050d4ea9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "771ca169-bfac-4306-9748-b2ae804852f9",
+        "invariantUUID": "ae627e8b-374b-41ac-9efb-25672099c7dd",
+        "name": "Vscp0502.nodes.heat.be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/771ca169-bfac-4306-9748-b2ae804852f9/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "72682bb7-94ca-47a7-9917-826f62e3d00d",
+        "invariantUUID": "7bb2f20e-10af-485b-9c7c-9fba2c016856",
+        "name": "1607Mog.nodes.heat.sm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/72682bb7-94ca-47a7-9917-826f62e3d00d/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "1fa641db-1d77-4242-8d0b-c0aa5f88fe2e",
+        "invariantUUID": "22464824-fcbe-4760-9aa7-f2d110e5c0f8",
+        "name": "1607MogMultiMembersVolume.nodes.heat.cm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1fa641db-1d77-4242-8d0b-c0aa5f88fe2e/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "897dcb54-bb55-4311-8c0e-b663781d7e4f",
+        "invariantUUID": "c223adda-e48d-487d-98e8-654bbb8268af",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolume.nodes.heat.lb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/897dcb54-bb55-4311-8c0e-b663781d7e4f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "a60c5230-8201-4b50-84a8-c905128c2bc2",
+        "invariantUUID": "59399b2e-66ed-4823-aa27-189fdb466045",
+        "name": "AppcTest.nodes.heat.smp",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a60c5230-8201-4b50-84a8-c905128c2bc2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "173c32b5-44c8-4404-ba18-32d9de49afae",
+        "invariantUUID": "c247493b-15a4-47af-bb6b-c664cb5a4d37",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolume.nodes.heat.eca_trx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/173c32b5-44c8-4404-ba18-32d9de49afae/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "59aa2d42-db52-438c-a69c-0b97a193abcd",
+        "invariantUUID": "31fc926f-cfc5-42bd-8955-42e68c113902",
+        "name": "TestConsol.nodes.heat.smp",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/59aa2d42-db52-438c-a69c-0b97a193abcd/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "0e6509c9-7d35-4daf-9086-9fe30fdd1275",
+        "invariantUUID": "9516ad03-b122-4738-ad6d-d9c2166cd75a",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolume.nodes.heat.nems_fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/0e6509c9-7d35-4daf-9086-9fe30fdd1275/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "e541a64c-9de7-4c71-b827-eb0f4d319e62",
+        "invariantUUID": "9952957d-d266-406e-ab7d-23a7fc154ea0",
+        "name": "1607MogMultiMembersVolume.nodes.heat.pd",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e541a64c-9de7-4c71-b827-eb0f4d319e62/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "5e448cd9-6dbd-4c31-98f2-caeceaf5efa7",
+        "invariantUUID": "3a97ded5-e8fc-42fa-b244-a6f91b610e08",
+        "name": "VfModule2.nodes.heat.lb",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5e448cd9-6dbd-4c31-98f2-caeceaf5efa7/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "d5c6a462-9d9a-46d4-a0b2-485300f34f0c",
+        "invariantUUID": "635abeeb-d903-44a8-9135-5d26e1ee41a1",
+        "name": "VmogVnf1.nodes.heat.psm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d5c6a462-9d9a-46d4-a0b2-485300f34f0c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "8678abfe-8cbd-42f2-aa78-ca47a1beaa14",
+        "invariantUUID": "4d02c8a5-e141-4d01-94ec-7a3b94afda97",
+        "name": "VmmscAic30MultiMembersMultiGroupsVolumeCs.nodes.heat.eca_trx",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8678abfe-8cbd-42f2-aa78-ca47a1beaa14/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "1c469da0-298f-41ea-94a2-aef82264e1e7",
+        "invariantUUID": "91530a04-e1f6-4242-abd2-f20630e1fa8f",
+        "name": "1607Mog.nodes.heat.oam",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1c469da0-298f-41ea-94a2-aef82264e1e7/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "c29e22e2-1a09-4164-a9a2-72d0e3f5df5b",
+        "invariantUUID": "a0e5c360-f0e7-4b8d-ac97-969b9dc5b187",
+        "name": "Vmmsc.nodes.heat.nems_be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c29e22e2-1a09-4164-a9a2-72d0e3f5df5b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "986b76dc-aca7-45b1-919c-398b770d5504",
+        "invariantUUID": "cd2f22e1-e21e-474b-a506-1bb4365aa106",
+        "name": "AppcTest.nodes.heat.fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/986b76dc-aca7-45b1-919c-398b770d5504/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "606f6c2b-a411-4644-a183-5487e3aed612",
+        "invariantUUID": "d67b05d1-119c-47a3-8b20-2babb53b42b3",
+        "name": "Vpe.nodes.heat.vmx_vpfe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/606f6c2b-a411-4644-a183-5487e3aed612/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "00695bbf-fa3f-47e4-96d7-973700a66f4f",
+        "invariantUUID": "d26ce6ce-b1f8-4cdc-955d-e2272563cff6",
+        "name": "TestPort.nodes.heat.smp",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/00695bbf-fa3f-47e4-96d7-973700a66f4f/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "d94275b4-ccfa-4096-bd7b-dd45ff6e84f2",
+        "invariantUUID": "56a1b1c7-6a6f-402b-890f-8e3a1cc56feb",
+        "name": "Vieccf.nodes.heat.plt",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d94275b4-ccfa-4096-bd7b-dd45ff6e84f2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "8beb2fe4-672e-46c3-8650-e2065ea429ea",
+        "invariantUUID": "be756449-fd9d-4889-83ad-41ff26a82f09",
+        "name": "Pxtc.nodes.heat.mts",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8beb2fe4-672e-46c3-8650-e2065ea429ea/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "c4b4f162-a616-45c6-b229-9833a78a46fd",
+        "invariantUUID": "b502eeb1-091c-41cf-b4ba-52f9ab6ecfcc",
+        "name": "Vpe.nodes.heat.vmx_vre",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c4b4f162-a616-45c6-b229-9833a78a46fd/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "95e982cd-551d-49b2-9600-04f1328b9ab5",
+        "invariantUUID": "26813b60-5437-4780-aaaa-9705b9d30357",
+        "name": "TestConsol.nodes.heat.be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/95e982cd-551d-49b2-9600-04f1328b9ab5/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "8316c6e3-7791-42cb-80fb-e57ed0809be6",
+        "invariantUUID": "5ca065b5-c2e3-4561-9dc6-58fc84c8398c",
+        "name": "Vscp0502.nodes.heat.smp",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8316c6e3-7791-42cb-80fb-e57ed0809be6/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "49cc354b-ea2e-48a9-a6b8-d414e6991898",
+        "invariantUUID": "b94ec614-4972-4355-ab2f-3c7068714581",
+        "name": "Ronytestcsar.nodes.heat.arb",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/49cc354b-ea2e-48a9-a6b8-d414e6991898/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rb844h"
+    },
+
+    {
+        "uuid": "cc0048fb-a464-4407-9907-5e760684bc7b",
+        "invariantUUID": "06aff944-cdab-42cd-a5a3-f2c2c65df4b2",
+        "name": "TestConsol.nodes.heat.fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/cc0048fb-a464-4407-9907-5e760684bc7b/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "bc1dea1b-5753-4d17-af6f-ac6050b3e281",
+        "invariantUUID": "76d0ef26-6721-4f11-ba1a-04c93e7154c3",
+        "name": "Vieccf.nodes.heat.app",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bc1dea1b-5753-4d17-af6f-ac6050b3e281/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "0b894e43-6d45-4c3d-95dd-2e80228055f3",
+        "invariantUUID": "ca679ac7-9d4b-4da1-8912-a262c5599692",
+        "name": "VfVolumeGroup.nodes.heat.oam",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/0b894e43-6d45-4c3d-95dd-2e80228055f3/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "2bb1e047-fa3b-41f5-9d29-ebbdbf01857c",
+        "invariantUUID": "988032f2-873e-4273-9075-17ffd47f0a7f",
+        "name": "VfModules1.nodes.heat.nems_be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2bb1e047-fa3b-41f5-9d29-ebbdbf01857c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "05c82d0d-826b-458c-8c81-9572298522a3",
+        "invariantUUID": "6e577da6-377d-46fb-84c0-3bfa4778062f",
+        "name": "Vscp0502.nodes.heat.fe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/05c82d0d-826b-458c-8c81-9572298522a3/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "c6809100-9349-4f98-a066-55b6f0cb8650",
+        "invariantUUID": "4d48d18e-baa3-41bb-8a07-3c553db1fbab",
+        "name": "Ronytestcsar.nodes.heat.eca",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c6809100-9349-4f98-a066-55b6f0cb8650/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rb844h"
+    },
+
+    {
+        "uuid": "abe50ede-b86c-415f-9f5f-235200433b51",
+        "invariantUUID": "c3cbaff7-a657-44d5-a0b3-cc65599b4fa8",
+        "name": "Csartest.nodes.heat.ltm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/abe50ede-b86c-415f-9f5f-235200433b51/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ss8214"
+    },
+
+    {
+        "uuid": "3ce1be04-57ad-4deb-bdba-b18447374a88",
+        "invariantUUID": "b08eef7d-1dd5-4996-9171-7822b48e9a9d",
+        "name": "Vprobe.nodes.qrouter",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3ce1be04-57ad-4deb-bdba-b18447374a88/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "f6406bba-b64c-4211-aaee-773cde6e7d54",
+        "invariantUUID": "490345fc-f6fe-49a6-b18d-6dcacca02a7e",
+        "name": "VscpaasTest2.nodes.be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f6406bba-b64c-4211-aaee-773cde6e7d54/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "d48751e4-07de-4208-9307-7ecb775fe7ca",
+        "invariantUUID": "ca0ae539-78d1-461a-a7ff-3dd663c85e2d",
+        "name": "pnf-test",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d48751e4-07de-4208-9307-7ecb775fe7ca/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "cdb99a41-e2ee-4b59-9107-13f0b2282ccc",
+        "invariantUUID": "6a828e59-cbee-4dc2-aa67-ee35a6eafd50",
+        "name": "Dev2devnfod.nodes.VF",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/cdb99a41-e2ee-4b59-9107-13f0b2282ccc/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "99b9dce6-ed85-4d76-aed9-40c020ba4607",
+        "invariantUUID": "c9e5dab6-eba5-4cc2-abff-305f8f508da1",
+        "name": "py-port-test",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/99b9dce6-ed85-4d76-aed9-40c020ba4607/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "acf4e0fa-17f9-4ac8-9fb2-2301cf942fcf",
+        "invariantUUID": "02cd4db0-a29b-4318-9b3b-a123b9103b85",
+        "name": "VfNoLicense.nodes.ppd",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/acf4e0fa-17f9-4ac8-9fb2-2301cf942fcf/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "fb6a8f39-84be-49a2-b551-26ce99ee6853",
+        "invariantUUID": "501e3f78-ae62-4551-bc47-a9afa8f29034",
+        "name": "ScpTestVsp.nodes.be",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fb6a8f39-84be-49a2-b551-26ce99ee6853/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "b09ec9ff-af66-4bdc-82d4-01a918e8e3ca",
+        "invariantUUID": "02d284b6-feb3-4762-be9b-8f6955f6b0b9",
+        "name": "SdWanTestVsp.nodes.DUMMY_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b09ec9ff-af66-4bdc-82d4-01a918e8e3ca/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "83256b0a-cb38-45de-b5f0-d2d4390f543d",
+        "invariantUUID": "c291bec4-fe31-4e6d-9126-f5ce104b84d1",
+        "name": "Sangeetha.nodes.vCTS_server",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/83256b0a-cb38-45de-b5f0-d2d4390f543d/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "16ba1289-5f91-4f07-914a-d2456d11c673",
+        "invariantUUID": "aafce2ad-8d15-4f53-88f5-9b3a1662f14e",
+        "name": "VpeAvRenana.nodes.vmx_vpfe",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/16ba1289-5f91-4f07-914a-d2456d11c673/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "93fe78c8-1350-4b1f-ac5f-ede411b992a0",
+        "invariantUUID": "a11f76ed-0f0a-4093-9c94-5f5eb6c450b5",
+        "name": "VfNoLicense.nodes.psm",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/93fe78c8-1350-4b1f-ac5f-ede411b992a0/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "1e5eafc0-1888-4247-9762-9ebd1383d0ae",
+        "invariantUUID": "076ddfc3-8a9d-4289-b71e-a707d359b149",
+        "name": "VnfcVspTest.nodes.heat.oam",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1e5eafc0-1888-4247-9762-9ebd1383d0ae/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "01faf05a-70b9-442f-be62-9884ea4cdf33",
+        "invariantUUID": "cd5937cc-37ef-4a85-ba10-2568628d4c1b",
+        "name": "VfDemor.nodes.vmx_vpfe",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/01faf05a-70b9-442f-be62-9884ea4cdf33/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "4583652c-e066-4a5c-88b8-fbcdd8619d2c",
+        "invariantUUID": "216e59ce-6940-4085-949e-9b47d9756383",
+        "name": "VfDemor.nodes.heat.vmx_vre",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4583652c-e066-4a5c-88b8-fbcdd8619d2c/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "16f02038-00f6-4a11-ab98-2a2154e98924",
+        "invariantUUID": "479cf5fc-8df3-49ec-9e85-da7899420b61",
+        "name": "VscpaasTest2.nodes.fe_0",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/16f02038-00f6-4a11-ab98-2a2154e98924/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VFC",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    }
+]

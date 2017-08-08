@@ -1,0 +1,35 @@
+[
+    {
+        "uuid": "29018914-966c-442d-9d08-251b9dc45b8e",
+        "invariantUUID": "a33ed748-3477-4434-b3f3-b5560f5e7d9b",
+        "name": "vcts4",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8e/toscaModel",
+        "category": "Application L4+",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535",
+        "distributionStatus":"DISTRIBUTED"
+    },
+    {
+        "uuid": "29018914-966c-442d-9d08-251b9dc45b8f",
+        "invariantUUID": "a33ed748-3477-4434-b3f3-b5560f5e7d9c",
+        "name": "vcts4",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8e/toscaModel",
+        "category": "Application L4+",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535",
+        "distributionStatus":"DISTRIBUTED"
+    },
+        {
+        "uuid": "29018914-966c-442d-9d08-251b9dc45b7f",
+        "invariantUUID": "a33ed748-3477-4434-b3f3-b5560f5e7d8c",
+        "name": "vcts5",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8e/toscaModel",
+        "category": "Application L4+",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535",
+        "distributionStatus":"DISTRIBUTED"
+    }
+]

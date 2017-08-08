@@ -1,0 +1,126 @@
+{
+    "uuid": "585822c7-4027-4f84-ba50-e9248606f136",
+    "invariantUUID": "585822c7-4027-4f84-ba50-e9248606f134",
+    "name": "resourceName-1",
+    "version": "3.0",
+    "toscaModelURL": "/sdc/v1/catalog/resources/585822c7-4027-4f84-ba50-e9248606f136/toscaModel",
+    "category": "Network L2-3",
+    "subCategory": "Router",
+    "resourceType": "VF",
+    "lifecycleState": "CERTIFIED",
+    "lastUpdaterUserId": "m08743",
+    "lastUpdaterFullName": "Three ASDCMech",
+    "toscaResourceName": "org.openecomp.resource.vf.ClampDev",
+    "resources": 
+    [
+        {
+            "resourceInstanceName": "abstract_virc_fe_be_0",
+            "resourceName": "CLAMP-Dev-nodes.virc_fe_be_0",
+            "resourceInvariantUUID": "133dd665-fca8-4e8b-8126-9e74a8d23bf5",
+            "resourceVersion": "1.0",
+            "resoucreType": "CVFC",
+            "resourceUUID": "a0475018-1e7e-4ddd-8bee-33cbf958c2e6"
+        },
+
+        {
+            "resourceInstanceName": "virc_fe_be_RSG",
+            "resourceName": "SecurityRules",
+            "resourceInvariantUUID": "dd31d2de-0a7f-4198-8966-3a04100fbfe3",
+            "resourceVersion": "1.0",
+            "resoucreType": "VFC",
+            "resourceUUID": "d57e57d2-e3c6-470d-8d16-e6ea05f536c5"
+        },
+
+        {
+            "resourceInstanceName": "abstract_virc_fe_be_1",
+            "resourceName": "CLAMP-Dev-nodes.virc_fe_be_1",
+            "resourceInvariantUUID": "096ff622-d7ea-4482-b7fe-8c7d99e7d7c6",
+            "resourceVersion": "1.0",
+            "resoucreType": "VFC",
+            "resourceUUID": "2c8f1219-8000-4001-aa13-496a0396d40f"
+        },
+
+        {
+            "resourceInstanceName": "virc_fe_be_volume_1",
+            "resourceName": "CinderVolume",
+            "resourceInvariantUUID": "61dc85d2-5e17-480e-a71f-8f6d59a0ead2",
+            "resourceVersion": "5.0",
+            "resoucreType": "VFC",
+            "resourceUUID": "b4288e07-597a-44a2-aa98-ad36e551a39d"
+        },
+
+        {
+            "resourceInstanceName": "virc_fe_be_volume_0",
+            "resourceName": "CinderVolume",
+            "resourceInvariantUUID": "61dc85d2-5e17-480e-a71f-8f6d59a0ead2",
+            "resourceVersion": "5.0",
+            "resoucreType": "VFC",
+            "resourceUUID": "b4288e07-597a-44a2-aa98-ad36e551a39d"
+        }
+    ],
+
+    "artifacts": 
+    [
+        {
+            "artifactName": "vf-license-model.xml",
+            "artifactType": "VF_LICENSE",
+            "artifactURL": "/sdc/v1/catalog/resources/91854bc8-534f-4249-899c-bbdc06f83436/artifacts/16ec4971-5f3d-4f29-b22e-4c9ede6fdd97",
+            "artifactDescription": "VF license file",
+            "artifactChecksum": "MGUwM2MzZmMyNTBhNzlmNjY2NjJmMTk1MjMwNjRlNzY=",
+            "artifactUUID": "16ec4971-5f3d-4f29-b22e-4c9ede6fdd97",
+            "artifactVersion": "1",
+            "artifactLabel": "vflicense",
+            "artifactGroupType": "DEPLOYMENT"
+        },
+
+        {
+            "artifactName": "base_fe_be.yaml",
+            "artifactType": "HEAT",
+            "artifactURL": "/sdc/v1/catalog/resources/91854bc8-534f-4249-899c-bbdc06f83436/artifacts/18fd7704-9fe7-40c6-bde2-a1753111a1af",
+            "artifactDescription": "created from csar",
+            "artifactTimeout": 60,
+            "artifactChecksum": "NTUyYjdlMDA1MGNmOGViZjA4OWQyOWEzNGU3NDM4OTk=",
+            "artifactUUID": "18fd7704-9fe7-40c6-bde2-a1753111a1af",
+            "artifactVersion": "2",
+            "artifactLabel": "heat1",
+            "artifactGroupType": "DEPLOYMENT"
+        },
+
+        {
+            "artifactName": "vendor-license-model.xml",
+            "artifactType": "VENDOR_LICENSE",
+            "artifactURL": "/sdc/v1/catalog/resources/91854bc8-534f-4249-899c-bbdc06f83436/artifacts/7ad72757-b35e-4084-954d-9f9d447f7a98",
+            "artifactDescription": " Vendor license file",
+            "artifactChecksum": "ZTFlYWYxYmEzY2ZiMmZmMDMyNWEyMmM2ZjI4ZjM1NTY=",
+            "artifactUUID": "7ad72757-b35e-4084-954d-9f9d447f7a98",
+            "artifactVersion": "1",
+            "artifactLabel": "vendorlicense",
+            "artifactGroupType": "DEPLOYMENT"
+        },
+
+        {
+            "artifactName": "user_data.sh",
+            "artifactType": "HEAT_ARTIFACT",
+            "artifactURL": "/sdc/v1/catalog/resources/91854bc8-534f-4249-899c-bbdc06f83436/artifacts/dff5a82d-5456-4653-87e5-4a8c52a9a67b",
+            "artifactDescription": "created from csar",
+            "artifactChecksum": "NmUyYjBmYzk5MDk3Mjc0NWNhZGU2ZGY1ZTE3YmU3ZjU=",
+            "artifactUUID": "dff5a82d-5456-4653-87e5-4a8c52a9a67b",
+            "artifactVersion": "1",
+            "artifactLabel": "heatartifact2",
+            "artifactGroupType": "DEPLOYMENT"
+        },
+        {
+            "artifactName": "eNodeB_Thresholds.csv",
+            "artifactType": "OTHER",
+            "artifactURL": "/sdc/v1/catalog/resources/84855843-5247-4e97-a2bd-5395a510253b/artifacts/d57ac7ec-f3c3-4793-983a-c75ac3a43153",
+            "artifactDescription": "kpis with nfNamingCode",
+            "artifactChecksum": "YTc1MDU0ZDFhODUwMGM5YmIwM2FmMWUzMmRiY2NlMGI=",
+            "artifactUUID": "d57ac7ec-f3c3-4793-983a-c75ac3a43153",
+            "artifactVersion": "1",
+            "artifactLabel": "kpis",
+            "artifactGroupType": "DEPLOYMENT"
+        }
+    ],
+
+    "description": "Description"
+}

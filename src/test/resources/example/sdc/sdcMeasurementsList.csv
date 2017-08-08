@@ -1,0 +1,17 @@
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRAATTCBRA')].Value,thresholdName,PMRAATTCBRA ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRASUCCCBRA')].Value,thresholdName,PMRASUCCCBRA  ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMCELLDOWNTIMEAUTO')].Value,thresholdName,PMCELLDOWNTIMEAUTO   ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMCELLDOWNTIMEMAN')].Value,thresholdName,PMCELLDOWNTIMEMAN  ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRRCCONNESTABATT')].Value,thresholdName,PMRRCCONNESTABATT ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRRCCONNESTABSUCC')].Value,thresholdName,PMRRCCONNESTABSUCC  ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMCELLDOWNTIMEAUTO')].Value,thresholdName,PMCELLDOWNTIMEAUTO  ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMCELLDOWNTIMEMAN')].Value,thresholdName,PMCELLDOWNTIMEMAN  ,nfNamingCode,ENBE
+
+fieldPath,$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRRCCONNESTABFAILCELLLATENCY')].Value,thresholdName,PMRRCCONNESTABFAILCELLLATENCY,nfNamingCode,ENBE

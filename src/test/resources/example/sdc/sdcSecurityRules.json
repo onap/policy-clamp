@@ -1,0 +1,15 @@
+{
+    "uuid": "d57e57d2-e3c6-470d-8d16-e6ea05f536c5",
+    "invariantUUID": "dd31d2de-0a7f-4198-8966-3a04100fbfe3",
+    "name": "SecurityRules",
+    "version": "1.0",
+    "toscaModelURL": "/sdc/v1/catalog/resources/d57e57d2-e3c6-470d-8d16-e6ea05f536c5/toscaModel",
+    "category": "Generic",
+    "subCategory": "Rules",
+    "resourceType": "VFC",
+    "lifecycleState": "CERTIFIED",
+    "lastUpdaterUserId": "jh0003",
+    "lastUpdaterFullName": "Jimmy Hendrix",
+    "toscaResourceName": "org.openecomp.resource.vfc.rules.nodes.heat.network.neutron.SecurityRules",
+    "description": "Configuration of policy rules to be applied on ports."
+}

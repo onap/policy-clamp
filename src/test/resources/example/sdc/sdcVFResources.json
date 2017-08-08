@@ -1,0 +1,1574 @@
+[
+    {
+        "uuid": "585822c7-4027-4f84-ba50-e9248606f136",
+        "invariantUUID": "585822c7-4027-4f84-ba50-e9248606f134",
+        "name": "resourceName-1",
+        "version": "3.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/585822c7-4027-4f84-ba50-e9248606f136/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Router",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "56389a7d-86db-49e1-aada-62aebf023f23",
+        "invariantUUID": "18a2c267-50a9-42ae-a3ec-4d55dd6df225",
+        "name": "shayVF",
+        "version": "0.2",
+        "toscaModelURL": "/sdc/v1/catalog/resources/56389a7d-86db-49e1-aada-62aebf023f23/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Load Balancer",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ss8214"
+    },
+
+    {
+        "uuid": "2ce2fe72-7f8d-4184-87e6-5fd7aa650acd",
+        "invariantUUID": "9aa658ae-8f6d-49bc-810d-8a544d6b12f2",
+        "name": "Dev2DevNFODVf_17_July",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2ce2fe72-7f8d-4184-87e6-5fd7aa650acd/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sw594b"
+    },
+
+    {
+        "uuid": "ae841bc4-6534-4d12-b8a4-ddd07a062a7e",
+        "invariantUUID": "926f6d60-bf84-46c4-9ed7-f0bb774e5184",
+        "name": "Sangeetha",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ae841bc4-6534-4d12-b8a4-ddd07a062a7e/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Database",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "ss8214"
+    },
+
+    {
+        "uuid": "0c940638-618b-450e-aa99-b991a3200d1a",
+        "invariantUUID": "2d4d1e44-14f7-41e0-a37a-f8a6507c86f6",
+        "name": "Eli",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/0c940638-618b-450e-aa99-b991a3200d1a/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Contrail Route",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "el489u"
+    },
+
+    {
+        "uuid": "91854bc8-534f-4249-899c-bbdc06f83436",
+        "invariantUUID": "5e9c180a-44f1-45ce-a7bc-95b493ae9fd3",
+        "name": "CLAMP-Dev",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/91854bc8-534f-4249-899c-bbdc06f83436/toscaModel",
+        "category": "Generic",
+        "subCategory": "Network Elements",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "168b696d-8ed5-41ff-8158-b8adadfcedfa",
+        "invariantUUID": "9429f628-f58d-492e-aa97-de9bd9f98043",
+        "name": "ariel_test_vf001",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/168b696d-8ed5-41ff-8158-b8adadfcedfa/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Application Server",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "290603da-0c41-4120-b737-f800c6031a58",
+        "invariantUUID": "f22a9390-6d25-4fa7-a1dd-8d0121f6aacf",
+        "name": "VF-example",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/290603da-0c41-4120-b737-f800c6031a58/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "LAN Connectors",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "271b4961-e4dc-42d5-8c0c-4da8685973ac",
+        "invariantUUID": "822e9970-a3fd-4d62-8f00-5819323cb54d",
+        "name": "vf_AR",
+        "version": "3.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/271b4961-e4dc-42d5-8c0c-4da8685973ac/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "b109217b-c959-4228-b30d-8f376668174c",
+        "invariantUUID": "5d616289-3563-48d8-b41a-15a633d5f03c",
+        "name": "Map Microservice",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b109217b-c959-4228-b30d-8f376668174c/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "44b0a91c-8d63-4304-a637-2eda78a86023",
+        "invariantUUID": "9b2e7539-b183-4a59-82ea-842494fe19e0",
+        "name": "enrich snmp",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/44b0a91c-8d63-4304-a637-2eda78a86023/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "418a2ea5-6a8a-4498-9d0f-602a809552d6",
+        "invariantUUID": "58d0e85f-3161-47c9-981d-3cbcf1be56b6",
+        "name": "renana",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/418a2ea5-6a8a-4498-9d0f-602a809552d6/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Media Servers",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "13ae8064-344f-4d67-acd2-810516927f48",
+        "invariantUUID": "69b75e6e-a839-4a91-93d7-821610517cb5",
+        "name": "Dror1",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/13ae8064-344f-4d67-acd2-810516927f48/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "6510ee54-2ccb-406c-a006-8a67b589eecd",
+        "invariantUUID": "2ef1c565-6a85-424e-80ab-8efe14fefe9f",
+        "name": "SD-WAN-Test-VSP",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/6510ee54-2ccb-406c-a006-8a67b589eecd/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "WAN Connectors",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "c3c0a9e1-bcda-4b46-a7d6-3916ea3fc1ca",
+        "invariantUUID": "21052af3-0f73-4f82-af68-03123ed49d41",
+        "name": "rrrr",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c3c0a9e1-bcda-4b46-a7d6-3916ea3fc1ca/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "IP Mux Demux",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ys278k"
+    },
+
+    {
+        "uuid": "10b535db-b01b-4a4b-aeef-97423d2d2093",
+        "invariantUUID": "761ed279-e5ff-43e2-8a05-b160224b7f54",
+        "name": "StringMatchingMS",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/10b535db-b01b-4a4b-aeef-97423d2d2093/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "5ea777fc-a3fe-4688-aefd-b1297bd36381",
+        "invariantUUID": "6d1eb2c8-ae57-4d32-bd63-b47fd503aafb",
+        "name": "map snmp",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5ea777fc-a3fe-4688-aefd-b1297bd36381/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "8d366342-8cfa-431b-82ca-013f7f06af50",
+        "invariantUUID": "822e9970-a3fd-4d62-8f00-5819323cb54d",
+        "name": "vf_AR",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8d366342-8cfa-431b-82ca-013f7f06af50/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFICATION_IN_PROGRESS",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "a804fb4e-33ce-4000-963f-d270a0593de2",
+        "invariantUUID": "6eb4b1ca-75ac-454b-a145-1ea27157bfac",
+        "name": "IP_Mux_Demux",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a804fb4e-33ce-4000-963f-d270a0593de2/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "IP Mux Demux",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "le056g"
+    },
+
+    {
+        "uuid": "9bed9e17-7bfa-4a92-9474-3bcf7187e206",
+        "invariantUUID": "853a6d9a-3004-462c-9142-631eb777a16c",
+        "name": "newShayVFMCT",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/9bed9e17-7bfa-4a92-9474-3bcf7187e206/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ss8214"
+    },
+
+    {
+        "uuid": "cae08b64-2784-4883-8dd0-747f6ebb94c4",
+        "invariantUUID": "3d51584c-aa2e-454a-a17a-970b51bbd668",
+        "name": "VES Collector Lisa",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/cae08b64-2784-4883-8dd0-747f6ebb94c4/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "lr0306"
+    },
+
+    {
+        "uuid": "d06b73ef-b908-44cd-8c17-11f1366c4f93",
+        "invariantUUID": "0ad06008-5ecc-4a24-a123-74fc23d7bf89",
+        "name": "shaytookmyvf",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d06b73ef-b908-44cd-8c17-11f1366c4f93/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "11ff4510-008f-4818-87aa-d22e1b26d03e",
+        "invariantUUID": "5d138333-7a0f-432b-ad74-009a308c91c5",
+        "name": "VF- DemoR",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/11ff4510-008f-4818-87aa-d22e1b26d03e/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Router",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "0ff82855-b0aa-4b0d-8451-82aa978ae4d5",
+        "invariantUUID": "9aa658ae-8f6d-49bc-810d-8a544d6b12f2",
+        "name": "Dev2DevNFODVf_17_July",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/0ff82855-b0aa-4b0d-8451-82aa978ae4d5/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "77d7e04f-89db-405f-ad53-8c2cc5bc721c",
+        "invariantUUID": "f632a0f0-d568-40aa-9342-341d603891e1",
+        "name": "vf_test",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/77d7e04f-89db-405f-ad53-8c2cc5bc721c/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "17dbd4a7-6c4d-4064-857e-8cbbc8303ed5",
+        "invariantUUID": "f632a0f0-d568-40aa-9342-341d603891e1",
+        "name": "vf_test",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/17dbd4a7-6c4d-4064-857e-8cbbc8303ed5/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "2c2fcf53-43af-41f4-8fec-0c729ca3cb4c",
+        "invariantUUID": "fc9af990-1ec6-4969-bd0d-973ae1ceba6f",
+        "name": "supplement snmp",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2c2fcf53-43af-41f4-8fec-0c729ca3cb4c/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "57cc5cac-15a0-4c39-aff4-426930e55057",
+        "invariantUUID": "b0d77932-dadd-4bde-82c9-0bcc367cb81c",
+        "name": "Dev2DevIpAssign_24_07",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/57cc5cac-15a0-4c39-aff4-426930e55057/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "4859989b-5663-4ff5-ab2e-68b7bd1e43c2",
+        "invariantUUID": "489220ac-8a2f-44b8-97a3-12af3280aa0e",
+        "name": "Cognitor",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4859989b-5663-4ff5-ab2e-68b7bd1e43c2/toscaModel",
+        "category": "Generic",
+        "subCategory": "Abstract",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "sj2381"
+    },
+
+    {
+        "uuid": "5de1a119-461f-4ff4-8aa6-6f194e79e861",
+        "invariantUUID": "de9c75f4-7cc1-4a9c-8642-4fa9ee730bd2",
+        "name": "sang_vsp",
+        "version": "0.2",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5de1a119-461f-4ff4-8aa6-6f194e79e861/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "af1041a9-0879-4fc1-9b62-42cf3eda5feb",
+        "invariantUUID": "4ed98cc2-22af-40c9-a031-86998cc12838",
+        "name": "FOI collector",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/af1041a9-0879-4fc1-9b62-42cf3eda5feb/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "271b4961-e4dc-42d5-8c0c-4da8685973ac",
+        "invariantUUID": "822e9970-a3fd-4d62-8f00-5819323cb54d",
+        "name": "vf_AR",
+        "version": "2.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/271b4961-e4dc-42d5-8c0c-4da8685973ac/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFICATION_IN_PROGRESS",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "bdc9b09f-246e-407f-9ccd-313a240ced95",
+        "invariantUUID": "1b6e3f8e-c8e2-4e66-8d44-8c7186c6eb14",
+        "name": "VFTest5.4",
+        "version": "0.3",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bdc9b09f-246e-407f-9ccd-313a240ced95/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Tunnel XConnect",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rb844h"
+    },
+
+    {
+        "uuid": "bbc70754-b046-4d8b-9ba5-1d4e96180788",
+        "invariantUUID": "c8e4743e-f7bd-4f04-8b7d-270f2de46c34",
+        "name": "VNFC_VSP_Test",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/bbc70754-b046-4d8b-9ba5-1d4e96180788/toscaModel",
+        "category": "Network Connectivity",
+        "subCategory": "Virtual Links",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "7cb8a6c7-c4fb-4d46-9233-8b247bd70124",
+        "invariantUUID": "f607e055-7af8-470d-86d3-1e2236c1c5b9",
+        "name": "syslog",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/7cb8a6c7-c4fb-4d46-9233-8b247bd70124/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "ce7f92a3-d5a8-4830-b1f9-72d32ff0f2bc",
+        "invariantUUID": "b0d77932-dadd-4bde-82c9-0bcc367cb81c",
+        "name": "Dev2DevIpAssign_24_07",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ce7f92a3-d5a8-4830-b1f9-72d32ff0f2bc/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sw594b"
+    },
+
+    {
+        "uuid": "f721bc81-be73-4fe5-90ab-ac9544916b74",
+        "invariantUUID": "5ebab19c-76ab-4310-96c1-64ab03ae7f08",
+        "name": "New_vendor_mdns",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f721bc81-be73-4fe5-90ab-ac9544916b74/toscaModel",
+        "category": "Generic",
+        "subCategory": "Database",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "6b934b9d-0785-4b46-8321-943a12b8031b",
+        "invariantUUID": "785012c2-fdd8-450d-8fa2-81ff60e25f1e",
+        "name": "vMMSC_AIC3.0__multi_members_multi_groups_volume.cs",
+        "version": "0.2",
+        "toscaModelURL": "/sdc/v1/catalog/resources/6b934b9d-0785-4b46-8321-943a12b8031b/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Media Servers",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "715426cc-acea-4dd9-9bbe-d338d40b0884",
+        "invariantUUID": "0879d8ba-7207-4ec4-9cc7-2eb695ef6876",
+        "name": "vmme_1710",
+        "version": "0.2",
+        "toscaModelURL": "/sdc/v1/catalog/resources/715426cc-acea-4dd9-9bbe-d338d40b0884/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "04addafc-2e5e-4381-8698-79a26acd5825",
+        "invariantUUID": "d348d94a-b49f-42ad-a5a2-6f94ebf58b75",
+        "name": "AVCXSADDAS",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/04addafc-2e5e-4381-8698-79a26acd5825/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "IP Mux Demux",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "yy815m"
+    },
+
+    {
+        "uuid": "3962491f-c310-4a24-9f13-291d2acf2f08",
+        "invariantUUID": "5d138333-7a0f-432b-ad74-009a308c91c5",
+        "name": "VF- DemoR",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3962491f-c310-4a24-9f13-291d2acf2f08/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Router",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFICATION_IN_PROGRESS",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "191128bc-1756-469b-8973-fcc6236c72c1",
+        "invariantUUID": "c1fae22d-0fdb-42fe-96a7-822f19503f1b",
+        "name": "Scp-tempalte-test",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/191128bc-1756-469b-8973-fcc6236c72c1/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "READY_FOR_CERTIFICATION",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "9a4c7c75-b54b-4240-b3bf-2ead9b7427d1",
+        "invariantUUID": "b595ea39-21e7-4fee-aedb-ef68506d581d",
+        "name": "test-VF",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/9a4c7c75-b54b-4240-b3bf-2ead9b7427d1/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "c3d5e222-28b4-456f-8488-ff3b4846be60",
+        "invariantUUID": "92ff9c15-3b67-410a-b8ed-aed627656a35",
+        "name": "TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEST",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c3d5e222-28b4-456f-8488-ff3b4846be60/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Security Zone",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "nk909r"
+    },
+
+    {
+        "uuid": "c8663b6e-bbe2-401d-9500-ec5425463655",
+        "invariantUUID": "925243cf-e342-4d86-8558-63899fbe88da",
+        "name": "VF Module LDSA",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c8663b6e-bbe2-401d-9500-ec5425463655/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Load Balancer",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "fda7c330-cb1e-4d43-9e97-87a5800b87c0",
+        "invariantUUID": "cc9b643b-8513-449b-a3f7-3c034b3f52a4",
+        "name": "composition",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/fda7c330-cb1e-4d43-9e97-87a5800b87c0/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Utility",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "27adaf15-a0c2-4889-bc10-b3fdb0bb038c",
+        "invariantUUID": "002b36df-41cd-4119-ab8d-0e9fae3cd3cb",
+        "name": "cdap_host",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/27adaf15-a0c2-4889-bc10-b3fdb0bb038c/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Utility",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "84855843-5247-4e97-a2bd-5395a510253b",
+        "invariantUUID": "755deb72-d767-4656-98b0-9d8ed288e9e6",
+        "name": "TestClamp",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/84855843-5247-4e97-a2bd-5395a510253b/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Application Server",
+        "resourceType": "VF",
+        "lifecycleState": "READY_FOR_CERTIFICATION",
+        "lastUpdaterUserId": "rx827p"
+    },
+
+    {
+        "uuid": "e01dfc8f-2529-423b-9765-08b57df6ba51",
+        "invariantUUID": "6c7aaec2-59eb-41d9-8681-b7f976ab668d",
+        "name": "eNodeB-vf",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e01dfc8f-2529-423b-9765-08b57df6ba51/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Application Server",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFICATION_IN_PROGRESS",
+        "lastUpdaterUserId": "rx827p"
+    },
+
+    {
+        "uuid": "d26e8473-b1c9-4751-bf7c-be0e10ba71ac",
+        "invariantUUID": "e06a2a94-5ff9-4ab7-879f-c2d5cfaef1ca",
+        "name": "tdy",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d26e8473-b1c9-4751-bf7c-be0e10ba71ac/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Tunnel XConnect",
+        "resourceType": "VF",
+        "lifecycleState": "READY_FOR_CERTIFICATION",
+        "lastUpdaterUserId": "rb844h"
+    },
+
+    {
+        "uuid": "038601f9-f242-49ab-8c19-08b95f34f7bf",
+        "invariantUUID": "0f183d4f-875b-4e7b-a23d-b9d68d81e0db",
+        "name": "Highland Park",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/038601f9-f242-49ab-8c19-08b95f34f7bf/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "25781e10-5fdd-499c-869d-0d70d61843df",
+        "invariantUUID": "f68b1982-a6ab-4849-b548-0d35655f4410",
+        "name": "Mikes VF",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/25781e10-5fdd-499c-869d-0d70d61843df/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "mh677g"
+    },
+
+    {
+        "uuid": "c1c02cff-855f-438e-85f8-40c362874896",
+        "invariantUUID": "64cb5201-90d4-4cab-a6a9-f7416eeb307f",
+        "name": "PXTC",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c1c02cff-855f-438e-85f8-40c362874896/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Web Server",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "837c2fee-c2b2-4e95-ad48-dd69772d99bd",
+        "invariantUUID": "e48b3ea8-39bc-41eb-84bf-f5ef267d31e4",
+        "name": "vMOG VNF 1",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/837c2fee-c2b2-4e95-ad48-dd69772d99bd/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Gateway",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "29018914-966c-442d-9d08-251b9dc45b8e",
+        "invariantUUID": "a33ed748-3477-4434-b3f3-b5560f5e7d9b",
+        "name": "vcts3",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8e/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Application Server",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "6906502e-6c2c-4b6f-8a3e-a2283f13cd69",
+        "invariantUUID": "fae890f6-4cdc-4e89-9502-3b1491c90393",
+        "name": "Generic VNF Source",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/6906502e-6c2c-4b6f-8a3e-a2283f13cd69/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Source",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "4168799c-a51f-4664-a5e9-f75bedda2a1c",
+        "invariantUUID": "55befb8d-81db-4ac0-8820-8ec582f8147b",
+        "name": "AppleVF",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4168799c-a51f-4664-a5e9-f75bedda2a1c/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "nk909r"
+    },
+
+    {
+        "uuid": "28c11fbd-a859-4819-b8c7-555b4ed05a7f",
+        "invariantUUID": "ab6094d3-ffe3-4386-b1c2-d6e0dbf103f3",
+        "name": "VF",
+        "version": "0.2",
+        "toscaModelURL": "/sdc/v1/catalog/resources/28c11fbd-a859-4819-b8c7-555b4ed05a7f/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ym903w"
+    },
+
+    {
+        "uuid": "dad125b7-cd8a-4fbe-a4ad-2b04944079da",
+        "invariantUUID": "dd3c68ac-5e6c-4b22-bea3-44fd7d6a6097",
+        "name": "Mazav",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/dad125b7-cd8a-4fbe-a4ad-2b04944079da/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Database",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "1e7f07c7-ff4c-40a6-95f6-a9b05f138027",
+        "invariantUUID": "cfff70d2-f942-4b25-b2ca-e64f64af511d",
+        "name": "vMMSC_AIC3.0__multi_members_multi_groups_volume",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1e7f07c7-ff4c-40a6-95f6-a9b05f138027/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Media Servers",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "yy815m"
+    },
+
+    {
+        "uuid": "2539b088-8e74-48d5-8401-77200be23f11",
+        "invariantUUID": "24ff5476-cabe-4cb5-99c8-e0f9ace75412",
+        "name": "AlinaVSP",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2539b088-8e74-48d5-8401-77200be23f11/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "8bebc883-1961-4d2f-9c34-b8a9f56dd6bf",
+        "invariantUUID": "49241b40-9bd1-4d05-83a9-b097f40f4cc0",
+        "name": "MonitoringVSP",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8bebc883-1961-4d2f-9c34-b8a9f56dd6bf/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "e0acc751-00cf-4f45-ac9d-23eb9cfc106d",
+        "invariantUUID": "1181d1c5-2524-40c2-bc81-e40dd813d70f",
+        "name": "Oren",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e0acc751-00cf-4f45-ac9d-23eb9cfc106d/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Service Admin",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ol664w"
+    },
+
+    {
+        "uuid": "2e42bac2-318a-410c-b8ff-3b3a31351be7",
+        "invariantUUID": "b2b88a73-5c55-4984-99dd-a35c55935d14",
+        "name": "SCP-Test-VSP",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2e42bac2-318a-410c-b8ff-3b3a31351be7/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "1a2bc1db-c4b3-4c26-837c-1f16b4e4eed0",
+        "invariantUUID": "869a4e40-2aac-42f6-9520-51d18a7bd5e0",
+        "name": "Vscpaas_Test2",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1a2bc1db-c4b3-4c26-837c-1f16b4e4eed0/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "52150d50-0b95-4056-b07a-abcf6414754e",
+        "invariantUUID": "cc4e47f7-360d-425b-a563-e870203d2d48",
+        "name": "SNMP Trap Collector",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/52150d50-0b95-4056-b07a-abcf6414754e/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "a36b04b6-6756-4860-9cbb-66a72d02361f",
+        "invariantUUID": "35841fd9-e768-466a-9a08-fd9f7dbef98d",
+        "name": "Vf-no-license",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/a36b04b6-6756-4860-9cbb-66a72d02361f/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Media Servers",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "8a1c4ce1-f132-4e05-92c1-91386689ddf5",
+        "invariantUUID": "4bd0b375-cec3-4da8-a6fb-028b523da60e",
+        "name": "vprobe",
+        "version": "0.2",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8a1c4ce1-f132-4e05-92c1-91386689ddf5/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Application Server",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m08740"
+    },
+
+    {
+        "uuid": "4ae669b4-778a-4f13-bf42-99da0c805414",
+        "invariantUUID": "17ba1436-2800-4bcb-b066-0484d119ea8d",
+        "name": "oren2",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4ae669b4-778a-4f13-bf42-99da0c805414/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ol664w"
+    },
+
+    {
+        "uuid": "c68a5162-bebf-4675-9b83-1aec994abd35",
+        "invariantUUID": "219b289e-e94e-4c1b-8ca0-53a19f4cf140",
+        "name": "AlinaVF",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c68a5162-bebf-4675-9b83-1aec994abd35/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "d03c68fc-ed63-4fce-bf7f-ebe23993157d",
+        "invariantUUID": "94746803-5a82-4112-9719-7cb64a43ea99",
+        "name": "testfe",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d03c68fc-ed63-4fce-bf7f-ebe23993157d/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Allotted Resource",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFICATION_IN_PROGRESS",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "ab88f446-f17f-4419-a4ce-84a24bc9a3c0",
+        "invariantUUID": "63aec7b3-8674-42ff-a9be-9d6c51544776",
+        "name": "Tunnel_XConnTest",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ab88f446-f17f-4419-a4ce-84a24bc9a3c0/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Tunnel XConnect",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "81d54f6d-ac2d-4282-ada9-48214e13dfd9",
+        "invariantUUID": "80d253d9-dca7-4d5e-96f2-e060deabf3bb",
+        "name": "Dev2DevNFOD_1207",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/81d54f6d-ac2d-4282-ada9-48214e13dfd9/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "pa0916"
+    },
+
+    {
+        "uuid": "c9ea2798-f3ba-4826-ae93-0786820cb890",
+        "invariantUUID": "5882c528-76fe-4884-90c7-71301ca52cf8",
+        "name": "vMMSC_ECA",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c9ea2798-f3ba-4826-ae93-0786820cb890/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "az2497"
+    },
+
+    {
+        "uuid": "e795b7f2-09c3-40a8-bc38-64bdad5e9f68",
+        "invariantUUID": "96079a9a-dbe3-4492-ba85-95b1b49d0983",
+        "name": "APPleVFV10",
+        "version": "3.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e795b7f2-09c3-40a8-bc38-64bdad5e9f68/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "nk909r"
+    },
+
+    {
+        "uuid": "1b9546ab-d1cd-489b-b07b-13537418ad57",
+        "invariantUUID": "4612156f-0a8d-46c5-bfb1-86e80148d123",
+        "name": "BerryVFNamequaryV10",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1b9546ab-d1cd-489b-b07b-13537418ad57/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "READY_FOR_CERTIFICATION",
+        "lastUpdaterUserId": "nk909r"
+    },
+
+    {
+        "uuid": "b71e8927-6567-4f14-a0ec-3bce871934c4",
+        "invariantUUID": "73bc5a4f-b902-43b2-83c2-915fa274960f",
+        "name": "vPE",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/b71e8927-6567-4f14-a0ec-3bce871934c4/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Border Element",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "31ad5aaa-8779-4384-819f-4a2ec217f608",
+        "invariantUUID": "f47b1fa4-574f-4c30-b0cf-af7919868eed",
+        "name": "BerryVFNamequery",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/31ad5aaa-8779-4384-819f-4a2ec217f608/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "nk909r"
+    },
+
+    {
+        "uuid": "10751313-0dd7-464a-92e3-ec77fcada2c8",
+        "invariantUUID": "229580a6-2d12-49b6-8c89-54d04f4569b4",
+        "name": "vIECCF",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/10751313-0dd7-464a-92e3-ec77fcada2c8/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Database",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99124"
+    },
+
+    {
+        "uuid": "3951e021-7595-43b1-a6fd-de077c01af54",
+        "invariantUUID": "925243cf-e342-4d86-8558-63899fbe88da",
+        "name": "VF Module LDSA",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3951e021-7595-43b1-a6fd-de077c01af54/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Load Balancer",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99124"
+    },
+
+    {
+        "uuid": "3b30f9df-5cc6-4f1d-b8fc-bf034891539e",
+        "invariantUUID": "10a2a956-5190-4aa8-8d3d-dea5863ab40f",
+        "name": "blueberryvf",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3b30f9df-5cc6-4f1d-b8fc-bf034891539e/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "lm906x"
+    },
+
+    {
+        "uuid": "c4e944bd-aa6a-4bd0-85ac-5566c98d2adc",
+        "invariantUUID": "cc4e47f7-360d-425b-a563-e870203d2d48",
+        "name": "SNMP Trap Collector",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c4e944bd-aa6a-4bd0-85ac-5566c98d2adc/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "07116436-aab8-4a54-85be-6691e451e65b",
+        "invariantUUID": "b1133487-2512-4a6d-8b68-4f56b81fd6a2",
+        "name": "1607_MOG",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/07116436-aab8-4a54-85be-6691e451e65b/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "70974b30-6b89-41d2-8b5d-779279db3b96",
+        "invariantUUID": "725e5fd1-2520-4669-a5f2-23f9ad2fbec4",
+        "name": "vSCP0502",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/70974b30-6b89-41d2-8b5d-779279db3b96/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "c9e436c3-539f-45e2-90b4-b046af907877",
+        "invariantUUID": "bc7fe896-e286-41cb-a11f-7081fc92876b",
+        "name": "vMMSC",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c9e436c3-539f-45e2-90b4-b046af907877/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Database",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "79a31423-43ae-4f00-9314-dbc6ed5dfcb7",
+        "invariantUUID": "6c1bcf11-ecdc-465d-83c7-4a1735ff8d00",
+        "name": "1607_MOG_multi_members_volume",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/79a31423-43ae-4f00-9314-dbc6ed5dfcb7/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Border Element",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99124"
+    },
+
+    {
+        "uuid": "ed9927dc-3c43-47bf-9c55-3aa3240749c4",
+        "invariantUUID": "d6ac75ef-0e55-41bb-9cac-bedd59c3b0b8",
+        "name": "SNMP Collector",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ed9927dc-3c43-47bf-9c55-3aa3240749c4/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "82460d6a-1cd7-4c57-bc89-625600555f80",
+        "invariantUUID": "c67108d4-a0b0-4eee-8fbc-c881d7bb21d3",
+        "name": "VF modules vMMSC",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/82460d6a-1cd7-4c57-bc89-625600555f80/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Web Server",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99124"
+    },
+
+    {
+        "uuid": "1d7a184b-3680-47e5-92de-6ac7207699a3",
+        "invariantUUID": "f7ba2bcd-747b-4ff6-994a-91be20fc726c",
+        "name": "VF modules",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1d7a184b-3680-47e5-92de-6ac7207699a3/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Web Server",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "90043cc2-5150-4127-aabe-67ed5c8a603b",
+        "invariantUUID": "fc6589c4-f030-4d02-b516-b99f73bfdca8",
+        "name": "VF module_2",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/90043cc2-5150-4127-aabe-67ed5c8a603b/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Media Servers",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "4c81fa7a-9e59-498a-96ba-2fc16eba23a3",
+        "invariantUUID": "4612156f-0a8d-46c5-bfb1-86e80148d123",
+        "name": "BerryVFNamequaryV10",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/4c81fa7a-9e59-498a-96ba-2fc16eba23a3/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "nk909r"
+    },
+
+    {
+        "uuid": "ac603264-cdf7-49ab-a9ae-92d341023218",
+        "invariantUUID": "379ab526-dc81-4b31-b60d-31c1805ddf5a",
+        "name": "FDNT1",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ac603264-cdf7-49ab-a9ae-92d341023218/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Border Element",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "c8c959fb-c57e-4a10-9f7e-d5cc5bbd4301",
+        "invariantUUID": "1170b507-33f9-4a2e-a9af-e44744b6c10d",
+        "name": "contrail route",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/c8c959fb-c57e-4a10-9f7e-d5cc5bbd4301/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Contrail Route",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "e3edd7bb-9732-4915-b1b9-2b4af561d85c",
+        "invariantUUID": "7669a21f-e8bf-429d-8267-b9a9b1be0e16",
+        "name": "test-port",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e3edd7bb-9732-4915-b1b9-2b4af561d85c/toscaModel",
+        "category": "Network L4+",
+        "subCategory": "Common Network Resources",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "8531f392-b695-49f4-98f8-cba632eb68fc",
+        "invariantUUID": "9dfe647e-7285-48dc-9e5d-f275f470e4ba",
+        "name": "security Zone",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8531f392-b695-49f4-98f8-cba632eb68fc/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Security Zone",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "e4924deb-7355-4f1e-9f8f-bd4e3b609e98",
+        "invariantUUID": "6eb4b1ca-75ac-454b-a145-1ea27157bfac",
+        "name": "IP_Mux_Demux",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e4924deb-7355-4f1e-9f8f-bd4e3b609e98/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "IP Mux Demux",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99124"
+    },
+
+    {
+        "uuid": "44ff8000-e703-4538-b26a-f2bc8205d7d4",
+        "invariantUUID": "26badc5a-d29e-4583-b773-0d42366a8bb1",
+        "name": "FDNT1234",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/44ff8000-e703-4538-b26a-f2bc8205d7d4/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "WAN Connectors",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m99124"
+    },
+
+    {
+        "uuid": "5ce3812b-935b-4c17-a1a7-a79a5179772e",
+        "invariantUUID": "ad3e0a75-d124-418d-ad57-970a9668e4d8",
+        "name": "vTSBC1",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/5ce3812b-935b-4c17-a1a7-a79a5179772e/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Gateway",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "e9fb3aa6-44f7-4154-9db6-1f60dac2d72f",
+        "invariantUUID": "ac661ee8-21b0-417f-98af-0b891c5f6c0d",
+        "name": "TuesdayVSP",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e9fb3aa6-44f7-4154-9db6-1f60dac2d72f/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "75b67a7f-9e2e-4c7d-a926-331f05ce5ff1",
+        "invariantUUID": "32d62649-390c-4208-b5cd-c1dc7dddf3db",
+        "name": "VF modules_1",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/75b67a7f-9e2e-4c7d-a926-331f05ce5ff1/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Load Balancer",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "25b6b8dc-8f32-42ea-bcea-04369827ddbf",
+        "invariantUUID": "e5d959b4-f11e-42ac-aa26-26beb526faf1",
+        "name": "pnf-resource-test",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/25b6b8dc-8f32-42ea-bcea-04369827ddbf/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ed852m"
+    },
+
+    {
+        "uuid": "f4bed159-36a0-4ea4-b2d4-2ebea8c208b8",
+        "invariantUUID": "e6b04d60-4a33-4899-9185-082b9b170cb8",
+        "name": "Dev2DevNFOD",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/f4bed159-36a0-4ea4-b2d4-2ebea8c208b8/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sw594b"
+    },
+
+    {
+        "uuid": "8dec3b8a-a0fa-4634-bbb4-d7bad5a912ab",
+        "invariantUUID": "eda652e4-6740-46bf-8d0f-92c4752070f6",
+        "name": "FCGI_OS",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8dec3b8a-a0fa-4634-bbb4-d7bad5a912ab/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Database",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "691cbc68-61df-472d-ad2d-8791444d2e27",
+        "invariantUUID": "7daf1f14-2aa3-48d8-89e5-3383cf004b6a",
+        "name": "AAI broker",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/691cbc68-61df-472d-ad2d-8791444d2e27/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "ccd6fa51-aafd-401f-96ce-3f0c94418865",
+        "invariantUUID": "fe5535d7-80e5-4278-bbdd-d2156b9a4d24",
+        "name": "test-consol",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/ccd6fa51-aafd-401f-96ce-3f0c94418865/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Gateway",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "100be1c2-28d9-4d8c-8551-608f82b202f8",
+        "invariantUUID": "771cb756-d74d-416d-97cb-6c88f1915721",
+        "name": "Source Generic",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/100be1c2-28d9-4d8c-8551-608f82b202f8/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Source",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "ml4535"
+    },
+
+    {
+        "uuid": "e2555d36-4fec-476a-8504-6e111f5d5dfd",
+        "invariantUUID": "cca91831-e7c4-4761-86eb-200206af302d",
+        "name": "VF Volume group",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e2555d36-4fec-476a-8504-6e111f5d5dfd/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Load Balancer",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "361f7f83-e4dd-4a27-ad4b-a7e1c7a52672",
+        "invariantUUID": "6598647d-b141-4c39-be82-91b536017bf2",
+        "name": "grapevnf",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/361f7f83-e4dd-4a27-ad4b-a7e1c7a52672/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "lm906x"
+    },
+
+    {
+        "uuid": "78160afe-b5e3-4978-8923-40d04671bd30",
+        "invariantUUID": "9b943920-4286-4f78-bc98-387d15812490",
+        "name": "APPC-test",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/78160afe-b5e3-4978-8923-40d04671bd30/toscaModel",
+        "category": "Network L4+",
+        "subCategory": "Common Network Resources",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "596c8b1d-3a1d-47fc-ace2-1fbebb94b1e5",
+        "invariantUUID": "b99889d1-bc9d-4a90-942c-88e21c358f75",
+        "name": "cherryvf",
+        "version": "3.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/596c8b1d-3a1d-47fc-ace2-1fbebb94b1e5/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "nk909r"
+    },
+
+    {
+        "uuid": "da3619c1-9b19-4edc-9853-a714c5034371",
+        "invariantUUID": "b90f7990-667a-4f63-9e7f-ee02f64766f1",
+        "name": "FDNT",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/da3619c1-9b19-4edc-9853-a714c5034371/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Call Control",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "m99121"
+    },
+
+    {
+        "uuid": "3c22db36-3461-4463-8b11-c8fbdb951c1e",
+        "invariantUUID": "42e3c73c-829f-464c-90fd-326ed7018d06",
+        "name": "RonyTestCSAR",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/3c22db36-3461-4463-8b11-c8fbdb951c1e/toscaModel",
+        "category": "Allotted Resource",
+        "subCategory": "Service Admin",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "rb844h"
+    },
+
+    {
+        "uuid": "d6c133c5-ab82-4c60-afe6-90556da55c7e",
+        "invariantUUID": "009e4104-2403-49c4-94ee-6dcb0547e44d",
+        "name": "VES Collector",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/d6c133c5-ab82-4c60-afe6-90556da55c7e/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Collector",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "43efef8f-204c-4a54-9121-ae19951063aa",
+        "invariantUUID": "926f6d60-bf84-46c4-9ed7-f0bb774e5184",
+        "name": "Sangeetha",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/43efef8f-204c-4a54-9121-ae19951063aa/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Database",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "e01dfc8f-2529-423b-9765-08b57df6ba51",
+        "invariantUUID": "6c7aaec2-59eb-41d9-8681-b7f976ab668d",
+        "name": "eNodeB-vf",
+        "version": "2.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/e01dfc8f-2529-423b-9765-08b57df6ba51/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Application Server",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "af3193"
+    },
+
+    {
+        "uuid": "1cad2e90-0259-498f-884d-7bbe5a156fb2",
+        "invariantUUID": "76b01019-a533-4c31-871d-6275924c7543",
+        "name": "vPE-AV-renana",
+        "version": "1.0",
+        "toscaModelURL": "/sdc/v1/catalog/resources/1cad2e90-0259-498f-884d-7bbe5a156fb2/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Router",
+        "resourceType": "VF",
+        "lifecycleState": "CERTIFIED",
+        "lastUpdaterUserId": "m08743"
+    },
+
+    {
+        "uuid": "747ccce2-7efb-403d-acd3-88bc9ffb43a2",
+        "invariantUUID": "76b01019-a533-4c31-871d-6275924c7543",
+        "name": "vPE-AV-renana",
+        "version": "1.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/747ccce2-7efb-403d-acd3-88bc9ffb43a2/toscaModel",
+        "category": "Network L2-3",
+        "subCategory": "Router",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "2d0cb42c-398e-4c4c-959a-290459489cef",
+        "invariantUUID": "935689b9-80e2-4818-8c2d-fbbeaec9b56a",
+        "name": "csarTest",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/2d0cb42c-398e-4c4c-959a-290459489cef/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Load Balancer",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "ss8214"
+    },
+
+    {
+        "uuid": "62c5d4c8-1a5a-4081-bde7-8805821f41a0",
+        "invariantUUID": "5bf48fb1-a073-4ad5-84e0-387d9160713c",
+        "name": "madhu_mdns",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/62c5d4c8-1a5a-4081-bde7-8805821f41a0/toscaModel",
+        "category": "Application L4+",
+        "subCategory": "Firewall",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKIN",
+        "lastUpdaterUserId": "sa997j"
+    },
+
+    {
+        "uuid": "8faf42f4-287a-430e-a761-9df0ce4075d1",
+        "invariantUUID": "6e2213a9-6ca2-4ab9-adfd-1af95c61f23d",
+        "name": "vPE-BV-Renana",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/8faf42f4-287a-430e-a761-9df0ce4075d1/toscaModel",
+        "category": "Generic",
+        "subCategory": "Infrastructure",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "rh176a"
+    },
+
+    {
+        "uuid": "541310cd-d7b4-48d1-969a-d81866277298",
+        "invariantUUID": "30df25ac-d6c9-4cec-8c56-b287cd462e30",
+        "name": "TCA",
+        "version": "0.1",
+        "toscaModelURL": "/sdc/v1/catalog/resources/541310cd-d7b4-48d1-969a-d81866277298/toscaModel",
+        "category": "DCAE Component",
+        "subCategory": "Microservice",
+        "resourceType": "VF",
+        "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
+        "lastUpdaterUserId": "ss7286"
+    }
+]

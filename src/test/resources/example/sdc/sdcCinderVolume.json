@@ -1,0 +1,15 @@
+{
+    "uuid": "b4288e07-597a-44a2-aa98-ad36e551a39d",
+    "invariantUUID": "61dc85d2-5e17-480e-a71f-8f6d59a0ead2",
+    "name": "CinderVolume",
+    "version": "5.0",
+    "toscaModelURL": "/sdc/v1/catalog/resources/b4288e07-597a-44a2-aa98-ad36e551a39d/toscaModel",
+    "category": "Generic",
+    "subCategory": "Infrastructure",
+    "resourceType": "VFC",
+    "lifecycleState": "CERTIFIED",
+    "lastUpdaterUserId": "jh0003",
+    "lastUpdaterFullName": "Jimmy Hendrix",
+    "toscaResourceName": "org.openecomp.resource.vfc.nodes.heat.cinder.Volume",
+    "description": "Represents a server-local block storage device that provides persistent storage to guest virtual machines. "
+}

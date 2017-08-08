@@ -1,0 +1,230 @@
+{
+    "uuid": "29018914-966c-442d-9d08-251b9dc45b8f",
+    "invariantUUID": "a33ed748-3477-4434-b3f3-b5560f5e7d9c",
+    "name": "vcts3",
+    "version": "1.0",
+    "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8f/toscaModel",
+    "category": "Application L4+",
+    "subCategory": "Application Server",
+    "resourceType": "VF",
+    "lifecycleState": "CERTIFIED",
+    "lastUpdaterUserId": "ml4535",
+    "lastUpdaterFullName": "MONICA LAZER",
+    "toscaResourceName": "org.openecomp.resource.vf.Vcts3",
+    "resources": 
+    [
+        {
+            "resourceInstanceName": "vCTS_port_0",
+            "resourceName": "NeutronPort",
+            "resourceInvariantUUID": "10428340-a673-4377-8696-af579a2e67a8",
+            "resourceVersion": "1.0",
+            "resoucreType": "CP",
+            "resourceUUID": "fdf0a74a-4942-4af0-9395-7bce23670662"
+        },
+
+        {
+            "resourceInstanceName": "vCTS",
+            "resourceName": "Vcts3.nodes.heat.vCTS_server",
+            "resourceInvariantUUID": "ef673ad3-2d81-47b7-99c2-bdc69ae79d80",
+            "resourceVersion": "1.0",
+            "resoucreType": "VFC",
+            "resourceUUID": "ab168037-e654-4990-a188-e5d2f25a8768",
+            "artifacts": 
+            [
+                {
+                    "artifactName": "Fault-alarms-SDC-Albino-vCTS2.csv",
+                    "artifactType": "SNMP_TRAP",
+                    "artifactURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8f/resourceInstances/vcts/artifacts/b4f583b4-da0c-4bf8-81fb-415ebcd78cd4",
+                    "artifactDescription": "Artifact created from csar",
+                    "artifactChecksum": "NjI1ZTEyM2YxYWFhZThlMzZkNjAwZmNmMjEwNjZmMDQ=",
+                    "artifactUUID": "b4f583b4-da0c-4bf8-81fb-415ebcd78cd4",
+                    "artifactVersion": "1",
+                    "artifactLabel": "faultalarmssdcalbinovcts2csv",
+                    "artifactGroupType": "DEPLOYMENT"
+                },
+
+                {
+                    "artifactName": "nagios2.csv",
+                    "artifactType": "SNMP_TRAP",
+                    "artifactURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8f/resourceInstances/vcts/artifacts/b1b86435-1de8-4d4a-8f69-f583a7417396",
+                    "artifactDescription": "Artifact created from csar",
+                    "artifactChecksum": "NzZlYTY1MmVjN2YyYWJlNWZkODIwYzBlNTFlYzg0NTA=",
+                    "artifactUUID": "b1b86435-1de8-4d4a-8f69-f583a7417396",
+                    "artifactVersion": "1",
+                    "artifactLabel": "nagios2csv",
+                    "artifactGroupType": "DEPLOYMENT"
+                }
+            ]
+        },
+
+        {
+            "resourceInstanceName": "resource-1",
+            "resourceInvariantUUID": "585822c7-4027-4f84-ba50-e9248606f134",
+            "resourceName": "resourceName-1",
+            "resoucreType": "VF",
+            "resourceUUID": "585822c7-4027-4f84-ba50-e9248606f136",
+            "resourceVersion": "3.0",
+            "category": "category",
+            "artifacts": 
+            [
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Meta data for VFModule",
+                    "artifactName": "vnf-module-artifact.json",
+                    "artifactType": "VF_MODULES_METADATA",
+                    "artifactURL": "vnf-module-artifact.json",
+                    "artifactUUID": "VfArtifact-UUID2",
+                    "artifactVersion": "1.0"
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Nimbus Heat OAM",
+                    "artifactName": "hot-nimbus-oam_v1.0.yaml",
+                    "artifactTimeout": 100,
+                    "artifactType": "HEAT",
+                    "artifactURL": "hot-nimbus-oam_v1.0.yaml",
+                    "artifactUUID": "Artifact-UUID1",
+                    "artifactVersion": "1.0",
+                    "generatedArtifact": "EnvArtifact-UUID2",
+                    "relatedArtifact": 
+                    [
+                        "NestedArtifact-UUID3",
+                        "ScriptArtifact-UUID1"
+                    ]
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Nimbus Heat ENV OAM",
+                    "artifactName": "hot-nimbus-oam_v1.0.env",
+                    "artifactType": "HEAT_ENV",
+                    "artifactURL": "hot-nimbus-oam_v1.0.env",
+                    "artifactUUID": "EnvArtifact-UUID2",
+                    "artifactVersion": "1.0"
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Nested OAM",
+                    "artifactName": "nested-oam_v1.0.yaml",
+                    "artifactTimeout": 10,
+                    "artifactType": "HEAT_NESTED",
+                    "artifactURL": "nested-oam_v1.0.yaml",
+                    "artifactUUID": "NestedArtifact-UUID3",
+                    "artifactVersion": "1.0"
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Nested PSM",
+                    "artifactName": "nested-psm_v1.0.yaml",
+                    "artifactTimeout": 10,
+                    "artifactType": "HEAT_NESTED",
+                    "artifactURL": "nested-psm_v1.0.yaml",
+                    "artifactUUID": "NestedArtifact-UUID4",
+                    "artifactVersion": "1.0"
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Script for Nimbus",
+                    "artifactName": "cloud-nimbus.sh",
+                    "artifactType": "HEAT_ARTIFACT",
+                    "artifactURL": "cloud-nimbus.sh",
+                    "artifactUUID": "ScriptNimbusArtifact-UUID1",
+                    "artifactVersion": "1.0"
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Script for OAM",
+                    "artifactName": "mount_iso_script.sh",
+                    "artifactType": "HEAT_ARTIFACT",
+                    "artifactURL": "mount_iso_script.sh",
+                    "artifactUUID": "ScriptArtifact-UUID1",
+                    "artifactVersion": "1.0"
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Heat Vol for OAM",
+                    "artifactName": "hot-nimbus-oam-volumes_v1.0.yaml",
+                    "artifactTimeout": 10,
+                    "artifactType": "HEAT_VOL",
+                    "artifactURL": "hot-nimbus-oam-volumes_v1.0.yaml",
+                    "artifactUUID": "VolumeArtifact-UUID1",
+                    "artifactVersion": "1.0",
+                    "generatedArtifact": "VolumeEnvArtifact-UUID1",
+                    "relatedArtifact": 
+                    [
+                        "NestedArtifact-UUID4"
+                    ]
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Heat Env Vol for OAM",
+                    "artifactName": "hot-nimbus-oam-volumes_v1.0.env",
+                    "artifactType": "HEAT_ENV",
+                    "artifactURL": "hot-nimbus-oam-volumes_v1.0.env",
+                    "artifactUUID": "VolumeEnvArtifact-UUID1",
+                    "artifactVersion": "1.0"
+                },
+
+                {
+                    "artifactChecksum": "CheckSum",
+                    "artifactDescription": "Meta data for VFModule",
+                    "artifactName": "att_nimbus_vsaegw_ht_base_v13_0728v1.yaml",
+                    "artifactTimeout": 100,
+                    "artifactType": "HEAT",
+                    "artifactURL": "att_nimbus_vsaegw_ht_base_v13_0728v1.yaml",
+                    "artifactUUID": "HeatArtifactE2E-UUIDTest",
+                    "artifactVersion": "1.0"
+                }
+            ]
+        }
+    ],
+
+    "artifacts": 
+    [
+        {
+            "artifactName": "vf-license-model.xml",
+            "artifactType": "VF_LICENSE",
+            "artifactURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8f/artifacts/f8fb4591-5387-4424-8e7b-e31cb34a8cc1",
+            "artifactDescription": "VF license file",
+            "artifactChecksum": "NDkxZjBiYTA3YzE4YzQ2NzVjNjU4ZjE5YTI2YzY2YjM=",
+            "artifactUUID": "f8fb4591-5387-4424-8e7b-e31cb34a8cc1",
+            "artifactVersion": "1",
+            "artifactLabel": "vflicense",
+            "artifactGroupType": "DEPLOYMENT"
+        },
+
+        {
+            "artifactName": "base_TEST.yaml",
+            "artifactType": "HEAT",
+            "artifactURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8f/artifacts/ced9f553-a9bf-48e9-bd67-7f17162665ee",
+            "artifactDescription": "created from csar",
+            "artifactTimeout": 60,
+            "artifactChecksum": "NGVlN2MwZmE0MjU1MTZlNmRlOTMxZmM1NGZlMDk3ZDE=",
+            "artifactUUID": "ced9f553-a9bf-48e9-bd67-7f17162665ee",
+            "artifactVersion": "1",
+            "artifactLabel": "heat1",
+            "artifactGroupType": "DEPLOYMENT"
+        },
+
+        {
+            "artifactName": "vendor-license-model.xml",
+            "artifactType": "VENDOR_LICENSE",
+            "artifactURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8f/artifacts/a34232d1-60ee-4dda-add8-fbc14531ac24",
+            "artifactDescription": " Vendor license file",
+            "artifactChecksum": "OGEwYzI2Njk2YzI4YTVjMzdhMTI5ODNkNjQxMWIzZWU=",
+            "artifactUUID": "a34232d1-60ee-4dda-add8-fbc14531ac24",
+            "artifactVersion": "1",
+            "artifactLabel": "vendorlicense",
+            "artifactGroupType": "DEPLOYMENT"
+        }
+    ],
+
+    "description": "for CLAMP"
+}

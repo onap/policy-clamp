@@ -5,16 +5,16 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
@@ -23,6 +23,28 @@
 
 package org.onap.clamp.clds.client.req;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.onap.clamp.clds.client.SdcCatalogServices;
+import org.onap.clamp.clds.model.CldsSdcResource;
+import org.onap.clamp.clds.model.CldsSdcServiceDetail;
+import org.onap.clamp.clds.model.prop.Global;
+import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.model.prop.StringMatch;
+import org.onap.clamp.clds.model.prop.Tca;
+import org.onap.clamp.clds.model.refprop.RefProp;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -31,29 +53,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
-import org.onap.clamp.clds.client.SdcCatalogServices;
-import org.onap.clamp.clds.model.CldsAsdcResource;
-import org.onap.clamp.clds.model.CldsAsdcServiceDetail;
-import org.onap.clamp.clds.model.prop.Global;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.prop.StringMatch;
-import org.onap.clamp.clds.model.prop.Tca;
-import org.onap.clamp.clds.model.refprop.RefProp;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 /**
- * Construct a Asdc request given CLDS objects.
+ * Construct a Sdc request given CLDS objects.
  */
 public class SdcReq {
-    // currently uses the java.util.logging.Logger like the Camunda engine
-    private static final Logger logger = Logger.getLogger(SdcReq.class.getName());
+    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(SdcReq.class);
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     /**
      * @param refProp
@@ -72,14 +78,15 @@ public class SdcReq {
         String yamlvalue = getYamlvalue(docText);
 
         String updatedBlueprint = "";
-        StringMatch stringMatch = prop.getStringMatch();
-        Tca tca = prop.getTca();
+        StringMatch stringMatch = prop.getType(StringMatch.class);
+        Tca tca = prop.getType(Tca.class);
         if (stringMatch.isFound()) {
             prop.setCurrentModelElementId(stringMatch.getId());
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode serviceConfigurations = objectMapper.createObjectNode();
 
-            StringMatchPolicyReq.appendServiceConfigurations(refProp, service, serviceConfigurations, stringMatch);
+            StringMatchPolicyReq.appendServiceConfigurations(refProp, service, serviceConfigurations, stringMatch,
+                    prop);
             logger.info("Value of serviceConfigurations:" + serviceConfigurations);
             ObjectNode servConfNode = (ObjectNode) serviceConfigurations.get("serviceConfigurations");
 
@@ -111,15 +118,15 @@ public class SdcReq {
         // Serialiaze Yaml file
         Map<String, Map> loadedYaml = (Map<String, Map>) yaml.load(yamlValue);
         // Get node templates information from Yaml
-        Map<String, Map> nodeTemplates = (Map<String, Map>) loadedYaml.get("node_templates");
+        Map<String, Map> nodeTemplates = loadedYaml.get("node_templates");
         logger.info("value of NodeTemplates:" + nodeTemplates);
 
         // Get StringMatch Object information from node templates of Yaml
-        Map<String, Map> smObject = (Map<String, Map>) nodeTemplates.get("SM");
+        Map<String, Map> smObject = nodeTemplates.get("SM");
         logger.info("value of StringMatch:" + smObject);
 
         // Get Properties Object information from stringmatch of Yaml
-        Map<String, String> propsObject = (Map<String, String>) smObject.get("properties");
+        Map<String, String> propsObject = smObject.get("properties");
         logger.info("value of PropsObject:" + propsObject);
 
         String deploymentJsonObject = propsObject.get("deployment_JSON");
@@ -154,15 +161,15 @@ public class SdcReq {
         // Serialiaze Yaml file
         Map<String, Map> loadedYaml = (Map<String, Map>) yaml.load(yamlValue);
         // Get node templates information from Yaml
-        Map<String, Map> nodeTemplates = (Map<String, Map>) loadedYaml.get("node_templates");
+        Map<String, Map> nodeTemplates = loadedYaml.get("node_templates");
         logger.info("value of NodeTemplates:" + nodeTemplates);
         // Get Tca Object information from node templates of Yaml
-        Map<String, Map> tcaObject = (Map<String, Map>) nodeTemplates.get("MTCA");
+        Map<String, Map> tcaObject = nodeTemplates.get("MTCA");
         logger.info("value of Tca:" + tcaObject);
         // Get Properties Object information from tca of Yaml
-        Map<String, String> propsObject = (Map<String, String>) tcaObject.get("properties");
+        Map<String, String> propsObject = tcaObject.get("properties");
         logger.info("value of PropsObject:" + propsObject);
-        String deploymentJsonObject = (String) propsObject.get("deployment_JSON");
+        String deploymentJsonObject = propsObject.get("deployment_JSON");
         logger.info("value of deploymentJson:" + deploymentJsonObject);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -182,7 +189,7 @@ public class SdcReq {
         return blueprint;
     }
 
-    public static String formatAsdcLocationsReq(ModelProperties prop, String artifactName) {
+    public static String formatSdcLocationsReq(ModelProperties prop, String artifactName) {
         ObjectMapper objectMapper = new ObjectMapper();
         Global global = prop.getGlobal();
         List<String> locationsList = global.getLocation();
@@ -198,7 +205,7 @@ public class SdcReq {
         return locationJsonFormat;
     }
 
-    public static String formatAsdcReq(String payloadData, String artifactName, String artifactLabel,
+    public static String formatSdcReq(String payloadData, String artifactName, String artifactLabel,
             String artifactType) throws IOException {
         logger.info("artifact=" + payloadData);
         String base64Artifact = base64Encode(payloadData);
@@ -208,7 +215,7 @@ public class SdcReq {
                 + "} \n";
     }
 
-    public static String getAsdcReqUrl(ModelProperties prop, String url) {
+    public static String getSdcReqUrl(ModelProperties prop, String url) {
         Global globalProps = prop.getGlobal();
         String serviceUUID = "";
         String resourceInstanceName = "";
@@ -234,7 +241,7 @@ public class SdcReq {
      * @return
      * @throws Exception
      */
-    public static List<String> getAsdcReqUrlsList(ModelProperties prop, String baseUrl,
+    public static List<String> getSdcReqUrlsList(ModelProperties prop, String baseUrl,
             SdcCatalogServices sdcCatalogServices, DelegateExecution execution) throws Exception {
         // TODO : refact and regroup with very similar code
         List<String> urlList = new ArrayList<>();
@@ -244,18 +251,21 @@ public class SdcReq {
                 String serviceInvariantUUID = globalProps.getService();
                 execution.setVariable("serviceInvariantUUID", serviceInvariantUUID);
                 List<String> resourceVfList = globalProps.getResourceVf();
-                String serviceUUID = sdcCatalogServices.getServiceUUIDFromServiceInvariantID(serviceInvariantUUID);
-                String asdcServicesInformation = sdcCatalogServices.getAsdcServicesInformation(serviceUUID);
-                CldsAsdcServiceDetail cldsAsdcServiceDetail = sdcCatalogServices.getCldsAsdcServiceDetailFromJson(asdcServicesInformation);
-                if (cldsAsdcServiceDetail != null && resourceVfList != null) {
-                    List<CldsAsdcResource> cldsAsdcResourcesList = cldsAsdcServiceDetail.getResources();
-                    if (cldsAsdcResourcesList != null && cldsAsdcResourcesList.size() > 0) {
-                        for (CldsAsdcResource cldsAsdcResource : cldsAsdcResourcesList) {
-                            if (cldsAsdcResource != null && cldsAsdcResource.getResoucreType() != null
-                                    && cldsAsdcResource.getResoucreType().equalsIgnoreCase("VF")) {
-                                if (resourceVfList.contains(cldsAsdcResource.getResourceInvariantUUID())) {
-                                    String normalizedResourceInstanceName = normalizeResourceInstanceName(cldsAsdcResource.getResourceInstanceName());
-                                    String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/" + normalizedResourceInstanceName + "/artifacts";
+                String serviceUUID = sdcCatalogServices.getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
+                String sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(serviceUUID);
+                CldsSdcServiceDetail CldsSdcServiceDetail = sdcCatalogServices
+                        .getCldsSdcServiceDetailFromJson(sdcServicesInformation);
+                if (CldsSdcServiceDetail != null && resourceVfList != null) {
+                    List<CldsSdcResource> CldsSdcResourcesList = CldsSdcServiceDetail.getResources();
+                    if (CldsSdcResourcesList != null && CldsSdcResourcesList.size() > 0) {
+                        for (CldsSdcResource CldsSdcResource : CldsSdcResourcesList) {
+                            if (CldsSdcResource != null && CldsSdcResource.getResoucreType() != null
+                                    && CldsSdcResource.getResoucreType().equalsIgnoreCase("VF")) {
+                                if (resourceVfList.contains(CldsSdcResource.getResourceInvariantUUID())) {
+                                    String normalizedResourceInstanceName = normalizeResourceInstanceName(
+                                            CldsSdcResource.getResourceInstanceName());
+                                    String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
+                                            + normalizedResourceInstanceName + "/artifacts";
                                     urlList.add(svcUrl);
                                 }
                             }
@@ -269,8 +279,8 @@ public class SdcReq {
 
     /**
      * "Normalize" the resource instance name: - Remove spaces, underscores,
-     * dashes, and periods. - make lower case This is required by ASDC when
-     * using the resource instance name to upload an artifact.
+     * dashes, and periods. - make lower case This is required by SDC when using
+     * the resource instance name to upload an artifact.
      *
      * @param inText
      * @return
@@ -323,15 +333,15 @@ public class SdcReq {
     }
 
     /**
-     * Return ASDC id and pw as a HTTP Basic Auth string (for example: Basic
+     * Return SDC id and pw as a HTTP Basic Auth string (for example: Basic
      * dGVzdDoxMjM0NTY=).
      *
      * @return
      */
-    public static String getAsdcBasicAuth(RefProp refProp) {
-        String asdcId = refProp.getStringValue("asdc.serviceUsername");
-        String asdcPw = refProp.getStringValue("asdc.servicePassword");
-        String idPw = base64Encode(asdcId + ":" + asdcPw);
+    public static String getSdcBasicAuth(RefProp refProp) {
+        String sdcId = refProp.getStringValue("sdc.serviceUsername");
+        String sdcPw = refProp.getStringValue("sdc.servicePassword");
+        String idPw = base64Encode(sdcId + ":" + sdcPw);
         return "Basic " + idPw;
     }
 
