@@ -57,7 +57,6 @@
 
 		<docker.push.registry>localhost:5000</docker.push.registry>
 		<skip.docker.build>true</skip.docker.build>
-		<skip.docker.tag>true</skip.docker.tag>
 		<skip.docker.push>true</skip.docker.push>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
 
@@ -618,7 +617,7 @@
 						<configuration>
 							<image>onap/clamp</image>
 							<newName>${docker.push.registry}/onap/clamp</newName>
-							<skipDockerTag>${skip.docker.tag}</skipDockerTag>
+							<skipDockerTag>${skip.docker.push}</skipDockerTag>
 						</configuration>
 					</execution>
 					<execution>
