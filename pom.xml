@@ -7,11 +7,11 @@
 	<version>1.0.1-SNAPSHOT</version>
 	<name>ONAP CLAMP</name>
 
-    <parent>
-        <groupId>org.onap.oparent</groupId>
-        <artifactId>oparent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.onap.oparent</groupId>
+		<artifactId>oparent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
 	<description>
            This project build the ONAP CLAMP JAR that contains AJSC + CLAMP code.
@@ -557,9 +557,9 @@
 				<version>1.6.7</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>ossrhajsc</serverId>
-					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					<nexusUrl>${nexusproxy}</nexusUrl>
+					<stagingProfileId>176c31dfe190a</stagingProfileId>
+					<serverId>ecomp-staging</serverId>
 					<skipNexusStagingDeployMojo>${skip.staging.artifacts}</skipNexusStagingDeployMojo>
 				</configuration>
 			</plugin>
@@ -610,17 +610,17 @@
 						</configuration>
 					</execution>
 					<execution>
-                        <id>tag-image</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>tag</goal>
-                        </goals>
-                        <configuration>
-                            <image>onap/clamp</image>
-                            <newName>${docker.push.registry}/onap/clamp</newName>
-                            <skipDockerTag>${skip.docker.tag}</skipDockerTag>
-                        </configuration>
-                    </execution>
+						<id>tag-image</id>
+						<phase>package</phase>
+						<goals>
+							<goal>tag</goal>
+						</goals>
+						<configuration>
+							<image>onap/clamp</image>
+							<newName>${docker.push.registry}/onap/clamp</newName>
+							<skipDockerTag>${skip.docker.tag}</skipDockerTag>
+						</configuration>
+					</execution>
 					<execution>
 						<id>push-image</id>
 						<phase>deploy</phase>
@@ -628,7 +628,7 @@
 							<goal>push</goal>
 						</goals>
 						<configuration>
-						    <imageName>${docker.push.registry}/onap/clamp</imageName>
+							<imageName>${docker.push.registry}/onap/clamp</imageName>
 							<skipDockerPush>${skip.docker.push}</skipDockerPush>
 						</configuration>
 					</execution>
