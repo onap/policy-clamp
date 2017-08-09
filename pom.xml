@@ -616,7 +616,7 @@
 							<goal>push</goal>
 						</goals>
 						<configuration>
-						    <imageName>onap/clamp</imageName>
+						    <imageName>${docker.push.registry}/onap/clamp</imageName>
 							<skipDockerPush>${skip.docker.push}</skipDockerPush>
 						</configuration>
 					</execution>
