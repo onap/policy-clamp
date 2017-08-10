@@ -786,6 +786,8 @@
 			<properties>
 				<skip.staging.artifacts>true</skip.staging.artifacts>
 				<skip.docker.build>false</skip.docker.build>
+				<skip.docker.tag>false</skip.docker.tag>
+				<skip.docker.push>false</skip.docker.push>
 			</properties>
 		</profile>
 	</profiles>
