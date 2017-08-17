@@ -35,21 +35,21 @@ public class LoggingUtils {
 
     /**
      * Set request related logging variables in thread local data via MDC
-     * 
+     *
      * @param service
      *            Service Name of API (ex. "PUT template")
      * @param partner
      *            Partner name (client or user invoking API)
      */
     public static void setRequestContext(String service, String partner) {
-        MDC.put("RequestId", "clds-" + UUID.randomUUID().toString());
+        MDC.put("RequestId",  UUID.randomUUID().toString());
         MDC.put("ServiceName", service);
         MDC.put("PartnerName", partner);
     }
 
     /**
      * Set time related logging variables in thread local data via MDC
-     * 
+     *
      * @param beginTimeStamp
      *            Start time
      * @param endTimeStamp

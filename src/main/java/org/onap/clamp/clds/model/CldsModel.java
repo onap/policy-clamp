@@ -243,17 +243,15 @@ public class CldsModel {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT);
                 break;
             case CldsEvent.ACTION_UNDEPLOY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT);
                 break;
             case CldsEvent.ACTION_DEPLOY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_UPDATE,
-                        CldsEvent.ACTION_STOP);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
                 break;
             case CldsEvent.ACTION_RESTART:
             case CldsEvent.ACTION_UPDATE:
                 // for 1702 delete is not currently implemented
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP,
-                        CldsEvent.ACTION_UNDEPLOY);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
                 break;
             case CldsEvent.ACTION_DELETE:
                 if (getCurrentActionStateCd().equals(CldsEvent.ACTION_STATE_SENT)) {

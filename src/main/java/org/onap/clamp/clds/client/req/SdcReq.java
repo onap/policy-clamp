@@ -143,6 +143,7 @@ public class SdcReq {
 
         // "closedLoopControlName":"ClosedLoop-FRWL-SIG-0538e6f2-8c1b-4656-9999-3501b3c59ad7",
         configurationObjectNode.put("closedLoopControlName", prop.getControlName());
+        configurationObjectNode.put("messageReaderConsumerGroup", prop.getModelName());
         configurationObjectNode.set("serviceConfigurations", serviceConf);
         propsObject.put("deployment_JSON", deployJsonNode.toString());
         String blueprint = yaml.dump(loadedYaml);
