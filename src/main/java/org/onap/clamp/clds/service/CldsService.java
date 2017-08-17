@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
@@ -916,7 +917,12 @@ public class CldsService extends SecureServiceBase {
         String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
                 model.getTypeId());
         String operationStatus = "processing";
+        long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
         while (operationStatus.equalsIgnoreCase("processing")) {
+            //Break the loop if waiting for more than 10 mins
+            if(waitingTime < System.nanoTime()){
+                break;
+            }
             operationStatus = dcaeDispatcherServices.getOperationStatus(createNewDeploymentStatusUrl);
         }
         if (operationStatus != null && operationStatus.equalsIgnoreCase("succeeded")) {
@@ -956,7 +962,11 @@ public class CldsService extends SecureServiceBase {
         String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
                 model.getTypeId());
         String operationStatus = "processing";
+        long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
         while (operationStatus.equalsIgnoreCase("processing")) {
+            if(waitingTime < System.nanoTime()){
+                break;
+            }
             operationStatus = dcaeDispatcherServices.getOperationStatus(operationStatusUndeployUrl);
         }
         if (operationStatus != null && operationStatus.equalsIgnoreCase("succeeded")) {

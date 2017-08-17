@@ -108,7 +108,7 @@ public class SdcCatalogServices {
         } catch (Exception e) {
             LoggingUtils.setResponseContext("900", "Get sdc services failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get sdc services error");
-            logger.error("not able to get any service information from sdc for uuid:" + uuid);
+            logger.error("not able to get any service information from sdc for uuid:" + uuid + " , exception is - " + e.getMessage());
         }
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setTargetContext("SDC", "Get Services");

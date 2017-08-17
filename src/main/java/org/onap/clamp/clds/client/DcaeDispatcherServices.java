@@ -129,25 +129,26 @@ public class DcaeDispatcherServices {
      */
     public String getOperationStatus(String statusUrl) throws Exception {
 
-        String opStatus = null;
+        //Assigning processing status to monitor operation status further
+        String opStatus = "processing";
         InputStream in = null;
         try {
             URL obj = new URL(statusUrl);
             HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
             conn.setRequestMethod("GET");
             int responseCode = conn.getResponseCode();
-            logger.debug("response code " + responseCode);
-            in = conn.getInputStream();
-            String res = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
-            JSONParser parser = new JSONParser();
-            Object obj0 = parser.parse(res);
-            JSONObject jsonObj = (JSONObject) obj0;
-            String operationType = (String) jsonObj.get("operationType");
-            String status = (String) jsonObj.get("status");
-            logger.debug("Operation Type " + operationType);
-            logger.debug("Status " + status);
-            opStatus = status;
-
+            logger.debug("Deployment operation status response code - " + responseCode);
+            if(responseCode == 200){
+                in = conn.getInputStream();
+                String res = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
+                JSONParser parser = new JSONParser();
+                Object obj0 = parser.parse(res);
+                JSONObject jsonObj = (JSONObject) obj0;
+                String operationType = (String) jsonObj.get("operationType");
+                String status = (String) jsonObj.get("status");
+                logger.debug("Operation Type - " + operationType + ", Status " + status);
+                opStatus = status;
+            }
         } catch (Exception e) {
             logger.debug(e.getClass().getName() + " " + e.getMessage());
             logger.debug(e.getMessage()
