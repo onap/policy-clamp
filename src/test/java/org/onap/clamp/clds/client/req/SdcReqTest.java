@@ -23,6 +23,12 @@
 
 package org.onap.clamp.clds.client.req;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.junit.Assert;
 import org.junit.Test;
@@ -31,12 +37,6 @@ import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class SdcReqTest {
 
@@ -48,35 +48,35 @@ public class SdcReqTest {
         ModelProperties prop = mock(ModelProperties.class);
         SdcCatalogServices sdcCatalogServices = mock(SdcCatalogServices.class);
         DelegateExecution delegateExecution = mock(DelegateExecution.class);
-        Global global = mock(Global.class);
-        CldsSdcServiceDetail CldsSdcServiceDetail = mock(CldsSdcServiceDetail.class);
-        CldsSdcResource CldsSdcResource = mock(CldsSdcResource.class);
-        List<CldsSdcResource> CldsSdcResources = new ArrayList<>();
-        CldsSdcResources.add(CldsSdcResource);
+        CldsSdcResource cldsSdcResource = mock(CldsSdcResource.class);
+        List<CldsSdcResource> cldsSdcResources = new ArrayList<>();
+        cldsSdcResources.add(cldsSdcResource);
         List<String> resourceVf = new ArrayList<>();
         resourceVf.add(serviceInvariantUUID);
 
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
+        Global global = mock(Global.class);
         when(prop.getGlobal()).thenReturn(global);
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
         when(global.getService()).thenReturn(serviceInvariantUUID);
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
-        when(sdcCatalogServices.getCldsSdcServiceDetailFromJson(null)).thenReturn(CldsSdcServiceDetail);
+        CldsSdcServiceDetail cldsSdcServiceDetail = mock(CldsSdcServiceDetail.class);
+        when(sdcCatalogServices.getCldsSdcServiceDetailFromJson(null)).thenReturn(cldsSdcServiceDetail);
         when(global.getResourceVf()).thenReturn(new ArrayList<>());
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
-        when(CldsSdcServiceDetail.getResources()).thenReturn(CldsSdcResources);
+        when(cldsSdcServiceDetail.getResources()).thenReturn(cldsSdcResources);
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
-        when(CldsSdcResource.getResoucreType()).thenReturn("VF");
+        when(cldsSdcResource.getResoucreType()).thenReturn("VF");
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
         when(global.getResourceVf()).thenReturn(resourceVf);
-        when(CldsSdcResource.getResourceInvariantUUID()).thenReturn(serviceInvariantUUID);
-        when(CldsSdcResource.getResourceInstanceName()).thenReturn("Resource instance name");
+        when(cldsSdcResource.getResourceInvariantUUID()).thenReturn(serviceInvariantUUID);
+        when(cldsSdcResource.getResourceInstanceName()).thenReturn("Resource instance name");
         List<String> expected = new ArrayList<>();
         expected.add("AYBABTU/null/resourceInstances/resourceinstancename/artifacts");
         Assert.assertEquals(expected, SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution));

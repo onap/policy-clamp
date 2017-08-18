@@ -23,11 +23,15 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import org.onap.clamp.clds.transform.TransformUtil;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import java.io.IOException;
+
+import org.onap.clamp.clds.transform.TransformUtil;
+
 
 /**
  * Test org.onap.clamp.ClampDesigner.model.prop package using ModelProperties.
@@ -45,50 +49,45 @@ public class ModelPropertiesTest {
         Assert.assertEquals(modName, prop.getModelName());
         Assert.assertEquals(controlName, prop.getControlName());
         Assert.assertEquals(null, prop.getActionCd());
-
-        Global g = prop.getGlobal();
-        Assert.assertEquals("0f983e18-4603-4bb4-a98c-e29691fb16a1", g.getService());
-        Assert.assertEquals("[SNDGCA64]", g.getLocation().toString());
-        Assert.assertEquals("[6c7aaec2-59eb-41d9-8681-b7f976ab668d]", g.getResourceVf().toString());
-
+        Global global = prop.getGlobal();
+        Assert.assertEquals("0f983e18-4603-4bb4-a98c-e29691fb16a1", global.getService());
+        Assert.assertEquals("[SNDGCA64]", global.getLocation().toString());
+        Assert.assertEquals("[6c7aaec2-59eb-41d9-8681-b7f976ab668d]", global.getResourceVf().toString());
         StringMatch sm = prop.getType(StringMatch.class);
         Assert.assertEquals("StringMatch_", sm.getId());
+        Policy policy = prop.getType(Policy.class);
+        Assert.assertEquals("Policy_", policy.getId());
+        Assert.assertEquals(null, policy.getTopicPublishes());
+        Assert.assertEquals(null, policy.getTopicSubscribes());
 
-        Policy p = prop.getType(Policy.class);
-        Assert.assertEquals("Policy_", p.getId());
-        Assert.assertEquals(null, p.getTopicPublishes());
-        Assert.assertEquals(null, p.getTopicSubscribes());
-
-        Tca t = prop.getType(Tca.class);
-        Assert.assertEquals("Narra", t.getTcaItems().get(0).getTcaName());
-        Assert.assertEquals(Integer.valueOf(4), t.getTcaItems().get(0).getTcaThreshholds().get(0).getThreshhold());
+        Tca tca = prop.getType(Tca.class);
+        Assert.assertEquals("Narra", tca.getTcaItems().get(0).getTcaName());
+        Assert.assertEquals(Integer.valueOf(4), tca.getTcaItems().get(0).getTcaThreshholds().get(0).getThreshhold());
     }
 
     @Test
-	public void testPolicy() throws IOException {
+    public void testPolicy() throws IOException {
 
-		String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
-		System.out.println(modelBpmnProp);
+        String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
+        System.out.println(modelBpmnProp);
 
-		String modelProp = TransformUtil.getResourceAsString("example/modelPropForPolicy.json");
-		System.out.println(modelProp);
-
-		ModelProperties prop = new ModelProperties("example-model-name", "example-control-name", null, true, modelBpmnProp, modelProp);
-		System.out.println("attempting prop.getGlobal()...");
-		Global g = prop.getGlobal();
-		System.out.println("attempting prop.getStringMatch()...");
-		StringMatch stringMatch = prop.getType(StringMatch.class);
-		if(stringMatch.isFound()){
-			System.out.println("stringMatch json object is present...");
-			assertEquals("1", stringMatch.getResourceGroups().get(0).getPolicyId());
-		}
-		System.out.println("attempting prop.getPolicy()...");
-		Policy policy = prop.getType(Policy.class);
-		if(policy.isFound()){
-			System.out.println("policy json object is present...");
-			assertEquals("1", policy.getPolicyChains().get(0).getPolicyId());
-		}
-	}
-
-
+        String modelProp = TransformUtil.getResourceAsString("example/modelPropForPolicy.json");
+        System.out.println(modelProp);
+        ModelProperties prop = new ModelProperties("example-model-name", "example-control-name",
+                null, true, modelBpmnProp, modelProp);
+        System.out.println("attempting prop.getGlobal()...");
+        Global global = prop.getGlobal();
+        System.out.println("attempting prop.getStringMatch()...");
+        StringMatch stringMatch = prop.getType(StringMatch.class);
+        if (stringMatch.isFound()) {
+            System.out.println("stringMatch json object is present...");
+            assertEquals("1", stringMatch.getResourceGroups().get(0).getPolicyId());
+        }
+        System.out.println("attempting prop.getPolicy()...");
+        Policy policy = prop.getType(Policy.class);
+        if (policy.isFound()) {
+            System.out.println("policy json object is present...");
+            assertEquals("1", policy.getPolicyChains().get(0).getPolicyId());
+        }
+    }
 }

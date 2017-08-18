@@ -23,6 +23,12 @@
 
 package org.onap.clamp.clds.it;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.IOException;
 
 import org.junit.Before;
@@ -35,12 +41,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
  * Test SDC API - stand alone (except for some config). Replicates
  * getSdcServices and getSdcServicesByUUID in the CldsService Adds test of
@@ -51,9 +51,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class PropJsonBuilderIT extends AbstractIT {
 
-    private String       globalPropsPartial;
+    private String globalPropsPartial;
     private ObjectMapper mapper;
 
+    /**
+     * Initial test setup.
+     */
     @Before
     public void setUp() throws IOException {
         String url = refProp.getStringValue("sdc.serviceUrl");
@@ -81,13 +84,11 @@ public class PropJsonBuilderIT extends AbstractIT {
     }
 
     private void sampleJsonObject() throws JsonProcessingException {
-        ArrayNode arrayNode = mapper.createArrayNode();
 
         /**
-         * Create three JSON Objects objectNode1, objectNode2, objectNode3 Add
-         * all these three objects in the array
+         * Create three JSON Objects objectNode1, objectNode2, objectNode3.
+         * Add all these three objects in the array
          */
-
         ObjectNode objectNode1 = mapper.createObjectNode();
         objectNode1.put("bookName", "Java");
         objectNode1.put("price", "100");
@@ -101,8 +102,9 @@ public class PropJsonBuilderIT extends AbstractIT {
         objectNode3.put("price", "500");
 
         /**
-         * Array contains JSON Objects
+         * Array contains JSON Objects.
          */
+        ArrayNode arrayNode = mapper.createArrayNode();
         arrayNode.add(objectNode1);
         arrayNode.add(objectNode2);
         arrayNode.add(objectNode3);
@@ -114,7 +116,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         System.out.println(arrayNode.toString());
 
         /**
-         * To make the JSON String pretty use the below code
+         * To make the JSON String pretty use the below code.
          */
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(arrayNode));
     }
@@ -122,6 +124,7 @@ public class PropJsonBuilderIT extends AbstractIT {
     private String createEmptySharedObject() throws JsonProcessingException {
 
         /**
+         * Empty Object initialization.
          * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
          * "": "" } }
          */
@@ -133,30 +136,31 @@ public class PropJsonBuilderIT extends AbstractIT {
         locationObjectNode.putPOJO("location", emptyObjectNode);
         ObjectNode alarmConditionObjectNode = mapper.createObjectNode();
         alarmConditionObjectNode.putPOJO("alarmCondition", emptyObjectNode);
-        ObjectNode emptyServiceObjectNode = mapper.createObjectNode();
         ArrayNode samArrayNode = mapper.createArrayNode();
         samArrayNode.add(vfObjectNode);
         samArrayNode.add(locationObjectNode);
         samArrayNode.add(alarmConditionObjectNode);
+        ObjectNode emptyServiceObjectNode = mapper.createObjectNode();
         emptyServiceObjectNode.putPOJO("", samArrayNode);
 
         /**
+         * Object initialization.
          * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
          *
          */
-        ObjectNode vfObjectNode2 = mapper.createObjectNode();
         ObjectNode dcaeClampDemo3Node = mapper.createObjectNode();
         dcaeClampDemo3Node.put("DCAE_CLAMP_DEMO3", "DCAE_CLAMP_DEMO3");
         ArrayNode vfArrayNode = mapper.createArrayNode();
         vfArrayNode.add(emptyObjectNode);
         vfArrayNode.add(dcaeClampDemo3Node);
+        ObjectNode vfObjectNode2 = mapper.createObjectNode();
         vfObjectNode2.putPOJO("vf", vfArrayNode);
 
         /**
+         * Object initialization.
          * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
          * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
-        ObjectNode locationObjectNode2 = mapper.createObjectNode();
         ObjectNode sandiegoLocationNode = mapper.createObjectNode();
         sandiegoLocationNode.put("SNDGCA64", "San Diego SAN3");
         ObjectNode alpharettaNode = mapper.createObjectNode();
@@ -165,14 +169,15 @@ public class PropJsonBuilderIT extends AbstractIT {
         locationArrayNode.add(emptyObjectNode);
         locationArrayNode.add(sandiegoLocationNode);
         locationArrayNode.add(alpharettaNode);
+        ObjectNode locationObjectNode2 = mapper.createObjectNode();
         locationObjectNode2.putPOJO("location", locationArrayNode);
 
         /**
+         * Object initialization.
          * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
          * "A Fallback Operation will soon be started",
          * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
          */
-        ObjectNode alarmConditionObjectNode2 = mapper.createObjectNode();
         ObjectNode alamrCondition1 = mapper.createObjectNode();
         alamrCondition1.put("A+Fallback+Operation+will+soon+be+started", "A Fallback Operation will soon be started");
         ObjectNode alarmConditon2 = mapper.createObjectNode();
@@ -181,6 +186,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         alarmArrayNode.add(emptyObjectNode);
         alarmArrayNode.add(alamrCondition1);
         alarmArrayNode.add(alarmConditon2);
+        ObjectNode alarmConditionObjectNode2 = mapper.createObjectNode();
         alarmConditionObjectNode2.putPOJO("alarmCondition", alarmArrayNode);
 
         ArrayNode byServiceIdArrayNode = mapper.createArrayNode();
@@ -200,12 +206,10 @@ public class PropJsonBuilderIT extends AbstractIT {
         byServiceBasicObjetNode.putPOJO("byService", byServiceBasicArrayNode);
 
         /**
+         * Object initialization.
          * "byVf": { "": { "vfc": { "": "" },
          * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
-
-        ObjectNode byVfCBasicNode = mapper.createObjectNode();
-        ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         ObjectNode vfCObjectNode = mapper.createObjectNode();
         vfCObjectNode.putPOJO("vfC", emptyObjectNode);
         ObjectNode vfcIdObjectNode = mapper.createObjectNode();
@@ -213,8 +217,10 @@ public class PropJsonBuilderIT extends AbstractIT {
         ArrayNode emptyvfcArrayNode = mapper.createArrayNode();
         emptyvfcArrayNode.add(vfCObjectNode);
         emptyvfcArrayNode.add(vfcIdObjectNode);
+        ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         emptyvfcobjectNode.putPOJO("", emptyvfcArrayNode);
 
+        ObjectNode byVfCBasicNode = mapper.createObjectNode();
         byVfCBasicNode.putPOJO("byVf", emptyvfcobjectNode);
 
         ArrayNode finalSharedArrayObject = mapper.createArrayNode();
@@ -232,12 +238,9 @@ public class PropJsonBuilderIT extends AbstractIT {
     }
 
     private String createTestEmptySharedObject() throws IOException {
-        String locationStringValue = refProp.getStringValue("ui.location.default");
-        String alarmStringValue = refProp.getStringValue("ui.alarm.default");
 
-        ObjectNode locationJsonNode = (ObjectNode) mapper.readValue(locationStringValue, JsonNode.class);
-        ObjectNode alarmStringJsonNode = (ObjectNode) mapper.readValue(alarmStringValue, JsonNode.class);
         /**
+         * Object initialization.
          * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
          * "": "" } }
          */
@@ -251,6 +254,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", vfObjectNode);
 
         /**
+         * Object initialization.
          * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
          *
          */
@@ -261,15 +265,19 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", dcaeClampDemo3Node);
 
         /**
+         * Object initialization.
          * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
          * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
         // ObjectNode sandiegoLocationNode = mapper.createObjectNode();
         // sandiegoLocationNode.put("SNDGCA64","San Diego SAN3");
         // sandiegoLocationNode.put("ALPRGAED","Alpharetta PDK1");
+        String locationStringValue = refProp.getStringValue("ui.location.default");
+        ObjectNode locationJsonNode = (ObjectNode) mapper.readValue(locationStringValue, JsonNode.class);
         vfObjectNode2.putPOJO("location", locationJsonNode);
 
         /**
+         * Object initialization.
          * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
          * "A Fallback Operation will soon be started",
          * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
@@ -279,27 +287,28 @@ public class PropJsonBuilderIT extends AbstractIT {
         // Fallback Operation will soon be started");
         // alamrCondition1.put("BRM%2C+Scheduled+Backup+Failed","BRM, Scheduled
         // Backup Failed");
+        String alarmStringValue = refProp.getStringValue("ui.alarm.default");
+        ObjectNode alarmStringJsonNode = (ObjectNode) mapper.readValue(alarmStringValue, JsonNode.class);
         vfObjectNode2.putPOJO("alarmCondition", alarmStringJsonNode);
         emptyServiceObjectNode.putPOJO("c989a551-69f7-4b30-b10a-2e85bb227c30", vfObjectNode2);
         ObjectNode byServiceBasicObjetNode = mapper.createObjectNode();
         byServiceBasicObjetNode.putPOJO("byService", emptyServiceObjectNode);
 
         /**
+         * Object initialization.
          * "byVf": { "": { "vfc": { "": "" },
          * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
-
-        ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         ObjectNode vfCObjectNode = mapper.createObjectNode();
         vfCObjectNode.putPOJO("vfC", emptyObjectNode);
         ObjectNode subVfCObjectNode = mapper.createObjectNode();
         subVfCObjectNode.putPOJO("vfc", emptyObjectNode);
         vfCObjectNode.putPOJO("03596c12-c7e3-44b7-8994-5cdfeda8afdd", subVfCObjectNode);
+        ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         emptyvfcobjectNode.putPOJO("", vfCObjectNode);
         byServiceBasicObjetNode.putPOJO("byVf", emptyvfcobjectNode);
 
         ObjectNode readTree = (ObjectNode) mapper.readValue(globalPropsPartial, JsonNode.class);
-
         readTree.putPOJO("shared", byServiceBasicObjetNode);
         System.out.println("valuie of objNode:" + readTree);
         return readTree.toString();
@@ -307,6 +316,7 @@ public class PropJsonBuilderIT extends AbstractIT {
 
     private String createCldsSharedObject(CldsSdcServiceDetail CldsSdcServiceDetail) throws IOException {
         /**
+         * Object initialization.
          * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
          * "": "" } }
          */
@@ -320,6 +330,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", vfObjectNode);
 
         /**
+         * Object initialization.
          * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
          *
          */
@@ -330,6 +341,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", dcaeClampDemo3Node);
 
         /**
+         * Object initialization.
          * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
          * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
@@ -339,6 +351,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("location", sandiegoLocationNode);
 
         /**
+         * Object initialization.
          * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
          * "A Fallback Operation will soon be started",
          * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
@@ -352,16 +365,17 @@ public class PropJsonBuilderIT extends AbstractIT {
         byServiceBasicObjetNode.putPOJO("byService", emptyServiceObjectNode);
 
         /**
+         * Object initialization.
          * "byVf": { "": { "vfc": { "": "" },
          * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
 
-        ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         ObjectNode vfCObjectNode = mapper.createObjectNode();
         vfCObjectNode.putPOJO("vfC", emptyObjectNode);
         ObjectNode subVfCObjectNode = mapper.createObjectNode();
         subVfCObjectNode.putPOJO("vfc", emptyObjectNode);
         vfCObjectNode.putPOJO("03596c12-c7e3-44b7-8994-5cdfeda8afdd", subVfCObjectNode);
+        ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         emptyvfcobjectNode.putPOJO("", vfCObjectNode);
         byServiceBasicObjetNode.putPOJO("byVf", emptyvfcobjectNode);
 

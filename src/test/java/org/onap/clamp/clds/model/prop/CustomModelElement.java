@@ -33,7 +33,7 @@ public class CustomModelElement extends ModelElement {
     private static final String CUSTOM_TYPE = "customType";
 
     /**
-     * 
+     * Main Constructor.
      */
     public CustomModelElement(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
         super(CUSTOM_TYPE, modelProp, modelBpmn, modelJson);
