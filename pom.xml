@@ -732,7 +732,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<id>jacoco-unit-tests</id>
+						<id>pre-unit-test</id>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
@@ -742,7 +742,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>jacoco-integration-tests</id>
+						<id>pre-integration-test</id>
 						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>prepare-agent</goal>
