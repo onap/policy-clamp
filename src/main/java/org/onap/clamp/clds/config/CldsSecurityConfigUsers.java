@@ -37,32 +37,50 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+/**
+ * This class is used to enable the HTTP authentication to login. It requires a
+ * specific JSON file containing the user definition
+ * (classpath:etc/config/clds/clds-users.json).
+ *
+ */
 @Configuration
 @EnableWebSecurity
 @Profile("clamp-spring-authentication")
-public class CldsSecurityConfig extends WebSecurityConfigurerAdapter {
+public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
 
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsSecurityConfig.class);
+    protected static final EELFLogger logger        = EELFManager.getInstance()
+            .getLogger(CldsSecurityConfigUsers.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
-    private ApplicationContext      appContext;
+    private ApplicationContext        appContext;
 
     @Value("${org.onap.clamp.config.files.cldsUsers:'classpath:etc/config/clds/clds-users.json'}")
-    private String                  cldsUsersFile;
+    private String                    cldsUsersFile;
 
     @Value("${CLDS_PERMISSION_TYPE_CL:permission-type-cl}")
-    private String                  cldsPersmissionTypeCl;
+    private String                    cldsPersmissionTypeCl;
 
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
-    private String                  cldsPermissionInstance;
+    private String                    cldsPermissionInstance;
 
+    /**
+     * This method configures on which URL the authorization will be enabled.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
                 .authenticated().anyRequest().permitAll().and().logout();
     }
 
+    /**
+     * This method is called by the framework and is used to load all the users
+     * defined in cldsUsersFile variable (this file path can be configured in
+     * the application.properties).
+     * 
+     * @param auth
+     * @throws Exception
+     */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         CldsUser[] usersList = loadUsers();
@@ -79,6 +97,13 @@ public class CldsSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    /**
+     * This method loads physically the JSON file and convert it to an Array of
+     * CldsUser.
+     * 
+     * @return The array of CldsUser
+     * @throws Exception
+     */
     private CldsUser[] loadUsers() throws Exception {
         logger.info("Load from clds-users.properties");
         return CldsUserJsonDecoder.decodeJson(appContext.getResource(cldsUsersFile).getInputStream());
