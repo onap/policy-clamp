@@ -62,12 +62,22 @@ public class SdcReq {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     /**
+     * Format the Blueprint from a Yaml
+     * 
      * @param refProp
+     *            The RefProp instance containing the Clds config
      * @param prop
-     * @return
+     *            The ModelProperties describing the clds model
+     * @param docText
+     *            The Yaml file that must be converted
+     * 
+     * @return A String containing the BluePrint
      * @throws JsonParseException
+     *             In case of issues
      * @throws JsonMappingException
+     *             In case of issues
      * @throws IOException
+     *             In case of issues
      */
     public static String formatBlueprint(RefProp refProp, ModelProperties prop, String docText)
             throws JsonParseException, JsonMappingException, IOException {
@@ -346,7 +356,14 @@ public class SdcReq {
         return "Basic " + idPw;
     }
 
-    private static String getYamlvalue(String docText) throws IOException {
+    /**
+     * Method to get yaml/template properties value from json
+     * 
+     * @param docText
+     * @return
+     * @throws IOException
+     */
+    public static String getYamlvalue(String docText) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String yamlFileValue = "";
         ObjectNode root = objectMapper.readValue(docText, ObjectNode.class);
