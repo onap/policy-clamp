@@ -28,9 +28,7 @@ import java.util.List;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.onap.clamp.clds.client.req.SdcReq;
-import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.DcaeEvent;
-import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,62 +83,14 @@ public class SdcSendReqDelegate implements JavaDelegate {
         if (formattedSdcLocationReq != null) {
             execution.setVariable("formattedLocationReq", formattedSdcLocationReq.getBytes());
         }
-        String serviceInvariantUUID = getServiceInvariantUUIDFromProps(prop);
-        uploadToSdc(prop, serviceInvariantUUID, userid, sdcReqUrlsList, formatttedSdcReq, formattedSdcLocationReq,
+        sdcCatalogServices.uploadToSdc(prop, userid, sdcReqUrlsList, formatttedSdcReq, formattedSdcLocationReq,
                 artifactName, locationArtifactName);
     }
 
-    private String getServiceInvariantUUIDFromProps(ModelProperties props) {
-        String invariantUUID = "";
-        Global globalProps = props.getGlobal();
-        if (globalProps != null) {
-            if (globalProps.getService() != null) {
-                invariantUUID = globalProps.getService();
-            }
-        }
-        return invariantUUID;
-    }
-
-    private void uploadToSdc(ModelProperties prop, String serviceInvariantUUID, String userid,
-            List<String> sdcReqUrlsList, String formatttedSdcReq, String formattedSdcLocationReq, String artifactName,
-            String locationArtifactName) throws Exception {
-        logger.info("userid=" + userid);
-        if (sdcReqUrlsList != null && sdcReqUrlsList.size() > 0) {
-            for (String url : sdcReqUrlsList) {
-                if (url != null) {
-                    String originalServiceUUID = sdcCatalogServices
-                            .getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
-                    logger.info("ServiceUUID used before upload in url:" + originalServiceUUID);
-                    String sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(originalServiceUUID);
-                    CldsSdcServiceDetail CldsSdcServiceDetail = sdcCatalogServices
-                            .getCldsSdcServiceDetailFromJson(sdcServicesInformation);
-                    String uploadedArtifactUUID = sdcCatalogServices
-                            .getArtifactIdIfArtifactAlreadyExists(CldsSdcServiceDetail, artifactName);
-                    // Upload artifacts to sdc
-                    String updateUrl = uploadedArtifactUUID != null ? url + "/" + uploadedArtifactUUID : url;
-                    String responseStr = sdcCatalogServices.uploadArtifactToSdc(prop, userid, updateUrl,
-                            formatttedSdcReq);
-                    logger.info("value of sdc Response of uploading to sdc :" + responseStr);
-                    String updatedServiceUUID = sdcCatalogServices
-                            .getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
-                    if (!originalServiceUUID.equalsIgnoreCase(updatedServiceUUID)) {
-                        url = url.replace(originalServiceUUID, updatedServiceUUID);
-                    }
-                    logger.info("ServiceUUID used after upload in ulr:" + updatedServiceUUID);
-                    sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(updatedServiceUUID);
-                    CldsSdcServiceDetail = sdcCatalogServices.getCldsSdcServiceDetailFromJson(sdcServicesInformation);
-                    uploadedArtifactUUID = sdcCatalogServices.getArtifactIdIfArtifactAlreadyExists(CldsSdcServiceDetail,
-                            locationArtifactName);
-                    // To send location information also to sdc
-                    updateUrl = uploadedArtifactUUID != null ? url + "/" + uploadedArtifactUUID : url;
-                    responseStr = sdcCatalogServices.uploadArtifactToSdc(prop, userid, updateUrl,
-                            formattedSdcLocationReq);
-                    logger.info("value of sdc Response of uploading location to sdc :" + responseStr);
-                }
-            }
-        }
-    }
-
+    /**
+     * Method to get sdc service values from properties file.
+     * @param controlName
+     */
     private void getSdcAttributes(String controlName) {
         baseUrl = refProp.getStringValue("sdc.serviceUrl");
         artifactLabel = SdcReq

@@ -23,8 +23,11 @@
 
 package org.onap.clamp.clds.client;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
+import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -33,47 +36,65 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Policy;
 import org.onap.clamp.clds.model.prop.PolicyChain;
 import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.policy.api.AttributeType;
+import org.onap.policy.api.PolicyEngineException;
+import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 /**
- * Send Operational Policy info to policy api.
+ * Send Operational Policy info to policy api. It uses the policy code to define
+ * the model and communicate with it. See also the PolicyClient class.
+ * 
  */
 public class OperationalPolicyDelegate implements JavaDelegate {
     protected static final EELFLogger logger        = EELFManager.getInstance()
             .getLogger(OperationalPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
+    /**
+     * Automatically injected by Spring, define in CldsConfiguration as a bean.
+     */
     @Autowired
-    private PolicyClient            policyClient;
+    private PolicyClient              policyClient;
 
+    /**
+     * Automatically injected by Spring, define in CldsConfiguration as a bean.
+     */
     @Autowired
-    private RefProp                 refProp;
+    private RefProp                   refProp;
 
     /**
      * Perform activity. Send Operational Policy info to policy api.
      *
      * @param execution
+     *            The DelegateExecution
+     * @throws BuilderException
+     *             In case of issues with OperationalPolicyReq
+     * @throws IOException
+     *             In case of issues with the stream
+     * @throws PolicyEngineException
+     *             In case of issues with the PolicyEngine creation
      */
     @Override
-    public void execute(DelegateExecution execution) throws Exception {
+    public void execute(DelegateExecution execution) throws IOException, BuilderException, PolicyEngineException {
 
         // execution.setVariable("operationalPolicyRequestUuid",
         // operationalPolicyRequestUuid);
         String responseMessage = null;
         String operationalPolicyRequestUuid = null;
         ModelProperties prop = ModelProperties.create(execution);
-        for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-            operationalPolicyRequestUuid = UUID.randomUUID().toString();
-            Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp, prop,
-                    prop.getType(Policy.class).getId(), policyChain);
-            responseMessage = policyClient.sendBrms(attributes, prop, operationalPolicyRequestUuid);
-        }
-        if (responseMessage != null) {
-            execution.setVariable("operationalPolicyResponseMessage", responseMessage.getBytes());
+        Policy policy = prop.getType(Policy.class);
+        if (policy.isFound()) {
+            for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
+                operationalPolicyRequestUuid = LoggingUtils.getRequestId();
+                Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
+                        prop, prop.getType(Policy.class).getId(), policyChain);
+                responseMessage = policyClient.sendBrms(attributes, prop, operationalPolicyRequestUuid);
+            }
+            if (responseMessage != null) {
+                execution.setVariable("operationalPolicyResponseMessage", responseMessage.getBytes());
+            }
         }
     }
 

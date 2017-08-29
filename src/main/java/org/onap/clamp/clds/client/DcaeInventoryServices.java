@@ -23,11 +23,16 @@
 
 package org.onap.clamp.clds.client;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.BadRequestException;
@@ -43,29 +48,43 @@ import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonProcessingException;
-
+/**
+ * This class implements the communication with DCAE for the service inventory.
+ *
+ */
 public class DcaeInventoryServices {
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
+    protected static final EELFLogger auditLogger   = EELFManager.getInstance().getAuditLogger();
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
-    private RefProp                 refProp;
+    private RefProp                   refProp;
 
     @Autowired
-    private CldsDao                 cldsDao;
+    private CldsDao                   cldsDao;
 
     @Autowired
-    private SdcCatalogServices      sdcCatalogServices;
+    private SdcCatalogServices        sdcCatalogServices;
 
-    public void setEventInventory(CldsModel cldsModel, String userId) throws Exception {
+    /**
+     * Set the event inventory.
+     * 
+     * @param cldsModel
+     *            The CldsModel
+     * @param userId
+     *            The user ID
+     * @throws ParseException
+     *             In case of issues during the parsing of DCAE answer
+     */
+    public void setEventInventory(CldsModel cldsModel, String userId) throws ParseException {
         String artifactName = cldsModel.getControlName();
         DcaeEvent dcaeEvent = new DcaeEvent();
         String isDcaeInfoAvailable = null;
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "setEventInventory");
         if (artifactName != null) {
             artifactName = artifactName + ".yml";
         }
@@ -74,8 +93,8 @@ public class DcaeInventoryServices {
              * Below are the properties required for calling the dcae inventory
              * url call
              */
-            ModelProperties prop = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), null, false, "{}",
-                    cldsModel.getPropText());
+            ModelProperties prop = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), null, false,
+                    "{}", cldsModel.getPropText());
             Global global = prop.getGlobal();
             String invariantServiceUuid = global.getService();
             List<String> resourceUuidList = global.getResourceVf();
@@ -92,12 +111,12 @@ public class DcaeInventoryServices {
             dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
 
         } catch (JsonProcessingException e) {
-            // exception
-            logger.error("JsonProcessingException" + e);
-        } catch (IOException e) {
-
-            // exception
-            logger.error("IOException :" + e);
+            logger.error("Error during JSON decoding", e);
+        } catch (IOException ex) {
+            logger.error("Error during JSON decoding", ex);
+        } finally {
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("setEventInventory complete");
         }
         /* Null whether the DCAE has items lenght or not */
         if (isDcaeInfoAvailable != null) {
@@ -107,18 +126,18 @@ public class DcaeInventoryServices {
             Object obj0 = parser.parse(isDcaeInfoAvailable);
             JSONObject jsonObj = (JSONObject) obj0;
             String oldTypeId = cldsModel.getTypeId();
-		    String newTypeId = "";
+            String newTypeId = "";
             if (jsonObj.get("typeId") != null) {
-            	newTypeId = jsonObj.get("typeId").toString();
+                newTypeId = jsonObj.get("typeId").toString();
                 cldsModel.setTypeId(jsonObj.get("typeId").toString());
             }
             // cldsModel.setTypeName(cldsModel.getControlName().toString()+".yml");
             if (jsonObj.get("typeName") != null) {
                 cldsModel.setTypeName(jsonObj.get("typeName").toString());
             }
-            if(oldTypeId == null || !oldTypeId.equalsIgnoreCase(newTypeId)){
-            	CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
-                    CldsEvent.ACTION_STATE_RECEIVED, null);
+            if (oldTypeId == null || !oldTypeId.equalsIgnoreCase(newTypeId)) {
+                CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
+                        CldsEvent.ACTION_STATE_RECEIVED, null);
             }
             cldsModel.save(cldsDao, userId);
         } else {
@@ -126,32 +145,55 @@ public class DcaeInventoryServices {
         }
     }
 
-    public String getDcaeInformation(String artifactName, String serviceUUID, String resourceUUID)
+    /**
+     * DO a query to DCAE to get some Information.
+     * 
+     * @param artifactName
+     *            The artifact Name
+     * @param serviceUuid
+     *            The service UUID
+     * @param resourceUuid
+     *            The resource UUID
+     * @return The DCAE inventory for the artifact
+     * @throws IOException
+     *             In case of issues with the stream
+     * @throws ParseException
+     *             In case of issues with the Json parsing
+     */
+    public String getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
             throws IOException, ParseException {
-        String queryString = "?sdcResourceId=" + resourceUUID + "&sdcServiceId=" + serviceUUID + "&typeName="
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
+        String queryString = "?sdcResourceId=" + resourceUuid + "&sdcServiceId=" + serviceUuid + "&typeName="
                 + artifactName;
         String fullUrl = refProp.getStringValue("DCAE_INVENTORY_URL") + "/dcae-service-types" + queryString;
+
         logger.info("Dcae Inventory Service full url - " + fullUrl);
         String daceInventoryResponse = null;
         URL inventoryUrl = new URL(fullUrl);
 
         HttpURLConnection conn = (HttpURLConnection) inventoryUrl.openConnection();
         conn.setRequestMethod("GET");
+        String reqid = LoggingUtils.getRequestId();
+        logger.info("reqid set to " + reqid);
+        conn.setRequestProperty("X-ECOMP-RequestID", reqid);
+
         boolean requestFailed = true;
         int responseCode = conn.getResponseCode();
         if (responseCode == 200) {
             requestFailed = false;
         }
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine = null;
-        StringBuffer response = new StringBuffer();
-        String responseStr = null;
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        StringBuilder response = new StringBuilder();
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            String inputLine = null;
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
         }
-        in.close();
-        responseStr = response.toString();
+        String responseStr = response.toString();
         if (responseStr != null) {
             if (requestFailed) {
                 logger.error("requestFailed - responseStr=" + response);
@@ -175,6 +217,8 @@ public class DcaeInventoryServices {
             daceInventoryResponse = dcaeServiceType0.toString();
             logger.info(daceInventoryResponse.toString());
         }
+        LoggingUtils.setTimeContext(startTime, new Date());
+        metricsLogger.info("getDcaeInformation complete: number services returned=" + numServices);
         return daceInventoryResponse;
     }
 

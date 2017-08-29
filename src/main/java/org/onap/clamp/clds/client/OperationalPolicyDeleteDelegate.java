@@ -56,13 +56,15 @@ public class OperationalPolicyDeleteDelegate implements JavaDelegate {
         prop.setCurrentModelElementId(policy.getId());
 
         String responseMessage = "";
-        for (PolicyChain policyChain : policy.getPolicyChains()) {
-            prop.setPolicyUniqueId(policyChain.getPolicyId());
-            responseMessage = policyClient.deleteBrms(prop);
-        }
-        if (responseMessage != null) {
-            execution.setVariable("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
-        }
+		if(policy.isFound()){
+	        for (PolicyChain policyChain : policy.getPolicyChains()) {
+	            prop.setPolicyUniqueId(policyChain.getPolicyId());
+	            responseMessage = policyClient.deleteBrms(prop);
+	        }
+	        if (responseMessage != null) {
+	            execution.setVariable("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
+	        }
+	    }
     }
 
 }

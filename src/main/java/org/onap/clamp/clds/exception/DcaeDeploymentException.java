@@ -21,48 +21,41 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.model;
+package org.onap.clamp.clds.exception;
 
-import java.io.Serializable;
+/**
+ * New exception to capture DCAE communication errors.
+ *
+ */
+public class DcaeDeploymentException extends RuntimeException {
 
-public class CldsAlarmCondition implements Serializable {
+    /**
+     * Generated ID
+     */
+    private static final long serialVersionUID = 8452294782552680243L;
 
-    private static final long serialVersionUID = 4271364536747705555L;
-    private String            eventSourceType;
-    private String            alarmConditionKey;
-    private String            severity;
-    private String            eventName;
-
-    public String getEventSourceType() {
-        return eventSourceType;
+    /**
+     * This constructor can be used to create a new DcaeDeploymentException.
+     * 
+     * @param message
+     *            A string message detailing the problem
+     * @param e
+     *            The exception sent by the code
+     */
+    public DcaeDeploymentException(String message, Throwable e) {
+        super(message, e);
     }
 
-    public void setEventSourceType(String eventSourceType) {
-        this.eventSourceType = eventSourceType;
+    /**
+     * This constructor can be used to create a new DcaeDeploymentException. Use
+     * this constructor only if you are creating a new exception stack, not if
+     * an exception was already raised by another code.
+     *
+     * @param message
+     *            A string message detailing the problem
+     */
+    public DcaeDeploymentException(String message) {
+        super(message);
     }
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
-    public String getAlarmConditionKey() {
-        return alarmConditionKey;
-    }
-
-    public void setAlarmConditionKey(String alarmConditionKey) {
-        this.alarmConditionKey = alarmConditionKey;
-    }
-
-	public String getEventName() {
-		return eventName;
-	}
-
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
-	}
 
 }
