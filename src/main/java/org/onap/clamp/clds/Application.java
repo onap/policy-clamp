@@ -30,7 +30,10 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.apache.catalina.connector.Connector;
 import org.camunda.bpm.spring.boot.starter.webapp.CamundaBpmWebappAutoConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -39,13 +42,18 @@ import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfig
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.att.ajsc.common.utility.SystemPropertiesLoader;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "org.onap.clamp.clds", "com.att.ajsc" })
@@ -55,8 +63,29 @@ import com.att.ajsc.common.utility.SystemPropertiesLoader;
 @EnableAsync
 public class Application extends SpringBootServletInitializer {
 
-    private static final String CAMEL_SERVLET_NAME = "CamelServlet";
-    private static final String CAMEL_URL_MAPPING  = "/restservices/clds/v1/*";
+    protected static final EELFLogger logger             = EELFManager.getInstance().getLogger(Application.class);
+
+    @Autowired
+    protected ApplicationContext      appContext;
+
+    private static final String       CAMEL_SERVLET_NAME = "CamelServlet";
+    private static final String       CAMEL_URL_MAPPING  = "/restservices/clds/v1/*";
+
+    // This settings is an additional one to Spring config,
+    // only if we want to have an additional port automatically redirected to
+    // HTTPS
+    @Value("${server.http-to-https-redirection.port:none}")
+    private String                    httpRedirectedPort;
+
+    /**
+     * This 8080 is the default port used by spring if this parameter is not
+     * specified in application.properties.
+     */
+    @Value("${server.port:8080}")
+    private String                    springServerPort;
+
+    @Value("${server.ssl.key-store:none}")
+    private String                    sslKeystoreFile;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -82,6 +111,41 @@ public class Application extends SpringBootServletInitializer {
     @Bean
     public Client restClient() {
         return ClientBuilder.newClient();
+    }
+
+    /**
+     * This method is used by Spring to create the servlet container factory.
+     * 
+     * @return The TomcatEmbeddedServletContainerFactory just created
+     */
+    @Bean
+    public EmbeddedServletContainerFactory getEmbeddedServletContainerFactory() {
+        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+        if (!"none".equals(httpRedirectedPort) && !"none".equals(sslKeystoreFile)) {
+            // Automatically redirect to HTTPS
+            tomcat = new TomcatEmbeddedServletContainerFactoryRedirection();
+            Connector newConnector = createRedirectConnector(Integer.parseInt(springServerPort));
+            if (newConnector != null) {
+                tomcat.addAdditionalTomcatConnectors(newConnector);
+            }
+
+        }
+        return tomcat;
+
+    }
+
+    private Connector createRedirectConnector(int redirectSecuredPort) {
+        if (redirectSecuredPort <= 0) {
+            logger.warn(
+                    "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1 (Connector disabled)");
+            return null;
+        }
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setSecure(false);
+        connector.setPort(Integer.parseInt(httpRedirectedPort));
+        connector.setRedirectPort(redirectSecuredPort);
+        return connector;
     }
 
 }
