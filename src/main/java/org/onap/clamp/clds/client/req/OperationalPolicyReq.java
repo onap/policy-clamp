@@ -38,11 +38,11 @@ import org.onap.clamp.clds.model.prop.PolicyChain;
 import org.onap.clamp.clds.model.prop.PolicyItem;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
-import org.onap.policy.controlloop.policy.OperationsAccumulateParams;
 import org.onap.policy.api.AttributeType;
 import org.onap.policy.asdc.Resource;
 import org.onap.policy.asdc.ResourceType;
 import org.onap.policy.asdc.Service;
+import org.onap.policy.controlloop.policy.OperationsAccumulateParams;
 import org.onap.policy.controlloop.policy.Policy;
 import org.onap.policy.controlloop.policy.PolicyResult;
 import org.onap.policy.controlloop.policy.Target;
@@ -274,21 +274,20 @@ public class OperationalPolicyReq {
         Target target = new Target();
         target.setType(TargetType.VM);
         Policy lastPolicyObj = new Policy();
-		for (int i = 0; i < policyItemList.size(); i++) {
+        for (int i = 0; i < policyItemList.size(); i++) {
             org.onap.policy.controlloop.policy.Policy policyObj;
             PolicyItem policyItem = policyItemList.get(i);
             String policyName = policyItem.getRecipe() + " Policy";
             if (i == 0) {
-            	//To set up time window payload for trigger policy
-				Map<String, String> payloadMap = new HashMap<String, String>();
-				payloadMap.put("timeWindow", refProp.getStringValue("op.eNodeB.timeWindow"));
-				String policyDescription = policyItem.getRecipe()
+                // To set up time window payload for trigger policy
+                Map<String, String> payloadMap = new HashMap<String, String>();
+                payloadMap.put("timeWindow", refProp.getStringValue("op.eNodeB.timeWindow"));
+                String policyDescription = policyItem.getRecipe()
                         + " Policy - the trigger (no parent) policy - created by CLDS";
                 policyObj = builder.setTriggerPolicy(policyName, policyDescription, policyItem.getActor(), target,
                         policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
             } else {
-                Policy parentPolicyObj = policyObjMap
-                        .get(policyItem.getParentPolicy());
+                Policy parentPolicyObj = policyObjMap.get(policyItem.getParentPolicy());
                 String policyDescription = policyItem.getRecipe() + " Policy - triggered conditionally by "
                         + parentPolicyObj.getName() + " - created by CLDS";
                 policyObj = builder.setPolicyForPolicyResult(policyName, policyDescription, policyItem.getActor(),
@@ -300,12 +299,12 @@ public class OperationalPolicyReq {
             }
             policyObjMap.put(policyItem.getId(), policyObj);
         }
-		//To set up operations accumulate params
-		OperationsAccumulateParams operationsAccumulateParams = new OperationsAccumulateParams();
-		operationsAccumulateParams.setLimit(Integer.valueOf(refProp.getStringValue("op.eNodeB.limit")));
-		operationsAccumulateParams.setPeriod(refProp.getStringValue("op.eNodeB.period"));
-		builder.addOperationsAccumulateParams(lastPolicyObj.getId(), operationsAccumulateParams);
-				
+        // To set up operations accumulate params
+        OperationsAccumulateParams operationsAccumulateParams = new OperationsAccumulateParams();
+        operationsAccumulateParams.setLimit(Integer.valueOf(refProp.getStringValue("op.eNodeB.limit")));
+        operationsAccumulateParams.setPeriod(refProp.getStringValue("op.eNodeB.period"));
+        builder.addOperationsAccumulateParams(lastPolicyObj.getId(), operationsAccumulateParams);
+
         //
         // Build the specification
         //
