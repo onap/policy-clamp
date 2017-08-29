@@ -122,6 +122,57 @@ public abstract class ModelElement {
         }
         return value;
     }
+	
+	/**
+	 * Return the value field of the json node element that has a name field that equals the given name.
+	 * 
+	 * @param nodeIn
+	 * @param name
+	 * @return
+	 */
+	public static String getNodeValueByName(JsonNode nodeIn, String name) {
+		String value = null;
+		if ( nodeIn != null ) {
+			value = nodeIn.path(name).asText();
+		}
+		if ( value == null || value.length() == 0 ) {
+			logger.warn(name + "=" + value);
+		} else {
+			logger.debug(name + "=" + value);
+		}
+		return value;
+	}    
+    
+	
+	/**
+	 * Return the value field of the json node element that has a name field that equals the given name.
+	 * 
+	 * @param nodeIn
+	 * @param name
+	 * @return
+	 */
+	public static List<String> getNodeValuesByName(JsonNode nodeIn, String name) {
+		List<String> values = new ArrayList<String>();
+		if ( nodeIn != null ) {
+			Iterator<JsonNode> i = nodeIn.iterator();
+			while (i.hasNext()) {
+				JsonNode node = i.next();
+				if ( node.path("name").asText().equals(name) ) {
+					String value = "";
+					JsonNode vnode = node.path("value");
+					if ( vnode.isArray() ) {
+						// if array, assume value is in first element
+						value = vnode.path(0).asText();
+					} else {
+						// otherwise, just return text
+						value = vnode.asText();					
+					}
+					values.add(value);
+				}
+			}
+		}
+		return values;
+	}    
 
     /**
      * Return the int value field of the json node element that has a name field
