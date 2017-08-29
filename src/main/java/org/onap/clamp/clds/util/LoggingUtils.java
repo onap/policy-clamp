@@ -29,27 +29,32 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import org.jboss.logging.MDC;
+import org.apache.log4j.MDC;
 
+/**
+ * This class handles the special info that appear in the log, like RequestID,
+ * time context, ...
+ *
+ */
 public class LoggingUtils {
 
     /**
      * Set request related logging variables in thread local data via MDC
-     *
+     * 
      * @param service
      *            Service Name of API (ex. "PUT template")
      * @param partner
      *            Partner name (client or user invoking API)
      */
     public static void setRequestContext(String service, String partner) {
-        MDC.put("RequestId",  UUID.randomUUID().toString());
+        MDC.put("RequestId", UUID.randomUUID().toString());
         MDC.put("ServiceName", service);
         MDC.put("PartnerName", partner);
     }
 
     /**
-     * Set time related logging variables in thread local data via MDC
-     *
+     * Set time related logging variables in thread local data via MDC.
+     * 
      * @param beginTimeStamp
      *            Start time
      * @param endTimeStamp
@@ -72,7 +77,7 @@ public class LoggingUtils {
     }
 
     /**
-     * Set response related logging variables in thread local data via MDC
+     * Set response related logging variables in thread local data via MDC.
      * 
      * @param code
      *            Response code ("0" indicates success)
@@ -102,7 +107,7 @@ public class LoggingUtils {
     }
 
     /**
-     * Set error related logging variables in thread local data via MDC
+     * Set error related logging variables in thread local data via MDC.
      * 
      * @param code
      *            Error code
@@ -119,6 +124,24 @@ public class LoggingUtils {
         TimeZone tz = TimeZone.getTimeZone("UTC");
         df.setTimeZone(tz);
         return df.format(timeStamp);
+    }
+
+    /**
+     * Get a previously stored RequestID for the thread local data via MDC. If
+     * one was not previously stored, generate one, store it, and return that
+     * one.
+     * 
+     * @return A string with the request ID
+     */
+    public static String getRequestId() {
+        String reqid;
+
+        reqid = (String) MDC.get("RequestID");
+        if (reqid == null || reqid.isEmpty()) {
+            reqid = UUID.randomUUID().toString();
+            MDC.put("RequestId", reqid);
+        }
+        return reqid;
     }
 
 }

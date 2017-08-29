@@ -23,25 +23,31 @@
 
 package org.onap.clamp.clds.client;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.stream.Collectors;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.onap.clamp.clds.model.refprop.RefProp;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Date;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.ws.rs.BadRequestException;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.onap.clamp.clds.exception.DcaeDeploymentException;
+import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.util.LoggingUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
- *
+ * This class implements the communication with DCAE for the service
+ * deployments.
  *
  */
 public class DcaeDispatcherServices {
@@ -49,23 +55,29 @@ public class DcaeDispatcherServices {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
-    private RefProp                 refProp;
+    private RefProp                   refProp;
 
     /**
-     *
+     * Delete the deployment on DCAE.
+     * 
      * @param deploymentId
-     * @return
-     * @throws Exception
+     *            The deployment ID
+     * @return Return the URL Status
+     * @throws IOException
+     *             In case of issues with the Stream
      */
-    public String deleteDeployment(String deploymentId) throws Exception {
+    public String deleteDeployment(String deploymentId) throws IOException {
 
         String statusUrl = null;
         InputStream in = null;
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "deleteDeployment");
         try {
             String url = refProp.getStringValue("DCAE_DISPATCHER_URL") + "/dcae-deployments/" + deploymentId;
             logger.info("Dcae Dispatcher url - " + url);
             URL obj = new URL(url);
             HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
+            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
             conn.setRequestMethod("DELETE");
             int responseCode = conn.getResponseCode();
 
@@ -94,7 +106,7 @@ public class DcaeDispatcherServices {
             if (responseStr != null) {
                 if (requestFailed) {
                     logger.error("requestFailed - responseStr=" + responseStr);
-                    throw new Exception(responseStr);
+                    throw new BadRequestException(responseStr);
                 }
             }
 
@@ -109,12 +121,14 @@ public class DcaeDispatcherServices {
             logger.debug("Status URL: " + statusUrl);
 
         } catch (Exception e) {
-            logger.error(e.getClass().getName() + " " + e.getMessage());
-            throw e;
+            logger.error("Exception occurred during Delete Deployment Operation with DCAE", e);
+            throw new DcaeDeploymentException("Exception occurred during Delete Deployment Operation with DCAE", e);
         } finally {
             if (in != null) {
                 in.close();
             }
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("deleteDeployment complete");
         }
 
         return statusUrl;
@@ -122,23 +136,30 @@ public class DcaeDispatcherServices {
     }
 
     /**
-     *
+     * Get the Operation Status from a specified URL.
+     * 
      * @param statusUrl
-     * @return
-     * @throws Exception
+     *            The URL provided by a previous DCAE Query
+     * @return The status
+     * @throws IOException
+     *             In case of issues with the Stream
+     * 
      */
-    public String getOperationStatus(String statusUrl) throws Exception {
+    public String getOperationStatus(String statusUrl) throws IOException {
 
-        //Assigning processing status to monitor operation status further
+        // Assigning processing status to monitor operation status further
         String opStatus = "processing";
         InputStream in = null;
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "getOperationStatus");
         try {
             URL obj = new URL(statusUrl);
             HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
             int responseCode = conn.getResponseCode();
             logger.debug("Deployment operation status response code - " + responseCode);
-            if(responseCode == 200){
+            if (responseCode == 200) {
                 in = conn.getInputStream();
                 String res = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
                 JSONParser parser = new JSONParser();
@@ -150,58 +171,71 @@ public class DcaeDispatcherServices {
                 opStatus = status;
             }
         } catch (Exception e) {
-            logger.debug(e.getClass().getName() + " " + e.getMessage());
+            logger.error("Exception occurred during getOperationStatus Operation with DCAE", e);
             logger.debug(e.getMessage()
                     + " : got exception while retrieving status, trying again until we get 200 response code");
         } finally {
             if (in != null) {
                 in.close();
             }
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("getOperationStatus complete");
         }
-
         return opStatus;
     }
 
     /**
-     *
-     * @throws Exception
+     * This method send a getDeployments operation to DCAE.
+     * 
+     * @throws IOException
+     *             In case of issues with the Stream
      */
-    public void getDeployments() throws Exception {
+    public void getDeployments() throws IOException {
         InputStream in = null;
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "getDeployments");
         try {
             String url = refProp.getStringValue("DCAE_DISPATCHER_URL") + "/dcae-deployments";
             logger.info("Dcae Dispatcher deployments url - " + url);
             URL obj = new URL(url);
             HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
             conn.setRequestMethod("GET");
+            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
             int responseCode = conn.getResponseCode();
             logger.debug("response code " + responseCode);
             in = conn.getInputStream();
             String res = new BufferedReader(new InputStreamReader(in)).lines().collect(Collectors.joining("\n"));
             logger.debug("res:" + res);
         } catch (Exception e) {
-            logger.error("Exception occurred during DCAE communication", e);
-            throw e;
+            logger.error("Exception occurred during getDeployments Operation with DCAE", e);
+            throw new DcaeDeploymentException("Exception occurred during getDeployments Operation with DCAE", e);
         } finally {
             if (in != null) {
                 in.close();
             }
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("getDeployments complete");
         }
     }
 
     /**
-     * Returns status URL for deployment operation
+     * Returns status URL for createNewDeployment operation.
      *
      * @param deploymentId
+     *            The deployment ID
      * @param serviceTypeId
-     * @return
-     * @throws Exception
+     *            Service type ID
+     * @return The status URL
+     * @throws IOException
+     *             In case of issues with the Stream
      */
-    public String createNewDeployment(String deploymentId, String serviceTypeId) throws Exception {
+    public String createNewDeployment(String deploymentId, String serviceTypeId) throws IOException {
 
         String statusUrl = null;
         InputStream inStream = null;
         BufferedReader in = null;
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "createNewDeployment");
         try {
             String apiBodyString = "{\"serviceTypeId\": \"" + serviceTypeId + "\"}";
             logger.info("Dcae api Body String - " + apiBodyString);
@@ -210,6 +244,7 @@ public class DcaeDispatcherServices {
             URL obj = new URL(url);
             HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
             conn.setRequestMethod("PUT");
+            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
             try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
@@ -247,7 +282,7 @@ public class DcaeDispatcherServices {
             if (responseStr != null) {
                 if (requestFailed) {
                     logger.error("requestFailed - responseStr=" + responseStr);
-                    throw new Exception(responseStr);
+                    throw new BadRequestException(responseStr);
                 }
             }
 
@@ -259,8 +294,8 @@ public class DcaeDispatcherServices {
             statusUrl = (String) linksObj.get("status");
             logger.debug("Status URL: " + statusUrl);
         } catch (Exception e) {
-            logger.error("Exception occurred during the DCAE communication", e);
-            throw e;
+            logger.error("Exception occurred during createNewDeployment Operation with DCAE", e);
+            throw new DcaeDeploymentException("Exception occurred during createNewDeployment Operation with DCAE", e);
         } finally {
             if (inStream != null) {
                 inStream.close();
@@ -268,21 +303,29 @@ public class DcaeDispatcherServices {
             if (in != null) {
                 in.close();
             }
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("createNewDeployment complete");
         }
         return statusUrl;
     }
 
     /**
-     *
+     * Returns status URL for deleteExistingDeployment operation.
+     * 
      * @param deploymentId
+     *            The deployment ID
      * @param serviceTypeId
-     * @return
-     * @throws Exception
+     *            The service Type ID
+     * @return The status URL
+     * @throws IOException
+     *             In case of issues with the Stream
      */
-    public String deleteExistingDeployment(String deploymentId, String serviceTypeId) throws Exception {
+    public String deleteExistingDeployment(String deploymentId, String serviceTypeId) throws IOException {
 
         String statusUrl = null;
         InputStream in = null;
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "deleteExistingDeployment");
         try {
             String apiBodyString = "{\"serviceTypeId\": \"" + serviceTypeId + "\"}";
             logger.debug(apiBodyString);
@@ -291,6 +334,7 @@ public class DcaeDispatcherServices {
             URL obj = new URL(url);
             HttpsURLConnection conn = (HttpsURLConnection) obj.openConnection();
             conn.setRequestMethod("DELETE");
+            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
@@ -309,12 +353,15 @@ public class DcaeDispatcherServices {
             statusUrl = (String) linksObj.get("status");
             logger.debug("Status URL: " + statusUrl);
         } catch (Exception e) {
-            logger.error("Exception occurred during DCAE communication", e);
-            throw e;
+            logger.error("Exception occurred during deleteExistingDeployment Operation with DCAE", e);
+            throw new DcaeDeploymentException("Exception occurred during deleteExistingDeployment Operation with DCAE",
+                    e);
         } finally {
             if (in != null) {
                 in.close();
             }
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("deleteExistingDeployment complete");
         }
         return statusUrl;
     }
