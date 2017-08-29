@@ -38,14 +38,14 @@ import com.att.eelf.configuration.EELFManager;
  * Base/abstract Service class. Implements shared security methods.
  */
 public abstract class SecureServiceBase {
-    protected static final EELFLogger       logger          = EELFManager.getInstance().getLogger(SecureServiceBase.class);
+    protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(SecureServiceBase.class);
     protected static final EELFLogger auditLogger     = EELFManager.getInstance().getAuditLogger();
 
     // By default we'll set it to a default handler
-    private static UserNameHandler  userNameHandler = new DefaultUserNameHandler();
+    private static UserNameHandler    userNameHandler = new DefaultUserNameHandler();
 
     @Context
-    private SecurityContext         securityContext;
+    private SecurityContext           securityContext;
 
     /**
      * Get the userId from AAF/CSP.
@@ -91,8 +91,12 @@ public abstract class SecureServiceBase {
      * app-perm-type|dev|read
      *
      * @param inPermission
-     * @return
+     *            The permission to validate
+     * @return A boolean to indicate if the user has the permission to do
+     *         execute the inPermission
      * @throws NotAuthorizedException
+     *             In case of issues with the permission test, error is returned
+     *             in this exception
      */
     public boolean isAuthorized(SecureServicePermission inPermission) throws NotAuthorizedException {
         boolean authorized = false;
@@ -133,11 +137,12 @@ public abstract class SecureServiceBase {
      * it will be authorized if the inPermission to check is:
      * app-perm-type|dev|read
      *
-     * @param aafPermission
-     * @return
-     * @throws NotAuthorizedException
+     * @param inPermission
+     *            The permission to validate
+     * @return A boolean to indicate if the user has the permission to do
+     *         execute the inPermission
      */
-    public boolean isAuthorizedNoException(SecureServicePermission inPermission) throws NotAuthorizedException {
+    public boolean isAuthorizedNoException(SecureServicePermission inPermission) {
         boolean authorized = false;
         logger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
         // check if the user has the permission key or the permission key with a
@@ -167,6 +172,14 @@ public abstract class SecureServiceBase {
         return authorized;
     }
 
+    /**
+     * This method can be used by the Application.class to set the
+     * UserNameHandler that must be used in this class. The UserNameHandler
+     * where to get the User name
+     * 
+     * @param handler
+     *            The Handler impl to use
+     */
     public static final void setUserNameHandler(UserNameHandler handler) {
         if (handler != null) {
             userNameHandler = handler;

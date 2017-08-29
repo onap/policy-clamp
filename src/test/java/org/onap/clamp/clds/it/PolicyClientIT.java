@@ -23,7 +23,6 @@
 
 package org.onap.clamp.clds.it;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -34,24 +33,22 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.client.req.OperationalPolicyReq;
 import org.onap.clamp.clds.client.req.StringMatchPolicyReq;
 import org.onap.clamp.clds.client.req.TcaMPolicyReq;
 import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.prop.*;
+import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.model.prop.Policy;
+import org.onap.clamp.clds.model.prop.PolicyChain;
+import org.onap.clamp.clds.model.prop.StringMatch;
+import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.transform.TransformUtil;
-
 import org.onap.policy.api.AttributeType;
-
 import org.skyscreamer.jsonassert.JSONAssert;
-
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
-
-
 
 /**
  * Test Policy API in org.onap.clamp.ClampDesigner.client package - replicate

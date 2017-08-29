@@ -76,6 +76,8 @@ import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.att.ajsc.common.AjscService;
 import com.att.eelf.configuration.EELFLogger;
@@ -97,38 +99,38 @@ import io.swagger.annotations.ApiOperation;
 public class CldsService extends SecureServiceBase {
 
     @Autowired
-    private ApplicationContext      appContext;
+    private ApplicationContext        appContext;
 
-    private static final String     RESOURCE_NAME = "clds-version.properties";
+    private static final String       RESOURCE_NAME = "clds-version.properties";
 
-    protected static final EELFLogger       logger        = EELFManager.getInstance().getLogger(CldsService.class);
+    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsService.class);
     protected static final EELFLogger auditLogger   = EELFManager.getInstance().getAuditLogger();
 
     @Value("${CLDS_PERMISSION_TYPE_CL:permission-type-cl}")
-    private String                  cldsPersmissionTypeCl;
+    private String                    cldsPersmissionTypeCl;
 
     @Value("${CLDS_PERMISSION_TYPE_CL_MANAGE:permission-type-cl-manage}")
-    private String                  cldsPermissionTypeClManage;
+    private String                    cldsPermissionTypeClManage;
 
     @Value("${CLDS_PERMISSION_TYPE_CL_EVENT:permission-type-cl-event}")
-    private String                  cldsPermissionTypeClEvent;
+    private String                    cldsPermissionTypeClEvent;
 
     @Value("${CLDS_PERMISSION_TYPE_FILTER_VF:permission-type-filter-vf}")
-    private String                  cldsPermissionTypeFilterVf;
+    private String                    cldsPermissionTypeFilterVf;
 
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
-    private String                  cldsPermissionTypeTemplate;
+    private String                    cldsPermissionTypeTemplate;
 
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
-    private String                  cldsPermissionInstance;
+    private String                    cldsPermissionInstance;
 
-    private SecureServicePermission permissionReadCl;
+    private SecureServicePermission   permissionReadCl;
 
-    private SecureServicePermission permissionUpdateCl;
+    private SecureServicePermission   permissionUpdateCl;
 
-    private SecureServicePermission permissionReadTemplate;
+    private SecureServicePermission   permissionReadTemplate;
 
-    private SecureServicePermission permissionUpdateTemplate;
+    private SecureServicePermission   permissionUpdateTemplate;
 
     @PostConstruct
     private final void afterConstruction() {
@@ -212,10 +214,10 @@ public class CldsService extends SecureServiceBase {
         cldsInfo.setCldsVersion(cldsVersion);
 
         // Get the user list of permissions
-        cldsInfo.setPermissionReadCl(isAuthorized(permissionReadCl));
-        cldsInfo.setPermissionUpdateCl(isAuthorized(permissionUpdateCl));
-        cldsInfo.setPermissionReadTemplate(isAuthorized(permissionReadTemplate));
-        cldsInfo.setPermissionUpdateTemplate(isAuthorized(permissionUpdateTemplate));
+        cldsInfo.setPermissionReadCl(isAuthorizedNoException(permissionReadCl));
+        cldsInfo.setPermissionUpdateCl(isAuthorizedNoException(permissionUpdateCl));
+        cldsInfo.setPermissionReadTemplate(isAuthorizedNoException(permissionReadTemplate));
+        cldsInfo.setPermissionUpdateTemplate(isAuthorizedNoException(permissionUpdateTemplate));
         return cldsInfo;
     }
 
@@ -447,9 +449,9 @@ public class CldsService extends SecureServiceBase {
     @Path("/model-names")
     @Produces(MediaType.APPLICATION_JSON)
     public List<ValueItem> getModelNames() {
-        // isAuthorized(permissionReadCl);
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model names", getPrincipalName());
+        isAuthorized(permissionReadCl);
         logger.info("GET list of model names");
         List<ValueItem> names = cldsDao.getBpmnNames();
         // audit log
@@ -522,10 +524,11 @@ public class CldsService extends SecureServiceBase {
         String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
         logger.info("PUT bpmnJson={}", bpmnJson);
 
-        // Flag indicates whether it is triggered by Validation Test button from UI
+        // Flag indicates whether it is triggered by Validation Test button from
+        // UI
         boolean isTest = false;
         if (test != null && test.equalsIgnoreCase("true")) {
-        	isTest = true;
+            isTest = true;
         } else {
             // if action.test.override is true, then any action will be marked
             // as test=true (even if incoming action request had test=false);
@@ -612,10 +615,11 @@ public class CldsService extends SecureServiceBase {
             userid = getUserId();
         }
 
-        // Flag indicates whether it is triggered by Validation Test button from UI
+        // Flag indicates whether it is triggered by Validation Test button from
+        // UI
         boolean isTest = false;
         if (test != null && test.equalsIgnoreCase("true")) {
-        	isTest = true;
+            isTest = true;
         }
 
         int instanceCount = 0;
@@ -919,8 +923,8 @@ public class CldsService extends SecureServiceBase {
         String operationStatus = "processing";
         long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
         while (operationStatus.equalsIgnoreCase("processing")) {
-            //Break the loop if waiting for more than 10 mins
-            if(waitingTime < System.nanoTime()){
+            // Break the loop if waiting for more than 10 mins
+            if (waitingTime < System.nanoTime()) {
                 break;
             }
             operationStatus = dcaeDispatcherServices.getOperationStatus(createNewDeploymentStatusUrl);
@@ -938,12 +942,12 @@ public class CldsService extends SecureServiceBase {
                     CldsEvent.ACTION_STATE_RECEIVED, null);
             model.setDeploymentId(deploymentId);
             model.save(cldsDao, getUserId());
+        } else {
+            logger.info("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
         }
-        else{
-			logger.info("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-			throw new Exception("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-		}
-		logger.info("Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
+        logger.info("Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Deploy model success", this.getClass().getName());
@@ -964,7 +968,7 @@ public class CldsService extends SecureServiceBase {
         String operationStatus = "processing";
         long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
         while (operationStatus.equalsIgnoreCase("processing")) {
-            if(waitingTime < System.nanoTime()){
+            if (waitingTime < System.nanoTime()) {
                 break;
             }
             operationStatus = dcaeDispatcherServices.getOperationStatus(operationStatusUndeployUrl);
@@ -982,13 +986,13 @@ public class CldsService extends SecureServiceBase {
                     CldsEvent.ACTION_STATE_RECEIVED, null);
             model.setDeploymentId(null);
             model.save(cldsDao, getUserId());
+        } else {
+            logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
         }
-        else{
-			logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-			throw new Exception("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-		}
-		logger.info("Undeploy model (" + modelName + ") succeeded.");
-		// audit log
+        logger.info("Undeploy model (" + modelName + ") succeeded.");
+        // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Undeploy model success", this.getClass().getName());
         auditLogger.info("Undeploy model completed");
