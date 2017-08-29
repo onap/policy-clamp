@@ -31,6 +31,7 @@ public class CldsAlarmCondition implements Serializable {
     private String            eventSourceType;
     private String            alarmConditionKey;
     private String            severity;
+    private String            eventName;
 
     public String getEventSourceType() {
         return eventSourceType;
@@ -55,5 +56,13 @@ public class CldsAlarmCondition implements Serializable {
     public void setAlarmConditionKey(String alarmConditionKey) {
         this.alarmConditionKey = alarmConditionKey;
     }
+
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
 
 }
