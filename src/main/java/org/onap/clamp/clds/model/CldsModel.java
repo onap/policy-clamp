@@ -23,17 +23,17 @@
 
 package org.onap.clamp.clds.model;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
-import org.jboss.resteasy.spi.BadRequestException;
 import org.onap.clamp.clds.dao.CldsDao;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 /**
  * Represent a CLDS Model.
@@ -42,52 +42,52 @@ public class CldsModel {
     protected static final EELFLogger logger             = EELFManager.getInstance().getLogger(CldsModel.class);
     protected static final EELFLogger metricsLogger      = EELFManager.getInstance().getMetricsLogger();
 
-    private static final int        UUID_LENGTH        = 36;
+    private static final int          UUID_LENGTH        = 36;
 
-    public static final String      STATUS_DESIGN      = "DESIGN";
-    public static final String      STATUS_DISTRIBUTED = "DISTRIBUTED";
-    public static final String      STATUS_ACTIVE      = "ACTIVE";
-    public static final String      STATUS_STOPPED     = "STOPPED";
-    public static final String      STATUS_DELETING    = "DELETING";
-    public static final String      STATUS_ERROR       = "ERROR";                                             // manual
-                                                                                                              // intervention
-                                                                                                              // required
-    public static final String      STATUS_UNKNOWN     = "UNKNOWN";
+    public static final String        STATUS_DESIGN      = "DESIGN";
+    public static final String        STATUS_DISTRIBUTED = "DISTRIBUTED";
+    public static final String        STATUS_ACTIVE      = "ACTIVE";
+    public static final String        STATUS_STOPPED     = "STOPPED";
+    public static final String        STATUS_DELETING    = "DELETING";
+    public static final String        STATUS_ERROR       = "ERROR";                                             // manual
+                                                                                                                // intervention
+                                                                                                                // required
+    public static final String        STATUS_UNKNOWN     = "UNKNOWN";
 
-    private String                  id;
-    private String                  templateId;
-    private String                  templateName;
-    private String                  name;
-    private String                  controlNamePrefix;
-    private String                  controlNameUuid;
-    private String                  bpmnId;
-    private String                  bpmnUserid;
-    private String                  bpmnText;
-    private String                  propId;
-    private String                  propUserid;
-    private String                  propText;
-    private String                  imageId;
-    private String                  imageUserid;
-    private String                  imageText;
-    private String                  docId;
-    private String                  docUserid;
-    private String                  docText;
-    private String                  blueprintId;
-    private String                  blueprintUserid;
-    private String                  blueprintText;
-    private CldsEvent               event;
-    private String                  status;
-    private List<String>            permittedActionCd;
-    private List<CldsModelInstance> cldsModelInstanceList;
+    private String                    id;
+    private String                    templateId;
+    private String                    templateName;
+    private String                    name;
+    private String                    controlNamePrefix;
+    private String                    controlNameUuid;
+    private String                    bpmnId;
+    private String                    bpmnUserid;
+    private String                    bpmnText;
+    private String                    propId;
+    private String                    propUserid;
+    private String                    propText;
+    private String                    imageId;
+    private String                    imageUserid;
+    private String                    imageText;
+    private String                    docId;
+    private String                    docUserid;
+    private String                    docText;
+    private String                    blueprintId;
+    private String                    blueprintUserid;
+    private String                    blueprintText;
+    private CldsEvent                 event;
+    private String                    status;
+    private List<String>              permittedActionCd;
+    private List<CldsModelInstance>   cldsModelInstanceList;
 
-    private String                  typeId;
-    private String                  typeName;
+    private String                    typeId;
+    private String                    typeName;
 
-    private String                  dispatcherResponse;
+    private String                    dispatcherResponse;
 
-    private String                  deploymentId;
+    private String                    deploymentId;
 
-    private boolean                 userAuthorizedToUpdate;
+    private boolean                   userAuthorizedToUpdate;
 
     /**
      * Construct empty model.
@@ -243,15 +243,18 @@ public class CldsModel {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT);
                 break;
             case CldsEvent.ACTION_UNDEPLOY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
+                        CldsEvent.ACTION_RESUBMIT);
                 break;
             case CldsEvent.ACTION_DEPLOY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UNDEPLOY,
+                        CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
                 break;
             case CldsEvent.ACTION_RESTART:
             case CldsEvent.ACTION_UPDATE:
                 // for 1702 delete is not currently implemented
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE,
+                        CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
                 break;
             case CldsEvent.ACTION_DELETE:
                 if (getCurrentActionStateCd().equals(CldsEvent.ACTION_STATE_SENT)) {
@@ -296,19 +299,13 @@ public class CldsModel {
      * @return
      */
     public static CldsModel createUsingControlName(String fullControlName) {
-
-        int len = 0;
-
-        if (fullControlName != null) {
-            len = fullControlName.length();
-        }
-        if (len < UUID_LENGTH) {
-            throw new BadRequestException(
-                    "closed loop id / control name length, " + len + ", less than the minimum of: " + UUID_LENGTH);
+        if (fullControlName == null || fullControlName.length() < UUID_LENGTH) {
+            throw new BadRequestException("closed loop id / control name length, " + fullControlName.length()
+                    + ", less than the minimum of: " + UUID_LENGTH);
         }
         CldsModel model = new CldsModel();
-        model.setControlNamePrefix(fullControlName.substring(0, len - UUID_LENGTH));
-        model.setControlNameUuid(fullControlName.substring(len - UUID_LENGTH));
+        model.setControlNamePrefix(fullControlName.substring(0, fullControlName.length() - UUID_LENGTH));
+        model.setControlNameUuid(fullControlName.substring(fullControlName.length() - UUID_LENGTH));
         return model;
     }
 
