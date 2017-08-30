@@ -23,6 +23,17 @@
 
 package org.onap.clamp.clds.client.req;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -35,6 +46,7 @@ import java.util.Map.Entry;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.onap.clamp.clds.client.SdcCatalogServices;
+import org.onap.clamp.clds.exception.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.prop.Global;
@@ -42,17 +54,6 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.StringMatch;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 
 /**
  * Construct a Sdc request given CLDS objects.
@@ -63,14 +64,14 @@ public class SdcReq {
 
     /**
      * Format the Blueprint from a Yaml
-     * 
+     *
      * @param refProp
      *            The RefProp instance containing the Clds config
      * @param prop
      *            The ModelProperties describing the clds model
      * @param docText
      *            The Yaml file that must be converted
-     * 
+     *
      * @return A String containing the BluePrint
      * @throws JsonParseException
      *             In case of issues
@@ -253,37 +254,41 @@ public class SdcReq {
      * @throws Exception
      */
     public static List<String> getSdcReqUrlsList(ModelProperties prop, String baseUrl,
-            SdcCatalogServices sdcCatalogServices, DelegateExecution execution) throws Exception {
+            SdcCatalogServices sdcCatalogServices, DelegateExecution execution) {
         // TODO : refact and regroup with very similar code
         List<String> urlList = new ArrayList<>();
-        Global globalProps = prop.getGlobal();
-        if (globalProps != null) {
-            if (globalProps.getService() != null) {
-                String serviceInvariantUUID = globalProps.getService();
-                execution.setVariable("serviceInvariantUUID", serviceInvariantUUID);
-                List<String> resourceVfList = globalProps.getResourceVf();
-                String serviceUUID = sdcCatalogServices.getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
-                String sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(serviceUUID);
-                CldsSdcServiceDetail CldsSdcServiceDetail = sdcCatalogServices
-                        .getCldsSdcServiceDetailFromJson(sdcServicesInformation);
-                if (CldsSdcServiceDetail != null && resourceVfList != null) {
-                    List<CldsSdcResource> CldsSdcResourcesList = CldsSdcServiceDetail.getResources();
-                    if (CldsSdcResourcesList != null && CldsSdcResourcesList.size() > 0) {
-                        for (CldsSdcResource CldsSdcResource : CldsSdcResourcesList) {
-                            if (CldsSdcResource != null && CldsSdcResource.getResoucreType() != null
-                                    && CldsSdcResource.getResoucreType().equalsIgnoreCase("VF")) {
-                                if (resourceVfList.contains(CldsSdcResource.getResourceInvariantUUID())) {
-                                    String normalizedResourceInstanceName = normalizeResourceInstanceName(
-                                            CldsSdcResource.getResourceInstanceName());
-                                    String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
-                                            + normalizedResourceInstanceName + "/artifacts";
-                                    urlList.add(svcUrl);
+        try {
+            Global globalProps = prop.getGlobal();
+            if (globalProps != null) {
+                if (globalProps.getService() != null) {
+                    String serviceInvariantUUID = globalProps.getService();
+                    execution.setVariable("serviceInvariantUUID", serviceInvariantUUID);
+                    List<String> resourceVfList = globalProps.getResourceVf();
+                    String serviceUUID = sdcCatalogServices.getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
+                    String sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(serviceUUID);
+                    CldsSdcServiceDetail CldsSdcServiceDetail = sdcCatalogServices
+                            .getCldsSdcServiceDetailFromJson(sdcServicesInformation);
+                    if (CldsSdcServiceDetail != null && resourceVfList != null) {
+                        List<CldsSdcResource> CldsSdcResourcesList = CldsSdcServiceDetail.getResources();
+                        if (CldsSdcResourcesList != null && CldsSdcResourcesList.size() > 0) {
+                            for (CldsSdcResource CldsSdcResource : CldsSdcResourcesList) {
+                                if (CldsSdcResource != null && CldsSdcResource.getResoucreType() != null
+                                        && CldsSdcResource.getResoucreType().equalsIgnoreCase("VF")) {
+                                    if (resourceVfList.contains(CldsSdcResource.getResourceInvariantUUID())) {
+                                        String normalizedResourceInstanceName = normalizeResourceInstanceName(
+                                                CldsSdcResource.getResourceInstanceName());
+                                        String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
+                                                + normalizedResourceInstanceName + "/artifacts";
+                                        urlList.add(svcUrl);
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+        } catch (IOException e) {
+            throw new SdcCommunicationException("Exception occurred during the SDC communication",e);
         }
         return urlList;
     }
@@ -358,7 +363,7 @@ public class SdcReq {
 
     /**
      * Method to get yaml/template properties value from json
-     * 
+     *
      * @param docText
      * @return
      * @throws IOException
