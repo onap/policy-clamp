@@ -23,6 +23,12 @@
 
 package org.onap.clamp.clds.client.req;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFLogger.Level;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -31,7 +37,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.resteasy.spi.BadRequestException;
+import javax.ws.rs.BadRequestException;
+
 import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.PolicyChain;
@@ -51,12 +58,6 @@ import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.onap.policy.controlloop.policy.builder.ControlLoopPolicyBuilder;
 import org.onap.policy.controlloop.policy.builder.Message;
 import org.onap.policy.controlloop.policy.builder.Results;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFLogger.Level;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Construct an Operational Policy request given CLDS objects.
@@ -426,16 +427,10 @@ public class OperationalPolicyReq {
      * @return
      */
     private static Resource[] convertToResource(List<String> stringList, ResourceType resourceType) {
-        int size = 0;
-        if (stringList != null) {
-            size = stringList.size();
+        if (stringList == null || stringList.isEmpty()) {
+            return new Resource[0];
         }
-        Resource[] resourceArray = new Resource[size];
-        for (int i = 0; i < size; i++) {
-            String rString = stringList.get(i);
-            resourceArray[i] = new Resource(rString, resourceType);
-        }
-        return resourceArray;
+        return stringList.stream().map(stringElem -> new Resource(stringElem, resourceType)).toArray(Resource[]::new);
     }
 
     /**
@@ -446,16 +441,10 @@ public class OperationalPolicyReq {
      * @return
      */
     private static PolicyResult[] convertToPolicyResult(List<String> prList) {
-        int size = 0;
-        if (prList != null) {
-            size = prList.size();
+        if (prList == null || prList.isEmpty()) {
+            return new PolicyResult[0];
         }
-        PolicyResult[] prArray = new PolicyResult[size];
-        for (int i = 0; i < size; i++) {
-            String prString = prList.get(i);
-            prArray[i] = PolicyResult.toResult(prString);
-        }
-        return prArray;
+        return prList.stream().map(stringElem -> PolicyResult.toResult(stringElem)).toArray(PolicyResult[]::new);
     }
 
 }
