@@ -23,6 +23,14 @@
 
 package org.onap.clamp.clds.service;
 
+import com.att.ajsc.common.AjscService;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -52,7 +60,6 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
-import org.jboss.resteasy.spi.BadRequestException;
 import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.SdcCatalogServices;
@@ -78,14 +85,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
-
-import com.att.ajsc.common.AjscService;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -595,14 +594,13 @@ public class CldsService extends SecureServiceBase {
      *
      * @param test
      * @param dcaeEvent
-     * @throws BadRequestException
      */
     @ApiOperation(value = "Accepts events for a model", notes = "", response = String.class)
     @POST
     @Path("/dcae/event")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String postDcaeEvent(@QueryParam("test") String test, DcaeEvent dcaeEvent) throws BadRequestException {
+    public String postDcaeEvent(@QueryParam("test") String test, DcaeEvent dcaeEvent) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Post dcae event", getPrincipalName());
         String userid = null;
@@ -929,7 +927,7 @@ public class CldsService extends SecureServiceBase {
             }
             operationStatus = dcaeDispatcherServices.getOperationStatus(createNewDeploymentStatusUrl);
         }
-        if (operationStatus != null && operationStatus.equalsIgnoreCase("succeeded")) {
+        if (operationStatus.equalsIgnoreCase("succeeded")) {
             String artifactName = model.getControlName();
             if (artifactName != null) {
                 artifactName = artifactName + ".yml";
@@ -973,7 +971,7 @@ public class CldsService extends SecureServiceBase {
             }
             operationStatus = dcaeDispatcherServices.getOperationStatus(operationStatusUndeployUrl);
         }
-        if (operationStatus != null && operationStatus.equalsIgnoreCase("succeeded")) {
+        if (operationStatus.equalsIgnoreCase("succeeded")) {
             String artifactName = model.getControlName();
             if (artifactName != null) {
                 artifactName = artifactName + ".yml";

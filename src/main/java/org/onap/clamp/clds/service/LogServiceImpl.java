@@ -23,6 +23,12 @@
 
 package org.onap.clamp.clds.service;
 
+import com.att.ajsc.camunda.core.AttCamundaHistoryEvent;
+import com.att.ajsc.camunda.core.AttCamundaService;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,25 +57,19 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
-import com.att.ajsc.camunda.core.AttCamundaHistoryEvent;
-import com.att.ajsc.camunda.core.AttCamundaService;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.google.gson.Gson;
-
 @Service
 public class LogServiceImpl implements LogService {
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(LogServiceImpl.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(LogServiceImpl.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
     @Autowired
-    private RuntimeService          runtimeService;
+    private RuntimeService            runtimeService;
 
     @Autowired
-    private HistoryService          historyService;
+    private HistoryService            historyService;
 
     @Context
-    private MessageContext          context;
+    private MessageContext            context;
 
     public void setRuntimeService(RuntimeService runtimeService) {
         this.runtimeService = runtimeService;
@@ -165,7 +165,6 @@ public class LogServiceImpl implements LogService {
                 if (classUrl != null) {
                     logger.info(LogMessages.LOGSERVICE_EMAIL_CLASS, classUrl.getFile());
                 } else {
-                    logger.info(LogMessages.LOGSERVICE_EMAIL_CLASS, classUrl.getFile());
                     logger.info(LogMessages.LOGSERVICE_EMAIL_CLASS_NULL);
                 }
                 email.send();
