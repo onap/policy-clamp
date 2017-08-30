@@ -300,8 +300,9 @@ public class CldsModel {
      */
     public static CldsModel createUsingControlName(String fullControlName) {
         if (fullControlName == null || fullControlName.length() < UUID_LENGTH) {
-            throw new BadRequestException("closed loop id / control name length, " + fullControlName.length()
-                    + ", less than the minimum of: " + UUID_LENGTH);
+            throw new BadRequestException(
+                    "closed loop id / control name length, " + (fullControlName != null ? fullControlName.length() : 0)
+                            + ", less than the minimum of: " + UUID_LENGTH);
         }
         CldsModel model = new CldsModel();
         model.setControlNamePrefix(fullControlName.substring(0, fullControlName.length() - UUID_LENGTH));
