@@ -25,10 +25,9 @@ package org.onap.clamp.clds.model;
 
 import static org.junit.Assert.assertEquals;
 
-import org.jboss.resteasy.spi.BadRequestException;
-import org.junit.Test;
+import javax.ws.rs.BadRequestException;
 
-import org.onap.clamp.clds.model.CldsModel;
+import org.junit.Test;
 
 /**
  * Test org.onap.clamp.ClampDesigner.model.Model
