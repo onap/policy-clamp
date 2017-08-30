@@ -23,6 +23,10 @@
 
 package org.onap.clamp.clds;
 
+import com.att.ajsc.common.utility.SystemPropertiesLoader;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -51,10 +55,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import com.att.ajsc.common.utility.SystemPropertiesLoader;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 @SpringBootApplication
 @ComponentScan(basePackages = { "org.onap.clamp.clds", "com.att.ajsc" })
 @EnableAutoConfiguration(exclude = { CamundaBpmWebappAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
@@ -63,7 +63,7 @@ import com.att.eelf.configuration.EELFManager;
 @EnableAsync
 public class Application extends SpringBootServletInitializer {
 
-    protected static final EELFLogger logger             = EELFManager.getInstance().getLogger(Application.class);
+    protected static final EELFLogger eelfLogger         = EELFManager.getInstance().getLogger(Application.class);
 
     @Autowired
     protected ApplicationContext      appContext;
@@ -94,7 +94,7 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws Exception {
         SystemPropertiesLoader.addSystemProperties();
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args); // NOSONAR
     }
 
     @Bean
@@ -136,7 +136,7 @@ public class Application extends SpringBootServletInitializer {
 
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
-            logger.warn(
+            eelfLogger.warn(
                     "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1 (Connector disabled)");
             return null;
         }
