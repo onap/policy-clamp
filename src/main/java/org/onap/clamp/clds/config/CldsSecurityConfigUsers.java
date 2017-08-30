@@ -23,6 +23,12 @@
 
 package org.onap.clamp.clds.config;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
+import java.io.IOException;
+
+import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +39,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 /**
  * This class is used to enable the HTTP authentication to login. It requires a
@@ -68,9 +71,14 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
      * This method configures on which URL the authorization will be enabled.
      */
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
-                .authenticated().anyRequest().permitAll().and().logout();
+    protected void configure(HttpSecurity http) {
+        try {
+            http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
+                    .authenticated().anyRequest().permitAll().and().logout();
+        } catch (Exception e) {
+            logger.error("Exception occurred during the setup of the Web users in memory", e);
+            throw new CldsUsersException("Exception occurred during the setup of the Web users in memory", e);
+        }
     }
 
     /**
@@ -82,18 +90,23 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
      * @throws Exception
      */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        CldsUser[] usersList = loadUsers();
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
+        try {
+            CldsUser[] usersList = loadUsers();
 
-        // no users defined
-        if (null == usersList) {
-            logger.warn("No users defined. Users should be defined under " + cldsUsersFile);
-            return;
-        }
+            // no users defined
+            if (null == usersList) {
+                logger.warn("No users defined. Users should be defined under " + cldsUsersFile);
+                return;
+            }
 
-        for (CldsUser user : usersList) {
-            auth.inMemoryAuthentication().withUser(user.getUser()).password(user.getPassword())
-                    .roles(user.getPermissionsString());
+            for (CldsUser user : usersList) {
+                auth.inMemoryAuthentication().withUser(user.getUser()).password(user.getPassword())
+                        .roles(user.getPermissionsString());
+            }
+        } catch (Exception e) {
+            logger.error("Exception occurred during the setup of the Web users in memory", e);
+            throw new CldsUsersException("Exception occurred during the setup of the Web users in memory", e);
         }
     }
 
@@ -102,9 +115,10 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
      * CldsUser.
      * 
      * @return The array of CldsUser
+     * @throws IOException
      * @throws Exception
      */
-    private CldsUser[] loadUsers() throws Exception {
+    private CldsUser[] loadUsers() throws IOException {
         logger.info("Load from clds-users.properties");
         return CldsUserJsonDecoder.decodeJson(appContext.getResource(cldsUsersFile).getInputStream());
     }
