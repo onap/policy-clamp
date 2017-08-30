@@ -324,8 +324,8 @@ public class PolicyClient {
                     versions.add(version);
                 } catch (Exception e) {
                     // just print warning - if n;o policies, version may be null
-                    logger.warn("warning: failed to parse policyConfig.getPolicyVersion()="
-                            + policyConfig.getPolicyVersion());
+                    logger.warn("Failed to parse due to an exception policyConfig.getPolicyVersion()="
+                            + policyConfig.getPolicyVersion(), e);
                 }
             }
             Collections.sort(versions);
