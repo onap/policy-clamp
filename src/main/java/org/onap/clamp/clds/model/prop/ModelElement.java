@@ -23,32 +23,32 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Provide base ModelElement functionality.
  */
 public abstract class ModelElement {
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(ModelElement.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(ModelElement.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    public static final String      TYPE_POLICY = "policy";
-    public static final String      TYPE_TCA    = "tca";
+    public static final String        TYPE_POLICY = "policy";
+    public static final String        TYPE_TCA    = "tca";
 
-    private final String            type;
-    private final ModelBpmn         modelBpmn;
-    private final String            id;
-    protected String                topicPublishes;
-    protected final JsonNode        meNode;
-    private boolean                 isFound;
+    private final String              type;
+    private final ModelBpmn           modelBpmn;
+    private final String              id;
+    protected String                  topicPublishes;
+    protected final JsonNode          meNode;
+    private boolean                   isFound;
 
-    private final ModelProperties   modelProp;
+    private final ModelProperties     modelProp;
 
     /**
      * Perform base parsing of properties for a ModelElement (such as,
@@ -122,57 +122,58 @@ public abstract class ModelElement {
         }
         return value;
     }
-	
-	/**
-	 * Return the value field of the json node element that has a name field that equals the given name.
-	 * 
-	 * @param nodeIn
-	 * @param name
-	 * @return
-	 */
-	public static String getNodeValueByName(JsonNode nodeIn, String name) {
-		String value = null;
-		if ( nodeIn != null ) {
-			value = nodeIn.path(name).asText();
-		}
-		if ( value == null || value.length() == 0 ) {
-			logger.warn(name + "=" + value);
-		} else {
-			logger.debug(name + "=" + value);
-		}
-		return value;
-	}    
-    
-	
-	/**
-	 * Return the value field of the json node element that has a name field that equals the given name.
-	 * 
-	 * @param nodeIn
-	 * @param name
-	 * @return
-	 */
-	public static List<String> getNodeValuesByName(JsonNode nodeIn, String name) {
-		List<String> values = new ArrayList<String>();
-		if ( nodeIn != null ) {
-			Iterator<JsonNode> i = nodeIn.iterator();
-			while (i.hasNext()) {
-				JsonNode node = i.next();
-				if ( node.path("name").asText().equals(name) ) {
-					String value = "";
-					JsonNode vnode = node.path("value");
-					if ( vnode.isArray() ) {
-						// if array, assume value is in first element
-						value = vnode.path(0).asText();
-					} else {
-						// otherwise, just return text
-						value = vnode.asText();					
-					}
-					values.add(value);
-				}
-			}
-		}
-		return values;
-	}    
+
+    /**
+     * Return the value field of the json node element that has a name field
+     * that equals the given name.
+     * 
+     * @param nodeIn
+     * @param name
+     * @return
+     */
+    public static String getNodeValueByName(JsonNode nodeIn, String name) {
+        String value = null;
+        if (nodeIn != null) {
+            value = nodeIn.path(name).asText();
+        }
+        if (value == null || value.length() == 0) {
+            logger.warn(name + "=" + value);
+        } else {
+            logger.debug(name + "=" + value);
+        }
+        return value;
+    }
+
+    /**
+     * Return the value field of the json node element that has a name field
+     * that equals the given name.
+     * 
+     * @param nodeIn
+     * @param name
+     * @return
+     */
+    public static List<String> getNodeValuesByName(JsonNode nodeIn, String name) {
+        List<String> values = new ArrayList<>();
+        if (nodeIn != null) {
+            Iterator<JsonNode> i = nodeIn.iterator();
+            while (i.hasNext()) {
+                JsonNode node = i.next();
+                if (node.path("name").asText().equals(name)) {
+                    String value;
+                    JsonNode vnode = node.path("value");
+                    if (vnode.isArray()) {
+                        // if array, assume value is in first element
+                        value = vnode.path(0).asText();
+                    } else {
+                        // otherwise, just return text
+                        value = vnode.asText();
+                    }
+                    values.add(value);
+                }
+            }
+        }
+        return values;
+    }
 
     /**
      * Return the int value field of the json node element that has a name field
@@ -206,7 +207,7 @@ public abstract class ModelElement {
                 }
             }
         }
-        if (values == null || values.size() == 0) {
+        if (values == null || values.isEmpty()) {
             logger.warn(name + "=" + values);
         } else {
             logger.debug(name + "=" + values);
