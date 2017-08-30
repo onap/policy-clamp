@@ -25,7 +25,7 @@ package org.onap.clamp.clds.model;
 
 import java.util.List;
 
-import org.jboss.resteasy.spi.BadRequestException;
+import javax.ws.rs.BadRequestException;
 
 /**
  * Represent a DCAE Event.
