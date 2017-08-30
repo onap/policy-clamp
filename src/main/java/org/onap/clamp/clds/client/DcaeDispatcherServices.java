@@ -96,18 +96,16 @@ public class DcaeDispatcherServices {
             if (inStream != null) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream));
                 String inputLine = null;
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
                 while ((inputLine = bufferedReader.readLine()) != null) {
                     response.append(inputLine);
                 }
                 responseStr = response.toString();
             }
 
-            if (responseStr != null) {
-                if (requestFailed) {
-                    logger.error("requestFailed - responseStr=" + responseStr);
-                    throw new BadRequestException(responseStr);
-                }
+            if (responseStr != null && requestFailed) {
+                logger.error("requestFailed - responseStr=" + responseStr);
+                throw new BadRequestException(responseStr);
             }
 
             logger.debug("response code " + responseCode);
@@ -270,7 +268,7 @@ public class DcaeDispatcherServices {
 
                 String inputLine = null;
 
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
 
                 while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
@@ -279,11 +277,9 @@ public class DcaeDispatcherServices {
                 responseStr = response.toString();
             }
 
-            if (responseStr != null) {
-                if (requestFailed) {
-                    logger.error("requestFailed - responseStr=" + responseStr);
-                    throw new BadRequestException(responseStr);
-                }
+            if (responseStr != null && requestFailed) {
+                logger.error("requestFailed - responseStr=" + responseStr);
+                throw new BadRequestException(responseStr);
             }
 
             logger.debug("response code " + responseCode);

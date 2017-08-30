@@ -423,14 +423,14 @@ public class SdcCatalogServices {
 
             // To remove duplicate resources from serviceDetail and add valid
             // vfs to service
-            if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getResources() != null) {
+            if (cldsSdcServiceDetail.getResources() != null) {
                 List<CldsSdcResource> cldsSdcResourceList = removeDuplicateSdcResourceInstances(
                         cldsSdcServiceDetail.getResources());
-                if (cldsSdcResourceList != null && cldsSdcResourceList.size() > 0) {
+                if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
                     List<CldsVfData> cldsVfDataList = new ArrayList<>();
                     for (CldsSdcResource currCldsSdcResource : cldsSdcResourceList) {
                         if (currCldsSdcResource != null && currCldsSdcResource.getResoucreType() != null
-                                && currCldsSdcResource.getResoucreType().equalsIgnoreCase("VF")) {
+                                && "VF".equalsIgnoreCase(currCldsSdcResource.getResoucreType())) {
                             CldsVfData currCldsVfData = new CldsVfData();
                             currCldsVfData.setVfName(currCldsSdcResource.getResourceInstanceName());
                             currCldsVfData.setVfInvariantResourceUUID(currCldsSdcResource.getResourceInvariantUUID());
@@ -454,7 +454,7 @@ public class SdcCatalogServices {
      */
     private void getAllVfcForVfList(List<CldsVfData> cldsVfDataList, String catalogUrl) throws IOException {
         // todo : refact this..
-        if (cldsVfDataList != null && cldsVfDataList.size() > 0) {
+        if (cldsVfDataList != null && !cldsVfDataList.isEmpty()) {
             List<CldsSdcResourceBasicInfo> allVfResources = getAllSdcVForVfcResourcesBasedOnResourceType(
                     RESOURCE_VF_TYPE);
             List<CldsSdcResourceBasicInfo> allVfcResources = getAllSdcVForVfcResourcesBasedOnResourceType(
@@ -475,7 +475,7 @@ public class SdcCatalogServices {
                             List<CldsVfcData> vfcDataListFromVfResponse = getVfcDataListFromVfResponse(vfResponse);
                             if (vfcDataListFromVfResponse != null) {
                                 currCldsVfData.setCldsVfcs(vfcDataListFromVfResponse);
-                                if (vfcDataListFromVfResponse.size() > 0) {
+                                if (!vfcDataListFromVfResponse.isEmpty()) {
                                     // To get artifacts for every VFC and get
                                     // alarm conditions from artifact
                                     for (CldsVfcData currCldsVfcData : vfcDataListFromVfResponse) {
@@ -537,7 +537,7 @@ public class SdcCatalogServices {
 
     private List<CldsVfcData> getVFCfromCVFC(String resourceUUID) {
         String catalogUrl = refProp.getStringValue("sdc.catalog.url");
-        List<CldsVfcData> cldsVfcDataList = new ArrayList<CldsVfcData>();
+        List<CldsVfcData> cldsVfcDataList = new ArrayList<>();
 
         if (resourceUUID != null) {
             String vfcResourceUUIDUrl = catalogUrl + "resources" + "/" + resourceUUID + "/metadata";
@@ -569,10 +569,11 @@ public class SdcCatalogServices {
     }
 
     private String removeUnwantedBracesFromString(String id) {
+        String idReworked = "";
         if (id != null && id.contains("\"")) {
-            id = id.replaceAll("\"", "");
+            idReworked = id.replaceAll("\"", "");
         }
-        return id;
+        return idReworked;
     }
 
     private List<CldsAlarmCondition> getAlarmCondtionsFromVfc(String vfcResponse) throws IOException {
@@ -611,7 +612,7 @@ public class SdcCatalogServices {
 
     // Method to get the artifact for any particular VF
     private List<CldsVfKPIData> getFieldPathFromVF(String vfResponse) throws JsonProcessingException, IOException {
-        List<CldsVfKPIData> cldsVfKPIDataList = new ArrayList<CldsVfKPIData>();
+        List<CldsVfKPIData> cldsVfKPIDataList = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode vfResponseNode = (ObjectNode) mapper.readTree(vfResponse);
         ArrayNode artifactsArrayNode = (ArrayNode) vfResponseNode.get("artifacts");
@@ -664,7 +665,7 @@ public class SdcCatalogServices {
 
     // Method to get the artifactURL Data and set the CldsVfKPIData node
     private List<CldsVfKPIData> parseCsvToGetFieldPath(String allFieldPathValues) throws IOException {
-        List<CldsVfKPIData> cldsVfKPIDataList = new ArrayList<CldsVfKPIData>();
+        List<CldsVfKPIData> cldsVfKPIDataList = new ArrayList<>();
         Reader alarmReader = new StringReader(allFieldPathValues);
         Iterable<CSVRecord> records = CSVFormat.RFC4180.parse(alarmReader);
         if (records != null) {
@@ -701,8 +702,8 @@ public class SdcCatalogServices {
 
     public String getResponsesFromArtifactUrl(String artifactsUrl) {
         String hostUrl = refProp.getStringValue("sdc.hostUrl");
-        artifactsUrl = artifactsUrl.replaceAll("\"", "");
-        String artifactUrl = hostUrl + artifactsUrl;
+        String artifactsUrlReworked = artifactsUrl.replaceAll("\"", "");
+        String artifactUrl = hostUrl + artifactsUrlReworked;
         logger.info("value of artifactURl:" + artifactUrl);
         String currArtifactResponse = getCldsServicesOrResourcesBasedOnURL(artifactUrl, true);
         logger.info("value of artifactResponse:" + currArtifactResponse);
@@ -720,8 +721,8 @@ public class SdcCatalogServices {
      */
     public String getCldsServicesOrResourcesBasedOnURL(String url, boolean alarmConditions) {
         try {
-            url = removeUnwantedBracesFromString(url);
-            URL urlObj = new URL(url);
+            String urlReworked = removeUnwantedBracesFromString(url);
+            URL urlObj = new URL(urlReworked);
 
             HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
             String basicAuth = SdcReq.getSdcBasicAuth(refProp);
@@ -738,7 +739,9 @@ public class SdcCatalogServices {
                 response = new StringBuilder();
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
+                    if (!inputLine.isEmpty()) {
+                        response.append(inputLine);
+                    }
                     if (alarmConditions) {
                         response.append("\n");
                     }
@@ -780,7 +783,7 @@ public class SdcCatalogServices {
 
             // To create byKpi
             ObjectNode kpiObjectNode = mapper.createObjectNode();
-            if (cldsServiceData.getCldsVfs() != null && cldsServiceData.getCldsVfs().size() > 0) {
+            if (cldsServiceData.getCldsVfs() != null && !cldsServiceData.getCldsVfs().isEmpty()) {
                 for (CldsVfData currCldsVfData : cldsServiceData.getCldsVfs()) {
                     if (currCldsVfData != null) {
                         createKpiObjectNodeByVfUuid(mapper, kpiObjectNode, currCldsVfData.getCldsKPIList());
@@ -791,7 +794,7 @@ public class SdcCatalogServices {
 
             // To create byVfc and alarmCondition with vfcResourceUUID
             ObjectNode vfcResourceUuidObjectNode = mapper.createObjectNode();
-            if (cldsServiceData.getCldsVfs() != null && cldsServiceData.getCldsVfs().size() > 0) {
+            if (cldsServiceData.getCldsVfs() != null && !cldsServiceData.getCldsVfs().isEmpty()) {
                 for (CldsVfData currCldsVfData : cldsServiceData.getCldsVfs()) {
                     if (currCldsVfData != null) {
                         createAlarmCondObjectNodeByVfcUuid(mapper, vfcResourceUuidObjectNode,
@@ -902,7 +905,7 @@ public class SdcCatalogServices {
             List<CldsAlarmCondition> cldsAlarmCondList) {
         ObjectNode alarmCondKeyNode = mapper.createObjectNode();
 
-        if (cldsAlarmCondList != null && cldsAlarmCondList.size() > 0) {
+        if (cldsAlarmCondList != null && !cldsAlarmCondList.isEmpty()) {
             for (CldsAlarmCondition currCldsAlarmCondition : cldsAlarmCondList) {
                 if (currCldsAlarmCondition != null) {
                     ObjectNode alarmCondNode = mapper.createObjectNode();
@@ -925,7 +928,7 @@ public class SdcCatalogServices {
         ObjectNode vfObjectNode = mapper.createObjectNode();
         ObjectNode vfUuidNode = mapper.createObjectNode();
         List<CldsVfData> cldsVfsList = cldsServiceData.getCldsVfs();
-        if (cldsVfsList != null && cldsVfsList.size() > 0) {
+        if (cldsVfsList != null && !cldsVfsList.isEmpty()) {
             for (CldsVfData currCldsVfData : cldsVfsList) {
                 if (currCldsVfData != null) {
                     vfUuidNode.put(currCldsVfData.getVfInvariantResourceUUID(), currCldsVfData.getVfName());
@@ -941,7 +944,7 @@ public class SdcCatalogServices {
 
     private void createKpiObjectNodeByVfUuid(ObjectMapper mapper, ObjectNode vfResourceUuidObjectNode,
             List<CldsVfKPIData> cldsVfKpiDataList) {
-        if (cldsVfKpiDataList != null && cldsVfKpiDataList.size() > 0) {
+        if (cldsVfKpiDataList != null && !cldsVfKpiDataList.isEmpty()) {
             for (CldsVfKPIData currCldsVfKpiData : cldsVfKpiDataList) {
                 if (currCldsVfKpiData != null) {
                     ObjectNode thresholdNameObjectNode = mapper.createObjectNode();
@@ -967,11 +970,11 @@ public class SdcCatalogServices {
         ObjectNode vfcObjectNode = mapper.createObjectNode();
         ObjectNode alarmCondNode = mapper.createObjectNode();
         ObjectNode alertDescNode = mapper.createObjectNode();
-        if (cldsVfcDataList != null && cldsVfcDataList.size() > 0) {
+        if (cldsVfcDataList != null && !cldsVfcDataList.isEmpty()) {
             for (CldsVfcData currCldsVfcData : cldsVfcDataList) {
                 if (currCldsVfcData != null) {
                     if (currCldsVfcData.getCldsAlarmConditions() != null
-                            && currCldsVfcData.getCldsAlarmConditions().size() > 0) {
+                            && !currCldsVfcData.getCldsAlarmConditions().isEmpty()) {
                         for (CldsAlarmCondition currCldsAlarmCondition : currCldsVfcData.getCldsAlarmConditions()) {
                             alarmCondNode.put(currCldsAlarmCondition.getAlarmConditionKey(),
                                     currCldsAlarmCondition.getAlarmConditionKey());
@@ -1001,12 +1004,12 @@ public class SdcCatalogServices {
     private ObjectNode createVfcObjectNodeByVfUuid(ObjectMapper mapper, List<CldsVfData> cldsVfDataList) {
         ObjectNode vfUuidObjectNode = mapper.createObjectNode();
 
-        if (cldsVfDataList != null && cldsVfDataList.size() > 0) {
+        if (cldsVfDataList != null && !cldsVfDataList.isEmpty()) {
             for (CldsVfData currCldsVfData : cldsVfDataList) {
                 if (currCldsVfData != null) {
                     ObjectNode vfcObjectNode = mapper.createObjectNode();
                     ObjectNode vfcUuidNode = mapper.createObjectNode();
-                    if (currCldsVfData.getCldsVfcs() != null && currCldsVfData.getCldsVfcs().size() > 0) {
+                    if (currCldsVfData.getCldsVfcs() != null && !currCldsVfData.getCldsVfcs().isEmpty()) {
                         for (CldsVfcData currCldsVfcData : currCldsVfData.getCldsVfcs()) {
                             vfcUuidNode.put(currCldsVfcData.getVfcInvariantResourceUUID(),
                                     currCldsVfcData.getVfcName());
@@ -1126,7 +1129,7 @@ public class SdcCatalogServices {
     private String getResourceUuidFromResourceInvariantUuid(String resourceInvariantUuid,
             List<CldsSdcResourceBasicInfo> resourceInfoList) throws IOException {
         String resourceUuid = null;
-        if (resourceInfoList != null && resourceInfoList.size() > 0) {
+        if (resourceInfoList != null && !resourceInfoList.isEmpty()) {
             for (CldsSdcResourceBasicInfo currResource : resourceInfoList) {
                 if (currResource != null && currResource.getInvariantUUID() != null && currResource.getUuid() != null
                         && currResource.getInvariantUUID().equalsIgnoreCase(resourceInvariantUuid)) {

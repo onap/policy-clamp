@@ -61,8 +61,11 @@ import org.springframework.context.ApplicationContext;
  * Policy utility methods - specifically, send the policy.
  */
 public class PolicyClient {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(PolicyClient.class);
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+
+    protected static final String     LOG_POLICY_PREFIX = "Response is ";
+
+    protected static final EELFLogger logger            = EELFManager.getInstance().getLogger(PolicyClient.class);
+    protected static final EELFLogger metricsLogger     = EELFManager.getInstance().getMetricsLogger();
 
     @Value("${org.onap.clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
     protected String                  cldsPolicyConfigFile;
@@ -72,10 +75,6 @@ public class PolicyClient {
 
     @Autowired
     protected RefProp                 refProp;
-
-    public PolicyClient() {
-
-    }
 
     /**
      * Perform send of microservice policy.
@@ -189,11 +188,11 @@ public class PolicyClient {
 
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
-        String responseMessage;
+        String responseMessage = "";
         Date startTime = new Date();
         try {
             List<Integer> versions = getVersions(policyNamePrefix, prop);
-            if (versions.size() <= 0) {
+            if (versions.isEmpty()) {
                 LoggingUtils.setTargetContext("Policy", "createPolicy");
                 logger.info("Attempting to create policy for action=" + prop.getActionCd());
                 response = policyEngine.createPolicy(policyParameters);
@@ -205,9 +204,9 @@ public class PolicyClient {
                 responseMessage = response.getResponseMessage();
             }
         } catch (Exception e) {
-            responseMessage = e.toString();
+            logger.error("Exception occurred during policy communnication", e);
         }
-        logger.info("response is " + responseMessage);
+        logger.info(LOG_POLICY_PREFIX + responseMessage);
 
         LoggingUtils.setTimeContext(startTime, new Date());
 
@@ -261,15 +260,15 @@ public class PolicyClient {
 
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
-        String responseMessage;
+        String responseMessage = "";
         try {
             logger.info("Attempting to push policy...");
             response = policyEngine.pushPolicy(pushPolicyParameters);
             responseMessage = response.getResponseMessage();
         } catch (Exception e) {
-            responseMessage = e.toString();
+            logger.error("Exception occurred during policy communnication", e);
         }
-        logger.info("response is " + responseMessage);
+        logger.info(LOG_POLICY_PREFIX + responseMessage);
 
         if (response != null && (response.getResponseCode() == 200 || response.getResponseCode() == 204)) {
             logger.info("Policy push successful");
@@ -333,7 +332,7 @@ public class PolicyClient {
             logger.info("Policy versions.size()=" + versions.size());
         } catch (Exception e) {
             // just print warning - if no policy version found
-            logger.warn("warning: policy not found...policy name - " + policyName);
+            logger.warn("warning: policy not found...policy name - " + policyName, e);
         }
 
         return versions;
@@ -401,8 +400,7 @@ public class PolicyClient {
         deletePolicyParameters.setPdpGroup(refProp.getStringValue("policy.pdp.group"));
         deletePolicyParameters.setPolicyType(policyType);
         // send delete request
-        String responseMessage = null;
-        responseMessage = sendDeletePolicy(deletePolicyParameters, prop);
+        String responseMessage = sendDeletePolicy(deletePolicyParameters, prop);
 
         logger.info("Deleting policy from PAP...");
         deletePolicyParameters.setPolicyComponent("PAP");
@@ -438,15 +436,15 @@ public class PolicyClient {
 
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
-        String responseMessage;
+        String responseMessage = "";
         try {
             logger.info("Attempting to delete policy...");
             response = policyEngine.deletePolicy(deletePolicyParameters);
             responseMessage = response.getResponseMessage();
         } catch (Exception e) {
-            responseMessage = e.toString();
+            logger.error("Exception occurred during policy communnication", e);
         }
-        logger.info("response is " + responseMessage);
+        logger.info(LOG_POLICY_PREFIX + responseMessage);
 
         if (response != null && response.getResponseCode() == 200) {
             logger.info("Policy delete successful");
