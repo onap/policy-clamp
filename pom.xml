@@ -82,28 +82,22 @@
 		<skip.docker.build>true</skip.docker.build>
 		<skip.docker.push>true</skip.docker.push>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
-
-		<nexusproxy>https://nexus.onap.org</nexusproxy>
-		<snapshotNexusPath>/content/repositories/snapshots/</snapshotNexusPath>
-		<releaseNexusPath>/content/repositories/releases/</releaseNexusPath>
-		<stagingNexusPath>/content/repositories/staging/</stagingNexusPath>
-		<sitePath>/content/sites/site/org/onap/clamp/${project.version}</sitePath>
 	</properties>
 
 	<distributionManagement>
 		<repository>
 			<id>ecomp-releases</id>
 			<name>Clamp Release Repository</name>
-			<url>${nexusproxy}/${releaseNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>ecomp-snapshots</id>
 			<name>Clamp Snapshot Repository</name>
-			<url>${nexusproxy}/${snapshotNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/snapshots/</url>
 		</snapshotRepository>
 		<site>
 			<id>ecomp-site</id>
-			<url>dav:${nexusproxy}${sitePath}</url>
+			<url>dav:https://nexus.onap.org/content/sites/site/org/onap/clamp/${project.version}</url>
 		</site>
 	</distributionManagement>
 
@@ -116,17 +110,17 @@
 		<repository>
 			<id>ecomp-releases</id>
 			<name>ONAP Release Repository</name>
-			<url>${nexusproxy}/${releaseNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>ecomp-staging</id>
 			<name>ONAP Staging Repository</name>
-			<url>${nexusproxy}/${stagingNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/staging/</url>
 		</repository>
 		<repository>
 			<id>ecomp-snapshots</id>
 			<name>ONAP Snapshot Repository</name>
-			<url>${nexusproxy}/${snapshotNexusPath}</url>
+			<url>https://nexus.onap.org/content/repositories/snapshots/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -578,7 +572,7 @@
 				<version>1.6.7</version>
 				<extensions>true</extensions>
 				<configuration>
-					<nexusUrl>${nexusproxy}</nexusUrl>
+					<nexusUrl>https://nexus.onap.org</nexusUrl>
 					<stagingProfileId>176c31dfe190a</stagingProfileId>
 					<serverId>ecomp-staging</serverId>
 					<skipNexusStagingDeployMojo>${skip.staging.artifacts}</skipNexusStagingDeployMojo>
