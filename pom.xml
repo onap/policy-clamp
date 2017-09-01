@@ -644,6 +644,53 @@
 							</buildArgs>
 						</configuration>
 					</execution>
+					
+					<execution>
+						<id>tag-image-latest-timestamp</id>
+						<phase>package</phase>
+						<goals>
+							<goal>tag</goal>
+						</goals>
+						<configuration>
+							<image>onap/clamp</image>
+							<newName>${docker.push.registry}/onap/clamp:${project.docker.latesttagtimestamp.version}</newName>
+							<skipDockerTag>${skip.docker.push}</skipDockerTag>
+						</configuration>
+					</execution>
+					<execution>
+						<id>push-image-latest-timestamp</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>push</goal>
+						</goals>
+						<configuration>
+							<imageName>${docker.push.registry}/onap/clamp:${project.docker.latesttagtimestamp.version}</imageName>
+							<skipDockerPush>${skip.docker.push}</skipDockerPush>
+						</configuration>
+					</execution>
+					<execution>
+						<id>tag-image-latest</id>
+						<phase>package</phase>
+						<goals>
+							<goal>tag</goal>
+						</goals>
+						<configuration>
+							<image>onap/clamp</image>
+							<newName>${docker.push.registry}/onap/clamp:${project.docker.latesttag.version}</newName>
+							<skipDockerTag>${skip.docker.push}</skipDockerTag>
+						</configuration>
+					</execution>
+					<execution>
+						<id>push-image-latest</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>push</goal>
+						</goals>
+						<configuration>
+							<imageName>${docker.push.registry}/onap/clamp:${project.docker.latesttag.version}</imageName>
+							<skipDockerPush>${skip.docker.push}</skipDockerPush>
+						</configuration>
+					</execution>
 					<execution>
 						<id>tag-image</id>
 						<phase>package</phase>
@@ -652,7 +699,7 @@
 						</goals>
 						<configuration>
 							<image>onap/clamp</image>
-							<newName>${docker.push.registry}/onap/clamp</newName>
+							<newName>${docker.push.registry}/onap/clamp:latest</newName>
 							<skipDockerTag>${skip.docker.push}</skipDockerTag>
 						</configuration>
 					</execution>
@@ -663,7 +710,7 @@
 							<goal>push</goal>
 						</goals>
 						<configuration>
-							<imageName>${docker.push.registry}/onap/clamp</imageName>
+							<imageName>${docker.push.registry}/onap/clamp:latest</imageName>
 							<skipDockerPush>${skip.docker.push}</skipDockerPush>
 						</configuration>
 					</execution>
