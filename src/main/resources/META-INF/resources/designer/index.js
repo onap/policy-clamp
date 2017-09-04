@@ -1503,7 +1503,7 @@ function visibility_model()
 
 
                 },
-				 'bpmn:StringMatch': function(p, element) {
+                'bpmn:VesCollector': function(p, element) {
                     var lane = renderer('bpmn:Lane')(p, element, {
                         fill: 'White'
                     });
@@ -1511,8 +1511,63 @@ function visibility_model()
                     var expandedPool = DiUtil.isExpanded(element);
 
                     if (expandedPool) {
-                    	 
-                    	 
+                       drawLine(p, [{
+                             x: element.width,
+                             y: 80
+                         }, {
+                             x: element.width,
+                             y: 20
+                         }]);
+
+                         drawLine(p, [{
+                             x: 20,
+                             y: 0
+                         }, {
+                             x: 20,
+                             y: element.height
+                         }]);
+
+                        textUtil.createText(p, "V", { align: 'left-top', 'padding': {top:0,  left:5, right:element.width - 20, bottom:0} });
+                        textUtil.createText(p, "E", { align: 'left-top', 'padding': {top:12, left:5, right:element.width - 20, bottom:0} });
+                        textUtil.createText(p, "S", { align: 'left-top', 'padding': {top:24, left:5, right:element.width - 20, bottom:0} });
+
+                         var text2 = getSemantic(element).name;
+                         if(text2 == undefined )
+                          {
+                            text2 = 'VesCollector';
+                          }
+
+                        renderLabel(p, text2, {
+                             box: element,
+                             align: 'center-middle'
+                         });
+
+                    } else {
+                        // Collapsed pool draw text inline
+                        var text2 = getSemantic(element).name;
+                        renderLabel(p, text2, {
+                            box: element,
+                            align: 'center-middle'
+                        });
+                    }
+
+                    var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
+
+                    if (participantMultiplicity) {
+                        renderer('ParticipantMultiplicityMarker')(p, element);
+                    }
+
+                    return lane;
+                },
+
+         'bpmn:StringMatch': function(p, element) {
+                    var lane = renderer('bpmn:Lane')(p, element, {
+                        fill: 'White'
+                    });
+
+                    var expandedPool = DiUtil.isExpanded(element);
+
+                    if (expandedPool) {
 
                          drawLine(p, [{
                              x: 0,
@@ -1530,7 +1585,7 @@ function visibility_model()
                              box: element,
                              align: 'center-middle'
                          });
-                         
+
                     } else {
                         // Collapsed pool draw text inline
                         var text2 = getSemantic(element).name;
@@ -1549,7 +1604,8 @@ function visibility_model()
                     return lane;
 
 
-                },
+                   },
+
                 'bpmn:TCA': function(p, element) {
                     var lane = renderer('bpmn:Lane')(p, element, {
                         fill: 'White'
@@ -3764,7 +3820,8 @@ function visibility_model()
                         }
                     }
                 });
-            }
+      }
+            
  			if (bpmnElement.$instanceOf('bpmn:TCA')) {
                 assign(actions, {
                     'Properties': {
@@ -4897,7 +4954,14 @@ function visibility_model()
                     width: 120,
                     height: 80
                 };
+      }
+			if (semantic.$instanceOf('bpmn:VesCollector')) {
+                return {
+                    width: 120,
+                    height: 80
+                };
             }
+            
 			
 			if (semantic.$instanceOf('bpmn:TCA')) {
                 return {
@@ -6413,7 +6477,11 @@ function visibility_model()
                     ),
 					'create.String-Match': createAction(
                         'bpmn:StringMatch', 'event', 'icon-stringmatch-node', 'String Match'
+          ),
+					'create.ves-collector': createAction(
+                        'bpmn:VesCollector', 'event', 'icon-ves-collector-node', 'Ves Collector'
                     ),
+                
                     'create.TCA': createAction(
                     	'bpmn:TCA', 'event', 'icon-tca-node', 'TCA'
                     ),
@@ -14253,7 +14321,15 @@ function visibility_model()
                     "Activity",
                     "InteractionNode"
                 ]
+      },
+			{
+                "name": "VesCollector",
+                "superClass": [
+                    "Activity",
+                    "InteractionNode"
+                ]
             },
+                      
             {
                 "name": "TCA",
                 "superClass": [

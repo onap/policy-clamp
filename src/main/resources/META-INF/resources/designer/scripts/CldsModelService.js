@@ -24,17 +24,19 @@
 app.service('cldsModelService', ['alertService','$http', '$q', function (alertService,$http, $q) {
   
   function checkIfElementType(name){
+      //This will open the methods located in the app.js
+      mapping = {
+          'stringmatch': StringMatchWindow,
+          'tca': TCAWindow,
+          'policy': PolicyWindow,
+          'collector': CollectorsWindow,
+          'vescollector': VesCollectorWindow,
+      };
 
-    //This will open the methods located in the app.js
-	if (name.toLowerCase().indexOf("stringmatch")>=0)
-	    StringMatchWindow();
-	else if (name.toLowerCase().indexOf("tca")>=0)
-		TCAWindow();
-    else if(name.toLowerCase().indexOf("policy")>=0)
-    	PolicyWindow();
-    else if(name.toLowerCase().indexOf("collector")>=0)
-        CollectorsWindow();
-    
+      key = name.split('_')[0].toLowerCase()
+      if (key in mapping) {
+          mapping[key]();
+      }
   }
 
   this.toggleDeploy = function  (uiAction, modelName, controlNamePrefixIn, 

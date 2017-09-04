@@ -181,6 +181,7 @@ svg:not(:root) {
 } /* '' */
 .icon-initial-node:before{ content: url('../images/InitialProcess.png'); } /* '' */
 .icon-collector-node:before{ content: url('../images/clds-collector-icon.png'); } /* '' */
+.icon-ves-collector-node:before{ content: url('../images/clds-ves-collector-icon.png'); } /* '' */
 .icon-stringmatch-node:before{ content: url('../images/clds-string-match-icon.png'); } /* '' */
 .icon-tca-node:before{ content: url('../images/clds-tca-icon.png'); } /* '' */
 .icon-policy-node:before{ content: url('../images/clds-policy-icon.png'); } /* '' */

@@ -1412,6 +1412,55 @@ var app = angular.module('clds-app', ['ngRoute',
 
 								}
 							};
+							$scope.VesCollectorWindow = function(vesCollector) {
+
+								if (isTemplate) {
+									var dlg = dialogs
+											.create(
+													'partials/portfolios/Template_model.html',
+													'ImportSchemaCtrl',
+													vesCollector,
+													{
+														closable : true,
+														draggable : true
+													},
+													{
+														size : 'lg',
+														keyboard : true,
+														backdrop : 'static',
+														windowClass : 'my-class'
+													});
+									dlg.result.then(function(name) {
+
+									}, function() {
+
+
+									});
+								} else { // if (isTemplate)
+
+									var dlg = dialogs
+											.create(
+													'partials/portfolios/vesCollector_properties.html',
+													'ImportSchemaCtrl',
+													{
+														closable : true,
+														draggable : true
+													},
+													{
+														size : 'lg',
+														keyboard : true,
+														backdrop : 'static',
+														windowClass : 'my-class'
+													});
+
+									dlg.result.then(function(name) {
+
+									}, function() {
+
+									});
+
+								}
+							};
 
 							$scope.TCAWindow = function(tca) {
 								if (isTemplate) {
@@ -1633,6 +1682,10 @@ function CollectorsWindow(collectorsWin) {
 	angular.element(document.getElementById('navbar')).scope()
 			.CollectorsWindow(collectorsWin);
 
+}
+function VesCollectorWindow(vesCollectorWin) {
+    angular.element(document.getElementById('navbar')).scope()
+        .VesCollectorWindow(vesCollectorWin);
 }
 
 function F5Window() {
