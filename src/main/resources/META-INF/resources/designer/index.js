@@ -1560,6 +1560,45 @@ function visibility_model()
                     return lane;
                 },
 
+                'bpmn:Holmes': function(p, element) {
+                    var lane = renderer('bpmn:Lane')(p, element, {
+                        fill: 'White'
+                    });
+
+                    var expandedPool = DiUtil.isExpanded(element);
+
+                    var instanceName = getSemantic(element).name;
+                    if (expandedPool) {
+
+                        if (instanceName == undefined) {
+                            instanceName = 'Holmes';
+                        }
+
+                        // add holmes 'icon'
+                        var attrs = computeStyle({}, {
+                            stroke: 'black',
+                            strokeWidth: 1,
+                            fill: 'white'
+                        });
+                        p.circle(15, 15, 10).attr(attrs)
+                        textUtil.createText(p, "H", { align: 'left-top', 'padding': { top:6, left:11 } });
+                    }
+
+                    renderLabel(p, instanceName, {
+                        box: element,
+                        align: 'center-middle'
+                    });
+
+                    var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
+
+                    if (participantMultiplicity) {
+                        renderer('ParticipantMultiplicityMarker')(p, element);
+                    }
+
+                    return lane;
+                },
+
+
          'bpmn:StringMatch': function(p, element) {
                     var lane = renderer('bpmn:Lane')(p, element, {
                         fill: 'White'
@@ -3821,7 +3860,22 @@ function visibility_model()
                     }
                 });
       }
-            
+ 			if (bpmnElement.$instanceOf('bpmn:Holmes')) {
+                assign(actions, {
+                    'Properties': {
+                        group: 'clds',
+                        label: 'Edit Properties',
+                        className: 'clds-edit-properties',
+                        title: 'Properties',
+                        action: {
+                            click: function(event) {
+                            	lastElementSelected=bpmnElement.id
+                            	HolmesWindow(bpmnElement);
+                            }
+                        }
+                    }
+                });
+      }
  			if (bpmnElement.$instanceOf('bpmn:TCA')) {
                 assign(actions, {
                     'Properties': {
@@ -4961,8 +5015,12 @@ function visibility_model()
                     height: 80
                 };
             }
-            
-			
+			if (semantic.$instanceOf('bpmn:Holmes')) {
+                return {
+                    width: 120,
+                    height: 80
+                };
+            }
 			if (semantic.$instanceOf('bpmn:TCA')) {
                 return {
                     width: 120,
@@ -6480,7 +6538,11 @@ function visibility_model()
           ),
 					'create.ves-collector': createAction(
                         'bpmn:VesCollector', 'event', 'icon-ves-collector-node', 'Ves Collector'
-                    ),
+          ),
+					'create.holmes': createAction(
+                        'bpmn:Holmes', 'event', 'icon-holmes-node', 'Holmes'
+          ),
+
                 
                     'create.TCA': createAction(
                     	'bpmn:TCA', 'event', 'icon-tca-node', 'TCA'
@@ -14324,6 +14386,13 @@ function visibility_model()
       },
 			{
                 "name": "VesCollector",
+                "superClass": [
+                    "Activity",
+                    "InteractionNode"
+                ]
+      },
+			{
+                "name": "Holmes",
                 "superClass": [
                     "Activity",
                     "InteractionNode"

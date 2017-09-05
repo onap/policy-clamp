@@ -1462,6 +1462,34 @@ var app = angular.module('clds-app', ['ngRoute',
 								}
 							};
 
+							$scope.HolmesWindow = function(holmes) {
+
+								  if (isTemplate) {
+                      var partial = 'partials/portfolios/Template_model.html'
+                  } else {
+                      var partial = 'partials/portfolios/holmes_properties.html'
+                  }
+                  
+									var dlg = dialogs
+											.create(
+													partial,
+													'ImportSchemaCtrl',
+													holmes,
+													{
+														  closable : true,
+														  draggable : true
+													},
+													{
+														  size : 'lg',
+														  keyboard : true,
+														  backdrop : 'static',
+														  windowClass : 'my-class'
+													});
+                  
+                  dlg.result()
+							};
+                
+                
 							$scope.TCAWindow = function(tca) {
 								if (isTemplate) {
 									var dlg = dialogs
@@ -1686,6 +1714,11 @@ function CollectorsWindow(collectorsWin) {
 function VesCollectorWindow(vesCollectorWin) {
     angular.element(document.getElementById('navbar')).scope()
         .VesCollectorWindow(vesCollectorWin);
+}
+
+function HolmesWindow(holmesWin) {
+    angular.element(document.getElementById('navbar')).scope()
+        .HolmesWindow(holmesWin);
 }
 
 function F5Window() {

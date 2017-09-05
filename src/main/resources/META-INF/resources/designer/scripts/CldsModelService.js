@@ -31,6 +31,7 @@ app.service('cldsModelService', ['alertService','$http', '$q', function (alertSe
           'policy': PolicyWindow,
           'collector': CollectorsWindow,
           'vescollector': VesCollectorWindow,
+          'holmes': HolmesWindow,
       };
 
       key = name.split('_')[0].toLowerCase()
