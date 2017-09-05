@@ -23,17 +23,87 @@
 <style>
 </style>
 
-<div attribute-test="holmesproperties" id="configure-widgets"  >
-      <div attribute-test="cldsopentemplateh" class="modal-header">
-        <button type="button" class="close" ng-click="close(false)" aria-hidden="true" style="margin-top: -3px">&times;</button>
-        <h4>Holmes</h4>
-      </div>
 
-      <div attribute-test="cldsopentemplateb" class="modal-body" style="height: 280px">
-        No parameter can be configured.
-      </div>
+<div id="holmes-configuration">
+  <!-- form header -->
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close(false)" aria-hidden="true" style="margin-top: -3px">&times;</button>
+    <h4>Holmes Microservice Configuration</h4>
+  </div>
 
-      <div class="modal-footer">
-        <button ng-click="close(true)" id="close_button" class="btn btn-primary">Close</button>
+  <!-- Form center-->
+  <div class="modal-body" style="height: 280px">
+
+    <form id="saveProps" class="form-horizontal">
+      <div class="form-group">
+        <div>
+          <label for="correlationalLogic" class="col-sm-4 control-label">Correlational logic</label>
+        </div>
+        <div class="col-sm-8">
+          <textarea class="form-control" focus="true" name="correlationalLogic"  id="correlationalLogic" />
+        </div>
+        <div>
+          <label for="operationalPolicy" class="col-sm-4 control-label">Operational policy</label>
+        </div>
+    <div class="col-sm-8">
+    <select class="form-control" id="operationalPolicy" name="operationalPolicy" autofocus="autofocus" required ng-trim="true">
+		  <option ng-repeat="x in operationalPolicies" value="{{x}}">{{x}}</option>
+		</select>
+        </div>
       </div>
+    </form>
+
+  </div>
+
+  <!-- footer -->
+  <div class="modal-footer">
+    <button id="savePropsBtn" class="btn btn-primary">Save</button>
+    <button id="close_button" class="btn btn-primary" ng-click="close(true)">Cancel</button>
+  </div>
 </div>
+
+<script language="javascript">
+
+// load window
+loadPropertyWindow('holmes')
+
+// fill policy combo box (allPolicies from ImporSchemaCtrl.js
+if (typeof allPolicies !== "undefined"){
+	  $.each(Object.keys(allPolicies), function(val, text) {
+	      $('#operationalPolicy').append($('<option></option>').val(text).html(text));
+	  });  
+} else if (typeof elementMap !== "undefined"){
+		for (key in elementMap){
+				if (key.indexOf("Policy")>-1){
+					  $.each(Object.keys(elementMap[key]), function(val, text){
+						    $('#operationalPolicy').append(
+							      $('<option></option>').val(text).html(text)
+						    );
+					  });
+				}
+		}
+}
+
+// load property values
+var el=elementMap[lastElementSelected];
+if(el!==undefined){
+    for(var i=0;i<el.length;i++){
+        $("#"+el[i].name).val(el[i].value);
+    }
+}
+
+$("#saveProps").on('submit', function (event) {
+    saveProperties($(this).serializeArray())
+    event.preventDefault();
+    $("#close_button").click();
+});
+
+$("#savePropsBtn").click(function (event) {
+    $("#saveProps").submit();
+});
+
+
+
+
+
+</script>
