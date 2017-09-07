@@ -1485,10 +1485,7 @@ var app = angular.module('clds-app', ['ngRoute',
 														  backdrop : 'static',
 														  windowClass : 'my-class'
 													});
-                  
-                  dlg.result()
 							};
-                
                 
 							$scope.TCAWindow = function(tca) {
 								if (isTemplate) {
