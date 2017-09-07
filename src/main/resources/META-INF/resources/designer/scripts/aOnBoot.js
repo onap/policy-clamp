@@ -113,61 +113,36 @@ function loadPropertyWindow(type) {
 
 function setMultiSelect() {
   $("select").each(function(index, mySelect) {
-    if ($(mySelect).parents(".multiselect-native-select") &&
-      $(mySelect).parents(".multiselect-native-select").length < 1) {
-      if (!$(mySelect).attr("multiple")) {
-        if ($(mySelect).attr("enableFilter")) {
-          $(mySelect).multiselect({
-            numberDisplayed: 1,
-            maxHeight: 200
-          });
-        } else {
-          $(mySelect).multiselect({
-            numberDisplayed: 1,
-            enableFiltering: true,
-            maxHeight: 200
-          });
-        }
 
-      } else {
-        $(mySelect).multiselect({
-          numberDisplayed: 1,
-          includeSelectAllOption: true,
-          enableFiltering: true,
-          maxHeight: 200,
-          enableCaseInsensitiveFiltering: true
-        });
-      }
-
-    } else if ($(mySelect).parents(".multiselect-native-select") &&
-      $(mySelect).parents(".multiselect-native-select").length > 0) {
-      var selectDrop = $(mySelect).parent(".multiselect-native-select").find("select");
-      $(mySelect).parent(".multiselect-native-select").parent().html(selectDrop);
-      if (!$(mySelect).attr("multiple")) {
-        if ($(mySelect).attr("enableFilter")) {
-          $(mySelect).multiselect({
-            numberDisplayed: 1,
-            maxHeight: 200
-          });
-        } else {
-          $(mySelect).multiselect({
-            numberDisplayed: 1,
-            enableFiltering: true,
-            maxHeight: 200
-          });
-        }
-      } else {
-        $(mySelect).multiselect({
-          numberDisplayed: 1,
-          includeSelectAllOption: true,
-          enableFiltering: true,
-          maxHeight: 200,
-          enableCaseInsensitiveFiltering: true
-        });
-      }
+    var mySelectObj = $(mySelect);
+    if (! mySelectObj.parents(".multiselect-native-select")) {
+      // keep native for this one
+      return;
     }
+
+    if (mySelectObj.parents(".multiselect-native-select").length > 0) {
+      var selectDrop = mySelectObj.parent(".multiselect-native-select").find("select");
+      mySelectObj.parent(".multiselect-native-select").parent().html(selectDrop);
+    }
+
+    var options = {
+      numberDisplayed: 1,
+      maxHeight: 200
+    };
+
+    if (mySelectObj.attr("multiple")
+        && mySelectObj.attr("multiple") != 'false') {
+      options.includeSelectAllOption = true;
+    }
+    
+    if (mySelectObj.attr("enableFilter")
+        && mySelectObj.attr("enableFilter") != 'false') {
+      options.enableCaseInsensitiveFiltering = true;
+      options.enableFiltering = true;
+    }
+
+    mySelectObj.multiselect(options);
   });
-  //refeshMultiSelect();
 }
 
 function loadSharedPropertyByService(onChangeUUID, refresh, callBack) {
