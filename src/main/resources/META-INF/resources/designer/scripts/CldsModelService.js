@@ -25,6 +25,10 @@ app.service('cldsModelService', ['alertService','$http', '$q', function (alertSe
   
   function checkIfElementType(name){
       //This will open the methods located in the app.js
+      if (undefined == name) {
+          return
+      }
+      
       mapping = {
           'stringmatch': StringMatchWindow,
           'tca': TCAWindow,
