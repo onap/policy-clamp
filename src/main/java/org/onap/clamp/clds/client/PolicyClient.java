@@ -62,10 +62,15 @@ import org.springframework.context.ApplicationContext;
  */
 public class PolicyClient {
 
+    protected static final String     POLICY_PREFIX_BASE         = "Config_";
+    protected static final String     POLICY_PREFIX_BRMS_PARAM   = "Config_BRMS_Param_";
+    protected static final String     POLICY_PREFIX_MICROSERVICE = "Config_MS_";
+
     protected static final String     LOG_POLICY_PREFIX = "Response is ";
 
-    protected static final EELFLogger logger            = EELFManager.getInstance().getLogger(PolicyClient.class);
-    protected static final EELFLogger metricsLogger     = EELFManager.getInstance().getMetricsLogger();
+    protected static final EELFLogger logger                     = EELFManager.getInstance()
+            .getLogger(PolicyClient.class);
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     @Value("${org.onap.clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
     protected String                  cldsPolicyConfigFile;
@@ -77,7 +82,7 @@ public class PolicyClient {
     protected RefProp                 refProp;
 
     /**
-     * Perform send of microservice policy.
+     * Perform BRMS policy type.
      *
      * @param attributes
      *            A map of attributes
@@ -92,7 +97,7 @@ public class PolicyClient {
      *             In case of issues with the PolicyEngine class
      * 
      */
-    public String sendBrms(Map<AttributeType, Map<String, String>> attributes, ModelProperties prop,
+    public String sendBrmsPolicy(Map<AttributeType, Map<String, String>> attributes, ModelProperties prop,
             String policyRequestUuid) throws PolicyEngineException, IOException {
 
         PolicyParameters policyParameters = new PolicyParameters();
@@ -122,7 +127,7 @@ public class PolicyClient {
     }
 
     /**
-     * Perform send of microservice policy.
+     * Perform send of microservice policy in JSON.
      *
      * @param policyJson
      *            The policy JSON
@@ -136,7 +141,7 @@ public class PolicyClient {
      * @throws IOException
      *             In case of issue with the Stream
      */
-    public String sendMicroService(String policyJson, ModelProperties prop, String policyRequestUuid)
+    public String sendMicroServiceInJson(String policyJson, ModelProperties prop, String policyRequestUuid)
             throws IOException, PolicyEngineException {
 
         PolicyParameters policyParameters = new PolicyParameters();
@@ -159,6 +164,47 @@ public class PolicyClient {
         String rtnMsg = send(policyParameters, prop, policyNamePrefix);
         String policyType = refProp.getStringValue("policy.ms.type");
         push(policyType, prop);
+
+        return rtnMsg;
+    }
+
+    /**
+     * Perform send of base policy in OTHER type.
+     * 
+     * @param configBody
+     *            The config policy string body
+     * @param prop
+     *            The ModelProperties
+     * @param policyRequestUuid
+     *            The policy request UUID
+     * @return
+     * @throws IOException
+     *             In case of issues with the policy engine class creation
+     * @throws PolicyEngineException
+     *             In case of issue with the Stream
+     */
+    public String sendBasePolicyInOther(String configBody, ModelProperties prop, String policyRequestUuid)
+            throws IOException, PolicyEngineException {
+
+        PolicyParameters policyParameters = new PolicyParameters();
+
+        // Set Policy Type
+        policyParameters.setPolicyConfigType(PolicyConfigType.Base);
+        policyParameters.setEcompName(refProp.getStringValue("policy.ecomp.name"));
+        policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
+
+        policyParameters.setConfigBody(configBody);
+        policyParameters.setConfigBodyType(PolicyType.OTHER);
+        policyParameters.setConfigName("HolmesPolicy");
+
+        policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
+
+        // Adding this line to clear the policy id from policy name while
+        // pushing to policy engine
+        prop.setPolicyUniqueId("");
+
+        String rtnMsg = send(policyParameters, prop, POLICY_PREFIX_BASE);
+        push(PolicyConfigType.Base.toString(), prop);
 
         return rtnMsg;
     }
@@ -204,7 +250,7 @@ public class PolicyClient {
                 responseMessage = response.getResponseMessage();
             }
         } catch (Exception e) {
-            logger.error("Exception occurred during policy communnication", e);
+            logger.error("Exception occurred during policy communication", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
 
@@ -266,7 +312,7 @@ public class PolicyClient {
             response = policyEngine.pushPolicy(pushPolicyParameters);
             responseMessage = response.getResponseMessage();
         } catch (Exception e) {
-            logger.error("Exception occurred during policy communnication", e);
+            logger.error("Exception occurred during policy communication", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
 
@@ -350,9 +396,20 @@ public class PolicyClient {
      *             In case of issues with the PolicyEngine creation
      */
     public String deleteMicrosService(ModelProperties prop) throws PolicyEngineException, IOException {
-        String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
         String policyType = refProp.getStringValue("policy.ms.type");
-        return deletePolicy(policyNamePrefix, prop, policyType);
+        return deletePolicy(prop, policyType);
+    }
+
+    /**
+     * This method delete the Base policy.
+     *
+     * @param prop The model Properties
+     * @return A string with the answer from policy
+     * @throws PolicyEngineException In case of issues with the policy engine
+     * @throws IOException In case of issues with the stream
+     */
+    public String deleteBasePolicy(ModelProperties prop) throws PolicyEngineException, IOException {
+        return deletePolicy(prop, PolicyConfigType.Base.toString());
     }
 
     /**
@@ -367,26 +424,23 @@ public class PolicyClient {
      *             In case of issues with the PolicyEngine creation
      */
     public String deleteBrms(ModelProperties prop) throws PolicyEngineException, IOException {
-        String policyNamePrefix = refProp.getStringValue("policy.op.policyNamePrefix");
         String policyType = refProp.getStringValue("policy.op.type");
-        return deletePolicy(policyNamePrefix, prop, policyType);
+        return deletePolicy(prop, policyType);
     }
 
     /**
      * Format and send delete PAP and PDP requests to Policy.
      *
-     * @param policyNamePrefix
-     *            The String policyNamePrefix
      * @param prop
      *            The ModelProperties
+     *
      * @return The response message from policy
      * @throws IOException
      *             in case of issues with the Stream
      * @throws PolicyEngineException
      *             In case of issues with the PolicyEngine class creation
      */
-    protected String deletePolicy(String policyNamePrefix, ModelProperties prop, String policyType)
-            throws PolicyEngineException, IOException {
+    protected String deletePolicy(ModelProperties prop, String policyType) throws PolicyEngineException, IOException {
         DeletePolicyParameters deletePolicyParameters = new DeletePolicyParameters();
 
         if (prop.getPolicyUniqueId() != null && !prop.getPolicyUniqueId().isEmpty()) {

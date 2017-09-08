@@ -70,9 +70,9 @@ public class SdcSendReqDelegate implements JavaDelegate {
         getSdcAttributes((String) execution.getVariable("controlName"));
         ModelProperties prop = ModelProperties.create(execution);
         String bluprintPayload = SdcReq.formatBlueprint(refProp, prop, docText);
-        String formatttedSdcReq = SdcReq.formatSdcReq(bluprintPayload, artifactName, artifactLabel, artifactType);
-        if (formatttedSdcReq != null) {
-            execution.setVariable("formattedArtifactReq", formatttedSdcReq.getBytes());
+        String formattedSdcReq = SdcReq.formatSdcReq(bluprintPayload, artifactName, artifactLabel, artifactType);
+        if (formattedSdcReq != null) {
+            execution.setVariable("formattedArtifactReq", formattedSdcReq.getBytes());
         }
         List<String> sdcReqUrlsList = SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, execution);
 
@@ -83,7 +83,7 @@ public class SdcSendReqDelegate implements JavaDelegate {
         if (formattedSdcLocationReq != null) {
             execution.setVariable("formattedLocationReq", formattedSdcLocationReq.getBytes());
         }
-        sdcCatalogServices.uploadToSdc(prop, userid, sdcReqUrlsList, formatttedSdcReq, formattedSdcLocationReq,
+        sdcCatalogServices.uploadToSdc(prop, userid, sdcReqUrlsList, formattedSdcReq, formattedSdcLocationReq,
                 artifactName, locationArtifactName);
     }
 

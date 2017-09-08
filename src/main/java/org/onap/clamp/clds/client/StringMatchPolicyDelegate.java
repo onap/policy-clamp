@@ -64,7 +64,7 @@ public class StringMatchPolicyDelegate implements JavaDelegate {
         StringMatch stringMatch = prop.getType(StringMatch.class);
         if (stringMatch.isFound()) {
             String policyJson = StringMatchPolicyReq.format(refProp, prop);
-            String responseMessage = policyClient.sendMicroService(policyJson, prop, stringMatchPolicyRequestUuid);
+            String responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, stringMatchPolicyRequestUuid);
             if (responseMessage != null) {
                 execution.setVariable("stringMatchPolicyResponseMessage", responseMessage.getBytes());
             }

@@ -23,6 +23,9 @@
 
 package org.onap.clamp.clds.model;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,20 +35,17 @@ import javax.ws.rs.NotAuthorizedException;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.service.CldsService;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 public class CldsServiceData implements Serializable {
 
-    private static final long       serialVersionUID = -9153372664377279423L;
+    private static final long         serialVersionUID = -9153372664377279423L;
 
-    protected static final EELFLogger       logger           = EELFManager.getInstance().getLogger(CldsServiceData.class);
+    protected static final EELFLogger logger           = EELFManager.getInstance().getLogger(CldsServiceData.class);
     protected static final EELFLogger auditLogger      = EELFManager.getInstance().getAuditLogger();
 
-    private String                  serviceInvariantUUID;
-    private String                  serviceUUID;
-    private Long                    ageOfRecord;
-    private List<CldsVfData>        cldsVfs;
+    private String                    serviceInvariantUUID;
+    private String                    serviceUUID;
+    private Long                      ageOfRecord;
+    private List<CldsVfData>          cldsVfs;
 
     public String getServiceInvariantUUID() {
         return serviceInvariantUUID;
@@ -71,11 +71,11 @@ public class CldsServiceData implements Serializable {
         this.serviceUUID = serviceUUID;
     }
 
-    public CldsServiceData getCldsServiceCache(CldsDao cldsDao, String invariantServiceUUID) throws Exception {
+    public CldsServiceData getCldsServiceCache(CldsDao cldsDao, String invariantServiceUUID) {
         return cldsDao.getCldsServiceCache(invariantServiceUUID);
     }
 
-    public void setCldsServiceCache(CldsDao cldsDao, CldsDBServiceCache cldsDBServiceCache) throws Exception {
+    public void setCldsServiceCache(CldsDao cldsDao, CldsDBServiceCache cldsDBServiceCache) {
         cldsDao.setCldsServiceCache(cldsDBServiceCache);
     }
 
@@ -106,7 +106,7 @@ public class CldsServiceData implements Serializable {
                         filteredCldsVfs.add(vf);
                     }
                 } catch (NotAuthorizedException e) {
-                    logger.debug("user not authorized for {}", vf.getVfInvariantResourceUUID());
+                    logger.error("user not authorized for {}" + vf.getVfInvariantResourceUUID(), e);
                     // when not NotAuthorizedException - don't add to
                     // filteredCldsVfs list
                 }

@@ -23,12 +23,12 @@
 
 package org.onap.clamp.clds.model;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CldsSdcResource implements Comparable<CldsSdcResource> {
@@ -36,13 +36,13 @@ public class CldsSdcResource implements Comparable<CldsSdcResource> {
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsSdcResource.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
-    private String                  resourceInstanceName;
-    private String                  resourceName;
-    private String                  resourceInvariantUuid;
-    private String                  resourceVersion;
-    private String                  resoucreType;
-    private String                  resourceUuid;
-    private List<CldsSdcArtifact>   artifacts;
+    private String                    resourceInstanceName;
+    private String                    resourceName;
+    private String                    resourceInvariantUuid;
+    private String                    resourceVersion;
+    private String                    resoucreType;
+    private String                    resourceUuid;
+    private List<CldsSdcArtifact>     artifacts;
 
     public String getResourceInstanceName() {
         return resourceInstanceName;
@@ -117,6 +117,37 @@ public class CldsSdcResource implements Comparable<CldsSdcResource> {
         return rtn;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((resourceInstanceName == null) ? 0 : resourceInstanceName.hashCode());
+        result = prime * result + ((resourceVersion == null) ? 0 : resourceVersion.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CldsSdcResource other = (CldsSdcResource) obj;
+        if (resourceInstanceName == null) {
+            if (other.resourceInstanceName != null)
+                return false;
+        } else if (!resourceInstanceName.equals(other.resourceInstanceName))
+            return false;
+        if (resourceVersion == null) {
+            if (other.resourceVersion != null)
+                return false;
+        } else if (!resourceVersion.equals(other.resourceVersion))
+            return false;
+        return true;
+    }
+
     /**
      * Convert version String into a BigDecimal
      *
@@ -124,7 +155,7 @@ public class CldsSdcResource implements Comparable<CldsSdcResource> {
      * @return
      */
     private BigDecimal convertVersion(String versionText) {
-        BigDecimal rtn = new BigDecimal(0.0);
+        BigDecimal rtn = BigDecimal.valueOf(0.0);
         try {
             rtn = new BigDecimal(versionText);
         } catch (NumberFormatException nfe) {

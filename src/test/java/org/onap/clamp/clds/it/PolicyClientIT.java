@@ -43,7 +43,7 @@ import org.onap.clamp.clds.model.prop.Policy;
 import org.onap.clamp.clds.model.prop.PolicyChain;
 import org.onap.clamp.clds.model.prop.StringMatch;
 import org.onap.clamp.clds.model.prop.Tca;
-import org.onap.clamp.clds.transform.TransformUtil;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,14 +62,13 @@ public class PolicyClientIT extends AbstractIT {
     String modelName;
     String controlName;
 
-
     /**
-    * Initialize Test.
-    */
+     * Initialize Test.
+     */
     @Before
     public void setUp() throws IOException {
-        modelProp = TransformUtil.getResourceAsString("example/modelProp.json");
-        modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnProp.json");
+        modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
+        modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
         modelName = "example-model06";
         controlName = "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf";
     }
@@ -81,11 +80,11 @@ public class PolicyClientIT extends AbstractIT {
             String stringMatchPolicyRequestUuid = UUID.randomUUID().toString();
 
             String policyJson = StringMatchPolicyReq.format(refProp, prop);
-            String correctValue = TransformUtil.getResourceAsString("expected/stringmatch.json");
+            String correctValue = ResourceFileUtil.getResourceAsString("expected/stringmatch.json");
             JSONAssert.assertEquals(policyJson, correctValue, true);
             String responseMessage = "";
             try {
-                responseMessage = policyClient.sendMicroService(policyJson, prop, stringMatchPolicyRequestUuid);
+                responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, stringMatchPolicyRequestUuid);
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Policy send failed: PE500 "));
             }
@@ -102,7 +101,7 @@ public class PolicyClientIT extends AbstractIT {
 
                 Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
                         prop, policy.getId(), policyChain);
-                String responseMessage = policyClient.sendBrms(attributes, prop, operationalPolicyRequestUuid);
+                String responseMessage = policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
                 System.out.println(responseMessage);
             }
         }
@@ -110,15 +109,15 @@ public class PolicyClientIT extends AbstractIT {
 
     private void createUpdateTcaPolicy(String actionCd) throws Exception {
         ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-        Tca tca = prop.getTca();
+        Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             String tcaPolicyRequestUuid = UUID.randomUUID().toString();
             String policyJson = TcaMPolicyReq.formatTca(refProp, prop);
-            String correctValue = TransformUtil.getResourceAsString("expected/tca.json");
+            String correctValue = ResourceFileUtil.getResourceAsString("expected/tca.json");
             JSONAssert.assertEquals(policyJson, correctValue, true);
             String responseMessage = "";
             try {
-                responseMessage = policyClient.sendMicroService(policyJson, prop, tcaPolicyRequestUuid);
+                responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Policy send failed: PE500 "));
             }
@@ -159,7 +158,7 @@ public class PolicyClientIT extends AbstractIT {
     private void deleteTcaPolicy(String actionCd) throws Exception {
         ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
 
-        Tca tca = prop.getTca();
+        Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             prop.setCurrentModelElementId(tca.getId());
             String responseMessage = "";

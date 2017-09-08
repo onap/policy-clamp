@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.onap.clamp.clds.transform.TransformUtil;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 
 public class CustomModelElementTest {
 
@@ -38,8 +38,8 @@ public class CustomModelElementTest {
     public void testNewElement() {
 
         try {
-            String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnProp.json");
-            String modelProp = TransformUtil.getResourceAsString("example/modelProp.json");
+            String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
+            String modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
             String modName = "example-model-name";
             String controlName = "example-control-name";
 

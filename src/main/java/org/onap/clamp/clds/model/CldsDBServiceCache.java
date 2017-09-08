@@ -51,7 +51,7 @@ public class CldsDBServiceCache {
         this.serviceId = serviceId;
     }
 
-    public InputStream getCldsDataInstream() throws IOException {
+    public InputStream getCldsDataInstream() {
         return cldsDataInstream;
     }
 

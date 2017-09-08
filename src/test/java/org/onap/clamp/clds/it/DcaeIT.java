@@ -30,8 +30,7 @@ import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.client.req.DcaeReq;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.transform.TransformUtil;
-
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -45,8 +44,8 @@ public class DcaeIT extends AbstractIT {
 
     @Test
     public void testDcaeReq() throws Exception {
-        String modelProp = TransformUtil.getResourceAsString("example/modelProp.json");
-        String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnProp.json");
+        String modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
+        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
         String modelName = "example-model";
         String controlName = "ClosedLoop-FRWL-SIG-1582f840-2881-11e6-b4ec-005056a9d756";
 

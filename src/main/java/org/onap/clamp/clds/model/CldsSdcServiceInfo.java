@@ -23,25 +23,25 @@
 
 package org.onap.clamp.clds.model;
 
-import java.math.BigDecimal;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.math.BigDecimal;
+
 public class CldsSdcServiceInfo implements Comparable<CldsSdcServiceInfo> {
 
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(CldsSdcServiceInfo.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(CldsSdcServiceInfo.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private String                  uuid;
-    private String                  invariantUUID;
-    private String                  name;
-    private String                  version;
-    private String                  toscaModelURL;
-    private String                  category;
-    private String                  lifecycleState;
-    private String                  lastUpdaterUserId;
-    private String                  distributionStatus;
+    private String                    uuid;
+    private String                    invariantUUID;
+    private String                    name;
+    private String                    version;
+    private String                    toscaModelURL;
+    private String                    category;
+    private String                    lifecycleState;
+    private String                    lastUpdaterUserId;
+    private String                    distributionStatus;
 
     public String getUuid() {
         return uuid;
@@ -135,6 +135,37 @@ public class CldsSdcServiceInfo implements Comparable<CldsSdcServiceInfo> {
         return rtn;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((version == null) ? 0 : version.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CldsSdcServiceInfo other = (CldsSdcServiceInfo) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (version == null) {
+            if (other.version != null)
+                return false;
+        } else if (!version.equals(other.version))
+            return false;
+        return true;
+    }
+
     /**
      * Convert version String into a BigDecimal
      *
@@ -147,7 +178,7 @@ public class CldsSdcServiceInfo implements Comparable<CldsSdcServiceInfo> {
         } catch (NumberFormatException nfe) {
             logger.warn("SDC version=" + versionText + " is not decimal for name=" + name);
         }
-        return new BigDecimal(0.0);
+        return BigDecimal.valueOf(0.0);
     }
 
 }

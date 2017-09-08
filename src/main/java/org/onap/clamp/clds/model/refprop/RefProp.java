@@ -23,6 +23,11 @@
 
 package org.onap.clamp.clds.model.refprop;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,33 +41,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * Holds reference properties.
  */
 public class RefProp {
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(RefProp.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(RefProp.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
     @Autowired
-    private ApplicationContext      appContext;
+    private ApplicationContext        appContext;
 
-    private Properties              prop;
+    private Properties                prop;
 
     @Value("${org.onap.clamp.config.files.cldsReference:'classpath:/clds/clds-reference.properties'}")
-    private String                  cldsReferenceValuesFile;
-
-    /**
-     * Load reference properties via null constructor
-     *
-     * @throws IOException
-     */
-    public RefProp() throws IOException {
-    }
+    private String                    cldsReferenceValuesFile;
 
     @PostConstruct
     public void loadConfig() throws IOException {

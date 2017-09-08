@@ -29,8 +29,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import org.onap.clamp.clds.transform.TransformUtil;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 
 
 /**
@@ -40,8 +39,8 @@ public class ModelPropertiesTest {
 
     @Test
     public void testJsonParse() throws IOException {
-        String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnProp.json");
-        String modelProp = TransformUtil.getResourceAsString("example/modelProp.json");
+        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
+        String modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
         String modName = "example-model-name";
         String controlName = "example-control-name";
 
@@ -68,10 +67,10 @@ public class ModelPropertiesTest {
     @Test
     public void testPolicy() throws IOException {
 
-        String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
+        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
         System.out.println(modelBpmnProp);
 
-        String modelProp = TransformUtil.getResourceAsString("example/modelPropForPolicy.json");
+        String modelProp = ResourceFileUtil.getResourceAsString("example/modelPropForPolicy.json");
         System.out.println(modelProp);
         ModelProperties prop = new ModelProperties("example-model-name", "example-control-name",
                 null, true, modelBpmnProp, modelProp);

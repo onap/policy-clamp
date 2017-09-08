@@ -65,7 +65,7 @@ public class TcaPolicyDelegate implements JavaDelegate {
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             String policyJson = TcaMPolicyReq.formatTca(refProp, prop);
-            String responseMessage = policyClient.sendMicroService(policyJson, prop, tcaPolicyRequestUuid);
+            String responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
             if (responseMessage != null) {
                 execution.setVariable("tcaPolicyResponseMessage", responseMessage.getBytes());
             }

@@ -23,6 +23,9 @@
 
 package org.onap.clamp.clds.dao;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -51,9 +54,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 /**
  * Data Access for CLDS Model tables.
  */
@@ -63,19 +63,19 @@ public class CldsDao {
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsDao.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
-    private JdbcTemplate            jdbcTemplateObject;
-    private SimpleJdbcCall          procGetModel;
-    private SimpleJdbcCall          procGetModelTemplate;
-    private SimpleJdbcCall          procSetModel;
-    private SimpleJdbcCall          procInsEvent;
-    private SimpleJdbcCall          procUpdEvent;
-    private SimpleJdbcCall          procSetTemplate;
-    private SimpleJdbcCall          procGetTemplate;
-    private SimpleJdbcCall          procDelAllModelInstances;
-    private SimpleJdbcCall          procInsModelInstance;
-    private SimpleJdbcCall          procDelModelInstance;
+    private JdbcTemplate              jdbcTemplateObject;
+    private SimpleJdbcCall            procGetModel;
+    private SimpleJdbcCall            procGetModelTemplate;
+    private SimpleJdbcCall            procSetModel;
+    private SimpleJdbcCall            procInsEvent;
+    private SimpleJdbcCall            procUpdEvent;
+    private SimpleJdbcCall            procSetTemplate;
+    private SimpleJdbcCall            procGetTemplate;
+    private SimpleJdbcCall            procDelAllModelInstances;
+    private SimpleJdbcCall            procInsModelInstance;
+    private SimpleJdbcCall            procDelModelInstance;
 
-    private static final String     healthcheck   = "Select 1";
+    private static final String       HEALTHCHECK   = "Select 1";
 
     /**
      * Log message when instantiating
@@ -386,7 +386,7 @@ public class CldsDao {
                 cldsServiceData = (CldsServiceData) oip.readObject();
                 cldsServiceData.setAgeOfRecord(age);
             } catch (IOException | ClassNotFoundException e) {
-                logger.error("Error caught while retrieving cldsServiceData from database");
+                logger.error("Error caught while retrieving cldsServiceData from database", e);
             }
             return cldsServiceData;
         }
@@ -463,8 +463,7 @@ public class CldsDao {
         return template;
     }
 
-    public CldsServiceData getCldsServiceCache(String invariantUUID)
-            throws SQLException, IOException, ClassNotFoundException {
+    public CldsServiceData getCldsServiceCache(String invariantUUID) {
         CldsServiceData cldsServiceData = null;
         List<CldsServiceData> cldsServiceDataList = new ArrayList<>();
         try {
@@ -478,7 +477,7 @@ public class CldsDao {
         return cldsServiceData;
     }
 
-    public void setCldsServiceCache(CldsDBServiceCache cldsDBServiceCache) throws SQLException, IOException {
+    public void setCldsServiceCache(CldsDBServiceCache cldsDBServiceCache) {
         if (cldsDBServiceCache != null && cldsDBServiceCache.getInvariantId() != null
                 && cldsDBServiceCache.getServiceId() != null) {
             String invariantUuid = cldsDBServiceCache.getInvariantId();
@@ -501,7 +500,7 @@ public class CldsDao {
     }
 
     public void doHealthCheck() throws SQLException, IOException {
-        jdbcTemplateObject.execute(healthcheck);
+        jdbcTemplateObject.execute(HEALTHCHECK);
     }
 
 }

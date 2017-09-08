@@ -233,7 +233,7 @@ public class SdcReq {
         String resourceInstanceName = "";
         if (globalProps != null) {
             List<String> resourceVf = globalProps.getResourceVf();
-            if (resourceVf != null && resourceVf.size() > 0) {
+            if (resourceVf != null && !resourceVf.isEmpty()) {
                 resourceInstanceName = resourceVf.get(0);
             }
             if (globalProps.getService() != null) {
@@ -258,35 +258,35 @@ public class SdcReq {
         // TODO : refact and regroup with very similar code
         List<String> urlList = new ArrayList<>();
         try {
-            Global globalProps = prop.getGlobal();
-            if (globalProps != null) {
-                if (globalProps.getService() != null) {
-                    String serviceInvariantUUID = globalProps.getService();
-                    execution.setVariable("serviceInvariantUUID", serviceInvariantUUID);
-                    List<String> resourceVfList = globalProps.getResourceVf();
-                    String serviceUUID = sdcCatalogServices.getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
-                    String sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(serviceUUID);
-                    CldsSdcServiceDetail CldsSdcServiceDetail = sdcCatalogServices
-                            .getCldsSdcServiceDetailFromJson(sdcServicesInformation);
-                    if (CldsSdcServiceDetail != null && resourceVfList != null) {
-                        List<CldsSdcResource> CldsSdcResourcesList = CldsSdcServiceDetail.getResources();
-                        if (CldsSdcResourcesList != null && CldsSdcResourcesList.size() > 0) {
-                            for (CldsSdcResource CldsSdcResource : CldsSdcResourcesList) {
-                                if (CldsSdcResource != null && CldsSdcResource.getResoucreType() != null
-                                        && CldsSdcResource.getResoucreType().equalsIgnoreCase("VF")) {
-                                    if (resourceVfList.contains(CldsSdcResource.getResourceInvariantUUID())) {
-                                        String normalizedResourceInstanceName = normalizeResourceInstanceName(
-                                                CldsSdcResource.getResourceInstanceName());
-                                        String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
-                                                + normalizedResourceInstanceName + "/artifacts";
-                                        urlList.add(svcUrl);
-                                    }
+        Global globalProps = prop.getGlobal();
+        if (globalProps != null) {
+            if (globalProps.getService() != null) {
+                String serviceInvariantUUID = globalProps.getService();
+                execution.setVariable("serviceInvariantUUID", serviceInvariantUUID);
+                List<String> resourceVfList = globalProps.getResourceVf();
+                String serviceUUID = sdcCatalogServices.getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
+                String sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(serviceUUID);
+                CldsSdcServiceDetail CldsSdcServiceDetail = sdcCatalogServices
+                        .getCldsSdcServiceDetailFromJson(sdcServicesInformation);
+                if (CldsSdcServiceDetail != null && resourceVfList != null) {
+                    List<CldsSdcResource> CldsSdcResourcesList = CldsSdcServiceDetail.getResources();
+                        if (CldsSdcResourcesList != null && !CldsSdcResourcesList.isEmpty()) {
+                        for (CldsSdcResource CldsSdcResource : CldsSdcResourcesList) {
+                            if (CldsSdcResource != null && CldsSdcResource.getResoucreType() != null
+                                    && CldsSdcResource.getResoucreType().equalsIgnoreCase("VF")) {
+                                if (resourceVfList.contains(CldsSdcResource.getResourceInvariantUUID())) {
+                                    String normalizedResourceInstanceName = normalizeResourceInstanceName(
+                                            CldsSdcResource.getResourceInstanceName());
+                                    String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
+                                            + normalizedResourceInstanceName + "/artifacts";
+                                    urlList.add(svcUrl);
                                 }
                             }
                         }
                     }
                 }
             }
+        }
         } catch (IOException e) {
             throw new SdcCommunicationException("Exception occurred during the SDC communication",e);
         }
