@@ -23,13 +23,13 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Parse Policy json properties.
@@ -49,12 +49,12 @@ import com.fasterxml.jackson.databind.JsonNode;
  * "vf3RtPi"]}]]}]
  */
 public class Policy extends ModelElement {
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(Policy.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(Policy.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private List<PolicyChain>       policyChains;
+    private List<PolicyChain>         policyChains;
 
-    private static final String     TYPE_POLICY = "policy";
+    private static final String       TYPE_POLICY = "policy";
 
     /**
      * Parse Policy given json node.
@@ -64,12 +64,12 @@ public class Policy extends ModelElement {
      * @param modelJson
      */
     public Policy(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
-        super(ModelElement.TYPE_POLICY, modelProp, modelBpmn, modelJson);
+        super(TYPE_POLICY, modelProp, modelBpmn, modelJson);
 
         // process policies
-        if (meNode != null) {
-            Iterator<JsonNode> itr = meNode.elements();
-            policyChains = new ArrayList<PolicyChain>();
+        if (modelElementJsonNode != null) {
+            Iterator<JsonNode> itr = modelElementJsonNode.elements();
+            policyChains = new ArrayList<>();
             while (itr.hasNext()) {
                 policyChains.add(new PolicyChain(itr.next()));
             }

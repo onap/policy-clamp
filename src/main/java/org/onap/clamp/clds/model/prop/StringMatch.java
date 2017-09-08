@@ -23,13 +23,11 @@
 
 package org.onap.clamp.clds.model.prop;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Parse StringMatch json properties.
@@ -62,12 +60,10 @@ import com.fasterxml.jackson.databind.JsonNode;
  *
  */
 public class StringMatch extends ModelElement {
-    protected static final EELFLogger       logger            = EELFManager.getInstance().getLogger(StringMatch.class);
-    protected static final EELFLogger auditLogger       = EELFManager.getInstance().getAuditLogger();
 
-    private List<ResourceGroup>     resourceGroups;
+    private List<ResourceGroup> resourceGroups;
 
-    private static final String     TYPE_STRING_MATCH = "stringMatch";
+    private static final String TYPE_STRING_MATCH = "stringMatch";
 
     /**
      * Parse StringMatch given json node.
@@ -79,9 +75,9 @@ public class StringMatch extends ModelElement {
         super(TYPE_STRING_MATCH, modelProp, modelBpmn, modelJson);
 
         // process Server_Configurations
-        if (meNode != null) {
-            Iterator<JsonNode> itr = meNode.elements();
-            resourceGroups = new ArrayList<ResourceGroup>();
+        if (modelElementJsonNode != null) {
+            Iterator<JsonNode> itr = modelElementJsonNode.elements();
+            resourceGroups = new ArrayList<>();
             while (itr.hasNext()) {
                 resourceGroups.add(new ResourceGroup(itr.next()));
             }

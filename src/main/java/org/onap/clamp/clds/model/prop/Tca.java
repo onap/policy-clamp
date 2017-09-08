@@ -23,13 +23,13 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Parse Tca json properties.
@@ -50,12 +50,12 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class Tca extends ModelElement {
 
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(Tca.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(Tca.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private List<TcaItem>           tcaItems;
+    private List<TcaItem>             tcaItems;
 
-    private static final String     TYPE_TCA    = "tca";
+    private static final String       TYPE_TCA    = "tca";
 
     /**
      * Parse Tca given json node
@@ -68,9 +68,9 @@ public class Tca extends ModelElement {
         super(TYPE_TCA, modelProp, modelBpmn, modelJson);
 
         // process Server_Configurations
-        if (meNode != null) {
-            Iterator<JsonNode> itr = meNode.elements();
-            tcaItems = new ArrayList<TcaItem>();
+        if (modelElementJsonNode != null) {
+            Iterator<JsonNode> itr = modelElementJsonNode.elements();
+            tcaItems = new ArrayList<>();
             while (itr.hasNext()) {
                 tcaItems.add(new TcaItem(itr.next()));
             }

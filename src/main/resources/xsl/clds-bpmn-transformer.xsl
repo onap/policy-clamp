@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
   ONAP CLAMP
@@ -54,6 +54,18 @@
                 
                 <xsl:text>"tca":[</xsl:text>
                 <xsl:for-each select="bpmn2:tCA" >
+		        <xsl:call-template name="network-element" />
+                </xsl:for-each>
+                <xsl:text>],</xsl:text>
+                
+                <xsl:text>"holmes":[</xsl:text>
+                <xsl:for-each select="bpmn2:holmes" >
+		        <xsl:call-template name="network-element" />
+                </xsl:for-each>
+                <xsl:text>],</xsl:text>
+                
+                <xsl:text>"vesCollector":[</xsl:text>
+                <xsl:for-each select="bpmn2:vesCollector" >
 		        <xsl:call-template name="network-element" />
                 </xsl:for-each>
                 <xsl:text>]</xsl:text>

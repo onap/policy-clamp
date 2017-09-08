@@ -32,20 +32,19 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Provide base ModelElement functionality.
+ * Provide base ModelElement functionality. Perform base parsing of properties
+ * for a ModelElement (such as, Collector, StringMatch, Policy, Tca, Holmes,
+ * ...)
  */
 public abstract class ModelElement {
     protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(ModelElement.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    public static final String        TYPE_POLICY = "policy";
-    public static final String        TYPE_TCA    = "tca";
-
     private final String              type;
     private final ModelBpmn           modelBpmn;
     private final String              id;
     protected String                  topicPublishes;
-    protected final JsonNode          meNode;
+    protected final JsonNode          modelElementJsonNode;
     private boolean                   isFound;
 
     private final ModelProperties     modelProp;
@@ -64,12 +63,13 @@ public abstract class ModelElement {
         this.modelProp = modelProp;
         this.modelBpmn = modelBpmn;
         this.id = modelBpmn.getId(type);
-        this.meNode = modelJson.get(id);
-        this.isFound = modelBpmn.getModelElementFound(type);
+        this.modelElementJsonNode = modelJson.get(id);
+        this.isFound = modelBpmn.isModelElementTypeInList(type);
     }
 
     /**
-     * topicSubscribes is the topicPublishes of the from Model Element
+     * topicSubscribes is the topicPublishes of the from Model Element (the
+     * previous one in the chain).
      *
      * @return the topicSubscribes
      */
@@ -159,16 +159,14 @@ public abstract class ModelElement {
             while (i.hasNext()) {
                 JsonNode node = i.next();
                 if (node.path("name").asText().equals(name)) {
-                    String value;
                     JsonNode vnode = node.path("value");
                     if (vnode.isArray()) {
                         // if array, assume value is in first element
-                        value = vnode.path(0).asText();
+                        values.add(vnode.path(0).asText());
                     } else {
                         // otherwise, just return text
-                        value = vnode.asText();
+                        values.add(vnode.asText());
                     }
-                    values.add(value);
                 }
             }
         }
@@ -241,7 +239,7 @@ public abstract class ModelElement {
      * @return
      */
     public String getValueByName(String name) {
-        return getValueByName(meNode, name);
+        return getValueByName(modelElementJsonNode, name);
     }
 
     /**
@@ -252,7 +250,7 @@ public abstract class ModelElement {
      * @return
      */
     public Integer getIntValueByName(String name) {
-        return getIntValueByName(meNode, name);
+        return getIntValueByName(modelElementJsonNode, name);
     }
 
     /**
@@ -263,7 +261,7 @@ public abstract class ModelElement {
      * @return
      */
     public List<String> getValuesByName(String name) {
-        return getValuesByName(meNode, name);
+        return getValuesByName(modelElementJsonNode, name);
     }
 
     /**

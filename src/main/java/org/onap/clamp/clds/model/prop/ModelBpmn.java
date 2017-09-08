@@ -23,6 +23,15 @@
 
 package org.onap.clamp.clds.model.prop;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,15 +42,6 @@ import java.util.Map.Entry;
 
 import org.onap.clamp.clds.service.CldsService;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
  * Parse Model BPMN properties.
  * <p>
@@ -50,9 +50,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * :[{"id":"Policy_0oxeocn", "from":"StringMatch_0h6cbdv"}]}
  */
 public class ModelBpmn {
-    protected static final EELFLogger                       logger        = EELFManager.getInstance()
+    protected static final EELFLogger               logger        = EELFManager.getInstance()
             .getLogger(CldsService.class);
-    protected static final EELFLogger                 auditLogger   = EELFManager.getInstance().getAuditLogger();
+    protected static final EELFLogger               auditLogger   = EELFManager.getInstance().getAuditLogger();
 
     // for each type, an array of entries
     private final Map<String, List<ModelBpmnEntry>> entriesByType = new HashMap<>();
@@ -123,12 +123,14 @@ public class ModelBpmn {
     }
 
     /**
-     *
+     * This method verifies if the ModelElement Type (collector, holmes, tca,
+     * ...) is in the list.
      *
      * @param type
+     *            A model Element type (tca, collector, ...)
      * @return true if the element is found or false otherwise
      */
-    public boolean getModelElementFound(String type) {
+    public boolean isModelElementTypeInList(String type) {
         return entriesByType.get(type) != null;
     }
 
