@@ -23,13 +23,13 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Parse Resource Group json properties.
@@ -63,8 +63,8 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class ResourceGroup {
 
-    protected static final EELFLogger          logger      = EELFManager.getInstance().getLogger(ResourceGroup.class);
-    protected static final EELFLogger    auditLogger = EELFManager.getInstance().getAuditLogger();
+    protected static final EELFLogger  logger      = EELFManager.getInstance().getLogger(ResourceGroup.class);
+    protected static final EELFLogger  auditLogger = EELFManager.getInstance().getAuditLogger();
 
     private String                     groupNumber;
     private String                     policyId;
@@ -84,7 +84,7 @@ public class ResourceGroup {
         // process Server_Configurations
         JsonNode serviceConfigurationsNode = node.get(node.size() - 1).get("serviceConfigurations");
         Iterator<JsonNode> itr = serviceConfigurationsNode.elements();
-        serviceConfigurations = new ArrayList<ServiceConfiguration>();
+        serviceConfigurations = new ArrayList<>();
         while (itr.hasNext()) {
             serviceConfigurations.add(new ServiceConfiguration(itr.next()));
         }

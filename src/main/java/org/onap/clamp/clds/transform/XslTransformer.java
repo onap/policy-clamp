@@ -34,6 +34,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.onap.clamp.clds.util.ResourceFileUtil;
+
 /**
  * XSL Transformer.
  */
@@ -43,7 +45,7 @@ public class XslTransformer {
 
     public void setXslResourceName(String xslResourceName) throws TransformerConfigurationException {
         TransformerFactory tfactory = TransformerFactory.newInstance();
-        templates = tfactory.newTemplates(new StreamSource(TransformUtil.getResourceAsStream(xslResourceName)));
+        templates = tfactory.newTemplates(new StreamSource(ResourceFileUtil.getResourceAsStream(xslResourceName)));
     }
 
     /**
@@ -53,7 +55,7 @@ public class XslTransformer {
      * @throws TransformerException
      */
     public String doXslTransformToString(String xml) throws TransformerException {
-        StringWriter output = new StringWriter(4000);
+        StringWriter output = new StringWriter(4096);
 
         Transformer transformer = templates.newTransformer();
         transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(output));

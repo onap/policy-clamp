@@ -23,6 +23,12 @@
 
 package org.onap.clamp.clds.model.prop;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
@@ -36,19 +42,13 @@ import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.service.CldsService;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * Parse model properties.
  */
 public class ModelProperties {
-    protected static final EELFLogger                                 logger              = EELFManager.getInstance()
+    protected static final EELFLogger                         logger              = EELFManager.getInstance()
             .getLogger(CldsService.class);
-    protected static final EELFLogger                           auditLogger         = EELFManager.getInstance()
+    protected static final EELFLogger                         auditLogger         = EELFManager.getInstance()
             .getAuditLogger();
 
     private ModelBpmn                                         modelBpmn;
@@ -58,10 +58,9 @@ public class ModelProperties {
     private final String                                      controlName;
     private final String                                      actionCd;
     // Flag indicate whether it is triggered by Validation Test button from UI
-    private final boolean 									  isTest;
+    private final boolean                                     isTest;
 
     private Global                                            global;
-    private Tca                                               tca;
 
     private final Map<String, ModelElement>                   modelElements       = new ConcurrentHashMap<>();
 
@@ -93,8 +92,8 @@ public class ModelProperties {
      * @throws JsonProcessingException
      * @throws IOException
      */
-    public ModelProperties(String modelName, String controlName, String actionCd, boolean isTest, String modelBpmnPropText,
-            String modelPropText) throws IOException {
+    public ModelProperties(String modelName, String controlName, String actionCd, boolean isTest,
+            String modelBpmnPropText, String modelPropText) throws IOException {
         this.modelName = modelName;
         this.controlName = controlName;
         this.actionCd = actionCd;
@@ -150,7 +149,7 @@ public class ModelProperties {
             Global global = new Global(modelJson);
             vfs = global.getResourceVf();
         } catch (IOException e) {
-            // VF is null
+            logger.warn("no VF found", e);
         }
         String vf = null;
         if (vfs != null && !vfs.isEmpty()) {
@@ -168,13 +167,12 @@ public class ModelProperties {
      * @throws IOException
      */
     public static ModelProperties create(DelegateExecution execution) throws IOException {
-        // String modelProp = (String) execution.getVariable("modelProp");
         String modelProp = new String((byte[]) execution.getVariable("modelProp"));
         String modelBpmnProp = (String) execution.getVariable("modelBpmnProp");
         String modelName = (String) execution.getVariable("modelName");
         String controlName = (String) execution.getVariable("controlName");
         String actionCd = (String) execution.getVariable("actionCd");
-        boolean isTest = (boolean)execution.getVariable("isTest");
+        boolean isTest = (boolean) execution.getVariable("isTest");
 
         return new ModelProperties(modelName, controlName, actionCd, isTest, modelBpmnProp, modelProp);
     }
@@ -303,12 +301,12 @@ public class ModelProperties {
         return actionCd;
     }
 
-	/**
-	 * @return the isTest
-	 */
-	public boolean isTest() {
-		return isTest;
-	}
+    /**
+     * @return the isTest
+     */
+    public boolean isTest() {
+        return isTest;
+    }
 
     /**
      * @return the isCreateRequest
@@ -351,15 +349,5 @@ public class ModelProperties {
         instantiateMissingModelElements();
         String type = modelElementClasses.get(clazz);
         return (type != null ? (T) modelElements.get(type) : null);
-    }
-
-    /**
-     * @return the tca
-     */
-    public Tca getTca() {
-        if (tca == null) {
-            tca = new Tca(this, modelBpmn, modelJson);
-        }
-        return tca;
     }
 }
