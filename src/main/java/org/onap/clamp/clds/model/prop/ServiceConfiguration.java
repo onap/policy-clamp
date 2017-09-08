@@ -84,15 +84,15 @@ public class ServiceConfiguration {
      * @param node
      */
     public ServiceConfiguration(JsonNode node) {
-        aaiMatchingFields = ModelElement.getValuesByName(node, "aaiMatchingFields");
-        aaiSendFields = ModelElement.getValuesByName(node, "aaiSendFields");
+        aaiMatchingFields = AbstractModelElement.getValuesByName(node, "aaiMatchingFields");
+        aaiSendFields = AbstractModelElement.getValuesByName(node, "aaiSendFields");
         // groupNumber = ModelElement.getValueByName(node, "groupNumber");
-        resourceVf = ModelElement.getValuesByName(node, "vf");
-        resourceVfc = ModelElement.getValuesByName(node, "vfc");
-        timeWindow = ModelElement.getValueByName(node, "timeWindow");
-        ageLimit = ModelElement.getValueByName(node, "ageLimit");
-        createClosedLoopEventId = ModelElement.getValueByName(node, "createClosedLoopEventId");
-        outputEventName = ModelElement.getValueByName(node, "outputEventName");
+        resourceVf = AbstractModelElement.getValuesByName(node, "vf");
+        resourceVfc = AbstractModelElement.getValuesByName(node, "vfc");
+        timeWindow = AbstractModelElement.getValueByName(node, "timeWindow");
+        ageLimit = AbstractModelElement.getValueByName(node, "ageLimit");
+        createClosedLoopEventId = AbstractModelElement.getValueByName(node, "createClosedLoopEventId");
+        outputEventName = AbstractModelElement.getValueByName(node, "outputEventName");
 
         // process the stringSet fields
         JsonNode ssNodes = node.findPath("stringSet");

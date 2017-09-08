@@ -46,7 +46,6 @@ import org.onap.clamp.clds.model.CldsModelInstance;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -398,8 +397,8 @@ public class CldsDao {
      * @return model names
      */
     public List<ValueItem> getBpmnNames() {
-        String SQL = "SELECT model_name FROM model ORDER BY 1;";
-        return jdbcTemplateObject.query(SQL, new ValueItemMapper());
+        String sql = "SELECT model_name FROM model ORDER BY 1;";
+        return jdbcTemplateObject.query(sql, new ValueItemMapper());
     }
 
     /**
@@ -435,8 +434,8 @@ public class CldsDao {
      * @return template names
      */
     public List<ValueItem> getTemplateNames() {
-        String SQL = "SELECT template_name FROM template ORDER BY 1;";
-        return jdbcTemplateObject.query(SQL, new ValueItemMapper());
+        String sql = "SELECT template_name FROM template ORDER BY 1;";
+        return jdbcTemplateObject.query(sql, new ValueItemMapper());
     }
 
     /**
@@ -466,14 +465,10 @@ public class CldsDao {
     public CldsServiceData getCldsServiceCache(String invariantUUID) {
         CldsServiceData cldsServiceData = null;
         List<CldsServiceData> cldsServiceDataList = new ArrayList<>();
-        try {
-            String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
-            cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] { invariantUUID },
-                    new CldsServiceDataMapper());
-            logger.info("value of cldsServiceDataList: {}", cldsServiceDataList);
-        } catch (EmptyResultDataAccessException e) {
-            logger.info("cache row not found for invariantUUID: {}", invariantUUID);
-        }
+        String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
+        cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] { invariantUUID },
+                new CldsServiceDataMapper());
+        logger.info("value of cldsServiceDataList: {}", cldsServiceDataList);
         return cldsServiceData;
     }
 
@@ -499,7 +494,7 @@ public class CldsDao {
         }
     }
 
-    public void doHealthCheck() throws SQLException, IOException {
+    public void doHealthCheck() {
         jdbcTemplateObject.execute(HEALTHCHECK);
     }
 

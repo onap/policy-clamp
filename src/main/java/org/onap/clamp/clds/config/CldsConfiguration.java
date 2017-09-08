@@ -23,7 +23,9 @@
 
 package org.onap.clamp.clds.config;
 
-import java.io.IOException;
+import com.att.ajsc.common.AjscProvider;
+import com.att.ajsc.common.AjscService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +56,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
-import com.att.ajsc.common.AjscProvider;
-import com.att.ajsc.common.AjscService;
 
 @Configuration
 @Profile("clamp-default")
@@ -99,7 +98,7 @@ public class CldsConfiguration {
     }
 
     @Bean
-    public RefProp getRefProp() throws IOException {
+    public RefProp getRefProp() {
         return new RefProp();
     }
 

@@ -54,11 +54,11 @@ public class Global {
      */
     public Global(JsonNode modelJson) {
         JsonNode globalNode = modelJson.get("global");
-        service = ModelElement.getValueByName(globalNode, "service");
-        actionSet = ModelElement.getValueByName(globalNode, "actionSet");
-        resourceVf = ModelElement.getValuesByName(globalNode, "vf");
-        resourceVfc = ModelElement.getValuesByName(globalNode, "vfc");
-        location = ModelElement.getValuesByName(globalNode, "location");
+        service = AbstractModelElement.getValueByName(globalNode, "service");
+        actionSet = AbstractModelElement.getValueByName(globalNode, "actionSet");
+        resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
+        resourceVfc = AbstractModelElement.getValuesByName(globalNode, "vfc");
+        location = AbstractModelElement.getValuesByName(globalNode, "location");
     }
 
     /**

@@ -46,7 +46,6 @@ import java.util.Map.Entry;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.onap.clamp.clds.client.SdcCatalogServices;
-import org.onap.clamp.clds.exception.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.prop.Global;
@@ -251,13 +250,12 @@ public class SdcReq {
      * @param baseUrl
      * @param sdcCatalogServices
      * @return
-     * @throws Exception
      */
     public static List<String> getSdcReqUrlsList(ModelProperties prop, String baseUrl,
             SdcCatalogServices sdcCatalogServices, DelegateExecution execution) {
         // TODO : refact and regroup with very similar code
         List<String> urlList = new ArrayList<>();
-        try {
+
         Global globalProps = prop.getGlobal();
         if (globalProps != null) {
             if (globalProps.getService() != null) {
@@ -266,30 +264,28 @@ public class SdcReq {
                 List<String> resourceVfList = globalProps.getResourceVf();
                 String serviceUUID = sdcCatalogServices.getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
                 String sdcServicesInformation = sdcCatalogServices.getSdcServicesInformation(serviceUUID);
-                CldsSdcServiceDetail CldsSdcServiceDetail = sdcCatalogServices
+                CldsSdcServiceDetail cldsSdcServiceDetail = sdcCatalogServices
                         .getCldsSdcServiceDetailFromJson(sdcServicesInformation);
-                if (CldsSdcServiceDetail != null && resourceVfList != null) {
-                    List<CldsSdcResource> CldsSdcResourcesList = CldsSdcServiceDetail.getResources();
-                        if (CldsSdcResourcesList != null && !CldsSdcResourcesList.isEmpty()) {
-                        for (CldsSdcResource CldsSdcResource : CldsSdcResourcesList) {
+                if (cldsSdcServiceDetail != null && resourceVfList != null) {
+                    List<CldsSdcResource> cldsSdcResourcesList = cldsSdcServiceDetail.getResources();
+                    if (cldsSdcResourcesList != null && !cldsSdcResourcesList.isEmpty()) {
+                        for (CldsSdcResource CldsSdcResource : cldsSdcResourcesList) {
                             if (CldsSdcResource != null && CldsSdcResource.getResoucreType() != null
-                                    && CldsSdcResource.getResoucreType().equalsIgnoreCase("VF")) {
-                                if (resourceVfList.contains(CldsSdcResource.getResourceInvariantUUID())) {
-                                    String normalizedResourceInstanceName = normalizeResourceInstanceName(
-                                            CldsSdcResource.getResourceInstanceName());
-                                    String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
-                                            + normalizedResourceInstanceName + "/artifacts";
-                                    urlList.add(svcUrl);
-                                }
+                                    && CldsSdcResource.getResoucreType().equalsIgnoreCase("VF")
+                                    && resourceVfList.contains(CldsSdcResource.getResourceInvariantUUID())) {
+                                String normalizedResourceInstanceName = normalizeResourceInstanceName(
+                                        CldsSdcResource.getResourceInstanceName());
+                                String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
+                                        + normalizedResourceInstanceName + "/artifacts";
+                                urlList.add(svcUrl);
+
                             }
                         }
                     }
                 }
             }
         }
-        } catch (IOException e) {
-            throw new SdcCommunicationException("Exception occurred during the SDC communication",e);
-        }
+
         return urlList;
     }
 

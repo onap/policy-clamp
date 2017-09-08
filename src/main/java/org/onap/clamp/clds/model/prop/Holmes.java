@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * [{"name":"correlationalLogic","value":"vcwx"},{"name":"operationalPolicy","value":"cccc"}]
  *
  */
-public class Holmes extends ModelElement {
+public class Holmes extends AbstractModelElement {
 
     private static final String TYPE_HOLMES = "holmes";
 

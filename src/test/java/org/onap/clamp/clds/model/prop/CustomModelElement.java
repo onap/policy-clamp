@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * A CustomModelElement to test the capability to add new elements on the fly.
  */
-public class CustomModelElement extends ModelElement {
+public class CustomModelElement extends AbstractModelElement {
 
     private static final String CUSTOM_TYPE = "customType";
 

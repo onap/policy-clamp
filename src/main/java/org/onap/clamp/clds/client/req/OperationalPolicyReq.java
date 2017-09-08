@@ -139,7 +139,7 @@ public class OperationalPolicyReq {
             logger.info("notificationTopic=" + notificationTopic);
 
             // format yaml
-            String yaml = tca.isFound() ? formateNodeBYaml(refProp, prop, modelElementId, policyChain)
+            String yaml = (tca != null && tca.isFound()) ? formateNodeBYaml(refProp, prop, modelElementId, policyChain)
                     : formatYaml(refProp, prop, modelElementId, policyChain);
 
             ruleAttributes.put("templateName", templateName);
@@ -425,7 +425,7 @@ public class OperationalPolicyReq {
             return new Resource[0];
         }
         return stringList.stream().map(stringElem -> new Resource(stringElem, resourceType)).toArray(Resource[]::new);
-        }
+    }
 
     /**
      * Convert a List of policy result strings to an array of PolicyResult

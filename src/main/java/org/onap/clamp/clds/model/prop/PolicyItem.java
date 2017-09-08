@@ -64,12 +64,12 @@ public class PolicyItem implements Cloneable {
      * @param node
      */
     public PolicyItem(JsonNode node) {
-        id = ModelElement.getValueByName(node, "_id");
-        recipe = ModelElement.getValueByName(node, "recipe");
-        maxRetries = ModelElement.getIntValueByName(node, "maxRetries");
-        retryTimeLimit = ModelElement.getIntValueByName(node, "retryTimeLimit");
-        parentPolicy = ModelElement.getValueByName(node, "parentPolicy");
-        parentPolicyConditions = ModelElement.getValuesByName(node, "parentPolicyConditions");
+        id = AbstractModelElement.getValueByName(node, "_id");
+        recipe = AbstractModelElement.getValueByName(node, "recipe");
+        maxRetries = AbstractModelElement.getIntValueByName(node, "maxRetries");
+        retryTimeLimit = AbstractModelElement.getIntValueByName(node, "retryTimeLimit");
+        parentPolicy = AbstractModelElement.getValueByName(node, "parentPolicy");
+        parentPolicyConditions = AbstractModelElement.getValuesByName(node, "parentPolicyConditions");
 
     }
 

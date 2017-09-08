@@ -21,64 +21,41 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.service;
+package org.onap.clamp.clds.exception.policy;
 
-import java.util.Arrays;
-
-public class CldsUser {
-
-    private String                    user;
-
-    private String                    password;
-
-    private SecureServicePermission[] permissions;
+/**
+ * New exception to Policy Client errors.
+ *
+ */
+public class PolicyClientException extends RuntimeException {
 
     /**
-     * @return the user
+     * Serial ID.
      */
-    public String getUser() {
-        return user;
-    }
+    private static final long serialVersionUID = -8379167975420213634L;
 
     /**
-     * @param user
-     *            the user to set
+     * This constructor can be used to create a new PolicyClientException.
+     * 
+     * @param message
+     *            A string message detailing the problem
+     * @param e
+     *            The exception sent by the code
      */
-    public void setUser(String user) {
-        this.user = user;
+    public PolicyClientException(String message, Throwable e) {
+        super(message, e);
     }
 
     /**
-     * @return the password
+     * This constructor can be used to create a new PolicyClientException. Use
+     * this constructor only if you are creating a new exception stack, not if
+     * an exception was already raised by another code.
+     *
+     * @param message
+     *            A string message detailing the problem
      */
-    public String getPassword() {
-        return password;
+    public PolicyClientException(String message) {
+        super(message);
     }
 
-    /**
-     * @param password
-     *            the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /**
-     * @return the permissions
-     */
-    public SecureServicePermission[] getPermissions() {
-        return permissions;
-    }
-
-    public String[] getPermissionsString() {
-        return Arrays.stream(getPermissions()).map(SecureServicePermission::getKey).toArray(String[]::new);
-    }
-
-    /**
-     * @param permissions
-     *            the permissions to set
-     */
-    public void setPermissions(SecureServicePermission[] permissions) {
-        this.permissions = permissions;
-    }
 }

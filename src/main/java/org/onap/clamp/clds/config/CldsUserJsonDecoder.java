@@ -23,12 +23,12 @@
 
 package org.onap.clamp.clds.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.onap.clamp.clds.service.CldsUser;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CldsUserJsonDecoder {
 
@@ -42,5 +42,9 @@ public class CldsUserJsonDecoder {
     public static CldsUser[] decodeJson(InputStream cldsUsersFile) throws IOException {
         // the ObjectMapper readValue method closes the stream no need to do it
         return new ObjectMapper().readValue(cldsUsersFile, CldsUser[].class);
+    }
+
+    private CldsUserJsonDecoder() {
+
     }
 }

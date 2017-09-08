@@ -48,7 +48,7 @@ import java.util.List;
  *
  *
  */
-public class Tca extends ModelElement {
+public class Tca extends AbstractModelElement {
 
     protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(Tca.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();

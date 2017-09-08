@@ -55,7 +55,7 @@ public class HolmesPolicyDeleteDelegate implements JavaDelegate {
         if (holmes.isFound()) {
             prop.setCurrentModelElementId(holmes.getId());
 
-            policyClient.deleteMicrosService(prop);
+            policyClient.deleteBasePolicy(prop);
         }
     }
 

@@ -48,7 +48,7 @@ import java.util.List;
  * ""]},{"name":"onOtherFailure","value":[""]},{"name":"policy_parent","value":[
  * "vf3RtPi"]}]]}]
  */
-public class Policy extends ModelElement {
+public class Policy extends AbstractModelElement {
     protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(Policy.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 

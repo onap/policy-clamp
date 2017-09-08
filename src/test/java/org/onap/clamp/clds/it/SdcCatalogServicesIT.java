@@ -202,9 +202,10 @@ public class SdcCatalogServicesIT extends AbstractIT {
     @Test
     public void getServiceUuidFromServiceInvariantIdTest() throws Exception {
         SdcCatalogServices spy = Mockito.spy(sdcCatalogWired);
-        Mockito.when(spy.getSdcServicesInformation(null)).thenReturn(IOUtils.toString(
-                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcServicesListExample.json"), "UTF-8"));
 
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcServicesListExample.json"), "UTF-8"))
+                .when(spy).getSdcServicesInformation(null);
         // Try the vcts4 version 1.0, this one should be replaced by 1.1 so it
         // should not exist, returning empty string
         String resUuidVcts4Null = spy.getServiceUuidFromServiceInvariantId("a33ed748-3477-4434-b3f3-b5560f5e7d9b");
@@ -228,8 +229,10 @@ public class SdcCatalogServicesIT extends AbstractIT {
     @Test
     public void getCldsServiceDataWithAlarmConditionsTest() throws Exception {
         SdcCatalogServices spy = Mockito.spy(sdcCatalogWired);
-        Mockito.when(spy.getSdcServicesInformation(null)).thenReturn(IOUtils.toString(
-                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcServicesListExample.json"), "UTF-8"));
+
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcServicesListExample.json"), "UTF-8"))
+                .when(spy).getSdcServicesInformation(null);
 
         // This invariant uuid is the one from vcts4 v1.1
         String serviceResourceDetailUrl = refProp.getStringValue("sdc.serviceUrl")
@@ -286,7 +289,8 @@ public class SdcCatalogServicesIT extends AbstractIT {
         assertTrue("29018914-966c-442d-9d08-251b9dc45b8f".equals(cldsServiceData.getServiceUUID()));
         assertTrue(cldsServiceData.getCldsVfs().size() == 1);
 
-        List<CldsAlarmCondition> alarmsList = spy.getAllAlarmConditionsFromCldsServiceData(cldsServiceData, "alarmCondition");
+        List<CldsAlarmCondition> alarmsList = spy.getAllAlarmConditionsFromCldsServiceData(cldsServiceData,
+                "alarmCondition");
         assertTrue(alarmsList.size() == 6);
 
     }

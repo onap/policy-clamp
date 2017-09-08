@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * Parse Collector json properties.
  */
-public class Collector extends ModelElement {
+public class Collector extends AbstractModelElement {
     protected static final EELFLogger       logger         = EELFManager.getInstance().getLogger(Collector.class);
     protected static final EELFLogger auditLogger    = EELFManager.getInstance().getAuditLogger();
 

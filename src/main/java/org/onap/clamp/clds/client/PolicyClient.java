@@ -31,13 +31,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.ws.rs.BadRequestException;
 
+import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -47,6 +47,7 @@ import org.onap.policy.api.DeletePolicyCondition;
 import org.onap.policy.api.DeletePolicyParameters;
 import org.onap.policy.api.PolicyChangeResponse;
 import org.onap.policy.api.PolicyConfig;
+import org.onap.policy.api.PolicyConfigException;
 import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyEngine;
 import org.onap.policy.api.PolicyEngineException;
@@ -66,11 +67,11 @@ public class PolicyClient {
     protected static final String     POLICY_PREFIX_BRMS_PARAM   = "Config_BRMS_Param_";
     protected static final String     POLICY_PREFIX_MICROSERVICE = "Config_MS_";
 
-    protected static final String     LOG_POLICY_PREFIX = "Response is ";
+    protected static final String     LOG_POLICY_PREFIX          = "Response is ";
 
     protected static final EELFLogger logger                     = EELFManager.getInstance()
             .getLogger(PolicyClient.class);
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    protected static final EELFLogger metricsLogger              = EELFManager.getInstance().getMetricsLogger();
 
     @Value("${org.onap.clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
     protected String                  cldsPolicyConfigFile;
@@ -91,14 +92,10 @@ public class PolicyClient {
      * @param policyRequestUuid
      *            PolicyRequest UUID
      * @return The response message of policy
-     * @throws IOException
-     *             In case of issues with the Stream
-     * @throws PolicyEngineException
-     *             In case of issues with the PolicyEngine class
      * 
      */
     public String sendBrmsPolicy(Map<AttributeType, Map<String, String>> attributes, ModelProperties prop,
-            String policyRequestUuid) throws PolicyEngineException, IOException {
+            String policyRequestUuid) {
 
         PolicyParameters policyParameters = new PolicyParameters();
 
@@ -136,13 +133,8 @@ public class PolicyClient {
      * @param policyRequestUuid
      *            The policy Request UUID
      * @return The response message of policy
-     * @throws PolicyEngineException
-     *             In case of issues with the policy engine class creation
-     * @throws IOException
-     *             In case of issue with the Stream
      */
-    public String sendMicroServiceInJson(String policyJson, ModelProperties prop, String policyRequestUuid)
-            throws IOException, PolicyEngineException {
+    public String sendMicroServiceInJson(String policyJson, ModelProperties prop, String policyRequestUuid) {
 
         PolicyParameters policyParameters = new PolicyParameters();
 
@@ -177,14 +169,9 @@ public class PolicyClient {
      *            The ModelProperties
      * @param policyRequestUuid
      *            The policy request UUID
-     * @return
-     * @throws IOException
-     *             In case of issues with the policy engine class creation
-     * @throws PolicyEngineException
-     *             In case of issue with the Stream
+     * @return The answer from policy call
      */
-    public String sendBasePolicyInOther(String configBody, ModelProperties prop, String policyRequestUuid)
-            throws IOException, PolicyEngineException {
+    public String sendBasePolicyInOther(String configBody, ModelProperties prop, String policyRequestUuid) {
 
         PolicyParameters policyParameters = new PolicyParameters();
 
@@ -216,21 +203,14 @@ public class PolicyClient {
      *            The PolicyParameters
      * @param prop
      *            The ModelProperties
-     * @return THe response message of Policy
-     * @throws IOException
-     *             In case of issues with the Stream
-     * @throws PolicyEngineException
-     *             In case of issue when creating PolicyEngine class
+     * @return The response message of Policy
+     * @throws Exception
      */
-    protected String send(PolicyParameters policyParameters, ModelProperties prop, String policyNamePrefix)
-            throws IOException, PolicyEngineException {
+    protected String send(PolicyParameters policyParameters, ModelProperties prop, String policyNamePrefix) {
         // Verify whether it is triggered by Validation Test button from UI
         if (prop.isTest()) {
             return "send not executed for test action";
         }
-
-        PolicyEngine policyEngine = new PolicyEngine(
-                appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
 
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
@@ -241,22 +221,23 @@ public class PolicyClient {
             if (versions.isEmpty()) {
                 LoggingUtils.setTargetContext("Policy", "createPolicy");
                 logger.info("Attempting to create policy for action=" + prop.getActionCd());
-                response = policyEngine.createPolicy(policyParameters);
+                response = getPolicyEngine().createPolicy(policyParameters);
                 responseMessage = response.getResponseMessage();
             } else {
                 LoggingUtils.setTargetContext("Policy", "updatePolicy");
                 logger.info("Attempting to update policy for action=" + prop.getActionCd());
-                response = policyEngine.updatePolicy(policyParameters);
+                response = getPolicyEngine().updatePolicy(policyParameters);
                 responseMessage = response.getResponseMessage();
             }
         } catch (Exception e) {
             logger.error("Exception occurred during policy communication", e);
+            throw new PolicyClientException("Exception while communicating with Policy", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
 
         LoggingUtils.setTimeContext(startTime, new Date());
 
-        if (response != null && response.getResponseCode() == 200) {
+        if (response.getResponseCode() == 200) {
             logger.info("Policy send successful");
             metricsLogger.info("Policy send success");
         } else {
@@ -276,12 +257,8 @@ public class PolicyClient {
      * @param prop
      *            The ModelProperties
      * @return The response message of policy
-     * @throws IOException
-     *             In case of issues with the stream
-     * @throws PolicyEngineException
-     *             In case of issues with the PolicyEngine creation
      */
-    protected String push(String policyType, ModelProperties prop) throws PolicyEngineException, IOException {
+    protected String push(String policyType, ModelProperties prop) {
         // Verify whether it is triggered by Validation Test button from UI
         if (prop.isTest()) {
             return "push not executed for test action";
@@ -301,15 +278,12 @@ public class PolicyClient {
         pushPolicyParameters.setPdpGroup(refProp.getStringValue("policy.pdp.group"));
         pushPolicyParameters.setRequestID(null);
 
-        PolicyEngine policyEngine = new PolicyEngine(
-                appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
-
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
         String responseMessage = "";
         try {
             logger.info("Attempting to push policy...");
-            response = policyEngine.pushPolicy(pushPolicyParameters);
+            response = getPolicyEngine().pushPolicy(pushPolicyParameters);
             responseMessage = response.getResponseMessage();
         } catch (Exception e) {
             logger.error("Exception occurred during policy communication", e);
@@ -335,13 +309,10 @@ public class PolicyClient {
      * @param prop
      *            The ModelProperties
      * @return The response message from policy
-     * @throws IOException
-     *             In case of issues with the stream
-     * @throws PolicyEngineException
-     *             In case of issues with the PolicyEngine creation
+     * @throws PolicyConfigException
+     *             In case of issues with policy engine
      */
-    protected List<Integer> getVersions(String policyNamePrefix, ModelProperties prop)
-            throws PolicyEngineException, IOException {
+    protected List<Integer> getVersions(String policyNamePrefix, ModelProperties prop) throws PolicyConfigException {
 
         ArrayList<Integer> versions = new ArrayList<>();
         ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
@@ -356,32 +327,32 @@ public class PolicyClient {
         logger.info("policyName=" + policyName);
         configRequestParameters.setPolicyName(policyName);
 
-        PolicyEngine policyEngine = new PolicyEngine(
-                appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
-
-        try {
-            Collection<PolicyConfig> response = policyEngine.getConfig(configRequestParameters);
-            Iterator<PolicyConfig> itrResp = response.iterator();
-
-            while (itrResp.hasNext()) {
-                PolicyConfig policyConfig = itrResp.next();
-                try {
-                    Integer version = new Integer(policyConfig.getPolicyVersion());
-                    versions.add(version);
-                } catch (Exception e) {
-                    // just print warning - if n;o policies, version may be null
-                    logger.warn("Failed to parse due to an exception policyConfig.getPolicyVersion()="
-                            + policyConfig.getPolicyVersion(), e);
-                }
-            }
-            Collections.sort(versions);
-            logger.info("Policy versions.size()=" + versions.size());
-        } catch (Exception e) {
-            // just print warning - if no policy version found
-            logger.warn("warning: policy not found...policy name - " + policyName, e);
+        Collection<PolicyConfig> response = getPolicyEngine().getConfig(configRequestParameters);
+        for (PolicyConfig policyConfig : response) {
+            Integer version = Integer.valueOf(policyConfig.getPolicyVersion());
+            versions.add(version);
         }
+        Collections.sort(versions);
+        logger.info("Policy versions.size()=" + versions.size());
 
         return versions;
+    }
+
+    /**
+     * This method create a new policy engine.
+     * 
+     * @return A new policy engine
+     */
+    private PolicyEngine getPolicyEngine() {
+        PolicyEngine policyEngine;
+        try {
+            policyEngine = new PolicyEngine(appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
+        } catch (IOException e1) {
+            throw new PolicyClientException("Exception when opening policy config file", e1);
+        } catch (PolicyEngineException e) {
+            throw new PolicyClientException("Exception when creating a new policy engine", e);
+        }
+        return policyEngine;
     }
 
     /**
@@ -390,12 +361,8 @@ public class PolicyClient {
      * @param prop
      *            The ModelProperties
      * @return The response message from Policy
-     * @throws IOException
-     *             In case of issues with the stream
-     * @throws PolicyEngineException
-     *             In case of issues with the PolicyEngine creation
      */
-    public String deleteMicrosService(ModelProperties prop) throws PolicyEngineException, IOException {
+    public String deleteMicrosService(ModelProperties prop) {
         String policyType = refProp.getStringValue("policy.ms.type");
         return deletePolicy(prop, policyType);
     }
@@ -403,12 +370,11 @@ public class PolicyClient {
     /**
      * This method delete the Base policy.
      *
-     * @param prop The model Properties
+     * @param prop
+     *            The model Properties
      * @return A string with the answer from policy
-     * @throws PolicyEngineException In case of issues with the policy engine
-     * @throws IOException In case of issues with the stream
      */
-    public String deleteBasePolicy(ModelProperties prop) throws PolicyEngineException, IOException {
+    public String deleteBasePolicy(ModelProperties prop) {
         return deletePolicy(prop, PolicyConfigType.Base.toString());
     }
 
@@ -418,12 +384,8 @@ public class PolicyClient {
      * @param prop
      *            The ModelProperties
      * @return The response message from policy
-     * @throws IOException
-     *             In case of issues with the stream
-     * @throws PolicyEngineException
-     *             In case of issues with the PolicyEngine creation
      */
-    public String deleteBrms(ModelProperties prop) throws PolicyEngineException, IOException {
+    public String deleteBrms(ModelProperties prop) {
         String policyType = refProp.getStringValue("policy.op.type");
         return deletePolicy(prop, policyType);
     }
@@ -435,12 +397,8 @@ public class PolicyClient {
      *            The ModelProperties
      *
      * @return The response message from policy
-     * @throws IOException
-     *             in case of issues with the Stream
-     * @throws PolicyEngineException
-     *             In case of issues with the PolicyEngine class creation
      */
-    protected String deletePolicy(ModelProperties prop, String policyType) throws PolicyEngineException, IOException {
+    protected String deletePolicy(ModelProperties prop, String policyType) {
         DeletePolicyParameters deletePolicyParameters = new DeletePolicyParameters();
 
         if (prop.getPolicyUniqueId() != null && !prop.getPolicyUniqueId().isEmpty()) {
@@ -454,16 +412,16 @@ public class PolicyClient {
         deletePolicyParameters.setPdpGroup(refProp.getStringValue("policy.pdp.group"));
         deletePolicyParameters.setPolicyType(policyType);
         // send delete request
-        String responseMessage = sendDeletePolicy(deletePolicyParameters, prop);
+        StringBuilder responseMessage = new StringBuilder(sendDeletePolicy(deletePolicyParameters, prop));
 
         logger.info("Deleting policy from PAP...");
         deletePolicyParameters.setPolicyComponent("PAP");
         deletePolicyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
 
         // send delete request
-        responseMessage = sendDeletePolicy(deletePolicyParameters, prop);
+        responseMessage.append(sendDeletePolicy(deletePolicyParameters, prop));
 
-        return responseMessage;
+        return responseMessage.toString();
     }
 
     /**
@@ -474,26 +432,19 @@ public class PolicyClient {
      * @param prop
      *            The ModelProperties
      * @return The response message from policy
-     * @throws IOException
-     *             In case of issues with the stream
-     * @throws PolicyEngineException
-     *             In case of issues with PolicyEngine class creation
      */
-    protected String sendDeletePolicy(DeletePolicyParameters deletePolicyParameters, ModelProperties prop)
-            throws PolicyEngineException, IOException {
+    protected String sendDeletePolicy(DeletePolicyParameters deletePolicyParameters, ModelProperties prop) {
         // Verify whether it is triggered by Validation Test button from UI
         if (prop.isTest()) {
             return "delete not executed for test action";
         }
-        PolicyEngine policyEngine = new PolicyEngine(
-                appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
 
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
         String responseMessage = "";
         try {
             logger.info("Attempting to delete policy...");
-            response = policyEngine.deletePolicy(deletePolicyParameters);
+            response = getPolicyEngine().deletePolicy(deletePolicyParameters);
             responseMessage = response.getResponseMessage();
         } catch (Exception e) {
             logger.error("Exception occurred during policy communnication", e);

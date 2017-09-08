@@ -119,7 +119,7 @@ public class PolicyClientIT extends AbstractIT {
             try {
                 responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
             } catch (Exception e) {
-                assertTrue(e.getMessage().contains("Policy send failed: PE500 "));
+                assertTrue(e.getMessage().contains("Exception while communicating with Policy"));
             }
             System.out.println(responseMessage);
         }

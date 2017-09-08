@@ -40,11 +40,11 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 
 public class SdcReqTest {
 
-    String baseUrl = "AYBABTU";
+    String baseUrl              = "AYBABTU";
     String serviceInvariantUUID = "serviceInvariantUUID";
 
     @Test
-    public void getSdcReqUrlsListNoGlobalPropTest() throws Exception {
+    public void getSdcReqUrlsListNoGlobalPropTest() {
         ModelProperties prop = mock(ModelProperties.class);
         SdcCatalogServices sdcCatalogServices = mock(SdcCatalogServices.class);
         DelegateExecution delegateExecution = mock(DelegateExecution.class);

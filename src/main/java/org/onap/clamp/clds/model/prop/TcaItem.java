@@ -70,17 +70,17 @@ public class TcaItem {
      */
     public TcaItem(JsonNode node) {
 
-        tcaName = ModelElement.getValueByName(node, "tname");
-        tcaUuId = ModelElement.getValueByName(node, "tuuid");
-        nfNamingCode = ModelElement.getValueByName(node, "tnfc");
-        tcaEnable = ModelElement.getValueByName(node, "tcaEnab");
-        policyId = ModelElement.getValueByName(node, "tcaPolId");
-        if (ModelElement.getValueByName(node, "tcaInt") != null) {
-            interval = Integer.valueOf(ModelElement.getValueByName(node, "tcaInt"));
+        tcaName = AbstractModelElement.getValueByName(node, "tname");
+        tcaUuId = AbstractModelElement.getValueByName(node, "tuuid");
+        nfNamingCode = AbstractModelElement.getValueByName(node, "tnfc");
+        tcaEnable = AbstractModelElement.getValueByName(node, "tcaEnab");
+        policyId = AbstractModelElement.getValueByName(node, "tcaPolId");
+        if (AbstractModelElement.getValueByName(node, "tcaInt") != null) {
+            interval = Integer.valueOf(AbstractModelElement.getValueByName(node, "tcaInt"));
         }
-        severity = ModelElement.getValueByName(node, "tcaSev");
-        if (ModelElement.getValueByName(node, "tcaVio") != null) {
-            violations = Integer.valueOf(ModelElement.getValueByName(node, "tcaVio"));
+        severity = AbstractModelElement.getValueByName(node, "tcaSev");
+        if (AbstractModelElement.getValueByName(node, "tcaVio") != null) {
+            violations = Integer.valueOf(AbstractModelElement.getValueByName(node, "tcaVio"));
         }
 
         // process service Configurations

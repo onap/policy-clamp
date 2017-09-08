@@ -62,13 +62,13 @@ public class ModelProperties {
 
     private Global                                            global;
 
-    private final Map<String, ModelElement>                   modelElements       = new ConcurrentHashMap<>();
+    private final Map<String, AbstractModelElement>                   modelElements       = new ConcurrentHashMap<>();
 
     private String                                            currentModelElementId;
     private String                                            policyUniqueId;
 
     private static final Object                               lock                = new Object();
-    private static Map<Class<? extends ModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
+    private static Map<Class<? extends AbstractModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
 
     static {
         synchronized (lock) {
@@ -119,7 +119,7 @@ public class ModelProperties {
             // Parse the list of base Model Elements and build up the
             // ModelElements
             modelElementClasses.entrySet().stream().parallel()
-                    .filter(entry -> (ModelElement.class.isAssignableFrom(entry.getKey())
+                    .filter(entry -> (AbstractModelElement.class.isAssignableFrom(entry.getKey())
                             && missingTypes.contains(entry.getValue())))
                     .forEach(entry -> {
                         try {
@@ -183,8 +183,8 @@ public class ModelProperties {
      * @param type
      * @return
      */
-    public ModelElement getModelElementByType(String type) {
-        ModelElement modelElement = modelElements.get(type);
+    public AbstractModelElement getModelElementByType(String type) {
+        AbstractModelElement modelElement = modelElements.get(type);
         if (modelElement == null) {
             throw new IllegalArgumentException("Invalid or not found ModelElement type: " + type);
         }
@@ -338,14 +338,14 @@ public class ModelProperties {
         return global;
     }
 
-    public static final synchronized void registerModelElement(Class<? extends ModelElement> modelElementClass,
+    public static final synchronized void registerModelElement(Class<? extends AbstractModelElement> modelElementClass,
             String type) {
         if (!modelElementClasses.containsKey(modelElementClass.getClass())) {
             modelElementClasses.put(modelElementClass, type);
         }
     }
 
-    public <T extends ModelElement> T getType(Class<T> clazz) {
+    public <T extends AbstractModelElement> T getType(Class<T> clazz) {
         instantiateMissingModelElements();
         String type = modelElementClasses.get(clazz);
         return (type != null ? (T) modelElements.get(type) : null);

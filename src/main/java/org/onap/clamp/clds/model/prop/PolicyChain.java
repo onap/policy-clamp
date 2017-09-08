@@ -63,13 +63,13 @@ public class PolicyChain {
 
     public PolicyChain(JsonNode node) {
 
-        policyId = ModelElement.getValueByName(node, "pid");
-        timeout = ModelElement.getIntValueByName(node, "timeout");
+        policyId = AbstractModelElement.getValueByName(node, "pid");
+        timeout = AbstractModelElement.getIntValueByName(node, "timeout");
 
         // process policy configurations
         JsonNode policyNode = node.get(node.size() - 1).get("policyConfigurations");
         Iterator<JsonNode> itr = policyNode.elements();
-        policyItems = new ArrayList<PolicyItem>();
+        policyItems = new ArrayList<>();
         while (itr.hasNext()) {
             policyItems.add(new PolicyItem(itr.next()));
         }

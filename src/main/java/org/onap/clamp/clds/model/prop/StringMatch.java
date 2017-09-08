@@ -59,7 +59,7 @@ import java.util.List;
  * "outputEventName","value":["ABATED"]}]]}]}}
  *
  */
-public class StringMatch extends ModelElement {
+public class StringMatch extends AbstractModelElement {
 
     private List<ResourceGroup> resourceGroups;
 

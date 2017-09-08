@@ -500,9 +500,6 @@ public class CldsService extends SecureServiceBase {
         if (test != null && test.equalsIgnoreCase("true")) {
             isTest = true;
         } else {
-            // if action.test.override is true, then any action will be marked
-            // as test=true (even if incoming action request had test=false);
-            // otherwise, test flag will be unchanged on the action request
             String actionTestOverride = refProp.getStringValue("action.test.override");
             if (actionTestOverride != null && actionTestOverride.equalsIgnoreCase("true")) {
                 logger.info("PUT actionTestOverride={}", actionTestOverride);
@@ -666,8 +663,7 @@ public class CldsService extends SecureServiceBase {
     /**
      * REST service that retrieves total properties by using invariantUUID based
      * on refresh and non refresh
-     *
-     * @throws Exception
+     * 
      */
     @ApiOperation(value = "Retrieves total properties by using invariantUUID based on refresh and non refresh", notes = "", response = String.class)
     @GET
@@ -675,7 +671,7 @@ public class CldsService extends SecureServiceBase {
     @Produces(MediaType.APPLICATION_JSON)
     public String getSdcPropertiesByServiceUUIDForRefresh(
             @PathParam("serviceInvariantUUID") String serviceInvariantUUID,
-            @DefaultValue("false") @QueryParam("refresh") String refresh) throws Exception {
+            @DefaultValue("false") @QueryParam("refresh") String refresh) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc properties by uuid", getPrincipalName());
         CldsServiceData cldsServiceData = new CldsServiceData();
@@ -901,7 +897,7 @@ public class CldsService extends SecureServiceBase {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public CldsModel deployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
-            @QueryParam("test") String test, CldsModel model) throws Exception {
+            @QueryParam("test") String test, CldsModel model) throws IOException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         String deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";

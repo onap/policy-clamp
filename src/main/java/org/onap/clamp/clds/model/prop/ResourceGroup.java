@@ -78,8 +78,8 @@ public class ResourceGroup {
      */
     public ResourceGroup(JsonNode node) {
 
-        groupNumber = ModelElement.getValueByName(node, "rgname");
-        policyId = ModelElement.getValueByName(node, "policyId");
+        groupNumber = AbstractModelElement.getValueByName(node, "rgname");
+        policyId = AbstractModelElement.getValueByName(node, "policyId");
 
         // process Server_Configurations
         JsonNode serviceConfigurationsNode = node.get(node.size() - 1).get("serviceConfigurations");
