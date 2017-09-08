@@ -95,7 +95,7 @@
   </appender>
 
 	<!-- CLDS related loggers -->
-	<logger name="com.att.ajsc.clds" level="INFO" />
+	<logger name="org.onap.clamp.clds" level="INFO" />
 	
 	<!-- EELF related loggers -->
 	<logger name="com.att.eelf.audit" level="INFO" additivity="false">
