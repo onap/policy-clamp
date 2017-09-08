@@ -28,7 +28,7 @@
 	<groupId>org.onap.clamp</groupId>
 	<artifactId>clds</artifactId>
 	<version>1.1.0</version>
-	<name>ONAP CLAMP</name>
+	<name>clamp</name>
 
 	<parent>
 		<groupId>org.onap.oparent</groupId>
