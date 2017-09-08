@@ -569,11 +569,7 @@ public class SdcCatalogServices {
     }
 
     private String removeUnwantedBracesFromString(String id) {
-        String idReworked = "";
-        if (id != null && id.contains("\"")) {
-            idReworked = id.replaceAll("\"", "");
-        }
-        return idReworked;
+        return (id != null) ? id.replaceAll("\"", "") : "";
     }
 
     private List<CldsAlarmCondition> getAlarmCondtionsFromVfc(String vfcResponse) throws IOException {
@@ -740,7 +736,7 @@ public class SdcCatalogServices {
                 String inputLine;
                 while ((inputLine = in.readLine()) != null) {
                     if (!inputLine.isEmpty()) {
-                        response.append(inputLine);
+                    response.append(inputLine);
                     }
                     if (alarmConditions) {
                         response.append("\n");
@@ -985,12 +981,13 @@ public class SdcCatalogServices {
                                 alertDescNode.put(currCldsAlarmCondition.getAlarmConditionKey(),
                                         currCldsAlarmCondition.getAlarmConditionKey());
                             }
+                            }
                         }
-                    }
+
                     vfcObjectNode.putPOJO("alarmCondition", alarmCondNode);
                     vfcObjectNode.putPOJO("alertDescription", alertDescNode);
                     vfcResourceUuidObjectNode.putPOJO(currCldsVfcData.getVfcInvariantResourceUUID(), vfcObjectNode);
-                }
+                    }
             }
         } else {
             alarmCondNode.put("", "");

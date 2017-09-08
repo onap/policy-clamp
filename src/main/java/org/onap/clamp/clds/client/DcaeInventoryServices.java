@@ -100,7 +100,7 @@ public class DcaeInventoryServices {
             List<String> resourceUuidList = global.getResourceVf();
             String serviceUuid = sdcCatalogServices.getServiceUuidFromServiceInvariantId(invariantServiceUuid);
             String resourceUuid = "";
-            if (resourceUuidList != null && resourceUuidList.size() > 0) {
+            if (resourceUuidList != null && !resourceUuidList.isEmpty()) {
                 resourceUuid = resourceUuidList.get(0).toString();
             }
             /* Invemtory service url is called in this method */

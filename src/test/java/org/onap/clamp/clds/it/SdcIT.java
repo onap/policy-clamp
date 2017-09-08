@@ -33,8 +33,7 @@ import org.onap.clamp.clds.client.req.SdcReq;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
-import org.onap.clamp.clds.transform.TransformUtil;
-
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -58,11 +57,11 @@ public class SdcIT extends AbstractIT {
 
     @Test
     public void testBlueprint() throws Exception {
-        String modelProp = TransformUtil.getResourceAsString("example/modelProp.json");
-        String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnProp.json");
+        String modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
+        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
         String modelName = "example-model06";
         String controlName = "ClosedLoop-FRWL-SIG04-1582f840-test-test-1234-005056a9d756";
-        String docText = TransformUtil.getResourceAsString("example/templateProp.json");
+        String docText = ResourceFileUtil.getResourceAsString("example/templateProp.json");
         ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT,
                 true, modelBpmnProp, modelProp);
         String blueprint = SdcReq.formatBlueprint(refProp, prop, docText);
@@ -73,11 +72,11 @@ public class SdcIT extends AbstractIT {
 
     @Test
     public void testTcaBlueprint() throws Exception {
-        String modelProp = TransformUtil.getResourceAsString("example/modelPropForPolicy.json");
-        String modelBpmnProp = TransformUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
+        String modelProp = ResourceFileUtil.getResourceAsString("example/modelPropForPolicy.json");
+        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
         String modelName = "example-model06";
         String controlName = "ClosedLoop-FRWL-SIG04-1582f840-test-test-1234-005056a9d756";
-        String docText = TransformUtil.getResourceAsString("example/templatePropForTca.json");
+        String docText = ResourceFileUtil.getResourceAsString("example/templatePropForTca.json");
         ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT,
                 true, modelBpmnProp, modelProp);
         String blueprint = SdcReq.formatBlueprint(refProp, prop, docText);

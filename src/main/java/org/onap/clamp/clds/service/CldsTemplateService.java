@@ -23,6 +23,14 @@
 
 package org.onap.clamp.clds.service;
 
+import com.att.ajsc.common.AjscService;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,16 +59,6 @@ import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.att.ajsc.common.AjscService;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
  * Service to save and retrieve the CLDS model attributes.
  */
@@ -68,12 +66,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Path("/cldsTempate")
 public class CldsTemplateService extends SecureServiceBase {
 
-    protected static final EELFLogger logger         = EELFManager.getInstance().getLogger(CldsTemplateService.class);
-    protected static final EELFLogger auditLogger    = EELFManager.getInstance().getAuditLogger();
-
-    private static final String     collectorKey   = "Collector";
-    private static final String     stringMatchKey = "StringMatch";
-    private static final String     policyKey      = "Policy";
+    private static final String     COLLECTOR_KEY    = "Collector";
+    private static final String     STRING_MATCH_KEY = "StringMatch";
+    private static final String     POLICY_KEY       = "Policy";
 
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
     private String                  cldsPermissionTypeTemplate;
@@ -309,7 +304,7 @@ public class CldsTemplateService extends SecureServiceBase {
         logger.info("value of elementIds:" + bpmnElementIds);
         logger.info("value of prop text:" + propText);
         Map<String, String> bpmnIoIdsMap = new HashMap<>();
-        if (bpmnElementIds != null && bpmnElementIds.size() > 0) {
+        if (bpmnElementIds != null && !bpmnElementIds.isEmpty()) {
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode root = objectMapper.readValue(propText, ObjectNode.class);
             Iterator<Entry<String, JsonNode>> entryItr = root.fields();
@@ -326,12 +321,12 @@ public class CldsTemplateService extends SecureServiceBase {
                             ObjectNode node = (ObjectNode) anArrayNode;
                             String valueNode = node.get("value").asText();
                             logger.info("value of node:" + valueNode);
-                            if (keyPropName.startsWith(collectorKey)) {
-                                valueNode = collectorKey + "_" + valueNode;
-                            } else if (keyPropName.startsWith(stringMatchKey)) {
-                                valueNode = stringMatchKey + "_" + valueNode;
-                            } else if (keyPropName.startsWith(policyKey)) {
-                                valueNode = policyKey + "_" + valueNode;
+                            if (keyPropName.startsWith(COLLECTOR_KEY)) {
+                                valueNode = COLLECTOR_KEY + "_" + valueNode;
+                            } else if (keyPropName.startsWith(STRING_MATCH_KEY)) {
+                                valueNode = STRING_MATCH_KEY + "_" + valueNode;
+                            } else if (keyPropName.startsWith(POLICY_KEY)) {
+                                valueNode = POLICY_KEY + "_" + valueNode;
                             }
                             bpmnIoIdsMap.put(keyPropName, valueNode);
                         }

@@ -23,28 +23,29 @@
 
 package org.onap.clamp.clds.model;
 
-import java.math.BigDecimal;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.math.BigDecimal;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CldsSdcResourceBasicInfo implements Comparable<CldsSdcResourceBasicInfo> {
 
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsSdcResourceBasicInfo.class);
+    protected static final EELFLogger logger        = EELFManager.getInstance()
+            .getLogger(CldsSdcResourceBasicInfo.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
-    private String                  uuid;
-    private String                  invariantUUID;
-    private String                  name;
-    private String                  version;
-    private String                  toscaModelURL;
-    private String                  category;
-    private String                  subCategory;
-    private String                  resourceType;
-    private String                  lifecycleState;
-    private String                  lastUpdaterUserId;
+    private String                    uuid;
+    private String                    invariantUUID;
+    private String                    name;
+    private String                    version;
+    private String                    toscaModelURL;
+    private String                    category;
+    private String                    subCategory;
+    private String                    resourceType;
+    private String                    lifecycleState;
+    private String                    lastUpdaterUserId;
 
     @Override
     public int compareTo(CldsSdcResourceBasicInfo in) {
@@ -62,6 +63,37 @@ public class CldsSdcResourceBasicInfo implements Comparable<CldsSdcResourceBasic
         return rtn;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((version == null) ? 0 : version.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CldsSdcResourceBasicInfo other = (CldsSdcResourceBasicInfo) obj;
+        if (name == null) {
+            if (other.name != null)
+                return false;
+        } else if (!name.equals(other.name))
+            return false;
+        if (version == null) {
+            if (other.version != null)
+                return false;
+        } else if (!version.equals(other.version))
+            return false;
+        return true;
+    }
+
     /**
      * Convert version String into a BigDecimal
      *
@@ -69,7 +101,7 @@ public class CldsSdcResourceBasicInfo implements Comparable<CldsSdcResourceBasic
      * @return
      */
     private BigDecimal convertVersion(String version) {
-        BigDecimal rtn = new BigDecimal(0.0);
+        BigDecimal rtn = BigDecimal.valueOf(0.0);
         try {
             rtn = new BigDecimal(version);
         } catch (NumberFormatException nfe) {

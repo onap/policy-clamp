@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.transform;
+package org.onap.clamp.clds.util;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +29,14 @@ import java.io.InputStream;
 /**
  * Utility methods supporting transforms.
  */
-public class TransformUtil {
+public class ResourceFileUtil {
+
+    /**
+     * Disable the ResourceFileUtil constructor.
+     */
+    private ResourceFileUtil() {
+
+    }
 
     /**
      * Return resource as a Stream.

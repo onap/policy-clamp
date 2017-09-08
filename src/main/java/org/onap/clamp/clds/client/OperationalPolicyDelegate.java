@@ -78,9 +78,6 @@ public class OperationalPolicyDelegate implements JavaDelegate {
      */
     @Override
     public void execute(DelegateExecution execution) throws IOException, BuilderException, PolicyEngineException {
-
-        // execution.setVariable("operationalPolicyRequestUuid",
-        // operationalPolicyRequestUuid);
         String responseMessage = null;
         String operationalPolicyRequestUuid = null;
         ModelProperties prop = ModelProperties.create(execution);
@@ -90,7 +87,7 @@ public class OperationalPolicyDelegate implements JavaDelegate {
                 operationalPolicyRequestUuid = LoggingUtils.getRequestId();
                 Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
                         prop, prop.getType(Policy.class).getId(), policyChain);
-                responseMessage = policyClient.sendBrms(attributes, prop, operationalPolicyRequestUuid);
+                responseMessage = policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
             }
             if (responseMessage != null) {
                 execution.setVariable("operationalPolicyResponseMessage", responseMessage.getBytes());
