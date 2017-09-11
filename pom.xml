@@ -316,6 +316,12 @@
 			<groupId>com.att.ajsc</groupId>
 			<artifactId>sdk-java-camunda-core</artifactId>
 			<version>${sdk.camunda.core}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- Spring Mail -->
 		<dependency>
@@ -359,6 +365,10 @@
 				<exclusion>
 					<artifactId>jackson-databind</artifactId>
 					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -431,6 +441,12 @@
 			<version>2.1.7</version>
 		</dependency>
 
+		<!-- Remove the MYSQL connector and replace it by Mariadb -->
+		<dependency>
+			 <groupId>org.mariadb.jdbc</groupId>
+			 <artifactId>mariadb-java-client</artifactId>
+			 <version>2.1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
