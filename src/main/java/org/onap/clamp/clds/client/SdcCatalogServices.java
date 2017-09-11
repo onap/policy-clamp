@@ -463,7 +463,7 @@ public class SdcCatalogServices {
 
             // To remove duplicate resources from serviceDetail and add valid
             // vfs to service
-            if (cldsSdcServiceDetail.getResources() != null) {
+            if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getResources() != null) {
                 List<CldsSdcResource> cldsSdcResourceList = removeDuplicateSdcResourceInstances(
                         cldsSdcServiceDetail.getResources());
                 if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
