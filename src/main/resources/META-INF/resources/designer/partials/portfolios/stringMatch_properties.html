@@ -283,7 +283,7 @@ label{
 						<div class="form-group clearfix">
 							<label for="vfc" class="col-sm-4 control-label">Resource-VFC</label>
 							<div class="col-sm-8">
-								<select class="form-control" id="vfc" name="vfc">
+								<select class="form-control" id="vfc" name="vfc" enableFilter="true">
 
 								</select>
 
@@ -292,7 +292,7 @@ label{
 						<div class="form-group clearfix">
 							<label for="alarmCondition" class="col-sm-4 control-label">Alarm Condition</label>
 							<div class="col-sm-8">
-								<select class="form-control" id="alarmCondition" name="alarmCondition">
+								<select class="form-control" id="alarmCondition" name="alarmCondition" enableFilter="true">
 								
 								</select>
 							</div>
@@ -350,7 +350,7 @@ label{
 
 							<div class="col-sm-8">
 								<select class="form-control" id="outputEventName"
-									name="outputEventName" enableFilter="false"></select>
+									name="outputEventName" enableFilter="true"></select>
 
 							</div>
 						</div>
@@ -376,8 +376,9 @@ label{
 		// css attribute display:none
 		$("#add_one_more").click(function(event) {
 			event.preventDefault();
-			add_one_more();
+			num = add_one_more();
 			setMultiSelect();
+			addSelectListen(num);
 		});
 		
 		
@@ -460,6 +461,8 @@ label{
 					alarm_conditions_temp="";
 					event_severity_temp="";
 					event_type_source_temp="";
+
+					addSelectListen(num);
 				}
 
 				//Adding all the ids for parent String options
@@ -666,6 +669,47 @@ label{
 				}
 			})
 		}
+
+			function addSelectListen(count) {
+				var onSelectChange = function() {
+					var opselected = this.selectedOptions[0].text;
+
+					if (this.id=="outputEventName"){
+						if(opselected!==""){
+							var stringMatchCount = $(this).closest("[id^='formId']").attr("id").substring(6);
+							$(this).closest(".stringMatchPanel").find("#go_properties_tab"+stringMatchCount).text(opselected);
+						} else {
+							$(this).closest("[id^='go_properties_tab']").text("Condition");
+						}
+					}
+
+					if (this.id=="vfc"){
+						var vfcCount = $(this).closest("[id^='formId']").attr("id").substring(6);
+						if(opselected!==""){
+							setAlarmConditions(opselected, vfcCount);
+							setAlertDescription(opselected, vfcCount);
+						} else {
+							$(this).closest(".formId").find("#eventSourceType").val("");
+							$(this).closest(".formId").find("#eventSeverity").val("");
+						}
+					}
+
+					if (this.id=="alarmCondition"){
+						var alarmCount = $(this).closest("[id^='formId']").attr("id").substring(6);
+						if(opselected!==""){
+							setEventSourceType(opselected.toString(), alarmCount, "alarm");
+						} else {
+							$(this).closest(".formId").find("#eventSourceType").val("");
+							$(this).closest(".formId").find("#eventSeverity").val("");
+						}
+					}
+
+				};
+
+				$("#formId"+count+" select").each( function () {
+					this.change = onSelectChange;
+				});
+			}
 
 		function addCustListen(count) {			
 			$('#go_properties_tab' + count).click(function(event) {

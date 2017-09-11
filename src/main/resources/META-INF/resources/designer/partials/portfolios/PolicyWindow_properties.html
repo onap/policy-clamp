@@ -236,7 +236,7 @@ label{
 					<div class="form-group clearfix" >
 						<label class="col-sm-4 control-label" for="recipe">Recipe</label>
 						<div class="col-sm-8">
-							<select class="form-control" name="recipe" id="recipe" enableFilter="false"></select>
+							<select class="form-control" name="recipe" id="recipe" enableFilter="true"></select>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -270,7 +270,7 @@ label{
 							Parent Policy</label>
 						<div class="col-sm-8">
 							<select  class="form-control" id="parentPolicy"
-								name="parentPolicy" enableFilter="false"><option value=""></option></select>
+								name="parentPolicy" enableFilter="true"><option value=""></option></select>
 						</div>
 					</div>			
 					<div class="form-group clearfix">
@@ -395,7 +395,35 @@ label{
 			}
 			
 		}
-		
+
+			function addSelectListen(count) {
+				var onSelectChange = function() {
+					var opselected = this.selectedOptions[0].text;
+
+					if (this.id == "recipe"){
+						if(opselected!==""){
+							var polCount = $(this).closest("[id^='formId']").attr("id").substring(6);
+							$(this).closest(".policyPanel").find("#go_properties_tab"+polCount).text(opselected);
+						} else {
+							$(this).closest("[id^='go_properties_tab']").text("Policy");
+						}
+					}
+
+					if (this.id=="parentPolicy"){
+						var ppCond = $(this).closest("[id^='formId']").find("#parentPolicyConditions");
+						if(opselected==""){
+							ppCond.multiselect("clearSelection");
+							ppCond.multiselect("disable");
+						} else {
+							ppCond.multiselect("enable");
+						}
+					}
+				};						 
+				$("#formId"+count+" select").each( function () {
+					this.change = onSelectChange;
+				});
+			}
+
 		
 		//This is ensure there are no repeated keys in the map
 		function noRepeats(form) {
@@ -487,6 +515,7 @@ label{
 			$(".formId").not($("#formId" + count)).css("display", "none")
 			addCustListen(count)
 			//addTabListen(count)
+			addSelectListen(count);
 			// This is for when the process is not loading from map but being created
 			if(!loadingId){
 				var l=makeid()
