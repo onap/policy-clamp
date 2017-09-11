@@ -37,6 +37,8 @@ import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.DcaeReqDelegate;
 import org.onap.clamp.clds.client.DcaeReqDeleteDelegate;
+import org.onap.clamp.clds.client.HolmesPolicyDelegate;
+import org.onap.clamp.clds.client.HolmesPolicyDeleteDelegate;
 import org.onap.clamp.clds.client.OperationalPolicyDelegate;
 import org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate;
 import org.onap.clamp.clds.client.PolicyClient;
@@ -170,6 +172,16 @@ public class CldsConfiguration {
     @Bean(name = "tcaPolicyDeleteDelegate")
     public TcaPolicyDeleteDelegate getTcaPolicyDeleteDelegate() {
         return new TcaPolicyDeleteDelegate();
+    }
+
+    @Bean(name = "holmesPolicyDelegate")
+    public HolmesPolicyDelegate getHolmesPolicyDelegate() {
+        return new HolmesPolicyDelegate();
+    }
+
+    @Bean(name = "holmesPolicyDeleteDelegate")
+    public HolmesPolicyDeleteDelegate getHolmesPolicyDeleteDelegate() {
+        return new HolmesPolicyDeleteDelegate();
     }
 
 }

@@ -237,51 +237,77 @@ public class SdcCatalogServicesIT extends AbstractIT {
         // This invariant uuid is the one from vcts4 v1.1
         String serviceResourceDetailUrl = refProp.getStringValue("sdc.serviceUrl")
                 + "/29018914-966c-442d-9d08-251b9dc45b8f/metadata";
-        Mockito.when(spy.getCldsServicesOrResourcesBasedOnURL(serviceResourceDetailUrl, false))
-                .thenReturn(IOUtils.toString(
-                        SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcServiceDetailsExample.json"),
-                        "UTF-8"));
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcServiceDetailsExample.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(serviceResourceDetailUrl, false);
 
         String resourceDetailUrl = refProp.getStringValue("sdc.catalog.url")
                 + "resources/585822c7-4027-4f84-ba50-e9248606f136/metadata";
-        Mockito.when(spy.getCldsServicesOrResourcesBasedOnURL(resourceDetailUrl, false))
-                .thenReturn(IOUtils.toString(
-                        SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcResourceDetailsExample.json"),
-                        "UTF-8"));
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcResourceDetailsExample.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(resourceDetailUrl, false);
 
         String securityRulesDetailUrl = refProp.getStringValue("sdc.catalog.url")
                 + "resources/d57e57d2-e3c6-470d-8d16-e6ea05f536c5/metadata";
-        Mockito.when(spy.getCldsServicesOrResourcesBasedOnURL(securityRulesDetailUrl, false)).thenReturn(
-                IOUtils.toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcSecurityRules.json"),
-                        "UTF-8"));
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcSecurityRules.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(securityRulesDetailUrl, false);
 
         String cinderVolumeDetailUrl = refProp.getStringValue("sdc.catalog.url")
                 + "resources/b4288e07-597a-44a2-aa98-ad36e551a39d/metadata";
-        Mockito.when(spy.getCldsServicesOrResourcesBasedOnURL(cinderVolumeDetailUrl, false)).thenReturn(
-                IOUtils.toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcCinderVolume.json"),
-                        "UTF-8"));
+        Mockito.doReturn(IOUtils
+                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcCinderVolume.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(cinderVolumeDetailUrl, false);
 
         String vfcGenericDetailUrl = refProp.getStringValue("sdc.catalog.url")
                 + "resources/2c8f1219-8000-4001-aa13-496a0396d40f/metadata";
-        Mockito.when(spy.getCldsServicesOrResourcesBasedOnURL(vfcGenericDetailUrl, false)).thenReturn(IOUtils.toString(
-                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcVFCGenericWithAlarms.json"), "UTF-8"));
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcVFCGenericWithAlarms.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(vfcGenericDetailUrl, false);
 
-        String csvDetailUrl = "/sdc/v1/catalog/resources/84855843-5247-4e97-a2bd-5395a510253b/artifacts/d57ac7ec-f3c3-4793-983a-c75ac3a43153";
-        Mockito.when(spy.getResponsesFromArtifactUrl(csvDetailUrl)).thenReturn(IOUtils.toString(
-                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcMeasurementsList.csv"), "UTF-8"));
+        String csvAlarmsDetailUrl = refProp.getStringValue("sdc.catalog.url")
+                + "resources/2c8f1219-8000-4001-aa13-496a0396d40f/resourceInstances/virc_fe_be/artifacts/5138e316-0237-49aa-817a-b3d8eaf77392";
+        Mockito.doReturn(IOUtils
+                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcAlarmsList.csv"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(csvAlarmsDetailUrl, false);
 
-        String csvAlarmsDetailUrl = "/sdc/v1/catalog/resources/2c8f1219-8000-4001-aa13-496a0396d40f/resourceInstances/virc_fe_be/artifacts/5138e316-0237-49aa-817a-b3d8eaf77392";
-        Mockito.when(spy.getResponsesFromArtifactUrl(csvAlarmsDetailUrl)).thenReturn(IOUtils
-                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcAlarmsList.csv"), "UTF-8"));
+        Mockito.doReturn(IOUtils
+                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcAlarmsList.csv"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(csvAlarmsDetailUrl, true);
+
+        String csvAlarmsDetailUrl2 = refProp.getStringValue("sdc.catalog.url")
+                + "resources/d7646638-2572-4a94-b497-c028ac15f9ca/artifacts/5138e316-0237-49aa-817a-b3d8eaf77392";
+        Mockito.doReturn(IOUtils
+                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcAlarmsList.csv"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(csvAlarmsDetailUrl2, true);
 
         String allVfResourcesDetailUrl = refProp.getStringValue("sdc.catalog.url") + "resources?resourceType=VF";
-        Mockito.when(spy.getCldsServicesOrResourcesBasedOnURL(allVfResourcesDetailUrl, false)).thenReturn(IOUtils
-                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcVFResources.json"), "UTF-8"));
+        Mockito.doReturn(IOUtils
+                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcVFResources.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(allVfResourcesDetailUrl, false);
+
+        String cVfcResourcesDetailUrl = refProp.getStringValue("sdc.catalog.url")
+                + "resources/a0475018-1e7e-4ddd-8bee-33cbf958c2e6/metadata";
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcCVFCResourceExample.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(cVfcResourcesDetailUrl, false);
 
         String allVfcResourcesDetailUrl = refProp.getStringValue("sdc.catalog.url") + "resources?resourceType=VFC";
-        Mockito.when(spy.getCldsServicesOrResourcesBasedOnURL(allVfcResourcesDetailUrl, false)).thenReturn(
-                IOUtils.toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcVFCResources.json"),
-                        "UTF-8"));
+        Mockito.doReturn(IOUtils
+                .toString(SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcVFCResources.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(allVfcResourcesDetailUrl, false);
+
+        String allVfAlarms = refProp.getStringValue("sdc.catalog.url")
+                + "resources/84855843-5247-4e97-a2bd-5395a510253b/artifacts/d57ac7ec-f3c3-4793-983a-c75ac3a43153";
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcMeasurementsList.csv"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(allVfAlarms, true);
+
+        String vfcResourceExample = refProp.getStringValue("sdc.catalog.url")
+                + "resources/d7646638-2572-4a94-b497-c028ac15f9ca/metadata";
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesIT.class.getResourceAsStream("/example/sdc/sdcVFCResourceExample.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(vfcResourceExample, false);
 
         CldsServiceData cldsServiceData = spy
                 .getCldsServiceDataWithAlarmConditions("a33ed748-3477-4434-b3f3-b5560f5e7d9c");
@@ -291,7 +317,7 @@ public class SdcCatalogServicesIT extends AbstractIT {
 
         List<CldsAlarmCondition> alarmsList = spy.getAllAlarmConditionsFromCldsServiceData(cldsServiceData,
                 "alarmCondition");
-        assertTrue(alarmsList.size() == 6);
+        assertTrue(alarmsList.size() == 12);
 
     }
 

@@ -1,0 +1,28 @@
+{
+	"uuid": "d7646638-2572-4a94-b497-c028ac15f9ca",
+	"invariantUUID": "e81d960d-794c-4d86-bbc4-31a2f86141ed",
+	"name": "ClampDev.nodes.heat.virc_fe_be",
+	"version": "1.0",
+	"toscaModelURL": "/sdc/v1/catalog/resources/d7646638-2572-4a94-b497-c028ac15f9ca/toscaModel",
+	"category": "Generic",
+	"subCategory": "Abstract",
+	"resourceType": "VFC",
+	"lifecycleState": "CERTIFIED",
+	"lastUpdaterUserId": "m08740",
+	"lastUpdaterFullName": "Zero ASDCMech",
+	"toscaResourceName": "org.openecomp.resource.vfc.Clampdev.abstract.nodes.heat.virc_fe_be",
+	"artifacts": [
+		{
+			"artifactName": "Fault-alarms-ASDC-vprobes-vLB.csv",
+			"artifactType": "SNMP_TRAP",
+			"artifactURL": "/sdc/v1/catalog/resources/d7646638-2572-4a94-b497-c028ac15f9ca/artifacts/5138e316-0237-49aa-817a-b3d8eaf77392",
+			"artifactDescription": "Artifact created from csar",
+			"artifactChecksum": "YWY2ZTY5NjhlOTU0YjQyZThhNTIyOGFmNzI1NTRiYzQ=",
+			"artifactUUID": "5138e316-0237-49aa-817a-b3d8eaf77392",
+			"artifactVersion": "1",
+			"artifactLabel": "faultalarmsasdcvprobesvlbcsv",
+			"artifactGroupType": "DEPLOYMENT"
+		}
+	],
+	"description": "Not reusable inner VFC"
+}
