@@ -1,0 +1,188 @@
+{
+	"Collector_1c72ct5": [
+		{
+			"name": "topicPublishes",
+			"value": "DCAE-COLLECTOR-UCSNMP"
+		}
+	],
+	"StringMatch_05arstl": {
+		"group1": [
+			{
+				"name": "rgname",
+				"value": "1505133578560"
+			},
+			{
+				"name": "rgfriendlyname",
+				"value": "group1"
+			},
+			{
+				"name": "policyName",
+				"value": "policy1"
+			},
+			{
+				"name": "policyId",
+				"value": "0"
+			},
+			{
+				"serviceConfigurations": [
+					[
+						{
+							"name": "aaiMatchingFields",
+							"value": [
+								"complex.city"
+							]
+						},
+						{
+							"name": "aaiSendFields",
+							"value": [
+								"cloud-region.identity-url"
+							]
+						},
+						{
+							"name": "timeWindow",
+							"value": [
+								"0"
+							]
+						},
+						{
+							"name": "ageLimit",
+							"value": [
+								"1600"
+							]
+						},
+						{
+							"name": "createClosedLoopEventId",
+							"value": [
+								"Initial"
+							]
+						},
+						{
+							"name": "outputEventName",
+							"value": [
+								""
+							]
+						},
+						{
+							"stringSet": [
+								{
+									
+								},
+								{
+									"name": "eventSeverity",
+									"value": [
+										"NORMAL"
+									]
+								},
+								{
+									"name": "eventSourceType",
+									"value": [
+										""
+									]
+								}
+							]
+						}
+					]
+				]
+			}
+		]
+	},
+	"Policy_0honxgv": {
+		"policy1": [
+			{
+				"name": "pname",
+				"value": "policy1"
+			},
+			{
+				"name": "pid",
+				"value": "0"
+			},
+			{
+				"name": "timeout",
+				"value": "345"
+			},
+			{
+				"policyConfigurations": [
+					[
+						{
+							"name": "maxRetries",
+							"value": [
+								"3"
+							]
+						},
+						{
+							"name": "retryTimeLimit",
+							"value": [
+								"180"
+							]
+						},
+						{
+							"name": "_id",
+							"value": [
+								"dGLuNqg"
+							]
+						},
+						{
+							"name": "parentPolicy",
+							"value": [
+								""
+							]
+						}
+					]
+				]
+			}
+		]
+	},
+	"TCA_1jy9to4": {
+		"tca1": [
+			{
+				"name": "tname",
+				"value": "tca1"
+			},
+			{
+				"name": "tuuid",
+				"value": "f43e3499-8c9c-teed-bb41-a0cb38ebf0d3"
+			},
+			{
+				"name": "tnfc",
+				"value": ""
+			},
+			{
+				"name": "tcaEnab",
+				"value": "on"
+			},
+			{
+				"name": "tcaPol",
+				"value": "policy1"
+			},
+			{
+				"name": "tcaPolId",
+				"value": "0"
+			},
+			{
+				"name": "tcaInt",
+				"value": "1"
+			},
+			{
+				"name": "tcaSev",
+				"value": "NORMAL"
+			},
+			{
+				"name": "tcaVio",
+				"value": "1"
+			},
+			{
+				"serviceConfigurations": []
+			}
+		]
+	},
+	"Holmes_0i4n2mm": [
+		{
+			"name": "correlationalLogic",
+			"value": "blabla"
+		},
+		{
+			"name": "operationalPolicy",
+			"value": "policy1"
+		}
+	]
+}

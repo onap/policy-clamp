@@ -24,69 +24,65 @@
 package org.onap.clamp.clds.model.prop;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.onap.clamp.clds.util.ResourceFileUtil;
-
 
 /**
  * Test org.onap.clamp.ClampDesigner.model.prop package using ModelProperties.
  */
 public class ModelPropertiesTest {
 
-    @Test
-    public void testJsonParse() throws IOException {
-        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
-        String modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
-        String modName = "example-model-name";
-        String controlName = "example-control-name";
-
-        ModelProperties prop = new ModelProperties(modName, controlName, null, true, modelBpmnProp, modelProp);
-        Assert.assertEquals(modName, prop.getModelName());
-        Assert.assertEquals(controlName, prop.getControlName());
-        Assert.assertEquals(null, prop.getActionCd());
-        Global global = prop.getGlobal();
-        Assert.assertEquals("0f983e18-4603-4bb4-a98c-e29691fb16a1", global.getService());
-        Assert.assertEquals("[SNDGCA64]", global.getLocation().toString());
-        Assert.assertEquals("[6c7aaec2-59eb-41d9-8681-b7f976ab668d]", global.getResourceVf().toString());
-        StringMatch sm = prop.getType(StringMatch.class);
-        Assert.assertEquals("StringMatch_", sm.getId());
-        Policy policy = prop.getType(Policy.class);
-        Assert.assertEquals("Policy_", policy.getId());
-        Assert.assertEquals(null, policy.getTopicPublishes());
-        Assert.assertEquals(null, policy.getTopicSubscribes());
-
-        Tca tca = prop.getType(Tca.class);
-        Assert.assertEquals("Narra", tca.getTcaItems().get(0).getTcaName());
-        Assert.assertEquals(Integer.valueOf(4), tca.getTcaItems().get(0).getTcaThreshholds().get(0).getThreshhold());
+    @Before
+    public void registerNewClasses() {
+        ModelProperties.registerModelElement(Holmes.class, Holmes.getType());
     }
 
     @Test
-    public void testPolicy() throws IOException {
+    public void testHolmes() throws IOException {
 
-        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
-        System.out.println(modelBpmnProp);
+        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/model-properties/modelBpmnProp.json");
+        String modelBpmn = ResourceFileUtil.getResourceAsString("example/model-properties/modelBpmn.json");
 
-        String modelProp = ResourceFileUtil.getResourceAsString("example/modelPropForPolicy.json");
-        System.out.println(modelProp);
-        ModelProperties prop = new ModelProperties("example-model-name", "example-control-name",
-                null, true, modelBpmnProp, modelProp);
-        System.out.println("attempting prop.getGlobal()...");
-        Global global = prop.getGlobal();
-        System.out.println("attempting prop.getStringMatch()...");
+        ModelProperties prop = new ModelProperties("example-model-name", "example-control-name", null, true, modelBpmn,
+                modelBpmnProp);
+
         StringMatch stringMatch = prop.getType(StringMatch.class);
-        if (stringMatch.isFound()) {
-            System.out.println("stringMatch json object is present...");
-            assertEquals("1", stringMatch.getResourceGroups().get(0).getPolicyId());
-        }
-        System.out.println("attempting prop.getPolicy()...");
+        assertTrue(stringMatch.isFound());
+        assertEquals("1505133578560", stringMatch.getResourceGroups().get(0).getGroupNumber());
+        assertEquals("0", stringMatch.getResourceGroups().get(0).getPolicyId());
+        assertEquals(1, stringMatch.getResourceGroups().get(0).getServiceConfigurations().size());
+        List<String> aaiMathcingFields = new ArrayList<String>();
+        aaiMathcingFields.add("complex.city");
+        assertEquals(aaiMathcingFields,
+                stringMatch.getResourceGroups().get(0).getServiceConfigurations().get(0).getaaiMatchingFields());
+        assertEquals("1600", stringMatch.getResourceGroups().get(0).getServiceConfigurations().get(0).getAgeLimit());
+        assertEquals(1, stringMatch.getResourceGroups().get(0).getServiceConfigurations().get(0).getStringSet().size());
+
+        Collector collector = prop.getType(Collector.class);
+        assertTrue(collector.isFound());
+        assertEquals("DCAE-COLLECTOR-UCSNMP", collector.getTopicPublishes());
+
         Policy policy = prop.getType(Policy.class);
-        if (policy.isFound()) {
-            System.out.println("policy json object is present...");
-            assertEquals("1", policy.getPolicyChains().get(0).getPolicyId());
-        }
+        assertTrue(policy.isFound());
+        assertEquals(1, policy.getPolicyChains().size());
+        assertEquals("0", policy.getPolicyChains().get(0).getPolicyId());
+        assertEquals(1, policy.getPolicyChains().get(0).getPolicyItems().size());
+
+        Tca tca = prop.getType(Tca.class);
+        assertTrue(tca.isFound());
+        assertEquals(1, tca.getTcaItems().size());
+        assertEquals(0, tca.getTcaItems().get(0).getTcaThreshholds().size());
+
+        Holmes holmes = prop.getType(Holmes.class);
+        assertTrue(holmes.isFound());
+        assertEquals("policy1", holmes.getOperationalPolicy());
+        assertEquals("blabla", holmes.getCorrelationLogic());
     }
 }

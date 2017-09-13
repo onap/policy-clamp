@@ -36,6 +36,8 @@ import javax.ws.rs.client.ClientBuilder;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.catalina.connector.Connector;
 import org.camunda.bpm.spring.boot.starter.webapp.CamundaBpmWebappAutoConfiguration;
+import org.onap.clamp.clds.model.prop.Holmes;
+import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -43,6 +45,7 @@ import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoC
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -57,8 +60,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "org.onap.clamp.clds", "com.att.ajsc" })
-@EnableAutoConfiguration(exclude = { CamundaBpmWebappAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
-        JpaRepositoriesAutoConfiguration.class, SecurityAutoConfiguration.class,
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, CamundaBpmWebappAutoConfiguration.class,
+        HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, SecurityAutoConfiguration.class,
         ManagementWebSecurityAutoConfiguration.class })
 @EnableAsync
 public class Application extends SpringBootServletInitializer {
@@ -92,9 +95,17 @@ public class Application extends SpringBootServletInitializer {
         return application.sources(Application.class);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
+        // This is to load the system.properties file parameters
         SystemPropertiesLoader.addSystemProperties();
+        // This is to initialize some Onap Clamp components
+        initializeComponents();
+        // Start the Spring application
         SpringApplication.run(Application.class, args); // NOSONAR
+    }
+
+    private static void initializeComponents() {
+        ModelProperties.registerModelElement(Holmes.class, Holmes.getType());
     }
 
     @Bean
