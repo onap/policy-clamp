@@ -25,14 +25,6 @@
 <process-application
 	xmlns="http://www.camunda.org/schema/1.0/ProcessApplication" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-	<process-archive name="example-process-archive">
-		<process-engine>default</process-engine>
-		<resource>bpmn/log-message.bpmn</resource>		
-		<properties>
-			<property name="isDeleteUponUndeploy">true</property>
-			<property name="isScanForProcessDefinitions">false</property>
-		</properties>
-	</process-archive>
 	<process-archive name="clds-process-archive">
 		<process-engine>default</process-engine>
 		<resource>bpmn/clds-process-action.bpmn</resource>
