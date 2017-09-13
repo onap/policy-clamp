@@ -52,6 +52,7 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
@@ -67,7 +68,7 @@ public class CldsConfiguration {
     private ApplicationContext context;
 
     /**
-     * Clds Identity databse DataSource configuration
+     * Clds Identity database DataSource configuration
      */
     @Bean(name = "cldsDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.cldsdb")
@@ -86,9 +87,9 @@ public class CldsConfiguration {
     }
 
     @Bean(name = "cldsDao")
-    public CldsDao getCldsDao() {
+    public CldsDao getCldsDao(@Qualifier("cldsDataSource") DataSource dataSource) {
         CldsDao cldsDao = new CldsDao();
-        cldsDao.setDataSource(cldsDataSource());
+        cldsDao.setDataSource(dataSource);
         return cldsDao;
     }
 
