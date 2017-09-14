@@ -25,7 +25,6 @@ package org.onap.clamp.clds.it;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.client.req.DcaeReq;
 import org.onap.clamp.clds.model.CldsEvent;
@@ -33,13 +32,16 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test DCAE API in org.onap.clamp.ClampDesigner.client package - replicate DCAE Delegates in test.
+ * Test DCAE API in org.onap.clamp.ClampDesigner.client package - replicate DCAE
+ * Delegates in test.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class DcaeIT extends AbstractIT {
 
     @Test
@@ -49,8 +51,8 @@ public class DcaeIT extends AbstractIT {
         String modelName = "example-model";
         String controlName = "ClosedLoop-FRWL-SIG-1582f840-2881-11e6-b4ec-005056a9d756";
 
-        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT,
-                true, modelBpmnProp, modelProp);
+        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, true, modelBpmnProp,
+                modelProp);
         String dcaeReq = DcaeReq.format(refProp, prop);
 
         System.out.println("dcaeReq=" + dcaeReq);

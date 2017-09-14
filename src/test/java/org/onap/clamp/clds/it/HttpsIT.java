@@ -50,8 +50,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Test DCAE API in org.onap.clamp.ClampDesigner.client package - replicate DCAE
- * Delegates in test.
+ * Test HTTP and HTTPS settings + redirection of HTTP to HTTPS.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)

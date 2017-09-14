@@ -49,7 +49,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerException;
 
-import org.camunda.bpm.engine.RuntimeService;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
@@ -90,8 +89,7 @@ public class CldsTemplateService extends SecureServiceBase {
 
     @Autowired
     private CldsDao        cldsDao;
-    @Autowired
-    private RuntimeService runtimeService;
+
     @Autowired
     private XslTransformer cldsBpmnTransformer;
 
