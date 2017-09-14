@@ -39,6 +39,7 @@ import org.onap.clamp.clds.client.req.SdcReq;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -49,9 +50,10 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class PropJsonBuilderIT extends AbstractIT {
 
-    private String globalPropsPartial;
+    private String       globalPropsPartial;
     private ObjectMapper mapper;
 
     /**
@@ -86,8 +88,8 @@ public class PropJsonBuilderIT extends AbstractIT {
     private void sampleJsonObject() throws JsonProcessingException {
 
         /**
-         * Create three JSON Objects objectNode1, objectNode2, objectNode3.
-         * Add all these three objects in the array
+         * Create three JSON Objects objectNode1, objectNode2, objectNode3. Add
+         * all these three objects in the array
          */
         ObjectNode objectNode1 = mapper.createObjectNode();
         objectNode1.put("bookName", "Java");
@@ -124,9 +126,8 @@ public class PropJsonBuilderIT extends AbstractIT {
     private String createEmptySharedObject() throws JsonProcessingException {
 
         /**
-         * Empty Object initialization.
-         * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
-         * "": "" } }
+         * Empty Object initialization. "": { "vf": { "": "" }, "location": {
+         * "": "" }, "alarmCondition": { "": "" } }
          */
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         emptyObjectNode.put("", "");
@@ -144,8 +145,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", samArrayNode);
 
         /**
-         * Object initialization.
-         * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
+         * Object initialization. "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1":
+         * "DCAE_CLAMP_DEMO3" }
          *
          */
         ObjectNode dcaeClampDemo3Node = mapper.createObjectNode();
@@ -157,9 +158,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", vfArrayNode);
 
         /**
-         * Object initialization.
-         * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
-         * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
+         * Object initialization. "location": { "SNDGCA64": "San Diego SAN3",
+         * "ALPRGAED": "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
         ObjectNode sandiegoLocationNode = mapper.createObjectNode();
         sandiegoLocationNode.put("SNDGCA64", "San Diego SAN3");
@@ -173,10 +173,10 @@ public class PropJsonBuilderIT extends AbstractIT {
         locationObjectNode2.putPOJO("location", locationArrayNode);
 
         /**
-         * Object initialization.
-         * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
-         * "A Fallback Operation will soon be started",
-         * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
+         * Object initialization. "alarmCondition": {
+         * "A+Fallback+Operation+will+soon+be+started": "A Fallback Operation
+         * will soon be started", "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto
+         * Export Backup Failed",
          */
         ObjectNode alamrCondition1 = mapper.createObjectNode();
         alamrCondition1.put("A+Fallback+Operation+will+soon+be+started", "A Fallback Operation will soon be started");
@@ -206,8 +206,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         byServiceBasicObjetNode.putPOJO("byService", byServiceBasicArrayNode);
 
         /**
-         * Object initialization.
-         * "byVf": { "": { "vfc": { "": "" },
+         * Object initialization. "byVf": { "": { "vfc": { "": "" },
          * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
         ObjectNode vfCObjectNode = mapper.createObjectNode();
@@ -240,9 +239,8 @@ public class PropJsonBuilderIT extends AbstractIT {
     private String createTestEmptySharedObject() throws IOException {
 
         /**
-         * Object initialization.
-         * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
-         * "": "" } }
+         * Object initialization. "": { "vf": { "": "" }, "location": { "": ""
+         * }, "alarmCondition": { "": "" } }
          */
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         emptyObjectNode.put("", "");
@@ -254,8 +252,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", vfObjectNode);
 
         /**
-         * Object initialization.
-         * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
+         * Object initialization. "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1":
+         * "DCAE_CLAMP_DEMO3" }
          *
          */
         ObjectNode vfObjectNode2 = mapper.createObjectNode();
@@ -265,9 +263,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", dcaeClampDemo3Node);
 
         /**
-         * Object initialization.
-         * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
-         * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
+         * Object initialization. "location": { "SNDGCA64": "San Diego SAN3",
+         * "ALPRGAED": "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
         // ObjectNode sandiegoLocationNode = mapper.createObjectNode();
         // sandiegoLocationNode.put("SNDGCA64","San Diego SAN3");
@@ -277,10 +274,10 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("location", locationJsonNode);
 
         /**
-         * Object initialization.
-         * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
-         * "A Fallback Operation will soon be started",
-         * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
+         * Object initialization. "alarmCondition": {
+         * "A+Fallback+Operation+will+soon+be+started": "A Fallback Operation
+         * will soon be started", "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto
+         * Export Backup Failed",
          */
         // ObjectNode alamrCondition1 = mapper.createObjectNode();
         // alamrCondition1.put("A+Fallback+Operation+will+soon+be+started","A
@@ -295,8 +292,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         byServiceBasicObjetNode.putPOJO("byService", emptyServiceObjectNode);
 
         /**
-         * Object initialization.
-         * "byVf": { "": { "vfc": { "": "" },
+         * Object initialization. "byVf": { "": { "vfc": { "": "" },
          * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
         ObjectNode vfCObjectNode = mapper.createObjectNode();
@@ -316,9 +312,8 @@ public class PropJsonBuilderIT extends AbstractIT {
 
     private String createCldsSharedObject(CldsSdcServiceDetail CldsSdcServiceDetail) throws IOException {
         /**
-         * Object initialization.
-         * "": { "vf": { "": "" }, "location": { "": "" }, "alarmCondition": {
-         * "": "" } }
+         * Object initialization. "": { "vf": { "": "" }, "location": { "": ""
+         * }, "alarmCondition": { "": "" } }
          */
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         emptyObjectNode.put("", "");
@@ -330,8 +325,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         emptyServiceObjectNode.putPOJO("", vfObjectNode);
 
         /**
-         * Object initialization.
-         * "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1": "DCAE_CLAMP_DEMO3" }
+         * Object initialization. "vf": { " ": " ", "DCAE_CLAMP_DEMO3 1":
+         * "DCAE_CLAMP_DEMO3" }
          *
          */
         ObjectNode vfObjectNode2 = mapper.createObjectNode();
@@ -341,9 +336,8 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("vf", dcaeClampDemo3Node);
 
         /**
-         * Object initialization.
-         * "location": { "SNDGCA64": "San Diego SAN3", "ALPRGAED":
-         * "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
+         * Object initialization. "location": { "SNDGCA64": "San Diego SAN3",
+         * "ALPRGAED": "Alpharetta PDK1", "LSLEILAA": "Lisle DPA3" },
          */
         ObjectNode sandiegoLocationNode = mapper.createObjectNode();
         sandiegoLocationNode.put("SNDGCA64", "San Diego SAN3");
@@ -351,10 +345,10 @@ public class PropJsonBuilderIT extends AbstractIT {
         vfObjectNode2.putPOJO("location", sandiegoLocationNode);
 
         /**
-         * Object initialization.
-         * "alarmCondition": { "A+Fallback+Operation+will+soon+be+started":
-         * "A Fallback Operation will soon be started",
-         * "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto Export Backup Failed",
+         * Object initialization. "alarmCondition": {
+         * "A+Fallback+Operation+will+soon+be+started": "A Fallback Operation
+         * will soon be started", "BRM%2C+Auto+Export+Backup+Failed": "BRM, Auto
+         * Export Backup Failed",
          */
         ObjectNode alamrCondition1 = mapper.createObjectNode();
         alamrCondition1.put("A+Fallback+Operation+will+soon+be+started", "A Fallback Operation will soon be started");
@@ -365,8 +359,7 @@ public class PropJsonBuilderIT extends AbstractIT {
         byServiceBasicObjetNode.putPOJO("byService", emptyServiceObjectNode);
 
         /**
-         * Object initialization.
-         * "byVf": { "": { "vfc": { "": "" },
+         * Object initialization. "byVf": { "": { "vfc": { "": "" },
          * "03596c12-c7e3-44b7-8994-5cdfeda8afdd": { "vfc": { " ": " " } } } }
          */
 

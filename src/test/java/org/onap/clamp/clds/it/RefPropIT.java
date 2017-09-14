@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractIT;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -39,12 +40,14 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class RefPropIT extends AbstractIT {
 
     /**
      * Test getting prop value as a JSON Node / template.
      *
-     * @throws IOException when JSON parsing fails
+     * @throws IOException
+     *             when JSON parsing fails
      */
     @Test
     public void testJsonTemplate() throws IOException {

@@ -26,7 +26,6 @@ package org.onap.clamp.clds.it;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.client.SdcCatalogServices;
 import org.onap.clamp.clds.client.req.SdcReq;
@@ -36,16 +35,18 @@ import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test DCAE API in org.onap.clamp.ClampDesigner.client package - replicate DCAE Delegates in test.
+ * Test SDC Blueprint formater.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class SdcIT extends AbstractIT {
     @Autowired
-    private RefProp refProp;
+    private RefProp            refProp;
 
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
@@ -62,13 +63,12 @@ public class SdcIT extends AbstractIT {
         String modelName = "example-model06";
         String controlName = "ClosedLoop-FRWL-SIG04-1582f840-test-test-1234-005056a9d756";
         String docText = ResourceFileUtil.getResourceAsString("example/templateProp.json");
-        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT,
-                true, modelBpmnProp, modelProp);
+        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, true, modelBpmnProp,
+                modelProp);
         String blueprint = SdcReq.formatBlueprint(refProp, prop, docText);
         System.out.println("blueprint=" + blueprint);
-        //assertEquals(blueprint, "");
+        // assertEquals(blueprint, "");
     }
-
 
     @Test
     public void testTcaBlueprint() throws Exception {
@@ -77,10 +77,10 @@ public class SdcIT extends AbstractIT {
         String modelName = "example-model06";
         String controlName = "ClosedLoop-FRWL-SIG04-1582f840-test-test-1234-005056a9d756";
         String docText = ResourceFileUtil.getResourceAsString("example/templatePropForTca.json");
-        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT,
-                true, modelBpmnProp, modelProp);
+        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, true, modelBpmnProp,
+                modelProp);
         String blueprint = SdcReq.formatBlueprint(refProp, prop, docText);
         System.out.println("blueprint=" + blueprint);
-        //assertEquals(blueprint, "");
+        // assertEquals(blueprint, "");
     }
 }

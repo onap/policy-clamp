@@ -41,14 +41,15 @@ import org.onap.clamp.clds.model.CldsSdcServiceInfo;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test DCAE API in org.onap.clamp.ClampDesigner.client package - replicate DCAE
- * Delegates in test.
+ * Test SDC Catalog Service class by mocking the SDC answers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class SdcCatalogServicesIT extends AbstractIT {
     @Autowired
     private SdcCatalogServices sdcCatalogWired = new SdcCatalogServices();
