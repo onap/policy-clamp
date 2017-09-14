@@ -46,28 +46,28 @@ import org.onap.clamp.clds.service.CldsService;
  * Parse model properties.
  */
 public class ModelProperties {
-    protected static final EELFLogger                         logger              = EELFManager.getInstance()
+    protected static final EELFLogger                                 logger              = EELFManager.getInstance()
             .getLogger(CldsService.class);
-    protected static final EELFLogger                         auditLogger         = EELFManager.getInstance()
+    protected static final EELFLogger                                 auditLogger         = EELFManager.getInstance()
             .getAuditLogger();
 
-    private ModelBpmn                                         modelBpmn;
-    private JsonNode                                          modelJson;
+    private ModelBpmn                                                 modelBpmn;
+    private JsonNode                                                  modelJson;
 
-    private final String                                      modelName;
-    private final String                                      controlName;
-    private final String                                      actionCd;
+    private final String                                              modelName;
+    private final String                                              controlName;
+    private final String                                              actionCd;
     // Flag indicate whether it is triggered by Validation Test button from UI
-    private final boolean                                     isTest;
+    private final boolean                                             isTest;
 
-    private Global                                            global;
+    private Global                                                    global;
 
     private final Map<String, AbstractModelElement>                   modelElements       = new ConcurrentHashMap<>();
 
-    private String                                            currentModelElementId;
-    private String                                            policyUniqueId;
+    private String                                                    currentModelElementId;
+    private String                                                    policyUniqueId;
 
-    private static final Object                               lock                = new Object();
+    private static final Object                                       lock                = new Object();
     private static Map<Class<? extends AbstractModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
 
     static {
@@ -84,21 +84,28 @@ public class ModelProperties {
      * parse them all - parse them on demand if requested.)
      *
      * @param modelName
+     *            The model name coming form the UI
      * @param controlName
+     *            The closed loop name coming from the UI
      * @param actionCd
+     *            Type of operation PUT,UPDATE,DELETE
      * @param isTest
-     * @param modelBpmnPropText
+     *            The test flag coming from the UI (for validation only, no
+     *            query are physically executed)
+     * @param modelBpmnText
+     *            The BPMN flow in JSON from the UI
      * @param modelPropText
-     * @throws JsonProcessingException
+     *            The BPMN parameters for all boxes defined in modelBpmnTest
      * @throws IOException
+     *             In case there is an issue with the JSON decoding
      */
-    public ModelProperties(String modelName, String controlName, String actionCd, boolean isTest,
-            String modelBpmnPropText, String modelPropText) throws IOException {
+    public ModelProperties(String modelName, String controlName, String actionCd, boolean isTest, String modelBpmnText,
+            String modelPropText) throws IOException {
         this.modelName = modelName;
         this.controlName = controlName;
         this.actionCd = actionCd;
         this.isTest = isTest;
-        modelBpmn = ModelBpmn.create(modelBpmnPropText);
+        modelBpmn = ModelBpmn.create(modelBpmnText);
         modelJson = new ObjectMapper().readTree(modelPropText);
 
         instantiateMissingModelElements();
