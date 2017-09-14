@@ -407,9 +407,8 @@ public class CldsDao {
      *
      * @param template
      * @param userid
-     * @return
      */
-    public CldsTemplate setTemplate(CldsTemplate template, String userid) {
+    public void setTemplate(CldsTemplate template, String userid) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_template_name", template.getName())
                 .addValue("v_user_id", userid).addValue("v_template_bpmn_text", template.getBpmnText())
                 .addValue("v_template_image_text", template.getImageText())
@@ -425,7 +424,6 @@ public class CldsDao {
         template.setPropId((String) (out.get("v_template_doc_id")));
         template.setPropUserid((String) out.get("v_template_doc_user_id"));
         template.setPropText((String) out.get("v_template_doc_text"));
-        return template;
     }
 
     /**
