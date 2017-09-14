@@ -402,7 +402,6 @@ public class CldsService extends SecureServiceBase {
             }
         }
         cldsModel.save(cldsDao, getUserId());
-        cldsModel.save(cldsDao, getUserId());
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Put model success", this.getClass().getName());
