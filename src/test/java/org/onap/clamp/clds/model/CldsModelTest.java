@@ -58,22 +58,19 @@ public class CldsModelTest {
         cldsModel.validateAction("unknown");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromCreate() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_CREATE);
         cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_TEST);
 
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
+        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+        fail("Exception should have been sent");
 
-        }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromSubmitOrReSubmit() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_SUBMIT);
@@ -82,35 +79,29 @@ public class CldsModelTest {
             cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
             fail("Exception should have been sent");
         } catch (IllegalArgumentException e) {
-
+            System.out.println("Exception caught IllegalArgumentException as expected");
         }
 
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_RESUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
 
-        }
+        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+        fail("Exception should have been sent");
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromDistribute() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DISTRIBUTE);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
 
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
+        cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+        fail("Exception should have been sent");
 
-        }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromUndeploy() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_UNDEPLOY);
@@ -118,15 +109,12 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
 
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
+        cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+        fail("Exception should have been sent");
 
-        }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromDeploy() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DEPLOY);
@@ -135,15 +123,12 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
         cldsModel.validateAction(CldsEvent.ACTION_STOP);
 
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
+        cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+        fail("Exception should have been sent");
 
-        }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromRestartOrUpdate() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_RESTART);
@@ -156,7 +141,7 @@ public class CldsModelTest {
             cldsModel.validateAction(CldsEvent.ACTION_CREATE);
             fail("Exception should have been sent");
         } catch (IllegalArgumentException e) {
-
+            System.out.println("Exception caught IllegalArgumentException as expected");
         }
 
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_UPDATE);
@@ -165,16 +150,12 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_STOP);
         cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
 
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
-
-        }
+        cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+        fail("Exception should have been sent");
 
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromDelete() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
@@ -184,21 +165,18 @@ public class CldsModelTest {
             cldsModel.validateAction(CldsEvent.ACTION_CREATE);
             fail("Exception should have been sent");
         } catch (IllegalArgumentException e) {
-
+            System.out.println("Exception caught IllegalArgumentException as expected");
         }
 
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
         cldsModel.getEvent().setActionStateCd(CldsEvent.ACTION_STATE_SENT);
 
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
+        cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
+        fail("Exception should have been sent");
 
-        }
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromStop() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_STOP);
@@ -206,12 +184,8 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_RESTART);
         cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
 
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
-
-        }
+        cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+        fail("Exception should have been sent");
     }
 
     /**

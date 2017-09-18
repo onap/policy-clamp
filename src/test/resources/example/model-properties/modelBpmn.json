@@ -1,38 +1,38 @@
 {
-	"collector": [
-		{
-			"id": "Collector_1c72ct5",
-			"from": "StartEvent_1"
-		}
-	],
-	"stringMatch": [
-		{
-			"id": "StringMatch_05arstl",
-			"from": "Collector_1c72ct5"
-		}
-	],
-	"policy": [
-		{
-			"id": "Policy_0honxgv",
-			"from": "TCA_1jy9to4"
-		}
-	],
-	"tca": [
-		{
-			"id": "TCA_1jy9to4",
-			"from": "Holmes_0i4n2mm"
-		}
-	],
-	"holmes": [
-		{
-			"id": "Holmes_0i4n2mm",
-			"from": "VesCollector_0orydnh"
-		}
-	],
-	"vesCollector": [
-		{
-			"id": "VesCollector_0orydnh",
-			"from": "StringMatch_05arstl"
-		}
-	]
+  "collector": [
+    {
+      "id": "Collector_1c72ct5",
+      "from": "StartEvent_1"
+    }
+  ],
+  "stringMatch": [
+    {
+      "id": "StringMatch_05arstl",
+      "from": "Collector_1c72ct5"
+    }
+  ],
+  "policy": [
+    {
+      "id": "Policy_0honxgv",
+      "from": "TCA_1jy9to4"
+    }
+  ],
+  "tca": [
+    {
+      "id": "TCA_1jy9to4",
+      "from": "Holmes_0i4n2mm"
+    }
+  ],
+  "holmes": [
+    {
+      "id": "Holmes_0i4n2mm",
+      "from": "VesCollector_0orydnh"
+    }
+  ],
+  "vesCollector": [
+    {
+      "id": "VesCollector_0orydnh",
+      "from": "StringMatch_05arstl"
+    }
+  ]
 }

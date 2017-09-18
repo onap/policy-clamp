@@ -94,8 +94,7 @@ public class CldsServiceIT extends AbstractIT {
         assertTrue(cldsInfo.isPermissionUpdateTemplate());
 
         Properties prop = new Properties();
-        // InputStream in =
-        // CldsInfo.class.getResourceAsStream("clds-version.properties");
+
         InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("clds-version.properties");
         prop.load(in);
         in.close();

@@ -1,38 +1,38 @@
 {
-	"collector": [
-		{
-			"id": "Collector_",
-			"from": "StartEvent_1"
-		}
-	],
-	"stringMatch": [
-		{
-			"id": "StringMatch_0tw2y4f",
-			"from": "Collector_"
-		}
-	],
-	"policy": [
-		{
-			"id": "Policy_",
-			"from": "TCA_09hcdsx"
-		}
-	],
-	"tca": [
-		{
-			"id": "TCA_09hcdsx",
-			"from": "VesCollector_1kxjxy6"
-		}
-	],
-	"vesCollector": [
-		{
-			"id": "VesCollector_1kxjxy6",
-			"from": "Holmes_1fzdqp9"
-		}
-	],
-	"holmes": [
-		{
-			"id": "Holmes_1fzdqp9",
-			"from": "StringMatch_0tw2y4f"
-		}
-	]
+  "collector": [
+    {
+      "id": "Collector_",
+      "from": "StartEvent_1"
+    }
+  ],
+  "stringMatch": [
+    {
+      "id": "StringMatch_0tw2y4f",
+      "from": "Collector_"
+    }
+  ],
+  "policy": [
+    {
+      "id": "Policy_",
+      "from": "TCA_09hcdsx"
+    }
+  ],
+  "tca": [
+    {
+      "id": "TCA_09hcdsx",
+      "from": "VesCollector_1kxjxy6"
+    }
+  ],
+  "vesCollector": [
+    {
+      "id": "VesCollector_1kxjxy6",
+      "from": "Holmes_1fzdqp9"
+    }
+  ],
+  "holmes": [
+    {
+      "id": "Holmes_1fzdqp9",
+      "from": "StringMatch_0tw2y4f"
+    }
+  ]
 }
