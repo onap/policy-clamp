@@ -23,6 +23,9 @@
 
 package org.onap.clamp.clds.service;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.security.Principal;
 
 import javax.ws.rs.NotAuthorizedException;
@@ -30,9 +33,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 import org.onap.clamp.clds.util.LoggingUtils;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 /**
  * Base/abstract Service class. Implements shared security methods.
@@ -185,4 +185,9 @@ public abstract class SecureServiceBase {
             userNameHandler = handler;
         }
     }
+
+    public void setSecurityContext(SecurityContext securityContext) {
+        this.securityContext = securityContext;
+    }
+
 }

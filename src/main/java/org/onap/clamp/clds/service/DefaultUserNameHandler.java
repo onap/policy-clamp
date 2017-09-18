@@ -29,9 +29,6 @@ import javax.ws.rs.core.SecurityContext;
 
 public class DefaultUserNameHandler implements UserNameHandler {
 
-    public DefaultUserNameHandler() {
-    }
-
     /*
      * (non-Javadoc)
      * 

@@ -24,6 +24,7 @@
 package org.onap.clamp.clds.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import javax.ws.rs.BadRequestException;
 
@@ -45,10 +46,177 @@ public class CldsModelTest {
         utilCreateUsingControlName("", "c42aceb-2350-11e6-8131-fa163ea8d2da");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateActionEmptyEvent() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testValidateActionNotExist() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.validateAction("unknown");
+    }
+
+    @Test
+    public void testValidateActionFromCreate() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_CREATE);
+        cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
+        cldsModel.validateAction(CldsEvent.ACTION_TEST);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    @Test
+    public void testValidateActionFromSubmitOrReSubmit() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_SUBMIT);
+        cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_RESUBMIT);
+        cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    @Test
+    public void testValidateActionFromDistribute() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DISTRIBUTE);
+        cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
+        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    @Test
+    public void testValidateActionFromUndeploy() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_UNDEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
+        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    @Test
+    public void testValidateActionFromDeploy() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
+        cldsModel.validateAction(CldsEvent.ACTION_STOP);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    @Test
+    public void testValidateActionFromRestartOrUpdate() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_RESTART);
+        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
+        cldsModel.validateAction(CldsEvent.ACTION_STOP);
+        cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_UPDATE);
+        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
+        cldsModel.validateAction(CldsEvent.ACTION_STOP);
+        cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+
+    }
+
+    @Test
+    public void testValidateActionFromDelete() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
+        cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
+        cldsModel.getEvent().setActionStateCd(CldsEvent.ACTION_STATE_SENT);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    @Test
+    public void testValidateActionFromStop() {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_STOP);
+        cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
+        cldsModel.validateAction(CldsEvent.ACTION_RESTART);
+        cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
+
+        try {
+            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
+            fail("Exception should have been sent");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
     /**
      * Utility Method to create model from controlname and uuid.
      */
-
     public void utilCreateUsingControlName(String controlNamePrefix, String controlNameUuid) {
         CldsModel model = CldsModel.createUsingControlName(controlNamePrefix + controlNameUuid);
         assertEquals(controlNamePrefix, model.getControlNamePrefix());

@@ -1,0 +1,192 @@
+{
+	"collector": {
+		"topicPublishes": {
+			"DCAE-COLLECTOR-UCSNMP": "DCAE-COLLECTOR-UCSNMP",
+			"GFP-IP-AIC-SNMP-TRAPS": "GFP-IP-AIC-SNMP-TRAPS",
+			"AIC-SNMP-TRAPS": "AIC-SNMP-TRAPS"
+		}
+	},
+	"string_match": {
+		"topicPublishes": {
+			"DCAE-CL-EVENT": "DCAE-CL-EVENT"
+		},
+		"aaiMatchingFields": {
+			"cloud-region.identity-url": "cloud-region.identity-url",
+			"complex.city": "complex.city",
+			"complex.physical-location-id": "complex.physical-location-id",
+			"complex.state": "complex.state",
+			"generic-vnf.service-id": "generic-vnf.service-id",
+			"generic-vnf.vnf-name": "generic-vnf.vnf-name",
+			"generic-vnf.vnf-type": "generic-vnf.vnf-type",
+			"tenant.tenant-id": "tenant.tenant-id",
+			"vserver.in-maint": "vserver.in-maint",
+			"vserver.is-closed-loop-disabled": "vserver.is-closed-loop-disabled",
+			"vserver.l-interface.interface-name": "vserver.l-interface.interface-name",
+			"vserver.l-interface.l3-interface-ipv4-address-list.l3-inteface-ipv4-address": "vserver.l-interface.l3-interface-ipv4-address-list.l3-inteface-ipv4-address",
+			"vserver.l-interface.l3-interface-ipv6-address-list.l3-inteface-ipv6-address": "vserver.l-interface.l3-interface-ipv6-address-list.l3-inteface-ipv6-address",
+			"vserver.l-interface.network-name": "vserver.l-interface.network-name",
+			"vserver.prov-status": "vserver.prov-status",
+			"vserver.selflink": "vserver.selflink",
+			"vserver.vserver-id": "vserver.vserver-id",
+			"vserver.vserver-name": "vserver.vserver-name"
+		},
+		"aaiSendFields": {
+			"cloud-region.identity-url": "cloud-region.identity-url",
+			"complex.city": "complex.city",
+			"complex.physical-location-id": "complex.physical-location-id",
+			"complex.state": "complex.state",
+			"generic-vnf.service-id": "generic-vnf.service-id",
+			"generic-vnf.vnf-name": "generic-vnf.vnf-name",
+			"generic-vnf.vnf-type": "generic-vnf.vnf-type",
+			"tenant.tenant-id": "tenant.tenant-id",
+			"vserver.in-maint": "vserver.in-maint",
+			"vserver.is-closed-loop-disabled": "vserver.is-closed-loop-disabled",
+			"vserver.l-interface.interface-name": "vserver.l-interface.interface-name",
+			"vserver.l-interface.l3-interface-ipv4-address-list.l3-inteface-ipv4-address": "vserver.l-interface.l3-interface-ipv4-address-list.l3-inteface-ipv4-address",
+			"vserver.l-interface.l3-interface-ipv6-address-list.l3-inteface-ipv6-address": "vserver.l-interface.l3-interface-ipv6-address-list.l3-inteface-ipv6-address",
+			"vserver.l-interface.network-name": "vserver.l-interface.network-name",
+			"vserver.prov-status": "vserver.prov-status",
+			"vserver.selflink": "vserver.selflink",
+			"vserver.vserver-id": "vserver.vserver-id",
+			"vserver.vserver-name": "vserver.vserver-name"
+		},
+		"eventSourceType": {
+			"f5BigIP": "f5BigIP",
+			"vSBG_Alarms": "vSBG_Alarms",
+			"vCTS_Alarms": "vCTS_Alarms"
+		},
+		"eventSeverity": {
+			"NORMAL": "NORMAL",
+			"not-NORMAL": "not-NORMAL",
+			"OK": "OK",
+			"WARNING": "WARNING",
+			"MINOR": "MINOR",
+			"MAJOR": "MAJOR",
+			"CRITICAL": "CRITICAL"
+		},
+		"timeWindow": 0,
+		"ageLimit": 1600,
+		"outputEventName": {
+			"": "",
+			"ONSET": "ONSET",
+			"ABATED": "ABATED"
+		},
+		"createClosedLoopEventId": {
+			"Initial": "Initial",
+			"Close": "Close"
+		}
+	},
+	"tca": {
+		"tname": "New_Set",
+		"tcaInt": "1",
+		"tcaVio": "1",
+		"tcaSev": {
+			"NORMAL": "NORMAL",
+			"CRITICAL": "CRITICAL",
+			"MAJOR": "MAJOR",
+			"MINOR": "MINOR",
+			"WARNING": "WARNING"
+		},
+		"fieldPath": {
+			"FIELDPATH_test_1": "FIELDPATH_test_1",
+			"FIELDPATH_test_2": "FIELDPATH_test_2"
+		},
+		"operator": {
+			">": "GREATER",
+			"=": "EQUAL",
+			"<": "LESS"
+		},
+		"opsPolicy": {
+			"POLICY_test_X": "POLICY_test_X",
+			"POLICY_test_Y": "POLICY_test_Y"
+		}
+	},
+	"global": [
+		{
+			"name": "actionSet",
+			"value": [
+				"vnfRecipe"
+			]
+		},
+		{
+			"name": "location",
+			"value": [
+				"SNDGCA64",
+				"ALPRGAED"
+			]
+		},
+		{
+			"name": "vf",
+			"value": [
+				"f5213e3a-9191-4362-93b5-b67f8d770e44"
+			]
+		},
+		{
+			"name": "location",
+			"value": [
+				"SNDGCA64",
+				"ALPRGAED",
+				"LSLEILAA",
+				"MDTWNJC1"
+			]
+		}
+	],
+	"policy": {
+		"pname": "0",
+		"timeout": 345,
+		"vnfRecipe": {
+			"": "",
+			"restart": "Restart",
+			"rebuild": "Rebuild",
+			"migrate": "Migrate",
+			"healthCheck": "Health Check",
+			"evacuate": "Evacuate"
+		},
+		"enbRecipe": {
+			"": "",
+			"reset": "Reset"
+		},
+		"maxRetries": "3",
+		"retryTimeLimit": 180,
+		"resource": {
+			"vCTS": "vCTS",
+			"v3CDB": "v3CDB",
+			"vUDR": "vUDR",
+			"vCOM": "vCOM",
+			"vRAR": "vRAR",
+			"vLCS": "vLCS",
+			"vUDR-BE": "vUDR-BE",
+			"vDBE": "vDBE"
+		},
+		"parentPolicyConditions": {
+			"Failure_Retries": "Failure: Max Retries Exceeded",
+			"Failure_Timeout": "Failure: Time Limit Exceeded",
+			"Failure_Guard": "Failure: Guard",
+			"Failure_Exception": "Failure: Exception",
+			"Failure": "Failure: Other",
+			"Success": "Success"
+		}
+	},
+	"shared": {
+		"byService": {
+			"": {
+				"vf": {
+					"": ""
+				},
+				"location": {
+					"": ""
+				},
+				"alarmCondition": {
+					"": ""
+				}
+			}
+		},
+		"byVf": {
+			"": {
+				"vfc": {
+					"": ""
+				}
+			}
+		}
+	}
+}

@@ -116,7 +116,7 @@ public class CldsModel {
 
     public boolean canInventoryCall() {
         boolean canCall = false;
-        /* Below checks the clds ecent is submit/resubmit */
+        /* Below checks the clds event is submit/resubmit */
 
         if ((event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT))) {
             canCall = true;
@@ -225,7 +225,9 @@ public class CldsModel {
 
     /**
      * Determine permittedActionCd list using the actionCd from the current
-     * event.
+     * event. It's a states graph, given the next action that can be executed
+     * from the one that has been executed (described in the event object).
+     * ACTION_CREATE being the first one.
      */
     private void determinePermittedActionCd() {
         String actionCd = getCurrentActionCd();

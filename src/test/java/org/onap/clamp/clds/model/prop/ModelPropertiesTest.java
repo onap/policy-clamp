@@ -32,6 +32,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
 /**
@@ -84,5 +85,13 @@ public class ModelPropertiesTest {
         assertTrue(holmes.isFound());
         assertEquals("policy1", holmes.getOperationalPolicy());
         assertEquals("blabla", holmes.getCorrelationLogic());
+    }
+
+    @Test
+    public void testGetVf() throws IOException {
+        CldsModel cldsModel = new CldsModel();
+        cldsModel.setPropText(
+                ResourceFileUtil.getResourceAsString("example/model-properties/modelBpmnPropWithGlobal.json"));
+        assertEquals("f5213e3a-9191-4362-93b5-b67f8d770e44", ModelProperties.getVf(cldsModel));
     }
 }
