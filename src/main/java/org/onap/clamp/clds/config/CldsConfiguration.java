@@ -35,8 +35,6 @@ import javax.xml.transform.TransformerConfigurationException;
 import org.onap.clamp.clds.client.CldsEventDelegate;
 import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
-import org.onap.clamp.clds.client.DcaeReqDelegate;
-import org.onap.clamp.clds.client.DcaeReqDeleteDelegate;
 import org.onap.clamp.clds.client.HolmesPolicyDelegate;
 import org.onap.clamp.clds.client.HolmesPolicyDeleteDelegate;
 import org.onap.clamp.clds.client.OperationalPolicyDelegate;
@@ -115,19 +113,9 @@ public class CldsConfiguration {
         return new CldsEventDelegate();
     }
 
-    @Bean(name = "dcaeReqDelegate")
-    public DcaeReqDelegate getDcaeReqDelegate() {
-        return new DcaeReqDelegate();
-    }
-
     @Bean(name = "sdcSendReqDelegate")
     public SdcSendReqDelegate getSdcSendReqDelegate() {
         return new SdcSendReqDelegate();
-    }
-
-    @Bean(name = "dcaeReqDeleteDelegate")
-    public DcaeReqDeleteDelegate getDcaeReqDeleteDelegate() {
-        return new DcaeReqDeleteDelegate();
     }
 
     @Bean(name = "operationalPolicyDelegate")

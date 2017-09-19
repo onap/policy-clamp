@@ -779,7 +779,9 @@ public class SdcCatalogServices {
      * @return
      */
     public String getCldsServicesOrResourcesBasedOnURL(String url, boolean alarmConditions) {
+        Date startTime = new Date();
         try {
+            LoggingUtils.setTargetContext("SDC", "getCldsServicesOrResourcesBasedOnURL");
             String urlReworked = removeUnwantedBracesFromString(url);
             URL urlObj = new URL(urlReworked);
 
@@ -792,7 +794,7 @@ public class SdcCatalogServices {
             conn.setRequestMethod("GET");
 
             int responseCode = conn.getResponseCode();
-            logger.info("responseCode=" + responseCode);
+            logger.info("Sdc resource url - " + urlReworked + " , responseCode=" + responseCode);
             StringBuilder response;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
                 response = new StringBuilder();
@@ -806,10 +808,16 @@ public class SdcCatalogServices {
                     }
                 }
             }
+            LoggingUtils.setResponseContext("0", "Get sdc resources success", this.getClass().getName());
             return response.toString();
         } catch (IOException e) {
+            LoggingUtils.setResponseContext("900", "Get sdc resources failed", this.getClass().getName());
+            LoggingUtils.setErrorContext("900", "Get sdc resources error");
             logger.error("Exception occurred during query to SDC", e);
             return "";
+        } finally {
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("getCldsServicesOrResourcesBasedOnURL completed");
         }
 
     }
@@ -1069,14 +1077,22 @@ public class SdcCatalogServices {
         }
     }
 
+    /**
+     * Method to create vfc and kpi nodes inside vf node
+     * 
+     * @param mapper
+     * @param cldsVfDataList
+     * @return
+     */
     private ObjectNode createVfcObjectNodeByVfUuid(ObjectMapper mapper, List<CldsVfData> cldsVfDataList) {
         ObjectNode vfUuidObjectNode = mapper.createObjectNode();
 
         if (cldsVfDataList != null && !cldsVfDataList.isEmpty()) {
             for (CldsVfData currCldsVfData : cldsVfDataList) {
                 if (currCldsVfData != null) {
-                    ObjectNode vfcObjectNode = mapper.createObjectNode();
+                    ObjectNode vfObjectNode = mapper.createObjectNode();
                     ObjectNode vfcUuidNode = mapper.createObjectNode();
+                    ObjectNode kpiObjectNode = mapper.createObjectNode();
                     if (currCldsVfData.getCldsVfcs() != null && !currCldsVfData.getCldsVfcs().isEmpty()) {
                         for (CldsVfcData currCldsVfcData : currCldsVfData.getCldsVfcs()) {
                             vfcUuidNode.put(currCldsVfcData.getVfcInvariantResourceUUID(),
@@ -1085,8 +1101,17 @@ public class SdcCatalogServices {
                     } else {
                         vfcUuidNode.put("", "");
                     }
-                    vfcObjectNode.putPOJO("vfc", vfcUuidNode);
-                    vfUuidObjectNode.putPOJO(currCldsVfData.getVfInvariantResourceUUID(), vfcObjectNode);
+                    if (currCldsVfData.getCldsKPIList() != null && !currCldsVfData.getCldsKPIList().isEmpty()) {
+                        for (CldsVfKPIData currCldsVfKPIData : currCldsVfData.getCldsKPIList()) {
+                            kpiObjectNode.put(currCldsVfKPIData.getThresholdValue(),
+                                    currCldsVfKPIData.getThresholdValue());
+                        }
+                    } else {
+                        kpiObjectNode.put("", "");
+                    }
+                    vfObjectNode.putPOJO("vfc", vfcUuidNode);
+                    vfObjectNode.putPOJO("kpi", kpiObjectNode);
+                    vfUuidObjectNode.putPOJO(currCldsVfData.getVfInvariantResourceUUID(), vfObjectNode);
                 }
             }
         } else {

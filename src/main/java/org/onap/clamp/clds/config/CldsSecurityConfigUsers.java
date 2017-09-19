@@ -87,7 +87,6 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
      * the application.properties).
      * 
      * @param auth
-     * @throws Exception
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
@@ -115,11 +114,14 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
      * CldsUser.
      * 
      * @return The array of CldsUser
-     * @throws IOException
-     * @throws Exception
      */
-    private CldsUser[] loadUsers() throws IOException {
-        logger.info("Load from clds-users.properties");
-        return CldsUserJsonDecoder.decodeJson(appContext.getResource(cldsUsersFile).getInputStream());
+    private CldsUser[] loadUsers() {
+        try {
+            logger.info("Load from clds-users.properties");
+            return CldsUserJsonDecoder.decodeJson(appContext.getResource(cldsUsersFile).getInputStream());
+        } catch (IOException e) {
+            logger.error("Unable to decode the User Json file", e);
+            throw new CldsUsersException("Load from clds-users.properties", e);
+        }
     }
 }

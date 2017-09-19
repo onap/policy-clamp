@@ -702,13 +702,15 @@ public class CldsService extends SecureServiceBase {
         // filter out VFs the user is not authorized for
         cldsServiceData.filterVfs(this);
 
+        // format retrieved data into properties json
+        String sdcProperties = sdcCatalogServices.createPropertiesObjectByUUID(getGlobalCldsString(), cldsServiceData);
+
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Get sdc properties by uuid success", this.getClass().getName());
         auditLogger.info("GET sdc properties by uuid completed");
 
-        // format retrieved data into properties json
-        return sdcCatalogServices.createPropertiesObjectByUUID(getGlobalCldsString(), cldsServiceData);
+        return sdcProperties;
     }
 
     /**

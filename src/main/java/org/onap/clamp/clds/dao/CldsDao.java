@@ -46,6 +46,7 @@ import org.onap.clamp.clds.model.CldsModelInstance;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -463,10 +464,14 @@ public class CldsDao {
     public CldsServiceData getCldsServiceCache(String invariantUUID) {
         CldsServiceData cldsServiceData = null;
         List<CldsServiceData> cldsServiceDataList = new ArrayList<>();
-        String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
-        cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] { invariantUUID },
-                new CldsServiceDataMapper());
-        logger.info("value of cldsServiceDataList: {}", cldsServiceDataList);
+        try {
+            String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
+            cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] { invariantUUID },
+                    new CldsServiceDataMapper());
+            logger.info("value of cldsServiceDataList: {}", cldsServiceDataList);
+        } catch (EmptyResultDataAccessException e) {
+            logger.info("cache row not found for invariantUUID: {}", invariantUUID);
+        }
         return cldsServiceData;
     }
 

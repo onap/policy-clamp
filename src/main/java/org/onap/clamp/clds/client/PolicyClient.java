@@ -204,7 +204,6 @@ public class PolicyClient {
      * @param prop
      *            The ModelProperties
      * @return The response message of Policy
-     * @throws Exception
      */
     protected String send(PolicyParameters policyParameters, ModelProperties prop, String policyNamePrefix) {
         // Verify whether it is triggered by Validation Test button from UI
@@ -336,6 +335,7 @@ public class PolicyClient {
         logger.info("Policy versions.size()=" + versions.size());
 
         return versions;
+
     }
 
     /**
