@@ -45,12 +45,11 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
 import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class OperationPolicyReqIT extends AbstractIT {
 

@@ -2,6 +2,7 @@
 controlLoop:
   abatement: false
   controlLoopName: controlNameTest
+  pnf: null
   resources:
   - resourceInvariantUUID: null
     resourceName: 6c7aaec2-59eb-41d9-8681-b7f976ab668d

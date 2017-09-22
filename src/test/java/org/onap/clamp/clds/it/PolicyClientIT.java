@@ -47,7 +47,6 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -56,7 +55,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * Policy Delegates in tests.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class PolicyClientIT extends AbstractIT {
     String modelProp;
@@ -90,7 +89,6 @@ public class PolicyClientIT extends AbstractIT {
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Policy send failed: PE500 "));
             }
-            System.out.println(responseMessage);
         }
     }
 
@@ -104,7 +102,6 @@ public class PolicyClientIT extends AbstractIT {
                 Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
                         prop, policy.getId(), policyChain);
                 String responseMessage = policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
-                System.out.println(responseMessage);
             }
         }
     }
@@ -123,7 +120,6 @@ public class PolicyClientIT extends AbstractIT {
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Exception while communicating with Policy"));
             }
-            System.out.println(responseMessage);
         }
     }
 
@@ -139,7 +135,6 @@ public class PolicyClientIT extends AbstractIT {
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Policy delete failed: PE500 "));
             }
-            System.out.println(responseMessage);
         }
     }
 
@@ -152,7 +147,6 @@ public class PolicyClientIT extends AbstractIT {
             for (PolicyChain policyChain : policy.getPolicyChains()) {
                 prop.setPolicyUniqueId(policyChain.getPolicyId());
                 String responseMessage = policyClient.deleteBrms(prop);
-                System.out.println(responseMessage);
             }
         }
     }
@@ -169,8 +163,6 @@ public class PolicyClientIT extends AbstractIT {
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Policy delete failed: PE500 "));
             }
-
-            System.out.println(responseMessage);
         }
     }
 
