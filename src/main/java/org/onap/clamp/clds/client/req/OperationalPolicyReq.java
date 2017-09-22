@@ -197,7 +197,7 @@ public class OperationalPolicyReq {
         builder.addResource(vfcResources);
 
         // process each policy
-        HashMap<String, Policy> policyObjMap = new HashMap<>();
+        Map<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = orderParentFirst(policyChain.getPolicyItems());
         for (PolicyItem policyItem : policyItemList) {
             String policyName = policyItem.getRecipe() + " Policy";
@@ -272,7 +272,7 @@ public class OperationalPolicyReq {
         builder.addResource(vfcResources);
 
         // process each policy
-        HashMap<String, Policy> policyObjMap = new HashMap<>();
+        Map<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = addAOTSActorRecipe(refProp, global.getService(),
                 policyChain.getPolicyItems());
 
