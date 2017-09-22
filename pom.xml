@@ -794,6 +794,7 @@
 							</run>
 						</image>
 					</images>
+					<skip>${skipITs}</skip>
 				</configuration>
 
 				<executions>
