@@ -62,12 +62,9 @@ public class PropJsonBuilderIT extends AbstractIT {
     @Before
     public void setUp() throws IOException {
         String url = refProp.getStringValue("sdc.serviceUrl");
-        String catalogUrl = refProp.getStringValue("sdc.catalog.url");
         String basicAuth = SdcReq.getSdcBasicAuth(refProp);
         System.out.println("value of string and basicAuth:" + url + basicAuth);
-        CldsSdcServiceDetail cldsservicedetail = new CldsSdcServiceDetail();
         // cldsservicedetail.set
-        String globalProps = refProp.getStringValue("globalPropsTest");
         globalPropsPartial = refProp.getStringValue("globalPropsPartialTest");
         mapper = new ObjectMapper();
     }
