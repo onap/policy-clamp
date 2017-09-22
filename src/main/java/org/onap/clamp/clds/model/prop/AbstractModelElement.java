@@ -37,8 +37,8 @@ import java.util.List;
  * ...)
  */
 public abstract class AbstractModelElement {
-    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(AbstractModelElement.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(AbstractModelElement.class);
+    protected static final EELFLogger auditLogger   = EELFManager.getInstance().getAuditLogger();
 
     private final String              type;
     private final ModelBpmn           modelBpmn;
@@ -48,6 +48,9 @@ public abstract class AbstractModelElement {
     private boolean                   isFound;
 
     private final ModelProperties     modelProp;
+
+    private static final String       LOG_ELEMENT   = "Value '";
+    private static final String       LOG_NOT_FOUND = "' for key 'name' not found in JSON";
 
     /**
      * Perform base parsing of properties for a ModelElement (such as,
@@ -116,9 +119,9 @@ public abstract class AbstractModelElement {
             }
         }
         if (value == null || value.length() == 0) {
-            logger.warn(name + "=" + value);
+            logger.warn(LOG_ELEMENT + name + LOG_NOT_FOUND);
         } else {
-            logger.debug(name + "=" + value);
+            logger.debug(LOG_ELEMENT + name + LOG_NOT_FOUND + nodeIn.toString());
         }
         return value;
     }
@@ -137,9 +140,9 @@ public abstract class AbstractModelElement {
             value = nodeIn.path(name).asText();
         }
         if (value == null || value.length() == 0) {
-            logger.warn(name + "=" + value);
+            logger.warn(LOG_ELEMENT + name + LOG_NOT_FOUND);
         } else {
-            logger.debug(name + "=" + value);
+            logger.debug(LOG_ELEMENT + name + LOG_NOT_FOUND + nodeIn.toString());
         }
         return value;
     }
@@ -206,9 +209,9 @@ public abstract class AbstractModelElement {
             }
         }
         if (values == null || values.isEmpty()) {
-            logger.warn(name + "=" + values);
+            logger.warn(LOG_ELEMENT + name + LOG_NOT_FOUND);
         } else {
-            logger.debug(name + "=" + values);
+            logger.debug(LOG_ELEMENT + name + LOG_NOT_FOUND + nodeIn.toString());
         }
         return values;
     }
