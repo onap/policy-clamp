@@ -42,73 +42,6 @@
         }
     ],
 
-    "HighlandPark_": 
-    [
-        [
-            {
-                "name": "topicPublishes",
-                "value": "DCAE-HIGHLANDPARK-EVENT-OUTPUT-VOIP"
-            }
-        ],
-
-        {
-            "serviceConfigurations": 
-            [
-                [
-                    {
-                        "name": "alarmCondition",
-                        "value": 
-                        [
-                            "Reports a transient alarm condition when an incoming ACR message is in conflict with former ACR in one diameter session"
-                        ]
-                    },
-
-                    {
-                        "name": "eventSourceType",
-                        "value": 
-                        [
-                            "f5BigIP"
-                        ]
-                    },
-
-                    {
-                        "name": "eventSeverity",
-                        "value": 
-                        [
-                            "NORMAL"
-                        ]
-                    }
-                ],
-
-                [
-                    {
-                        "name": "alarmCondition",
-                        "value": 
-                        [
-                            "Reports a transient alarm condition when an incoming ACR message is in conflict with former ACR in one diameter session"
-                        ]
-                    },
-
-                    {
-                        "name": "eventSourceType",
-                        "value": 
-                        [
-                            "f5BigIP"
-                        ]
-                    },
-
-                    {
-                        "name": "eventSeverity",
-                        "value": 
-                        [
-                            "NORMAL"
-                        ]
-                    }
-                ]
-            ]
-        }
-    ],
-
     "StringMatch_": 
     {
         "Group1": 
@@ -472,6 +405,13 @@
                             [
                                 ""
                             ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
+                            ]
                         }
                     ],
 
@@ -524,6 +464,13 @@
                                 "Failure_Timeout",
                                 "Failure_Exception",
                                 "Failure"
+                            ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
                             ]
                         }
                     ]
@@ -590,6 +537,13 @@
                             [
                                 ""
                             ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
+                            ]
                         }
                     ],
 
@@ -642,6 +596,13 @@
                                 "Failure_Timeout",
                                 "Failure_Exception",
                                 "Failure"
+                            ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
                             ]
                         }
                     ]

@@ -23,11 +23,11 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.List;
 
 /**
  * Parse policyConfigurations from Policy json properties.
@@ -44,19 +44,21 @@ import com.fasterxml.jackson.databind.JsonNode;
  * ,{"name":"location","value":["san_diego"]},{"name":"resource","value":["vCTS"
  * ]},{"name":"onMaxRetriesLimit","value":[""]},{"name":"onTimeLimit","value":[
  * ""]},{"name":"onOtherFailure","value":[""]},{"name":"policy_parent","value":[
- * "vf3RtPi"]}]]}]
+ * "vf3RtPi"]},{"name":
+ * "targetResourceId","value":["Eace933104d443b496b8.nodes.heat.vpg"]}]]}]
  */
 public class PolicyItem implements Cloneable {
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(PolicyItem.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(PolicyItem.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private String                  id;
-    private String                  recipe;
-    private int                     maxRetries;
-    private int                     retryTimeLimit;
-    private String                  parentPolicy;
-    private List<String>            parentPolicyConditions;
-    private String                  actor;
+    private String                    id;
+    private String                    recipe;
+    private int                       maxRetries;
+    private int                       retryTimeLimit;
+    private String                    parentPolicy;
+    private List<String>              parentPolicyConditions;
+    private String                    actor;
+    private String                    targetResourceId;
 
     /**
      * Parse Policy given json node.
@@ -70,6 +72,7 @@ public class PolicyItem implements Cloneable {
         retryTimeLimit = AbstractModelElement.getIntValueByName(node, "retryTimeLimit");
         parentPolicy = AbstractModelElement.getValueByName(node, "parentPolicy");
         parentPolicyConditions = AbstractModelElement.getValuesByName(node, "parentPolicyConditions");
+        targetResourceId = AbstractModelElement.getValueByName(node, "targetResourceId");
 
     }
 
@@ -169,6 +172,14 @@ public class PolicyItem implements Cloneable {
      */
     public void setActor(String actor) {
         this.actor = actor;
+    }
+
+    public String getTargetResourceId() {
+        return targetResourceId;
+    }
+
+    public void setTargetResourceId(String targetResourceId) {
+        this.targetResourceId = targetResourceId;
     }
 
     @Override

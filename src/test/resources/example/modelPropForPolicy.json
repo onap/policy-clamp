@@ -87,6 +87,13 @@
                             [
                                 ""
                             ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
+                            ]
                         }
                     ],
 
@@ -139,6 +146,13 @@
                                 "Failure_Timeout",
                                 "Failure_Exception",
                                 "Failure"
+                            ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
                             ]
                         }
                     ]
@@ -205,6 +219,13 @@
                             [
                                 ""
                             ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
+                            ]
                         }
                     ],
 
@@ -257,6 +278,13 @@
                                 "Failure_Timeout",
                                 "Failure_Exception",
                                 "Failure"
+                            ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value": 
+                            [
+                                "resource-id"
                             ]
                         }
                     ]

@@ -66,6 +66,10 @@ public class OperationalPolicyReq {
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(OperationalPolicyReq.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
+    private OperationalPolicyReq() {
+
+    }
+
     /**
      * Format Operational Policy attributes.
      *
@@ -127,12 +131,16 @@ public class OperationalPolicyReq {
             String recipe = policyItem.getRecipe();
             String maxRetries = String.valueOf(policyItem.getMaxRetries());
             String retryTimeLimit = String.valueOf(policyItem.getRetryTimeLimit());
+            String targetResourceId = String.valueOf(policyItem.getTargetResourceId());
             logger.info("recipe=" + recipe);
             logger.info("maxRetries=" + maxRetries);
             logger.info("retryTimeLimit=" + retryTimeLimit);
+            logger.info("targetResourceId=" + targetResourceId);
             ruleAttributes.put("Recipe", recipe);
             ruleAttributes.put("MaxRetries", maxRetries);
             ruleAttributes.put("RetryTimeLimit", retryTimeLimit);
+            ruleAttributes.put("ResourceId", targetResourceId);
+
         } else {
             logger.info("templateName=" + templateName);
             logger.info("operationTopic=" + operationTopic);
@@ -189,24 +197,22 @@ public class OperationalPolicyReq {
         builder.addResource(vfcResources);
 
         // process each policy
-        HashMap<String, org.onap.policy.controlloop.policy.Policy> policyObjMap = new HashMap<>();
+        HashMap<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = orderParentFirst(policyChain.getPolicyItems());
-        Target target = new Target();
-        target.setType(TargetType.VM);
-        for (int i = 0; i < policyItemList.size(); i++) {
-
-            org.onap.policy.controlloop.policy.Policy policyObj;
-            PolicyItem policyItem = policyItemList.get(i);
+        for (PolicyItem policyItem : policyItemList) {
             String policyName = policyItem.getRecipe() + " Policy";
-            if (i == 0) {
+            Target target = new Target();
+            target.setType(TargetType.VM);
+            target.setResourceID(policyItem.getTargetResourceId());
+            Policy policyObj;
+            if (policyItemList.indexOf(policyItem) == 0) {
                 String policyDescription = policyItem.getRecipe()
                         + " Policy - the trigger (no parent) policy - created by CLDS";
                 policyObj = builder.setTriggerPolicy(policyName, policyDescription,
                         refProp.getStringValue("op.policy.appc"), target, policyItem.getRecipe(), null,
                         policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
             } else {
-                org.onap.policy.controlloop.policy.Policy parentPolicyObj = policyObjMap
-                        .get(policyItem.getParentPolicy());
+                Policy parentPolicyObj = policyObjMap.get(policyItem.getParentPolicy());
                 String policyDescription = policyItem.getRecipe() + " Policy - triggered conditionally by "
                         + parentPolicyObj.getName() + " - created by CLDS";
                 policyObj = builder.setPolicyForPolicyResult(policyName, policyDescription,
@@ -269,14 +275,15 @@ public class OperationalPolicyReq {
         HashMap<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = addAOTSActorRecipe(refProp, global.getService(),
                 policyChain.getPolicyItems());
-        Target target = new Target();
-        target.setType(TargetType.VM);
+
         Policy lastPolicyObj = new Policy();
-        for (int i = 0; i < policyItemList.size(); i++) {
-            org.onap.policy.controlloop.policy.Policy policyObj;
-            PolicyItem policyItem = policyItemList.get(i);
+        for (PolicyItem policyItem : policyItemList) {
+            Target target = new Target();
+            target.setType(TargetType.VM);
+            target.setResourceID(policyItem.getTargetResourceId());
             String policyName = policyItem.getRecipe() + " Policy";
-            if (i == 0) {
+            Policy policyObj;
+            if (policyItemList.indexOf(policyItem) == 0) {
                 // To set up time window payload for trigger policy
                 Map<String, String> payloadMap = new HashMap<>();
                 payloadMap.put("timeWindow", refProp.getStringValue("op.eNodeB.timeWindow"));

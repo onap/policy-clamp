@@ -75,6 +75,11 @@ public class ModelPropertiesTest {
         assertEquals(1, policy.getPolicyChains().size());
         assertEquals("0", policy.getPolicyChains().get(0).getPolicyId());
         assertEquals(1, policy.getPolicyChains().get(0).getPolicyItems().size());
+        assertEquals("resourceid", policy.getPolicyChains().get(0).getPolicyItems().get(0).getTargetResourceId());
+        assertEquals(180, policy.getPolicyChains().get(0).getPolicyItems().get(0).getRetryTimeLimit());
+        assertEquals(3, policy.getPolicyChains().get(0).getPolicyItems().get(0).getMaxRetries());
+        assertEquals("", policy.getPolicyChains().get(0).getPolicyItems().get(0).getParentPolicy());
+        assertEquals(null, policy.getPolicyChains().get(0).getPolicyItems().get(0).getParentPolicyConditions());
 
         Tca tca = prop.getType(Tca.class);
         assertTrue(tca.isFound());

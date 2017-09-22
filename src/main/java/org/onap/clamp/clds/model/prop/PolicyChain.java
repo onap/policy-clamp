@@ -23,13 +23,13 @@
 
 package org.onap.clamp.clds.model.prop;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Parse Policy json properties.
@@ -42,24 +42,27 @@ import com.fasterxml.jackson.databind.JsonNode;
  * :"_id","value":["q2JmHD5"]},{"name":"parentPolicy","value":[""]}],[{"name":
  * "recipe","value":["rebuild"]},{"name":"maxRetries","value":["3"]},{"name":
  * "retryTimeLimit","value":["180"]},{"name":"_id","value":["0ZqHdrR"]},{"name":
- * "parentPolicy","value":[""]}]]}],"PolicyTest2":[{"name":"pname","value":
+ * "parentPolicy","value":[""]},{"name":
+ * "targetResourceId","value":["Eace933104d443b496b8.nodes.heat.vpg"]}]]}],
+ * "PolicyTest2":[{"name":"pname","value":
  * "PolicyTest2"},{"name":"pid","value":"2"},{"name":"timeout","value":"345"},{
  * "policyConfigurations":[[{"name":"recipe","value":["restart"]},{"name":
  * "maxRetries","value":["3"]},{"name":"retryTimeLimit","value":["180"]},{"name"
  * :"_id","value":["q2JmHD5"]},{"name":"parentPolicy","value":[""]}],[{"name":
  * "recipe","value":["rebuild"]},{"name":"maxRetries","value":["3"]},{"name":
  * "retryTimeLimit","value":["180"]},{"name":"_id","value":["0ZqHdrR"]},{"name":
- * "parentPolicy","value":[""]}]]}]}} f
+ * "parentPolicy","value":[""]},{"name":
+ * "targetResourceId","value":["Eace933104d443b496b8.nodes.heat.vpg"]}]]}]}} f
  *
  */
 public class PolicyChain {
 
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(PolicyChain.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(PolicyChain.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private String                  policyId;
-    private Integer                 timeout;
-    private List<PolicyItem>        policyItems;
+    private String                    policyId;
+    private Integer                   timeout;
+    private List<PolicyItem>          policyItems;
 
     public PolicyChain(JsonNode node) {
 
