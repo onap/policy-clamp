@@ -35,7 +35,7 @@ import org.onap.policy.asdc.Resource;
 import org.onap.policy.asdc.ResourceType;
 import org.onap.policy.controlloop.policy.PolicyResult;
 
-public class SdcPolicyReqTest {
+public class OperationalPolicyReqTest {
 
     @Test
     public void convertToResourceTest() throws NoSuchMethodException, SecurityException, IllegalAccessException,
@@ -44,13 +44,12 @@ public class SdcPolicyReqTest {
                 ResourceType.class);
         method.setAccessible(true);
         // return method.invoke(targetObject, argObjects);
-        OperationalPolicyReq policyReq = new OperationalPolicyReq();
         List<String> stringList = new ArrayList<>();
         stringList.add("test1");
         stringList.add("test2");
         stringList.add("test3");
         stringList.add("test4");
-        Resource resources[] = (Resource[]) method.invoke(policyReq, stringList, ResourceType.VF);
+        Resource resources[] = (Resource[]) method.invoke(null, stringList, ResourceType.VF);
 
         assertTrue(resources.length == 4);
         assertTrue("test1".equals(resources[0].getResourceName()));
@@ -65,13 +64,12 @@ public class SdcPolicyReqTest {
         Method method = OperationalPolicyReq.class.getDeclaredMethod("convertToPolicyResult", List.class);
         method.setAccessible(true);
         // return method.invoke(targetObject, argObjects);
-        OperationalPolicyReq policyReq = new OperationalPolicyReq();
         List<String> stringList = new ArrayList<>();
         stringList.add("FAILURE");
         stringList.add("SUCCESS");
         stringList.add("FAILURE_GUARD");
         stringList.add("FAILURE_TIMEOUT");
-        PolicyResult policyResult[] = (PolicyResult[]) method.invoke(policyReq, stringList);
+        PolicyResult policyResult[] = (PolicyResult[]) method.invoke(null, stringList);
 
         assertTrue(policyResult.length == 4);
         assertTrue(policyResult[0].equals(PolicyResult.FAILURE));
