@@ -194,6 +194,12 @@
 								<select name="tcaPol" id="tcaPol" enableFilter="true"></select>
 							</div>
 						</div>
+						<div class="col-sm-8 form-group">
+							<label class="col-sm-3">EventName</label>
+							<div class="col-sm-9" style="padding:0px;">
+								<select name="eventName" id="eventName" enableFilter="true"></select>
+							</div>
+						</div>            
 						
 						<div class="col-sm-8 form-group" style="display:none;">
 							<label class="col-sm-3"> Policy ID </label>
@@ -244,6 +250,18 @@
 										onkeypress="return isNumberKey(event)" id="threshold"></input>
 									</div>
 								</div>
+								<div>
+									<label class="control-label">Control Loop Schema</label>
+									<div>
+										<select id="controlLoopSchema" name="controlLoopSchema"></select>
+									</div>
+								</div>
+								<div>
+									<label class="control-label">Closed Loop Event Status</label>
+									<div>
+										<select id="closedLoopEventStatus" name="closedLoopEventStatus"></select>
+									</div>
+								</div>                
 							</div>
 						</div>
 					</div>
@@ -281,8 +299,17 @@
 				return (c == 'x' ? r : (r*0x3|0*8)).toString(16);
 			});
 			$("#formId" + count + " #tuuid").val(tuuid);
-		}
-		
+		};
+
+
+    var propertiesToString = function(formIdNum) {
+      return $('#formId'+formIdNum+' #fieldPathM').val() + ' ' +
+				$('#formId'+formIdNum+' #operator').val() + ' ' +
+				$('#formId'+formIdNum+' #threshold').val() + ' ' +
+        $('#formId'+formIdNum+' #controlLoopSchema').val() + ' ' +
+        $('#formId'+formIdNum+' #closedLoopEventStatus').val();
+    };
+
 		loadPropertyWindow("tca");
 		
 		//load dropdown with policy options
@@ -320,7 +347,7 @@
 				};
 			};
 		};
-		
+
 		var arr = elementMap[lastElementSelected];
 		
 		if (arr !== undefined) {
@@ -353,10 +380,7 @@
 			} else {
 				$('#formId'+num+' .tcaErr').hide();
 				if ($('#formId'+num+' #tcaTable .highlight').length > 0){
-					$('#formId'+num+' #tcaTable .highlight td').text(
-							$('#formId'+num+' #fieldPathM').val() + ' ' +
-							$('#formId'+num+' #operator').val() + ' ' +
-							$('#formId'+num+' #threshold').val());
+					$('#formId'+num+' #tcaTable .highlight td').text(propertiesToString(num));
 				}
 				var saveP = {};
 				$('.formId').each(function(){
@@ -433,7 +457,6 @@
 			var form=$($("#formSpan").children()[0]).clone();
 			var count=0;
 			if($(".formId").length>0){
-        debugger;
 				var greatest=0;
 				var s=$(".formId");
 				for(var i=0;i<s.length; i++){
@@ -476,10 +499,7 @@
 					} else {
 						$('#formId'+oldCount+' .tcaErr').hide();
 						if ($('#formId'+oldCount+' #tcaTable .highlight').length > 0){
-							$('#formId'+oldCount+' #tcaTable .highlight td').text(
-									$('#formId'+oldCount+' #fieldPathM').val() + ' ' +
-									$('#formId'+oldCount+' #operator').val() + ' ' +
-									$('#formId'+oldCount+' #threshold').val());
+							$('#formId'+oldCount+' #tcaTable .highlight td').text(propertiesToString(oldCount));
 						}
 						$("#formId"+oldCount+" #tcaTable .highlight").removeClass("highlight")
 					}
@@ -504,19 +524,18 @@
 				} else {
 					$('#formId'+count+' .tcaErr').hide();
 					if ($('#formId'+count+' #tcaTable .highlight').length > 0){
-						$('#formId'+count+' #tcaTable .highlight td').text(
-								$('#formId'+count+' #fieldPathM').val() + ' ' +
-								$('#formId'+count+' #operator').val() + ' ' +
-								$('#formId'+count+' #threshold').val());
+						$('#formId'+count+' #tcaTable .highlight td').text(propertiesToString(num));
 					}
 					//$('#formId'+count+' #tcaTable .highlight').text();
 					$(this).addClass('highlight').siblings().removeClass('highlight');
 					var str = $(this).text().split(' ');
 					$('#formId'+count + ' #properties_tab').visible();
-					if (str.length == 3){
+					if (str.length == 5){
 						$('#formId'+count+' #fieldPathM').val(str[0]).multiselect('refresh');
 						$('#formId'+count+' #operator').val(str[1]).multiselect('refresh');
 						$('#formId'+count+' #threshold').val(str[2]);
+            $('#formId'+count+' #controlLoopSchema').val(str[3]).multiselect('refresh');
+            $('#formId'+count+' #closedLoopEventStatus').val(str[4]).multiselect('refresh');
 					}
 					
 					if ((!(readOnly||readMOnly)) && ($('#formId'+count + ' #deleteThresh').prop('disabled'))) {
@@ -540,10 +559,7 @@
 				} else {
 					$('#formId'+count+' .tcaErr').hide();
 					if ($('#formId'+count+' #tcaTable .highlight').length > 0){
-						$('#formId'+count+' #tcaTable .highlight td').text(
-								$('#formId'+count+' #fieldPathM').val() + ' ' +
-								$('#formId'+count+' #operator').val() + ' ' +
-								$('#formId'+count+' #threshold').val());
+						$('#formId'+count+' #tcaTable .highlight td').text(propertiesToString(count));
 					}
 					$('#formId'+count+ ' #properties_tab').visible();
 					if (('#formId'+count+' #tcaTable .highlight').length > 0 ){
@@ -553,6 +569,8 @@
 					$('#formId'+count+' #fieldPathM').prop("selectedIndex", 0).multiselect('refresh');
 					$('#formId'+count+' #operator').prop("selectedIndex", 0).multiselect('refresh');
 					$('#formId'+count+' #threshold').val("");
+          $('#formId'+count+' #controlLoopSchema').prop("selectedIndex", 0).multiselect('refresh');
+          $('#formId'+count+' #closedLoopEventStatus').prop("selectedIndex", 0).multiselect('refresh');
 					
 					if ($('#formId'+count + ' #deleteThresh').prop('disabled')) {
 						$('#formId'+count + ' #deleteThresh').prop('disabled', false);
