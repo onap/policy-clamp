@@ -155,12 +155,6 @@
 		<div style="height: 10px"></div>
 		<div class="panel panel-default" id="panelHolder">
 			
-			<div class="panel-heading">
-				<ul id="nav_Tabs" class="nav nav-tabs">
-					<li class><a id="add_one_more" href="#desc_tab"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-				</ul>
-			</div>
-			
 			<span id="formSpan" style="display:none;">
 			<div class="panel-body">
 			
@@ -187,11 +181,6 @@
 							</div>
 						</div>
 						
-						<div class="col-sm-3 form-group"> 
-							<label class="col-sm-8"> Enable </label>
-							<input class="col-sm-4" type="checkbox" style="height:21px; 
-								width:21px; margin:6px;" checked="checked" id="tcaEnab" name="tcaEnab"></input>
-						</div>
 					</div>
 					<div class="row">
 						<div class="col-sm-8 form-group">
@@ -207,27 +196,7 @@
 								<input class="form-control" onkeydown="return false;" type="text" id="tcaPolId" name="tcaPolId"></input>
 							</div>
 						</div>
-						
-						<div class="col-sm-3 form-group"> 
-							<label class="col-sm-8">Max Intervals</label>
-							<input class="col-sm-4 form-control" style="width:80%" type="text" maxlength="3" 
-							id="tcaInt" onkeypress="return isNumberKey(event)" name="tcaInt"></input>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-8 form-group">
-							<label class="col-sm-3"> Severity </label>
-							<div class="col-sm-9" style="padding:0px;">
-								<select name="tcaSev" id="tcaSev" enableFilter="false">
-								</select>
-							</div>
-						</div>
-						
-						<div class="col-sm-3 form-group"> 
-							<label class="col-sm-8">Min Violations</label>
-							<input class="col-sm-4 form-control" style="width:80%" type="text" maxlength="3" 
-							id="tcaVio" onkeypress="return isNumberKey(event)" name="tcaVio"></input>
-						</div>
+
 					</div>
 				</form>
 				
@@ -300,28 +269,6 @@
 			$("#formId" + count + " #tuuid").val(tuuid);
 		}
 		
-		$("#add_one_more").click(function(event) {
-			event.preventDefault();
-			if ($("#nav_Tabs li.active").length>0){
-				var oldCount = $("#nav_Tabs li.active").find("a").attr("id").slice(-1);
-				if (($('#formId'+oldCount+' #tcaTable .highlight').length > 0 ) &&
-						(!($('#formId'+oldCount+' #threshold').val()) || !($('#formId'+oldCount+' #fieldPathM').val())) ) {
-					$('#formId'+oldCount+' #tcaError').show();
-					return;
-				} else {
-					$('#formId'+oldCount+' .tcaErr').hide();
-					if ($('#formId'+oldCount+' #tcaTable .highlight').length > 0){
-						$('#formId'+oldCount+' #tcaTable .highlight td').text(
-								$('#formId'+oldCount+' #fieldPathM').val() + ' ' +
-								$('#formId'+oldCount+' #operator').val() + ' ' +
-								$('#formId'+oldCount+' #threshold').val());
-					}
-					$("#formId"+oldCount+" #tcaTable .highlight").removeClass("highlight")
-				}
-			}
-			var count = add_one_more();	
-			generateTUUID(count);
-		})
 		loadPropertyWindow("tca");
 		
 		//load dropdown with policy options
@@ -365,27 +312,18 @@
 		if (arr !== undefined) {
 			for (var x in arr){
 				var num = add_one_more();
-				var setCheck = true;
 				for (var i=0; i< arr[x].length; i++){
-					if (arr[x][i].name=='tcaEnab'){
-						$("#formId" + num + " #tcaEnab").prop("checked","true");
-						setCheck = false;
-					}
 					
 					if (arr[x][i].hasOwnProperty('serviceConfigurations')){
 						for (var j=0; j<arr[x][i]["serviceConfigurations"].length; j++){
 							$("#formId" + num + " #tcaTable").prepend("<tr><td>"
 									+arr[x][i]["serviceConfigurations"][j][0]+" "
-									//+(defaults_props['tca']['operator']).getKey(arr[x][i]["serviceConfigurations"][j][1])+" "
 									+(Object.keys(defaults_props['tca']['operator']).find(key => defaults_props['tca']['operator'][key] == (arr[x][i]["serviceConfigurations"][j][1])))+ " " 
 									+arr[x][i]["serviceConfigurations"][j][2]+"</td></tr>");
 						}
 					} else {
 						$("#formId" + num + " #"+arr[x][i].name).val(arr[x][i].value);
 					}
-				}
-				if (setCheck){
-					$("#formId" + num + " #tcaEnab").prop("checked",false);
 				}
 				$('#go_properties_tab'+num).text($('#formId' +num+ ' #tname').val());
 				$("#formId"+num + " #properties_tab").hide();
@@ -489,6 +427,7 @@
 			var form=$($("#formSpan").children()[0]).clone();
 			var count=0;
 			if($(".formId").length>0){
+        debugger;
 				var greatest=0;
 				var s=$(".formId");
 				for(var i=0;i<s.length; i++){
