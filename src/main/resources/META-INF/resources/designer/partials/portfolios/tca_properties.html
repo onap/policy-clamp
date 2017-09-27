@@ -70,17 +70,22 @@
 }
 
 #tcaEditHolder{
-	height:260px; 
 	background-color: #f5f5f5; 
-	padding:10px 0px; 
+	padding:10px 10px; 
 	margin: 15px 15px 0 0; 
 	float: right;
 }
+
+
+#tcaEditHolder #properties_tab>div+div {
+  margin-top: 10px;
+}
+
 .tcaErr{
 	display:none; 
 	text-align:center; 
 	margin-bottom:20px; 
-	color:red;"
+	color:red;
 }
 
 .tcaParentItems {
@@ -219,20 +224,20 @@
 					
 					<div id="tcaEditHolder" class="panel panel-default col-sm-6">
 						<div class="tab-content">
-							<div id="properties_tab" style="padding:10px;" class="form-horizontal">
-								<div style="margin-bottom:20px;">
+							<div id="properties_tab" class="form-vertical">
+								<div>
 									<label class="control-label">Metric</label>
 									<div>
 										<select id="fieldPathM" name="fieldPathM"></select>
 									</div>
 								</div>
-								<div style="margin-bottom:20px;">
+								<div>
 									<label class="control-label">Operator</label>
 									<div>
 										<select id="operator" name="operator"></select>
 									</div>
 								</div>
-								<div style="margin-bottom:20px;">
+								<div>
 									<label class="control-label">Threshold</label>
 									<div>
 										<input type="text" maxlength="10" class="form-control" name="threshold" 
@@ -258,7 +263,16 @@
 			class="btn btn-primary">Cancel</button>
 	</div>
 	
-	<script>
+	<script language="javascript">
+    // helper that make jquery objects visibles or invisible
+    // to use instead of show to keep placeholder size correct
+    jQuery.fn.visible = function() {
+        return this.css('visibility', 'visible');
+    };
+    jQuery.fn.invisible = function() {
+        return this.css('visibility', 'hidden');
+    };
+
 		var generateTUUID = function(count){
 			var d = new Date().getTime();
 			var tuuid = 'xxxxxxxx-xxxx-txxx-xxxx-xxxxxxxxxxxx'.replace(/[x]/g, function(c){
@@ -326,23 +340,15 @@
 					}
 				}
 				$('#go_properties_tab'+num).text($('#formId' +num+ ' #tname').val());
-				$("#formId"+num + " #properties_tab").hide();
+				$("#formId"+num + " #properties_tab").invisible();
 			}
 		} 
 	
 		$("#savePropsBtn").click(function(event) {
-			var num = $('#nav_Tabs .active a').attr('id').slice(-1);
-			var tabs = [];
-			$('#nav_Tabs li:not(:last)').each(function(){
-				tabs.push($(this).text());
-			});
-			var nonunique = uniquet(tabs);
+			var num = 1
 			if (($('#formId'+num+' #tcaTable .highlight').length > 0 ) &&
 					(!($('#formId'+num+' #threshold').val()) || !($('#formId'+num+' #fieldPathM').val())) ) {
 				$('#formId'+num+' #tcaError').show();
-				return;
-			} else if (nonunique){
-				$('#formId'+num+' #tcaUnique').show();
 				return;
 			} else {
 				$('#formId'+num+' .tcaErr').hide();
@@ -444,7 +450,7 @@
 			
 			$("#add_one_more").parent().before(' <li class="active"><a id="go_properties_tab'+count+'">New_Set</a><button id="tab_close'+count+'" type="button" class="close tab-close-popup" aria-hidden="true" style="margin-top: -30px;margin-right: 5px">&times;</button></li>');
 			$("#formId"+count).append(form);
-			$('#formId'+count+ ' #properties_tab').hide();
+			$('#formId'+count+ ' #properties_tab').invisible();
 			$(".formId").not($("#formId"+count)).css("display","none");
 			addCustListen(count);
 			setMultiSelect();
@@ -506,7 +512,7 @@
 					//$('#formId'+count+' #tcaTable .highlight').text();
 					$(this).addClass('highlight').siblings().removeClass('highlight');
 					var str = $(this).text().split(' ');
-					$('#formId'+count + ' #properties_tab').show();
+					$('#formId'+count + ' #properties_tab').visible();
 					if (str.length == 3){
 						$('#formId'+count+' #fieldPathM').val(str[0]).multiselect('refresh');
 						$('#formId'+count+' #operator').val(str[1]).multiselect('refresh');
@@ -521,7 +527,7 @@
 			
 			$('#formId'+count+' #deleteThresh').on('click', function(){
 				$('#formId'+num+' .tcaErr').hide();
-				$('#formId'+count+ ' #properties_tab').hide();
+				$('#formId'+count+ ' #properties_tab').invisible();
 				$('#formId'+count+ ' #tcaTable .highlight').remove();
 				$('#formId'+count+ ' #deleteThresh').prop('disabled', true);
 			});
@@ -539,7 +545,7 @@
 								$('#formId'+count+' #operator').val() + ' ' +
 								$('#formId'+count+' #threshold').val());
 					}
-					$('#formId'+count+ ' #properties_tab').show();
+					$('#formId'+count+ ' #properties_tab').visible();
 					if (('#formId'+count+' #tcaTable .highlight').length > 0 ){
 						$('#formId'+count+' #tcaTable tr.highlight').removeClass('highlight');
 					}
