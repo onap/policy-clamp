@@ -30,10 +30,8 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
     }
 
     mapping = {
-      'stringmatch': StringMatchWindow,
       'tca': TCAWindow,
       'policy': PolicyWindow,
-      'collector': CollectorsWindow,
       'vescollector': VesCollectorWindow,
       'holmes': HolmesWindow,
     };

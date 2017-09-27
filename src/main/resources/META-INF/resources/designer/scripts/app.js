@@ -1296,106 +1296,6 @@ var app = angular.module('clds-app', ['ngRoute',
             // $modalInstance.close("closed");
           });
         };
-        $scope.CollectorsWindow = function(collectorsWin) {
-
-          if (isTemplate) {
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/Template_model.html',
-                'ImportSchemaCtrl',
-                collectorsWin, {
-                  closable: true,
-                  draggable: true
-                }, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: 'static',
-                  windowClass: 'my-class'
-                });
-            dlg.result.then(function(name) {
-
-            }, function() {
-
-              // if(angular.equals($scope.name,''))
-              // $scope.name = 'You did not enter in
-              // your name!';
-            });
-          } else {
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/Collector_properties.html',
-                'ImportSchemaCtrl', {
-                  closable: true,
-                  draggable: true
-                }, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: 'static',
-                  windowClass: 'my-class'
-                });
-            dlg.result.then(function(name) {
-
-            }, function() {
-
-              // if(angular.equals($scope.name,''))
-              // $scope.name = 'You did not enter in
-              // your name!';
-            });
-
-          }
-
-        };
-        $scope.StringMatchWindow = function(stringMatch) {
-
-          if (isTemplate) {
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/Template_model.html',
-                'ImportSchemaCtrl',
-                stringMatch, {
-                  closable: true,
-                  draggable: true
-                }, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: 'static',
-                  windowClass: 'my-class'
-                });
-            dlg.result.then(function(name) {
-
-            }, function() {
-
-              // if(angular.equals($scope.name,''))
-              // $scope.name = 'You did not enter in
-              // your name!';
-            });
-          } else {
-
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/stringMatch_properties.html',
-                'ImportSchemaCtrl', {
-                  closable: true,
-                  draggable: true
-                }, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: 'static',
-                  windowClass: 'my-class'
-                });
-
-            dlg.result.then(function(name) {
-
-              // $scope.name = name;
-            }, function() {
-
-              // if(angular.equals($scope.name,''))
-              // $scope.name = 'You did not enter in
-              // your name!';
-            });
-
-          }
-        };
         $scope.VesCollectorWindow = function(vesCollector) {
 
           if (isTemplate) {
@@ -1677,13 +1577,6 @@ function importshema() {
 
 }
 
-function CollectorsWindow(collectorsWin) {
-
-  angular.element(document.getElementById('navbar')).scope()
-    .CollectorsWindow(collectorsWin);
-
-}
-
 function VesCollectorWindow(vesCollectorWin) {
   angular.element(document.getElementById('navbar')).scope()
     .VesCollectorWindow(vesCollectorWin);
@@ -1697,13 +1590,6 @@ function HolmesWindow(holmesWin) {
 function F5Window() {
 
   angular.element(document.getElementById('navbar')).scope().F5Window();
-
-}
-
-function StringMatchWindow(stringMatch) {
-
-  angular.element(document.getElementById('navbar')).scope()
-    .StringMatchWindow(stringMatch);
 
 }
 

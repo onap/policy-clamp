@@ -7,18 +7,10 @@
 		<bpmn:startEvent id="StartEvent_1">
 			<bpmn:outgoing>SequenceFlow_1nvvr00</bpmn:outgoing>
 		</bpmn:startEvent>
-		<bpmn:stringMatch id="StringMatch_0tw2y4f">
-			<bpmn:incoming>SequenceFlow_0qf2552</bpmn:incoming>
-			<bpmn:outgoing>SequenceFlow_1a2oxpd</bpmn:outgoing>
-		</bpmn:stringMatch>
 		<bpmn:vesCollector id="VesCollector_1kxjxy6" name="AAAAA">
 			<bpmn:incoming>SequenceFlow_0jeu0gv</bpmn:incoming>
 			<bpmn:outgoing>SequenceFlow_15gkgs5</bpmn:outgoing>
 		</bpmn:vesCollector>
-		<bpmn:collector id="Collector_">
-			<bpmn:incoming>SequenceFlow_1nvvr00</bpmn:incoming>
-			<bpmn:outgoing>SequenceFlow_0qf2552</bpmn:outgoing>
-		</bpmn:collector>
 		<bpmn:tCA id="TCA_09hcdsx">
 			<bpmn:incoming>SequenceFlow_15gkgs5</bpmn:incoming>
 			<bpmn:outgoing>SequenceFlow_0ev75ss</bpmn:outgoing>
@@ -31,15 +23,11 @@
 			<bpmn:incoming>SequenceFlow_103hvmr</bpmn:incoming>
 		</bpmn:endEvent>
 		<bpmn:holmes id="Holmes_1fzdqp9">
-			<bpmn:incoming>SequenceFlow_1a2oxpd</bpmn:incoming>
+			<bpmn:incoming>SequenceFlow_1nvvr00</bpmn:incoming>
 			<bpmn:outgoing>SequenceFlow_0jeu0gv</bpmn:outgoing>
 		</bpmn:holmes>
 		<bpmn:sequenceFlow id="SequenceFlow_1nvvr00"
-			sourceRef="StartEvent_1" targetRef="Collector_" />
-		<bpmn:sequenceFlow id="SequenceFlow_0qf2552"
-			sourceRef="Collector_" targetRef="StringMatch_0tw2y4f" />
-		<bpmn:sequenceFlow id="SequenceFlow_1a2oxpd"
-			sourceRef="StringMatch_0tw2y4f" targetRef="Holmes_1fzdqp9" />
+			sourceRef="StartEvent_1" targetRef="Holmes_1fzdqp9" />
 		<bpmn:sequenceFlow id="SequenceFlow_0jeu0gv"
 			sourceRef="Holmes_1fzdqp9" targetRef="VesCollector_1kxjxy6" />
 		<bpmn:sequenceFlow id="SequenceFlow_15gkgs5"
@@ -55,16 +43,9 @@
 				bpmnElement="StartEvent_1">
 				<dc:Bounds x="50" y="162" width="36" height="36" />
 			</bpmndi:BPMNShape>
-			<bpmndi:BPMNShape id="StringMatch_0tw2y4f_di"
-				bpmnElement="StringMatch_0tw2y4f">
-				<dc:Bounds x="324" y="192" width="120" height="80" />
-			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="VesCollector_1kxjxy6_di"
 				bpmnElement="VesCollector_1kxjxy6">
 				<dc:Bounds x="492" y="192" width="120" height="80" />
-			</bpmndi:BPMNShape>
-			<bpmndi:BPMNShape id="Collector__di" bpmnElement="Collector_">
-				<dc:Bounds x="159" y="206" width="120" height="80" />
 			</bpmndi:BPMNShape>
 			<bpmndi:BPMNShape id="TCA_09hcdsx_di" bpmnElement="TCA_09hcdsx">
 				<dc:Bounds x="651" y="192" width="120" height="80" />

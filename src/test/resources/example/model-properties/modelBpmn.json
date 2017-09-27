@@ -1,16 +1,4 @@
 {
-  "collector": [
-    {
-      "id": "Collector_1c72ct5",
-      "from": "StartEvent_1"
-    }
-  ],
-  "stringMatch": [
-    {
-      "id": "StringMatch_05arstl",
-      "from": "Collector_1c72ct5"
-    }
-  ],
   "policy": [
     {
       "id": "Policy_0honxgv",
@@ -32,7 +20,7 @@
   "vesCollector": [
     {
       "id": "VesCollector_0orydnh",
-      "from": "StringMatch_05arstl"
+      "from": "StartEvent_1"
     }
   ]
 }

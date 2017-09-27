@@ -65,8 +65,6 @@ import org.springframework.beans.factory.annotation.Value;
 @Path("/cldsTempate")
 public class CldsTemplateService extends SecureServiceBase {
 
-    private static final String     COLLECTOR_KEY    = "Collector";
-    private static final String     STRING_MATCH_KEY = "StringMatch";
     private static final String     POLICY_KEY       = "Policy";
 
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
@@ -314,16 +312,12 @@ public class CldsTemplateService extends SecureServiceBase {
                     if (keyPropName != null && keyPropName.equalsIgnoreCase(currElementId)) {
                         ArrayNode arrayNode = (ArrayNode) entry.getValue();
                         // process each id/from object, like:
-                        // {"id":"Collector_11r50j1", "from":"StartEvent_1"}
+                        // {"id":"Policy_11r50j1", "from":"StartEvent_1"}
                         for (JsonNode anArrayNode : arrayNode) {
                             ObjectNode node = (ObjectNode) anArrayNode;
                             String valueNode = node.get("value").asText();
                             logger.info("value of node:" + valueNode);
-                            if (keyPropName.startsWith(COLLECTOR_KEY)) {
-                                valueNode = COLLECTOR_KEY + "_" + valueNode;
-                            } else if (keyPropName.startsWith(STRING_MATCH_KEY)) {
-                                valueNode = STRING_MATCH_KEY + "_" + valueNode;
-                            } else if (keyPropName.startsWith(POLICY_KEY)) {
+                            if (keyPropName.startsWith(POLICY_KEY)) {
                                 valueNode = POLICY_KEY + "_" + valueNode;
                             }
                             bpmnIoIdsMap.put(keyPropName, valueNode);

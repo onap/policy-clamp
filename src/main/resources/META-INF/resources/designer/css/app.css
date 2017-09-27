@@ -170,20 +170,18 @@ svg:not(:root) {
 } /* '' */
 
 .define-path:before{ 
-	content: url('../images/DefinePath.png'); 
+	content: url('../images/DefinePath.png');
 	position:relative; /*or absolute*/
 	z-index:100000; /*a number that's more than the modal box*/
 } /* '' */
-.define-decision:before{ 
+.define-decision:before{
 	content: url('../images/DefineDecision.png');
 	position:relative; /*or absolute*/
 	z-index:100000; /*a number that's more than the modal box*/
 } /* '' */
 .icon-initial-node:before{ content: url('../images/InitialProcess.png'); } /* '' */
-.icon-collector-node:before{ content: url('../images/clds-collector-icon.png'); } /* '' */
 .icon-holmes-node:before{ content: url('../images/clds-holmes-icon.png'); } /* '' */
 .icon-ves-collector-node:before{ content: url('../images/clds-ves-collector-icon.png'); } /* '' */
-.icon-stringmatch-node:before{ content: url('../images/clds-string-match-icon.png'); } /* '' */
 .icon-tca-node:before{ content: url('../images/clds-tca-icon.png'); } /* '' */
 .icon-policy-node:before{ content: url('../images/clds-policy-icon.png'); } /* '' */
 .icon-goc-node:before{ content: url('../images/GOC.png'); } /* '' */

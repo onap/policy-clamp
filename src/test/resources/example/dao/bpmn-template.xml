@@ -4,16 +4,8 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>SequenceFlow_0mshiwd</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:collector id="Collector_1i63yo1">
-      <bpmn:incoming>SequenceFlow_0mshiwd</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0z37chw</bpmn:outgoing>
-    </bpmn:collector>
-    <bpmn:stringMatch id="StringMatch_1g5af0z">
-      <bpmn:incoming>SequenceFlow_0z37chw</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_1io8zzg</bpmn:outgoing>
-    </bpmn:stringMatch>
     <bpmn:vesCollector id="VesCollector_1s3sgbh">
-      <bpmn:incoming>SequenceFlow_1io8zzg</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_0mshiwd</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0yenh9m</bpmn:outgoing>
     </bpmn:vesCollector>
     <bpmn:holmes id="Holmes_1m8n1s9">
@@ -31,9 +23,7 @@
     <bpmn:endEvent id="EndEvent_0z8t6ek">
       <bpmn:incoming>SequenceFlow_1q2yngv</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_0mshiwd" sourceRef="StartEvent_1" targetRef="Collector_1i63yo1" />
-    <bpmn:sequenceFlow id="SequenceFlow_0z37chw" sourceRef="Collector_1i63yo1" targetRef="StringMatch_1g5af0z" />
-    <bpmn:sequenceFlow id="SequenceFlow_1io8zzg" sourceRef="StringMatch_1g5af0z" targetRef="VesCollector_1s3sgbh" />
+    <bpmn:sequenceFlow id="SequenceFlow_0mshiwd" sourceRef="StartEvent_1" targetRef="VesCollector_1s3sgbh" />
     <bpmn:sequenceFlow id="SequenceFlow_0yenh9m" sourceRef="VesCollector_1s3sgbh" targetRef="Holmes_1m8n1s9" />
     <bpmn:sequenceFlow id="SequenceFlow_1gq21be" sourceRef="Holmes_1m8n1s9" targetRef="TCA_11n5nl9" />
     <bpmn:sequenceFlow id="SequenceFlow_14phr7v" sourceRef="TCA_11n5nl9" targetRef="Policy_19c1hms" />
@@ -43,12 +33,6 @@
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="50" y="162" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Collector_1i63yo1_di" bpmnElement="Collector_1i63yo1">
-        <dc:Bounds x="216" y="152" width="120" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="StringMatch_1g5af0z_di" bpmnElement="StringMatch_1g5af0z">
-        <dc:Bounds x="378" y="140" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="VesCollector_1s3sgbh_di" bpmnElement="VesCollector_1s3sgbh">
         <dc:Bounds x="552" y="140" width="120" height="80" />

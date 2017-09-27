@@ -42,8 +42,6 @@ import org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate;
 import org.onap.clamp.clds.client.PolicyClient;
 import org.onap.clamp.clds.client.SdcCatalogServices;
 import org.onap.clamp.clds.client.SdcSendReqDelegate;
-import org.onap.clamp.clds.client.StringMatchPolicyDelegate;
-import org.onap.clamp.clds.client.StringMatchPolicyDeleteDelegate;
 import org.onap.clamp.clds.client.TcaPolicyDelegate;
 import org.onap.clamp.clds.client.TcaPolicyDeleteDelegate;
 import org.onap.clamp.clds.dao.CldsDao;
@@ -126,16 +124,6 @@ public class CldsConfiguration {
     @Bean(name = "operationalPolicyDeleteDelegate")
     public OperationalPolicyDeleteDelegate getOperationalPolicyDeleteDelegate() {
         return new OperationalPolicyDeleteDelegate();
-    }
-
-    @Bean(name = "stringMatchPolicyDelegate")
-    public StringMatchPolicyDelegate getStringMatchPolicyDelegate() {
-        return new StringMatchPolicyDelegate();
-    }
-
-    @Bean(name = "stringMatchPolicyDeleteDelegate")
-    public StringMatchPolicyDeleteDelegate getStringMatchPolicyDeleteDelegate() {
-        return new StringMatchPolicyDeleteDelegate();
     }
 
     @Bean(name = "sdcCatalogServices")

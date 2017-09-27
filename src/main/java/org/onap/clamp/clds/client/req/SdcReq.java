@@ -50,7 +50,6 @@ import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.prop.StringMatch;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
 
@@ -88,22 +87,8 @@ public class SdcReq {
         String yamlvalue = getYamlvalue(docText);
 
         String updatedBlueprint = "";
-        StringMatch stringMatch = prop.getType(StringMatch.class);
         Tca tca = prop.getType(Tca.class);
-        if (stringMatch.isFound()) {
-            prop.setCurrentModelElementId(stringMatch.getId());
-            ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode serviceConfigurations = objectMapper.createObjectNode();
-
-            StringMatchPolicyReq.appendServiceConfigurations(refProp, service, serviceConfigurations, stringMatch,
-                    prop);
-            logger.info("Value of serviceConfigurations:" + serviceConfigurations);
-            ObjectNode servConfNode = (ObjectNode) serviceConfigurations.get("serviceConfigurations");
-
-            // get updated blueprint by attaching service Conf from
-            // globalProperties
-            updatedBlueprint = getUpdatedBlueprintWithServiceConf(refProp, prop, yamlvalue, servConfNode);
-        } else if (tca.isFound()) {
+        if (tca.isFound()) {
             prop.setCurrentModelElementId(tca.getId());
             ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.template", service);
             ObjectNode content = rootNode.with("content");
@@ -119,50 +104,6 @@ public class SdcReq {
 
         logger.info("value of blueprint:" + updatedBlueprint);
         return updatedBlueprint;
-    }
-
-    private static String getUpdatedBlueprintWithServiceConf(RefProp refProp, ModelProperties prop, String yamlValue,
-            ObjectNode serviceConf) throws IOException {
-        Yaml yaml = new Yaml();
-
-        // Serialiaze Yaml file
-        Map<String, Map> loadedYaml = (Map<String, Map>) yaml.load(yamlValue);
-        // Get node templates information from Yaml
-        Map<String, Map> nodeTemplates = loadedYaml.get("node_templates");
-        logger.info("value of NodeTemplates:" + nodeTemplates);
-
-        // Get StringMatch Object information from node templates of Yaml
-        Map<String, Map> smObject = nodeTemplates.get("SM");
-        logger.info("value of StringMatch:" + smObject);
-
-        // Get Properties Object information from stringmatch of Yaml
-        Map<String, String> propsObject = smObject.get("properties");
-        logger.info("value of PropsObject:" + propsObject);
-
-        String deploymentJsonObject = propsObject.get("deployment_JSON");
-        logger.info("value of deploymentJson:" + deploymentJsonObject);
-
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode deployJsonNode = (ObjectNode) mapper.readTree(deploymentJsonObject);
-        ObjectNode configurationObjectNode = (ObjectNode) deployJsonNode.get("configuration");
-
-        // "policyName":"example_model06.ClosedLoop_FRWL_SIG_0538e6f2_8c1b_4656_9999_3501b3c59ad7_StringMatch_",
-        String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
-        String policyName = prop.getCurrentPolicyScopeAndFullPolicyName(policyNamePrefix);
-        configurationObjectNode.put("policyName", policyName);
-
-        // "closedLoopControlName":"ClosedLoop-FRWL-SIG-0538e6f2-8c1b-4656-9999-3501b3c59ad7",
-        configurationObjectNode.put("closedLoopControlName", prop.getControlName());
-        configurationObjectNode.put("messageReaderConsumerGroup", prop.getModelName());
-        configurationObjectNode.set("serviceConfigurations", serviceConf);
-        propsObject.put("deployment_JSON", deployJsonNode.toString());
-        String blueprint = yaml.dump(loadedYaml);
-        logger.info("value of updated Yaml File:" + blueprint);
-
-        blueprint = yaml.dump(loadedYaml);
-        logger.info("value of updated Yaml File:" + blueprint);
-
-        return blueprint;
     }
 
     private static String getUpdatedBlueprintWithConfiguration(RefProp refProp, ModelProperties prop, String yamlValue,

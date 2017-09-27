@@ -35,7 +35,7 @@ import java.util.List;
  * Parse Resource Group json properties.
  *
  * Example json:
- * {"StringMatch_0aji7go":{"Group1":[{"name":"rgname","value":"1493749598520"},{
+ * {"TCA_0aji7go":{"Group1":[{"name":"rgname","value":"1493749598520"},{
  * "name":"rgfriendlyname","value":"Group1"},{"name":"policyName","value":
  * "Policy1"},{"name":"policyId","value":"1"},{"serviceConfigurations":[[{"name"
  * :"aaiMatchingFields","value":["complex.city","vserver.vserver-name"]},{"name"

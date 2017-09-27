@@ -1,29 +1,13 @@
 {
-    "collector": 
+    "policy":
     [
         {
-            "id": "Collector_",
+            "id": "Policy_",
             "from": "StartEvent_1"
         }
     ],
 
-    "stringMatch": 
-    [
-        {
-            "id": "StringMatch_",
-            "from": "Collector_"
-        }
-    ],
-
-    "policy": 
-    [
-        {
-            "id": "Policy_",
-            "from": "StringMatch_"
-        }
-    ],
-
-    "tca": 
+    "tca":
     [
         {
             "id": "TCA_",
@@ -31,7 +15,7 @@
         }
     ],
 
-    "customType": 
+    "customType":
     [
         {
             "id": "CustomType_",

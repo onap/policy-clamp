@@ -70,48 +70,6 @@
 		</g>
 	</g>
 	<g class="djs-group" xmlns="http://www.w3.org/2000/svg">
-		<g class="djs-element djs-shape" data-element-id="Collector_1i63yo1"
-			transform="matrix(1,0,0,1,216,152)" style="display: block;">
-			<rect fill="none" class="djs-outline" x="-6" y="-6" width="132"
-				height="92"></rect>
-			<g class="djs-visual">
-				<rect x="0" y="0" width="120" height="80" rx="0" ry="0"
-					style="stroke-width: 2;" stroke="#000000" fill="#ffffff"></rect>
-				<polyline points="120,80 120,20 " style="stroke-width: 2;"
-					fill="none" stroke="#000000"></polyline>
-				<polyline points="20,0 20,80 " style="stroke-width: 2;"
-					fill="none" stroke="#000000"></polyline>
-				<text style="font-family: Arial,sans-serif; font-size: 12px;"
-					class=" djs-label">
-					<tspan x="35.5" y="43.5">Collector</tspan>
-				</text>
-			</g>
-			<rect x="0" y="0" width="120" height="80"
-				style="stroke-opacity: 0; stroke-width: 15;" fill="none" stroke="#ffffff"
-				class="djs-hit"></rect>
-		</g>
-	</g>
-	<g class="djs-group" xmlns="http://www.w3.org/2000/svg">
-		<g class="djs-element djs-shape" data-element-id="StringMatch_1g5af0z"
-			transform="matrix(1,0,0,1,378,140)" style="display: block;">
-			<rect fill="none" class="djs-outline" x="-6" y="-6" width="132"
-				height="92"></rect>
-			<g class="djs-visual">
-				<rect x="0" y="0" width="120" height="80" rx="0" ry="0"
-					style="stroke-width: 2;" stroke="#000000" fill="#ffffff"></rect>
-				<polyline points="0,20 120,20 " style="stroke-width: 2;"
-					fill="none" stroke="#000000"></polyline>
-				<text style="font-family: Arial,sans-serif; font-size: 12px;"
-					class=" djs-label">
-					<tspan x="27.5" y="43.5">StringMatch</tspan>
-				</text>
-			</g>
-			<rect x="0" y="0" width="120" height="80"
-				style="stroke-opacity: 0; stroke-width: 15;" fill="none" stroke="#ffffff"
-				class="djs-hit"></rect>
-		</g>
-	</g>
-	<g class="djs-group" xmlns="http://www.w3.org/2000/svg">
 		<g class="djs-element djs-shape" data-element-id="VesCollector_1s3sgbh"
 			transform="matrix(1,0,0,1,552,140)" style="display: block;">
 			<rect fill="none" class="djs-outline" x="-6" y="-6" width="132"

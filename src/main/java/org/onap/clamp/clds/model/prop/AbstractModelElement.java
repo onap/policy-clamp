@@ -33,7 +33,7 @@ import java.util.List;
 
 /**
  * Provide base ModelElement functionality. Perform base parsing of properties
- * for a ModelElement (such as, Collector, StringMatch, Policy, Tca, Holmes,
+ * for a ModelElement (such as, VesCollector, Policy, Tca, Holmes,
  * ...)
  */
 public abstract class AbstractModelElement {
@@ -54,7 +54,7 @@ public abstract class AbstractModelElement {
 
     /**
      * Perform base parsing of properties for a ModelElement (such as,
-     * Collector, StringMatch, Policy and Tca)
+     * VesCollector, Policy and Tca)
      *
      * @param type
      * @param modelProp

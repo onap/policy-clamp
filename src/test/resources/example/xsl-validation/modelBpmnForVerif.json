@@ -1,16 +1,4 @@
 {
-  "collector": [
-    {
-      "id": "Collector_",
-      "from": "StartEvent_1"
-    }
-  ],
-  "stringMatch": [
-    {
-      "id": "StringMatch_0tw2y4f",
-      "from": "Collector_"
-    }
-  ],
   "policy": [
     {
       "id": "Policy_",
@@ -32,7 +20,7 @@
   "holmes": [
     {
       "id": "Holmes_1fzdqp9",
-      "from": "StringMatch_0tw2y4f"
+      "from": "StartEvent_1"
     }
   ]
 }

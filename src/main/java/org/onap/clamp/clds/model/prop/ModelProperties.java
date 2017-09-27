@@ -72,10 +72,9 @@ public class ModelProperties {
 
     static {
         synchronized (lock) {
-            modelElementClasses.put(Collector.class, Collector.getType());
             modelElementClasses.put(Policy.class, Policy.getType());
-            modelElementClasses.put(StringMatch.class, StringMatch.getType());
             modelElementClasses.put(Tca.class, Tca.getType());
+            modelElementClasses.put(Holmes.class, Holmes.getType());
         }
     }
 

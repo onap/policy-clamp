@@ -54,22 +54,6 @@ public class ModelPropertiesTest {
         ModelProperties prop = new ModelProperties("example-model-name", "example-control-name", null, true, modelBpmn,
                 modelBpmnProp);
 
-        StringMatch stringMatch = prop.getType(StringMatch.class);
-        assertTrue(stringMatch.isFound());
-        assertEquals("1505133578560", stringMatch.getResourceGroups().get(0).getGroupNumber());
-        assertEquals("0", stringMatch.getResourceGroups().get(0).getPolicyId());
-        assertEquals(1, stringMatch.getResourceGroups().get(0).getServiceConfigurations().size());
-        List<String> aaiMathcingFields = new ArrayList<String>();
-        aaiMathcingFields.add("complex.city");
-        assertEquals(aaiMathcingFields,
-                stringMatch.getResourceGroups().get(0).getServiceConfigurations().get(0).getaaiMatchingFields());
-        assertEquals("1600", stringMatch.getResourceGroups().get(0).getServiceConfigurations().get(0).getAgeLimit());
-        assertEquals(1, stringMatch.getResourceGroups().get(0).getServiceConfigurations().get(0).getStringSet().size());
-
-        Collector collector = prop.getType(Collector.class);
-        assertTrue(collector.isFound());
-        assertEquals("DCAE-COLLECTOR-UCSNMP", collector.getTopicPublishes());
-
         Policy policy = prop.getType(Policy.class);
         assertTrue(policy.isFound());
         assertEquals(1, policy.getPolicyChains().size());

@@ -1,17 +1,9 @@
 {
-    "Collector_": 
-    [
-        {
-            "name": "topicPublishes",
-            "value": "DCAE-COLLECTOR-UCSNMP"
-        }
-    ],
-
-    "global": 
+    "global":
     [
         {
             "name": "service",
-            "value": 
+            "value":
             [
                 "0f983e18-4603-4bb4-a98c-e29691fb16a1"
             ]
@@ -19,7 +11,7 @@
 
         {
             "name": "vf",
-            "value": 
+            "value":
             [
                 "6c7aaec2-59eb-41d9-8681-b7f976ab668d"
             ]
@@ -27,7 +19,7 @@
 
         {
             "name": "actionSet",
-            "value": 
+            "value":
             [
                 "enbRecipe"
             ]
@@ -35,318 +27,16 @@
 
         {
             "name": "location",
-            "value": 
+            "value":
             [
                 "SNDGCA64"
             ]
         }
     ],
 
-    "StringMatch_": 
+    "Policy_":
     {
-        "Group1": 
-        [
-            {
-                "name": "rgname",
-                "value": "1493749598520"
-            },
-
-            {
-                "name": "rgfriendlyname",
-                "value": "Group1"
-            },
-
-            {
-                "name": "policyName",
-                "value": "Policy1"
-            },
-
-            {
-                "name": "policyId",
-                "value": "1"
-            },
-
-            {
-                "serviceConfigurations": 
-                [
-                    [
-                        {
-                            "name": "aaiMatchingFields",
-                            "value": 
-                            [
-                                "complex.city",
-                                "vserver.vserver-name"
-                            ]
-                        },
-
-                        {
-                            "name": "aaiSendFields",
-                            "value": 
-                            [
-                                "complex.city",
-                                "vserver.vserver-name"
-                            ]
-                        },
-
-                        {
-                            "name": "timeWindow",
-                            "value": 
-                            [
-                                "100"
-                            ]
-                        },
-
-                        {
-                            "name": "ageLimit",
-                            "value": 
-                            [
-                                "100"
-                            ]
-                        },
-
-                        {
-                            "name": "createClosedLoopEventId",
-                            "value": 
-                            [
-                                "Initial"
-                            ]
-                        },
-
-                        {
-                            "name": "outputEventName",
-                            "value": 
-                            [
-                                "ONSET"
-                            ]
-                        },
-
-                        {
-                            "stringSet": 
-                            [
-                                {
-                                    "name": "alarmCondition",
-                                    "value": 
-                                    [
-                                        "Reports a transient alarm condition when an outgoing Ro message send fails"
-                                    ]
-                                },
-
-                                {
-                                    "name": "eventSeverity",
-                                    "value": 
-                                    [
-                                        "WARNING"
-                                    ]
-                                },
-
-                                {
-                                    "name": "eventSourceType",
-                                    "value": 
-                                    [
-                                        "f5BigIP"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                ]
-            }
-        ],
-
-        "Group2": 
-        [
-            {
-                "name": "rgname",
-                "value": "1493749665149"
-            },
-
-            {
-                "name": "rgfriendlyname",
-                "value": "Group2"
-            },
-
-            {
-                "name": "policyName",
-                "value": "Policy2"
-            },
-
-            {
-                "name": "policyId",
-                "value": "2"
-            },
-
-            {
-                "serviceConfigurations": 
-                [
-                    [
-                        {
-                            "name": "aaiMatchingFields",
-                            "value": 
-                            [
-                                "cloud-region.identity-url",
-                                "vserver.vserver-name"
-                            ]
-                        },
-
-                        {
-                            "name": "aaiSendFields",
-                            "value": 
-                            [
-                                "cloud-region.identity-url",
-                                "vserver.vserver-name"
-                            ]
-                        },
-
-                        {
-                            "name": "timeWindow",
-                            "value": 
-                            [
-                                "1000"
-                            ]
-                        },
-
-                        {
-                            "name": "ageLimit",
-                            "value": 
-                            [
-                                "1000"
-                            ]
-                        },
-
-                        {
-                            "name": "createClosedLoopEventId",
-                            "value": 
-                            [
-                                "Initial"
-                            ]
-                        },
-
-                        {
-                            "name": "outputEventName",
-                            "value": 
-                            [
-                                "ONSET"
-                            ]
-                        },
-
-                        {
-                            "stringSet": 
-                            [
-                                {
-                                    "name": "alarmCondition",
-                                    "value": 
-                                    [
-                                        "LSS_asdaCommunicationFailure"
-                                    ]
-                                },
-
-                                {
-                                    "name": "eventSeverity",
-                                    "value": 
-                                    [
-                                        "WARNING"
-                                    ]
-                                },
-
-                                {
-                                    "name": "eventSourceType",
-                                    "value": 
-                                    [
-                                        "f5BigIP"
-                                    ]
-                                }
-                            ]
-                        }
-                    ],
-
-                    [
-                        {
-                            "name": "aaiMatchingFields",
-                            "value": 
-                            [
-                                "generic-vnf.vnf-name",
-                                "vserver.vserver-name"
-                            ]
-                        },
-
-                        {
-                            "name": "aaiSendFields",
-                            "value": 
-                            [
-                                "generic-vnf.vnf-name",
-                                "vserver.vserver-name"
-                            ]
-                        },
-
-                        {
-                            "name": "timeWindow",
-                            "value": 
-                            [
-                                "3000"
-                            ]
-                        },
-
-                        {
-                            "name": "ageLimit",
-                            "value": 
-                            [
-                                "3000"
-                            ]
-                        },
-
-                        {
-                            "name": "createClosedLoopEventId",
-                            "value": 
-                            [
-                                "Initial"
-                            ]
-                        },
-
-                        {
-                            "name": "outputEventName",
-                            "value": 
-                            [
-                                "ABATED"
-                            ]
-                        },
-
-                        {
-                            "stringSet": 
-                            [
-                                {
-                                    "name": "alarmCondition",
-                                    "value": 
-                                    [
-                                        "LSS_asdaCommunicationFailure"
-                                    ]
-                                },
-
-                                {
-                                    "name": "eventSeverity",
-                                    "value": 
-                                    [
-                                        "MAJOR"
-                                    ]
-                                },
-
-                                {
-                                    "name": "eventSourceType",
-                                    "value": 
-                                    [
-                                        "f5BigIP"
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                ]
-            }
-        ]
-    },
-
-    "Policy_": 
-    {
-        "Policy1": 
+        "Policy1":
         [
             {
                 "name": "pname",
@@ -364,12 +54,12 @@
             },
 
             {
-                "policyConfigurations": 
+                "policyConfigurations":
                 [
                     [
                         {
                             "name": "recipe",
-                            "value": 
+                            "value":
                             [
                                 "restart"
                             ]
@@ -377,7 +67,7 @@
 
                         {
                             "name": "maxRetries",
-                            "value": 
+                            "value":
                             [
                                 "3"
                             ]
@@ -385,7 +75,7 @@
 
                         {
                             "name": "retryTimeLimit",
-                            "value": 
+                            "value":
                             [
                                 "180"
                             ]
@@ -393,7 +83,7 @@
 
                         {
                             "name": "_id",
-                            "value": 
+                            "value":
                             [
                                 "n9bQ4t6"
                             ]
@@ -401,14 +91,14 @@
 
                         {
                             "name": "parentPolicy",
-                            "value": 
+                            "value":
                             [
                                 ""
                             ]
                         },
                         {
                             "name": "targetResourceId",
-                            "value": 
+                            "value":
                             [
                                 "resource-id"
                             ]
@@ -418,7 +108,7 @@
                     [
                         {
                             "name": "recipe",
-                            "value": 
+                            "value":
                             [
                                 "rebuild"
                             ]
@@ -426,7 +116,7 @@
 
                         {
                             "name": "maxRetries",
-                            "value": 
+                            "value":
                             [
                                 "3"
                             ]
@@ -434,7 +124,7 @@
 
                         {
                             "name": "retryTimeLimit",
-                            "value": 
+                            "value":
                             [
                                 "180"
                             ]
@@ -442,7 +132,7 @@
 
                         {
                             "name": "_id",
-                            "value": 
+                            "value":
                             [
                                 "ItE5xKT"
                             ]
@@ -450,7 +140,7 @@
 
                         {
                             "name": "parentPolicy",
-                            "value": 
+                            "value":
                             [
                                 "n9bQ4t6"
                             ]
@@ -458,7 +148,7 @@
 
                         {
                             "name": "parentPolicyConditions",
-                            "value": 
+                            "value":
                             [
                                 "Failure_Retries",
                                 "Failure_Timeout",
@@ -468,7 +158,7 @@
                         },
                         {
                             "name": "targetResourceId",
-                            "value": 
+                            "value":
                             [
                                 "resource-id"
                             ]
@@ -478,7 +168,7 @@
             }
         ],
 
-        "Policy2": 
+        "Policy2":
         [
             {
                 "name": "pname",
@@ -496,12 +186,12 @@
             },
 
             {
-                "policyConfigurations": 
+                "policyConfigurations":
                 [
                     [
                         {
                             "name": "recipe",
-                            "value": 
+                            "value":
                             [
                                 "restart"
                             ]
@@ -509,7 +199,7 @@
 
                         {
                             "name": "maxRetries",
-                            "value": 
+                            "value":
                             [
                                 "3"
                             ]
@@ -517,7 +207,7 @@
 
                         {
                             "name": "retryTimeLimit",
-                            "value": 
+                            "value":
                             [
                                 "180"
                             ]
@@ -525,7 +215,7 @@
 
                         {
                             "name": "_id",
-                            "value": 
+                            "value":
                             [
                                 "n9bQ4t6"
                             ]
@@ -533,14 +223,14 @@
 
                         {
                             "name": "parentPolicy",
-                            "value": 
+                            "value":
                             [
                                 ""
                             ]
                         },
                         {
                             "name": "targetResourceId",
-                            "value": 
+                            "value":
                             [
                                 "resource-id"
                             ]
@@ -550,7 +240,7 @@
                     [
                         {
                             "name": "recipe",
-                            "value": 
+                            "value":
                             [
                                 "rebuild"
                             ]
@@ -558,7 +248,7 @@
 
                         {
                             "name": "maxRetries",
-                            "value": 
+                            "value":
                             [
                                 "3"
                             ]
@@ -566,7 +256,7 @@
 
                         {
                             "name": "retryTimeLimit",
-                            "value": 
+                            "value":
                             [
                                 "180"
                             ]
@@ -574,7 +264,7 @@
 
                         {
                             "name": "_id",
-                            "value": 
+                            "value":
                             [
                                 "ItE5xKT"
                             ]
@@ -582,7 +272,7 @@
 
                         {
                             "name": "parentPolicy",
-                            "value": 
+                            "value":
                             [
                                 "n9bQ4t6"
                             ]
@@ -590,7 +280,7 @@
 
                         {
                             "name": "parentPolicyConditions",
-                            "value": 
+                            "value":
                             [
                                 "Failure_Retries",
                                 "Failure_Timeout",
@@ -600,7 +290,7 @@
                         },
                         {
                             "name": "targetResourceId",
-                            "value": 
+                            "value":
                             [
                                 "resource-id"
                             ]
@@ -611,9 +301,9 @@
         ]
     },
 
-    "TCA_": 
+    "TCA_":
     {
-        "Narra": 
+        "Narra":
         [
             {
                 "name": "tname",
@@ -661,7 +351,7 @@
             },
 
             {
-                "serviceConfigurations": 
+                "serviceConfigurations":
                 [
                     [
                         "PMRRCCONNESTABFAILCELLLATENCY",
@@ -680,7 +370,7 @@
             }
         ],
 
-        "Srini": 
+        "Srini":
         [
             {
                 "name": "tname",
@@ -728,7 +418,7 @@
             },
 
             {
-                "serviceConfigurations": 
+                "serviceConfigurations":
                 [
                     [
                         "PMRRCCONNESTABFAILCELLLATENCY",

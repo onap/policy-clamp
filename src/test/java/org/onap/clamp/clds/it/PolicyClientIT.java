@@ -35,13 +35,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.client.req.OperationalPolicyReq;
-import org.onap.clamp.clds.client.req.StringMatchPolicyReq;
 import org.onap.clamp.clds.client.req.TcaMPolicyReq;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Policy;
 import org.onap.clamp.clds.model.prop.PolicyChain;
-import org.onap.clamp.clds.model.prop.StringMatch;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
@@ -72,24 +70,6 @@ public class PolicyClientIT extends AbstractIT {
         modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
         modelName = "example-model06";
         controlName = "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf";
-    }
-
-    private void createUpdateStringMatch(String actionCd) throws Exception {
-        ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-        StringMatch stringMatch = prop.getType(StringMatch.class);
-        if (stringMatch.isFound()) {
-            String stringMatchPolicyRequestUuid = UUID.randomUUID().toString();
-
-            String policyJson = StringMatchPolicyReq.format(refProp, prop);
-            String correctValue = ResourceFileUtil.getResourceAsString("expected/stringmatch.json");
-            JSONAssert.assertEquals(policyJson, correctValue, true);
-            String responseMessage = "";
-            try {
-                responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, stringMatchPolicyRequestUuid);
-            } catch (Exception e) {
-                assertTrue(e.getMessage().contains("Policy send failed: PE500 "));
-            }
-        }
     }
 
     private void createUpdateOperationalPolicy(String actionCd) throws Exception {
@@ -123,21 +103,6 @@ public class PolicyClientIT extends AbstractIT {
         }
     }
 
-    private void deleteStringMatchPolicy(String actionCd) throws Exception {
-        ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-
-        StringMatch stringMatch = prop.getType(StringMatch.class);
-        if (stringMatch.isFound()) {
-            prop.setCurrentModelElementId(stringMatch.getId());
-            String responseMessage = "";
-            try {
-                responseMessage = policyClient.deleteMicrosService(prop);
-            } catch (Exception e) {
-                assertTrue(e.getMessage().contains("Policy delete failed: PE500 "));
-            }
-        }
-    }
-
     private void deleteOperationalPolicy(String actionCd) throws Exception {
         ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
 
@@ -164,19 +129,6 @@ public class PolicyClientIT extends AbstractIT {
                 assertTrue(e.getMessage().contains("Policy delete failed: PE500 "));
             }
         }
-    }
-
-    // @Test
-    /**
-     * Temporarily disabled Test.
-     */
-    public void testCreateUpdateDeleteStringMatchPolicy() throws Exception {
-
-        createUpdateStringMatch(CldsEvent.ACTION_SUBMIT);
-
-        TimeUnit.SECONDS.sleep(20);
-
-        deleteStringMatchPolicy(CldsEvent.ACTION_DELETE);
     }
 
     // @Test

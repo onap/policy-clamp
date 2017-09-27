@@ -1450,58 +1450,6 @@ function visibility_model() {
 
 
         },
-        'bpmn:Collector': function(p, element) {
-          var lane = renderer('bpmn:Lane')(p, element, {
-            fill: 'White'
-          });
-
-          var expandedPool = DiUtil.isExpanded(element);
-
-          if (expandedPool) {
-            drawLine(p, [{
-              x: element.width,
-              y: 80
-            }, {
-              x: element.width,
-              y: 20
-            }]);
-
-            drawLine(p, [{
-              x: 20,
-              y: 0
-            }, {
-              x: 20,
-              y: element.height
-            }]);
-            var text2 = getSemantic(element).name;
-            if (text2 == undefined) {
-              text2 = 'Collector';
-            }
-
-            renderLabel(p, text2, {
-              box: element,
-              align: 'center-middle'
-            });
-
-          } else {
-            // Collapsed pool draw text inline
-            var text2 = getSemantic(element).name;
-            renderLabel(p, text2, {
-              box: element,
-              align: 'center-middle'
-            });
-          }
-
-          var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
-
-          if (participantMultiplicity) {
-            renderer('ParticipantMultiplicityMarker')(p, element);
-          }
-
-          return lane;
-
-
-        },
         'bpmn:VesCollector': function(p, element) {
           var lane = renderer('bpmn:Lane')(p, element, {
             fill: 'White'
@@ -1624,52 +1572,6 @@ function visibility_model() {
           }
 
           return lane;
-        },
-
-
-        'bpmn:StringMatch': function(p, element) {
-          var lane = renderer('bpmn:Lane')(p, element, {
-            fill: 'White'
-          });
-
-          var expandedPool = DiUtil.isExpanded(element);
-
-          if (expandedPool) {
-
-            drawLine(p, [{
-              x: 0,
-              y: 20
-            }, {
-              x: element.width,
-              y: 20
-            }]);
-            var text2 = getSemantic(element).name;
-            if (text2 == undefined) {
-              text2 = 'StringMatch';
-            }
-            renderLabel(p, text2, {
-              box: element,
-              align: 'center-middle'
-            });
-
-          } else {
-            // Collapsed pool draw text inline
-            var text2 = getSemantic(element).name;
-            renderLabel(p, text2, {
-              box: element,
-              align: 'center-middle'
-            });
-          }
-
-          var participantMultiplicity = !!(getSemantic(element).participantMultiplicity);
-
-          if (participantMultiplicity) {
-            renderer('ParticipantMultiplicityMarker')(p, element);
-          }
-
-          return lane;
-
-
         },
 
         'bpmn:TCA': function(p, element) {
@@ -3838,39 +3740,6 @@ function visibility_model() {
       if (bpmnElement.$instanceOf('bpmn:InitiateProcess')) {}
 
       if (bpmnElement.$instanceOf('bpmn:StartEvent')) {}
-      if (bpmnElement.$instanceOf('bpmn:Collector')) {
-        assign(actions, {
-          'Properties': {
-            group: 'clds',
-            label: 'Edit Properties',
-            className: 'clds-edit-properties',
-            title: 'Properties',
-            action: {
-              click: function(event) {
-                lastElementSelected = bpmnElement.id
-                CollectorsWindow(bpmnElement);
-              }
-            }
-          }
-        });
-
-      }
-      if (bpmnElement.$instanceOf('bpmn:StringMatch')) {
-        assign(actions, {
-          'Properties': {
-            group: 'clds',
-            label: 'Edit Properties',
-            className: 'clds-edit-properties',
-            title: 'Properties',
-            action: {
-              click: function(event) {
-                lastElementSelected = bpmnElement.id
-                StringMatchWindow(bpmnElement);
-              }
-            }
-          }
-        });
-      }
       if (bpmnElement.$instanceOf('bpmn:Holmes')) {
         assign(actions, {
           'Properties': {
@@ -5002,19 +4871,6 @@ function visibility_model() {
       }
 
       if (semantic.$instanceOf('bpmn:InitiateProcess')) {
-        return {
-          width: 120,
-          height: 80
-        };
-      }
-      if (semantic.$instanceOf('bpmn:Collector')) {
-        return {
-          width: 120,
-          height: 80
-        };
-      }
-
-      if (semantic.$instanceOf('bpmn:StringMatch')) {
         return {
           width: 120,
           height: 80
@@ -6540,12 +6396,6 @@ function visibility_model() {
       assign(actions, {
         'create.start-event': createAction(
           'bpmn:StartEvent', 'event', 'icon-start-event-none', "Start"
-        ),
-        'create.collector': createAction(
-          'bpmn:Collector', 'event', 'icon-collector-node', 'Collector'
-        ),
-        'create.String-Match': createAction(
-          'bpmn:StringMatch', 'event', 'icon-stringmatch-node', 'String Match'
         ),
         'create.ves-collector': createAction(
           'bpmn:VesCollector', 'event', 'icon-ves-collector-node', 'Ves Collector'
@@ -14377,18 +14227,6 @@ function visibility_model() {
           ]
         }, {
           "name": "InitiateProcess",
-          "superClass": [
-            "Activity",
-            "InteractionNode"
-          ]
-        }, {
-          "name": "Collector",
-          "superClass": [
-            "Activity",
-            "InteractionNode"
-          ]
-        }, {
-          "name": "StringMatch",
           "superClass": [
             "Activity",
             "InteractionNode"

@@ -33,10 +33,10 @@ import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Parse serviceConfigurations from StringMatch json properties.
+ * Parse serviceConfigurations from Tca json properties.
  * <p>
  * Example json:
- * {"StringMatch_0aji7go":{"Group1":[{"name":"rgname","value":"1493749598520"},{
+ * {"Tca_0aji7go":{"Group1":[{"name":"rgname","value":"1493749598520"},{
  * "name":"rgfriendlyname","value":"Group1"},{"name":"policyName","value":
  * "Policy1"},{"name":"policyId","value":"1"},{"serviceConfigurations":[[{"name"
  * :"aaiMatchingFields","value":["complex.city","vserver.vserver-name"]},{"name"

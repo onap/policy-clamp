@@ -34,19 +34,7 @@
 	<!-- by default copy all attributes and elements -->
 	<xsl:template match="/bpmn2:definitions/bpmn2:process">
 
-                <xsl:text>{"collector":[</xsl:text>
-                <xsl:for-each select="bpmn2:collector" >
-		        <xsl:call-template name="network-element" />
-                </xsl:for-each>
-                <xsl:text>],</xsl:text>
-
-                <xsl:text>"stringMatch":[</xsl:text>
-                <xsl:for-each select="bpmn2:stringMatch" >
-		        <xsl:call-template name="network-element" />
-                </xsl:for-each>
-                <xsl:text>],</xsl:text>
-
-                <xsl:text>"policy":[</xsl:text>
+                <xsl:text>{"policy":[</xsl:text>
                 <xsl:for-each select="bpmn2:policy" >
 		        <xsl:call-template name="network-element" />
                 </xsl:for-each>
@@ -63,7 +51,7 @@
 		        <xsl:call-template name="network-element" />
                 </xsl:for-each>
                 <xsl:text>],</xsl:text>
-                
+
                 <xsl:text>"vesCollector":[</xsl:text>
                 <xsl:for-each select="bpmn2:vesCollector" >
 		        <xsl:call-template name="network-element" />

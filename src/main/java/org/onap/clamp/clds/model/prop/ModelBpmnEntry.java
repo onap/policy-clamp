@@ -29,9 +29,8 @@ import com.att.eelf.configuration.EELFManager;
 /**
  * Model BPMN property entry
  * <p>
- * Example json: {"collector":[{"id":"Collector_11r50j1",
- * "from":"StartEvent_1"}],"stringMatch":[{"id":"StringMatch_0h6cbdv"],"policy":
- * [{"id":"Policy_0oxeocn", "from":"StringMatch_0h6cbdv"}]}
+ * Example json: {"policy":
+ * [{"id":"Policy_0oxeocn", "from":"StartEvent_1"}]}
  */
 public class ModelBpmnEntry {
     protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(ModelBpmnEntry.class);

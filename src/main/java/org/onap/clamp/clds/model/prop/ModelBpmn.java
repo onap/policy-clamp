@@ -45,9 +45,8 @@ import org.onap.clamp.clds.service.CldsService;
 /**
  * Parse Model BPMN properties.
  * <p>
- * Example json: {"collector":[{"id":"Collector_11r50j1",
- * "from":"StartEvent_1"}],"stringMatch":[{"id":"StringMatch_0h6cbdv"}],"policy"
- * :[{"id":"Policy_0oxeocn", "from":"StringMatch_0h6cbdv"}]}
+ * Example json: {"policy"
+ * :[{"id":"Policy_0oxeocn", "from":"StartEvent_1"}]}
  */
 public class ModelBpmn {
     protected static final EELFLogger               logger        = EELFManager.getInstance()
@@ -77,7 +76,7 @@ public class ModelBpmn {
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode root = objectMapper.readValue(modelBpmnPropText, ObjectNode.class);
         // iterate over each entry like:
-        // "collector":[{"id":"Collector_11r50j1","from":"StartEvent_1"}]
+        // "Policy":[{"id":"Policy","from":"StartEvent_1"}]
         Iterator<Entry<String, JsonNode>> entryItr = root.fields();
         List<String> bpmnElementIdList = new ArrayList<>();
         while (entryItr.hasNext()) {
@@ -86,7 +85,7 @@ public class ModelBpmn {
             String type = entry.getKey();
             ArrayNode arrayNode = (ArrayNode) entry.getValue();
             // process each id/from object, like:
-            // {"id":"Collector_11r50j1","from":"StartEvent_1"}
+            // {"id":"Policy","from":"StartEvent_1"}
             for (JsonNode anArrayNode : arrayNode) {
                 ObjectNode node = (ObjectNode) anArrayNode;
                 String id = node.get("id").asText();
@@ -123,11 +122,11 @@ public class ModelBpmn {
     }
 
     /**
-     * This method verifies if the ModelElement Type (collector, holmes, tca,
+     * This method verifies if the ModelElement Type (holmes, tca,
      * ...) is in the list.
      *
      * @param type
-     *            A model Element type (tca, collector, ...)
+     *            A model Element type (tca, ...)
      * @return true if the element is found or false otherwise
      */
     public boolean isModelElementTypeInList(String type) {

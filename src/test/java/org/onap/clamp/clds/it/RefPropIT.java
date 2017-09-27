@@ -51,7 +51,7 @@ public class RefPropIT extends AbstractIT {
      */
     @Test
     public void testJsonTemplate() throws IOException {
-        ObjectNode root = (ObjectNode) refProp.getJsonTemplate("sm.template");
+        ObjectNode root = (ObjectNode) refProp.getJsonTemplate("tca.template");
         root.put("closedLoopControlName", "ClosedLoop-FRWL-SIG-1582f840-2881-11e6-b4ec-005056a9d756");
 
         ObjectMapper mapper = new ObjectMapper();

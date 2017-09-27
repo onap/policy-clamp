@@ -197,7 +197,7 @@
     {
         "uuid": "10b535db-b01b-4a4b-aeef-97423d2d2093",
         "invariantUUID": "761ed279-e5ff-43e2-8a05-b160224b7f54",
-        "name": "StringMatchingMS",
+        "name": "TcaMS",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/10b535db-b01b-4a4b-aeef-97423d2d2093/toscaModel",
         "category": "DCAE Component",
