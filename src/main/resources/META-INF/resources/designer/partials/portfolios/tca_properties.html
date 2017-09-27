@@ -360,7 +360,9 @@
 							$("#formId" + num + " #tcaTable").prepend("<tr><td>"
 									+arr[x][i]["serviceConfigurations"][j][0]+" "
 									+(Object.keys(defaults_props['tca']['operator']).find(key => defaults_props['tca']['operator'][key] == (arr[x][i]["serviceConfigurations"][j][1])))+ " " 
-									+arr[x][i]["serviceConfigurations"][j][2]+"</td></tr>");
+									+arr[x][i]["serviceConfigurations"][j][2]+" "
+									+arr[x][i]["serviceConfigurations"][j][3]+" "
+									+arr[x][i]["serviceConfigurations"][j][4]+"</td></tr>");
 						}
 					} else {
 						$("#formId" + num + " #"+arr[x][i].name).val(arr[x][i].value);
