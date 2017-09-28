@@ -31,7 +31,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractIT;
+import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.TcaRequestFormatter;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
@@ -42,12 +42,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test Onap TcaPolicyReq features
+ * Test Onap TcaRequestFormatter features.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
-public class TcaRequestFormatterIT extends AbstractIT {
+public class TcaRequestFormatterItCase extends AbstractItCase {
 
     String modelProp;
     String modelBpmn;

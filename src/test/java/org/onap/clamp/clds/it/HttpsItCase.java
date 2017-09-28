@@ -38,7 +38,7 @@ import javax.net.ssl.X509TrustManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractIT;
+import org.onap.clamp.clds.AbstractItCase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -55,7 +55,7 @@ import org.springframework.web.client.RestTemplate;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:https/https-test.properties")
-public class HttpsIT extends AbstractIT {
+public class HttpsItCase extends AbstractItCase {
 
     @Value("${server.port}")
     private String httpsPort;
@@ -63,6 +63,9 @@ public class HttpsIT extends AbstractIT {
     @Value("${server.http-to-https-redirection.port}")
     private String httpPort;
 
+    /**
+     * Setup the variable before tests execution.
+     */
     @BeforeClass
     public static void setUp() {
 

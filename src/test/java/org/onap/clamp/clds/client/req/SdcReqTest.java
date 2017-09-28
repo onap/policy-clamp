@@ -41,7 +41,7 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 public class SdcReqTest {
 
     String baseUrl              = "AYBABTU";
-    String serviceInvariantUUID = "serviceInvariantUUID";
+    String serviceInvariantUuid = "serviceInvariantUUID";
 
     @Test
     public void getSdcReqUrlsListNoGlobalPropTest() {
@@ -52,7 +52,7 @@ public class SdcReqTest {
         List<CldsSdcResource> cldsSdcResources = new ArrayList<>();
         cldsSdcResources.add(cldsSdcResource);
         List<String> resourceVf = new ArrayList<>();
-        resourceVf.add(serviceInvariantUUID);
+        resourceVf.add(serviceInvariantUuid);
 
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
@@ -60,7 +60,7 @@ public class SdcReqTest {
         when(prop.getGlobal()).thenReturn(global);
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
-        when(global.getService()).thenReturn(serviceInvariantUUID);
+        when(global.getService()).thenReturn(serviceInvariantUuid);
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
         CldsSdcServiceDetail cldsSdcServiceDetail = mock(CldsSdcServiceDetail.class);
@@ -75,7 +75,7 @@ public class SdcReqTest {
         Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
 
         when(global.getResourceVf()).thenReturn(resourceVf);
-        when(cldsSdcResource.getResourceInvariantUUID()).thenReturn(serviceInvariantUUID);
+        when(cldsSdcResource.getResourceInvariantUUID()).thenReturn(serviceInvariantUuid);
         when(cldsSdcResource.getResourceInstanceName()).thenReturn("Resource instance name");
         List<String> expected = new ArrayList<>();
         expected.add("AYBABTU/null/resourceInstances/resourceinstancename/artifacts");

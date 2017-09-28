@@ -36,7 +36,7 @@ import javax.ws.rs.core.SecurityContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.onap.clamp.clds.AbstractIT;
+import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.service.CldsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
-public class CldsServiceIT extends AbstractIT {
+public class CldsServiceItCase extends AbstractItCase {
 
     @Autowired
     CldsService cldsService;
@@ -59,10 +59,10 @@ public class CldsServiceIT extends AbstractIT {
     @Test
     public void testCldsInfoNotAuthorized() throws Exception {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal p = Mockito.mock(Principal.class);
-        Mockito.when(p.getName()).thenReturn("admin");
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("admin");
 
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(p);
+        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
         cldsService.setSecurityContext(securityContext);
 
         CldsInfo cldsInfo = cldsService.getCldsInfo();

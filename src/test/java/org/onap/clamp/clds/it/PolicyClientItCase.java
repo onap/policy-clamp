@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractIT;
+import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.OperationalPolicyReq;
 import org.onap.clamp.clds.client.req.TcaRequestFormatter;
 import org.onap.clamp.clds.model.CldsEvent;
@@ -43,7 +43,6 @@ import org.onap.clamp.clds.model.prop.PolicyChain;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -55,7 +54,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
-public class PolicyClientIT extends AbstractIT {
+public class PolicyClientItCase extends AbstractItCase {
     String modelProp;
     String modelBpmnProp;
     String modelName;
@@ -81,7 +80,7 @@ public class PolicyClientIT extends AbstractIT {
 
                 Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
                         prop, policy.getId(), policyChain);
-                String responseMessage = policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
+                policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
             }
         }
     }
@@ -92,9 +91,9 @@ public class PolicyClientIT extends AbstractIT {
         if (tca.isFound()) {
             String tcaPolicyRequestUuid = UUID.randomUUID().toString();
             String policyJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
-            String responseMessage = "";
+
             try {
-                responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
+                policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Exception while communicating with Policy"));
             }
@@ -109,7 +108,7 @@ public class PolicyClientIT extends AbstractIT {
             prop.setCurrentModelElementId(policy.getId());
             for (PolicyChain policyChain : policy.getPolicyChains()) {
                 prop.setPolicyUniqueId(policyChain.getPolicyId());
-                String responseMessage = policyClient.deleteBrms(prop);
+                policyClient.deleteBrms(prop);
             }
         }
     }
@@ -120,9 +119,9 @@ public class PolicyClientIT extends AbstractIT {
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             prop.setCurrentModelElementId(tca.getId());
-            String responseMessage = "";
+
             try {
-                responseMessage = policyClient.deleteMicrosService(prop);
+                policyClient.deleteMicrosService(prop);
             } catch (Exception e) {
                 assertTrue(e.getMessage().contains("Policy delete failed: PE500 "));
             }

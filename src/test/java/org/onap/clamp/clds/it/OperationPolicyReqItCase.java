@@ -35,7 +35,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractIT;
+import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.OperationalPolicyReq;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
@@ -51,7 +51,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
-public class OperationPolicyReqIT extends AbstractIT {
+public class OperationPolicyReqItCase extends AbstractItCase {
 
     @Test
     public void formatAttributesTest() throws IOException, BuilderException {
