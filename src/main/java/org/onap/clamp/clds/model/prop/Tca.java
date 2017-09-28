@@ -27,25 +27,8 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
- * Parse Tca json properties.
- *
- * Example json:
- * {"TCA_0lm6cix":{"Narra":[{"name":"tname","value":"Narra"},{"name":"tcaEnab",
- * "value":"on"},{"name":"tcaPol","value":"Polcicy1"},{"name":"tcaPolId","value"
- * :"1"},{"name":"tcaInt","value":"1"},{"name":"tcaSev","value":"Critical"},{
- * "name":"tcaVio","value":"1"},{"serviceConfigurations":[["FIELDPATH_test_1",
- * ">","4"],["FIELDPATH_test_1","=","5"]]}],"Srini":[{"name":"tname","value":
- * "Srini"},{"name":"tcaEnab","value":"on"},{"name":"tcaPol","value":"Policy1"},
- * {"name":"tcaPolId","value":"1"},{"name":"tcaInt","value":"1"},{"name":
- * "tcaSev","value":"Major"},{"name":"tcaVio","value":"1"},{
- * "serviceConfigurations":[["FIELDPATH_test_2","=","3"],["FIELDPATH_test_1",">"
- * ,"2"]]}]}}
- *
+ * Parse ONAP Tca json properties.
  *
  */
 public class Tca extends AbstractModelElement {
@@ -53,7 +36,7 @@ public class Tca extends AbstractModelElement {
     protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(Tca.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private List<TcaItem>             tcaItems;
+    private TcaItem                   tcaItem;
 
     private static final String       TYPE_TCA    = "tca";
 
@@ -69,16 +52,12 @@ public class Tca extends AbstractModelElement {
 
         // process Server_Configurations
         if (modelElementJsonNode != null) {
-            Iterator<JsonNode> itr = modelElementJsonNode.elements();
-            tcaItems = new ArrayList<>();
-            while (itr.hasNext()) {
-                tcaItems.add(new TcaItem(itr.next()));
-            }
+            tcaItem = new TcaItem(modelElementJsonNode.elements().next());
         }
     }
 
-    public List<TcaItem> getTcaItems() {
-        return tcaItems;
+    public TcaItem getTcaItem() {
+        return tcaItem;
     }
 
     public static final String getType() {

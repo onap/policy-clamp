@@ -26,7 +26,6 @@ package org.onap.clamp.clds.client.req;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -89,25 +88,14 @@ public class SdcReq {
         String updatedBlueprint = "";
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
-            prop.setCurrentModelElementId(tca.getId());
-            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.template", service);
-            ObjectNode content = rootNode.with("content");
-            TcaMPolicyReq.appendSignatures(refProp, service, content, tca, prop);
-            logger.info("Value of content:" + content);
-            // ObjectNode servConfNode =
-            // (ObjectNode)signatures.get("signatures");
-
-            // get updated blueprint by attaching service Conf from
-            // globalProperties
-            updatedBlueprint = getUpdatedBlueprintWithConfiguration(refProp, prop, yamlvalue, content);
-        }
-
+		updatedBlueprint = TcaRequestFormatter.updatedBlueprintWithConfiguration(refProp, prop, yamlvalue);
+        } 
         logger.info("value of blueprint:" + updatedBlueprint);
         return updatedBlueprint;
     }
 
     private static String getUpdatedBlueprintWithConfiguration(RefProp refProp, ModelProperties prop, String yamlValue,
-            ObjectNode serviceConf) throws JsonProcessingException, IOException {
+            ObjectNode serviceConf) throws IOException {
         String blueprint = "";
         Yaml yaml = new Yaml();
         // Serialiaze Yaml file

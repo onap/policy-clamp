@@ -23,18 +23,18 @@
 
 package org.onap.clamp.clds.client;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.util.UUID;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.onap.clamp.clds.client.req.TcaMPolicyReq;
+import org.onap.clamp.clds.client.req.TcaRequestFormatter;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 /**
  * Send Tca info to policy api.
@@ -46,10 +46,10 @@ public class TcaPolicyDelegate implements JavaDelegate {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
-    private RefProp                 refProp;
+    private RefProp                   refProp;
 
     @Autowired
-    PolicyClient                    policyClient;
+    PolicyClient                      policyClient;
 
     /**
      * Perform activity. Send Tca info to policy api.
@@ -64,8 +64,8 @@ public class TcaPolicyDelegate implements JavaDelegate {
         ModelProperties prop = ModelProperties.create(execution);
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
-            String policyJson = TcaMPolicyReq.formatTca(refProp, prop);
-            String responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
+            String policyJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
+            String responseMessage = policyClient.sendMicroServiceInOther(policyJson, prop, tcaPolicyRequestUuid);
             if (responseMessage != null) {
                 execution.setVariable("tcaPolicyResponseMessage", responseMessage.getBytes());
             }
