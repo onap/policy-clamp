@@ -353,7 +353,10 @@
 				$('#go_properties_tab'+num).text($('#formId' +num+ ' #tname').val());
 				$("#formId"+num + " #properties_tab").invisible();
 			}
-		} 
+		} else {
+      var count = add_one_more();
+      generateTUUID(count);
+    }
 	
 		$("#savePropsBtn").click(function(event) {
 			var num = 1
