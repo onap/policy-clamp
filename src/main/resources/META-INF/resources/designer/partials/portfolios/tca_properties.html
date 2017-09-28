@@ -178,14 +178,6 @@
 								<input class="form-control" onkeydown="return false;" type="text" id="tuuid" name="tuuid"></input>
 							</div>
 						</div>
-						
-						<div class="col-sm-8 form-group" style="display:none;">
-							<label class="col-sm-3"> NF Code </label>
-							<div class="col-sm-9" style="padding:0px;">
-								<input class="form-control" onkeydown="return false;" type="text" id="tnfc" name="tnfc"></input>
-							</div>
-						</div>
-						
 					</div>
 					<div class="row">
 						<div class="col-sm-8 form-group">
@@ -303,7 +295,7 @@
 
 
     var propertiesToString = function(formIdNum) {
-      return $('#formId'+formIdNum+' #fieldPathM').val() + ' ' +
+      return $('#formId'+formIdNum+' #fieldPathM').find(':selected').text() + ' ' +
 				$('#formId'+formIdNum+' #operator').val() + ' ' +
 				$('#formId'+formIdNum+' #threshold').val() + ' ' +
         $('#formId'+formIdNum+' #controlLoopSchema').val() + ' ' +
@@ -328,28 +320,18 @@
 				}
 			}
 		}
-		
+
+		var fieldPathMLabel2Value = function(label) {
+			return Object.keys(defaults_props['tca']['fieldPathM']).find(key => defaults_props['tca']['fieldPathM'][key] == label)
+		}
+		var fieldPathMValue2Label = function(value) {
+			return defaults_props['tca']['fieldPathM'][value];
+		}
+
 		setASDCFields();
-		
-		//load metrics dropdown
-		if (elementMap["global"]){
-			for (var i = 0; i < (elementMap["global"].length); i++){
-				if ((elementMap["global"][i]["name"]) == "vf"){
-					var vfSel = elementMap["global"][i]["value"];	
-					if (vf_Services["shared"]["byVf"][vfSel]["kpi"]){
-						$.each((vf_Services["shared"]["byVf"][vfSel]["kpi"]), function(val, text) {
-			                $('#fieldPathM').append(
-			                    $('<option></option>').val(val).html(text)
-			                );
-			            });
-					}
-					break;
-				};
-			};
-		};
 
 		var arr = elementMap[lastElementSelected];
-		
+
 		if (arr !== undefined) {
 			for (var x in arr){
 				var num = add_one_more();
@@ -358,8 +340,8 @@
 					if (arr[x][i].hasOwnProperty('serviceConfigurations')){
 						for (var j=0; j<arr[x][i]["serviceConfigurations"].length; j++){
 							$("#formId" + num + " #tcaTable").prepend("<tr><td>"
-									+arr[x][i]["serviceConfigurations"][j][0]+" "
-									+(Object.keys(defaults_props['tca']['operator']).find(key => defaults_props['tca']['operator'][key] == (arr[x][i]["serviceConfigurations"][j][1])))+ " " 
+									+fieldPathMValue2Label(arr[x][i]["serviceConfigurations"][j][0])+ " "
+									+(Object.keys(defaults_props['tca']['operator']).find(key => defaults_props['tca']['operator'][key] == (arr[x][i]["serviceConfigurations"][j][1])))+ " "
 									+arr[x][i]["serviceConfigurations"][j][2]+" "
 									+arr[x][i]["serviceConfigurations"][j][3]+" "
 									+arr[x][i]["serviceConfigurations"][j][4]+"</td></tr>");
@@ -390,23 +372,11 @@
 					var header = $(this).find('.tcaParentItems').serializeArray();
 					var sconf = {};
 					var sconfa = [];
-					var checkNF = true;
 					$('#formId' +count+' #tcaTable tr').each(function(){
 						$('td', this).each(function(){
 							var splitTd = $(this).text().split(' ');
+              splitTd[0]=fieldPathMLabel2Value(splitTd[0]);
 							splitTd[1]=defaults_props['tca']['operator'][splitTd[1]];
-							var checkByKpi = vf_Services["shared"]["byKpi"][splitTd[0].replace(/\s/g, "")];
-							if (checkByKpi["fieldPath"]){
-								splitTd.push(Object.keys(vf_Services["shared"]["byKpi"][splitTd[0].replace(/\s/g, "")]["fieldPath"])[0]);
-							};
-							if ((checkByKpi["nfNamingCode"]) && (checkNF)){
-								$.grep(header, function(e,i){ 
-									if (e.name == "tnfc"){
-										header[i]["value"] = (Object.keys(checkByKpi["nfNamingCode"])[0]);
-									}
-								});
-								checkNF = false;
-							}
 							sconfa.push(splitTd);
 						});
 						
@@ -533,7 +503,7 @@
 					var str = $(this).text().split(' ');
 					$('#formId'+count + ' #properties_tab').visible();
 					if (str.length == 5){
-						$('#formId'+count+' #fieldPathM').val(str[0]).multiselect('refresh');
+						$('#formId'+count+' #fieldPathM').val(fieldPathMLabel2Value(str[0])).multiselect('refresh');
 						$('#formId'+count+' #operator').val(str[1]).multiselect('refresh');
 						$('#formId'+count+' #threshold').val(str[2]);
             $('#formId'+count+' #controlLoopSchema').val(str[3]).multiselect('refresh');
@@ -571,9 +541,9 @@
 					$('#formId'+count+' #fieldPathM').prop("selectedIndex", 0).multiselect('refresh');
 					$('#formId'+count+' #operator').prop("selectedIndex", 0).multiselect('refresh');
 					$('#formId'+count+' #threshold').val("");
-          $('#formId'+count+' #controlLoopSchema').prop("selectedIndex", 0).multiselect('refresh');
-          $('#formId'+count+' #closedLoopEventStatus').prop("selectedIndex", 0).multiselect('refresh');
-					
+					$('#formId'+count+' #controlLoopSchema').prop("selectedIndex", 0).multiselect('refresh');
+					$('#formId'+count+' #closedLoopEventStatus').prop("selectedIndex", 0).multiselect('refresh');
+
 					if ($('#formId'+count + ' #deleteThresh').prop('disabled')) {
 						$('#formId'+count + ' #deleteThresh').prop('disabled', false);
 					}
