@@ -23,37 +23,31 @@
 
 package org.onap.clamp.clds.it;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.client.SdcCatalogServices;
-import org.onap.clamp.clds.client.req.SdcReq;
-import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
-import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test SDC Blueprint formater.
+ * Test SDC Blueprint formatter.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class SdcIT extends AbstractIT {
     @Autowired
-    private RefProp refProp;
+    private RefProp            refProp;
 
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
 
     @Test
     public void testTcaBlueprint() throws Exception {
-       
+
     }
 }
