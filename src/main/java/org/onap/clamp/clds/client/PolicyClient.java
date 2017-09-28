@@ -140,7 +140,7 @@ public class PolicyClient {
 
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-        policyParameters.setEcompName(refProp.getStringValue("policy.ecomp.name"));
+        policyParameters.setEcompName(refProp.getStringValue("policy.onap.name"));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
 
         policyParameters.setConfigBody(policyJson);
@@ -177,7 +177,7 @@ public class PolicyClient {
 
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.Base);
-        policyParameters.setEcompName(refProp.getStringValue("policy.ecomp.name"));
+        policyParameters.setEcompName(refProp.getStringValue("policy.onap.name"));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
 
         policyParameters.setConfigBody(configBody);
@@ -192,6 +192,43 @@ public class PolicyClient {
 
         String rtnMsg = send(policyParameters, prop, POLICY_PREFIX_BASE);
         push(PolicyConfigType.Base.toString(), prop);
+
+        return rtnMsg;
+    }
+
+    /**
+     * Perform send of Microservice policy in OTHER type.
+     * 
+     * @param configBody
+     *            The config policy string body
+     * @param prop
+     *            The ModelProperties
+     * @param policyRequestUuid
+     *            The policy request UUID
+     * @return The answer from policy call
+     */
+    public String sendMicroServiceInOther(String configBody, ModelProperties prop, String policyRequestUuid) {
+
+        PolicyParameters policyParameters = new PolicyParameters();
+
+        // Set Policy Type
+        policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
+        policyParameters.setEcompName(refProp.getStringValue("policy.onap.name"));
+        policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
+
+        policyParameters.setConfigBody(configBody);
+        policyParameters.setConfigBodyType(PolicyType.OTHER);
+
+        policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
+        String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
+
+        // Adding this line to clear the policy id from policy name while
+        // pushing to policy engine
+        prop.setPolicyUniqueId("");
+
+        String rtnMsg = send(policyParameters, prop, policyNamePrefix);
+        String policyType = refProp.getStringValue("policy.ms.type");
+        push(policyType, prop);
 
         return rtnMsg;
     }
