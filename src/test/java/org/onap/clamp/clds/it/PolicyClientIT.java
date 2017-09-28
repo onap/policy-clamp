@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractIT;
 import org.onap.clamp.clds.client.req.OperationalPolicyReq;
-import org.onap.clamp.clds.client.req.TcaMPolicyReq;
+import org.onap.clamp.clds.client.req.TcaRequestFormatter;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Policy;
@@ -91,9 +91,7 @@ public class PolicyClientIT extends AbstractIT {
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             String tcaPolicyRequestUuid = UUID.randomUUID().toString();
-            String policyJson = TcaMPolicyReq.formatTca(refProp, prop);
-            String correctValue = ResourceFileUtil.getResourceAsString("expected/tca.json");
-            JSONAssert.assertEquals(policyJson, correctValue, true);
+            String policyJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
             String responseMessage = "";
             try {
                 responseMessage = policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
