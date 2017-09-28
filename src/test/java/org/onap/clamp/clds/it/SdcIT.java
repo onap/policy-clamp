@@ -52,22 +52,8 @@ public class SdcIT extends AbstractIT {
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
 
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        System.setProperty("AJSC_CONF_HOME", System.getProperty("user.dir") + "/src/test/resources/");
-    }
-
     @Test
     public void testTcaBlueprint() throws Exception {
-        String modelProp = ResourceFileUtil.getResourceAsString("example/modelPropForPolicy.json");
-        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnPropForPolicy.json");
-        String modelName = "example-model06";
-        String controlName = "ClosedLoop-FRWL-SIG04-1582f840-test-test-1234-005056a9d756";
-        String docText = ResourceFileUtil.getResourceAsString("example/templatePropForTca.json");
-        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT,
-                true, modelBpmnProp, modelProp);
-        String blueprint = SdcReq.formatBlueprint(refProp, prop, docText);
-        System.out.println("blueprint=" + blueprint);
-        //assertEquals(blueprint, "");
+       
     }
 }
