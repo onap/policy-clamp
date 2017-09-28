@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.onap.policy.controlloop.policy.PolicyResult;
 import org.onap.policy.sdc.Resource;
 import org.onap.policy.sdc.ResourceType;
-import org.onap.policy.controlloop.policy.PolicyResult;
 
 public class OperationalPolicyReqTest {
 
@@ -49,7 +49,7 @@ public class OperationalPolicyReqTest {
         stringList.add("test2");
         stringList.add("test3");
         stringList.add("test4");
-        Resource resources[] = (Resource[]) method.invoke(null, stringList, ResourceType.VF);
+        Resource[] resources = (Resource[]) method.invoke(null, stringList, ResourceType.VF);
 
         assertTrue(resources.length == 4);
         assertTrue("test1".equals(resources[0].getResourceName()));
@@ -69,7 +69,7 @@ public class OperationalPolicyReqTest {
         stringList.add("SUCCESS");
         stringList.add("FAILURE_GUARD");
         stringList.add("FAILURE_TIMEOUT");
-        PolicyResult policyResult[] = (PolicyResult[]) method.invoke(null, stringList);
+        PolicyResult[] policyResult = (PolicyResult[]) method.invoke(null, stringList);
 
         assertTrue(policyResult.length == 4);
         assertTrue(policyResult[0].equals(PolicyResult.FAILURE));

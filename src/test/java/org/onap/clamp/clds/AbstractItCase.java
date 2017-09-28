@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("clamp-default")
-public abstract class AbstractIT {
+public abstract class AbstractItCase {
 
     @Autowired
     protected RefProp      refProp;

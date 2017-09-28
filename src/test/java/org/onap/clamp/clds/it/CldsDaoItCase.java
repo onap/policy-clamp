@@ -32,7 +32,7 @@ import javax.ws.rs.NotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractIT;
+import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
@@ -50,7 +50,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
-public class CldsDaoIT extends AbstractIT {
+public class CldsDaoItCase extends AbstractItCase {
 
     @Autowired
     public CldsDao cldsDao;
@@ -59,6 +59,12 @@ public class CldsDaoIT extends AbstractIT {
     private String imageText;
     private String bpmnPropText;
 
+    /**
+     * Setup the variable before the tests execution.
+     * 
+     * @throws IOException
+     *             In case of issues when opening the files
+     */
     @Before
     public void setupBefore() throws IOException {
         bpmnText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-template.xml");
