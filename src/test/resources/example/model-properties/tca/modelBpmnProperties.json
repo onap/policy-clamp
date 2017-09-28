@@ -1,0 +1,150 @@
+{
+  "TCA_1jy9to4": {
+    "group1": [
+      {
+        "name": "tname",
+        "value": "group1"
+      },
+      {
+        "name": "tuuid",
+        "value": "f734f031-10aa-t8fb-330f-04dde2886325"
+      },
+      {
+        "name": "tcaPolId",
+        "value": "policy1"
+      },
+      {
+        "name": "eventName",
+        "value": "vFirewallBroadcastPackets"
+      },
+      {
+        "serviceConfigurations": [
+          [
+            "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated",
+            "LESS_OR_EQUAL",
+            "123",
+            "VM",
+            "ABATED"
+          ],
+          [
+            "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+            "GREATER_OR_EQUAL",
+            "123",
+            "VNF",
+            "ONSET"
+          ]
+        ]
+      }
+    ]
+  },
+  "Policy_0honxgv": {
+    "policy1": [
+      {
+        "name": "pname",
+        "value": "policy1"
+      },
+      {
+        "name": "pid",
+        "value": "0"
+      },
+      {
+        "name": "timeout",
+        "value": "345"
+      },
+      {
+        "policyConfigurations": [
+          [
+            {
+              "name": "maxRetries",
+              "value": [
+                "3"
+              ]
+            },
+            {
+              "name": "retryTimeLimit",
+              "value": [
+                "180"
+              ]
+            },
+            {
+              "name": "_id",
+              "value": [
+                "dGLuNqg"
+              ]
+            },
+            {
+              "name": "parentPolicy",
+              "value": [
+                ""
+              ]
+            },
+            {
+              "name": "targetResourceId",
+              "value": [
+                "resourceid"
+              ]
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  "global": [
+    {
+      "name": "actionSet",
+      "value": [
+        "vnfRecipe"
+      ]
+    },
+    {
+      "name": "service",
+      "value": [
+        "serviceUUID"
+      ]
+    },
+    {
+      "name": "location",
+      "value": [
+        "SNDGCA64",
+        "ALPRGAED"
+      ]
+    },
+    {
+      "name": "vf",
+      "value": [
+        "f5213e3a-9191-4362-93b5-b67f8d770e44"
+      ]
+    },
+    {
+      "name": "location",
+      "value": [
+        "SNDGCA64",
+        "ALPRGAED",
+        "LSLEILAA",
+        "MDTWNJC1"
+      ]
+    }
+  ],
+  "shared": {
+    "byService": {
+      "": {
+        "vf": {
+          "": ""
+        },
+        "location": {
+          "": ""
+        },
+        "alarmCondition": {
+          "": ""
+        }
+      }
+    },
+    "byVf": {
+      "": {
+        "vfc": {
+          "": ""
+        }
+      }
+    }
+  }
+}

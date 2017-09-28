@@ -28,59 +28,42 @@ import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Parse Tca Threshhold json properties.
- *
- * Example json:
- * {"TCA_0lm6cix":{"Narra":[{"name":"tname","value":"Narra"},{"name":"tcaEnab",
- * "value":"on"},{"name":"tcaPol","value":"Polcicy1"},{"name":"tcaPolId","value"
- * :"1"},{"name":"tcaInt","value":"1"},{"name":"tcaSev","value":"Critical"},{
- * "name":"tcaVio","value":"1"},{"serviceConfigurations":[["FIELDPATH_test_1",
- * ">","4"],["FIELDPATH_test_1","=","5"]]}],"Srini":[{"name":"tname","value":
- * "Srini"},{"name":"tcaEnab","value":"on"},{"name":"tcaPol","value":"Policy1"},
- * {"name":"tcaPolId","value":"1"},{"name":"tcaInt","value":"1"},{"name":
- * "tcaSev","value":"Major"},{"name":"tcaVio","value":"1"},{
- * "serviceConfigurations":[["FIELDPATH_test_2","=","3"],["FIELDPATH_test_1",">"
- * ,"2"]]}]}}
- *
+ * Parse ONAP Tca Threshold json properties.
  *
  */
-public class TcaThreshhold {
+public class TcaThreshold {
 
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(TcaThreshhold.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(TcaThreshold.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private String                  metric;
-    private String                  fieldPath;
-    private String                  operator;
-    private Integer                 threshhold;
+    private String                    fieldPath;
+    private String                    operator;
+    private Integer                   threshold;
+    private String                    closedLoopEventStatus;
+    private String                    controlLoopSchema;
 
     /**
      * Parse Tca Threshhold given json node
      *
      * @param node
      */
-    public TcaThreshhold(JsonNode node) {
+    public TcaThreshold(JsonNode node) {
 
         if (node.get(0) != null) {
-            metric = node.get(0).asText();
+            fieldPath = node.get(0).asText();
         }
         if (node.get(1) != null) {
             operator = node.get(1).asText();
         }
         if (node.get(2) != null) {
-            threshhold = Integer.valueOf(node.get(2).asText());
+            threshold = Integer.valueOf(node.get(2).asText());
         }
         if (node.get(3) != null) {
-            fieldPath = node.get(3).asText();
+            controlLoopSchema = node.get(3).asText();
         }
-    }
-
-    public String getMetric() {
-        return metric;
-    }
-
-    public void setMetric(String metric) {
-        this.metric = metric;
+        if (node.get(4) != null) {
+            closedLoopEventStatus = node.get(4).asText();
+        }
     }
 
     public String getFieldPath() {
@@ -99,12 +82,27 @@ public class TcaThreshhold {
         this.operator = operator;
     }
 
-    public Integer getThreshhold() {
-        return threshhold;
+    public Integer getThreshold() {
+        return threshold;
     }
 
-    public void setThreshhold(Integer threshhold) {
-        this.threshhold = threshhold;
+    public void setThreshold(Integer threshold) {
+        this.threshold = threshold;
     }
 
+    public String getClosedLoopEventStatus() {
+        return closedLoopEventStatus;
+    }
+
+    public void setClosedLoopEventStatus(String closedLoopEventStatus) {
+        this.closedLoopEventStatus = closedLoopEventStatus;
+    }
+
+    public String getControlLoopSchema() {
+        return controlLoopSchema;
+    }
+
+    public void setControlLoopSchema(String controlLoopSchema) {
+        this.controlLoopSchema = controlLoopSchema;
+    }
 }
