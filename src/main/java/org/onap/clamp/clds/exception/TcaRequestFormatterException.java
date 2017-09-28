@@ -24,7 +24,7 @@
 package org.onap.clamp.clds.exception;
 
 /**
- * New exception to capture TcaRequestFormaterException errors.
+ * New exception to capture TcaRequestFormatterException errors.
  *
  */
 public class TcaRequestFormatterException extends RuntimeException {
@@ -35,7 +35,8 @@ public class TcaRequestFormatterException extends RuntimeException {
     private static final long serialVersionUID = 169875373143236667L;
 
     /**
-     * This constructor can be used to create a new TcaRequestFormaterException.
+     * This constructor can be used to create a new
+     * TcaRequestFormatterException.
      * 
      * @param message
      *            A string message detailing the problem
@@ -47,9 +48,10 @@ public class TcaRequestFormatterException extends RuntimeException {
     }
 
     /**
-     * This constructor can be used to create a new TcaRequestFormaterException.
-     * Use this constructor only if you are creating a new exception stack, not
-     * if an exception was already raised by another code.
+     * This constructor can be used to create a new
+     * TcaRequestFormatterException. Use this constructor only if you are
+     * creating a new exception stack, not if an exception was already raised by
+     * another code.
      *
      * @param message
      *            A string message detailing the problem
