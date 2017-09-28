@@ -111,7 +111,7 @@ public class SdcCatalogServices {
 
             String resp = getResponse(conn);
             if (resp != null) {
-                logger.info(resp.toString());
+                logger.info(resp);
                 // metrics log
                 LoggingUtils.setResponseContext("0", "Get sdc services success", this.getClass().getName());
                 return resp;
@@ -318,18 +318,18 @@ public class SdcCatalogServices {
      * @param prop
      * @param userid
      * @param url
-     * @param formattedSdcReq
+     * @param formatedSdcReq
      * @return
      */
-    public String uploadArtifactToSdc(ModelProperties prop, String userid, String url, String formatttedSdcReq) {
+    public String uploadArtifactToSdc(ModelProperties prop, String userid, String url, String formatedSdcReq) {
         // Verify whether it is triggered by Validation Test button from UI
         if (prop.isTest()) {
             return "sdc artifact upload not executed for test action";
         }
         try {
             logger.info("userid=" + userid);
-            String md5Text = SdcReq.calculateMD5ByString(formatttedSdcReq);
-            byte[] postData = SdcReq.stringToByteArray(formatttedSdcReq);
+            String md5Text = SdcReq.calculateMD5ByString(formatedSdcReq);
+            byte[] postData = SdcReq.stringToByteArray(formatedSdcReq);
             int postDataLength = postData.length;
             HttpURLConnection conn = getSdcHttpUrlConnection(userid, postDataLength, url, md5Text);
             try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
@@ -682,8 +682,7 @@ public class SdcCatalogServices {
                     artifactName = artifactNameNode.textValue();
                     artifactName = artifactName.substring(artifactName.lastIndexOf('.') + 1);
                 }
-                if (artifactUrlNode != null && artifactName != null && !artifactName.isEmpty()
-                        && artifactName.equalsIgnoreCase("csv")) {
+                if (artifactUrlNode != null && "csv".equalsIgnoreCase(artifactName)) {
                     String responsesFromArtifactUrl = getResponsesFromArtifactUrl(artifactUrlNode.textValue());
                     cldsVfKPIDataList.addAll(parseCsvToGetFieldPath(responsesFromArtifactUrl));
                     logger.info(responsesFromArtifactUrl);
@@ -1053,7 +1052,7 @@ public class SdcCatalogServices {
                         for (CldsAlarmCondition currCldsAlarmCondition : currCldsVfcData.getCldsAlarmConditions()) {
                             alarmCondNode.put(currCldsAlarmCondition.getAlarmConditionKey(),
                                     currCldsAlarmCondition.getAlarmConditionKey());
-                            if (currCldsAlarmCondition.getEventName().equalsIgnoreCase("alarmCondition")) {
+                            if ("alarmCondition".equalsIgnoreCase(currCldsAlarmCondition.getEventName())) {
                                 alarmCondNode.put(currCldsAlarmCondition.getAlarmConditionKey(),
                                         currCldsAlarmCondition.getAlarmConditionKey());
                             } else {
