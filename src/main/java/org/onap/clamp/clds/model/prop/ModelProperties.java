@@ -135,7 +135,7 @@ public class ModelProperties {
                                             .newInstance(this, modelBpmn, modelJson)));
                         } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
                                 | InvocationTargetException e) {
-                            logger.warn("Unable to instantiate a ModelElement, exception follows: " + e);
+                            logger.warn("Unable to instantiate a ModelElement, exception follows: ", e);
                         }
                     });
         }
