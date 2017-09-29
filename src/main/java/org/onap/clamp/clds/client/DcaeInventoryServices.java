@@ -101,7 +101,7 @@ public class DcaeInventoryServices {
             String serviceUuid = sdcCatalogServices.getServiceUuidFromServiceInvariantId(invariantServiceUuid);
             String resourceUuid = "";
             if (resourceUuidList != null && !resourceUuidList.isEmpty()) {
-                resourceUuid = resourceUuidList.get(0).toString();
+                resourceUuid = resourceUuidList.get(0);
             }
             /* Invemtory service url is called in this method */
             isDcaeInfoAvailable = getDcaeInformation(artifactName, serviceUuid, resourceUuid);
@@ -215,7 +215,7 @@ public class DcaeInventoryServices {
             JSONArray itemsArray = (JSONArray) jsonObj.get("items");
             JSONObject dcaeServiceType0 = (JSONObject) itemsArray.get(0);
             daceInventoryResponse = dcaeServiceType0.toString();
-            logger.info(daceInventoryResponse.toString());
+            logger.info(daceInventoryResponse);
         }
         LoggingUtils.setTimeContext(startTime, new Date());
         metricsLogger.info("getDcaeInformation complete: number services returned=" + numServices);
