@@ -88,8 +88,8 @@ public class SdcReq {
         String updatedBlueprint = "";
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
-		updatedBlueprint = TcaRequestFormatter.updatedBlueprintWithConfiguration(refProp, prop, yamlvalue);
-        } 
+            updatedBlueprint = TcaRequestFormatter.updatedBlueprintWithConfiguration(refProp, prop, yamlvalue);
+        }
         logger.info("value of blueprint:" + updatedBlueprint);
         return updatedBlueprint;
     }

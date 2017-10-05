@@ -162,16 +162,18 @@ public class PolicyClient {
 
     /**
      * Perform send of base policy in OTHER type.
-     * 
+     *
      * @param configBody
      *            The config policy string body
+     * @param configPolicyName
+     *            The config policy name of the component that has been pre-deployed in DCAE
      * @param prop
      *            The ModelProperties
      * @param policyRequestUuid
      *            The policy request UUID
      * @return The answer from policy call
      */
-    public String sendBasePolicyInOther(String configBody, ModelProperties prop, String policyRequestUuid) {
+    public String sendBasePolicyInOther(String configBody, String configPolicyName, ModelProperties prop, String policyRequestUuid) {
 
         PolicyParameters policyParameters = new PolicyParameters();
 
@@ -183,6 +185,7 @@ public class PolicyClient {
         policyParameters.setConfigBody(configBody);
         policyParameters.setConfigBodyType(PolicyType.OTHER);
         policyParameters.setConfigName("HolmesPolicy");
+        policyParameters.setPolicyName(configPolicyName);
 
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
 

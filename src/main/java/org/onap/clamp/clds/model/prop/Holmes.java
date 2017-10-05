@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Parse Holmes bpmn parameters json properties.
  * <p>
  * Example json:
- * [{"name":"correlationalLogic","value":"vcwx"},{"name":"operationalPolicy","value":"cccc"}]
+ * [{"name":"correlationalLogic","value":"vcwx"},{"name":"configPolicyName","value":"cccc"}]
  *
  */
 public class Holmes extends AbstractModelElement {
@@ -38,11 +38,11 @@ public class Holmes extends AbstractModelElement {
 
     private String              correlationLogic;
 
-    private String              operationalPolicy;
+    private String              configPolicyName;
 
     /**
      * Default constructor for Holmes Element
-     * 
+     *
      * @param modelProp
      *            The ModelProperties containing the all the info, like bpmn,
      *            bpmn params, etc ...
@@ -53,7 +53,7 @@ public class Holmes extends AbstractModelElement {
         super(TYPE_HOLMES, modelProp, modelBpmn, modelJson);
 
         correlationLogic = this.getValueByName("correlationalLogic");
-        operationalPolicy = this.getValueByName("operationalPolicy");
+        configPolicyName = this.getValueByName("configPolicyName");
     }
 
     public static final String getType() {
@@ -64,8 +64,8 @@ public class Holmes extends AbstractModelElement {
         return correlationLogic;
     }
 
-    public String getOperationalPolicy() {
-        return operationalPolicy;
+    public String getConfigPolicyName() {
+        return configPolicyName;
     }
 
 }

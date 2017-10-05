@@ -70,21 +70,24 @@ public class SdcSendReqDelegate implements JavaDelegate {
         getSdcAttributes((String) execution.getVariable("controlName"));
         ModelProperties prop = ModelProperties.create(execution);
         String bluprintPayload = SdcReq.formatBlueprint(refProp, prop, docText);
-        String formattedSdcReq = SdcReq.formatSdcReq(bluprintPayload, artifactName, artifactLabel, artifactType);
-        if (formattedSdcReq != null) {
-            execution.setVariable("formattedArtifactReq", formattedSdcReq.getBytes());
-        }
-        List<String> sdcReqUrlsList = SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, execution);
+        // no need to upload blueprint for Holmes, thus blueprintPayload for Holmes is empty
+        if (!bluprintPayload.isEmpty()) {
+            String formattedSdcReq = SdcReq.formatSdcReq(bluprintPayload, artifactName, artifactLabel, artifactType);
+            if (formattedSdcReq != null) {
+                execution.setVariable("formattedArtifactReq", formattedSdcReq.getBytes());
+            }
+            List<String> sdcReqUrlsList = SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, execution);
 
-        String sdcLocationsPayload = SdcReq.formatSdcLocationsReq(prop, artifactName);
-        String locationArtifactName = (String) execution.getVariable("controlName") + "-location.json";
-        String formattedSdcLocationReq = SdcReq.formatSdcReq(sdcLocationsPayload, locationArtifactName,
+            String sdcLocationsPayload = SdcReq.formatSdcLocationsReq(prop, artifactName);
+            String locationArtifactName = (String) execution.getVariable("controlName") + "-location.json";
+            String formattedSdcLocationReq = SdcReq.formatSdcReq(sdcLocationsPayload, locationArtifactName,
                 locationArtifactLabel, locationArtifactType);
-        if (formattedSdcLocationReq != null) {
-            execution.setVariable("formattedLocationReq", formattedSdcLocationReq.getBytes());
-        }
-        sdcCatalogServices.uploadToSdc(prop, userid, sdcReqUrlsList, formattedSdcReq, formattedSdcLocationReq,
+            if (formattedSdcLocationReq != null) {
+                execution.setVariable("formattedLocationReq", formattedSdcLocationReq.getBytes());
+            }
+            sdcCatalogServices.uploadToSdc(prop, userid, sdcReqUrlsList, formattedSdcReq, formattedSdcLocationReq,
                 artifactName, locationArtifactName);
+        }
     }
 
     /**

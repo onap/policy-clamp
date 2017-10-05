@@ -113,7 +113,7 @@ public class ModelPropertiesTest {
         Holmes holmes = prop.getType(Holmes.class);
         assertNotNull(holmes);
         assertTrue(holmes.isFound());
-        assertEquals("policy1", holmes.getOperationalPolicy());
+        assertEquals("configPolicy1", holmes.getConfigPolicyName());
         assertEquals("blabla", holmes.getCorrelationLogic());
     }
 

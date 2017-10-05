@@ -43,12 +43,10 @@
           <textarea class="form-control" focus="true" name="correlationalLogic"  id="correlationalLogic" />
         </div>
         <div>
-          <label for="operationalPolicy" class="col-sm-4 control-label">Operational policy</label>
+          <label for="configPolicyName" class="col-sm-4 control-label">Configuration Policy Name</label>
         </div>
-    <div class="col-sm-8">
-    <select class="form-control" id="operationalPolicy" name="operationalPolicy" autofocus="autofocus" required ng-trim="true" enableFilter="true">
-		  <option ng-repeat="x in operationalPolicies" value="{{x}}">{{x}}</option>
-		</select>
+        <div class="col-sm-8">
+          <textarea class="form-control" focus="true" name="configPolicyName"  id="configPolicyName" />
         </div>
       </div>
     </form>

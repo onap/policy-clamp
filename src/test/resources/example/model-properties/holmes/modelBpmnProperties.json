@@ -5,8 +5,8 @@
       "value": "blabla"
     },
     {
-      "name": "operationalPolicy",
-      "value": "policy1"
+      "name": "configPolicyName",
+      "value": "configPolicy1"
     }
   ],
   "Policy_0honxgv": {

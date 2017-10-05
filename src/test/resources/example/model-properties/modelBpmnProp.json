@@ -101,7 +101,7 @@
       "value": "blabla"
     },
     {
-      "name": "operationalPolicy",
+      "name": "configPolicyName",
       "value": "policy1"
     }
   ]
