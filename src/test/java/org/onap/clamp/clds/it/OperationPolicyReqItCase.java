@@ -75,6 +75,9 @@ public class OperationPolicyReqItCase extends AbstractItCase {
         yaml = yaml.replaceAll("trigger_policy: (.*)", "trigger_policy: <generatedId>");
         yaml = yaml.replaceAll("id: (.*)", "id: <generatedId>");
         yaml = yaml.replaceAll("success: (.*)", "success: <generatedId>");
+        // Remove this field as not always present (depends of policy api)
+        yaml = yaml.replaceAll("  pnf: null", "");
+        yaml = yaml.substring(yaml.indexOf("controlLoop:"), yaml.length());
 
         assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-1.yaml"), yaml);
 
@@ -82,6 +85,9 @@ public class OperationPolicyReqItCase extends AbstractItCase {
         yaml = yaml.replaceAll("trigger_policy: (.*)", "trigger_policy: <generatedId>");
         yaml = yaml.replaceAll("id: (.*)", "id: <generatedId>");
         yaml = yaml.replaceAll("success: (.*)", "success: <generatedId>");
+        // Remove this field as not always present (depends of policy api)
+        yaml = yaml.replaceAll("  pnf: null", "");
+        yaml = yaml.substring(yaml.indexOf("controlLoop:"), yaml.length());
 
         assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-2.yaml"), yaml);
     }
