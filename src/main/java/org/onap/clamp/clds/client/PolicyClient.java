@@ -365,15 +365,18 @@ public class PolicyClient {
 
         logger.info("policyName=" + policyName);
         configRequestParameters.setPolicyName(policyName);
-
-        Collection<PolicyConfig> response = getPolicyEngine().getConfig(configRequestParameters);
-        for (PolicyConfig policyConfig : response) {
-            Integer version = Integer.valueOf(policyConfig.getPolicyVersion());
-            versions.add(version);
+        try {
+            Collection<PolicyConfig> response = getPolicyEngine().getConfig(configRequestParameters);
+            for (PolicyConfig policyConfig : response) {
+                Integer version = Integer.valueOf(policyConfig.getPolicyVersion());
+                versions.add(version);
+            }
+            Collections.sort(versions);
+            logger.info("Policy versions.size()=" + versions.size());
+        } catch (PolicyConfigException e) {
+            // just print warning - if no policy version found
+            logger.warn("warning: policy not found...policy name - " + policyName, e.getMessage());
         }
-        Collections.sort(versions);
-        logger.info("Policy versions.size()=" + versions.size());
-
         return versions;
 
     }
