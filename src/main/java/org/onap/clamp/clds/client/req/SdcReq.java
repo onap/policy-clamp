@@ -94,46 +94,6 @@ public class SdcReq {
         return updatedBlueprint;
     }
 
-    private static String getUpdatedBlueprintWithConfiguration(RefProp refProp, ModelProperties prop, String yamlValue,
-            ObjectNode serviceConf) throws IOException {
-        String blueprint = "";
-        Yaml yaml = new Yaml();
-        // Serialiaze Yaml file
-        Map<String, Map> loadedYaml = (Map<String, Map>) yaml.load(yamlValue);
-        // Get node templates information from Yaml
-        Map<String, Map> nodeTemplates = loadedYaml.get("node_templates");
-        logger.info("value of NodeTemplates:" + nodeTemplates);
-        // Get Tca Object information from node templates of Yaml
-        Map<String, Map> tcaObject = nodeTemplates.get("MTCA");
-        logger.info("value of Tca:" + tcaObject);
-        // Get Properties Object information from tca of Yaml
-        Map<String, String> propsObject = tcaObject.get("properties");
-        logger.info("value of PropsObject:" + propsObject);
-        String deploymentJsonObject = propsObject.get("deployment_JSON");
-        logger.info("value of deploymentJson:" + deploymentJsonObject);
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        ObjectNode deployJsonNode = (ObjectNode) mapper.readTree(deploymentJsonObject);
-
-        // "policyName":"example_model06.ClosedLoop_FRWL_SIG_0538e6f2_8c1b_4656_9999_3501b3c59ad7_Tca_",
-        String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
-        String policyName = prop.getCurrentPolicyScopeAndFullPolicyName(policyNamePrefix);
-        serviceConf.put("policyName", policyName);
-
-        deployJsonNode.set("configuration", serviceConf);
-        propsObject.put("deployment_JSON", deployJsonNode.toString());
-        blueprint = yaml.dump(loadedYaml);
-        // To remove new lines in blueprint for deployment_json
-        String[] deploymentJson = blueprint.split(" deployment_JSON:");
-        String beforeJson = deploymentJson[0];
-        String afterJson = deploymentJson[1].replaceAll("\\s+", " ");
-        blueprint = beforeJson + " deployment_JSON:" + afterJson;
-        logger.info("value of updated Yaml File:" + blueprint);
-
-        return blueprint;
-    }
-
     public static String formatSdcLocationsReq(ModelProperties prop, String artifactName) {
         ObjectMapper objectMapper = new ObjectMapper();
         Global global = prop.getGlobal();
