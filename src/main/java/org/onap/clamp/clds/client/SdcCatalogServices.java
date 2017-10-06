@@ -318,18 +318,18 @@ public class SdcCatalogServices {
      * @param prop
      * @param userid
      * @param url
-     * @param formatedSdcReq
+     * @param formattedSdcReq
      * @return
      */
-    public String uploadArtifactToSdc(ModelProperties prop, String userid, String url, String formatedSdcReq) {
+    public String uploadArtifactToSdc(ModelProperties prop, String userid, String url, String formattedSdcReq) {
         // Verify whether it is triggered by Validation Test button from UI
         if (prop.isTest()) {
             return "sdc artifact upload not executed for test action";
         }
         try {
             logger.info("userid=" + userid);
-            String md5Text = SdcReq.calculateMD5ByString(formatedSdcReq);
-            byte[] postData = SdcReq.stringToByteArray(formatedSdcReq);
+            String md5Text = SdcReq.calculateMD5ByString(formattedSdcReq);
+            byte[] postData = SdcReq.stringToByteArray(formattedSdcReq);
             int postDataLength = postData.length;
             HttpURLConnection conn = getSdcHttpUrlConnection(userid, postDataLength, url, md5Text);
             try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
