@@ -26,18 +26,10 @@ package org.onap.clamp.clds.service;
 import com.att.ajsc.common.AjscService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
@@ -52,7 +44,6 @@ import javax.xml.transform.TransformerException;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
-import org.onap.clamp.clds.model.prop.ModelBpmn;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +55,6 @@ import org.springframework.beans.factory.annotation.Value;
 @AjscService
 @Path("/cldsTempate")
 public class CldsTemplateService extends SecureServiceBase {
-
-    private static final String     POLICY_KEY       = "Policy";
 
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
     private String                  cldsPermissionTypeTemplate;
@@ -244,14 +233,6 @@ public class CldsTemplateService extends SecureServiceBase {
         String bpmnText = cldsTemplate.getBpmnText();
         String imageText = cldsTemplate.getImageText();
         String propText = cldsTemplate.getPropText();
-        Map<String, String> newBpmnIdsMap = getNewBpmnIdsMap(bpmnText, cldsTemplate.getPropText());
-        for (String currBpmnId : newBpmnIdsMap.keySet()) {
-            if (currBpmnId != null && newBpmnIdsMap.get(currBpmnId) != null) {
-                bpmnText = bpmnText.replace(currBpmnId, newBpmnIdsMap.get(currBpmnId));
-                imageText = imageText.replace(currBpmnId, newBpmnIdsMap.get(currBpmnId));
-                propText = propText.replace(currBpmnId, newBpmnIdsMap.get(currBpmnId));
-            }
-        }
         cldsTemplate.setBpmnText(bpmnText);
         cldsTemplate.setImageText(imageText);
         cldsTemplate.setPropText(propText);
@@ -287,50 +268,5 @@ public class CldsTemplateService extends SecureServiceBase {
         LoggingUtils.setResponseContext("0", "Get template names success", this.getClass().getName());
         auditLogger.info("GET template names completed");
         return names;
-    }
-
-    private Map<String, String> getNewBpmnIdsMap(String bpmnText, String propText)
-            throws TransformerException, IOException {
-        /**
-         * Test sample code start
-         */
-        String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmnText);
-        ModelBpmn templateBpmn = ModelBpmn.create(bpmnJson);
-        List<String> bpmnElementIds = templateBpmn.getBpmnElementIds();
-        logger.info("value of elementIds:" + bpmnElementIds);
-        logger.info("value of prop text:" + propText);
-        Map<String, String> bpmnIoIdsMap = new HashMap<>();
-        if (bpmnElementIds != null && !bpmnElementIds.isEmpty()) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode root = objectMapper.readValue(propText, ObjectNode.class);
-            Iterator<Entry<String, JsonNode>> entryItr = root.fields();
-            while (entryItr.hasNext()) {
-                // process the entry
-                Entry<String, JsonNode> entry = entryItr.next();
-                String keyPropName = entry.getKey();
-                for (String currElementId : bpmnElementIds) {
-                    if (keyPropName != null && keyPropName.equalsIgnoreCase(currElementId)) {
-                        ArrayNode arrayNode = (ArrayNode) entry.getValue();
-                        // process each id/from object, like:
-                        // {"id":"Policy_11r50j1", "from":"StartEvent_1"}
-                        for (JsonNode anArrayNode : arrayNode) {
-                            ObjectNode node = (ObjectNode) anArrayNode;
-                            String valueNode = node.get("value").asText();
-                            logger.info("value of node:" + valueNode);
-                            if (keyPropName.startsWith(POLICY_KEY)) {
-                                valueNode = POLICY_KEY + "_" + valueNode;
-                            }
-                            bpmnIoIdsMap.put(keyPropName, valueNode);
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-        logger.info("value of hashmap:" + bpmnIoIdsMap);
-        /**
-         * Test sample code end
-         */
-        return bpmnIoIdsMap;
     }
 }
