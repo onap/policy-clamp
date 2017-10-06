@@ -124,6 +124,11 @@ public class SdcReq {
         deployJsonNode.set("configuration", serviceConf);
         propsObject.put("deployment_JSON", deployJsonNode.toString());
         blueprint = yaml.dump(loadedYaml);
+        // To remove new lines in blueprint for deployment_json
+        String[] deploymentJson = blueprint.split(" deployment_JSON:");
+        String beforeJson = deploymentJson[0];
+        String afterJson = deploymentJson[1].replaceAll("\\s+", " ");
+        blueprint = beforeJson + " deployment_JSON:" + afterJson;
         logger.info("value of updated Yaml File:" + blueprint);
 
         return blueprint;
@@ -207,7 +212,6 @@ public class SdcReq {
                                 String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
                                         + normalizedResourceInstanceName + "/artifacts";
                                 urlList.add(svcUrl);
-
                             }
                         }
                     }
