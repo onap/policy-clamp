@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.onap.clamp.clds.exception.TcaRequestFormatterException;
@@ -150,6 +151,15 @@ public class TcaRequestFormatter {
             Map<String, Object> loadedYaml = (Map<String, Object>) yaml.load(yamlValue);
 
             Map<String, Object> nodeTemplates = (Map<String, Object>) loadedYaml.get("node_templates");
+            //add policy_0 section in blueprint
+            Map<String, Object> policyObject = new HashMap<String, Object> ();
+            Map<String, Object> policyIdObject = new HashMap<String, Object> ();
+            String policyPrefix = refProp.getStringValue("tca.policyid.prefix");
+            policyIdObject.put("policy_id", policyPrefix + modelProperties.getCurrentPolicyScopeAndPolicyName());
+            policyObject.put("type", "dcae.nodes.policy");
+            policyObject.put("properties", policyIdObject);
+            nodeTemplates.put("policy_0", policyObject);
+
             Map<String, Object> tcaObject = (Map<String, Object>) nodeTemplates.get("tca_tca");
             Map<String, Object> propsObject = (Map<String, Object>) tcaObject.get("properties");
             Map<String, Object> appPreferences = (Map<String, Object>) propsObject.get("app_preferences");

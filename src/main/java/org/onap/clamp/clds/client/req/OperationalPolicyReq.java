@@ -178,7 +178,7 @@ public class OperationalPolicyReq {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    private static String formatYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+    public static String formatYaml(RefProp refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
 
         // get property objects
@@ -253,7 +253,7 @@ public class OperationalPolicyReq {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    private static String formateNodeBYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+    public static String formateNodeBYaml(RefProp refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
 
         // get property objects
