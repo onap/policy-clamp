@@ -1,3 +1,7 @@
+
+
+
+
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright © 2017 AT&T Intellectual Property. All rights reserved.
@@ -17,7 +21,22 @@ At a higher level, CLAMP is about supporting and managing the broad operational 
 
 
 .. toctree::
-    :maxdepth: 1
+:maxdepth: 1
+
+Offered APIs
+------------
+CLAMP offers the following API's:
+-) HealthCheck
+    URL: http://<host>:8080/restservices/clds/v1/clds/healthcheck
+        if in good health it will return OK: "HTTP/1.1 200", and the following json string content:{"healthCheckComponent":"CLDS-APP","healthCheckStatus":"UP","description":"OK"}
+
+
+Consumed APIs
+-------------
+CLAMP uses the API's exposed by the following ONAP components:
+-) SDC : Rest based interface exposed by the SDC, Distribution of service to DCAE
+-) DCAE: Rest based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
+-) Policy: Rest based interface (the Policy team provide a "jar" to handle the communication), both XACML and Drools PDP, APIs to App-C/VF-C/SDN-C
 
 
 Delivery
@@ -114,7 +133,7 @@ Administration
 --------------
 
 A user can access CLAMP UI at the following URL : http://localhost:8080/designer/index.html.
-
+(in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
 Default username : admin
 Default password : password
 
@@ -124,5 +143,18 @@ Human Interfaces
 .. Basic info on the interface type, ports/protocols provided over, etc.
 
 User Interface (CLAMP Designer) - serve to configure control loop
+The following actions are done using the UI:
 
-HealthCheck API - serve to verify CLAMP status
+•	Design a control loop flow by selecting a predefined template from a list
+     (a template is an orchestration chain of Micro-services, so the template defines how the micro-services of the control loop are chained together)
+•	Give value to the configuration the parameters of each micro-service of the control loop
+•	Select the service and VNF(of that service) to which the control loop will be attached
+•	Configure the operational policy(the actual operation resulting from the control loop)
+•	Generate the “TOSCA” blueprint that will be used by DCAE to start the control loop
+	(The blueprint will be sent first to SDC and SDC will publish it to DCAE)
+•	Trigger the deployment of the Control loop in DCAE
+•	Control (start/stop) the operation of the control loop in DCAE
+
+
+
+HealthCheck API - serve to verify CLAMP status (see offered API's section)
