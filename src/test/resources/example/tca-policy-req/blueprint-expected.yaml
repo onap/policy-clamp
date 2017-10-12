@@ -48,3 +48,6 @@ node_templates:
       streamname: TCASubscriberOutputStream
     relationships:
     - {target: cdap_host_host, type: dcae.relationships.component_contained_in}
+  policy_0:
+    type: dcae.nodes.policy
+    properties: {policy_id: nullexample_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4}
