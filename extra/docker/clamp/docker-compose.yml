@@ -14,6 +14,8 @@ services:
 
   clamp:
     image: onap/clamp
+    volumes:
+      - "./config/:/opt/clamp/config:rw"
     depends_on:
       - db
     env_file:
