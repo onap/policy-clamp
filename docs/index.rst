@@ -25,23 +25,29 @@ At a higher level, CLAMP is about supporting and managing the broad operational 
 
 Offered APIs
 ------------
-CLAMP offers the following API's:
--) HealthCheck
+CLAMP offers the following API:
+* HealthCheck
     URL: http://<host>:8080/restservices/clds/v1/clds/healthcheck
-        if in good health it will return OK: "HTTP/1.1 200", and the following json string content:{"healthCheckComponent":"CLDS-APP","healthCheckStatus":"UP","description":"OK"}
+        if in good health it will return OK: "HTTP/1.1 200", and the following json string content:
+.. code-block:: json
+    {
+        "healthCheckComponent": "CLDS-APP",
+        "healthCheckStatus": "UP",
+        "description": "OK"
+    }
 
 
 Consumed APIs
 -------------
 CLAMP uses the API's exposed by the following ONAP components:
--) SDC : Rest based interface exposed by the SDC, Distribution of service to DCAE
--) DCAE: Rest based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
--) Policy: Rest based interface (the Policy team provide a "jar" to handle the communication), both XACML and Drools PDP, APIs to App-C/VF-C/SDN-C
+* SDC : REST based interface exposed by the SDC, Distribution of service to DCAE
+* DCAE: REST based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
+* Policy: REST based interface (the Policy team provide a "jar" to handle the communication), both XACML and Drools PDP, APIs to App-C/VF-C/SDN-C
 
 
 Delivery
 --------
-CLAMP component is composed of a UI layer and a BackEND layer and packaged into a single container.
+CLAMP component is composed of a UI layer and a BackEnd layer and packaged into a single container.
 CLAMP also requires a database instance with 2 DB, it uses MariaDB.
 
 .. blockdiag::
@@ -67,9 +73,9 @@ CLAMP also requires a database instance with 2 DB, it uses MariaDB.
 
 Logging & Diagnostic Information
 --------------------------------
-Clamp uses logback framework to generate logs. The logback.xml file cand be found under the [src/main/resources/ folder](src/main/resources).
+CLAMP uses logback framework to generate logs. The logback.xml file cand be found under the [src/main/resources/ folder](src/main/resources).
 
-With the default log settings, all logs will be generated into console and into root.log file under the Clamp root folder. The root.log file is not allowed to be appended, thus restarting the clamp will result in cleaning of the old log files.
+With the default log settings, all logs will be generated into console and into root.log file under the CLAMP root folder. The root.log file is not allowed to be appended, thus restarting the CLAMP will result in cleaning of the old log files.
 
 
 
@@ -77,7 +83,7 @@ Installation
 ------------
 A [docker-compose example file](extra/docker/clamp/docker-compose.yml) can be found under the [extra/docker/clamp/ folder](extra/docker/).
 
-Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a prepopullated database and a clamp instance available on [http://localhost:8080/designer/index.html](http://localhost:8080/designer/index.html).
+Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a prepopullated database and a CLAMP instance available on [http://localhost:8080/designer/index.html](http://localhost:8080/designer/index.html).
 
 Configuration
 -------------
@@ -85,7 +91,7 @@ Configuration
 .. What are parameters and values?
 
 
-Currently, the clamp docker image can be deployed with small configuration needs. Though, you might need to make small adjustments to the configuration. As clamp is spring based, you can use the SPRING_APPLICATION_JSON environment variable to update its parameters.
+Currently, the CLAMP docker image can be deployed with small configuration needs. Though, you might need to make small adjustments to the configuration. As CLAMP is spring based, you can use the SPRING_APPLICATION_JSON environment variable to update its parameters.
 
 .. TODO detail config parameters and the usage
 
@@ -134,8 +140,9 @@ Administration
 
 A user can access CLAMP UI at the following URL : http://localhost:8080/designer/index.html.
 (in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
-Default username : admin
-Default password : password
+.. code-block::
+    Default username : admin
+    Default password : password
 
 
 Human Interfaces
@@ -151,7 +158,7 @@ The following actions are done using the UI:
 •	Select the service and VNF(of that service) to which the control loop will be attached
 •	Configure the operational policy(the actual operation resulting from the control loop)
 •	Generate the “TOSCA” blueprint that will be used by DCAE to start the control loop
-	(The blueprint will be sent first to SDC and SDC will publish it to DCAE)
+        (The blueprint will be sent first to SDC and SDC will publish it to DCAE)
 •	Trigger the deployment of the Control loop in DCAE
 •	Control (start/stop) the operation of the control loop in DCAE
 
