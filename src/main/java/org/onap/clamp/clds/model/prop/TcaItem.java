@@ -44,6 +44,7 @@ public class TcaItem {
     private String                    tcaUuId;
     private String                    policyId;
     private String                    eventName;
+    private String                    controlLoopSchemaType;
     private List<TcaThreshold>        tcaThresholds;
 
     /**
@@ -57,6 +58,7 @@ public class TcaItem {
         tcaUuId = AbstractModelElement.getValueByName(node, "tuuid");
         policyId = AbstractModelElement.getValueByName(node, "tcaPolId");
         eventName = AbstractModelElement.getValueByName(node, "eventName");
+        controlLoopSchemaType = AbstractModelElement.getValueByName(node, "controlLoopSchemaType");
         // process service Configurations
         JsonNode serviceConfigurationsNode = node.get(node.size() - 1).get("serviceConfigurations");
         Iterator<JsonNode> itr = serviceConfigurationsNode.elements();
@@ -64,6 +66,14 @@ public class TcaItem {
         while (itr.hasNext()) {
             tcaThresholds.add(new TcaThreshold(itr.next()));
         }
+    }
+
+    public String getControlLoopSchemaType() {
+        return controlLoopSchemaType;
+    }
+
+    public void setControlLoopSchemaType(String controlLoopSchemaType) {
+        this.controlLoopSchemaType = controlLoopSchemaType;
     }
 
     public String getTcaName() {

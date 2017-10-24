@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 
 import java.util.HashMap;
@@ -70,22 +71,54 @@ public class TcaRequestFormatter {
 
             Tca tca = modelProperties.getType(Tca.class);
             modelProperties.setCurrentModelElementId(tca.getId());
-            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.template", service);
-            ((ObjectNode) rootNode.get("cdap-tca-hi-lo_policy").get("metricsPerEventName").get(0)).put("policyName",
-                    modelProperties.getCurrentPolicyScopeAndPolicyName());
-            ((ObjectNode) rootNode.get("cdap-tca-hi-lo_policy").get("metricsPerEventName").get(0)).put("eventName",
-                    tca.getTcaItem().getEventName());
-
-            ObjectNode thresholdsParent = ((ObjectNode) rootNode.get("cdap-tca-hi-lo_policy").get("metricsPerEventName")
-                    .get(0));
-
-            addThresholds(refProp, service, thresholdsParent, tca.getTcaItem(), modelProperties);
+            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.policy.template", service);
+            String policyName = refProp.getStringValue("tca.policyid.prefix") + modelProperties.getCurrentPolicyScopeAndPolicyName();
+            ((ObjectNode) rootNode).put("policyName", policyName);
+            ((ObjectNode) rootNode).put("description", "MicroService vCPE Policy");
+            ((ObjectNode) rootNode).replace("content", createPolicyContent(refProp, modelProperties, service, policyName, tca));
 
             String tcaPolicyReq = rootNode.toString();
             logger.info("tcaPolicyReq=" + tcaPolicyReq);
             return tcaPolicyReq;
         } catch (Exception e) {
             throw new TcaRequestFormatterException("Exception caught when attempting to create the policy JSON", e);
+        }
+    }
+
+    /**
+     * Format Tca Policy Content JSON
+     *
+     * @param refProp
+     *            The refProp generally created by Spring, it's an access on the
+     *            clds-references.properties file
+     * @param modelProperties
+     *            The Model Prop created from BPMN JSON and BPMN properties JSON
+     * @return The Json string containing that should be sent to policy
+     */
+    public static JsonNode createPolicyContent(RefProp refProp, ModelProperties modelProperties, String service, String policyName, Tca tca) {
+        try {
+            if (null == service) {
+                service = modelProperties.getGlobal().getService();
+            }
+            if (null == tca){
+                tca = modelProperties.getType(Tca.class);
+                modelProperties.setCurrentModelElementId(tca.getId());
+            }
+            if (null == policyName) {
+                policyName = refProp.getStringValue("tca.policyid.prefix") + modelProperties.getCurrentPolicyScopeAndPolicyName();
+            }
+            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.template", service);
+            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("eventName", tca.getTcaItem().getEventName());
+            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("policyName", policyName);
+            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("controlLoopSchemaType", tca.getTcaItem().getControlLoopSchemaType());
+            ObjectNode thresholdsParent = ((ObjectNode) rootNode.get("metricsPerEventName").get(0));
+
+            addThresholds(refProp, service, thresholdsParent, tca.getTcaItem(), modelProperties);
+
+            logger.info("tcaPolicyContent=" + rootNode.toString());
+            return (JsonNode) rootNode;
+        } catch (Exception e) {
+            throw new TcaRequestFormatterException("Exception caught when attempting to create the policy content JSON", e);
         }
     }
 
@@ -114,7 +147,6 @@ public class TcaRequestFormatter {
             ObjectNode tcaNode = (ObjectNode) refProp.getJsonTemplate("tca.thresholds.template", service);
 
             for (TcaThreshold tcaThreshold : tcaItem.getTcaThresholds()) {
-                tcaNode.put("controlLoopSchema", tcaThreshold.getControlLoopSchema());
                 tcaNode.put("closedLoopControlName", modelProperties.getControlNameAndPolicyUniqueId());
                 tcaNode.put("fieldPath", tcaThreshold.getFieldPath());
                 tcaNode.put("thresholdValue", tcaThreshold.getThreshold());
@@ -143,7 +175,7 @@ public class TcaRequestFormatter {
     public static String updatedBlueprintWithConfiguration(RefProp refProp, ModelProperties modelProperties,
             String yamlValue) {
         try {
-            String jsonPolicy = createPolicyJson(refProp, modelProperties);
+            String jsonPolicy = ((ObjectNode) createPolicyContent(refProp, modelProperties, null, null, null)).toString();
 
             logger.info("Yaml that will be updated:" + yamlValue);
             Yaml yaml = new Yaml();

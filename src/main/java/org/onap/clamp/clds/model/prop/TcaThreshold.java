@@ -40,7 +40,6 @@ public class TcaThreshold {
     private String                    operator;
     private Integer                   threshold;
     private String                    closedLoopEventStatus;
-    private String                    controlLoopSchema;
 
     /**
      * Parse Tca Threshhold given json node
@@ -59,10 +58,7 @@ public class TcaThreshold {
             threshold = Integer.valueOf(node.get(2).asText());
         }
         if (node.get(3) != null) {
-            controlLoopSchema = node.get(3).asText();
-        }
-        if (node.get(4) != null) {
-            closedLoopEventStatus = node.get(4).asText();
+            closedLoopEventStatus = node.get(3).asText();
         }
     }
 
@@ -96,13 +92,5 @@ public class TcaThreshold {
 
     public void setClosedLoopEventStatus(String closedLoopEventStatus) {
         this.closedLoopEventStatus = closedLoopEventStatus;
-    }
-
-    public String getControlLoopSchema() {
-        return controlLoopSchema;
-    }
-
-    public void setControlLoopSchema(String controlLoopSchema) {
-        this.controlLoopSchema = controlLoopSchema;
     }
 }

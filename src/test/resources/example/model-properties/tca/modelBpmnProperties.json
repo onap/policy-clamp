@@ -18,19 +18,21 @@
         "value": "vFirewallBroadcastPackets"
       },
       {
+        "name": "controlLoopSchemaType",
+        "value": "VNF"
+      },
+      {
         "serviceConfigurations": [
           [
             "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated",
             "LESS_OR_EQUAL",
             "123",
-            "VM",
             "ABATED"
           ],
           [
             "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
             "GREATER_OR_EQUAL",
             "123",
-            "VNF",
             "ONSET"
           ]
         ]

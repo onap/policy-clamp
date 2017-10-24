@@ -69,12 +69,12 @@ public class ModelPropertiesTest {
         assertNotNull(tca);
         assertTrue(tca.isFound());
         assertEquals("vFirewallBroadcastPackets", tca.getTcaItem().getEventName());
+        assertEquals("VNF", tca.getTcaItem().getControlLoopSchemaType());
         assertEquals("policy1", tca.getTcaItem().getPolicyId());
         assertEquals("f734f031-10aa-t8fb-330f-04dde2886325", tca.getTcaItem().getTcaUuId());
         assertEquals(2, tca.getTcaItem().getTcaThresholds().size());
 
         assertEquals("ABATED", tca.getTcaItem().getTcaThresholds().get(0).getClosedLoopEventStatus());
-        assertEquals("VM", tca.getTcaItem().getTcaThresholds().get(0).getControlLoopSchema());
         assertEquals(
                 "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated",
                 tca.getTcaItem().getTcaThresholds().get(0).getFieldPath());
@@ -82,7 +82,6 @@ public class ModelPropertiesTest {
         assertEquals(Integer.valueOf(123), tca.getTcaItem().getTcaThresholds().get(0).getThreshold());
 
         assertEquals("ONSET", tca.getTcaItem().getTcaThresholds().get(1).getClosedLoopEventStatus());
-        assertEquals("VNF", tca.getTcaItem().getTcaThresholds().get(1).getControlLoopSchema());
         assertEquals("$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
                 tca.getTcaItem().getTcaThresholds().get(1).getFieldPath());
         assertEquals("GREATER_OR_EQUAL", tca.getTcaItem().getTcaThresholds().get(1).getOperator());

@@ -37,6 +37,7 @@ import java.util.UUID;
 
 import javax.ws.rs.BadRequestException;
 
+import org.onap.clamp.clds.client.req.TcaRequestFormatter;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
@@ -62,7 +63,6 @@ import org.springframework.context.ApplicationContext;
  * Policy utility methods - specifically, send the policy.
  */
 public class PolicyClient {
-
     protected static final String     POLICY_PREFIX_BASE         = "Config_";
     protected static final String     POLICY_PREFIX_BRMS_PARAM   = "Config_BRMS_Param_";
     protected static final String     POLICY_PREFIX_MICROSERVICE = "Config_MS_";
@@ -109,8 +109,6 @@ public class PolicyClient {
         // following failure: java.lang.Exception: Policy send failed: PE300 -
         // Data Issue: No policyDescription given.
         policyParameters.setPolicyDescription(refProp.getStringValue("op.policyDescription"));
-
-        policyParameters.setAttributes(attributes);
 
         // Set a random UUID(Mandatory)
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
@@ -213,16 +211,12 @@ public class PolicyClient {
     public String sendMicroServiceInOther(String configBody, ModelProperties prop, String policyRequestUuid) {
 
         PolicyParameters policyParameters = new PolicyParameters();
-
-        // Set Policy Type
+        // Set Policy Type 
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
+        policyParameters.setOnapName("DCAE");
         policyParameters.setEcompName(refProp.getStringValue("policy.onap.name"));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
-
         policyParameters.setConfigBody(configBody);
-        policyParameters.setConfigBodyType(PolicyType.OTHER);
-
-        policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
         String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
 
         // Adding this line to clear the policy id from policy name while

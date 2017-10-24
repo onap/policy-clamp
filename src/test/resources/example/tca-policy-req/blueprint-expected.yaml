@@ -30,7 +30,7 @@ node_templates:
         subscriberMessageLimit: '-1', subscriberPollingInterval: '20000', subscriberProtocol: https,
         subscriberTimeoutMS: '-1', subscriberTopicName: com.att.dcae.dmaap.mtnje2.DcaeTestVESSub,
         subscriberUserName: m00502@tca.af.dcae.att.com, subscriberUserPassword: Te5021abc,
-        tca_policy: '{"cdap-tca-hi-lo_policy":{"domain":"measurementsForVfScaling","metricsPerEventName":[{"eventName":"vFirewallBroadcastPackets","policyScope":"DCAE","policyName":"example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4","policyVersion":"v0.0.1","thresholds":[{"closedLoopControlName":"ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null","controlLoopSchema":"VNF","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta","thresholdValue":123,"direction":"GREATER_OR_EQUAL","severity":"MAJOR","closedLoopEventStatus":"ONSET"},{"closedLoopControlName":"ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null","controlLoopSchema":"VNF","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta","thresholdValue":123,"direction":"GREATER_OR_EQUAL","severity":"MAJOR","closedLoopEventStatus":"ONSET"}]}]}}'}
+        tca_policy: '{"domain":"measurementsForVfScaling","metricsPerEventName":[{"eventName":"vFirewallBroadcastPackets","controlLoopSchemaType":"VNF","policyScope":"DCAE","policyName":"DCAE.Config_example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4","policyVersion":"v0.0.1","thresholds":[{"closedLoopControlName":"ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta","thresholdValue":123,"direction":"GREATER_OR_EQUAL","severity":"MAJOR","closedLoopEventStatus":"ONSET"},{"closedLoopControlName":"ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta","thresholdValue":123,"direction":"GREATER_OR_EQUAL","severity":"MAJOR","closedLoopEventStatus":"ONSET"}]}]}'}
       artifact_name: dcae-analytics-tca
       artifact_version: 1.0.0
       connections:
@@ -50,4 +50,4 @@ node_templates:
     - {target: cdap_host_host, type: dcae.relationships.component_contained_in}
   policy_0:
     type: dcae.nodes.policy
-    properties: {policy_id: nullexample_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4}
+    properties: {policy_id: DCAE.Config_example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4}
