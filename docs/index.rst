@@ -1,7 +1,3 @@
-
-
-
-
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright © 2017 AT&T Intellectual Property. All rights reserved.
@@ -10,26 +6,21 @@ CLAMP - Closed Loop Automation Management Platform
 ==================================================
 .. High level architecture, design, and packaging information for release planning and delivery.
 
-CLAMP is a platform for designing and managing control loops. It is used to design a closed loop, configure it with specific parameters for a particular network service, then deploying and undeploying it.  Once deployed, the user can also update the loop with new parameters during runtime, as well as suspending and restarting it.
+.. include:: architecture.rst
 
-It interacts with other systems to deploy and execute the closed loop. For example, it pushes the control loop design to the SDC catalog, associating it with the VF resource.  It requests from DCAE the instantiation of microservices to manage the closed loop flow.  Further, it creates and updates multiple policies in the Policy Engine that define the closed loop flow.
-
-The ONAP CLAMP platform abstracts the details of these systems under the concept of a control loop model.  The design of a control loop and its management is represented by a workflow in which all relevant system interactions take place.  This is essential for a self-service model of creating and managing control loops, where no low-level user interaction with other components is required.
-
-At a higher level, CLAMP is about supporting and managing the broad operational life cycle of VNFs/VMs and ultimately ONAP components itself. It will offer the ability to design, test, deploy and update control loop automation - both closed and open. Automating these functions would represent a significant saving on operational costs compared to traditional methods.
-
-
-
-.. toctree::
-:maxdepth: 1
 
 Offered APIs
 ------------
 CLAMP offers the following API:
 * HealthCheck
-    URL: http://<host>:8080/restservices/clds/v1/clds/healthcheck
-        if in good health it will return OK: "HTTP/1.1 200", and the following json string content:
+
+.. line-block::
+
+   URL: http://<host>:8080/restservices/clds/v1/clds/healthcheck
+   Result: if in good health it will return OK: "HTTP/1.1 200", and the following json string content:
+
 .. code-block:: json
+
     {
         "healthCheckComponent": "CLDS-APP",
         "healthCheckStatus": "UP",
@@ -152,15 +143,26 @@ Human Interfaces
 User Interface (CLAMP Designer) - serve to configure control loop
 The following actions are done using the UI:
 
-•	Design a control loop flow by selecting a predefined template from a list
-     (a template is an orchestration chain of Micro-services, so the template defines how the micro-services of the control loop are chained together)
-•	Give value to the configuration the parameters of each micro-service of the control loop
-•	Select the service and VNF(of that service) to which the control loop will be attached
-•	Configure the operational policy(the actual operation resulting from the control loop)
-•	Generate the “TOSCA” blueprint that will be used by DCAE to start the control loop
-        (The blueprint will be sent first to SDC and SDC will publish it to DCAE)
-•	Trigger the deployment of the Control loop in DCAE
-•	Control (start/stop) the operation of the control loop in DCAE
+* Design a control loop flow by selecting a predefined template from a list
+  (a template is an orchestration chain of Micro-services, so the template
+  defines how the micro-services of the control loop are chained together)
+
+* Give value to the configuration the parameters of each micro-service of
+  the control loop
+
+* Select the service and VNF(of that service) to which the control loop
+  will be attached
+
+* Configure the operational policy(the actual operation resulting from
+  the control loop)
+
+* Generate the “TOSCA” blueprint that will be used by DCAE to start the
+  control loop (The blueprint will be sent first to SDC and SDC will
+  publish it to DCAE)
+
+* Trigger the deployment of the Control loop in DCAE
+
+* Control (start/stop) the operation of the control loop in DCAE
 
 
 
