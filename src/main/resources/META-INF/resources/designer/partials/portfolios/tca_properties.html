@@ -191,8 +191,13 @@
 							<div class="col-sm-9" style="padding:0px;">
 								<select name="eventName" id="eventName" enableFilter="true"></select>
 							</div>
-						</div>            
-						
+						</div>
+						<div class="col-sm-8 form-group">
+							<label class="col-sm-3">Control Loop Schema Type</label>
+							<div class="col-sm-9" style="padding:0px;">
+								<select name="controlLoopSchemaType" id="controlLoopSchemaType" enableFilter="true"></select>
+							</div>
+						</div>
 						<div class="col-sm-8 form-group" style="display:none;">
 							<label class="col-sm-3"> Policy ID </label>
 							<div class="col-sm-9" style="padding:0px;">
@@ -202,7 +207,7 @@
 
 					</div>
 				</form>
-				
+
  				<div class="tcaBody row">
 					<div class="col-sm-5" style="padding:0px 5px; margin: 15px;">
 						<div class="panel panel-default" id="tcaTableHolder">
@@ -243,17 +248,11 @@
 									</div>
 								</div>
 								<div>
-									<label class="control-label">Control Loop Schema</label>
-									<div>
-										<select id="controlLoopSchema" name="controlLoopSchema"></select>
-									</div>
-								</div>
-								<div>
 									<label class="control-label">Closed Loop Event Status</label>
 									<div>
 										<select id="closedLoopEventStatus" name="closedLoopEventStatus"></select>
 									</div>
-								</div>                
+								</div>
 							</div>
 						</div>
 					</div>
@@ -298,17 +297,16 @@
       return $('#formId'+formIdNum+' #fieldPathM').find(':selected').text() + ' ' +
 				$('#formId'+formIdNum+' #operator').val() + ' ' +
 				$('#formId'+formIdNum+' #threshold').val() + ' ' +
-        $('#formId'+formIdNum+' #controlLoopSchema').val() + ' ' +
         $('#formId'+formIdNum+' #closedLoopEventStatus').val();
     };
 
 		loadPropertyWindow("tca");
-		
+
 		//load dropdown with policy options
  		if (typeof allPolicies !== "undefined"){
 	       	$.each(Object.keys(allPolicies), function(val, text) {
 	       		$('#tcaPol').append($('<option></option>').val(text).html(text));
-	        });  
+	        });
 		} else if (typeof elementMap !== "undefined"){
 			for (key in elementMap){
 				if (key.indexOf("Policy")>-1){
@@ -509,16 +507,15 @@
 						$('#formId'+count+' #fieldPathM').val(fieldPathMLabel2Value(str[0])).multiselect('refresh');
 						$('#formId'+count+' #operator').val(str[1]).multiselect('refresh');
 						$('#formId'+count+' #threshold').val(str[2]);
-            $('#formId'+count+' #controlLoopSchema').val(str[3]).multiselect('refresh');
-            $('#formId'+count+' #closedLoopEventStatus').val(str[4]).multiselect('refresh');
+            $('#formId'+count+' #closedLoopEventStatus').val(str[3]).multiselect('refresh');
 					}
-					
+
 					if ((!(readOnly||readMOnly)) && ($('#formId'+count + ' #deleteThresh').prop('disabled'))) {
 						$('#formId'+count + ' #deleteThresh').prop('disabled', false);
 					}
 				}
 			});
-			
+
 			$('#formId'+count+' #deleteThresh').on('click', function(){
 				$('#formId'+num+' .tcaErr').hide();
 				$('#formId'+count+ ' #properties_tab').invisible();
@@ -544,7 +541,6 @@
 					$('#formId'+count+' #fieldPathM').prop("selectedIndex", 0).multiselect('refresh');
 					$('#formId'+count+' #operator').prop("selectedIndex", 0).multiselect('refresh');
 					$('#formId'+count+' #threshold').val("");
-					$('#formId'+count+' #controlLoopSchema').prop("selectedIndex", 0).multiselect('refresh');
 					$('#formId'+count+' #closedLoopEventStatus').prop("selectedIndex", 0).multiselect('refresh');
 
 					if ($('#formId'+count + ' #deleteThresh').prop('disabled')) {
@@ -552,7 +548,7 @@
 					}
 				}
 			});
-			
+
 			$('#formId'+count+' #tname').on('change',function(){
 				$('#go_properties_tab'+count).text($('#formId'+count+' #tname').val())
 			});

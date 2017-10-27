@@ -1,16 +1,29 @@
 {
-  "cdap-tca-hi-lo_policy": {
+  "service": "policy_tosca_tca",
+  "version": "1.0.0",
+  "location": "SampleServiceLocation",
+  "configName": "SampleConfigName",
+  "uuid": "test",
+  "policyScope": "resource=SampleResource,service=SampleService,type=SampleType,closedLoopControlName=ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e",
+  "templateVersion": "OpenSource.version.1",
+  "policyName": "DCAE.Config_example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4",
+  "description": "MicroService vCPE Policy",
+  "priority": "1",
+  "riskType": "SampleRiskType",
+  "riskLevel": "1",
+  "guard": "False",
+  "content": {
     "domain": "measurementsForVfScaling",
     "metricsPerEventName": [
       {
         "eventName": "vFirewallBroadcastPackets",
+        "controlLoopSchemaType": "VNF",
         "policyScope": "DCAE",
-        "policyName": "example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4",
+        "policyName": "DCAE.Config_example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4",
         "policyVersion": "v0.0.1",
         "thresholds": [
           {
             "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
-            "controlLoopSchema": "VNF",
             "version": "1.0.2",
             "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
             "thresholdValue": 123,
@@ -20,7 +33,6 @@
           },
           {
             "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
-            "controlLoopSchema": "VNF",
             "version": "1.0.2",
             "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
             "thresholdValue": 123,
