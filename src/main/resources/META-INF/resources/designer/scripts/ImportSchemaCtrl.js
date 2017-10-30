@@ -56,17 +56,6 @@ app.controller('ImportSchemaCtrl', ['$scope', '$rootScope','$modalInstance','dat
     setTimeout(function(){
     console.log("setTimeout");
     setMultiSelect(); }, 100);
-	
-	$scope.init = function() {
-        console.log("init");
-        $scope.schemaLocation = 'svn://svnrepo:3690';
-		$scope.upgrade_schemaLocation = 'svn://svnrepo:3690';
-		$scope.userID = 'user_id';
-		$scope.password = 'password';
-	};
-	
-	$scope.init();
-	 
 
 	$scope.close = function(){
     console.log("close");		
