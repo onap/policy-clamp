@@ -37,7 +37,6 @@ import java.util.UUID;
 
 import javax.ws.rs.BadRequestException;
 
-import org.onap.clamp.clds.client.req.TcaRequestFormatter;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
@@ -109,9 +108,7 @@ public class PolicyClient {
         // following failure: java.lang.Exception: Policy send failed: PE300 -
         // Data Issue: No policyDescription given.
         policyParameters.setPolicyDescription(refProp.getStringValue("op.policyDescription"));
-
         policyParameters.setAttributes(attributes);
-
         // Set a random UUID(Mandatory)
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
         String policyNamePrefix = refProp.getStringValue("policy.op.policyNamePrefix");
@@ -166,15 +163,16 @@ public class PolicyClient {
      * @param configBody
      *            The config policy string body
      * @param configPolicyName
-     *            The config policy name of the component that has been pre-deployed in DCAE
+     *            The config policy name of the component that has been
+     *            pre-deployed in DCAE
      * @param prop
      *            The ModelProperties
      * @param policyRequestUuid
      *            The policy request UUID
      * @return The answer from policy call
      */
-    public String sendBasePolicyInOther(String configBody, String configPolicyName, ModelProperties prop, String policyRequestUuid) {
-
+    public String sendBasePolicyInOther(String configBody, String configPolicyName, ModelProperties prop,
+            String policyRequestUuid) {
         PolicyParameters policyParameters = new PolicyParameters();
 
         // Set Policy Type
@@ -322,6 +320,7 @@ public class PolicyClient {
             responseMessage = response.getResponseMessage();
         } catch (Exception e) {
             logger.error("Exception occurred during policy communication", e);
+            throw new PolicyClientException("Exception while communicating with Policy", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
 
