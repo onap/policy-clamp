@@ -31,15 +31,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -51,19 +50,23 @@ import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.util.CryptoUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Construct a Sdc request given CLDS objects.
  */
 public class SdcReq {
+    @Autowired
+    protected CryptoUtils             cryptoUtils;
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(SdcReq.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    @Autowired
+    protected RefProp                 refProp;
 
     /**
      * Format the Blueprint from a Yaml
      *
-     * @param refProp
-     *            The RefProp instance containing the Clds config
      * @param prop
      *            The ModelProperties describing the clds model
      * @param docText
@@ -77,14 +80,9 @@ public class SdcReq {
      * @throws IOException
      *             In case of issues
      */
-    public static String formatBlueprint(RefProp refProp, ModelProperties prop, String docText)
+    public String formatBlueprint(ModelProperties prop, String docText)
             throws JsonParseException, JsonMappingException, IOException {
-
-        Global globalProp = prop.getGlobal();
-        String service = globalProp.getService();
-
         String yamlvalue = getYamlvalue(docText);
-
         String updatedBlueprint = "";
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
@@ -94,7 +92,17 @@ public class SdcReq {
         return updatedBlueprint;
     }
 
-    public static String formatSdcLocationsReq(ModelProperties prop, String artifactName) {
+    /**
+     * Format the SDC Locations Request in the JSON Format
+     *
+     * @param prop
+     *            The ModelProperties describing the clds model
+     * @param artifactName
+     *            The name of the artifact
+     *
+     * @return SDC Locations request in the JSON Format
+     */
+    public String formatSdcLocationsReq(ModelProperties prop, String artifactName) {
         ObjectMapper objectMapper = new ObjectMapper();
         Global global = prop.getGlobal();
         List<String> locationsList = global.getLocation();
@@ -106,12 +114,27 @@ public class SdcReq {
         locationObject.put("artifactName", artifactName);
         locationObject.putPOJO("locations", locationsArrayNode);
         String locationJsonFormat = locationObject.toString();
-        logger.info("Value of locaation Json Artifact:" + locationsArrayNode);
+        logger.info("Value of location Json Artifact:" + locationsArrayNode);
         return locationJsonFormat;
     }
 
-    public static String formatSdcReq(String payloadData, String artifactName, String artifactLabel,
-            String artifactType) throws IOException {
+    /**
+     * Format the SDC Request
+     *
+     * @param payloadData
+     *            The ModelProperties describing the clds model
+     * @param artifactName
+     *            The name of the artifact
+     * @param artifactLabel
+     *            The Label of the artifact
+     * @param artifactType
+     *            The type of the artifact
+     * @return formatted SDC Request
+     * @throws IOException
+     *             In case of issues
+     */
+    public String formatSdcReq(String payloadData, String artifactName, String artifactLabel, String artifactType)
+            throws IOException {
         logger.info("artifact=" + payloadData);
         String base64Artifact = base64Encode(payloadData);
         return "{ \n" + "\"payloadData\" : \"" + base64Artifact + "\",\n" + "\"artifactLabel\" : \"" + artifactLabel
@@ -120,7 +143,16 @@ public class SdcReq {
                 + "} \n";
     }
 
-    public static String getSdcReqUrl(ModelProperties prop, String url) {
+    /**
+     * Get the SDC Request URL
+     *
+     * @param prop
+     *            The ModelProperties describing the clds model
+     * @param url
+     *            url
+     * @return SDC Request URL
+     */
+    public String getSdcReqUrl(ModelProperties prop, String url) {
         Global globalProps = prop.getGlobal();
         String serviceUUID = "";
         String resourceInstanceName = "";
@@ -143,13 +175,14 @@ public class SdcReq {
      * @param prop
      * @param baseUrl
      * @param sdcCatalogServices
+     * @param execution
      * @return
+     * @throws GeneralSecurityException
      */
-    public static List<String> getSdcReqUrlsList(ModelProperties prop, String baseUrl,
-            SdcCatalogServices sdcCatalogServices, DelegateExecution execution) {
+    public List<String> getSdcReqUrlsList(ModelProperties prop, String baseUrl, SdcCatalogServices sdcCatalogServices,
+            DelegateExecution execution) throws GeneralSecurityException {
         // TODO : refact and regroup with very similar code
         List<String> urlList = new ArrayList<>();
-
         Global globalProps = prop.getGlobal();
         if (globalProps != null) {
             if (globalProps.getService() != null) {
@@ -178,7 +211,6 @@ public class SdcReq {
                 }
             }
         }
-
         return urlList;
     }
 
@@ -190,7 +222,7 @@ public class SdcReq {
      * @param inText
      * @return
      */
-    public static String normalizeResourceInstanceName(String inText) {
+    public String normalizeResourceInstanceName(String inText) {
         return inText.replace(" ", "").replace("-", "").replace(".", "").toLowerCase();
     }
 
@@ -200,7 +232,7 @@ public class SdcReq {
      * @param data
      * @return
      */
-    public static String calculateMD5ByString(String data) {
+    public String calculateMD5ByString(String data) {
         String calculatedMd5 = DigestUtils.md5Hex(data);
         // encode base-64 result
         return base64Encode(calculatedMd5.getBytes());
@@ -212,7 +244,7 @@ public class SdcReq {
      * @param inText
      * @return
      */
-    public static String base64Encode(String inText) {
+    public String base64Encode(String inText) {
         return base64Encode(stringToByteArray(inText));
     }
 
@@ -222,7 +254,7 @@ public class SdcReq {
      * @param inText
      * @return
      */
-    public static byte[] stringToByteArray(String inText) {
+    public byte[] stringToByteArray(String inText) {
         return inText.getBytes(StandardCharsets.UTF_8);
     }
 
@@ -232,7 +264,7 @@ public class SdcReq {
      * @param bytes
      * @return
      */
-    public static String base64Encode(byte[] bytes) {
+    public String base64Encode(byte[] bytes) {
         Base64.Encoder encoder = Base64.getEncoder();
         return encoder.encodeToString(bytes);
     }
@@ -241,12 +273,15 @@ public class SdcReq {
      * Return SDC id and pw as a HTTP Basic Auth string (for example: Basic
      * dGVzdDoxMjM0NTY=).
      *
-     * @return
+     * @return The String with Basic Auth and password
+     * @throws GeneralSecurityException
+     *             In case of issue when decryting the SDC password
      */
-    public static String getSdcBasicAuth(RefProp refProp) {
+    public String getSdcBasicAuth() throws GeneralSecurityException {
         String sdcId = refProp.getStringValue("sdc.serviceUsername");
         String sdcPw = refProp.getStringValue("sdc.servicePassword");
-        String idPw = base64Encode(sdcId + ":" + sdcPw);
+        String password = cryptoUtils.decrypt(sdcPw);
+        String idPw = base64Encode(sdcId + ":" + password);
         return "Basic " + idPw;
     }
 
@@ -257,7 +292,7 @@ public class SdcReq {
      * @return
      * @throws IOException
      */
-    public static String getYamlvalue(String docText) throws IOException {
+    public String getYamlvalue(String docText) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         String yamlFileValue = "";
         ObjectNode root = objectMapper.readValue(docText, ObjectNode.class);

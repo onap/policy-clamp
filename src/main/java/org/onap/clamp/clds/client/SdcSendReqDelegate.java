@@ -23,6 +23,9 @@
 
 package org.onap.clamp.clds.client;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.util.List;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -33,27 +36,23 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 /**
  * Send control loop model to dcae proxy.
  */
 public class SdcSendReqDelegate implements JavaDelegate {
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(SdcSendReqDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-
     @Autowired
-    private RefProp                 refProp;
-
+    private SdcReq                    sdcReq;
     @Autowired
-    private SdcCatalogServices      sdcCatalogServices;
-
-    private String                  baseUrl;
-    private String                  artifactType;
-    private String                  locationArtifactType;
-    private String                  artifactLabel;
-    private String                  locationArtifactLabel;
+    private RefProp                   refProp;
+    @Autowired
+    private SdcCatalogServices        sdcCatalogServices;
+    private String                    baseUrl;
+    private String                    artifactType;
+    private String                    locationArtifactType;
+    private String                    artifactLabel;
+    private String                    locationArtifactLabel;
 
     /**
      * Perform activity. Send to sdc proxy.
@@ -69,36 +68,37 @@ public class SdcSendReqDelegate implements JavaDelegate {
         execution.setVariable("artifactName", artifactName);
         getSdcAttributes((String) execution.getVariable("controlName"));
         ModelProperties prop = ModelProperties.create(execution);
-        String bluprintPayload = SdcReq.formatBlueprint(refProp, prop, docText);
-        // no need to upload blueprint for Holmes, thus blueprintPayload for Holmes is empty
+        String bluprintPayload = sdcReq.formatBlueprint(prop, docText);
+        // no need to upload blueprint for Holmes, thus blueprintPayload for
+        // Holmes is empty
         if (!bluprintPayload.isEmpty()) {
-            String formattedSdcReq = SdcReq.formatSdcReq(bluprintPayload, artifactName, artifactLabel, artifactType);
+            String formattedSdcReq = sdcReq.formatSdcReq(bluprintPayload, artifactName, artifactLabel, artifactType);
             if (formattedSdcReq != null) {
                 execution.setVariable("formattedArtifactReq", formattedSdcReq.getBytes());
             }
-            List<String> sdcReqUrlsList = SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, execution);
-
-            String sdcLocationsPayload = SdcReq.formatSdcLocationsReq(prop, artifactName);
+            List<String> sdcReqUrlsList = sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, execution);
+            String sdcLocationsPayload = sdcReq.formatSdcLocationsReq(prop, artifactName);
             String locationArtifactName = (String) execution.getVariable("controlName") + "-location.json";
-            String formattedSdcLocationReq = SdcReq.formatSdcReq(sdcLocationsPayload, locationArtifactName,
-                locationArtifactLabel, locationArtifactType);
+            String formattedSdcLocationReq = sdcReq.formatSdcReq(sdcLocationsPayload, locationArtifactName,
+                    locationArtifactLabel, locationArtifactType);
             if (formattedSdcLocationReq != null) {
                 execution.setVariable("formattedLocationReq", formattedSdcLocationReq.getBytes());
             }
             sdcCatalogServices.uploadToSdc(prop, userid, sdcReqUrlsList, formattedSdcReq, formattedSdcLocationReq,
-                artifactName, locationArtifactName);
+                    artifactName, locationArtifactName);
         }
     }
 
     /**
      * Method to get sdc service values from properties file.
+     * 
      * @param controlName
      */
     private void getSdcAttributes(String controlName) {
         baseUrl = refProp.getStringValue("sdc.serviceUrl");
-        artifactLabel = SdcReq
+        artifactLabel = sdcReq
                 .normalizeResourceInstanceName(refProp.getStringValue("sdc.artifactLabel") + "-" + controlName);
-        locationArtifactLabel = SdcReq
+        locationArtifactLabel = sdcReq
                 .normalizeResourceInstanceName(refProp.getStringValue("sdc.locationArtifactLabel") + "-" + controlName);
         artifactType = refProp.getStringValue("sdc.artifactType");
         locationArtifactType = refProp.getStringValue("sdc.locationArtifactType");

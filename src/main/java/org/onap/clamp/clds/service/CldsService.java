@@ -24,12 +24,15 @@
 package org.onap.clamp.clds.service;
 
 import com.att.ajsc.common.AjscService;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +42,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -62,11 +66,13 @@ import org.onap.clamp.clds.client.SdcCatalogServices;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.SdcCommunicationException;
+import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.model.CldsDBServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
+import org.onap.clamp.clds.model.CldsModelProp;
 import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.CldsSdcServiceInfo;
@@ -74,6 +80,7 @@ import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.ValueItem;
+import org.onap.clamp.clds.model.prop.AbstractModelElement;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.transform.XslTransformer;
@@ -94,37 +101,26 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "/clds")
 @Path("/clds")
 public class CldsService extends SecureServiceBase {
-
+    protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
     @Autowired
-    private ApplicationContext      appContext;
-
-    private static final String     RESOURCE_NAME = "clds-version.properties";
-
+    private ApplicationContext        appContext;
+    private static final String       RESOURCE_NAME  = "clds-version.properties";
     @Value("${CLDS_PERMISSION_TYPE_CL:permission-type-cl}")
-    private String                  cldsPersmissionTypeCl;
-
+    private String                    cldsPersmissionTypeCl;
     @Value("${CLDS_PERMISSION_TYPE_CL_MANAGE:permission-type-cl-manage}")
-    private String                  cldsPermissionTypeClManage;
-
+    private String                    cldsPermissionTypeClManage;
     @Value("${CLDS_PERMISSION_TYPE_CL_EVENT:permission-type-cl-event}")
-    private String                  cldsPermissionTypeClEvent;
-
+    private String                    cldsPermissionTypeClEvent;
     @Value("${CLDS_PERMISSION_TYPE_FILTER_VF:permission-type-filter-vf}")
-    private String                  cldsPermissionTypeFilterVf;
-
+    private String                    cldsPermissionTypeFilterVf;
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
-    private String                  cldsPermissionTypeTemplate;
-
+    private String                    cldsPermissionTypeTemplate;
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
-    private String                  cldsPermissionInstance;
-
-    private SecureServicePermission permissionReadCl;
-
-    private SecureServicePermission permissionUpdateCl;
-
-    private SecureServicePermission permissionReadTemplate;
-
-    private SecureServicePermission permissionUpdateTemplate;
+    private String                    cldsPermissionInstance;
+    private SecureServicePermission   permissionReadCl;
+    private SecureServicePermission   permissionUpdateCl;
+    private SecureServicePermission   permissionReadTemplate;
+    private SecureServicePermission   permissionUpdateTemplate;
 
     @PostConstruct
     private final void afterConstruction() {
@@ -138,25 +134,19 @@ public class CldsService extends SecureServiceBase {
 
     @Value("${org.onap.clamp.config.files.globalClds:'classpath:/clds/globalClds.properties'}")
     private String                 globalClds;
-
     private Properties             globalCldsProperties;
-
     @Autowired
     private CldsDao                cldsDao;
     @Autowired
     private RuntimeService         runtimeService;
     @Autowired
     private XslTransformer         cldsBpmnTransformer;
-
     @Autowired
     private RefProp                refProp;
-
     @Autowired
     private SdcCatalogServices     sdcCatalogServices;
-
     @Autowired
     private DcaeDispatcherServices dcaeDispatcherServices;
-
     @Autowired
     private DcaeInventoryServices  dcaeInventoryServices;
 
@@ -173,23 +163,20 @@ public class CldsService extends SecureServiceBase {
      * that is currently installed from pom.xml file 3. User permissions
      *
      */
-
     @GET
     @Path("/cldsInfo")
     @Produces(MediaType.APPLICATION_JSON)
     public CldsInfo getCldsInfo() {
-
         CldsInfo cldsInfo = new CldsInfo();
-
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsService: GET cldsInfo", getPrincipalName());
+        LoggingUtils.setTimeContext(startTime, new Date());
         // Get the user info
         cldsInfo.setUserName(getUserName());
-
         // Get CLDS application version
         String cldsVersion = "";
         Properties props = new Properties();
-
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-
         try (InputStream resourceStream = loader.getResourceAsStream(RESOURCE_NAME)) {
             props.load(resourceStream);
             cldsVersion = props.getProperty("clds.version");
@@ -197,22 +184,31 @@ public class CldsService extends SecureServiceBase {
             logger.error("Exception caught during the clds.version reading", ex);
         }
         cldsInfo.setCldsVersion(cldsVersion);
-
         // Get the user list of permissions
         cldsInfo.setPermissionReadCl(isAuthorizedNoException(permissionReadCl));
         cldsInfo.setPermissionUpdateCl(isAuthorizedNoException(permissionUpdateCl));
         cldsInfo.setPermissionReadTemplate(isAuthorizedNoException(permissionReadTemplate));
         cldsInfo.setPermissionUpdateTemplate(isAuthorizedNoException(permissionUpdateTemplate));
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Get cldsInfo success", this.getClass().getName());
+        securityLogger.info("GET cldsInfo completed");
         return cldsInfo;
     }
 
+    /**
+     * REST service that retrieves clds healthcheck information.
+     * 
+     * @return CldsHealthCheck class containing healthcheck info
+     */
     @GET
     @Path("/healthcheck")
     @Produces(MediaType.APPLICATION_JSON)
     public CldsHealthCheck gethealthcheck() {
-
         CldsHealthCheck cldsHealthCheck = new CldsHealthCheck();
-
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsService: GET healthcheck", getPrincipalName());
+        LoggingUtils.setTimeContext(startTime, new Date());
         try {
             cldsDao.doHealthCheck();
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
@@ -224,8 +220,11 @@ public class CldsService extends SecureServiceBase {
             cldsHealthCheck.setHealthCheckStatus("DOWN");
             cldsHealthCheck.setDescription("NOT-OK");
         }
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
+        securityLogger.info("GET healthcheck completed");
         return cldsHealthCheck;
-
     }
 
     /**
@@ -254,32 +253,6 @@ public class CldsService extends SecureServiceBase {
     }
 
     /**
-     * REST service that saves BPMN for a CLDS model by name in the database.
-     * This is subset of the json putModel. This is only expected to be used for
-     * testing purposes, not by the UI.
-     *
-     * @param modelName
-     */
-    @ApiOperation(value = "Saves BPMN for a CLDS model by name in the database", notes = "This is only expected to be used for testing purposes, not by the UI", response = String.class)
-    @PUT
-    @Path("/model/bpmn/{modelName}")
-    @Consumes(MediaType.TEXT_XML)
-    public String putBpmnXml(@PathParam("modelName") String modelName, String bpmnText) {
-        LoggingUtils.setRequestContext("CldsService: PUT model bpmn", getPrincipalName());
-        isAuthorized(permissionUpdateCl);
-        logger.info("PUT bpmnText for modelName={}", modelName);
-        logger.info("PUT bpmnText={}", bpmnText);
-        CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, true);
-        cldsModel.setBpmnText(bpmnText);
-        cldsModel.save(cldsDao, getUserId());
-        // audit log
-        LoggingUtils.setTimeContext(new Date(), new Date());
-        LoggingUtils.setResponseContext("0", "Put model bpmn success", this.getClass().getName());
-        auditLogger.info("PUT model bpmn completed");
-        return "wrote bpmnText for modelName=" + modelName;
-    }
-
-    /**
      * REST service that retrieves image for a CLDS model name from the
      * database. This is subset of the json getModel. This is only expected to
      * be used for testing purposes, not by the UI.
@@ -305,33 +278,6 @@ public class CldsService extends SecureServiceBase {
     }
 
     /**
-     * REST service that saves image for a CLDS model by name in the database.
-     * This is subset of the json putModel. This is only expected to be used for
-     * testing purposes, not by the UI.
-     *
-     * @param modelName
-     */
-    @ApiOperation(value = "Saves image for a CLDS model by name in the database", notes = "This is only expected to be used for testing purposes, not by the UI", response = String.class)
-    @PUT
-    @Path("/model/image/{modelName}")
-    @Consumes(MediaType.TEXT_XML)
-    public String putImageXml(@PathParam("modelName") String modelName, String imageText) {
-        Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: PUT model image", getPrincipalName());
-        isAuthorized(permissionUpdateCl);
-        logger.info("PUT iamgeText for modelName={}", modelName);
-        logger.info("PUT imageText={}", imageText);
-        CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, true);
-        cldsModel.setImageText(imageText);
-        cldsModel.save(cldsDao, getUserId());
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Put model image success", this.getClass().getName());
-        auditLogger.info("PUT model image completed");
-        return "wrote imageText for modelName=" + modelName;
-    }
-
-    /**
      * REST service that retrieves a CLDS model by name from the database.
      *
      * @param modelName
@@ -349,7 +295,6 @@ public class CldsService extends SecureServiceBase {
         CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
         isAuthorizedForVf(cldsModel);
         cldsModel.setUserAuthorizedToUpdate(isAuthorizedNoException(permissionUpdateCl));
-
         /**
          * Checking condition whether our CLDS model can call INventory Method
          */
@@ -392,7 +337,12 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT propText={}", cldsModel.getPropText());
         logger.info("PUT imageText={}", cldsModel.getImageText());
         cldsModel.setName(modelName);
-
+        try {
+            duplicateCheckforServiceVf(modelName, cldsModel.getPropText());
+        } catch (IOException | BadRequestException e) {
+            logger.error("Exception occured during duplicate check for service and VF", e);
+            throw new CldsConfigException(e.getMessage(), e);
+        }
         if (cldsModel.getTemplateName() != null) {
             CldsTemplate template = cldsDao.getTemplate(cldsModel.getTemplateName());
             if (template != null) {
@@ -441,6 +391,7 @@ public class CldsService extends SecureServiceBase {
      * @return
      * @throws TransformerException
      * @throws ParseException
+     * @throws GeneralSecurityException
      */
     @ApiOperation(value = "Saves and processes an action for a CLDS model by name", notes = "", response = String.class)
     @PUT
@@ -449,7 +400,7 @@ public class CldsService extends SecureServiceBase {
     @Produces(MediaType.APPLICATION_JSON)
     public CldsModel putModelAndProcessAction(@PathParam("action") String action,
             @PathParam("modelName") String modelName, @QueryParam("test") String test, CldsModel model)
-            throws TransformerException, ParseException {
+            throws TransformerException, ParseException, GeneralSecurityException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
         String actionCd = action.toUpperCase();
@@ -460,7 +411,6 @@ public class CldsService extends SecureServiceBase {
         String userid = getUserId();
         String actionStateCd = CldsEvent.ACTION_STATE_INITIATED;
         String processDefinitionKey = "clds-process-action-wf";
-
         logger.info("PUT actionCd={}", actionCd);
         logger.info("PUT actionStateCd={}", actionStateCd);
         logger.info("PUT processDefinitionKey={}", processDefinitionKey);
@@ -471,7 +421,6 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT userid={}", userid);
         logger.info("PUT getTypeId={}", model.getTypeId());
         logger.info("PUT deploymentId={}", model.getDeploymentId());
-
         if (model.getTemplateName() != null) {
             CldsTemplate template = cldsDao.getTemplate(model.getTemplateName());
             if (template != null) {
@@ -483,16 +432,13 @@ public class CldsService extends SecureServiceBase {
         // save model to db
         model.setName(modelName);
         model.save(cldsDao, getUserId());
-
         // get vars and format if necessary
         String prop = model.getPropText();
         String bpmn = model.getBpmnText();
         String docText = model.getDocText();
         String controlName = model.getControlName();
-
         String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
         logger.info("PUT bpmnJson={}", bpmnJson);
-
         // Flag indicates whether it is triggered by Validation Test button from
         // UI
         boolean isTest = false;
@@ -507,17 +453,14 @@ public class CldsService extends SecureServiceBase {
             }
         }
         logger.info("PUT isTest={}", isTest);
-
         boolean isInsertTestEvent = false;
         String insertTestEvent = refProp.getStringValue("action.insert.test.event");
         if (insertTestEvent != null && insertTestEvent.equalsIgnoreCase("true")) {
             isInsertTestEvent = true;
         }
         logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
-
         // determine if requested action is permitted
         model.validateAction(actionCd);
-
         // input variables to camunda process
         Map<String, Object> variables = new HashMap<>();
         variables.put("actionCd", actionCd);
@@ -531,17 +474,18 @@ public class CldsService extends SecureServiceBase {
         variables.put("isInsertTestEvent", isInsertTestEvent);
         logger.info("modelProp - " + prop);
         logger.info("docText - " + docText);
-
-        // start camunda process
-        ProcessInstance pi = runtimeService.startProcessInstanceByKey(processDefinitionKey, variables);
-
-        // log process info
-        logger.info("Started processDefinitionId={}, processInstanceId={}", pi.getProcessDefinitionId(),
-                pi.getProcessInstanceId());
-
+        try {
+            // start camunda process
+            ProcessInstance pi = runtimeService.startProcessInstanceByKey(processDefinitionKey, variables);
+            // log process info
+            logger.info("Started processDefinitionId={}, processInstanceId={}", pi.getProcessDefinitionId(),
+                    pi.getProcessInstanceId());
+        } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
+            logger.error("Exception occured during invoking bpmn process", e);
+            throw new CldsConfigException(e.getMessage(), e);
+        }
         // refresh model info from db (get fresh event info)
         CldsModel retreivedModel = CldsModel.retrieve(cldsDao, modelName, false);
-
         if (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                 || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)) {
             // To verify inventory status and modify model status to distribute
@@ -552,7 +496,6 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Process model action success", this.getClass().getName());
         auditLogger.info("Process model action completed");
-
         return retreivedModel;
     }
 
@@ -579,14 +522,12 @@ public class CldsService extends SecureServiceBase {
             isAuthorized(permissionEvent);
             userid = getUserId();
         }
-
         // Flag indicates whether it is triggered by Validation Test button from
         // UI
         boolean isTest = false;
         if (test != null && test.equalsIgnoreCase("true")) {
             isTest = true;
         }
-
         int instanceCount = 0;
         if (dcaeEvent.getInstances() != null) {
             instanceCount = dcaeEvent.getInstances().size();
@@ -595,7 +536,6 @@ public class CldsService extends SecureServiceBase {
                 + " resourceUUID=" + dcaeEvent.getResourceUUID() + " artifactName=" + dcaeEvent.getArtifactName()
                 + " instance count=" + instanceCount + " isTest=" + isTest;
         logger.info("POST dcae event {}", msgInfo);
-
         if (isTest) {
             logger.warn("Ignorning test event from DCAE");
         } else {
@@ -610,24 +550,24 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Post dcae event success", this.getClass().getName());
         auditLogger.info("Post dcae event completed");
-
         return msgInfo;
     }
 
     /**
      * REST service that retrieves sdc services
+     * 
+     * @throws GeneralSecurityException
+     *             In case of issue when decryting the SDC password
      *
-     * @throws Exception
      */
     @ApiOperation(value = "Retrieves sdc services", notes = "", response = String.class)
     @GET
     @Path("/sdc/services")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSdcServices() {
+    public String getSdcServices() throws GeneralSecurityException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc services", getPrincipalName());
         String retStr;
-
         String responseStr = sdcCatalogServices.getSdcServicesInformation(null);
         try {
             retStr = createUiServiceFormatJson(responseStr);
@@ -635,7 +575,6 @@ public class CldsService extends SecureServiceBase {
             logger.error("IOException during SDC communication", e);
             throw new SdcCommunicationException("IOException during SDC communication", e);
         }
-
         logger.info("value of sdcServices : {}", retStr);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
@@ -663,6 +602,9 @@ public class CldsService extends SecureServiceBase {
      * REST service that retrieves total properties by using invariantUUID based
      * on refresh and non refresh
      * 
+     * @throws GeneralSecurityException
+     *             In case of issue when decryting the SDC password
+     * 
      */
     @ApiOperation(value = "Retrieves total properties by using invariantUUID based on refresh and non refresh", notes = "", response = String.class)
     @GET
@@ -670,12 +612,11 @@ public class CldsService extends SecureServiceBase {
     @Produces(MediaType.APPLICATION_JSON)
     public String getSdcPropertiesByServiceUUIDForRefresh(
             @PathParam("serviceInvariantUUID") String serviceInvariantUUID,
-            @DefaultValue("false") @QueryParam("refresh") String refresh) {
+            @DefaultValue("false") @QueryParam("refresh") String refresh) throws GeneralSecurityException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc properties by uuid", getPrincipalName());
         CldsServiceData cldsServiceData = new CldsServiceData();
         cldsServiceData.setServiceInvariantUUID(serviceInvariantUUID);
-
         boolean isCldsSdcDataExpired = true;
         // To getcldsService information from database cache using invariantUUID
         // only when refresh = false
@@ -698,18 +639,14 @@ public class CldsService extends SecureServiceBase {
                 cldsServiceData.setCldsServiceCache(cldsDao, cldsDBServiceCache);
             }
         }
-
         // filter out VFs the user is not authorized for
         cldsServiceData.filterVfs(this);
-
         // format retrieved data into properties json
         String sdcProperties = sdcCatalogServices.createPropertiesObjectByUUID(getGlobalCldsString(), cldsServiceData);
-
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Get sdc properties by uuid success", this.getClass().getName());
         auditLogger.info("GET sdc properties by uuid completed");
-
         return sdcProperties;
     }
 
@@ -763,7 +700,6 @@ public class CldsService extends SecureServiceBase {
         logger.info("value of cldsserviceiNfolist: {}", rawList);
         if (rawList != null && !rawList.isEmpty()) {
             List<CldsSdcServiceInfo> cldsSdcServiceInfoList = sdcCatalogServices.removeDuplicateServices(rawList);
-
             for (CldsSdcServiceInfo currCldsSdcServiceInfo : cldsSdcServiceInfoList) {
                 if (currCldsSdcServiceInfo != null) {
                     invariantIdServiceNode.put(currCldsSdcServiceInfo.getInvariantUUID(),
@@ -785,7 +721,6 @@ public class CldsService extends SecureServiceBase {
              */
             ObjectNode serviceObjectNode = createEmptyVfAlarmObject(mapper);
             ObjectNode vfObjectNode = mapper.createObjectNode();
-
             /**
              * to create json with vf and vfresourceId
              */
@@ -793,7 +728,6 @@ public class CldsService extends SecureServiceBase {
             serviceObjectNode.putPOJO(cldsSdcServiceDetail.getInvariantUUID(), vfObjectNode);
             ObjectNode byServiceBasicObjetNode = mapper.createObjectNode();
             byServiceBasicObjetNode.putPOJO("byService", serviceObjectNode);
-
             /**
              * to create json with VFC Node
              */
@@ -827,7 +761,6 @@ public class CldsService extends SecureServiceBase {
             List<CldsSdcResource> rawCldsSdcResourceList) {
         ObjectNode vfNode = mapper.createObjectNode();
         vfNode.put("", "");
-
         // To remove repeated resource instance name from
         // resourceInstanceList
         List<CldsSdcResource> cldsSdcResourceList = sdcCatalogServices
@@ -843,7 +776,6 @@ public class CldsService extends SecureServiceBase {
             }
         }
         vfObjectNode2.putPOJO("vf", vfNode);
-
         /**
          * creating location json object using properties file value
          */
@@ -857,7 +789,6 @@ public class CldsService extends SecureServiceBase {
                     "Unable to load ui.location.default JSON in clds-references.properties properly", e);
         }
         vfObjectNode2.putPOJO("location", locationJsonNode);
-
         /**
          * creating alarm json object using properties file value
          */
@@ -872,7 +803,6 @@ public class CldsService extends SecureServiceBase {
                     e);
         }
         vfObjectNode2.putPOJO("alarmCondition", alarmStringJsonNode);
-
     }
 
     private ObjectNode createByVFCObjectNode(ObjectMapper mapper, List<CldsSdcResource> cldsSdcResourceList) {
@@ -901,7 +831,13 @@ public class CldsService extends SecureServiceBase {
             @QueryParam("test") String test, CldsModel model) throws IOException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
-        String deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";
+        String deploymentId = "";
+        // If model is already deployed then pass same deployment id
+        if (model.getDeploymentId() != null && !model.getDeploymentId().isEmpty()) {
+            deploymentId = model.getDeploymentId();
+        } else {
+            deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";
+        }
         String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
                 model.getTypeId());
         String operationStatus = "processing";
@@ -993,6 +929,29 @@ public class CldsService extends SecureServiceBase {
         } catch (IOException e) {
             logger.error("Unable to load the globalClds due to an exception", e);
             throw new CldsConfigException("Unable to load the globalClds due to an exception", e);
+        }
+    }
+
+    private void duplicateCheckforServiceVf(String modelName, String modelPropText) throws IOException {
+        JsonNode modelJson = new ObjectMapper().readTree(modelPropText);
+        JsonNode globalNode = modelJson.get("global");
+        String service = AbstractModelElement.getValueByName(globalNode, "service");
+        List<String> resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
+        if (resourceVf != null && !resourceVf.isEmpty()) {
+            List<CldsModelProp> cldsModelPropList = cldsDao.getAllModelProperties();
+            for (CldsModelProp cldsModelProp : cldsModelPropList) {
+                JsonNode currentJson = new ObjectMapper().readTree(cldsModelProp.getPropText());
+                JsonNode currentNode = currentJson.get("global");
+                String currentService = AbstractModelElement.getValueByName(currentNode, "service");
+                List<String> currentVf = AbstractModelElement.getValuesByName(currentNode, "vf");
+                if (currentVf != null && !currentVf.isEmpty()) {
+                    if (!modelName.equalsIgnoreCase(cldsModelProp.getName()) && service.equalsIgnoreCase(currentService)
+                            && resourceVf.get(0).equalsIgnoreCase(currentVf.get(0))) {
+                        throw new BadRequestException("Same service/VF already exists in " + cldsModelProp.getName()
+                                + " model, please select different service/VF.");
+                    }
+                }
+            }
         }
     }
 }

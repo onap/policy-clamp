@@ -23,9 +23,10 @@
 
 package org.onap.clamp.clds.config;
 
+import java.security.GeneralSecurityException;
+
 import javax.sql.DataSource;
 
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,15 +34,17 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class CamundaEngineConfiguration {
-
     /**
-     * Camunda Identity databse DataSource configuration
+     * Camunda Identity database DataSource configuration
+     * 
+     * @return
+     * @throws GeneralSecurityException
+     *             In case of issue during the decoding of the password
      */
     @Primary
     @Bean(name = "camundaBpmDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.camunda")
     public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
+        return new EncodedPasswordBasicDataSource();
     }
-
 }

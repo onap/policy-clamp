@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.security.Principal;
+import java.util.Date;
 
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Context;
@@ -40,6 +41,7 @@ import org.onap.clamp.clds.util.LoggingUtils;
 public abstract class SecureServiceBase {
     protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(SecureServiceBase.class);
     protected static final EELFLogger auditLogger     = EELFManager.getInstance().getAuditLogger();
+    protected static final EELFLogger securityLogger  = EELFManager.getInstance().getSecurityLogger();
 
     // By default we'll set it to a default handler
     private static UserNameHandler    userNameHandler = new DefaultUserNameHandler();
@@ -63,7 +65,10 @@ public abstract class SecureServiceBase {
      */
     public String getUserName() {
         String name = userNameHandler.retrieveUserName(securityContext);
-        logger.debug("userName={}", name);
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("CLDS", "getUserName");
+        LoggingUtils.setTimeContext(startTime, new Date());
+        securityLogger.debug("User logged into the CLDS system={}", name);
         return name;
     }
 
@@ -100,30 +105,33 @@ public abstract class SecureServiceBase {
      */
     public boolean isAuthorized(SecureServicePermission inPermission) throws NotAuthorizedException {
         boolean authorized = false;
-        logger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+       
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("CLDS", "isAuthorized");
+        LoggingUtils.setTimeContext(startTime, new Date());
+        
+        securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+        
         // check if the user has the permission key or the permission key with a
         // combination of all instance and/or all action.
         if (securityContext.isUserInRole(inPermission.getKey())) {
-            logger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());
+            securityLogger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());            
             authorized = true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
         } else if (securityContext.isUserInRole(inPermission.getKeyAllInstance())) {
-            logger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(),
-                    inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
         } else if (securityContext.isUserInRole(inPermission.getKeyAllInstanceAction())) {
-            logger.info("{} authorized because user has permission with * for instance and * for action: {}",
-                    getPrincipalName(), inPermission.getKey());
+             securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());            
             authorized = true;
         } else if (securityContext.isUserInRole(inPermission.getKeyAllAction())) {
-            logger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(),
-                    inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());            
             authorized = true;
         } else {
             String msg = getPrincipalName() + " does not have permission: " + inPermission;
             LoggingUtils.setErrorContext("100", "Authorization Error");
-            logger.warn(msg);
+            securityLogger.warn(msg);
             throw new NotAuthorizedException(msg);
         }
         return authorized;
@@ -144,29 +152,32 @@ public abstract class SecureServiceBase {
      */
     public boolean isAuthorizedNoException(SecureServicePermission inPermission) {
         boolean authorized = false;
-        logger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+        
+        securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("CLDS", "isAuthorizedNoException");
+        LoggingUtils.setTimeContext(startTime, new Date());
+        
         // check if the user has the permission key or the permission key with a
         // combination of all instance and/or all action.
         if (securityContext.isUserInRole(inPermission.getKey())) {
-            logger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());
+            securityLogger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
         } else if (securityContext.isUserInRole(inPermission.getKeyAllInstance())) {
-            logger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(),
-                    inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(),inPermission.getKey());
             authorized = true;
         } else if (securityContext.isUserInRole(inPermission.getKeyAllInstanceAction())) {
-            logger.info("{} authorized because user has permission with * for instance and * for action: {}",
-                    getPrincipalName(), inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
         } else if (securityContext.isUserInRole(inPermission.getKeyAllAction())) {
-            logger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(),
-                    inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
         } else {
             String msg = getPrincipalName() + " does not have permission: " + inPermission;
             LoggingUtils.setErrorContext("100", "Authorization Error");
+            securityLogger.warn(msg);
             logger.warn(msg);
         }
         return authorized;

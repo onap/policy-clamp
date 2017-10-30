@@ -298,6 +298,11 @@ public class SdcCatalogServicesItCase extends AbstractItCase {
                 SdcCatalogServicesItCase.class.getResourceAsStream("/example/sdc/sdcVFCResources.json"), "UTF-8"))
                 .when(spy).getCldsServicesOrResourcesBasedOnURL(allVfcResourcesDetailUrl, false);
 
+        String allCvfcResourcesDetailUrl = refProp.getStringValue("sdc.catalog.url") + "resources?resourceType=CVFC";
+        Mockito.doReturn(IOUtils.toString(
+                SdcCatalogServicesItCase.class.getResourceAsStream("/example/sdc/sdcCVFCResources.json"), "UTF-8"))
+                .when(spy).getCldsServicesOrResourcesBasedOnURL(allCvfcResourcesDetailUrl, false);
+
         String allVfAlarms = refProp.getStringValue("sdc.catalog.url")
                 + "resources/84855843-5247-4e97-a2bd-5395a510253b/artifacts/d57ac7ec-f3c3-4793-983a-c75ac3a43153";
         Mockito.doReturn(IOUtils.toString(

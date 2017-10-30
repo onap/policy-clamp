@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 
@@ -52,34 +53,37 @@ import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * 
  * This class implements the communication with DCAE for the service inventory.
  *
+ * 
+ * 
  */
 public class DcaeInventoryServices {
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
     protected static final EELFLogger auditLogger   = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-
     @Autowired
     private RefProp                   refProp;
-
     @Autowired
     private CldsDao                   cldsDao;
-
     @Autowired
     private SdcCatalogServices        sdcCatalogServices;
 
     /**
+     * 
      * Set the event inventory.
      * 
      * @param cldsModel
      *            The CldsModel
      * @param userId
      *            The user ID
+     * @throws GeneralSecurityException
+     *             In case of issue when decryting the DCAE password
      * @throws ParseException
-     *             In case of issues during the parsing of DCAE answer
+     *             In case of DCAE Json parse exception
      */
-    public void setEventInventory(CldsModel cldsModel, String userId) throws ParseException {
+    public void setEventInventory(CldsModel cldsModel, String userId) throws GeneralSecurityException, ParseException {
         String artifactName = cldsModel.getControlName();
         DcaeEvent dcaeEvent = new DcaeEvent();
         String isDcaeInfoAvailable = null;
@@ -90,8 +94,11 @@ public class DcaeInventoryServices {
         }
         try {
             /*
+             * 
              * Below are the properties required for calling the dcae inventory
+             * 
              * url call
+             * 
              */
             ModelProperties prop = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), null, false,
                     "{}", cldsModel.getPropText());
@@ -105,11 +112,9 @@ public class DcaeInventoryServices {
             }
             /* Invemtory service url is called in this method */
             isDcaeInfoAvailable = getDcaeInformation(artifactName, serviceUuid, resourceUuid);
-
             /* set dcae events */
             dcaeEvent.setArtifactName(artifactName);
             dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
-
         } catch (JsonProcessingException e) {
             logger.error("Error during JSON decoding", e);
         } catch (IOException ex) {
@@ -159,6 +164,7 @@ public class DcaeInventoryServices {
      *             In case of issues with the stream
      * @throws ParseException
      *             In case of issues with the Json parsing
+     * 
      */
     public String getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
             throws IOException, ParseException {
@@ -167,28 +173,22 @@ public class DcaeInventoryServices {
         String queryString = "?sdcResourceId=" + resourceUuid + "&sdcServiceId=" + serviceUuid + "&typeName="
                 + artifactName;
         String fullUrl = refProp.getStringValue("DCAE_INVENTORY_URL") + "/dcae-service-types" + queryString;
-
         logger.info("Dcae Inventory Service full url - " + fullUrl);
         String daceInventoryResponse = null;
         URL inventoryUrl = new URL(fullUrl);
-
         HttpURLConnection conn = (HttpURLConnection) inventoryUrl.openConnection();
         conn.setRequestMethod("GET");
         String reqid = LoggingUtils.getRequestId();
         logger.info("reqid set to " + reqid);
         conn.setRequestProperty("X-ECOMP-RequestID", reqid);
-
         boolean requestFailed = true;
         int responseCode = conn.getResponseCode();
         if (responseCode == 200) {
             requestFailed = false;
         }
-
         StringBuilder response = new StringBuilder();
-
         try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             String inputLine = null;
-
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -203,11 +203,8 @@ public class DcaeInventoryServices {
         String jsonResponseString = response.toString();
         JSONParser parser = new JSONParser();
         Object obj0 = parser.parse(jsonResponseString);
-
         JSONObject jsonObj = (JSONObject) obj0;
-
         Long totalCount = (Long) jsonObj.get("totalCount");
-
         int numServices = totalCount.intValue();
         if (numServices == 0) {
             daceInventoryResponse = null;
@@ -221,5 +218,4 @@ public class DcaeInventoryServices {
         metricsLogger.info("getDcaeInformation complete: number services returned=" + numServices);
         return daceInventoryResponse;
     }
-
 }

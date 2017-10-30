@@ -21,30 +21,41 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.client.req;
+package org.onap.clamp.clds.it;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.onap.clamp.clds.client.SdcCatalogServices;
+import org.onap.clamp.clds.client.req.SdcReq;
 import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
 
-public class SdcReqTest {
-
-    String baseUrl              = "AYBABTU";
-    String serviceInvariantUuid = "serviceInvariantUUID";
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@TestPropertySource(locations = "classpath:application-no-camunda.properties")
+public class SdcReqItCase {
+    String         baseUrl              = "AYBABTU";
+    String         serviceInvariantUuid = "serviceInvariantUUID";
+    @Autowired
+    private SdcReq sdcReq;
 
     @Test
-    public void getSdcReqUrlsListNoGlobalPropTest() {
+    public void getSdcReqUrlsListNoGlobalPropTest() throws GeneralSecurityException {
         ModelProperties prop = mock(ModelProperties.class);
         SdcCatalogServices sdcCatalogServices = mock(SdcCatalogServices.class);
         DelegateExecution delegateExecution = mock(DelegateExecution.class);
@@ -53,32 +64,25 @@ public class SdcReqTest {
         cldsSdcResources.add(cldsSdcResource);
         List<String> resourceVf = new ArrayList<>();
         resourceVf.add(serviceInvariantUuid);
-
-        Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-
+        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
         Global global = mock(Global.class);
         when(prop.getGlobal()).thenReturn(global);
-        Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-
+        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
         when(global.getService()).thenReturn(serviceInvariantUuid);
-        Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-
+        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
         CldsSdcServiceDetail cldsSdcServiceDetail = mock(CldsSdcServiceDetail.class);
         when(sdcCatalogServices.getCldsSdcServiceDetailFromJson(null)).thenReturn(cldsSdcServiceDetail);
         when(global.getResourceVf()).thenReturn(new ArrayList<>());
-        Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-
+        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
         when(cldsSdcServiceDetail.getResources()).thenReturn(cldsSdcResources);
-        Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-
+        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
         when(cldsSdcResource.getResoucreType()).thenReturn("VF");
-        Assert.assertTrue(SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-
+        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
         when(global.getResourceVf()).thenReturn(resourceVf);
         when(cldsSdcResource.getResourceInvariantUUID()).thenReturn(serviceInvariantUuid);
         when(cldsSdcResource.getResourceInstanceName()).thenReturn("Resource instance name");
         List<String> expected = new ArrayList<>();
         expected.add("AYBABTU/null/resourceInstances/resourceinstancename/artifacts");
-        Assert.assertEquals(expected, SdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution));
+        Assert.assertEquals(expected, sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution));
     }
 }

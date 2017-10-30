@@ -26,6 +26,7 @@ package org.onap.clamp.clds.config;
 import com.att.ajsc.common.AjscProvider;
 import com.att.ajsc.common.AjscService;
 
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +45,12 @@ import org.onap.clamp.clds.client.SdcCatalogServices;
 import org.onap.clamp.clds.client.SdcSendReqDelegate;
 import org.onap.clamp.clds.client.TcaPolicyDelegate;
 import org.onap.clamp.clds.client.TcaPolicyDeleteDelegate;
+import org.onap.clamp.clds.client.req.SdcReq;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -59,17 +60,18 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile("clamp-default")
 public class CldsConfiguration {
-
     @Autowired
     private ApplicationContext context;
 
     /**
      * Clds Identity database DataSource configuration
+     * 
+     * @return
      */
     @Bean(name = "cldsDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.cldsdb")
     public DataSource cldsDataSource() {
-        return DataSourceBuilder.create().build();
+        return new EncodedPasswordBasicDataSource();
     }
 
     @Bean(name = "jaxrsProviders")
@@ -99,6 +101,11 @@ public class CldsConfiguration {
     @Bean
     public RefProp getRefProp() {
         return new RefProp();
+    }
+
+    @Bean
+    public SdcReq getSdcReq() {
+        return new SdcReq();
     }
 
     @Bean
@@ -160,5 +167,4 @@ public class CldsConfiguration {
     public HolmesPolicyDeleteDelegate getHolmesPolicyDeleteDelegate() {
         return new HolmesPolicyDeleteDelegate();
     }
-
 }
