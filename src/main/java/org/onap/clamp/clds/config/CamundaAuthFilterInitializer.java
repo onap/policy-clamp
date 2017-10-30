@@ -23,6 +23,9 @@
 
 package org.onap.clamp.clds.config;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.util.EnumSet;
 import java.util.Map;
 
@@ -34,36 +37,27 @@ import javax.servlet.ServletException;
 
 import org.camunda.bpm.spring.boot.starter.CamundaBpmAutoConfiguration;
 import org.camunda.bpm.webapp.impl.security.auth.AuthenticationFilter;
-import org.onap.clamp.clds.client.SdcCatalogServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 @Configuration
 @ConditionalOnWebApplication
 @AutoConfigureAfter(CamundaBpmAutoConfiguration.class)
 public class CamundaAuthFilterInitializer implements ServletContextInitializer {
-
     private static final EnumSet<DispatcherType> DISPATCHER_TYPES = EnumSet.of(DispatcherType.REQUEST);
-
     private ServletContext                       servletContext;
-
     @Value("${com.att.ajsc.camunda.contextPath:/camunda}")
     private String                               camundaSuffix;
-
-    protected static final EELFLogger              logger           = EELFManager.getInstance()
-            .getLogger(SdcCatalogServices.class);
-    protected static final EELFLogger              metricsLogger    = EELFManager.getInstance().getMetricsLogger();
+    protected static final EELFLogger            logger           = EELFManager.getInstance()
+            .getLogger(CamundaAuthFilterInitializer.class);
+    protected static final EELFLogger            metricsLogger    = EELFManager.getInstance().getMetricsLogger();
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         this.servletContext = servletContext;
-
         registerFilter("Authentication Filter", AuthenticationFilter.class, camundaSuffix + "/*");
     }
 
@@ -75,16 +69,13 @@ public class CamundaAuthFilterInitializer implements ServletContextInitializer {
     private FilterRegistration registerFilter(final String filterName, final Class<? extends Filter> filterClass,
             final Map<String, String> initParameters, final String... urlPatterns) {
         FilterRegistration filterRegistration = servletContext.getFilterRegistration(filterName);
-
         if (filterRegistration == null) {
             filterRegistration = servletContext.addFilter(filterName, filterClass);
             filterRegistration.addMappingForUrlPatterns(DISPATCHER_TYPES, true, urlPatterns);
-
             if (initParameters != null) {
                 filterRegistration.setInitParameters(initParameters);
             }
         }
-
         return filterRegistration;
     }
 }
