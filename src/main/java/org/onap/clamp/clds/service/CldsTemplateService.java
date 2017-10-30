@@ -107,33 +107,6 @@ public class CldsTemplateService extends SecureServiceBase {
     }
 
     /**
-     * REST service that saves BPMN for a CLDS template by name in the database.
-     * This is subset of the json putModel. This is only expected to be used for
-     * testing purposes, not by the UI.
-     *
-     * @param templateName
-     * @param bpmnText
-     */
-    @PUT
-    @Path("/template/bpmn/{templateName}")
-    @Consumes(MediaType.TEXT_XML)
-    public String putBpmnTemplateXml(@PathParam("templateName") String templateName, String bpmnText) {
-        Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsTemplateService: PUT template bpmn", getPrincipalName());
-        isAuthorized(permissionUpdateTemplate);
-        logger.info("PUT bpmnText for templateName=" + templateName);
-        logger.info("PUT bpmnText=" + bpmnText);
-        CldsTemplate cldsTemplate = CldsTemplate.retrieve(cldsDao, templateName, true);
-        cldsTemplate.setBpmnText(bpmnText);
-        cldsTemplate.save(cldsDao, userid);
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Put template bpmn success", this.getClass().getName());
-        auditLogger.info("PUT template bpm completed");
-        return "wrote bpmnText for templateName=" + templateName;
-    }
-
-    /**
      * REST service that retrieves image for a CLDS template name from the
      * database. This is subset of the json getModel. This is only expected to
      * be used for testing purposes, not by the UI.
@@ -155,33 +128,6 @@ public class CldsTemplateService extends SecureServiceBase {
         LoggingUtils.setResponseContext("0", "Get template image success", this.getClass().getName());
         auditLogger.info("GET template image completed");
         return template.getImageText();
-    }
-
-    /**
-     * REST service that saves image for a CLDS template by name in the
-     * database. This is subset of the json putModel. This is only expected to
-     * be used for testing purposes, not by the UI.
-     *
-     * @param templateName
-     * @param imageText
-     */
-    @PUT
-    @Path("/template/image/{templateName}")
-    @Consumes(MediaType.TEXT_XML)
-    public String putImageXml(@PathParam("templateName") String templateName, String imageText) {
-        Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsTemplateService: PUT template image", getPrincipalName());
-        isAuthorized(permissionUpdateTemplate);
-        logger.info("PUT iamgeText for modelName=" + templateName);
-        logger.info("PUT imageText=" + imageText);
-        CldsTemplate cldsTemplate = CldsTemplate.retrieve(cldsDao, templateName, true);
-        cldsTemplate.setImageText(imageText);
-        cldsTemplate.save(cldsDao, userid);
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Put template image success", this.getClass().getName());
-        auditLogger.info("PUT template image completed");
-        return "wrote imageText for modelName=" + templateName;
     }
 
     /**
