@@ -26,6 +26,7 @@ package org.onap.clamp.clds.transform;
 import java.io.StringReader;
 import java.io.StringWriter;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -45,6 +46,7 @@ public class XslTransformer {
 
     public void setXslResourceName(String xslResourceName) throws TransformerConfigurationException {
         TransformerFactory tfactory = TransformerFactory.newInstance();
+        tfactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         templates = tfactory.newTemplates(new StreamSource(ResourceFileUtil.getResourceAsStream(xslResourceName)));
     }
 
