@@ -43,6 +43,7 @@ import org.onap.clamp.clds.model.CldsDBServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelInstance;
+import org.onap.clamp.clds.model.CldsModelProp;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
@@ -499,6 +500,28 @@ public class CldsDao {
 
     public void doHealthCheck() {
         jdbcTemplateObject.execute(HEALTHCHECK);
+    }
+
+    /**
+     * Method to get all models with model properties.
+     * 
+     * @return list of CldsModelProp
+     */
+    public List<CldsModelProp> getAllModelProperties() {
+        List<CldsModelProp> cldsModelPropList = new ArrayList<CldsModelProp>();
+        String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, model_properties mp"
+                + " WHERE m.model_prop_id = mp.model_prop_id";
+        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
+        CldsModelProp cldsModelProp = null;
+        for (Map<String, Object> row : rows) {
+            cldsModelProp = new CldsModelProp();
+            cldsModelProp.setId((String) row.get("model_id"));
+            cldsModelProp.setName((String) row.get("model_name"));
+            cldsModelProp.setPropId((String) row.get("model_prop_id"));
+            cldsModelProp.setPropText((String) row.get("model_prop_text"));
+            cldsModelPropList.add(cldsModelProp);
+        }
+        return cldsModelPropList;
     }
 
 }
