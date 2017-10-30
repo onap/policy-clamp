@@ -110,6 +110,8 @@ public class PolicyClient {
         // Data Issue: No policyDescription given.
         policyParameters.setPolicyDescription(refProp.getStringValue("op.policyDescription"));
 
+        policyParameters.setAttributes(attributes);
+
         // Set a random UUID(Mandatory)
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
         String policyNamePrefix = refProp.getStringValue("policy.op.policyNamePrefix");
