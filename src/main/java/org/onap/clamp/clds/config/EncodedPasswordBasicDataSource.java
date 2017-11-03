@@ -31,6 +31,7 @@ import java.security.GeneralSecurityException;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.onap.clamp.clds.util.CryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,6 +40,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component("EncodedPasswordBasicDataSource")
+@DependsOn(value = { "CryptoUtils" })
 public class EncodedPasswordBasicDataSource extends BasicDataSource {
     protected static final EELFLogger logger        = EELFManager.getInstance()
             .getLogger(EncodedPasswordBasicDataSource.class);
