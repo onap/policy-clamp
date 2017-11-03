@@ -75,7 +75,7 @@ public class TcaRequestFormatter {
             String policyName = refProp.getStringValue("tca.policyid.prefix") + modelProperties.getCurrentPolicyScopeAndPolicyName();
             ((ObjectNode) rootNode).put("policyName", policyName);
             ((ObjectNode) rootNode).put("description", "MicroService vCPE Policy");
-            ((ObjectNode) rootNode).replace("content", createPolicyContent(refProp, modelProperties, service, policyName, tca));
+            ((ObjectNode) rootNode.get("content")).replace("tca_policy", createPolicyContent(refProp, modelProperties, service, policyName, tca));
 
             String tcaPolicyReq = rootNode.toString();
             logger.info("tcaPolicyReq=" + tcaPolicyReq);

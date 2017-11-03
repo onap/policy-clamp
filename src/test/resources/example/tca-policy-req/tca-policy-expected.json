@@ -1,5 +1,5 @@
 {
-  "service": "policy_tosca_tca",
+  "service": "tca_policy",
   "version": "1.0.0",
   "location": "SampleServiceLocation",
   "configName": "SampleConfigName",
@@ -13,35 +13,37 @@
   "riskLevel": "1",
   "guard": "False",
   "content": {
-    "domain": "measurementsForVfScaling",
-    "metricsPerEventName": [
-      {
-        "eventName": "vFirewallBroadcastPackets",
-        "controlLoopSchemaType": "VNF",
-        "policyScope": "DCAE",
-        "policyName": "DCAE.Config_example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4",
-        "policyVersion": "v0.0.1",
-        "thresholds": [
-          {
-            "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
-            "version": "1.0.2",
-            "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
-            "thresholdValue": 123,
-            "direction": "GREATER_OR_EQUAL",
-            "severity": "MAJOR",
-            "closedLoopEventStatus": "ONSET"
-          },
-          {
-            "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
-            "version": "1.0.2",
-            "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
-            "thresholdValue": 123,
-            "direction": "GREATER_OR_EQUAL",
-            "severity": "MAJOR",
-            "closedLoopEventStatus": "ONSET"
-          }
-        ]
-      }
-    ]
+    "tca_policy": {
+        "domain": "measurementsForVfScaling",
+        "metricsPerEventName": [
+        {
+          "eventName": "vFirewallBroadcastPackets",
+          "controlLoopSchemaType": "VNF",
+          "policyScope": "DCAE",
+          "policyName": "DCAE.Config_example_model01.ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_TCA_1jy9to4",
+          "policyVersion": "v0.0.1",
+          "thresholds": [
+            {
+              "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
+              "version": "1.0.2",
+              "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+              "thresholdValue": 123,
+              "direction": "GREATER_OR_EQUAL",
+              "severity": "MAJOR",
+              "closedLoopEventStatus": "ONSET"
+            },
+            {
+              "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
+              "version": "1.0.2",
+              "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+              "thresholdValue": 123,
+              "direction": "GREATER_OR_EQUAL",
+              "severity": "MAJOR",
+              "closedLoopEventStatus": "ONSET"
+            }
+          ]
+        }
+      ]
+    }
   }
 }
