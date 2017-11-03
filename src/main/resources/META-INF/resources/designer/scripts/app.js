@@ -393,7 +393,7 @@ var app = angular.module('clds-app', ['ngRoute',
               $scope
                 .cldsConfirmPerformAction("RESTART");
             } else if (name == "Refresh Status") {
-              $scope.cldsPerformAction("REFRESH");
+              $scope.refreshStatus();
             } else if (name == "Properties CL") {
               $scope.cldsOpenModelProperties();
             } else if (name == "Deploy") {
@@ -1175,7 +1175,32 @@ var app = angular.module('clds-app', ['ngRoute',
                 // + data);
               });
         };
-
+        $scope.refreshStatus = function() {
+            var modelName = selected_model;
+            var svgXml = "";
+            console.log(abootDiagram.saveSVG({
+              format: true
+            }, function(err, xml) {
+              if (err)
+                console.log("error")
+              else
+                console.log(xml)
+              svgXml = xml;
+            }));
+            console.log("refreStatus modelName=" + modelName);
+            cldsModelService
+              .getModel(modelName)
+              .then(
+                function(pars) {
+                  console
+                    .log("refreStatus: pars=" +
+                      pars);
+                  cldsModelService
+                    .processRefresh(pars);
+                },
+                function(data) {
+                });
+          };
         $scope.cldsConfirmPerformAction = function(uiAction) {
           var dlg = dialogs.confirm('Message',
             'Do you want to ' +

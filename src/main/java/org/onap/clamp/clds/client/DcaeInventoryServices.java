@@ -105,13 +105,12 @@ public class DcaeInventoryServices {
             Global global = prop.getGlobal();
             String invariantServiceUuid = global.getService();
             List<String> resourceUuidList = global.getResourceVf();
-            String serviceUuid = sdcCatalogServices.getServiceUuidFromServiceInvariantId(invariantServiceUuid);
             String resourceUuid = "";
             if (resourceUuidList != null && !resourceUuidList.isEmpty()) {
                 resourceUuid = resourceUuidList.get(0);
             }
             /* Invemtory service url is called in this method */
-            isDcaeInfoAvailable = getDcaeInformation(artifactName, serviceUuid, resourceUuid);
+            isDcaeInfoAvailable = getDcaeInformation(artifactName, invariantServiceUuid, resourceUuid);
             /* set dcae events */
             dcaeEvent.setArtifactName(artifactName);
             dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
@@ -170,7 +169,7 @@ public class DcaeInventoryServices {
             throws IOException, ParseException {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
-        String queryString = "?sdcResourceId=" + resourceUuid + "&sdcServiceId=" + serviceUuid + "&typeName="
+        String queryString = "?asdcResourceId=" + resourceUuid + "&asdcServiceId=" + serviceUuid + "&typeName="
                 + artifactName;
         String fullUrl = refProp.getStringValue("DCAE_INVENTORY_URL") + "/dcae-service-types" + queryString;
         logger.info("Dcae Inventory Service full url - " + fullUrl);

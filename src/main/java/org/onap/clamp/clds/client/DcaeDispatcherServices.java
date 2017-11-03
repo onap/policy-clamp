@@ -25,6 +25,7 @@ package org.onap.clamp.clds.client;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -235,7 +236,10 @@ public class DcaeDispatcherServices {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "createNewDeployment");
         try {
-            String apiBodyString = "{\"serviceTypeId\": \"" + serviceTypeId + "\"}";
+            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("dcae.deployment.template");
+            ((ObjectNode) rootNode).put("serviceTypeId", serviceTypeId);
+            String apiBodyString = rootNode.toString();
+
             logger.info("Dcae api Body String - " + apiBodyString);
             String url = refProp.getStringValue("DCAE_DISPATCHER_URL") + "/dcae-deployments/" + deploymentId;
             logger.info("Dcae Dispatcher Service url - " + url);

@@ -72,7 +72,7 @@ public class TcaRequestFormatter {
             Tca tca = modelProperties.getType(Tca.class);
             modelProperties.setCurrentModelElementId(tca.getId());
             ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.policy.template", service);
-            String policyName = refProp.getStringValue("tca.policyid.prefix") + modelProperties.getCurrentPolicyScopeAndPolicyName();
+            String policyName = modelProperties.getCurrentPolicyScopeAndPolicyName();
             ((ObjectNode) rootNode).put("policyName", policyName);
             ((ObjectNode) rootNode).put("description", "MicroService vCPE Policy");
             ((ObjectNode) rootNode.get("content")).replace("tca_policy", createPolicyContent(refProp, modelProperties, service, policyName, tca));
@@ -105,7 +105,7 @@ public class TcaRequestFormatter {
                 modelProperties.setCurrentModelElementId(tca.getId());
             }
             if (null == policyName) {
-                policyName = refProp.getStringValue("tca.policyid.prefix") + modelProperties.getCurrentPolicyScopeAndPolicyName();
+                policyName = modelProperties.getCurrentPolicyScopeAndPolicyName();
             }
             ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.template", service);
             ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("eventName", tca.getTcaItem().getEventName());

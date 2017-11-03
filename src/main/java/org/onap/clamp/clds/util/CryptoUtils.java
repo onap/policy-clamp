@@ -31,6 +31,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,6 +41,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component("CryptoUtils")
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public final class CryptoUtils {
     public static final String AES       = "AES";
     public static final String KEY_PARAM = "org.onap.clamp.encryption.aes.key";
