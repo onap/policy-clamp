@@ -27,16 +27,10 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
-
-import javax.ws.rs.BadRequestException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -67,8 +61,6 @@ public class DcaeInventoryServices {
     private RefProp                   refProp;
     @Autowired
     private CldsDao                   cldsDao;
-    @Autowired
-    private SdcCatalogServices        sdcCatalogServices;
 
     /**
      * 
@@ -117,7 +109,7 @@ public class DcaeInventoryServices {
         } catch (JsonProcessingException e) {
             logger.error("Error during JSON decoding", e);
         } catch (IOException ex) {
-            logger.error("Error during JSON decoding", ex);
+            logger.error("Error during DCAE communication", ex);
         } finally {
             LoggingUtils.setTimeContext(startTime, new Date());
             metricsLogger.info("setEventInventory complete");
@@ -160,9 +152,7 @@ public class DcaeInventoryServices {
      *            The resource UUID
      * @return The DCAE inventory for the artifact
      * @throws IOException
-     *             In case of issues with the stream
      * @throws ParseException
-     *             In case of issues with the Json parsing
      * 
      */
     public String getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
@@ -174,34 +164,9 @@ public class DcaeInventoryServices {
         String fullUrl = refProp.getStringValue("DCAE_INVENTORY_URL") + "/dcae-service-types" + queryString;
         logger.info("Dcae Inventory Service full url - " + fullUrl);
         String daceInventoryResponse = null;
-        URL inventoryUrl = new URL(fullUrl);
-        HttpURLConnection conn = (HttpURLConnection) inventoryUrl.openConnection();
-        conn.setRequestMethod("GET");
-        String reqid = LoggingUtils.getRequestId();
-        logger.info("reqid set to " + reqid);
-        conn.setRequestProperty("X-ECOMP-RequestID", reqid);
-        boolean requestFailed = true;
-        int responseCode = conn.getResponseCode();
-        if (responseCode == 200) {
-            requestFailed = false;
-        }
-        StringBuilder response = new StringBuilder();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-            String inputLine = null;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-        }
-        String responseStr = response.toString();
-        if (responseStr != null) {
-            if (requestFailed) {
-                logger.error("requestFailed - responseStr=" + response);
-                throw new BadRequestException(responseStr);
-            }
-        }
-        String jsonResponseString = response.toString();
+        String responseStr = DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
         JSONParser parser = new JSONParser();
-        Object obj0 = parser.parse(jsonResponseString);
+        Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
         Long totalCount = (Long) jsonObj.get("totalCount");
         int numServices = totalCount.intValue();
