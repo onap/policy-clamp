@@ -25,12 +25,11 @@ package org.onap.clamp.clds.client.req;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.onap.clamp.clds.exception.TcaRequestFormatterException;
@@ -52,7 +51,6 @@ public class TcaRequestFormatter {
      * Hide the default constructor.
      */
     private TcaRequestFormatter() {
-
     }
 
     /**
@@ -68,15 +66,14 @@ public class TcaRequestFormatter {
     public static String createPolicyJson(RefProp refProp, ModelProperties modelProperties) {
         try {
             String service = modelProperties.getGlobal().getService();
-
             Tca tca = modelProperties.getType(Tca.class);
             modelProperties.setCurrentModelElementId(tca.getId());
             ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.policy.template", service);
             String policyName = modelProperties.getCurrentPolicyScopeAndPolicyName();
-            ((ObjectNode) rootNode).put("policyName", policyName);
-            ((ObjectNode) rootNode).put("description", "MicroService vCPE Policy");
-            ((ObjectNode) rootNode.get("content")).replace("tca_policy", createPolicyContent(refProp, modelProperties, service, policyName, tca));
-
+            rootNode.put("policyName", policyName);
+            rootNode.put("description", "MicroService vCPE Policy");
+            ((ObjectNode) rootNode.get("content")).replace("tca_policy",
+                    createPolicyContent(refProp, modelProperties, service, policyName, tca));
             String tcaPolicyReq = rootNode.toString();
             logger.info("tcaPolicyReq=" + tcaPolicyReq);
             return tcaPolicyReq;
@@ -95,12 +92,13 @@ public class TcaRequestFormatter {
      *            The Model Prop created from BPMN JSON and BPMN properties JSON
      * @return The Json string containing that should be sent to policy
      */
-    public static JsonNode createPolicyContent(RefProp refProp, ModelProperties modelProperties, String service, String policyName, Tca tca) {
+    public static JsonNode createPolicyContent(RefProp refProp, ModelProperties modelProperties, String service,
+            String policyName, Tca tca) {
         try {
             if (null == service) {
                 service = modelProperties.getGlobal().getService();
             }
-            if (null == tca){
+            if (null == tca) {
                 tca = modelProperties.getType(Tca.class);
                 modelProperties.setCurrentModelElementId(tca.getId());
             }
@@ -110,15 +108,15 @@ public class TcaRequestFormatter {
             ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.template", service);
             ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("eventName", tca.getTcaItem().getEventName());
             ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("policyName", policyName);
-            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("controlLoopSchemaType", tca.getTcaItem().getControlLoopSchemaType());
+            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("controlLoopSchemaType",
+                    tca.getTcaItem().getControlLoopSchemaType());
             ObjectNode thresholdsParent = ((ObjectNode) rootNode.get("metricsPerEventName").get(0));
-
             addThresholds(refProp, service, thresholdsParent, tca.getTcaItem(), modelProperties);
-
             logger.info("tcaPolicyContent=" + rootNode.toString());
-            return (JsonNode) rootNode;
+            return rootNode;
         } catch (Exception e) {
-            throw new TcaRequestFormatterException("Exception caught when attempting to create the policy content JSON", e);
+            throw new TcaRequestFormatterException("Exception caught when attempting to create the policy content JSON",
+                    e);
         }
     }
 
@@ -145,7 +143,6 @@ public class TcaRequestFormatter {
         try {
             ArrayNode tcaNodes = appendToNode.withArray("thresholds");
             ObjectNode tcaNode = (ObjectNode) refProp.getJsonTemplate("tca.thresholds.template", service);
-
             for (TcaThreshold tcaThreshold : tcaItem.getTcaThresholds()) {
                 tcaNode.put("closedLoopControlName", modelProperties.getControlNameAndPolicyUniqueId());
                 tcaNode.put("fieldPath", tcaThreshold.getFieldPath());
@@ -175,31 +172,30 @@ public class TcaRequestFormatter {
     public static String updatedBlueprintWithConfiguration(RefProp refProp, ModelProperties modelProperties,
             String yamlValue) {
         try {
-            String jsonPolicy = ((ObjectNode) createPolicyContent(refProp, modelProperties, null, null, null)).toString();
-
+            String jsonPolicy = ((ObjectNode) createPolicyContent(refProp, modelProperties, null, null, null))
+                    .toString();
             logger.info("Yaml that will be updated:" + yamlValue);
             Yaml yaml = new Yaml();
-
             Map<String, Object> loadedYaml = (Map<String, Object>) yaml.load(yamlValue);
-
             Map<String, Object> nodeTemplates = (Map<String, Object>) loadedYaml.get("node_templates");
-            //add policy_0 section in blueprint
-            Map<String, Object> policyObject = new HashMap<String, Object> ();
-            Map<String, Object> policyIdObject = new HashMap<String, Object> ();
-            String policyPrefix = refProp.getStringValue("tca.policyid.prefix");
-            policyIdObject.put("policy_id", policyPrefix + modelProperties.getCurrentPolicyScopeAndPolicyName());
-            policyObject.put("type", "dcae.nodes.policy");
-            policyObject.put("properties", policyIdObject);
-            nodeTemplates.put("policy_0", policyObject);
-
+            // add policy_0 section in blueprint
+            /*
+             * Map<String, Object> policyObject = new HashMap<String, Object>
+             * (); Map<String, Object> policyIdObject = new HashMap<String,
+             * Object> (); String policyPrefix =
+             * refProp.getStringValue("tca.policyid.prefix");
+             * policyIdObject.put("policy_id", policyPrefix +
+             * modelProperties.getCurrentPolicyScopeAndPolicyName());
+             * policyObject.put("type", "dcae.nodes.policy");
+             * policyObject.put("properties", policyIdObject);
+             * nodeTemplates.put("policy_0", policyObject);
+             */
             Map<String, Object> tcaObject = (Map<String, Object>) nodeTemplates.get("tca_tca");
             Map<String, Object> propsObject = (Map<String, Object>) tcaObject.get("properties");
             Map<String, Object> appPreferences = (Map<String, Object>) propsObject.get("app_preferences");
             appPreferences.put("tca_policy", jsonPolicy);
-
             String blueprint = yaml.dump(loadedYaml);
             logger.info("Yaml updated:" + blueprint);
-
             return blueprint;
         } catch (Exception e) {
             throw new TcaRequestFormatterException("Exception caught when attempting to update the blueprint", e);
