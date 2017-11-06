@@ -31,9 +31,10 @@ CLAMP offers the following API:
 Consumed APIs
 -------------
 CLAMP uses the API's exposed by the following ONAP components:
-* SDC : REST based interface exposed by the SDC, Distribution of service to DCAE
-* DCAE: REST based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
-* Policy: REST based interface (the Policy team provide a "jar" to handle the communication), both XACML and Drools PDP, APIs to App-C/VF-C/SDN-C
+
+- SDC : REST based interface exposed by the SDC, Distribution of service to DCAE
+- DCAE: REST based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
+- Policy: REST based interface (the Policy team provide a "jar" to handle the communication), both XACML and Drools PDP, APIs to App-C/VF-C/SDN-C
 
 
 Delivery
