@@ -1,47 +1,66 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
+.. http://creativecommons.org/licenses/by/4.0
+.. Copyright 2017 AT&T Intellectual Property.  All rights reserved.
 
 Release Notes
 =============
 
-.. note::
-	* This Release Notes must be updated each time the team decides to Release new artifacts.
-	* The scope of this Release Notes is for this particular component. In other words, each ONAP component has its Release Notes.
-	* This Release Notes is cumulative, the most recently Released artifact is made visible in the top of this Release Notes.
-	* Except the date and the version number, all the other sections are optional but there must be at least one section describing the purpose of this new release.
-	* This note must be removed after content has been added.
-
-
-Version: x.y.z
+Version: 1.1.0
 --------------
 
-
-:Release Date: yyyy-mm-dd
-
-
+:Release Date: 2017-11-16
 
 **New Features**
 
-One or two sentences explaining the purpose of this Release.
+The Amsterdam release is the first release of the Control Loop Automation Management Platform (CLAMP).
+
+The main goal of the Amsterdam release was to:
+
+    - Support the automation of provisionning for the Closed loops of the vFW, vDNW and vCPE through TCA.
+    - Support the automation of provisionning for the Closed loops of VVolte (Holmes)
+    - Demonstrate complete interaction with Policy, DCAE, SDC and Holmes.
 
 **Bug Fixes**
-	- `CIMAN-65 <https://jira.onap.org/browse/CIMAN-65>`_ and a sentence explaining what this defect is addressing.
+
+	- The full list of implemented user stories and epics is available on `JIRA <https://jira.onap.org/projects/CLAMP/versions/10313>`_
+	  This is technically the first release of CLAMP, previous release was the seed code contribution.
+	  As such, the defects fixed in this release were raised during the course of the release.
+	  Anything not closed is captured below under Known Issues. If you want to review the defects fixed in the Amsterdam release, refer to Jira link above.
+
 **Known Issues**
-	- `CIMAN-65 <https://jira.onap.org/browse/CIMAN-65>`_ and two, three sentences.
-	  One sentences explaining what is the issue.
-	  
-	  Another sentence explaining the impact of the issue.
-	  
-	  And an optional sentence providing a workaround.
+	- `CLAMP-68 <https://jira.onap.org/browse/CLAMP-68>`_ ResourceVF not always provisioned.
+
+        In Closed Loop -> Properties CL: When opening the popup window, the first service in the list does not show Resource-VF even though in SDC there is a resource instance in the service.
+
+        Workaround:
+
+        If you have multiple service available (if not create a dummy one on SDC), just click on another one and then click back on the first one in the list. The ResourceVF should be provisioned now.
+.
+    - `CLAMP-69 <https://jira.onap.org/browse/CLAMP-69>`_ Deploy action does not always work.
+
+        The "Deploy" action does not work directly after submitting it.
+
+        Workaround:
+
+        You have to close the CL and reopen it again. In that case the Deploy action will do something
+
 
 **Security Issues**
-	You may want to include a reference to CVE (Common Vulnerabilities and Exposures) `CVE <https://cve.mitre.org>`_
+	CLAMP is following the CII Best Practices Badge Program, results including security assesment can be found on the
+	`project page <https://bestpractices.coreinfrastructure.org/projects/1197>`_
 
 
 **Upgrade Notes**
 
+    N/A
+
 **Deprecation Notes**
 
+    N/A
+
 **Other**
+
+
 
 ===========
 
