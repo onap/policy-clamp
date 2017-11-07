@@ -25,14 +25,11 @@ package org.onap.clamp.clds.util;
 
 import java.security.GeneralSecurityException;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -43,20 +40,9 @@ import org.springframework.stereotype.Component;
 @Component("CryptoUtils")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public final class CryptoUtils {
-    public static final String AES       = "AES";
-    public static final String KEY_PARAM = "org.onap.clamp.encryption.aes.key";
-    @Autowired
-    private Environment        springEnv;
-    private SecretKeySpec      secretKeySpec;
-
-    /**
-     * Initialize Method
-     * 
-     */
-    @PostConstruct
-    public void init() {
-        secretKeySpec = getSecretKeySpec(springEnv.getProperty(KEY_PARAM));
-    }
+    public static final String AES           = "AES";
+    public static final String KEY_PARAM     = "org.onap.clamp.encryption.aes.key";
+    private SecretKeySpec      secretKeySpec = getSecretKeySpec("aa3871669d893c7fb8abbcda31b88b4f");
 
     /**
      * Encrypt a value based on the Clamp Encryption Key.
