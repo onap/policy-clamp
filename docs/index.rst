@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright 2017 AT&T Intellectual Property. All rights reserved.
+.. Copyright © 2017 AT&T Intellectual Property. All rights reserved.
 
 CLAMP - Closed Loop Automation Management Platform
 ==================================================
@@ -132,10 +132,11 @@ Administration
 
 A user can access CLAMP UI at the following URL : http://localhost:8080/designer/index.html.
 (in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
-.. code-block::
+
+.. code-block:: html
+
     Default username : admin
     Default password : password
-
 
 Human Interfaces
 ----------------
@@ -165,6 +166,6 @@ The following actions are done using the UI:
 
 * Control (start/stop) the operation of the control loop in DCAE
 
-Please refer to the `Using ONAP <https://wiki.onap.org/display/DW/Control+Loop+Design>` for more details
+
 
 HealthCheck API - serve to verify CLAMP status (see offered API's section)
