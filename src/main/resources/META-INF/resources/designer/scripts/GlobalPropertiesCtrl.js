@@ -27,6 +27,8 @@ app.controller('GlobalPropertiesCtrl',
 			$scope.$watch('name', function(newValue, oldValue) {
 				var services=asdc_Services
 				setASDCFields()
+				// add blank service item as the default service, to force user chose the correct service by themselves
+				$("#service").append("<option></option>")
 				for(k in services){
 		 			$("#service").append("<option value="+k+">"+services[k]+"</option>")
 		 		}
