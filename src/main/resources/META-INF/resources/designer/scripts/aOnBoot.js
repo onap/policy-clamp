@@ -150,15 +150,6 @@ function loadSharedPropertyByService(onChangeUUID, refresh, callBack) {
   if (uuid === undefined) {
     uuid = elementMap["global"] && elementMap["global"].length > 0 ?
       elementMap["global"][0].value : "";
-  } else if (uuid === "") {
-    vf_Services = null
-    if ($("#vf").length > 0)
-      $("#vf").empty().multiselect("refresh");
-    if ($("#location").length > 0)
-      $("#location").empty().multiselect("refresh");
-    if ($("#alarmCondition").length > 0)
-      $("#alarmCondition").empty().multiselect("refresh");
-    return true;
   }
   var share = null,
     serviceUrl = '/restservices/clds/v1/clds/properties/' + uuid;

@@ -937,7 +937,7 @@ public class CldsService extends SecureServiceBase {
         JsonNode globalNode = modelJson.get("global");
         String service = AbstractModelElement.getValueByName(globalNode, "service");
         List<String> resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
-        if (resourceVf != null && !resourceVf.isEmpty()) {
+        if (service != null && resourceVf != null && !resourceVf.isEmpty()) {
             List<CldsModelProp> cldsModelPropList = cldsDao.getAllModelProperties();
             for (CldsModelProp cldsModelProp : cldsModelPropList) {
                 JsonNode currentJson = new ObjectMapper().readTree(cldsModelProp.getPropText());

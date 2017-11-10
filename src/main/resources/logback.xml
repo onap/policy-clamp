@@ -19,7 +19,7 @@
 		<appender name="ERROR"
 				class="ch.qos.logback.core.rolling.RollingFileAppender">
 				<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-						<level>WARN</level>
+						<level>INFO</level>
 				</filter>
 				<file>${logDirectory}/CLAMP/error.log</file>
 				<append>true</append>
@@ -45,16 +45,13 @@
 				<encoder>
 						<pattern>%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX",UTC}|%X{RequestId}|%.20thread|%.-5level|%logger{36}|%msg%n</pattern>
 				</encoder>
-				<rollingPolicy
-						class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-						<maxIndex>10</maxIndex>
-						<FileNamePattern>${logDirectory}/CLAMP/debug.%i.log.zip
-						</FileNamePattern>
-				</rollingPolicy>
-				<triggeringPolicy
-						class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<fileNamePattern>${logDirectory}/CLAMP/debug.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+					<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 						<maxFileSize>10MB</maxFileSize>
-				</triggeringPolicy>
+					</timeBasedFileNamingAndTriggeringPolicy>
+					<maxHistory>5</maxHistory>
+				</rollingPolicy>
 		</appender>
 
 		<appender name="AUDIT"
@@ -131,8 +128,9 @@
 		</appender>
 
 		<!-- CLDS related loggers -->
-		<logger name="org.onap.clamp.clds" level="INFO" />
-
+		<logger name="org.onap.clamp.clds" level="INFO" additivity="true">
+				<appender-ref ref="ERROR" />
+		</logger>
 		<!-- EELF related loggers -->
 		<logger name="com.att.eelf.audit" level="INFO" additivity="false">
 				<appender-ref ref="asyncEELFAudit" />
@@ -250,7 +248,6 @@
 
 		<root level="WARN">
 				<appender-ref ref="DEBUG" />
-				<appender-ref ref="ERROR" />
 				<appender-ref ref="STDOUT" />
 		</root>
 

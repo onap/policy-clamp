@@ -486,7 +486,7 @@ var app = angular.module('clds-app', ['ngRoute',
             link: "/refreshStatus",
             name: "Refresh Status"
           }, {
-            link: "/refreshASDCProperties",
+            link: "/cldsRefreshASDC",
             name: "Refresh ASDC"
           }],
           "Help": [{
