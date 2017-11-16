@@ -26,11 +26,8 @@ package org.onap.clamp.clds.service;
 import java.util.Arrays;
 
 public class CldsUser {
-
     private String                    user;
-
     private String                    password;
-
     private SecureServicePermission[] permissions;
 
     /**
@@ -67,7 +64,7 @@ public class CldsUser {
      * @return the permissions
      */
     public SecureServicePermission[] getPermissions() {
-        return permissions;
+        return Arrays.copyOf(permissions, permissions.length);
     }
 
     public String[] getPermissionsString() {
@@ -78,7 +75,7 @@ public class CldsUser {
      * @param permissions
      *            the permissions to set
      */
-    public void setPermissions(SecureServicePermission[] permissions) {
-        this.permissions = permissions;
+    public void setPermissions(SecureServicePermission[] permissionsArray) {
+        this.permissions = Arrays.copyOf(permissionsArray, permissionsArray.length);
     }
 }

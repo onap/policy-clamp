@@ -1,9 +1,7 @@
- [{
-    "user":"admin1",
-	"permissions": 
-	            [
-
-	            ]
+[
+	{
+		"user": "admin1",
+		"permissions": [
+		]
 	}
-
 ]
