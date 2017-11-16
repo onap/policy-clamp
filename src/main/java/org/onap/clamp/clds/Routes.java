@@ -23,11 +23,11 @@
 
 package org.onap.clamp.clds;
 
+import com.att.ajsc.common.camel.AjscRouteBuilder;
+
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.att.ajsc.common.camel.AjscRouteBuilder;
 
 @Component
 public class Routes extends RouteBuilder {
@@ -35,10 +35,9 @@ public class Routes extends RouteBuilder {
     private AjscRouteBuilder ajscRoute;
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
         ajscRoute.initialize(this);
         ajscRoute
                 .setRoute(from("servlet:/?matchOnUriPrefix=true").to("cxfbean:jaxrsServices?providers=jaxrsProviders"));
     }
-
 }
