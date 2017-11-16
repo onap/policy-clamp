@@ -28,23 +28,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
 
 public class CldsUserJsonDecoder {
-
     /**
      * This method decodes the JSON file provided to a CldsUser Array. The
      * stream is closed after this call, this is not possible to reuse it.
      * 
+     * @param cldsUsersFile
+     *            The inputStream containing the users json file
      * @return CldsUser[] Array containing a list of the user defined in the
      *         JSON file
      */
-    public static CldsUser[] decodeJson(InputStream cldsUsersFile) throws IOException {
-        // the ObjectMapper readValue method closes the stream no need to do it
-        return new ObjectMapper().readValue(cldsUsersFile, CldsUser[].class);
+    public static CldsUser[] decodeJson(InputStream cldsUsersFile) {
+        try {
+            // the ObjectMapper readValue method closes the stream no need to do
+            // it
+            return new ObjectMapper().readValue(cldsUsersFile, CldsUser[].class);
+        } catch (IOException e) {
+            throw new CldsUsersException("Exception occurred during the decoding of the clds-users.json", e);
+        }
     }
 
     private CldsUserJsonDecoder() {
-
     }
 }

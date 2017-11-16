@@ -30,41 +30,33 @@ import org.junit.Test;
 import org.onap.clamp.clds.service.CldsUser;
 
 public class CldsUserJsonDecoderTest {
-
     private String   user1                      = "admin1";
     private String   user2                      = "admin2";
-
     private String   password                   = "5f4dcc3b5aa765d61d8327deb882cf99";
     private String[] normalPermissionsArray     = { "permission-type-cl|dev|read", "permission-type-cl|dev|update",
-        "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
-        "permission-type-template|dev|update" };
-
+            "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
+            "permission-type-template|dev|update" };
     private String[] incompletePermissionsArray = { "permission-type-cl|dev|*", "permission-type-cl|dev|*",
-        "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
-        "permission-type-template|dev|update" };
+            "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
+            "permission-type-template|dev|update" };
 
     @Test
-    public void testDecodingDoubleUsers() throws Exception {
+    public void testDecodingDoubleUsers() {
         CldsUser[] usersArray = CldsUserJsonDecoder
                 .decodeJson(CldsUserJsonDecoderTest.class.getResourceAsStream("/clds/clds-users-two-users.json"));
-
         assertEquals(usersArray.length, 2);
-
         assertEquals(usersArray[0].getUser(), user1);
         assertEquals(usersArray[1].getUser(), user2);
-
         assertEquals(usersArray[0].getPassword(), password);
         assertEquals(usersArray[1].getPassword(), password);
-
         assertArrayEquals(usersArray[0].getPermissionsString(), normalPermissionsArray);
         assertArrayEquals(usersArray[1].getPermissionsString(), normalPermissionsArray);
     }
 
     @Test
-    public void testDecodingNoPermission() throws Exception {
+    public void testDecodingNoPermission() {
         CldsUser[] usersArray = CldsUserJsonDecoder
                 .decodeJson(this.getClass().getResourceAsStream("/clds/clds-users-no-permission.json"));
-
         assertEquals(usersArray.length, 1);
         assertEquals(usersArray[0].getUser(), user1);
         assertEquals(usersArray[0].getPassword(), null);
@@ -72,14 +64,12 @@ public class CldsUserJsonDecoderTest {
     }
 
     @Test
-    public void testDecodingIncompletePermissions() throws Exception {
+    public void testDecodingIncompletePermissions() {
         CldsUser[] usersArray = CldsUserJsonDecoder
                 .decodeJson(this.getClass().getResourceAsStream("/clds/clds-users-incomplete-permissions.json"));
-
         assertEquals(usersArray.length, 1);
         assertEquals(usersArray[0].getUser(), user1);
         assertEquals(usersArray[0].getPassword(), password);
         assertArrayEquals(usersArray[0].getPermissionsString(), incompletePermissionsArray);
     }
-
 }
