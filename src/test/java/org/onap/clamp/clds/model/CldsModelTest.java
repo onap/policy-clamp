@@ -26,6 +26,9 @@ package org.onap.clamp.clds.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import javax.ws.rs.BadRequestException;
 
 import org.junit.Test;
@@ -34,6 +37,7 @@ import org.junit.Test;
  * Test org.onap.clamp.ClampDesigner.model.Model
  */
 public class CldsModelTest {
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsModelTest.class);
 
     @Test
     public void testCreateUsingControlName() {
@@ -64,10 +68,8 @@ public class CldsModelTest {
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_CREATE);
         cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_TEST);
-
         cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
         fail("Exception should have been sent");
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -79,12 +81,10 @@ public class CldsModelTest {
             cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
             fail("Exception should have been sent");
         } catch (IllegalArgumentException e) {
-            System.out.println("Exception caught IllegalArgumentException as expected");
+            logger.error("Exception caught IllegalArgumentException as expected", e);
         }
-
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_RESUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
-
         cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
         fail("Exception should have been sent");
     }
@@ -95,10 +95,8 @@ public class CldsModelTest {
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DISTRIBUTE);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
-
         cldsModel.validateAction(CldsEvent.ACTION_CREATE);
         fail("Exception should have been sent");
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -108,10 +106,8 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
         cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
-
         cldsModel.validateAction(CldsEvent.ACTION_CREATE);
         fail("Exception should have been sent");
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -122,10 +118,8 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
         cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
         cldsModel.validateAction(CldsEvent.ACTION_STOP);
-
         cldsModel.validateAction(CldsEvent.ACTION_CREATE);
         fail("Exception should have been sent");
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -136,23 +130,19 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
         cldsModel.validateAction(CldsEvent.ACTION_STOP);
         cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
-
         try {
             cldsModel.validateAction(CldsEvent.ACTION_CREATE);
             fail("Exception should have been sent");
         } catch (IllegalArgumentException e) {
             System.out.println("Exception caught IllegalArgumentException as expected");
         }
-
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_UPDATE);
         cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
         cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
         cldsModel.validateAction(CldsEvent.ACTION_STOP);
         cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
-
         cldsModel.validateAction(CldsEvent.ACTION_CREATE);
         fail("Exception should have been sent");
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -160,20 +150,16 @@ public class CldsModelTest {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
         cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
-
         try {
             cldsModel.validateAction(CldsEvent.ACTION_CREATE);
             fail("Exception should have been sent");
         } catch (IllegalArgumentException e) {
             System.out.println("Exception caught IllegalArgumentException as expected");
         }
-
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
         cldsModel.getEvent().setActionStateCd(CldsEvent.ACTION_STATE_SENT);
-
         cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
         fail("Exception should have been sent");
-
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -183,7 +169,6 @@ public class CldsModelTest {
         cldsModel.validateAction(CldsEvent.ACTION_UPDATE);
         cldsModel.validateAction(CldsEvent.ACTION_RESTART);
         cldsModel.validateAction(CldsEvent.ACTION_UNDEPLOY);
-
         cldsModel.validateAction(CldsEvent.ACTION_CREATE);
         fail("Exception should have been sent");
     }
