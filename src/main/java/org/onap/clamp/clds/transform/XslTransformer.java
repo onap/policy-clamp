@@ -47,6 +47,7 @@ public class XslTransformer {
     public void setXslResourceName(String xslResourceName) throws TransformerConfigurationException {
         TransformerFactory tfactory = TransformerFactory.newInstance();
         tfactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        tfactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         templates = tfactory.newTemplates(new StreamSource(ResourceFileUtil.getResourceAsStream(xslResourceName)));
     }
 
