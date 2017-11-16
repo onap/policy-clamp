@@ -28,25 +28,20 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.security.GeneralSecurityException;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.onap.clamp.clds.util.CryptoUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.stereotype.Component;
 
 /**
  * This class is an extension of the standard datasource, it will be used to
  * decode the encoded password defined in the application.properties.
  *
  */
-@Component("EncodedPasswordBasicDataSource")
-@DependsOn(value = { "CryptoUtils" })
 public class EncodedPasswordBasicDataSource extends BasicDataSource {
     protected static final EELFLogger logger        = EELFManager.getInstance()
             .getLogger(EncodedPasswordBasicDataSource.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    @Autowired
-    private CryptoUtils               cryptoUtils;
+    private CryptoUtils               cryptoUtils   = new CryptoUtils();
 
     /**
      * The default constructor calling the parent one.
@@ -64,6 +59,8 @@ public class EncodedPasswordBasicDataSource extends BasicDataSource {
             this.password = cryptoUtils.decrypt(encodedPassword);
         } catch (GeneralSecurityException e) {
             logger.error("Unable to decrypt the DB password", e);
+        } catch (DecoderException e) {
+            logger.error("Exception caught when decoding the HEX String Key for encryption", e);
         }
     }
 }

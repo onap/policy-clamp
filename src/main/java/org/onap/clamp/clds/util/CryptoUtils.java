@@ -23,26 +23,54 @@
 
 package org.onap.clamp.clds.util;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.util.Properties;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * CryptoUtils for encrypting/decrypting string based on a Key defined in
  * application.properties (Spring config file).
  * 
  */
-@Component("CryptoUtils")
-@Order(Ordered.HIGHEST_PRECEDENCE)
 public final class CryptoUtils {
-    public static final String AES           = "AES";
-    public static final String KEY_PARAM     = "org.onap.clamp.encryption.aes.key";
-    private SecretKeySpec      secretKeySpec = getSecretKeySpec("aa3871669d893c7fb8abbcda31b88b4f");
+    protected static final EELFLogger logger            = EELFManager.getInstance().getLogger(CryptoUtils.class);
+    // Openssl commands:
+    // Encrypt: echo -n "123456" | openssl aes-128-cbc -e -K <Private Hex key>
+    // -iv <16 Hex Bytes iv> | xxd -u -g100
+    // Final result is to put in properties file is: IV + Outcome of openssl
+    // command
+    // ************************************************************
+    // Decrypt: echo -n 'Encrypted string' | xxd -r -ps | openssl aes-128-cbc -d
+    // -K
+    // <Private Hex Key> -iv <16 Bytes IV extracted from Encrypted String>
+    private static final String       ALGORITHM         = "AES";
+    private static final String       ALGORYTHM_DETAILS = ALGORITHM + "/CBC/PKCS5PADDING";
+    private static final int          BLOCK_SIZE        = 128;
+    private static final String       KEY_PARAM         = "org.onap.clamp.encryption.aes.key";
+    private static SecretKeySpec      secretKeySpec     = null;
+    private IvParameterSpec           ivspec;
+    static {
+        Properties props = new Properties();
+        try {
+            props.load(ResourceFileUtil.getResourceAsStream("clds/key.properties"));
+            secretKeySpec = getSecretKeySpec(props.getProperty(KEY_PARAM));
+        } catch (IOException | DecoderException e) {
+            logger.error("Exception occurred during the key reading", e);
+        }
+    }
 
     /**
      * Encrypt a value based on the Clamp Encryption Key.
@@ -51,16 +79,21 @@ public final class CryptoUtils {
      * @return The encrypted string
      * @throws GeneralSecurityException
      *             In case of issue with the encryption
+     * @throws UnsupportedEncodingException
+     *             In case of issue with the charset conversion
      */
-    public String encrypt(String value) throws GeneralSecurityException {
-        Cipher cipher = Cipher.getInstance(CryptoUtils.AES);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, cipher.getParameters());
-        byte[] encrypted = cipher.doFinal(value.getBytes());
-        return byteArrayToHexString(encrypted);
+    public String encrypt(String value) throws GeneralSecurityException, UnsupportedEncodingException {
+        Cipher cipher = Cipher.getInstance(CryptoUtils.ALGORYTHM_DETAILS, "SunJCE");
+        SecureRandom r = SecureRandom.getInstance("SHA1PRNG");
+        byte[] iv = new byte[BLOCK_SIZE / 8];
+        r.nextBytes(iv);
+        ivspec = new IvParameterSpec(iv);
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec);
+        return Hex.encodeHexString(ArrayUtils.addAll(iv, cipher.doFinal(value.getBytes("UTF-8"))));
     }
 
     /**
-     * Decrypt a value.
+     * Decrypt a value based on the Clamp Encryption Key
      * 
      * @param message
      *            The encrypted string that must be decrypted using the Clamp
@@ -68,38 +101,21 @@ public final class CryptoUtils {
      * @return The String decrypted
      * @throws GeneralSecurityException
      *             In case of issue with the encryption
+     * @throws DecoderException
+     *             In case of issue to decode the HexString
      */
-    public String decrypt(String message) throws GeneralSecurityException {
-        Cipher cipher = Cipher.getInstance(CryptoUtils.AES);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-        byte[] decrypted = cipher.doFinal(hexStringToByteArray(message));
+    public String decrypt(String message) throws GeneralSecurityException, DecoderException {
+        byte[] encryptedMessage = Hex.decodeHex(message.toCharArray());
+        Cipher cipher = Cipher.getInstance(CryptoUtils.ALGORYTHM_DETAILS, "SunJCE");
+        ivspec = new IvParameterSpec(ArrayUtils.subarray(encryptedMessage, 0, BLOCK_SIZE / 8));
+        byte[] realData = ArrayUtils.subarray(encryptedMessage, BLOCK_SIZE / 8, encryptedMessage.length);
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec);
+        byte[] decrypted = cipher.doFinal(realData);
         return new String(decrypted);
     }
 
-    private SecretKeySpec getSecretKeySpec(String keyString) {
-        byte[] key = hexStringToByteArray(keyString);
-        return new SecretKeySpec(key, CryptoUtils.AES);
-    }
-
-    private String byteArrayToHexString(byte[] b) {
-        StringBuilder sb = new StringBuilder(b.length * 2);
-        for (int i = 0; i < b.length; i++) {
-            int v = b[i] & 0xff;
-            if (v < 16) {
-                sb.append('0');
-            }
-            sb.append(Integer.toHexString(v));
-        }
-        return sb.toString().toUpperCase();
-    }
-
-    private byte[] hexStringToByteArray(String s) {
-        byte[] b = new byte[s.length() / 2];
-        for (int i = 0; i < b.length; i++) {
-            int index = i * 2;
-            int v = Integer.parseInt(s.substring(index, index + 2), 16);
-            b[i] = (byte) v;
-        }
-        return b;
+    private static SecretKeySpec getSecretKeySpec(String keyString) throws DecoderException {
+        byte[] key = Hex.decodeHex(keyString.toCharArray());
+        return new SecretKeySpec(key, CryptoUtils.ALGORITHM);
     }
 }
