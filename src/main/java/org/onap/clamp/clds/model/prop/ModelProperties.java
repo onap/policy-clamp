@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.onap.clamp.clds.exception.ModelBpmnException;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.service.CldsService;
@@ -50,26 +51,19 @@ public class ModelProperties {
             .getLogger(CldsService.class);
     protected static final EELFLogger                                 auditLogger         = EELFManager.getInstance()
             .getAuditLogger();
-
     private ModelBpmn                                                 modelBpmn;
     private JsonNode                                                  modelJson;
-
     private final String                                              modelName;
     private final String                                              controlName;
     private final String                                              actionCd;
     // Flag indicate whether it is triggered by Validation Test button from UI
-    private final boolean                                             isTest;
-
+    private final boolean                                             testOnly;
     private Global                                                    global;
-
     private final Map<String, AbstractModelElement>                   modelElements       = new ConcurrentHashMap<>();
-
     private String                                                    currentModelElementId;
     private String                                                    policyUniqueId;
-
     private static final Object                                       lock                = new Object();
     private static Map<Class<? extends AbstractModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
-
     static {
         synchronized (lock) {
             modelElementClasses.put(Policy.class, Policy.getType());
@@ -88,26 +82,27 @@ public class ModelProperties {
      *            The closed loop name coming from the UI
      * @param actionCd
      *            Type of operation PUT,UPDATE,DELETE
-     * @param isTest
+     * @param isATest
      *            The test flag coming from the UI (for validation only, no
      *            query are physically executed)
      * @param modelBpmnText
      *            The BPMN flow in JSON from the UI
      * @param modelPropText
      *            The BPMN parameters for all boxes defined in modelBpmnTest
-     * @throws IOException
-     *             In case there is an issue with the JSON decoding
      */
-    public ModelProperties(String modelName, String controlName, String actionCd, boolean isTest, String modelBpmnText,
-            String modelPropText) throws IOException {
-        this.modelName = modelName;
-        this.controlName = controlName;
-        this.actionCd = actionCd;
-        this.isTest = isTest;
-        modelBpmn = ModelBpmn.create(modelBpmnText);
-        modelJson = new ObjectMapper().readTree(modelPropText);
-
-        instantiateMissingModelElements();
+    public ModelProperties(String modelName, String controlName, String actionCd, boolean isATest, String modelBpmnText,
+            String modelPropText) {
+        try {
+            this.modelName = modelName;
+            this.controlName = controlName;
+            this.actionCd = actionCd;
+            this.testOnly = isATest;
+            modelBpmn = ModelBpmn.create(modelBpmnText);
+            modelJson = new ObjectMapper().readTree(modelPropText);
+            instantiateMissingModelElements();
+        } catch (IOException e) {
+            throw new ModelBpmnException("Exception occurred when trying to decode the BPMN Properties JSON", e);
+        }
     }
 
     /**
@@ -172,14 +167,13 @@ public class ModelProperties {
      * @throws JsonProcessingException
      * @throws IOException
      */
-    public static ModelProperties create(DelegateExecution execution) throws IOException {
+    public static ModelProperties create(DelegateExecution execution) {
         String modelProp = new String((byte[]) execution.getVariable("modelProp"));
         String modelBpmnProp = (String) execution.getVariable("modelBpmnProp");
         String modelName = (String) execution.getVariable("modelName");
         String controlName = (String) execution.getVariable("controlName");
         String actionCd = (String) execution.getVariable("actionCd");
         boolean isTest = (boolean) execution.getVariable("isTest");
-
         return new ModelProperties(modelName, controlName, actionCd, isTest, modelBpmnProp, modelProp);
     }
 
@@ -308,10 +302,10 @@ public class ModelProperties {
     }
 
     /**
-     * @return the isTest
+     * @return the testOnly
      */
-    public boolean isTest() {
-        return isTest;
+    public boolean isTestOnly() {
+        return testOnly;
     }
 
     /**
