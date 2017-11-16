@@ -32,22 +32,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.BadRequestException;
 
 import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 
+/**
+ * 
+ * This class manages the HTTP and HTTPS connections to DCAE.
+ *
+ */
 public class DcaeHttpConnectionManager {
     protected static final EELFLogger logger                  = EELFManager.getInstance()
             .getLogger(DcaeHttpConnectionManager.class);
@@ -55,39 +51,6 @@ public class DcaeHttpConnectionManager {
     private static final String       DCAE_REQUEST_FAILED_LOG = "Request Failed - response payload=";
 
     private DcaeHttpConnectionManager() {
-    }
-
-    static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-        @Override
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-        }
-    } };
-
-    private static void enableSslNoCheck() {
-        try {
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
-            // set the allTrusting verifier
-            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            logger.error("Error when disabling security on SSL", e);
-        }
     }
 
     private static String doHttpsQuery(URL url, String requestMethod, String payload, String contentType)
@@ -157,7 +120,7 @@ public class DcaeHttpConnectionManager {
     }
 
     /**
-     * This method does a HTTP query to DCAE with parameters specified.
+     * This method does a HTTP/HTTPS query to DCAE with parameters specified.
      * 
      * @param url
      *            The string HTTP or HTTPS that mustr be used to connect
@@ -173,33 +136,8 @@ public class DcaeHttpConnectionManager {
      */
     public static String doDcaeHttpQuery(String url, String requestMethod, String payload, String contentType)
             throws IOException {
-        return doDcaeHttpQuery(url, requestMethod, payload, contentType, false);
-    }
-
-    /**
-     * This method does a HTTP/HTTPS query to DCAE with parameters specified.
-     * 
-     * @param url
-     *            The string HTTP or HTTPS that mustr be used to connect
-     * @param requestMethod
-     *            The Request Method (PUT, POST, GET, DELETE, etc ...)
-     * @param payload
-     *            The payload if any, in that case an ouputstream is opened
-     * @param contentType
-     *            The "application/json or application/xml, or whatever"
-     * @param withoutSecurity
-     *            Disable or not the SSL security (certificate,hostname, etc...)
-     * @return The payload of the answer
-     * @throws IOException
-     *             In case of issue with the streams
-     */
-    public static String doDcaeHttpQuery(String url, String requestMethod, String payload, String contentType,
-            boolean withoutSecurity) throws IOException {
         URL urlObj = new URL(url);
         if (url.contains("https://")) { // Support for HTTPS
-            if (withoutSecurity) {
-                enableSslNoCheck();
-            }
             return doHttpsQuery(urlObj, requestMethod, payload, contentType);
         } else { // Support for HTTP
             return doHttpQuery(urlObj, requestMethod, payload, contentType);

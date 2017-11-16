@@ -28,9 +28,20 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.BadRequestException;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractItCase;
@@ -49,14 +60,49 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource(locations = "classpath:https/https-test.properties")
 public class DcaeHttpConnectionManagerItCase extends AbstractItCase {
     @Value("${server.port}")
-    private String httpsPort;
+    private String                httpsPort;
     @Value("${server.http-to-https-redirection.port}")
-    private String httpPort;
+    private String                httpPort;
+    private static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                                            @Override
+                                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                                return null;
+                                            }
+
+                                            @Override
+                                            public void checkClientTrusted(X509Certificate[] arg0, String arg1)
+                                                    throws CertificateException {
+                                            }
+
+                                            @Override
+                                            public void checkServerTrusted(X509Certificate[] arg0, String arg1)
+                                                    throws CertificateException {
+                                            }
+                                        } };
+
+    private void enableSslNoCheck() throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sc = SSLContext.getInstance("SSL");
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        HostnameVerifier allHostsValid = new HostnameVerifier() {
+            @Override
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+        // set the allTrusting verifier
+        HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+    }
+
+    @Before
+    public void setupEnvBeforeTest() throws KeyManagementException, NoSuchAlgorithmException {
+        enableSslNoCheck();
+    }
 
     @Test
     public void testHttpGet() throws Exception {
         String response = DcaeHttpConnectionManager
-                .doDcaeHttpQuery("http://localhost:" + this.httpPort + "/designer/index.html", "GET", null, null, true);
+                .doDcaeHttpQuery("http://localhost:" + this.httpPort + "/designer/index.html", "GET", null, null);
         assertNotNull(response);
         // Should be a redirection so 302, so empty
         assertTrue(response.isEmpty());
@@ -64,8 +110,8 @@ public class DcaeHttpConnectionManagerItCase extends AbstractItCase {
 
     @Test
     public void testHttpsGet() throws Exception {
-        String response = DcaeHttpConnectionManager.doDcaeHttpQuery(
-                "https://localhost:" + this.httpsPort + "/designer/index.html", "GET", null, null, true);
+        String response = DcaeHttpConnectionManager
+                .doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index.html", "GET", null, null);
         assertNotNull(response);
         // Should contain something
         assertTrue(!response.isEmpty());
@@ -74,21 +120,21 @@ public class DcaeHttpConnectionManagerItCase extends AbstractItCase {
     @Test(expected = BadRequestException.class)
     public void testHttpsGet404() throws IOException {
         DcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
-                "GET", null, null, true);
+                "GET", null, null);
         fail("Should have raised an BadRequestException exception");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpsPost404() throws IOException {
         DcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
-                "POST", "", "application/json", true);
+                "POST", "", "application/json");
         fail("Should have raised an BadRequestException exception");
     }
 
     @Test(expected = IOException.class)
     public void testHttpException() throws IOException {
         DcaeHttpConnectionManager.doDcaeHttpQuery("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
-                null, null, true);
+                null, null);
         fail("Should have raised an IOException exception");
     }
 }
