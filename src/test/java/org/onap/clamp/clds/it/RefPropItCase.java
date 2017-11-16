@@ -23,6 +23,8 @@
 
 package org.onap.clamp.clds.it;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -42,6 +44,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class RefPropItCase extends AbstractItCase {
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(RefPropItCase.class);
 
     /**
      * Test getting prop value as a JSON Node / template.
@@ -53,12 +56,9 @@ public class RefPropItCase extends AbstractItCase {
     public void testJsonTemplate() throws IOException {
         ObjectNode root = (ObjectNode) refProp.getJsonTemplate("tca.template");
         root.put("closedLoopControlName", "ClosedLoop-FRWL-SIG-1582f840-2881-11e6-b4ec-005056a9d756");
-
         ObjectMapper mapper = new ObjectMapper();
         String jsonText = mapper.writeValueAsString(root);
-        System.out.println("jsonText=" + jsonText);
-
+        logger.error("Exception caught IllegalArgumentException as expected");
         // assertEquals(topicsJson, ref.getTopicsToJson());
     }
-
 }

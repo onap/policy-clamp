@@ -21,25 +21,22 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds;
+package org.onap.clamp.clds.dao;
 
-import org.junit.BeforeClass;
-import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.model.refprop.RefProp;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-@ActiveProfiles("clamp-default")
-public abstract class AbstractItCase {
+import org.onap.clamp.clds.model.ValueItem;
+import org.springframework.jdbc.core.RowMapper;
 
-    @Autowired
-    protected RefProp      refProp;
-    @Autowired
-    protected PolicyClient policyClient;
-
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        System.setProperty("AJSC_CONF_HOME", System.getProperty("user.dir") + "/src/it/resources/");
-        System.setProperty("CLDS_DCAE_URL", "http://localhost:13786/cl-dcae-services");
+/**
+ * Generic mapper for list of values
+ */
+public final class ValueItemMapper implements RowMapper<ValueItem> {
+    @Override
+    public ValueItem mapRow(ResultSet rs, int rowNum) throws SQLException {
+        ValueItem item = new ValueItem();
+        item.setValue(rs.getString(1));
+        return item;
     }
 }

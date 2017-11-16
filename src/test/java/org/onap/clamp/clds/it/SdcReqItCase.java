@@ -30,12 +30,13 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.DecoderException;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.client.SdcCatalogServices;
-import org.onap.clamp.clds.client.req.SdcReq;
+import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
+import org.onap.clamp.clds.client.req.sdc.SdcReq;
 import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.prop.Global;
@@ -55,7 +56,7 @@ public class SdcReqItCase {
     private SdcReq sdcReq;
 
     @Test
-    public void getSdcReqUrlsListNoGlobalPropTest() throws GeneralSecurityException {
+    public void getSdcReqUrlsListNoGlobalPropTest() throws GeneralSecurityException, DecoderException {
         ModelProperties prop = mock(ModelProperties.class);
         SdcCatalogServices sdcCatalogServices = mock(SdcCatalogServices.class);
         DelegateExecution delegateExecution = mock(DelegateExecution.class);

@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.client.req;
+package org.onap.clamp.clds.client.req.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -41,24 +41,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.DecoderException;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.onap.clamp.clds.client.SdcCatalogServices;
+import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcServiceDetail;
 import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
-import org.onap.clamp.clds.util.CryptoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Construct a Sdc request given CLDS objects.
  */
 public class SdcReq {
-    @Autowired
-    protected CryptoUtils             cryptoUtils;
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(SdcReq.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
@@ -136,37 +133,11 @@ public class SdcReq {
     public String formatSdcReq(String payloadData, String artifactName, String artifactLabel, String artifactType)
             throws IOException {
         logger.info("artifact=" + payloadData);
-        String base64Artifact = base64Encode(payloadData);
+        String base64Artifact = Base64.getEncoder().encodeToString(payloadData.getBytes(StandardCharsets.UTF_8));
         return "{ \n" + "\"payloadData\" : \"" + base64Artifact + "\",\n" + "\"artifactLabel\" : \"" + artifactLabel
                 + "\",\n" + "\"artifactName\" :\"" + artifactName + "\",\n" + "\"artifactType\" : \"" + artifactType
                 + "\",\n" + "\"artifactGroupType\" : \"DEPLOYMENT\",\n" + "\"description\" : \"from CLAMP Cockpit\"\n"
                 + "} \n";
-    }
-
-    /**
-     * Get the SDC Request URL
-     *
-     * @param prop
-     *            The ModelProperties describing the clds model
-     * @param url
-     *            url
-     * @return SDC Request URL
-     */
-    public String getSdcReqUrl(ModelProperties prop, String url) {
-        Global globalProps = prop.getGlobal();
-        String serviceUUID = "";
-        String resourceInstanceName = "";
-        if (globalProps != null) {
-            List<String> resourceVf = globalProps.getResourceVf();
-            if (resourceVf != null && !resourceVf.isEmpty()) {
-                resourceInstanceName = resourceVf.get(0);
-            }
-            if (globalProps.getService() != null) {
-                serviceUUID = globalProps.getService();
-            }
-        }
-        String normalizedResourceInstanceName = normalizeResourceInstanceName(resourceInstanceName);
-        return url + "/" + serviceUUID + "/resourceInstances/" + normalizedResourceInstanceName + "/artifacts";
     }
 
     /**
@@ -178,9 +149,12 @@ public class SdcReq {
      * @param execution
      * @return
      * @throws GeneralSecurityException
+     *             In case of issues when decrypting the password
+     * @throws DecoderException
+     *             In case of issues when decoding the Hex String
      */
     public List<String> getSdcReqUrlsList(ModelProperties prop, String baseUrl, SdcCatalogServices sdcCatalogServices,
-            DelegateExecution execution) throws GeneralSecurityException {
+            DelegateExecution execution) throws GeneralSecurityException, DecoderException {
         // TODO : refact and regroup with very similar code
         List<String> urlList = new ArrayList<>();
         Global globalProps = prop.getGlobal();
@@ -224,65 +198,6 @@ public class SdcReq {
      */
     public String normalizeResourceInstanceName(String inText) {
         return inText.replace(" ", "").replace("-", "").replace(".", "").toLowerCase();
-    }
-
-    /**
-     * from michael
-     *
-     * @param data
-     * @return
-     */
-    public String calculateMD5ByString(String data) {
-        String calculatedMd5 = DigestUtils.md5Hex(data);
-        // encode base-64 result
-        return base64Encode(calculatedMd5.getBytes());
-    }
-
-    /**
-     * Base 64 encode a String.
-     *
-     * @param inText
-     * @return
-     */
-    public String base64Encode(String inText) {
-        return base64Encode(stringToByteArray(inText));
-    }
-
-    /**
-     * Convert String to byte array.
-     *
-     * @param inText
-     * @return
-     */
-    public byte[] stringToByteArray(String inText) {
-        return inText.getBytes(StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Base 64 encode a byte array.
-     *
-     * @param bytes
-     * @return
-     */
-    public String base64Encode(byte[] bytes) {
-        Base64.Encoder encoder = Base64.getEncoder();
-        return encoder.encodeToString(bytes);
-    }
-
-    /**
-     * Return SDC id and pw as a HTTP Basic Auth string (for example: Basic
-     * dGVzdDoxMjM0NTY=).
-     *
-     * @return The String with Basic Auth and password
-     * @throws GeneralSecurityException
-     *             In case of issue when decryting the SDC password
-     */
-    public String getSdcBasicAuth() throws GeneralSecurityException {
-        String sdcId = refProp.getStringValue("sdc.serviceUsername");
-        String sdcPw = refProp.getStringValue("sdc.servicePassword");
-        String password = cryptoUtils.decrypt(sdcPw);
-        String idPw = base64Encode(sdcId + ":" + password);
-        return "Basic " + idPw;
     }
 
     /**

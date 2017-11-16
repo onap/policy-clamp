@@ -26,12 +26,13 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.onap.clamp.clds.client.req.OperationalPolicyReq;
+import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
+import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Policy;
 import org.onap.clamp.clds.model.prop.PolicyChain;
@@ -51,13 +52,11 @@ public class OperationalPolicyDelegate implements JavaDelegate {
     protected static final EELFLogger logger        = EELFManager.getInstance()
             .getLogger(OperationalPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-
     /**
      * Automatically injected by Spring, define in CldsConfiguration as a bean.
      */
     @Autowired
     private PolicyClient              policyClient;
-
     /**
      * Automatically injected by Spring, define in CldsConfiguration as a bean.
      */
@@ -71,13 +70,13 @@ public class OperationalPolicyDelegate implements JavaDelegate {
      *            The DelegateExecution
      * @throws BuilderException
      *             In case of issues with OperationalPolicyReq
-     * @throws IOException
-     *             In case of issues with the stream
      * @throws PolicyEngineException
      *             In case of issues with the PolicyEngine creation
+     * @throws UnsupportedEncodingException
      */
     @Override
-    public void execute(DelegateExecution execution) throws IOException, BuilderException, PolicyEngineException {
+    public void execute(DelegateExecution execution)
+            throws BuilderException, PolicyEngineException, UnsupportedEncodingException {
         String responseMessage = null;
         String operationalPolicyRequestUuid = null;
         ModelProperties prop = ModelProperties.create(execution);
@@ -94,5 +93,4 @@ public class OperationalPolicyDelegate implements JavaDelegate {
             }
         }
     }
-
 }

@@ -32,6 +32,7 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.codec.DecoderException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -74,8 +75,11 @@ public class DcaeInventoryServices {
      *             In case of issue when decryting the DCAE password
      * @throws ParseException
      *             In case of DCAE Json parse exception
+     * @throws DecoderException
+     *             In case of issues with HexString decoding
      */
-    public void setEventInventory(CldsModel cldsModel, String userId) throws GeneralSecurityException, ParseException {
+    public void setEventInventory(CldsModel cldsModel, String userId)
+            throws GeneralSecurityException, ParseException, DecoderException {
         String artifactName = cldsModel.getControlName();
         DcaeEvent dcaeEvent = new DcaeEvent();
         String isDcaeInfoAvailable = null;
@@ -152,7 +156,9 @@ public class DcaeInventoryServices {
      *            The resource UUID
      * @return The DCAE inventory for the artifact
      * @throws IOException
+     *             In case of issues with the stream
      * @throws ParseException
+     *             In case of issues with the Json parsing
      * 
      */
     public String getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)

@@ -56,13 +56,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.StringUtils;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
-import org.onap.clamp.clds.client.SdcCatalogServices;
+import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.SdcCommunicationException;
@@ -337,12 +338,6 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT propText={}", cldsModel.getPropText());
         logger.info("PUT imageText={}", cldsModel.getImageText());
         cldsModel.setName(modelName);
-        try {
-            duplicateCheckforServiceVf(modelName, cldsModel.getPropText());
-        } catch (IOException | BadRequestException e) {
-            logger.error("Exception occured during duplicate check for service and VF", e);
-            throw new CldsConfigException(e.getMessage(), e);
-        }
         if (cldsModel.getTemplateName() != null) {
             CldsTemplate template = cldsDao.getTemplate(cldsModel.getTemplateName());
             if (template != null) {
@@ -390,8 +385,13 @@ public class CldsService extends SecureServiceBase {
      * @param model
      * @return
      * @throws TransformerException
+     *             In case of issues when doing the XSLT of the BPMN flow
      * @throws ParseException
+     *             In case of issues when parsing the JSON
      * @throws GeneralSecurityException
+     *             In case of issues when decrypting the password
+     * @throws DecoderException
+     *             In case of issues with the Hex String decoding
      */
     @ApiOperation(value = "Saves and processes an action for a CLDS model by name", notes = "", response = String.class)
     @PUT
@@ -400,7 +400,7 @@ public class CldsService extends SecureServiceBase {
     @Produces(MediaType.APPLICATION_JSON)
     public CldsModel putModelAndProcessAction(@PathParam("action") String action,
             @PathParam("modelName") String modelName, @QueryParam("test") String test, CldsModel model)
-            throws TransformerException, ParseException, GeneralSecurityException {
+            throws TransformerException, ParseException, GeneralSecurityException, DecoderException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
         String actionCd = action.toUpperCase();
@@ -558,13 +558,15 @@ public class CldsService extends SecureServiceBase {
      * 
      * @throws GeneralSecurityException
      *             In case of issue when decryting the SDC password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the Hex String
      *
      */
     @ApiOperation(value = "Retrieves sdc services", notes = "", response = String.class)
     @GET
     @Path("/sdc/services")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getSdcServices() throws GeneralSecurityException {
+    public String getSdcServices() throws GeneralSecurityException, DecoderException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc services", getPrincipalName());
         String retStr;
@@ -603,7 +605,9 @@ public class CldsService extends SecureServiceBase {
      * on refresh and non refresh
      * 
      * @throws GeneralSecurityException
-     *             In case of issue when decryting the SDC password
+     *             In case of issues with the decryting the encrypted password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the Hex String
      * 
      */
     @ApiOperation(value = "Retrieves total properties by using invariantUUID based on refresh and non refresh", notes = "", response = String.class)
@@ -612,7 +616,8 @@ public class CldsService extends SecureServiceBase {
     @Produces(MediaType.APPLICATION_JSON)
     public String getSdcPropertiesByServiceUUIDForRefresh(
             @PathParam("serviceInvariantUUID") String serviceInvariantUUID,
-            @DefaultValue("false") @QueryParam("refresh") String refresh) throws GeneralSecurityException {
+            @DefaultValue("false") @QueryParam("refresh") String refresh)
+            throws GeneralSecurityException, DecoderException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc properties by uuid", getPrincipalName());
         CldsServiceData cldsServiceData = new CldsServiceData();
@@ -831,6 +836,12 @@ public class CldsService extends SecureServiceBase {
             @QueryParam("test") String test, CldsModel model) throws IOException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
+        try {
+            checkForDuplicateServiceVf(modelName, model.getPropText());
+        } catch (IOException | BadRequestException e) {
+            logger.error("Exception occured during duplicate check for service and VF", e);
+            throw new CldsConfigException(e.getMessage(), e);
+        }
         String deploymentId = "";
         // If model is already deployed then pass same deployment id
         if (model.getDeploymentId() != null && !model.getDeploymentId().isEmpty()) {
@@ -932,13 +943,13 @@ public class CldsService extends SecureServiceBase {
         }
     }
 
-    private void duplicateCheckforServiceVf(String modelName, String modelPropText) throws IOException {
+    private void checkForDuplicateServiceVf(String modelName, String modelPropText) throws IOException {
         JsonNode modelJson = new ObjectMapper().readTree(modelPropText);
         JsonNode globalNode = modelJson.get("global");
         String service = AbstractModelElement.getValueByName(globalNode, "service");
         List<String> resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
         if (service != null && resourceVf != null && !resourceVf.isEmpty()) {
-            List<CldsModelProp> cldsModelPropList = cldsDao.getAllModelProperties();
+            List<CldsModelProp> cldsModelPropList = cldsDao.getDeployedModelProperties();
             for (CldsModelProp cldsModelProp : cldsModelPropList) {
                 JsonNode currentJson = new ObjectMapper().readTree(cldsModelProp.getPropText());
                 JsonNode currentNode = currentJson.get("global");
@@ -947,8 +958,9 @@ public class CldsService extends SecureServiceBase {
                 if (currentVf != null && !currentVf.isEmpty()) {
                     if (!modelName.equalsIgnoreCase(cldsModelProp.getName()) && service.equalsIgnoreCase(currentService)
                             && resourceVf.get(0).equalsIgnoreCase(currentVf.get(0))) {
-                        throw new BadRequestException("Same service/VF already exists in " + cldsModelProp.getName()
-                                + " model, please select different service/VF.");
+                        throw new BadRequestException("Same Service/VF already exists in " + cldsModelProp.getName()
+                                + " model, please select different Service/VF.");
+
                     }
                 }
             }

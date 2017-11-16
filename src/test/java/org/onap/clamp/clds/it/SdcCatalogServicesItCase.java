@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.AbstractItCase;
-import org.onap.clamp.clds.client.SdcCatalogServices;
+import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.model.CldsAlarmCondition;
 import org.onap.clamp.clds.model.CldsSdcResource;
 import org.onap.clamp.clds.model.CldsSdcResourceBasicInfo;

@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractItCase;
-import org.onap.clamp.clds.client.req.TcaRequestFormatter;
+import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;

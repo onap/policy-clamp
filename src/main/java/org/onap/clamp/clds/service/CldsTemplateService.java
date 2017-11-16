@@ -44,7 +44,6 @@ import javax.xml.transform.TransformerException;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
-import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,15 +54,11 @@ import org.springframework.beans.factory.annotation.Value;
 @AjscService
 @Path("/cldsTempate")
 public class CldsTemplateService extends SecureServiceBase {
-
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
     private String                  cldsPermissionTypeTemplate;
-
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
     private String                  cldsPermissionInstance;
-
     private SecureServicePermission permissionReadTemplate;
-
     private SecureServicePermission permissionUpdateTemplate;
 
     @PostConstruct
@@ -75,12 +70,7 @@ public class CldsTemplateService extends SecureServiceBase {
     }
 
     @Autowired
-    private CldsDao        cldsDao;
-
-    @Autowired
-    private XslTransformer cldsBpmnTransformer;
-
-    private static String  userid;
+    private CldsDao cldsDao;
 
     /**
      * REST service that retrieves BPMN for a CLDS template name from the
@@ -170,7 +160,6 @@ public class CldsTemplateService extends SecureServiceBase {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsTemplateService: PUT template", getPrincipalName());
         isAuthorized(permissionUpdateTemplate);
-
         logger.info("PUT Template for  templateName=" + templateName);
         logger.info("PUT bpmnText=" + cldsTemplate.getBpmnText());
         logger.info("PUT propText=" + cldsTemplate.getPropText());
@@ -185,13 +174,11 @@ public class CldsTemplateService extends SecureServiceBase {
         logger.info(" bpmnText : " + cldsTemplate.getBpmnText());
         logger.info(" Image Text : " + cldsTemplate.getImageText());
         logger.info(" Prop Text : " + cldsTemplate.getPropText());
-        cldsTemplate.save(cldsDao, userid);
-
+        cldsTemplate.save(cldsDao, null);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Put template success", this.getClass().getName());
         auditLogger.info("PUT template completed");
-
         return cldsTemplate;
     }
 

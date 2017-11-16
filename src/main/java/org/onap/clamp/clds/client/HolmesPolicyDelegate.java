@@ -30,6 +30,7 @@ import java.util.UUID;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.Holmes;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
@@ -41,10 +42,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class HolmesPolicyDelegate implements JavaDelegate {
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(HolmesPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-
     @Autowired
     private PolicyClient              policyClient;
-
     @Autowired
     private RefProp                   refProp;
 
@@ -54,22 +53,30 @@ public class HolmesPolicyDelegate implements JavaDelegate {
      * @param execution
      */
     @Override
-    public void execute(DelegateExecution execution) throws Exception {
+    public void execute(DelegateExecution execution) {
         String holmesPolicyRequestUuid = UUID.randomUUID().toString();
         execution.setVariable("holmesPolicyRequestUuid", holmesPolicyRequestUuid);
-
         ModelProperties prop = ModelProperties.create(execution);
         Holmes holmes = prop.getType(Holmes.class);
         if (holmes.isFound()) {
-            String responseMessage = policyClient.sendBasePolicyInOther(formatHolmesConfigBody(prop, holmes), holmes.getConfigPolicyName(), prop,
-                    holmesPolicyRequestUuid);
+            String responseMessage = policyClient.sendBasePolicyInOther(formatHolmesConfigBody(prop, holmes),
+                    holmes.getConfigPolicyName(), prop, holmesPolicyRequestUuid);
             if (responseMessage != null) {
                 execution.setVariable("holmesPolicyResponseMessage", responseMessage.getBytes());
             }
         }
     }
 
-    public static String formatHolmesConfigBody (ModelProperties prop, Holmes holmes) {
+    /**
+     * This method is used to create the Payload that must be sent to Holmes.
+     * 
+     * @param prop
+     *            The ModelProperties containing all the closed loop props
+     * @param holmes
+     *            The holmes object extracted from the closed loop
+     * @return The String that must be sent to policy for holmes
+     */
+    public static String formatHolmesConfigBody(ModelProperties prop, Holmes holmes) {
         return prop.getControlName() + "$$$" + holmes.getCorrelationLogic();
     }
 }

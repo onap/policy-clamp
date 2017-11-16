@@ -25,6 +25,8 @@ package org.onap.clamp.clds.it;
 
 import static org.junit.Assert.assertEquals;
 
+import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
+
 import java.io.IOException;
 
 import javax.ws.rs.NotFoundException;
@@ -51,10 +53,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class CldsDaoItCase extends AbstractItCase {
-
     @Autowired
     public CldsDao cldsDao;
-
     private String bpmnText;
     private String imageText;
     private String bpmnPropText;
@@ -74,40 +74,37 @@ public class CldsDaoItCase extends AbstractItCase {
 
     @Test
     public void testModelSave() throws IOException {
+        String randomNameTemplate = RandomStringUtils.randomAlphanumeric(5);
+        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
         // Add the template first
         CldsTemplate newTemplate = new CldsTemplate();
-        newTemplate.setName("test-template");
-
+        newTemplate.setName(randomNameTemplate);
         newTemplate.setBpmnText(bpmnText);
         newTemplate.setImageText(imageText);
-
         // Save the template in DB
         cldsDao.setTemplate(newTemplate, "user");
         // Test if it's well there
-        CldsTemplate newTemplateRead = cldsDao.getTemplate("test-template");
+        CldsTemplate newTemplateRead = cldsDao.getTemplate(randomNameTemplate);
         assertEquals(bpmnText, newTemplateRead.getBpmnText());
         assertEquals(imageText, newTemplateRead.getImageText());
-
         // Save the model
         CldsModel newModel = new CldsModel();
-        newModel.setName("test-model");
-
+        newModel.setName(randomNameModel);
         newModel.setBpmnText(bpmnText);
         newModel.setImageText(imageText);
         newModel.setPropText(bpmnPropText);
         newModel.setControlNamePrefix("ClosedLoop-");
-        newModel.setTemplateName("test-template");
+        newModel.setTemplateName(randomNameTemplate);
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
         newModel.setDocId(newTemplate.getPropId());
         // Save the model in DB
         cldsDao.setModel(newModel, "user");
         // Test if the model can be retrieved
-        CldsModel newCldsModel = cldsDao.getModelTemplate("test-model");
+        CldsModel newCldsModel = cldsDao.getModelTemplate(randomNameModel);
         assertEquals(bpmnText, newCldsModel.getBpmnText());
         assertEquals(imageText, newCldsModel.getImageText());
         assertEquals(bpmnPropText, newCldsModel.getPropText());
-
     }
 
     @Test(expected = NotFoundException.class)
@@ -125,21 +122,16 @@ public class CldsDaoItCase extends AbstractItCase {
         // Add the template first
         CldsTemplate newTemplate = new CldsTemplate();
         newTemplate.setName("test-template-for-event");
-
         newTemplate.setBpmnText(bpmnText);
         newTemplate.setImageText(imageText);
-
         newTemplate.save(cldsDao, "user");
-
         // Test if it's well there
         CldsTemplate newTemplateRead = CldsTemplate.retrieve(cldsDao, "test-template-for-event", false);
         assertEquals(bpmnText, newTemplateRead.getBpmnText());
         assertEquals(imageText, newTemplateRead.getImageText());
-
         // Save the model
         CldsModel newModel = new CldsModel();
         newModel.setName("test-model-for-event");
-
         newModel.setBpmnText(bpmnText);
         newModel.setImageText(imageText);
         newModel.setPropText(bpmnPropText);
@@ -148,7 +140,6 @@ public class CldsDaoItCase extends AbstractItCase {
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
         newModel.setDocId(newTemplate.getPropId());
-
         CldsEvent.insEvent(cldsDao, newModel, "user", CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_COMPLETED,
                 "process-instance-id");
     }

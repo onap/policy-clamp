@@ -25,6 +25,7 @@ package org.onap.clamp.clds.client;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.springframework.beans.factory.annotation.Autowired;

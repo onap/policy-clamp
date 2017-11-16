@@ -65,28 +65,22 @@ import org.springframework.scheduling.annotation.EnableAsync;
         ManagementWebSecurityAutoConfiguration.class })
 @EnableAsync
 public class Application extends SpringBootServletInitializer {
-
-    protected static final EELFLogger eelfLogger         = EELFManager.getInstance().getLogger(Application.class);
-
+    protected static final EELFLogger EELF_LOGGER        = EELFManager.getInstance().getLogger(Application.class);
     @Autowired
-    protected ApplicationContext      appContext;
-
+    private ApplicationContext        appContext;
     private static final String       CAMEL_SERVLET_NAME = "CamelServlet";
     private static final String       CAMEL_URL_MAPPING  = "/restservices/clds/v1/*";
-
     // This settings is an additional one to Spring config,
     // only if we want to have an additional port automatically redirected to
     // HTTPS
     @Value("${server.http-to-https-redirection.port:none}")
     private String                    httpRedirectedPort;
-
     /**
      * This 8080 is the default port used by spring if this parameter is not
      * specified in application.properties.
      */
     @Value("${server.port:8080}")
     private String                    springServerPort;
-
     @Value("${server.ssl.key-store:none}")
     private String                    sslKeystoreFile;
 
@@ -139,15 +133,13 @@ public class Application extends SpringBootServletInitializer {
             if (newConnector != null) {
                 tomcat.addAdditionalTomcatConnectors(newConnector);
             }
-
         }
         return tomcat;
-
     }
 
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
-            eelfLogger.warn(
+            EELF_LOGGER.warn(
                     "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1 (Connector disabled)");
             return null;
         }
@@ -158,5 +150,4 @@ public class Application extends SpringBootServletInitializer {
         connector.setRedirectPort(redirectSecuredPort);
         return connector;
     }
-
 }

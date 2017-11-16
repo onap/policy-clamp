@@ -34,8 +34,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractItCase;
-import org.onap.clamp.clds.client.req.OperationalPolicyReq;
-import org.onap.clamp.clds.client.req.TcaRequestFormatter;
+import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
+import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Policy;
@@ -77,7 +77,6 @@ public class PolicyClientItCase extends AbstractItCase {
         if (policy.isFound()) {
             for (PolicyChain policyChain : policy.getPolicyChains()) {
                 String operationalPolicyRequestUuid = UUID.randomUUID().toString();
-
                 Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
                         prop, policy.getId(), policyChain);
                 policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
@@ -91,7 +90,6 @@ public class PolicyClientItCase extends AbstractItCase {
         if (tca.isFound()) {
             String tcaPolicyRequestUuid = UUID.randomUUID().toString();
             String policyJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
-
             try {
                 policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
             } catch (Exception e) {
@@ -102,7 +100,6 @@ public class PolicyClientItCase extends AbstractItCase {
 
     private void deleteOperationalPolicy(String actionCd) throws Exception {
         ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             prop.setCurrentModelElementId(policy.getId());
@@ -115,11 +112,9 @@ public class PolicyClientItCase extends AbstractItCase {
 
     private void deleteTcaPolicy(String actionCd) throws Exception {
         ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             prop.setCurrentModelElementId(tca.getId());
-
             try {
                 policyClient.deleteMicrosService(prop);
             } catch (Exception e) {
@@ -133,21 +128,15 @@ public class PolicyClientItCase extends AbstractItCase {
      * Temporarily disabled Test.
      */
     public void testCreateUpdateDeleteOperationalPolicy() throws Exception {
-
         createUpdateOperationalPolicy(CldsEvent.ACTION_SUBMIT);
-
         TimeUnit.SECONDS.sleep(20);
-
         deleteOperationalPolicy(CldsEvent.ACTION_DELETE);
     }
 
     @Test
     public void testCreateUpdateDeleteTcaPolicy() throws Exception {
-
         createUpdateTcaPolicy(CldsEvent.ACTION_SUBMIT);
-
         TimeUnit.SECONDS.sleep(20);
-
         deleteTcaPolicy(CldsEvent.ACTION_DELETE);
     }
 }

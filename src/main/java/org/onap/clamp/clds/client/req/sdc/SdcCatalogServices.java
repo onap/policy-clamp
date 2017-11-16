@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.client;
+package org.onap.clamp.clds.client.req.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -40,8 +40,10 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -49,10 +51,13 @@ import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.onap.clamp.clds.client.req.SdcReq;
+import org.apache.http.HttpHeaders;
 import org.onap.clamp.clds.exception.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsAlarmCondition;
 import org.onap.clamp.clds.model.CldsDBServiceCache;
@@ -68,20 +73,45 @@ import org.onap.clamp.clds.model.CldsVfcData;
 import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.util.CryptoUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SdcCatalogServices {
-    protected static final EELFLogger logger             = EELFManager.getInstance()
+    protected static final EELFLogger logger                        = EELFManager.getInstance()
             .getLogger(SdcCatalogServices.class);
-    protected static final EELFLogger metricsLogger      = EELFManager.getInstance().getMetricsLogger();
-    private static final String       RESOURCE_VF_TYPE   = "VF";
-    private static final String       RESOURCE_VFC_TYPE  = "VFC";
-    private static final String       RESOURCE_CVFC_TYPE = "CVFC";
+    protected static final EELFLogger metricsLogger                 = EELFManager.getInstance().getMetricsLogger();
+    private static final String       RESOURCE_VF_TYPE              = "VF";
+    private static final String       RESOURCE_VFC_TYPE             = "VFC";
+    private static final String       RESOURCE_CVFC_TYPE            = "CVFC";
+    public static final String        SDC_REQUESTID_PROPERTY_NAME   = "sdc.header.requestId";
+    private static final String       SDC_METADATA_URL_PREFIX       = "/metadata";
+    private static final String       SDC_INSTANCE_ID_PROPERTY_NAME = "sdc.InstanceID";
+    private static final String       SDC_CATALOG_URL_PROPERTY_NAME = "sdc.catalog.url";
+    private static final String       SDC_SERVICE_URL_PROPERTY_NAME = "sdc.serviceUrl";
+    private static final String       SDC_INSTANCE_ID_CLAMP         = "CLAMP-Tool";
+    private static final String       RESOURCE_URL_PREFIX           = "resources";
     @Autowired
     private RefProp                   refProp;
-    @Autowired
-    private SdcReq                    sdcReq;
+    protected CryptoUtils             cryptoUtils                   = new CryptoUtils();
+
+    /**
+     * Return SDC id and pw as a HTTP Basic Auth string (for example: Basic
+     * dGVzdDoxMjM0NTY=).
+     *
+     * @return The String with Basic Auth and password
+     * @throws GeneralSecurityException
+     *             In case of issue when decryting the SDC password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the HexString message
+     */
+    private String getSdcBasicAuth() throws GeneralSecurityException, DecoderException {
+        String sdcId = refProp.getStringValue("sdc.serviceUsername");
+        String sdcPw = refProp.getStringValue("sdc.servicePassword");
+        String password = cryptoUtils.decrypt(sdcPw);
+        String idPw = Base64.getEncoder().encodeToString((sdcId + ":" + password).getBytes(StandardCharsets.UTF_8));
+        return "Basic " + idPw;
+    }
 
     /**
      * This method get the SDC services Information with the corresponding
@@ -92,31 +122,31 @@ public class SdcCatalogServices {
      * @return A Json String with all the service list
      * @throws GeneralSecurityException
      *             In case of issue when decryting the SDC password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the Hex String
      */
-    public String getSdcServicesInformation(String uuid) throws GeneralSecurityException {
+    public String getSdcServicesInformation(String uuid) throws GeneralSecurityException, DecoderException {
         Date startTime = new Date();
-        String baseUrl = refProp.getStringValue("sdc.serviceUrl");
-        String basicAuth = sdcReq.getSdcBasicAuth();
+        String baseUrl = refProp.getStringValue(SDC_SERVICE_URL_PROPERTY_NAME);
+        String basicAuth = getSdcBasicAuth();
         LoggingUtils.setTargetContext("SDC", "getSdcServicesInformation");
         try {
             String url = baseUrl;
             if (uuid != null) {
-                url = baseUrl + "/" + uuid + "/metadata";
+                url = baseUrl + "/" + uuid + SDC_METADATA_URL_PREFIX;
             }
             URL urlObj = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-            conn.setRequestProperty(refProp.getStringValue("sdc.InstanceID"), "CLAMP-Tool");
-            conn.setRequestProperty("Authorization", basicAuth);
-            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
+            conn.setRequestProperty(refProp.getStringValue(SDC_INSTANCE_ID_PROPERTY_NAME), SDC_INSTANCE_ID_CLAMP);
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, basicAuth);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+            conn.setRequestProperty(refProp.getStringValue(SDC_REQUESTID_PROPERTY_NAME), LoggingUtils.getRequestId());
             conn.setRequestMethod("GET");
             String resp = getResponse(conn);
-            if (resp != null) {
-                logger.info(resp);
-                // metrics log
-                LoggingUtils.setResponseContext("0", "Get sdc services success", this.getClass().getName());
-                return resp;
-            }
+            logger.info(resp);
+            // metrics log
+            LoggingUtils.setResponseContext("0", "Get sdc services success", this.getClass().getName());
+            return resp;
         } catch (IOException e) {
             LoggingUtils.setResponseContext("900", "Get sdc services failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get sdc services error");
@@ -223,8 +253,11 @@ public class SdcCatalogServices {
      * @return The service UUID
      * @throws GeneralSecurityException
      *             In case of issue when decryting the SDC password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the Hex String
      */
-    public String getServiceUuidFromServiceInvariantId(String invariantId) throws GeneralSecurityException {
+    public String getServiceUuidFromServiceInvariantId(String invariantId)
+            throws GeneralSecurityException, DecoderException {
         String serviceUuid = "";
         String responseStr = getSdcServicesInformation(null);
         List<CldsSdcServiceInfo> rawCldsSdcServicesList = getCldsSdcServicesListFromJson(responseStr);
@@ -326,15 +359,14 @@ public class SdcCatalogServices {
     public String uploadArtifactToSdc(ModelProperties prop, String userid, String url, String formattedSdcReq)
             throws GeneralSecurityException {
         // Verify whether it is triggered by Validation Test button from UI
-        if (prop.isTest()) {
+        if (prop.isTestOnly()) {
             return "sdc artifact upload not executed for test action";
         }
         try {
             logger.info("userid=" + userid);
-            String md5Text = sdcReq.calculateMD5ByString(formattedSdcReq);
-            byte[] postData = sdcReq.stringToByteArray(formattedSdcReq);
+            byte[] postData = formattedSdcReq.getBytes(StandardCharsets.UTF_8);
             int postDataLength = postData.length;
-            HttpURLConnection conn = getSdcHttpUrlConnection(userid, postDataLength, url, md5Text);
+            HttpURLConnection conn = getSdcHttpUrlConnection(userid, postDataLength, url, formattedSdcReq);
             try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
                 wr.write(postData);
             }
@@ -356,45 +388,43 @@ public class SdcCatalogServices {
         }
     }
 
-    private HttpURLConnection getSdcHttpUrlConnection(String userid, int postDataLength, String url, String md5Text)
+    private HttpURLConnection getSdcHttpUrlConnection(String userid, int postDataLength, String url, String content)
             throws GeneralSecurityException {
         try {
             logger.info("userid=" + userid);
-            String basicAuth = sdcReq.getSdcBasicAuth();
+            String basicAuth = getSdcBasicAuth();
             String sdcXonapInstanceId = refProp.getStringValue("sdc.sdcX-InstanceID");
             URL urlObj = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
             conn.setDoOutput(true);
-            conn.setRequestProperty(refProp.getStringValue("sdc.InstanceID"), sdcXonapInstanceId);
-            conn.setRequestProperty("Authorization", basicAuth);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Content-MD5", md5Text);
+            conn.setRequestProperty(refProp.getStringValue(SDC_INSTANCE_ID_PROPERTY_NAME), sdcXonapInstanceId);
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, basicAuth);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json");
+            conn.setRequestProperty(HttpHeaders.CONTENT_MD5,
+                    Base64.getEncoder().encodeToString(DigestUtils.md5Hex(content).getBytes("UTF-8")));
             conn.setRequestProperty("USER_ID", userid);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("charset", "utf-8");
-            conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            conn.setRequestProperty(HttpHeaders.CONTENT_LENGTH, Integer.toString(postDataLength));
             conn.setUseCaches(false);
-            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
+            conn.setRequestProperty(refProp.getStringValue(SDC_REQUESTID_PROPERTY_NAME), LoggingUtils.getRequestId());
             return conn;
         } catch (IOException e) {
             logger.error("Exception when attempting to open connection with SDC", e);
             throw new SdcCommunicationException("Exception when attempting to open connection with SDC", e);
+        } catch (DecoderException e) {
+            logger.error("Exception when attempting to decode the Hex string", e);
+            throw new SdcCommunicationException("Exception when attempting to decode the Hex string", e);
+        } catch (GeneralSecurityException e) {
+            logger.error("Exception when attempting to decrypt the encrypted password", e);
+            throw new SdcCommunicationException("Exception when attempting to decrypt the encrypted password", e);
         }
     }
 
     private String getResponse(HttpURLConnection conn) {
         try (InputStream is = getInputStream(conn)) {
-            if (is != null) {
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
-                    StringBuilder response = new StringBuilder();
-                    String inputLine;
-                    while ((inputLine = in.readLine()) != null) {
-                        response.append(inputLine);
-                    }
-                    return response.toString();
-                }
-            } else {
-                return null;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(is))) {
+                return IOUtils.toString(in);
             }
         } catch (IOException e) {
             logger.error("Exception when attempting to open SDC response", e);
@@ -434,8 +464,12 @@ public class SdcCatalogServices {
      * @param cldsServiceData
      * @return
      * @throws GeneralSecurityException
+     *             In case of issues with the decryting the encrypted password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the Hex String
      */
-    public boolean isCldsSdcCacheDataExpired(CldsServiceData cldsServiceData) throws GeneralSecurityException {
+    public boolean isCldsSdcCacheDataExpired(CldsServiceData cldsServiceData)
+            throws GeneralSecurityException, DecoderException {
         boolean expired = false;
         if (cldsServiceData != null && cldsServiceData.getServiceUUID() != null) {
             String cachedServiceUuid = cldsServiceData.getServiceUUID();
@@ -458,13 +492,16 @@ public class SdcCatalogServices {
      * @param invariantServiceUuid
      * @return
      * @throws GeneralSecurityException
+     *             In case of issues with the decryting the encrypted password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the Hex String
      */
     public CldsServiceData getCldsServiceDataWithAlarmConditions(String invariantServiceUuid)
-            throws GeneralSecurityException {
-        String url = refProp.getStringValue("sdc.serviceUrl");
-        String catalogUrl = refProp.getStringValue("sdc.catalog.url");
+            throws GeneralSecurityException, DecoderException {
+        String url = refProp.getStringValue(SDC_SERVICE_URL_PROPERTY_NAME);
+        String catalogUrl = refProp.getStringValue(SDC_CATALOG_URL_PROPERTY_NAME);
         String serviceUuid = getServiceUuidFromServiceInvariantId(invariantServiceUuid);
-        String serviceDetailUrl = url + "/" + serviceUuid + "/metadata";
+        String serviceDetailUrl = url + "/" + serviceUuid + SDC_METADATA_URL_PREFIX;
         String responseStr = getCldsServicesOrResourcesBasedOnURL(serviceDetailUrl, false);
         ObjectMapper objectMapper = new ObjectMapper();
         CldsServiceData cldsServiceData = new CldsServiceData();
@@ -476,11 +513,11 @@ public class SdcCatalogServices {
                 logger.error("Exception when decoding the CldsServiceData JSON from SDC", e);
                 throw new SdcCommunicationException("Exception when decoding the CldsServiceData JSON from SDC", e);
             }
-            cldsServiceData.setServiceUUID(cldsSdcServiceDetail.getUuid());
-            cldsServiceData.setServiceInvariantUUID(cldsSdcServiceDetail.getInvariantUUID());
             // To remove duplicate resources from serviceDetail and add valid
             // vfs to service
             if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getResources() != null) {
+                cldsServiceData.setServiceUUID(cldsSdcServiceDetail.getUuid());
+                cldsServiceData.setServiceInvariantUUID(cldsSdcServiceDetail.getInvariantUUID());
                 List<CldsSdcResource> cldsSdcResourceList = removeDuplicateSdcResourceInstances(
                         cldsSdcServiceDetail.getResources());
                 if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
@@ -519,7 +556,8 @@ public class SdcCatalogServices {
                     String resourceUuid = getResourceUuidFromResourceInvariantUuid(
                             currCldsVfData.getVfInvariantResourceUUID(), allVfResources);
                     if (resourceUuid != null) {
-                        String vfResourceUuidUrl = catalogUrl + "resources" + "/" + resourceUuid + "/metadata";
+                        String vfResourceUuidUrl = catalogUrl + RESOURCE_URL_PREFIX + "/" + resourceUuid
+                                + SDC_METADATA_URL_PREFIX;
                         String vfResponse = getCldsServicesOrResourcesBasedOnURL(vfResourceUuidUrl, false);
                         if (vfResponse != null) {
                             // Below 2 line are to get the KPI(field path) data
@@ -538,8 +576,8 @@ public class SdcCatalogServices {
                                             String resourceVfcUuid = getResourceUuidFromResourceInvariantUuid(
                                                     currCldsVfcData.getVfcInvariantResourceUUID(), allVfcResources);
                                             if (resourceVfcUuid != null) {
-                                                String vfcResourceUuidUrl = catalogUrl + "resources" + "/"
-                                                        + resourceVfcUuid + "/metadata";
+                                                String vfcResourceUuidUrl = catalogUrl + RESOURCE_URL_PREFIX + "/"
+                                                        + resourceVfcUuid + SDC_METADATA_URL_PREFIX;
                                                 String vfcResponse = getCldsServicesOrResourcesBasedOnURL(
                                                         vfcResourceUuidUrl, false);
                                                 if (vfcResponse != null) {
@@ -601,10 +639,10 @@ public class SdcCatalogServices {
     }
 
     private List<CldsVfcData> getVFCfromCVFC(String resourceUUID) throws GeneralSecurityException {
-        String catalogUrl = refProp.getStringValue("sdc.catalog.url");
+        String catalogUrl = refProp.getStringValue(SDC_CATALOG_URL_PROPERTY_NAME);
         List<CldsVfcData> cldsVfcDataList = new ArrayList<>();
         if (resourceUUID != null) {
-            String vfcResourceUUIDUrl = catalogUrl + "resources" + "/" + resourceUUID + "/metadata";
+            String vfcResourceUUIDUrl = catalogUrl + RESOURCE_URL_PREFIX + "/" + resourceUUID + SDC_METADATA_URL_PREFIX;
             try {
                 String vfcResponse = getCldsServicesOrResourcesBasedOnURL(vfcResourceUUIDUrl, false);
                 ObjectMapper mapper = new ObjectMapper();
@@ -809,34 +847,30 @@ public class SdcCatalogServices {
             String urlReworked = removeUnwantedBracesFromString(url);
             URL urlObj = new URL(urlReworked);
             HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-            String basicAuth = sdcReq.getSdcBasicAuth();
-            conn.setRequestProperty(refProp.getStringValue("sdc.InstanceID"), "CLAMP-Tool");
-            conn.setRequestProperty("Authorization", basicAuth);
-            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
+            String basicAuth = getSdcBasicAuth();
+            conn.setRequestProperty(refProp.getStringValue(SDC_INSTANCE_ID_PROPERTY_NAME), SDC_INSTANCE_ID_CLAMP);
+            conn.setRequestProperty(HttpHeaders.AUTHORIZATION, basicAuth);
+            conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+            conn.setRequestProperty(refProp.getStringValue(SDC_REQUESTID_PROPERTY_NAME), LoggingUtils.getRequestId());
             conn.setRequestMethod("GET");
             int responseCode = conn.getResponseCode();
             logger.info("Sdc resource url - " + urlReworked + " , responseCode=" + responseCode);
-            StringBuilder response;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                response = new StringBuilder();
-                String inputLine;
-                while ((inputLine = in.readLine()) != null) {
-                    if (!inputLine.isEmpty()) {
-                        response.append(inputLine);
-                    }
-                    if (alarmConditions) {
-                        response.append("\n");
-                    }
-                }
+                String response = IOUtils.toString(in);
+                LoggingUtils.setResponseContext("0", "Get sdc resources success", this.getClass().getName());
+                return response;
             }
-            LoggingUtils.setResponseContext("0", "Get sdc resources success", this.getClass().getName());
-            return response.toString();
         } catch (IOException e) {
             LoggingUtils.setResponseContext("900", "Get sdc resources failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get sdc resources error");
             logger.error("Exception occurred during query to SDC", e);
             return "";
+        } catch (DecoderException e) {
+            logger.error("Exception when attempting to decode the Hex string", e);
+            throw new SdcCommunicationException("Exception when attempting to decode the Hex string", e);
+        } catch (GeneralSecurityException e) {
+            logger.error("Exception when attempting to decrypt the encrypted password", e);
+            throw new SdcCommunicationException("Exception when attempting to decrypt the encrypted password", e);
         } finally {
             LoggingUtils.setTimeContext(startTime, new Date());
             metricsLogger.info("getCldsServicesOrResourcesBasedOnURL completed");
@@ -1161,41 +1195,6 @@ public class SdcCatalogServices {
         return artifactUuid;
     }
 
-    public String updateControlLoopStatusToDcae(String dcaeUrl, String invariantResourceUuid,
-            String invariantServiceUuid, String artifactName) throws GeneralSecurityException {
-        String baseUrl = refProp.getStringValue("sdc.serviceUrl");
-        String basicAuth = sdcReq.getSdcBasicAuth();
-        String postStatusData = "{ \n" + "\"event\" : \"" + "Created" + "\",\n" + "\"serviceUUID\" : \""
-                + invariantServiceUuid + "\",\n" + "\"resourceUUID\" :\"" + invariantResourceUuid + "\",\n"
-                + "\"artifactName\" : \"" + artifactName + "\",\n" + "} \n";
-        try {
-            String url = baseUrl;
-            if (invariantServiceUuid != null) {
-                url = dcaeUrl + "/closed-loops";
-            }
-            URL urlObj = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
-            conn.setRequestProperty(refProp.getStringValue("sdc.InstanceID"), "CLAMP-Tool");
-            conn.setRequestProperty("Authorization", basicAuth);
-            conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            conn.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
-            conn.setRequestMethod("POST");
-            byte[] postData = sdcReq.stringToByteArray(postStatusData);
-            try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-                wr.write(postData);
-            }
-            int responseCode = conn.getResponseCode();
-            logger.info("responseCode=" + responseCode);
-            String resp = getResponse(conn);
-            if (resp != null) {
-                return resp;
-            }
-        } catch (IOException e) {
-            logger.error("Not able to get any service information from sdc for uuid:" + invariantServiceUuid, e);
-        }
-        return "";
-    }
-
     /**
      * To get all sdc VF/VFC Resources basic info.
      * 
@@ -1208,7 +1207,7 @@ public class SdcCatalogServices {
      */
     private List<CldsSdcResourceBasicInfo> getAllSdcVForVfcResourcesBasedOnResourceType(String resourceType)
             throws GeneralSecurityException {
-        String catalogUrl = refProp.getStringValue("sdc.catalog.url");
+        String catalogUrl = refProp.getStringValue(SDC_CATALOG_URL_PROPERTY_NAME);
         String resourceUrl = catalogUrl + "resources?resourceType=" + resourceType;
         String allSdcVfcResources = getCldsServicesOrResourcesBasedOnURL(resourceUrl, false);
         return removeDuplicateSdcResourceBasicInfo(getAllSdcResourcesListFromJson(allSdcVfcResources));
@@ -1264,11 +1263,13 @@ public class SdcCatalogServices {
      *            The location artifact name from where we can get the Artifact
      *            UUID
      * @throws GeneralSecurityException
-     *             In case of issues to decrypt the SDC password
+     *             In case of issues with the decryting the encrypted password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the Hex String
      */
     public void uploadToSdc(ModelProperties prop, String userid, List<String> sdcReqUrlsList, String formattedSdcReq,
             String formattedSdcLocationReq, String artifactName, String locationArtifactName)
-            throws GeneralSecurityException {
+            throws GeneralSecurityException, DecoderException {
         logger.info("userid=" + userid);
         String serviceInvariantUuid = getServiceInvariantUuidFromProps(prop);
         if (sdcReqUrlsList != null && !sdcReqUrlsList.isEmpty()) {

@@ -26,12 +26,7 @@ package org.onap.clamp.clds.dao;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.sql.Blob;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +44,6 @@ import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
@@ -60,10 +54,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("cldsDao")
 public class CldsDao {
-
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsDao.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-
     private JdbcTemplate              jdbcTemplateObject;
     private SimpleJdbcCall            procGetModel;
     private SimpleJdbcCall            procGetModelTemplate;
@@ -75,7 +67,6 @@ public class CldsDao {
     private SimpleJdbcCall            procDelAllModelInstances;
     private SimpleJdbcCall            procInsModelInstance;
     private SimpleJdbcCall            procDelModelInstance;
-
     private static final String       HEALTHCHECK   = "Select 1";
 
     /**
@@ -202,7 +193,6 @@ public class CldsDao {
         model.getEvent().setUserid((String) out.get("v_event_user_id"));
         model.setTypeId((String) out.get("v_service_type_id"));
         model.setDeploymentId((String) out.get("v_deployment_id"));
-
         Map<String, Object> modelResults = logSqlExecution(procGetModel, in);
         Object modelResultObject = modelResults.get("#result-set-1");
         if (modelResultObject != null && modelResultObject instanceof ArrayList) {
@@ -266,7 +256,6 @@ public class CldsDao {
         // Delete all existing model instances for given controlNameUUID
         logger.debug("deleting instances for: {}", model.getControlNameUuid());
         delAllModelInstances(model.getControlNameUuid());
-
         if (modelInstancesList == null) {
             logger.debug("modelInstancesList == null");
         } else {
@@ -356,41 +345,6 @@ public class CldsDao {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_event_id", eventId)
                 .addValue("v_process_instance_id", processInstanceId);
         logSqlExecution(procUpdEvent, in);
-    }
-
-    /**
-     * Generic mapper for list of values
-     */
-    private static final class ValueItemMapper implements RowMapper<ValueItem> {
-        @Override
-        public ValueItem mapRow(ResultSet rs, int rowNum) throws SQLException {
-            ValueItem item = new ValueItem();
-            item.setValue(rs.getString(1));
-            return item;
-        }
-    }
-
-    /**
-     * Generic mapper for CldsDBServiceCache
-     */
-    private static final class CldsServiceDataMapper implements RowMapper<CldsServiceData> {
-        @Override
-        public CldsServiceData mapRow(ResultSet rs, int rowNum) throws SQLException {
-            CldsServiceData cldsServiceData = new CldsServiceData();
-            long age;
-            age = rs.getLong(5);
-            Blob blob = rs.getBlob(4);
-            InputStream is = blob.getBinaryStream();
-            ObjectInputStream oip;
-            try {
-                oip = new ObjectInputStream(is);
-                cldsServiceData = (CldsServiceData) oip.readObject();
-                cldsServiceData.setAgeOfRecord(age);
-            } catch (IOException | ClassNotFoundException e) {
-                logger.error("Error caught while retrieving cldsServiceData from database", e);
-            }
-            return cldsServiceData;
-        }
     }
 
     /**
@@ -503,14 +457,14 @@ public class CldsDao {
     }
 
     /**
-     * Method to get all models with model properties.
+     * Method to get deployed/active models with model properties.
      * 
      * @return list of CldsModelProp
      */
-    public List<CldsModelProp> getAllModelProperties() {
+    public List<CldsModelProp> getDeployedModelProperties() {
         List<CldsModelProp> cldsModelPropList = new ArrayList<CldsModelProp>();
-        String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, model_properties mp"
-                + " WHERE m.model_prop_id = mp.model_prop_id";
+        String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, model_properties mp, event e "
+                + "WHERE m.model_prop_id = mp.model_prop_id and m.event_id = e.event_id and e.action_cd = 'DEPLOY'";
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
         CldsModelProp cldsModelProp = null;
         for (Map<String, Object> row : rows) {
@@ -523,5 +477,4 @@ public class CldsDao {
         }
         return cldsModelPropList;
     }
-
 }

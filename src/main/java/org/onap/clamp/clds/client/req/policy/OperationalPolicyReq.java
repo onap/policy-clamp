@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.client.req;
+package org.onap.clamp.clds.client.req.policy;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFLogger.Level;
@@ -67,7 +67,6 @@ public class OperationalPolicyReq {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     private OperationalPolicyReq() {
-
     }
 
     /**
@@ -84,7 +83,6 @@ public class OperationalPolicyReq {
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
         prop.setPolicyUniqueId(policyChain.getPolicyId());
-
         String templateName = "";
         String operationTopic = "";
         String notificationTopic = "";
@@ -110,24 +108,19 @@ public class OperationalPolicyReq {
             controller = refProp.getStringValue("op.controller", global.getService());
         }
         String recipeTopic = refProp.getStringValue("op.recipeTopic", global.getService());
-
         // ruleAttributes
         Map<String, String> ruleAttributes = new HashMap<>();
-
         if (operationTopic == null || operationTopic.isEmpty()) {
             logger.info("templateName=" + templateName);
             logger.info("recipeTopic=" + recipeTopic);
             logger.info("notificationTopic=" + notificationTopic);
-
             // if no operationTopic, then don't format yaml - use first policy
             // from list
             PolicyItem policyItem = policyChain.getPolicyItems().get(0);
-
             ruleAttributes.put("templateName", templateName);
             ruleAttributes.put("ClosedLoopControlName", prop.getControlNameAndPolicyUniqueId());
             ruleAttributes.put("RecipeTopic", recipeTopic);
             ruleAttributes.put("NotificationTopic", notificationTopic);
-
             String recipe = policyItem.getRecipe();
             String maxRetries = String.valueOf(policyItem.getMaxRetries());
             String retryTimeLimit = String.valueOf(policyItem.getRetryTimeLimit());
@@ -140,32 +133,25 @@ public class OperationalPolicyReq {
             ruleAttributes.put("MaxRetries", maxRetries);
             ruleAttributes.put("RetryTimeLimit", retryTimeLimit);
             ruleAttributes.put("ResourceId", targetResourceId);
-
         } else {
             logger.info("templateName=" + templateName);
             logger.info("operationTopic=" + operationTopic);
             logger.info("notificationTopic=" + notificationTopic);
-
             // format yaml
             String yaml = (tca != null && tca.isFound()) ? formateNodeBYaml(refProp, prop, modelElementId, policyChain)
                     : formatYaml(refProp, prop, modelElementId, policyChain);
-
             ruleAttributes.put("templateName", templateName);
             ruleAttributes.put("ClosedLoopControlName", prop.getControlNameAndPolicyUniqueId());
             ruleAttributes.put("OperationTopic", operationTopic);
             ruleAttributes.put("NotificationTopic", notificationTopic);
-
             ruleAttributes.put("ControlLoopYaml", yaml);
         }
-
         // matchingAttributes
         Map<String, String> matchingAttributes = new HashMap<>();
         matchingAttributes.put("controller", controller);
-
         Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
         attributes.put(AttributeType.RULE, ruleAttributes);
         attributes.put(AttributeType.MATCHING, matchingAttributes);
-
         return attributes;
     }
 
@@ -180,22 +166,18 @@ public class OperationalPolicyReq {
      */
     public static String formatYaml(RefProp refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
-
         // get property objects
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
         prop.setPolicyUniqueId(policyChain.getPolicyId());
-
         // convert values to SDC objects
         Service service = new Service(global.getService());
         Resource[] vfResources = convertToResource(global.getResourceVf(), ResourceType.VF);
         Resource[] vfcResources = convertToResource(global.getResourceVfc(), ResourceType.VFC);
-
         // create builder
         ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
                 policyChain.getTimeout(), service, vfResources);
         builder.addResource(vfcResources);
-
         // process each policy
         Map<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = orderParentFirst(policyChain.getPolicyItems());
@@ -219,12 +201,10 @@ public class OperationalPolicyReq {
                         refProp.getStringValue("op.policy.appc"), target, policyItem.getRecipe(), null,
                         policyItem.getMaxRetries(), policyItem.getRetryTimeLimit(), parentPolicyObj.getId(),
                         convertToPolicyResult(policyItem.getParentPolicyConditions()));
-
                 logger.info("policyObj.id=" + policyObj.getId() + "; parentPolicyObj.id=" + parentPolicyObj.getId());
             }
             policyObjMap.put(policyItem.getId(), policyObj);
         }
-
         //
         // Build the specification
         //
@@ -255,27 +235,22 @@ public class OperationalPolicyReq {
      */
     public static String formateNodeBYaml(RefProp refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
-
         // get property objects
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
         prop.setPolicyUniqueId(policyChain.getPolicyId());
-
         // convert values to SDC objects
         Service service = new Service(global.getService());
         Resource[] vfResources = convertToResource(global.getResourceVf(), ResourceType.VF);
         Resource[] vfcResources = convertToResource(global.getResourceVfc(), ResourceType.VFC);
-
         // create builder
         ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
                 policyChain.getTimeout(), service, vfResources);
         builder.addResource(vfcResources);
-
         // process each policy
         Map<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = addAOTSActorRecipe(refProp, global.getService(),
                 policyChain.getPolicyItems());
-
         Policy lastPolicyObj = new Policy();
         for (PolicyItem policyItem : policyItemList) {
             Target target = new Target();
@@ -309,7 +284,6 @@ public class OperationalPolicyReq {
         operationsAccumulateParams.setLimit(Integer.valueOf(refProp.getStringValue("op.eNodeB.limit")));
         operationsAccumulateParams.setPeriod(refProp.getStringValue("op.eNodeB.period"));
         builder.addOperationsAccumulateParams(lastPolicyObj.getId(), operationsAccumulateParams);
-
         //
         // Build the specification
         //
@@ -447,5 +421,4 @@ public class OperationalPolicyReq {
         }
         return prList.stream().map(stringElem -> PolicyResult.toResult(stringElem)).toArray(PolicyResult[]::new);
     }
-
 }

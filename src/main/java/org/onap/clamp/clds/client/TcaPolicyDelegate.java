@@ -30,7 +30,8 @@ import java.util.UUID;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.onap.clamp.clds.client.req.TcaRequestFormatter;
+import org.onap.clamp.clds.client.req.policy.PolicyClient;
+import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
@@ -44,10 +45,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class TcaPolicyDelegate implements JavaDelegate {
     protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(TcaPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-
     @Autowired
     private RefProp                   refProp;
-
     @Autowired
     PolicyClient                      policyClient;
 
@@ -60,16 +59,14 @@ public class TcaPolicyDelegate implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         String tcaPolicyRequestUuid = UUID.randomUUID().toString();
         execution.setVariable("tcaPolicyRequestUuid", tcaPolicyRequestUuid);
-
         ModelProperties prop = ModelProperties.create(execution);
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             String policyJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
-            String responseMessage = policyClient.sendMicroServiceInOther(policyJson, prop, tcaPolicyRequestUuid);
+            String responseMessage = policyClient.sendMicroServiceInOther(policyJson, prop);
             if (responseMessage != null) {
                 execution.setVariable("tcaPolicyResponseMessage", responseMessage.getBytes());
             }
         }
     }
-
 }

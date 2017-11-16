@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.client;
+package org.onap.clamp.clds.client.req.policy;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -62,22 +62,19 @@ import org.springframework.context.ApplicationContext;
  * Policy utility methods - specifically, send the policy.
  */
 public class PolicyClient {
-    protected static final String     POLICY_PREFIX_BASE         = "Config_";
-    protected static final String     POLICY_PREFIX_BRMS_PARAM   = "Config_BRMS_Param_";
-    protected static final String     POLICY_PREFIX_MICROSERVICE = "Config_MS_";
-
-    protected static final String     LOG_POLICY_PREFIX          = "Response is ";
-
-    protected static final EELFLogger logger                     = EELFManager.getInstance()
+    protected static final String     POLICY_PREFIX_BASE            = "Config_";
+    protected static final String     POLICY_PREFIX_BRMS_PARAM      = "Config_BRMS_Param_";
+    protected static final String     POLICY_PREFIX_MICROSERVICE    = "Config_MS_";
+    protected static final String     LOG_POLICY_PREFIX             = "Response is ";
+    protected static final EELFLogger logger                        = EELFManager.getInstance()
             .getLogger(PolicyClient.class);
-    protected static final EELFLogger metricsLogger              = EELFManager.getInstance().getMetricsLogger();
-
+    protected static final EELFLogger metricsLogger                 = EELFManager.getInstance().getMetricsLogger();
+    protected static final String     POLICY_MSTYPE_PROPERTY_NAME   = "policy.ms.type";
+    protected static final String     POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
     @Value("${org.onap.clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
     protected String                  cldsPolicyConfigFile;
-
     @Autowired
     protected ApplicationContext      appContext;
-
     @Autowired
     protected RefProp                 refProp;
 
@@ -95,15 +92,11 @@ public class PolicyClient {
      */
     public String sendBrmsPolicy(Map<AttributeType, Map<String, String>> attributes, ModelProperties prop,
             String policyRequestUuid) {
-
         PolicyParameters policyParameters = new PolicyParameters();
-
         // Set Policy Type(Mandatory)
         policyParameters.setPolicyConfigType(PolicyConfigType.BRMS_PARAM);
-
         // Set Policy Name(Mandatory)
         policyParameters.setPolicyName(prop.getPolicyScopeAndNameWithUniqueId());
-
         // documentation says this is options, but when tested, got the
         // following failure: java.lang.Exception: Policy send failed: PE300 -
         // Data Issue: No policyDescription given.
@@ -113,10 +106,8 @@ public class PolicyClient {
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
         String policyNamePrefix = refProp.getStringValue("policy.op.policyNamePrefix");
         String rtnMsg = send(policyParameters, prop, policyNamePrefix);
-
         String policyType = refProp.getStringValue("policy.op.type");
         push(policyType, prop);
-
         return rtnMsg;
     }
 
@@ -132,28 +123,21 @@ public class PolicyClient {
      * @return The response message of policy
      */
     public String sendMicroServiceInJson(String policyJson, ModelProperties prop, String policyRequestUuid) {
-
         PolicyParameters policyParameters = new PolicyParameters();
-
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-        policyParameters.setEcompName(refProp.getStringValue("policy.onap.name"));
+        policyParameters.setEcompName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
-
         policyParameters.setConfigBody(policyJson);
         policyParameters.setConfigBodyType(PolicyType.JSON);
-
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
         String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
-
         // Adding this line to clear the policy id from policy name while
         // pushing to policy engine
         prop.setPolicyUniqueId("");
-
         String rtnMsg = send(policyParameters, prop, policyNamePrefix);
-        String policyType = refProp.getStringValue("policy.ms.type");
+        String policyType = refProp.getStringValue(POLICY_MSTYPE_PROPERTY_NAME);
         push(policyType, prop);
-
         return rtnMsg;
     }
 
@@ -174,26 +158,20 @@ public class PolicyClient {
     public String sendBasePolicyInOther(String configBody, String configPolicyName, ModelProperties prop,
             String policyRequestUuid) {
         PolicyParameters policyParameters = new PolicyParameters();
-
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.Base);
-        policyParameters.setEcompName(refProp.getStringValue("policy.onap.name"));
+        policyParameters.setEcompName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
-
         policyParameters.setConfigBody(configBody);
         policyParameters.setConfigBodyType(PolicyType.OTHER);
         policyParameters.setConfigName("HolmesPolicy");
         policyParameters.setPolicyName(configPolicyName);
-
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
-
         // Adding this line to clear the policy id from policy name while
         // pushing to policy engine
         prop.setPolicyUniqueId("");
-
         String rtnMsg = send(policyParameters, prop, POLICY_PREFIX_BASE);
         push(PolicyConfigType.Base.toString(), prop);
-
         return rtnMsg;
     }
 
@@ -204,29 +182,23 @@ public class PolicyClient {
      *            The config policy string body
      * @param prop
      *            The ModelProperties
-     * @param policyRequestUuid
-     *            The policy request UUID
      * @return The answer from policy call
      */
-    public String sendMicroServiceInOther(String configBody, ModelProperties prop, String policyRequestUuid) {
-
+    public String sendMicroServiceInOther(String configBody, ModelProperties prop) {
         PolicyParameters policyParameters = new PolicyParameters();
-        // Set Policy Type 
+        // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-        policyParameters.setOnapName("DCAE");
-        policyParameters.setEcompName(refProp.getStringValue("policy.onap.name"));
+        // policyParameters.setOnapName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
+        policyParameters.setEcompName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         policyParameters.setConfigBody(configBody);
         String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
-
         // Adding this line to clear the policy id from policy name while
         // pushing to policy engine
         prop.setPolicyUniqueId("");
-
         String rtnMsg = send(policyParameters, prop, policyNamePrefix);
-        String policyType = refProp.getStringValue("policy.ms.type");
+        String policyType = refProp.getStringValue(POLICY_MSTYPE_PROPERTY_NAME);
         push(policyType, prop);
-
         return rtnMsg;
     }
 
@@ -241,10 +213,9 @@ public class PolicyClient {
      */
     protected String send(PolicyParameters policyParameters, ModelProperties prop, String policyNamePrefix) {
         // Verify whether it is triggered by Validation Test button from UI
-        if (prop.isTest()) {
+        if (prop.isTestOnly()) {
             return "send not executed for test action";
         }
-
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
         String responseMessage = "";
@@ -267,9 +238,7 @@ public class PolicyClient {
             throw new PolicyClientException("Exception while communicating with Policy", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
-
         LoggingUtils.setTimeContext(startTime, new Date());
-
         if (response.getResponseCode() == 200) {
             logger.info("Policy send successful");
             metricsLogger.info("Policy send success");
@@ -278,7 +247,6 @@ public class PolicyClient {
             metricsLogger.info("Policy send failure");
             throw new BadRequestException("Policy send failed: " + responseMessage);
         }
-
         return responseMessage;
     }
 
@@ -293,12 +261,10 @@ public class PolicyClient {
      */
     protected String push(String policyType, ModelProperties prop) {
         // Verify whether it is triggered by Validation Test button from UI
-        if (prop.isTest()) {
+        if (prop.isTestOnly()) {
             return "push not executed for test action";
         }
-
         PushPolicyParameters pushPolicyParameters = new PushPolicyParameters();
-
         // Parameter arguments
         if (prop.getPolicyUniqueId() != null && !prop.getPolicyUniqueId().isEmpty()) {
             pushPolicyParameters.setPolicyName(prop.getPolicyScopeAndNameWithUniqueId());
@@ -306,31 +272,29 @@ public class PolicyClient {
             pushPolicyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         }
         logger.info("Policy Name in Push policy method - " + pushPolicyParameters.getPolicyName());
-
         pushPolicyParameters.setPolicyType(policyType);
         pushPolicyParameters.setPdpGroup(refProp.getStringValue("policy.pdp.group"));
         pushPolicyParameters.setRequestID(null);
-
         // API method to create or update Policy.
-        PolicyChangeResponse response = null;
+        PolicyChangeResponse response;
         String responseMessage = "";
         try {
             logger.info("Attempting to push policy...");
             response = getPolicyEngine().pushPolicy(pushPolicyParameters);
-            responseMessage = response.getResponseMessage();
+            if (response != null) {
+                responseMessage = response.getResponseMessage();
+            }
         } catch (Exception e) {
             logger.error("Exception occurred during policy communication", e);
             throw new PolicyClientException("Exception while communicating with Policy", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
-
         if (response != null && (response.getResponseCode() == 200 || response.getResponseCode() == 204)) {
             logger.info("Policy push successful");
         } else {
             logger.warn("Policy push failed: " + responseMessage);
             throw new BadRequestException("Policy push failed: " + responseMessage);
         }
-
         return responseMessage;
     }
 
@@ -347,17 +311,14 @@ public class PolicyClient {
      *             In case of issues with policy engine
      */
     protected List<Integer> getVersions(String policyNamePrefix, ModelProperties prop) throws PolicyConfigException {
-
         ArrayList<Integer> versions = new ArrayList<>();
         ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
         String policyName = "";
-
         if (prop.getPolicyUniqueId() != null && !prop.getPolicyUniqueId().isEmpty()) {
             policyName = prop.getCurrentPolicyScopeAndFullPolicyName(policyNamePrefix) + "_" + prop.getPolicyUniqueId();
         } else {
             policyName = prop.getCurrentPolicyScopeAndFullPolicyName(policyNamePrefix);
         }
-
         logger.info("policyName=" + policyName);
         configRequestParameters.setPolicyName(policyName);
         try {
@@ -373,7 +334,6 @@ public class PolicyClient {
             logger.warn("warning: policy not found...policy name - " + policyName, e.getMessage());
         }
         return versions;
-
     }
 
     /**
@@ -401,7 +361,7 @@ public class PolicyClient {
      * @return The response message from Policy
      */
     public String deleteMicrosService(ModelProperties prop) {
-        String policyType = refProp.getStringValue("policy.ms.type");
+        String policyType = refProp.getStringValue(POLICY_MSTYPE_PROPERTY_NAME);
         return deletePolicy(prop, policyType);
     }
 
@@ -438,7 +398,6 @@ public class PolicyClient {
      */
     protected String deletePolicy(ModelProperties prop, String policyType) {
         DeletePolicyParameters deletePolicyParameters = new DeletePolicyParameters();
-
         if (prop.getPolicyUniqueId() != null && !prop.getPolicyUniqueId().isEmpty()) {
             deletePolicyParameters.setPolicyName(prop.getPolicyScopeAndNameWithUniqueId());
         } else {
@@ -451,14 +410,11 @@ public class PolicyClient {
         deletePolicyParameters.setPolicyType(policyType);
         // send delete request
         StringBuilder responseMessage = new StringBuilder(sendDeletePolicy(deletePolicyParameters, prop));
-
         logger.info("Deleting policy from PAP...");
         deletePolicyParameters.setPolicyComponent("PAP");
         deletePolicyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
-
         // send delete request
         responseMessage.append(sendDeletePolicy(deletePolicyParameters, prop));
-
         return responseMessage.toString();
     }
 
@@ -473,10 +429,9 @@ public class PolicyClient {
      */
     protected String sendDeletePolicy(DeletePolicyParameters deletePolicyParameters, ModelProperties prop) {
         // Verify whether it is triggered by Validation Test button from UI
-        if (prop.isTest()) {
+        if (prop.isTestOnly()) {
             return "delete not executed for test action";
         }
-
         // API method to create or update Policy.
         PolicyChangeResponse response = null;
         String responseMessage = "";
@@ -488,14 +443,12 @@ public class PolicyClient {
             logger.error("Exception occurred during policy communnication", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
-
         if (response != null && response.getResponseCode() == 200) {
             logger.info("Policy delete successful");
         } else {
             logger.warn("Policy delete failed: " + responseMessage);
             throw new BadRequestException("Policy delete failed: " + responseMessage);
         }
-
         return responseMessage;
     }
 }

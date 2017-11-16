@@ -30,7 +30,8 @@ import java.util.List;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.onap.clamp.clds.client.req.SdcReq;
+import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
+import org.onap.clamp.clds.client.req.sdc.SdcReq;
 import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
