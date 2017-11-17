@@ -54,20 +54,21 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("cldsDao")
 public class CldsDao {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsDao.class);
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    private JdbcTemplate              jdbcTemplateObject;
-    private SimpleJdbcCall            procGetModel;
-    private SimpleJdbcCall            procGetModelTemplate;
-    private SimpleJdbcCall            procSetModel;
-    private SimpleJdbcCall            procInsEvent;
-    private SimpleJdbcCall            procUpdEvent;
-    private SimpleJdbcCall            procSetTemplate;
-    private SimpleJdbcCall            procGetTemplate;
-    private SimpleJdbcCall            procDelAllModelInstances;
-    private SimpleJdbcCall            procInsModelInstance;
-    private SimpleJdbcCall            procDelModelInstance;
-    private static final String       HEALTHCHECK   = "Select 1";
+    private JdbcTemplate jdbcTemplateObject;
+    private SimpleJdbcCall procGetModel;
+    private SimpleJdbcCall procGetModelTemplate;
+    private SimpleJdbcCall procSetModel;
+    private SimpleJdbcCall procInsEvent;
+    private SimpleJdbcCall procUpdEvent;
+    private SimpleJdbcCall procSetTemplate;
+    private SimpleJdbcCall procGetTemplate;
+    private SimpleJdbcCall procDelAllModelInstances;
+    private SimpleJdbcCall procInsModelInstance;
+    private SimpleJdbcCall procDelModelInstance;
+    private static final String HEALTHCHECK = "Select 1";
 
     /**
      * Log message when instantiating
@@ -421,11 +422,12 @@ public class CldsDao {
         List<CldsServiceData> cldsServiceDataList = new ArrayList<>();
         try {
             String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
-            cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] { invariantUUID },
-                    new CldsServiceDataMapper());
+            cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] {
+                    invariantUUID
+            }, new CldsServiceDataMapper());
             logger.info("value of cldsServiceDataList: {}", cldsServiceDataList);
         } catch (EmptyResultDataAccessException e) {
-            logger.info("cache row not found for invariantUUID: {}", invariantUUID);
+            logger.warn("cache row not found for invariantUUID: " + invariantUUID, e);
         }
         return cldsServiceData;
     }

@@ -26,8 +26,9 @@ package org.onap.clamp.clds.service;
 import java.util.Arrays;
 
 public class CldsUser {
-    private String                    user;
-    private String                    password;
+
+    private String user;
+    private String password;
     private SecureServicePermission[] permissions;
 
     /**
@@ -68,6 +69,7 @@ public class CldsUser {
     }
 
     public String[] getPermissionsString() {
+        // NOSONAR
         return Arrays.stream(getPermissions()).map(SecureServicePermission::getKey).toArray(String[]::new);
     }
 

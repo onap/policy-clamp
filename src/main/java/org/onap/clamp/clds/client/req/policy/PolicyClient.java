@@ -62,21 +62,21 @@ import org.springframework.context.ApplicationContext;
  * Policy utility methods - specifically, send the policy.
  */
 public class PolicyClient {
-    protected static final String     POLICY_PREFIX_BASE            = "Config_";
-    protected static final String     POLICY_PREFIX_BRMS_PARAM      = "Config_BRMS_Param_";
-    protected static final String     POLICY_PREFIX_MICROSERVICE    = "Config_MS_";
-    protected static final String     LOG_POLICY_PREFIX             = "Response is ";
-    protected static final EELFLogger logger                        = EELFManager.getInstance()
-            .getLogger(PolicyClient.class);
-    protected static final EELFLogger metricsLogger                 = EELFManager.getInstance().getMetricsLogger();
-    protected static final String     POLICY_MSTYPE_PROPERTY_NAME   = "policy.ms.type";
-    protected static final String     POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
+
+    protected static final String POLICY_PREFIX_BASE = "Config_";
+    protected static final String POLICY_PREFIX_BRMS_PARAM = "Config_BRMS_Param_";
+    protected static final String POLICY_PREFIX_MICROSERVICE = "Config_MS_";
+    protected static final String LOG_POLICY_PREFIX = "Response is ";
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyClient.class);
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    protected static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
+    protected static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
     @Value("${org.onap.clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
-    protected String                  cldsPolicyConfigFile;
+    protected String cldsPolicyConfigFile;
     @Autowired
-    protected ApplicationContext      appContext;
+    protected ApplicationContext appContext;
     @Autowired
-    protected RefProp                 refProp;
+    protected RefProp refProp;
 
     /**
      * Perform BRMS policy type.
@@ -88,7 +88,6 @@ public class PolicyClient {
      * @param policyRequestUuid
      *            PolicyRequest UUID
      * @return The response message of policy
-     * 
      */
     public String sendBrmsPolicy(Map<AttributeType, Map<String, String>> attributes, ModelProperties prop,
             String policyRequestUuid) {
@@ -331,7 +330,7 @@ public class PolicyClient {
             logger.info("Policy versions.size()=" + versions.size());
         } catch (PolicyConfigException e) {
             // just print warning - if no policy version found
-            logger.warn("warning: policy not found...policy name - " + policyName, e.getMessage());
+            logger.warn("policy not found...policy name - " + policyName, e);
         }
         return versions;
     }
@@ -393,7 +392,6 @@ public class PolicyClient {
      *
      * @param prop
      *            The ModelProperties
-     *
      * @return The response message from policy
      */
     protected String deletePolicy(ModelProperties prop, String policyType) {
