@@ -25,6 +25,9 @@ package org.onap.clamp.clds.service;
 
 import java.util.Arrays;
 
+/**
+ * The class represents the CldsUser that can be extracted from cldsusers.json.
+ */
 public class CldsUser {
 
     private String user;
@@ -32,6 +35,8 @@ public class CldsUser {
     private SecureServicePermission[] permissions;
 
     /**
+     * Returns the user.
+     * 
      * @return the user
      */
     public String getUser() {
@@ -39,6 +44,8 @@ public class CldsUser {
     }
 
     /**
+     * Sets the user.
+     * 
      * @param user
      *            the user to set
      */
@@ -47,6 +54,8 @@ public class CldsUser {
     }
 
     /**
+     * Returns the password.
+     * 
      * @return the password
      */
     public String getPassword() {
@@ -54,6 +63,8 @@ public class CldsUser {
     }
 
     /**
+     * Sets the password.
+     * 
      * @param password
      *            the password to set
      */
@@ -62,6 +73,8 @@ public class CldsUser {
     }
 
     /**
+     * Returns the permissions.
+     * 
      * @return the permissions
      */
     public SecureServicePermission[] getPermissions() {
@@ -69,12 +82,13 @@ public class CldsUser {
     }
 
     public String[] getPermissionsString() {
-        //NOSONAR
-        return Arrays.stream(getPermissions()).map(SecureServicePermission::getKey).toArray(String[]::new);
+        return Arrays.stream(getPermissions()).map(SecureServicePermission::getKey).toArray(String[]::new);// NOSONAR
     }
 
     /**
-     * @param permissions
+     * Sets the permissions.
+     * 
+     * @param permissionsArray
      *            the permissions to set
      */
     public void setPermissions(SecureServicePermission[] permissionsArray) {
