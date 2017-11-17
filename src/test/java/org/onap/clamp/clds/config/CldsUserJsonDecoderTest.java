@@ -30,15 +30,20 @@ import org.junit.Test;
 import org.onap.clamp.clds.service.CldsUser;
 
 public class CldsUserJsonDecoderTest {
-    private String   user1                      = "admin1";
-    private String   user2                      = "admin2";
-    private String   password                   = "5f4dcc3b5aa765d61d8327deb882cf99";
-    private String[] normalPermissionsArray     = { "permission-type-cl|dev|read", "permission-type-cl|dev|update",
-            "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
-            "permission-type-template|dev|update" };
-    private String[] incompletePermissionsArray = { "permission-type-cl|dev|*", "permission-type-cl|dev|*",
-            "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
-            "permission-type-template|dev|update" };
+
+    private String user1 = "admin1";
+    private String user2 = "admin2";
+    private String password = "5f4dcc3b5aa765d61d8327deb882cf99";
+    private String[] normalPermissionsArray = {
+        "permission-type-cl|dev|read", "permission-type-cl|dev|update", "permission-type-cl-manage|dev|*",
+        "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
+        "permission-type-template|dev|update"
+    };
+    private String[] incompletePermissionsArray = {
+        "permission-type-cl|dev|*", "permission-type-cl|dev|*", "permission-type-cl-manage|dev|*",
+        "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
+        "permission-type-template|dev|update"
+    };
 
     @Test
     public void testDecodingDoubleUsers() {

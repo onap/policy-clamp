@@ -63,7 +63,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class CldsServiceItCase extends AbstractItCase {
     @Autowired
-    CldsService    cldsService;
+    CldsService cldsService;
     private String bpmnText;
     private String imageText;
     private String bpmnPropText;
@@ -100,9 +100,9 @@ public class CldsServiceItCase extends AbstractItCase {
     @Test
     public void testCldsInfoAuthorized() throws Exception {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal p = Mockito.mock(Principal.class);
-        Mockito.when(p.getName()).thenReturn("admin");
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(p);
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("admin");
+        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
         Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
         Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
         Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
@@ -132,12 +132,10 @@ public class CldsServiceItCase extends AbstractItCase {
 
     @Test
     public void testPutModel() throws Exception {
-        String randomNameTemplate = RandomStringUtils.randomAlphanumeric(5);
-        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal p = Mockito.mock(Principal.class);
-        Mockito.when(p.getName()).thenReturn("admin");
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(p);
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("admin");
+        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
         Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
         Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
         Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
@@ -145,6 +143,7 @@ public class CldsServiceItCase extends AbstractItCase {
         cldsService.setSecurityContext(securityContext);
         // Add the template first
         CldsTemplate newTemplate = new CldsTemplate();
+        String randomNameTemplate = RandomStringUtils.randomAlphanumeric(5);
         newTemplate.setName(randomNameTemplate);
         newTemplate.setBpmnText(bpmnText);
         newTemplate.setImageText(imageText);
@@ -166,6 +165,7 @@ public class CldsServiceItCase extends AbstractItCase {
         newModel.setDocText(newTemplate.getPropText());
         newModel.setDocId(newTemplate.getPropId());
         // Test the PutModel method
+        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
         cldsService.putModel(randomNameModel, newModel);
         // Verify whether it has been added properly or not
         assertNotNull(cldsDao.getModel(randomNameModel));

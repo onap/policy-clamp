@@ -24,7 +24,6 @@
 package org.onap.clamp.clds.it;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
@@ -46,17 +45,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class HolmesPolicyDelegateItCase extends AbstractItCase {
-
     @Test
     public void testCreatePolicyJson() throws IOException {
         String modelBpmnProp = ResourceFileUtil
                 .getResourceAsString("example/model-properties/holmes/modelBpmnProperties.json");
         String modelBpmn = ResourceFileUtil.getResourceAsString("example/model-properties/holmes/modelBpmn.json");
-
-        ModelProperties prop = new ModelProperties("example-model-name", "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf", null, true, modelBpmn,
-                modelBpmnProp);
-
-        Holmes holmes =  prop.getType(Holmes.class);
+        ModelProperties prop = new ModelProperties("example-model-name",
+                "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf", null, true, modelBpmn, modelBpmnProp);
+        Holmes holmes = prop.getType(Holmes.class);
         String result = HolmesPolicyDelegate.formatHolmesConfigBody(prop, holmes);
         assertTrue("ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf$$$blabla".equals(result));
     }

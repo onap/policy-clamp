@@ -60,25 +60,23 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource(locations = "classpath:https/https-test.properties")
 public class DcaeHttpConnectionManagerItCase extends AbstractItCase {
     @Value("${server.port}")
-    private String                httpsPort;
+    private String httpsPort;
     @Value("${server.http-to-https-redirection.port}")
-    private String                httpPort;
+    private String httpPort;
     private static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-                                            @Override
-                                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                                                return null;
-                                            }
+        @Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
 
-                                            @Override
-                                            public void checkClientTrusted(X509Certificate[] arg0, String arg1)
-                                                    throws CertificateException {
-                                            }
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+        }
 
-                                            @Override
-                                            public void checkServerTrusted(X509Certificate[] arg0, String arg1)
-                                                    throws CertificateException {
-                                            }
-                                        } };
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+        }
+    } };
 
     private void enableSslNoCheck() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sc = SSLContext.getInstance("SSL");

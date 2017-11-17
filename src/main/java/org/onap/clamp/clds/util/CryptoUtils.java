@@ -46,7 +46,8 @@ import org.apache.commons.lang3.ArrayUtils;
  * 
  */
 public final class CryptoUtils {
-    protected static final EELFLogger logger            = EELFManager.getInstance().getLogger(CryptoUtils.class);
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CryptoUtils.class);
     // Openssl commands:
     // Encrypt: echo -n "123456" | openssl aes-128-cbc -e -K <Private Hex key>
     // -iv <16 Hex Bytes iv> | xxd -u -g100
@@ -56,12 +57,14 @@ public final class CryptoUtils {
     // Decrypt: echo -n 'Encrypted string' | xxd -r -ps | openssl aes-128-cbc -d
     // -K
     // <Private Hex Key> -iv <16 Bytes IV extracted from Encrypted String>
-    private static final String       ALGORITHM         = "AES";
-    private static final String       ALGORYTHM_DETAILS = ALGORITHM + "/CBC/PKCS5PADDING";
-    private static final int          BLOCK_SIZE        = 128;
-    private static final String       KEY_PARAM         = "org.onap.clamp.encryption.aes.key";
-    private static SecretKeySpec      secretKeySpec     = null;
-    private IvParameterSpec           ivspec;
+    private static final String ALGORITHM = "AES";
+    private static final String ALGORYTHM_DETAILS = ALGORITHM + "/CBC/PKCS5PADDING";
+    private static final int BLOCK_SIZE = 128;
+    private static final String KEY_PARAM = "org.onap.clamp.encryption.aes.key";
+    private static SecretKeySpec secretKeySpec = null;
+    private IvParameterSpec ivspec;
+
+    // Static init
     static {
         Properties props = new Properties();
         try {
@@ -76,6 +79,7 @@ public final class CryptoUtils {
      * Encrypt a value based on the Clamp Encryption Key.
      * 
      * @param value
+     *            The value to encrypt
      * @return The encrypted string
      * @throws GeneralSecurityException
      *             In case of issue with the encryption
@@ -84,16 +88,16 @@ public final class CryptoUtils {
      */
     public String encrypt(String value) throws GeneralSecurityException, UnsupportedEncodingException {
         Cipher cipher = Cipher.getInstance(CryptoUtils.ALGORYTHM_DETAILS, "SunJCE");
-        SecureRandom r = SecureRandom.getInstance("SHA1PRNG");
+        SecureRandom randomNumber = SecureRandom.getInstance("SHA1PRNG");
         byte[] iv = new byte[BLOCK_SIZE / 8];
-        r.nextBytes(iv);
+        randomNumber.nextBytes(iv);
         ivspec = new IvParameterSpec(iv);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec);
         return Hex.encodeHexString(ArrayUtils.addAll(iv, cipher.doFinal(value.getBytes("UTF-8"))));
     }
 
     /**
-     * Decrypt a value based on the Clamp Encryption Key
+     * Decrypt a value based on the Clamp Encryption Key.
      * 
      * @param message
      *            The encrypted string that must be decrypted using the Clamp

@@ -75,7 +75,6 @@ public class CldsDaoItCase extends AbstractItCase {
     @Test
     public void testModelSave() throws IOException {
         String randomNameTemplate = RandomStringUtils.randomAlphanumeric(5);
-        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
         // Add the template first
         CldsTemplate newTemplate = new CldsTemplate();
         newTemplate.setName(randomNameTemplate);
@@ -89,6 +88,7 @@ public class CldsDaoItCase extends AbstractItCase {
         assertEquals(imageText, newTemplateRead.getImageText());
         // Save the model
         CldsModel newModel = new CldsModel();
+        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
         newModel.setName(randomNameModel);
         newModel.setBpmnText(bpmnText);
         newModel.setImageText(imageText);
