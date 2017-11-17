@@ -43,11 +43,13 @@ import org.apache.commons.lang3.ArrayUtils;
 /**
  * CryptoUtils for encrypting/decrypting string based on a Key defined in
  * application.properties (Spring config file).
- * 
  */
 public final class CryptoUtils {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CryptoUtils.class);
+    /**
+     * Used to log.
+     */
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CryptoUtils.class);
     // Openssl commands:
     // Encrypt: echo -n "123456" | openssl aes-128-cbc -e -K <Private Hex key>
     // -iv <16 Hex Bytes iv> | xxd -u -g100
@@ -57,12 +59,26 @@ public final class CryptoUtils {
     // Decrypt: echo -n 'Encrypted string' | xxd -r -ps | openssl aes-128-cbc -d
     // -K
     // <Private Hex Key> -iv <16 Bytes IV extracted from Encrypted String>
+    /**
+     * Definition of encryption algorithm.
+     */
     private static final String ALGORITHM = "AES";
+    /**
+     * Detailed definition of encryption algorithm.
+     */
     private static final String ALGORYTHM_DETAILS = ALGORITHM + "/CBC/PKCS5PADDING";
+    /**
+     * Block SIze in bits.
+     */
     private static final int BLOCK_SIZE = 128;
+    /**
+     * Key to read in the key.properties file.
+     */
     private static final String KEY_PARAM = "org.onap.clamp.encryption.aes.key";
+    /**
+     * The SecretKeySpec created from the Base 64 String key.
+     */
     private static SecretKeySpec secretKeySpec = null;
-    private IvParameterSpec ivspec;
 
     // Static init
     static {
@@ -91,7 +107,7 @@ public final class CryptoUtils {
         SecureRandom randomNumber = SecureRandom.getInstance("SHA1PRNG");
         byte[] iv = new byte[BLOCK_SIZE / 8];
         randomNumber.nextBytes(iv);
-        ivspec = new IvParameterSpec(iv);
+        IvParameterSpec ivspec = new IvParameterSpec(iv);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec);
         return Hex.encodeHexString(ArrayUtils.addAll(iv, cipher.doFinal(value.getBytes("UTF-8"))));
     }
@@ -111,13 +127,22 @@ public final class CryptoUtils {
     public String decrypt(String message) throws GeneralSecurityException, DecoderException {
         byte[] encryptedMessage = Hex.decodeHex(message.toCharArray());
         Cipher cipher = Cipher.getInstance(CryptoUtils.ALGORYTHM_DETAILS, "SunJCE");
-        ivspec = new IvParameterSpec(ArrayUtils.subarray(encryptedMessage, 0, BLOCK_SIZE / 8));
+        IvParameterSpec ivspec = new IvParameterSpec(ArrayUtils.subarray(encryptedMessage, 0, BLOCK_SIZE / 8));
         byte[] realData = ArrayUtils.subarray(encryptedMessage, BLOCK_SIZE / 8, encryptedMessage.length);
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec);
         byte[] decrypted = cipher.doFinal(realData);
         return new String(decrypted);
     }
 
+    /**
+     * Method used to generate the SecretKeySpec from a Base64 String.
+     * 
+     * @param keyString
+     *            The key as a string in Base 64
+     * @return The SecretKeySpec created
+     * @throws DecoderException
+     *             In case of issues with the decoding of Base64
+     */
     private static SecretKeySpec getSecretKeySpec(String keyString) throws DecoderException {
         byte[] key = Hex.decodeHex(keyString.toCharArray());
         return new SecretKeySpec(key, CryptoUtils.ALGORITHM);
