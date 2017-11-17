@@ -62,13 +62,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class CldsServiceItCase extends AbstractItCase {
+
     @Autowired
-    CldsService cldsService;
+    private CldsService cldsService;
     private String bpmnText;
     private String imageText;
     private String bpmnPropText;
     @Autowired
-    public CldsDao cldsDao;
+    private CldsDao cldsDao;
 
     /**
      * Setup the variable before the tests execution.
