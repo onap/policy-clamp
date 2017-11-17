@@ -69,7 +69,7 @@ public class CldsUser {
     }
 
     public String[] getPermissionsString() {
-        // NOSONAR
+        //NOSONAR
         return Arrays.stream(getPermissions()).map(SecureServicePermission::getKey).toArray(String[]::new);
     }
 
