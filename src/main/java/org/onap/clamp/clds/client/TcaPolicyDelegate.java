@@ -48,7 +48,7 @@ public class TcaPolicyDelegate implements JavaDelegate {
     @Autowired
     private RefProp                   refProp;
     @Autowired
-    PolicyClient                      policyClient;
+    private PolicyClient              policyClient;
 
     /**
      * Perform activity. Send Tca info to policy api.
