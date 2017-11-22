@@ -70,6 +70,7 @@ CLAMP uses logback framework to generate logs. The logback.xml file cand be foun
 With the default log settings, all logs will be generated into console and into root.log file under the CLAMP root folder. The root.log file is not allowed to be appended, thus restarting the CLAMP will result in cleaning of the old log files.
 
 
+.. _index-clamp-installation:
 
 Installation
 ------------
