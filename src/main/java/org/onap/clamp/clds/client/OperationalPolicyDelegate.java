@@ -39,14 +39,13 @@ import org.onap.clamp.clds.model.prop.PolicyChain;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.policy.api.AttributeType;
-import org.onap.policy.api.PolicyEngineException;
 import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Send Operational Policy info to policy api. It uses the policy code to define
  * the model and communicate with it. See also the PolicyClient class.
- * 
+ *
  */
 public class OperationalPolicyDelegate implements JavaDelegate {
     protected static final EELFLogger logger        = EELFManager.getInstance()
@@ -70,20 +69,17 @@ public class OperationalPolicyDelegate implements JavaDelegate {
      *            The DelegateExecution
      * @throws BuilderException
      *             In case of issues with OperationalPolicyReq
-     * @throws PolicyEngineException
-     *             In case of issues with the PolicyEngine creation
      * @throws UnsupportedEncodingException
      */
     @Override
     public void execute(DelegateExecution execution)
-            throws BuilderException, PolicyEngineException, UnsupportedEncodingException {
+            throws BuilderException, UnsupportedEncodingException {
         String responseMessage = null;
-        String operationalPolicyRequestUuid = null;
         ModelProperties prop = ModelProperties.create(execution);
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                operationalPolicyRequestUuid = LoggingUtils.getRequestId();
+                String operationalPolicyRequestUuid = LoggingUtils.getRequestId();
                 Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
                         prop, prop.getType(Policy.class).getId(), policyChain);
                 responseMessage = policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);

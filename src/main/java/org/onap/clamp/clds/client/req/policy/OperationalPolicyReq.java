@@ -107,20 +107,21 @@ public class OperationalPolicyReq {
             notificationTopic = refProp.getStringValue("op.notificationTopic", global.getService());
             controller = refProp.getStringValue("op.controller", global.getService());
         }
+
         String recipeTopic = refProp.getStringValue("op.recipeTopic", global.getService());
         // ruleAttributes
+        logger.info("templateName=" + templateName);
+        logger.info("notificationTopic=" + notificationTopic);
         Map<String, String> ruleAttributes = new HashMap<>();
+        ruleAttributes.put("templateName", templateName);
+        ruleAttributes.put("ClosedLoopControlName", prop.getControlNameAndPolicyUniqueId());
+        ruleAttributes.put("NotificationTopic", notificationTopic);
         if (operationTopic == null || operationTopic.isEmpty()) {
-            logger.info("templateName=" + templateName);
             logger.info("recipeTopic=" + recipeTopic);
-            logger.info("notificationTopic=" + notificationTopic);
             // if no operationTopic, then don't format yaml - use first policy
             // from list
             PolicyItem policyItem = policyChain.getPolicyItems().get(0);
-            ruleAttributes.put("templateName", templateName);
-            ruleAttributes.put("ClosedLoopControlName", prop.getControlNameAndPolicyUniqueId());
             ruleAttributes.put("RecipeTopic", recipeTopic);
-            ruleAttributes.put("NotificationTopic", notificationTopic);
             String recipe = policyItem.getRecipe();
             String maxRetries = String.valueOf(policyItem.getMaxRetries());
             String retryTimeLimit = String.valueOf(policyItem.getRetryTimeLimit());
@@ -134,16 +135,11 @@ public class OperationalPolicyReq {
             ruleAttributes.put("RetryTimeLimit", retryTimeLimit);
             ruleAttributes.put("ResourceId", targetResourceId);
         } else {
-            logger.info("templateName=" + templateName);
             logger.info("operationTopic=" + operationTopic);
-            logger.info("notificationTopic=" + notificationTopic);
             // format yaml
             String yaml = (tca != null && tca.isFound()) ? formateNodeBYaml(refProp, prop, modelElementId, policyChain)
                     : formatYaml(refProp, prop, modelElementId, policyChain);
-            ruleAttributes.put("templateName", templateName);
-            ruleAttributes.put("ClosedLoopControlName", prop.getControlNameAndPolicyUniqueId());
             ruleAttributes.put("OperationTopic", operationTopic);
-            ruleAttributes.put("NotificationTopic", notificationTopic);
             ruleAttributes.put("ControlLoopYaml", yaml);
         }
         // matchingAttributes
@@ -205,22 +201,9 @@ public class OperationalPolicyReq {
             }
             policyObjMap.put(policyItem.getId(), policyObj);
         }
-        //
         // Build the specification
-        //
         Results results = builder.buildSpecification();
-        if (results.isValid()) {
-            logger.info("results.getSpecification()=" + results.getSpecification());
-        } else {
-            // throw exception with error info
-            StringBuilder sb = new StringBuilder();
-            sb.append("Operation Policy validation problem: ControlLoopPolicyBuilder failed with following messages: ");
-            for (Message message : results.getMessages()) {
-                sb.append(message.getMessage());
-                sb.append("; ");
-            }
-            throw new BadRequestException(sb.toString());
-        }
+        validate(results);
         return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
@@ -284,10 +267,13 @@ public class OperationalPolicyReq {
         operationsAccumulateParams.setLimit(Integer.valueOf(refProp.getStringValue("op.eNodeB.limit")));
         operationsAccumulateParams.setPeriod(refProp.getStringValue("op.eNodeB.period"));
         builder.addOperationsAccumulateParams(lastPolicyObj.getId(), operationsAccumulateParams);
-        //
         // Build the specification
-        //
         Results results = builder.buildSpecification();
+        validate(results);
+        return URLEncoder.encode(results.getSpecification(), "UTF-8");
+    }
+
+    private static void validate (Results results) {
         if (results.isValid()) {
             logger.info("results.getSpecification()=" + results.getSpecification());
         } else {
@@ -300,7 +286,6 @@ public class OperationalPolicyReq {
             }
             throw new BadRequestException(sb.toString());
         }
-        return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
     /**
