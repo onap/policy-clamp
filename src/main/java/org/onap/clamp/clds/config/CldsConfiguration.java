@@ -26,7 +26,6 @@ package org.onap.clamp.clds.config;
 import com.att.ajsc.common.AjscProvider;
 import com.att.ajsc.common.AjscService;
 
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -54,9 +54,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("cldsDao")
 public class CldsDao {
-
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
     private JdbcTemplate jdbcTemplateObject;
     private SimpleJdbcCall procGetModel;
     private SimpleJdbcCall procGetModelTemplate;
@@ -116,12 +114,7 @@ public class CldsDao {
         return getModel(null, controlNameUuid);
     }
 
-    /**
-     * Get a model from the database given the model name or a controlNameUuid.
-     *
-     * @param modelName
-     * @return model
-     */
+    // Get a model from the database given the model name or a controlNameUuid.
     private CldsModel getModel(String modelName, String controlNameUuid) {
         CldsModel model = new CldsModel();
         model.setName(modelName);
@@ -280,29 +273,6 @@ public class CldsDao {
     }
 
     /**
-     * Delete a list of modelInstance from the database using parameter values
-     * and returns updated model object. This method is defunct - DCAE Proxy
-     * will not undeploy individual instances. It will send an empty list of
-     * deployed instances to indicate all have been removed. Or it will send an
-     * updated list to indicate those that are still deployed with any not on
-     * the list considered undeployed.
-     *
-     * @param controlNameUUid
-     * @param modelInstancesList
-     * @return
-     */
-    private CldsModel delModelInstance(String controlNameUUid, List<CldsModelInstance> modelInstancesList) {
-        CldsModel model = new CldsModel();
-        for (CldsModelInstance currModelInstance : modelInstancesList) {
-            SqlParameterSource in = new MapSqlParameterSource().addValue("v_control_name_uuid", controlNameUUid)
-                    .addValue("v_vm_name", currModelInstance.getVmName());
-            Map<String, Object> out = logSqlExecution(procDelModelInstance, in);
-            model.setId((String) (out.get("v_model_id")));
-        }
-        return model;
-    }
-
-    /**
      * Insert an event in the database - require either modelName or
      * controlNamePrefix/controlNameUuid.
      *
@@ -324,12 +294,6 @@ public class CldsDao {
         return event;
     }
 
-    /**
-     * Method to delete all model instances based on controlNameUUID
-     *
-     * @param controlNameUUid
-     * @return
-     */
     private String delAllModelInstances(String controlNameUUid) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_control_name_uuid", controlNameUUid);
         Map<String, Object> out = logSqlExecution(procDelAllModelInstances, in);

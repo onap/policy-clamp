@@ -62,10 +62,7 @@ import org.springframework.context.ApplicationContext;
  * Policy utility methods - specifically, send the policy.
  */
 public class PolicyClient {
-
     protected static final String POLICY_PREFIX_BASE = "Config_";
-    protected static final String POLICY_PREFIX_BRMS_PARAM = "Config_BRMS_Param_";
-    protected static final String POLICY_PREFIX_MICROSERVICE = "Config_MS_";
     protected static final String LOG_POLICY_PREFIX = "Response is ";
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyClient.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
@@ -187,7 +184,6 @@ public class PolicyClient {
         PolicyParameters policyParameters = new PolicyParameters();
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-        // policyParameters.setOnapName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setEcompName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         policyParameters.setConfigBody(configBody);
@@ -335,11 +331,6 @@ public class PolicyClient {
         return versions;
     }
 
-    /**
-     * This method create a new policy engine.
-     * 
-     * @return A new policy engine
-     */
     private PolicyEngine getPolicyEngine() {
         PolicyEngine policyEngine;
         try {

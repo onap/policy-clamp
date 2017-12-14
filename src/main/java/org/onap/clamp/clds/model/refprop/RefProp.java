@@ -23,38 +23,27 @@
 
 package org.onap.clamp.clds.model.refprop;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * Holds reference properties.
  */
 public class RefProp {
-    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(RefProp.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
     @Autowired
-    private ApplicationContext        appContext;
-
-    private Properties                prop;
-
+    private ApplicationContext appContext;
+    private Properties prop;
     @Value("${org.onap.clamp.config.files.cldsReference:'classpath:/clds/clds-reference.properties'}")
-    private String                    cldsReferenceValuesFile;
+    private String cldsReferenceValuesFile;
 
     @PostConstruct
     public void loadConfig() throws IOException {
@@ -113,26 +102,6 @@ public class RefProp {
     public JsonNode getJsonTemplate(String key1, String key2) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(getStringValue(key1, key2), JsonNode.class);
-    }
-
-    /**
-     * Get list of values for a property field containing json and a
-     * field/keyword within that json.
-     *
-     * @param fieldName
-     * @param value
-     * @return
-     * @throws IOException
-     */
-    public List<String> decodeToList(String fieldName, String value) throws IOException {
-        JsonNode decode = getJsonTemplate(fieldName);
-        Iterator<JsonNode> itr = decode.path(value).elements();
-        ArrayList<String> al = new ArrayList<>();
-        while (itr.hasNext()) {
-            JsonNode node = itr.next();
-            al.add(node.asText());
-        }
-        return al;
     }
 
 }
