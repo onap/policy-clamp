@@ -65,7 +65,6 @@ public class CldsDao {
     private SimpleJdbcCall procGetTemplate;
     private SimpleJdbcCall procDelAllModelInstances;
     private SimpleJdbcCall procInsModelInstance;
-    private SimpleJdbcCall procDelModelInstance;
     private static final String HEALTHCHECK = "Select 1";
 
     /**
@@ -77,8 +76,6 @@ public class CldsDao {
 
     /**
      * When dataSource is provided, instantiate spring jdbc objects.
-     *
-     * @param dataSource
      */
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplateObject = new JdbcTemplate(dataSource);
@@ -90,15 +87,11 @@ public class CldsDao {
         this.procGetTemplate = new SimpleJdbcCall(dataSource).withProcedureName("get_template");
         this.procSetTemplate = new SimpleJdbcCall(dataSource).withProcedureName("set_template");
         this.procInsModelInstance = new SimpleJdbcCall(dataSource).withProcedureName("ins_model_instance");
-        this.procDelModelInstance = new SimpleJdbcCall(dataSource).withProcedureName("del_model_instance");
         this.procDelAllModelInstances = new SimpleJdbcCall(dataSource).withProcedureName("del_all_model_instances");
     }
 
     /**
      * Get a model from the database given the model name.
-     *
-     * @param modelName
-     * @return model
      */
     public CldsModel getModel(String modelName) {
         return getModel(modelName, null);
@@ -106,9 +99,6 @@ public class CldsDao {
 
     /**
      * Get a model from the database given the controlNameUuid.
-     *
-     * @param controlNameUuid
-     * @return model
      */
     public CldsModel getModelByUuid(String controlNameUuid) {
         return getModel(null, controlNameUuid);
@@ -126,17 +116,9 @@ public class CldsDao {
         model.setId((String) (out.get("v_model_id")));
         model.setTemplateId((String) (out.get("v_template_id")));
         model.setTemplateName((String) (out.get("v_template_name")));
-        model.setBpmnId((String) (out.get("v_template_bpmn_id")));
-        model.setBpmnUserid((String) out.get("v_template_bpmn_user_id"));
         model.setBpmnText((String) out.get("v_template_bpmn_text"));
-        model.setPropId((String) (out.get("v_model_prop_id")));
-        model.setPropUserid((String) out.get("v_model_prop_user_id"));
         model.setPropText((String) out.get("v_model_prop_text"));
-        model.setImageId((String) (out.get("v_template_image_id")));
-        model.setImageUserid((String) out.get("v_template_image_user_id"));
         model.setImageText((String) out.get("v_template_image_text"));
-        model.setDocId((String) (out.get("v_template_doc_id")));
-        model.setDocUserid((String) out.get("v_template_doc_user_id"));
         model.setDocText((String) out.get("v_template_doc_text"));
         model.setBlueprintText((String) out.get("v_model_blueprint_text"));
         model.getEvent().setId((String) (out.get("v_event_id")));
@@ -167,17 +149,9 @@ public class CldsDao {
         model.setId((String) (out.get("v_model_id")));
         model.setTemplateId((String) (out.get("v_template_id")));
         model.setTemplateName((String) (out.get("v_template_name")));
-        model.setBpmnId((String) (out.get("v_template_bpmn_id")));
-        model.setBpmnUserid((String) out.get("v_template_bpmn_user_id"));
         model.setBpmnText((String) out.get("v_template_bpmn_text"));
-        model.setPropId((String) (out.get("v_model_prop_id")));
-        model.setPropUserid((String) out.get("v_model_prop_user_id"));
         model.setPropText((String) out.get("v_model_prop_text"));
-        model.setImageId((String) (out.get("v_template_image_id")));
-        model.setImageUserid((String) out.get("v_template_image_user_id"));
         model.setImageText((String) out.get("v_template_image_text"));
-        model.setDocId((String) (out.get("v_template_doc_id")));
-        model.setDocUserid((String) out.get("v_template_doc_user_id"));
         model.setDocText((String) out.get("v_template_doc_text"));
         model.setBlueprintText((String) out.get("v_model_blueprint_text"));
         model.getEvent().setId((String) (out.get("v_event_id")));
@@ -226,10 +200,6 @@ public class CldsDao {
         model.setControlNamePrefix((String) out.get("v_control_name_prefix"));
         model.setControlNameUuid((String) out.get("v_control_name_uuid"));
         model.setId((String) (out.get("v_model_id")));
-        model.setPropId((String) (out.get("v_model_prop_id")));
-        model.setPropUserid((String) (out.get("v_model_prop_user_id")));
-        model.setBlueprintId((String) (out.get("v_model_blueprint_id")));
-        model.setBlueprintUserid((String) out.get("v_model_blueprint_user_id"));
         model.getEvent().setId((String) (out.get("v_event_id")));
         model.getEvent().setActionCd((String) out.get("v_action_cd"));
         model.getEvent().setActionStateCd((String) out.get("v_action_state_cd"));

@@ -73,7 +73,7 @@ public class CldsDaoItCase extends AbstractItCase {
     }
 
     @Test
-    public void testModelSave() throws IOException {
+    public void testModelSave() {
         String randomNameTemplate = RandomStringUtils.randomAlphanumeric(5);
         // Add the template first
         CldsTemplate newTemplate = new CldsTemplate();
@@ -97,7 +97,6 @@ public class CldsDaoItCase extends AbstractItCase {
         newModel.setTemplateName(randomNameTemplate);
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
-        newModel.setDocId(newTemplate.getPropId());
         // Save the model in DB
         cldsDao.setModel(newModel, "user");
         // Test if the model can be retrieved
@@ -139,7 +138,6 @@ public class CldsDaoItCase extends AbstractItCase {
         newModel.setTemplateName("test-template-for-event");
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
-        newModel.setDocId(newTemplate.getPropId());
         CldsEvent.insEvent(cldsDao, newModel, "user", CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_COMPLETED,
                 "process-instance-id");
     }

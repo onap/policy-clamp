@@ -85,7 +85,7 @@ public class CldsServiceItCase extends AbstractItCase {
     }
 
     @Test
-    public void testCldsInfoNotAuthorized() throws Exception {
+    public void testCldsInfoNotAuthorized() {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Principal principal = Mockito.mock(Principal.class);
         Mockito.when(principal.getName()).thenReturn("admin");
@@ -123,7 +123,7 @@ public class CldsServiceItCase extends AbstractItCase {
     }
 
     @Test
-    public void testGetHealthCheck() throws Exception {
+    public void testGetHealthCheck() {
         CldsHealthCheck cldsHealthCheck = cldsService.gethealthcheck();
         assertNotNull(cldsHealthCheck);
         assertEquals("UP", cldsHealthCheck.getHealthCheckStatus());
@@ -132,7 +132,7 @@ public class CldsServiceItCase extends AbstractItCase {
     }
 
     @Test
-    public void testPutModel() throws Exception {
+    public void testPutModel() {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Principal principal = Mockito.mock(Principal.class);
         Mockito.when(principal.getName()).thenReturn("admin");
@@ -164,7 +164,6 @@ public class CldsServiceItCase extends AbstractItCase {
         newModel.setTemplateName("test-template");
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
-        newModel.setDocId(newTemplate.getPropId());
         // Test the PutModel method
         String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
         cldsService.putModel(randomNameModel, newModel);
