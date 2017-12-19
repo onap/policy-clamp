@@ -41,14 +41,6 @@ public class EncodedPasswordBasicDataSource extends BasicDataSource {
     protected static final EELFLogger logger        = EELFManager.getInstance()
             .getLogger(EncodedPasswordBasicDataSource.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    private CryptoUtils               cryptoUtils   = new CryptoUtils();
-
-    /**
-     * The default constructor calling the parent one.
-     */
-    public EncodedPasswordBasicDataSource() {
-        super();
-    }
 
     /**
      * This method is used automatically by Spring to decode the password.
@@ -56,7 +48,7 @@ public class EncodedPasswordBasicDataSource extends BasicDataSource {
     @Override
     public synchronized void setPassword(String encodedPassword) {
         try {
-            this.password = cryptoUtils.decrypt(encodedPassword);
+            this.password = CryptoUtils.decrypt(encodedPassword);
         } catch (GeneralSecurityException e) {
             logger.error("Unable to decrypt the DB password", e);
         } catch (DecoderException e) {

@@ -26,7 +26,6 @@ package org.onap.clamp.clds.model.prop;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,29 +36,25 @@ import java.util.List;
  * ...)
  */
 public abstract class AbstractModelElement {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(AbstractModelElement.class);
-    protected static final EELFLogger auditLogger   = EELFManager.getInstance().getAuditLogger();
 
-    private final String              type;
-    private final ModelBpmn           modelBpmn;
-    private final String              id;
-    protected String                  topicPublishes;
-    protected final JsonNode          modelElementJsonNode;
-    private boolean                   isFound;
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(AbstractModelElement.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private final ModelProperties     modelProp;
+    private final String type;
+    private final ModelBpmn modelBpmn;
+    private final String id;
+    protected String topicPublishes;
+    protected final JsonNode modelElementJsonNode;
+    private boolean isFound;
 
-    private static final String       LOG_ELEMENT   = "Value '";
-    private static final String       LOG_NOT_FOUND = "' for key 'name' not found in JSON";
+    private final ModelProperties modelProp;
+
+    private static final String LOG_ELEMENT_NOT_FOUND = "Value '{}' for key 'name' not found in JSON";
+    private static final String LOG_ELEMENT_NOT_FOUND_IN_JSON = "Value '{}' for key 'name' not found in JSON {}";
 
     /**
      * Perform base parsing of properties for a ModelElement (such as,
      * VesCollector, Policy and Tca)
-     *
-     * @param type
-     * @param modelProp
-     * @param modelBpmn
-     * @param modelJson
      */
     protected AbstractModelElement(String type, ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
         this.type = type;
@@ -97,10 +92,6 @@ public abstract class AbstractModelElement {
     /**
      * Return the value field of the json node element that has a name field
      * equals to the given name.
-     *
-     * @param nodeIn
-     * @param name
-     * @return
      */
     public static String getValueByName(JsonNode nodeIn, String name) {
         String value = null;
@@ -119,9 +110,9 @@ public abstract class AbstractModelElement {
             }
         }
         if (value == null || value.length() == 0) {
-            logger.warn(LOG_ELEMENT + name + LOG_NOT_FOUND);
+            logger.warn(LOG_ELEMENT_NOT_FOUND, name);
         } else {
-            logger.debug(LOG_ELEMENT + name + LOG_NOT_FOUND + nodeIn.toString());
+            logger.debug(LOG_ELEMENT_NOT_FOUND_IN_JSON, name, nodeIn.toString());
         }
         return value;
     }
@@ -129,10 +120,6 @@ public abstract class AbstractModelElement {
     /**
      * Return the value field of the json node element that has a name field
      * that equals the given name.
-     * 
-     * @param nodeIn
-     * @param name
-     * @return
      */
     public static String getNodeValueByName(JsonNode nodeIn, String name) {
         String value = null;
@@ -140,9 +127,9 @@ public abstract class AbstractModelElement {
             value = nodeIn.path(name).asText();
         }
         if (value == null || value.length() == 0) {
-            logger.warn(LOG_ELEMENT + name + LOG_NOT_FOUND);
+            logger.warn(LOG_ELEMENT_NOT_FOUND, name);
         } else {
-            logger.debug(LOG_ELEMENT + name + LOG_NOT_FOUND + nodeIn.toString());
+            logger.debug(LOG_ELEMENT_NOT_FOUND_IN_JSON, name, nodeIn.toString());
         }
         return value;
     }
@@ -150,17 +137,11 @@ public abstract class AbstractModelElement {
     /**
      * Return the value field of the json node element that has a name field
      * that equals the given name.
-     * 
-     * @param nodeIn
-     * @param name
-     * @return
      */
     public static List<String> getNodeValuesByName(JsonNode nodeIn, String name) {
         List<String> values = new ArrayList<>();
         if (nodeIn != null) {
-            Iterator<JsonNode> i = nodeIn.iterator();
-            while (i.hasNext()) {
-                JsonNode node = i.next();
+            for (JsonNode node : nodeIn) {
                 if (node.path("name").asText().equals(name)) {
                     JsonNode vnode = node.path("value");
                     if (vnode.isArray()) {
@@ -179,10 +160,6 @@ public abstract class AbstractModelElement {
     /**
      * Return the int value field of the json node element that has a name field
      * equals to the given name.
-     *
-     * @param nodeIn
-     * @param name
-     * @return
      */
     public static Integer getIntValueByName(JsonNode nodeIn, String name) {
         String value = getValueByName(nodeIn, name);
@@ -192,35 +169,26 @@ public abstract class AbstractModelElement {
     /**
      * Return an array of values for the field of the json node element that has
      * a name field equals to the given name.
-     *
-     * @param nodeIn
-     * @param name
-     * @return
      */
     public static List<String> getValuesByName(JsonNode nodeIn, String name) {
         List<String> values = null;
         if (nodeIn != null) {
-            Iterator<JsonNode> i = nodeIn.iterator();
-            while (i.hasNext()) {
-                JsonNode node = i.next();
+            for (JsonNode node : nodeIn) {
                 if (node.path("name").asText().equals(name)) {
                     values = getValuesList(node);
                 }
             }
         }
         if (values == null || values.isEmpty()) {
-            logger.warn(LOG_ELEMENT + name + LOG_NOT_FOUND);
+            logger.warn(LOG_ELEMENT_NOT_FOUND, name);
         } else {
-            logger.debug(LOG_ELEMENT + name + LOG_NOT_FOUND + nodeIn.toString());
+            logger.debug(LOG_ELEMENT_NOT_FOUND_IN_JSON, name, nodeIn.toString());
         }
         return values;
     }
 
     /**
      * Return an array of String values.
-     *
-     * @param nodeIn
-     * @return
      */
     public static List<String> getValuesList(JsonNode nodeIn) {
         ArrayList<String> al = new ArrayList<>();
@@ -237,9 +205,6 @@ public abstract class AbstractModelElement {
     /**
      * Return the value field of the json node element that has a name field
      * equals to the given name.
-     *
-     * @param name
-     * @return
      */
     public String getValueByName(String name) {
         return getValueByName(modelElementJsonNode, name);
@@ -248,9 +213,6 @@ public abstract class AbstractModelElement {
     /**
      * Return the int value field of the json node element that has a name field
      * equals to the given name.
-     *
-     * @param name
-     * @return
      */
     public Integer getIntValueByName(String name) {
         return getIntValueByName(modelElementJsonNode, name);
@@ -259,9 +221,6 @@ public abstract class AbstractModelElement {
     /**
      * Return an array of values for the field of the json node element that has
      * a name field equals to the given name.
-     *
-     * @param name
-     * @return
      */
     public List<String> getValuesByName(String name) {
         return getValuesByName(modelElementJsonNode, name);

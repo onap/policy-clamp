@@ -28,23 +28,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
-
+import javax.validation.constraints.NotNull;
 import org.apache.log4j.MDC;
 
 /**
  * This class handles the special info that appear in the log, like RequestID,
  * time context, ...
- *
  */
-public class LoggingUtils {
+public final class LoggingUtils {
+
+    private static final DateFormat DATE_FORMAT = createDateFormat();
+
+    /**
+     * Private constructor to avoid creating instances of util class.
+     */
+    private LoggingUtils() {
+    }
 
     /**
      * Set request related logging variables in thread local data via MDC
-     * 
-     * @param service
-     *            Service Name of API (ex. "PUT template")
-     * @param partner
-     *            Partner name (client or user invoking API)
+     *
+     * @param service Service Name of API (ex. "PUT template")
+     * @param partner Partner name (client or user invoking API)
      */
     public static void setRequestContext(String service, String partner) {
         MDC.put("RequestId", UUID.randomUUID().toString());
@@ -54,37 +59,22 @@ public class LoggingUtils {
 
     /**
      * Set time related logging variables in thread local data via MDC.
-     * 
-     * @param beginTimeStamp
-     *            Start time
-     * @param endTimeStamp
-     *            End time
+     *
+     * @param beginTimeStamp Start time
+     * @param endTimeStamp End time
      */
-    public static void setTimeContext(Date beginTimeStamp, Date endTimeStamp) {
-        String beginTime = "";
-        String endTime = "";
-        String elapsedTime = "";
-
-        if (beginTimeStamp != null && endTimeStamp != null) {
-            elapsedTime = String.valueOf(endTimeStamp.getTime() - beginTimeStamp.getTime());
-            beginTime = generateTimestampStr(beginTimeStamp);
-            endTime = generateTimestampStr(endTimeStamp);
-        }
-
-        MDC.put("BeginTimestamp", beginTime);
-        MDC.put("EndTimestamp", endTime);
-        MDC.put("ElapsedTime", elapsedTime);
+    public static void setTimeContext(@NotNull Date beginTimeStamp, @NotNull Date endTimeStamp) {
+        MDC.put("BeginTimestamp", generateTimestampStr(beginTimeStamp));
+        MDC.put("EndTimestamp", generateTimestampStr(endTimeStamp));
+        MDC.put("ElapsedTime", String.valueOf(endTimeStamp.getTime() - beginTimeStamp.getTime()));
     }
 
     /**
      * Set response related logging variables in thread local data via MDC.
-     * 
-     * @param code
-     *            Response code ("0" indicates success)
-     * @param description
-     *            Response description
-     * @param className
-     *            class name of invoking class
+     *
+     * @param code Response code ("0" indicates success)
+     * @param description Response description
+     * @param className class name of invoking class
      */
     public static void setResponseContext(String code, String description, String className) {
         MDC.put("ResponseCode", code);
@@ -95,11 +85,9 @@ public class LoggingUtils {
 
     /**
      * Set target related logging variables in thread local data via MDC
-     * 
-     * @param targetEntity
-     *            Target entity (an external/sub component, for ex. "sdc")
-     * @param targetServiceName
-     *            Target service name (name of API invoked on target)
+     *
+     * @param targetEntity Target entity (an external/sub component, for ex. "sdc")
+     * @param targetServiceName Target service name (name of API invoked on target)
      */
     public static void setTargetContext(String targetEntity, String targetServiceName) {
         MDC.put("TargetEntity", targetEntity != null ? targetEntity : "");
@@ -108,11 +96,9 @@ public class LoggingUtils {
 
     /**
      * Set error related logging variables in thread local data via MDC.
-     * 
-     * @param code
-     *            Error code
-     * @param description
-     *            Error description
+     *
+     * @param code Error code
+     * @param description Error description
      */
     public static void setErrorContext(String code, String description) {
         MDC.put("ErrorCode", code);
@@ -120,28 +106,31 @@ public class LoggingUtils {
     }
 
     private static String generateTimestampStr(Date timeStamp) {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-        df.setTimeZone(tz);
-        return df.format(timeStamp);
+        return DATE_FORMAT.format(timeStamp);
     }
 
     /**
      * Get a previously stored RequestID for the thread local data via MDC. If
      * one was not previously stored, generate one, store it, and return that
      * one.
-     * 
+     *
      * @return A string with the request ID
      */
     public static String getRequestId() {
-        String reqid;
+        String requestId;
 
-        reqid = (String) MDC.get("RequestID");
-        if (reqid == null || reqid.isEmpty()) {
-            reqid = UUID.randomUUID().toString();
-            MDC.put("RequestId", reqid);
+        requestId = (String) MDC.get("RequestID");
+        if (requestId == null || requestId.isEmpty()) {
+            requestId = UUID.randomUUID().toString();
+            MDC.put("RequestId", requestId);
         }
-        return reqid;
+        return requestId;
+    }
+
+    private static DateFormat createDateFormat() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return dateFormat;
     }
 
 }

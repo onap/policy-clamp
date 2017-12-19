@@ -25,23 +25,22 @@ package org.onap.clamp.clds.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * Utility methods supporting transforms.
  */
-public class ResourceFileUtil {
+public final class ResourceFileUtil {
 
     /**
-     * Disable the ResourceFileUtil constructor.
+     * Private constructor to avoid creating instances of util class.
      */
     private ResourceFileUtil() {
-
     }
 
     /**
      * Return resource as a Stream.
      *
-     * @param name
      * @return resource - resource as stream
      */
     public static InputStream getResourceAsStream(String name) {
@@ -54,14 +53,11 @@ public class ResourceFileUtil {
 
     /**
      * Return resource as a Stream.
-     *
-     * @param name
-     * @throws IOException
      */
     public static String getResourceAsString(String name) throws IOException {
         InputStream is = getResourceAsStream(name);
-        java.util.Scanner scanner = new java.util.Scanner(is);
-        java.util.Scanner delimitedScanner = scanner.useDelimiter("\\A");
+        Scanner scanner = new Scanner(is);
+        Scanner delimitedScanner = scanner.useDelimiter("\\A");
         String text = delimitedScanner.hasNext() ? delimitedScanner.next() : "";
         delimitedScanner.close();
         scanner.close();

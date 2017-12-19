@@ -27,47 +27,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
-/**
- * Test Crypto Utils with Spring.
- */
-public class CryptoUtilsTest {
-    private CryptoUtils cryptoUtils = new CryptoUtils();
-    final String        data        = "This is a test string";
 
-    /**
-     * This method tests encryption.
-     * 
-     * @throws GeneralSecurityException
-     * @throws DecoderException
-     * @throws UnsupportedEncodingException
-     */
+public class CryptoUtilsTest {
+
+    private final String data = "This is a test string";
+
     @Test
-    public final void testEncryption() throws GeneralSecurityException, DecoderException, UnsupportedEncodingException {
-        String encodedString = cryptoUtils.encrypt(data);
+    public final void testEncryption() throws Exception {
+        String encodedString = CryptoUtils.encrypt(data);
         assertNotNull(encodedString);
-        assertEquals(data, cryptoUtils.decrypt(encodedString));
+        assertEquals(data, CryptoUtils.decrypt(encodedString));
     }
 
-    /**
-     * This method tests encryption.
-     * 
-     * @throws GeneralSecurityException
-     * @throws DecoderException
-     * @throws UnsupportedEncodingException
-     */
     @Test
-    public final void testEncryptedStringIsDifferent()
-            throws GeneralSecurityException, DecoderException, UnsupportedEncodingException {
-        String encodedString1 = cryptoUtils.encrypt(data);
-        String encodedString2 = cryptoUtils.encrypt(data);
+    public final void testEncryptedStringIsDifferent() throws Exception {
+        String encodedString1 = CryptoUtils.encrypt(data);
+        String encodedString2 = CryptoUtils.encrypt(data);
         byte[] encryptedMessage1 = Hex.decodeHex(encodedString1.toCharArray());
         byte[] encryptedMessage2 = Hex.decodeHex(encodedString2.toCharArray());
         assertNotNull(encryptedMessage1);

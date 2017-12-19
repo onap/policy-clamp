@@ -25,17 +25,15 @@ package org.onap.clamp.clds.util;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
+import com.google.common.base.Charsets;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Properties;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
@@ -46,9 +44,6 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public final class CryptoUtils {
 
-    /**
-     * Used to log.
-     */
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CryptoUtils.class);
     // Openssl commands:
     // Encrypt: echo -n "123456" | openssl aes-128-cbc -e -K <Private Hex key>
@@ -66,85 +61,87 @@ public final class CryptoUtils {
     /**
      * Detailed definition of encryption algorithm.
      */
-    private static final String ALGORYTHM_DETAILS = ALGORITHM + "/CBC/PKCS5PADDING";
-    /**
-     * Block SIze in bits.
-     */
-    private static final int BLOCK_SIZE = 128;
+    private static final String ALGORITHM_DETAILS = ALGORITHM + "/CBC/PKCS5PADDING";
+    private static final int BLOCK_SIZE_IN_BITS = 128;
+    private static final int BLOCK_SIZE_IN_BYTES = BLOCK_SIZE_IN_BITS / 8;
     /**
      * Key to read in the key.properties file.
      */
     private static final String KEY_PARAM = "org.onap.clamp.encryption.aes.key";
+    private static final String PROPERTIES_FILE_NAME = "clds/key.properties";
     /**
      * The SecretKeySpec created from the Base 64 String key.
      */
-    private static SecretKeySpec secretKeySpec = null;
+    private static final SecretKeySpec SECRET_KEY_SPEC = readSecretKeySpec(PROPERTIES_FILE_NAME);
 
-    // Static init
-    static {
-        Properties props = new Properties();
-        try {
-            props.load(ResourceFileUtil.getResourceAsStream("clds/key.properties"));
-            secretKeySpec = getSecretKeySpec(props.getProperty(KEY_PARAM));
-        } catch (IOException | DecoderException e) {
-            logger.error("Exception occurred during the key reading", e);
-        }
+    /**
+     * Private constructor to avoid creating instances of util class.
+     */
+    private CryptoUtils() {
     }
 
     /**
      * Encrypt a value based on the Clamp Encryption Key.
-     * 
-     * @param value
-     *            The value to encrypt
+     *
+     * @param value The value to encrypt
      * @return The encrypted string
-     * @throws GeneralSecurityException
-     *             In case of issue with the encryption
-     * @throws UnsupportedEncodingException
-     *             In case of issue with the charset conversion
+     * @throws GeneralSecurityException In case of issue with the encryption
+     * @throws UnsupportedEncodingException In case of issue with the charset conversion
      */
-    public String encrypt(String value) throws GeneralSecurityException, UnsupportedEncodingException {
-        Cipher cipher = Cipher.getInstance(CryptoUtils.ALGORYTHM_DETAILS, "SunJCE");
+    public static String encrypt(String value) throws GeneralSecurityException, UnsupportedEncodingException {
+        Cipher cipher = Cipher.getInstance(ALGORITHM_DETAILS, "SunJCE");
         SecureRandom randomNumber = SecureRandom.getInstance("SHA1PRNG");
-        byte[] iv = new byte[BLOCK_SIZE / 8];
+        byte[] iv = new byte[BLOCK_SIZE_IN_BYTES];
         randomNumber.nextBytes(iv);
         IvParameterSpec ivspec = new IvParameterSpec(iv);
-        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivspec);
-        return Hex.encodeHexString(ArrayUtils.addAll(iv, cipher.doFinal(value.getBytes("UTF-8"))));
+        cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY_SPEC, ivspec);
+        return Hex.encodeHexString(ArrayUtils.addAll(iv, cipher.doFinal(value.getBytes(Charsets.UTF_8))));
     }
 
     /**
      * Decrypt a value based on the Clamp Encryption Key.
-     * 
-     * @param message
-     *            The encrypted string that must be decrypted using the Clamp
-     *            Encryption Key
+     *
+     * @param message The encrypted string that must be decrypted using the Clamp Encryption Key
      * @return The String decrypted
-     * @throws GeneralSecurityException
-     *             In case of issue with the encryption
-     * @throws DecoderException
-     *             In case of issue to decode the HexString
+     * @throws GeneralSecurityException In case of issue with the encryption
+     * @throws DecoderException In case of issue to decode the HexString
      */
-    public String decrypt(String message) throws GeneralSecurityException, DecoderException {
+    public static String decrypt(String message) throws GeneralSecurityException, DecoderException {
         byte[] encryptedMessage = Hex.decodeHex(message.toCharArray());
-        Cipher cipher = Cipher.getInstance(CryptoUtils.ALGORYTHM_DETAILS, "SunJCE");
-        IvParameterSpec ivspec = new IvParameterSpec(ArrayUtils.subarray(encryptedMessage, 0, BLOCK_SIZE / 8));
-        byte[] realData = ArrayUtils.subarray(encryptedMessage, BLOCK_SIZE / 8, encryptedMessage.length);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivspec);
+        Cipher cipher = Cipher.getInstance(ALGORITHM_DETAILS, "SunJCE");
+        IvParameterSpec ivspec = new IvParameterSpec(ArrayUtils.subarray(encryptedMessage, 0, BLOCK_SIZE_IN_BYTES));
+        byte[] realData = ArrayUtils.subarray(encryptedMessage, BLOCK_SIZE_IN_BYTES, encryptedMessage.length);
+        cipher.init(Cipher.DECRYPT_MODE, SECRET_KEY_SPEC, ivspec);
         byte[] decrypted = cipher.doFinal(realData);
         return new String(decrypted);
     }
 
     /**
      * Method used to generate the SecretKeySpec from a Base64 String.
-     * 
-     * @param keyString
-     *            The key as a string in Base 64
+     *
+     * @param keyString The key as a string in Base 64
      * @return The SecretKeySpec created
-     * @throws DecoderException
-     *             In case of issues with the decoding of Base64
+     * @throws DecoderException In case of issues with the decoding of Base64
      */
     private static SecretKeySpec getSecretKeySpec(String keyString) throws DecoderException {
         byte[] key = Hex.decodeHex(keyString.toCharArray());
-        return new SecretKeySpec(key, CryptoUtils.ALGORITHM);
+        return new SecretKeySpec(key, ALGORITHM);
+    }
+
+    /**
+     * Reads SecretKeySpec from file specified by propertiesFileName
+     *
+     * @param propertiesFileName File name with properties
+     * @return SecretKeySpec secret key spec read from propertiesFileName
+     */
+    private static SecretKeySpec readSecretKeySpec(String propertiesFileName) {
+        Properties props = new Properties();
+        try {
+            props.load(ResourceFileUtil.getResourceAsStream(propertiesFileName));
+            return getSecretKeySpec(props.getProperty(KEY_PARAM));
+        } catch (IOException | DecoderException e) {
+            logger.error("Exception occurred during the key reading", e);
+            return null;
+        }
     }
 }

@@ -93,13 +93,12 @@ public class SdcCatalogServices {
     private static final String RESOURCE_URL_PREFIX = "resources";
     @Autowired
     private RefProp refProp;
-    private CryptoUtils cryptoUtils = new CryptoUtils();
 
     // returns SDC id and password as a HTTP Basic Auth string (for example: Basic dGVzdDoxMjM0NTY=)
     private String getSdcBasicAuth() throws GeneralSecurityException, DecoderException {
         String sdcId = refProp.getStringValue("sdc.serviceUsername");
         String sdcPw = refProp.getStringValue("sdc.servicePassword");
-        String password = cryptoUtils.decrypt(sdcPw);
+        String password = CryptoUtils.decrypt(sdcPw);
         String idPw = Base64.getEncoder().encodeToString((sdcId + ":" + password).getBytes(StandardCharsets.UTF_8));
         return "Basic " + idPw;
     }
