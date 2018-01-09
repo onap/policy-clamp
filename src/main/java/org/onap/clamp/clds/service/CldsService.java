@@ -151,13 +151,6 @@ public class CldsService extends SecureServiceBase {
     @Autowired
     private DcaeInventoryServices  dcaeInventoryServices;
 
-    public CldsService() {
-    }
-
-    public CldsService(RefProp refProp) {
-        this.refProp = refProp;
-    }
-
     /*
      *
      * CLDS IFO service will return 3 things 1. User Name 2. CLDS code version
@@ -295,7 +288,6 @@ public class CldsService extends SecureServiceBase {
         logger.debug("GET model for  modelName={}", modelName);
         CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
         isAuthorizedForVf(cldsModel);
-        cldsModel.setUserAuthorizedToUpdate(isAuthorizedNoException(permissionUpdateCl));
         /**
          * Checking condition whether our CLDS model can call INventory Method
          */
@@ -343,7 +335,6 @@ public class CldsService extends SecureServiceBase {
             if (template != null) {
                 cldsModel.setTemplateId(template.getId());
                 cldsModel.setDocText(template.getPropText());
-                cldsModel.setDocId(template.getPropId());
             }
         }
         cldsModel.save(cldsDao, getUserId());
@@ -426,7 +417,6 @@ public class CldsService extends SecureServiceBase {
             if (template != null) {
                 model.setTemplateId(template.getId());
                 model.setDocText(template.getPropText());
-                model.setDocId(template.getPropId());
             }
         }
         // save model to db
@@ -833,7 +823,7 @@ public class CldsService extends SecureServiceBase {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public CldsModel deployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
-            @QueryParam("test") String test, CldsModel model) throws IOException {
+            @QueryParam("test") String test, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         try {

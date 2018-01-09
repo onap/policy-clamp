@@ -39,55 +39,34 @@ import org.onap.clamp.clds.dao.CldsDao;
  * Represent a CLDS Model.
  */
 public class CldsModel {
-    protected static final EELFLogger logger             = EELFManager.getInstance().getLogger(CldsModel.class);
-    protected static final EELFLogger metricsLogger      = EELFManager.getInstance().getMetricsLogger();
 
-    private static final int          UUID_LENGTH        = 36;
-
-    public static final String        STATUS_DESIGN      = "DESIGN";
-    public static final String        STATUS_DISTRIBUTED = "DISTRIBUTED";
-    public static final String        STATUS_ACTIVE      = "ACTIVE";
-    public static final String        STATUS_STOPPED     = "STOPPED";
-    public static final String        STATUS_DELETING    = "DELETING";
-    public static final String        STATUS_ERROR       = "ERROR";                                             // manual
-                                                                                                                // intervention
-                                                                                                                // required
-    public static final String        STATUS_UNKNOWN     = "UNKNOWN";
-
-    private String                    id;
-    private String                    templateId;
-    private String                    templateName;
-    private String                    name;
-    private String                    controlNamePrefix;
-    private String                    controlNameUuid;
-    private String                    bpmnId;
-    private String                    bpmnUserid;
-    private String                    bpmnText;
-    private String                    propId;
-    private String                    propUserid;
-    private String                    propText;
-    private String                    imageId;
-    private String                    imageUserid;
-    private String                    imageText;
-    private String                    docId;
-    private String                    docUserid;
-    private String                    docText;
-    private String                    blueprintId;
-    private String                    blueprintUserid;
-    private String                    blueprintText;
-    private CldsEvent                 event;
-    private String                    status;
-    private List<String>              permittedActionCd;
-    private List<CldsModelInstance>   cldsModelInstanceList;
-
-    private String                    typeId;
-    private String                    typeName;
-
-    private String                    dispatcherResponse;
-
-    private String                    deploymentId;
-
-    private boolean                   userAuthorizedToUpdate;
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsModel.class);
+    private static final int UUID_LENGTH = 36;
+    private static final String STATUS_DESIGN = "DESIGN";
+    private static final String STATUS_DISTRIBUTED = "DISTRIBUTED";
+    private static final String STATUS_ACTIVE = "ACTIVE";
+    private static final String STATUS_STOPPED = "STOPPED";
+    private static final String STATUS_DELETING = "DELETING";
+    private static final String STATUS_ERROR = "ERROR";
+    private static final String STATUS_UNKNOWN = "UNKNOWN";
+    private String id;
+    private String templateId;
+    private String templateName;
+    private String name;
+    private String controlNamePrefix;
+    private String controlNameUuid;
+    private String bpmnText;
+    private String propText;
+    private String imageText;
+    private String docText;
+    private String blueprintText;
+    private CldsEvent event;
+    private String status;
+    private List<String> permittedActionCd;
+    private List<CldsModelInstance> cldsModelInstanceList;
+    private String typeId;
+    private String typeName;
+    private String deploymentId;
 
     /**
      * Construct empty model.
@@ -98,10 +77,6 @@ public class CldsModel {
 
     /**
      * Retrieve from DB.
-     *
-     * @param cldsDao
-     * @param name
-     * @return
      */
     public static CldsModel retrieve(CldsDao cldsDao, String name, boolean okIfNotFound) {
         // get from db
@@ -126,40 +101,11 @@ public class CldsModel {
 
     /**
      * Save model to DB.
-     *
-     * @param cldsDao
-     * @param userid
      */
     public void save(CldsDao cldsDao, String userid) {
         cldsDao.setModel(this, userid);
         determineStatus();
         determinePermittedActionCd();
-    }
-
-    /**
-     * Insert a new event for the new action. Throw IllegalArgumentException if
-     * requested actionCd is not permitted.
-     *
-     * @param cldsDao
-     * @param userid
-     * @param actionCd
-     * @param actionStateCd
-     */
-    public void insEvent(CldsDao cldsDao, String userid, String actionCd, String actionStateCd) {
-        validateAction(actionCd);
-        event = CldsEvent.insEvent(cldsDao, this, userid, actionCd, actionStateCd, null);
-        determineStatus();
-        determinePermittedActionCd();
-    }
-
-    /**
-     * Update event with processInstanceId
-     *
-     * @param cldsDao
-     * @param processInstanceId
-     */
-    public void updEvent(CldsDao cldsDao, String processInstanceId) {
-        cldsDao.updEvent(event.getId(), processInstanceId);
     }
 
     /**
@@ -196,8 +142,6 @@ public class CldsModel {
     /**
      * Get the actionCd from current event. If none, default value is
      * CldsEvent.ACTION_CREATE
-     *
-     * @return
      */
     private String getCurrentActionCd() {
         // current default actionCd is CREATE
@@ -211,8 +155,6 @@ public class CldsModel {
     /**
      * Get the actionStateCd from current event. If none, default value is
      * CldsEvent.ACTION_STATE_COMPLETED
-     *
-     * @return
      */
     private String getCurrentActionStateCd() {
         // current default actionStateCd is CREATE
@@ -279,8 +221,6 @@ public class CldsModel {
      * Validate requestedActionCd - determine permittedActionCd and then check
      * if contained in permittedActionCd Throw IllegalArgumentException if
      * requested actionCd is not permitted.
-     *
-     * @param requestedActionCd
      */
     public void validateAction(String requestedActionCd) {
         determinePermittedActionCd();
@@ -296,9 +236,6 @@ public class CldsModel {
      * + controlNameUuid). No fields are populated other than controlNamePrefix
      * and controlNameUuid. Throws BadRequestException if length of given
      * control name is less than UUID_LENGTH.
-     *
-     * @param fullControlName
-     * @return
      */
     public static CldsModel createUsingControlName(String fullControlName) {
         if (fullControlName == null || fullControlName.length() < UUID_LENGTH) {
@@ -321,9 +258,6 @@ public class CldsModel {
 
     /**
      * To insert modelInstance to the database
-     *
-     * @param cldsDao
-     * @param dcaeEvent
      */
     public static CldsModel insertModelInstance(CldsDao cldsDao, DcaeEvent dcaeEvent, String userid) {
         String controlName = dcaeEvent.getControlName();
@@ -338,24 +272,6 @@ public class CldsModel {
         }
         cldsDao.insModelInstance(cldsModel, dcaeEvent.getInstances());
         return cldsModel;
-    }
-
-    /**
-     * To remove modelInstance from the database This method is defunct - DCAE
-     * Proxy will not undeploy individual instances. It will send an empty list
-     * of deployed instances to indicate all have been removed. Or it will send
-     * an updated list to indicate those that are still deployed with any not on
-     * the list considered undeployed.
-     *
-     * @param cldsDao
-     * @param dcaeEvent
-     */
-    @SuppressWarnings("unused")
-    private static CldsModel removeModelInstance(CldsDao cldsDao, DcaeEvent dcaeEvent) {
-        String controlName = dcaeEvent.getControlName();
-        // cldsModel = cldsDao.delModelInstance(cldsModel.getControlNameUuid(),
-        // dcaeEvent.getInstances() );
-        return createUsingControlName(controlName);
     }
 
     /**
@@ -380,10 +296,6 @@ public class CldsModel {
         return typeName;
     }
 
-    /**
-     * @param name
-     *            the typeName to set
-     */
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
@@ -427,21 +339,6 @@ public class CldsModel {
     }
 
     /**
-     * @return the propUserid
-     */
-    public String getPropUserid() {
-        return propUserid;
-    }
-
-    /**
-     * @param propUserid
-     *            the propUserid to set
-     */
-    public void setPropUserid(String propUserid) {
-        this.propUserid = propUserid;
-    }
-
-    /**
      * @return the propText
      */
     public String getPropText() {
@@ -479,14 +376,6 @@ public class CldsModel {
         this.templateName = templateName;
     }
 
-    public String getPropId() {
-        return propId;
-    }
-
-    public void setPropId(String propId) {
-        this.propId = propId;
-    }
-
     /**
      * @param event
      *            the event to set
@@ -510,59 +399,12 @@ public class CldsModel {
         this.status = status;
     }
 
-    /**
-     * @return the permittedActionCd
-     */
-    public List<String> getPermittedActionCd() {
-        return permittedActionCd;
-    }
-
-    /**
-     * @param permittedActionCd
-     *            the permittedActionCd to set
-     */
-    public void setPermittedActionCd(List<String> permittedActionCd) {
-        this.permittedActionCd = permittedActionCd;
-    }
-
-    public String getBlueprintId() {
-        return blueprintId;
-    }
-
-    public void setBlueprintId(String blueprintId) {
-        this.blueprintId = blueprintId;
-    }
-
-    public String getBlueprintUserid() {
-        return blueprintUserid;
-    }
-
-    public void setBlueprintUserid(String blueprintUserid) {
-        this.blueprintUserid = blueprintUserid;
-    }
-
     public String getBlueprintText() {
         return blueprintText;
     }
 
     public void setBlueprintText(String blueprintText) {
         this.blueprintText = blueprintText;
-    }
-
-    public String getBpmnId() {
-        return bpmnId;
-    }
-
-    public void setBpmnId(String bpmnId) {
-        this.bpmnId = bpmnId;
-    }
-
-    public String getBpmnUserid() {
-        return bpmnUserid;
-    }
-
-    public void setBpmnUserid(String bpmnUserid) {
-        this.bpmnUserid = bpmnUserid;
     }
 
     public String getBpmnText() {
@@ -573,44 +415,12 @@ public class CldsModel {
         this.bpmnText = bpmnText;
     }
 
-    public String getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
-    }
-
-    public String getImageUserid() {
-        return imageUserid;
-    }
-
-    public void setImageUserid(String imageUserid) {
-        this.imageUserid = imageUserid;
-    }
-
     public String getImageText() {
         return imageText;
     }
 
     public void setImageText(String imageText) {
         this.imageText = imageText;
-    }
-
-    public String getDocId() {
-        return docId;
-    }
-
-    public void setDocId(String docId) {
-        this.docId = docId;
-    }
-
-    public String getDocUserid() {
-        return docUserid;
-    }
-
-    public void setDocUserid(String docUserid) {
-        this.docUserid = docUserid;
     }
 
     public String getDocText() {
@@ -636,19 +446,6 @@ public class CldsModel {
         return cldsModelInstanceList;
     }
 
-    public void setCldsModelInstanceList(List<CldsModelInstance> cldsModelInstanceList) {
-        this.cldsModelInstanceList = cldsModelInstanceList;
-    }
-
-    public void setDispatcherResponse(String dispatcherResponse) {
-        this.dispatcherResponse = dispatcherResponse;
-
-    }
-
-    public String getDispatcherResponse() {
-        return this.dispatcherResponse;
-    }
-
     public String getDeploymentId() {
         return deploymentId;
     }
@@ -657,11 +454,4 @@ public class CldsModel {
         this.deploymentId = deploymentId;
     }
 
-    public boolean isUserAuthorizedToUpdate() {
-        return userAuthorizedToUpdate;
-    }
-
-    public void setUserAuthorizedToUpdate(boolean userAuthorizedToUpdate) {
-        this.userAuthorizedToUpdate = userAuthorizedToUpdate;
-    }
 }
