@@ -53,7 +53,7 @@
 				- org.onap.clamp.config.files.cldsPolicyConfig=classpath:/clds/clds-policy-config.properties
 				- org.onap.clamp.config.files.cldsUsers=classpath:/clds/clds-users.json
 				- org.onap.clamp.config.files.globalClds=classpath:/clds/globalClds.properties
-           
+
     </description>
 
 		<properties>
@@ -794,7 +794,7 @@
 																</volumes>
 																<wait>
 																		<log>socket: '/var/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution</log>
-																		<time>600000</time>
+																		<time>1200000</time>
 																</wait>
 																<ports>
 																		<port>${docker.mariadb.port.host}:3306</port>
