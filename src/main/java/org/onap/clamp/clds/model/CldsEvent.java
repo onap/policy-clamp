@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,8 @@ public class CldsEvent {
     public static final String ACTION_SUBMIT          = "SUBMIT";
     // an update before model is active
     public static final String ACTION_RESUBMIT        = "RESUBMIT";
+    // For simplified models
+    public static final String ACTION_SUBMITDCAE      = "SUBMITDCAE";
     // only from dcae
     public static final String ACTION_DISTRIBUTE      = "DISTRIBUTE";
     // only from dcae
@@ -87,13 +89,14 @@ public class CldsEvent {
      * 
      * @param cldsDao
      * @param model
+     * @param userId
      * @param actionCd
      * @param actionStateCd
      * @param processInstanceId
      * @return
      */
-    public static CldsEvent insEvent(CldsDao cldsDao, CldsModel model, String userId, String actionCd, String actionStateCd,
-            String processInstanceId) {
+    public static CldsEvent insEvent(CldsDao cldsDao, CldsModel model, String userId, String actionCd,
+            String actionStateCd, String processInstanceId) {
         CldsEvent event = new CldsEvent();
         event.setUserid(userId);
         event.setActionCd(actionCd);
