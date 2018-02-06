@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,9 +46,6 @@ import org.onap.clamp.clds.model.prop.PolicyItem;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.policy.api.AttributeType;
-import org.onap.policy.sdc.Resource;
-import org.onap.policy.sdc.ResourceType;
-import org.onap.policy.sdc.Service;
 import org.onap.policy.controlloop.policy.OperationsAccumulateParams;
 import org.onap.policy.controlloop.policy.Policy;
 import org.onap.policy.controlloop.policy.PolicyResult;
@@ -58,14 +55,18 @@ import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.onap.policy.controlloop.policy.builder.ControlLoopPolicyBuilder;
 import org.onap.policy.controlloop.policy.builder.Message;
 import org.onap.policy.controlloop.policy.builder.Results;
+import org.onap.policy.sdc.Resource;
+import org.onap.policy.sdc.ResourceType;
+import org.onap.policy.sdc.Service;
 
 /**
  * Construct an Operational Policy request given CLDS objects.
  */
-public final class OperationalPolicyReq {
+public class OperationalPolicyReq {
+
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicyReq.class);
 
-    private OperationalPolicyReq() {
+    protected OperationalPolicyReq() {
     }
 
     /**
@@ -73,6 +74,8 @@ public final class OperationalPolicyReq {
      *
      * @param refProp
      * @param prop
+     * @param modelElementId
+     * @param policyChain
      * @return
      * @throws BuilderException
      * @throws UnsupportedEncodingException
@@ -106,7 +109,6 @@ public final class OperationalPolicyReq {
             notificationTopic = refProp.getStringValue("op.notificationTopic", global.getService());
             controller = refProp.getStringValue("op.controller", global.getService());
         }
-
         String recipeTopic = refProp.getStringValue("op.recipeTopic", global.getService());
         // ruleAttributes
         logger.info("templateName=" + templateName);
@@ -150,7 +152,48 @@ public final class OperationalPolicyReq {
         return attributes;
     }
 
-    private static String formatYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+    /**
+     * Format Operational OpenLoop Policy yaml.
+     * 
+     * @param refProp
+     * @param prop
+     * @param modelElementId
+     * @param policyChain
+     * @return
+     * @throws BuilderException
+     * @throws UnsupportedEncodingException
+     */
+    protected static String formatOpenLoopYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+            PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+        // get property objects
+        Global global = prop.getGlobal();
+        prop.setCurrentModelElementId(modelElementId);
+        prop.setPolicyUniqueId(policyChain.getPolicyId());
+        // convert values to SDC objects
+        Service service = new Service(global.getService());
+        Resource[] vfResources = convertToResource(global.getResourceVf(), ResourceType.VF);
+        // create builder
+        ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
+                policyChain.getTimeout(), service, vfResources);
+        // builder.setTriggerPolicy(refProp.getStringValue("op.openloop.policy"));
+        // Build the specification
+        Results results = builder.buildSpecification();
+        validate(results);
+        return URLEncoder.encode(results.getSpecification(), "UTF-8");
+    }
+
+    /**
+     * Format Operational Policy yaml.
+     *
+     * @param refProp
+     * @param prop
+     * @param modelElementId
+     * @param policyChain
+     * @return
+     * @throws BuilderException
+     * @throws UnsupportedEncodingException
+     */
+    protected static String formatYaml(RefProp refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
@@ -197,7 +240,18 @@ public final class OperationalPolicyReq {
         return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
-    private static String formateNodeBYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+    /**
+     * Format Operational Policy yaml.
+     *
+     * @param refProp
+     * @param prop
+     * @param modelElementId
+     * @param policyChain
+     * @return
+     * @throws BuilderException
+     * @throws UnsupportedEncodingException
+     */
+    protected static String formateNodeBYaml(RefProp refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
@@ -254,10 +308,11 @@ public final class OperationalPolicyReq {
         return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
-    private static void validate (Results results) {
+    private static void validate(Results results) {
         if (results.isValid()) {
             logger.info("results.getSpecification()=" + results.getSpecification());
         } else {
+            // throw exception with error info
             StringBuilder sb = new StringBuilder();
             sb.append("Operation Policy validation problem: ControlLoopPolicyBuilder failed with following messages: ");
             for (Message message : results.getMessages()) {
@@ -268,8 +323,13 @@ public final class OperationalPolicyReq {
         }
     }
 
-     // Adding AOTS actor and other recipe for yaml
-     private static List<PolicyItem> addAOTSActorRecipe(RefProp refProp, String service, List<PolicyItem> inOrigList) {
+    /**
+     * Adding AOTS actor and other recipe for yaml
+     *
+     * @param inOrigList
+     * @return
+     */
+    private static List<PolicyItem> addAOTSActorRecipe(RefProp refProp, String service, List<PolicyItem> inOrigList) {
         List<PolicyItem> outList = new ArrayList<>();
         try {
             PolicyItem policyItem = inOrigList.get(0);
@@ -303,8 +363,14 @@ public final class OperationalPolicyReq {
         return outList;
     }
 
-     // Order list of PolicyItems so that parents come before any of their children
-     private static List<PolicyItem> orderParentFirst(List<PolicyItem> inOrigList) {
+    /**
+     * Order list of PolicyItems so that parents come before any of their
+     * children
+     *
+     * @param inOrigList
+     * @return
+     */
+    private static List<PolicyItem> orderParentFirst(List<PolicyItem> inOrigList) {
         List<PolicyItem> inList = new ArrayList<>();
         inList.addAll(inOrigList);
         List<PolicyItem> outList = new ArrayList<>();
@@ -348,6 +414,13 @@ public final class OperationalPolicyReq {
         return outList;
     }
 
+    /**
+     * Convert a List of resource strings to an array of Resource objects.
+     *
+     * @param stringList
+     * @param resourceType
+     * @return
+     */
     private static Resource[] convertToResource(List<String> stringList, ResourceType resourceType) {
         if (stringList == null || stringList.isEmpty()) {
             return new Resource[0];
@@ -355,6 +428,13 @@ public final class OperationalPolicyReq {
         return stringList.stream().map(stringElem -> new Resource(stringElem, resourceType)).toArray(Resource[]::new);
     }
 
+    /**
+     * Convert a List of policy result strings to an array of PolicyResult
+     * objects.
+     *
+     * @param prList
+     * @return
+     */
     private static PolicyResult[] convertToPolicyResult(List<String> prList) {
         if (prList == null || prList.isEmpty()) {
             return new PolicyResult[0];
