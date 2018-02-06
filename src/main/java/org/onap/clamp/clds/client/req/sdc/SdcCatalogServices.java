@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,20 +81,29 @@ public class SdcCatalogServices {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcCatalogServices.class);
     private static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    private static final String RESOURCE_VF_TYPE = "VF";
-    private static final String RESOURCE_VFC_TYPE = "VFC";
-    private static final String RESOURCE_CVFC_TYPE = "CVFC";
+    private static final String       RESOURCE_VF_TYPE              = "VF";
+    private static final String       RESOURCE_VFC_TYPE             = "VFC";
+    private static final String       RESOURCE_CVFC_TYPE            = "CVFC";
     private static final String SDC_REQUESTID_PROPERTY_NAME = "sdc.header.requestId";
-    private static final String SDC_METADATA_URL_PREFIX = "/metadata";
-    private static final String SDC_INSTANCE_ID_PROPERTY_NAME = "sdc.InstanceID";
-    private static final String SDC_CATALOG_URL_PROPERTY_NAME = "sdc.catalog.url";
-    private static final String SDC_SERVICE_URL_PROPERTY_NAME = "sdc.serviceUrl";
-    private static final String SDC_INSTANCE_ID_CLAMP = "CLAMP-Tool";
-    private static final String RESOURCE_URL_PREFIX = "resources";
+    private static final String       SDC_METADATA_URL_PREFIX       = "/metadata";
+    private static final String       SDC_INSTANCE_ID_PROPERTY_NAME = "sdc.InstanceID";
+    private static final String       SDC_CATALOG_URL_PROPERTY_NAME = "sdc.catalog.url";
+    private static final String       SDC_SERVICE_URL_PROPERTY_NAME = "sdc.serviceUrl";
+    private static final String       SDC_INSTANCE_ID_CLAMP         = "CLAMP-Tool";
+    private static final String       RESOURCE_URL_PREFIX           = "resources";
     @Autowired
-    private RefProp refProp;
+    private RefProp                   refProp;
 
-    // returns SDC id and password as a HTTP Basic Auth string (for example: Basic dGVzdDoxMjM0NTY=)
+    /**
+     * Return SDC id and pw as a HTTP Basic Auth string (for example: Basic
+     * dGVzdDoxMjM0NTY=).
+     *
+     * @return The String with Basic Auth and password
+     * @throws GeneralSecurityException
+     *             In case of issue when decryting the SDC password
+     * @throws DecoderException
+     *             In case of issues with the decoding of the HexString message
+     */
     private String getSdcBasicAuth() throws GeneralSecurityException, DecoderException {
         String sdcId = refProp.getStringValue("sdc.serviceUsername");
         String sdcPw = refProp.getStringValue("sdc.servicePassword");
@@ -106,7 +115,7 @@ public class SdcCatalogServices {
     /**
      * This method get the SDC services Information with the corresponding
      * Service UUID.
-     *
+     * 
      * @param uuid
      *            The service UUID
      * @return A Json String with all the service list
@@ -150,7 +159,7 @@ public class SdcCatalogServices {
 
     /**
      * To remove duplicate serviceUUIDs from sdc services List.
-     *
+     * 
      * @param rawCldsSdcServiceList
      *            A list of CldsSdcServiceInfo
      * @return A list of CldsSdcServiceInfo without duplicate service UUID
@@ -179,8 +188,9 @@ public class SdcCatalogServices {
 
     /**
      * To remove duplicate serviceUUIDs from sdc resources List.
-     *
+     * 
      * @param rawCldsSdcResourceList
+     * @return List of CldsSdcResource
      */
     public List<CldsSdcResource> removeDuplicateSdcResourceInstances(List<CldsSdcResource> rawCldsSdcResourceList) {
         List<CldsSdcResource> cldsSdcResourceList = null;
@@ -206,8 +216,9 @@ public class SdcCatalogServices {
 
     /**
      * To remove duplicate basic resources with same resourceUUIDs.
-     *
+     * 
      * @param rawCldsSdcResourceListBasicList
+     * @return List of CldsSdcResourceBasicInfo
      */
     public List<CldsSdcResourceBasicInfo> removeDuplicateSdcResourceBasicInfo(
             List<CldsSdcResourceBasicInfo> rawCldsSdcResourceListBasicList) {
@@ -235,7 +246,7 @@ public class SdcCatalogServices {
 
     /**
      * To get ServiceUUID by using serviceInvariantUUID.
-     *
+     * 
      * @param invariantId
      *            The invariant ID
      * @return The service UUID
@@ -262,6 +273,14 @@ public class SdcCatalogServices {
         return serviceUuid;
     }
 
+    /**
+     * To get CldsAsdsServiceInfo class by parsing json string.
+     * 
+     * @param jsonStr
+     *            The Json string that must be decoded
+     * @return The list of CldsSdcServiceInfo, if there is a failure it return
+     *         an empty list
+     */
     private List<CldsSdcServiceInfo> getCldsSdcServicesListFromJson(String jsonStr) {
         ObjectMapper objectMapper = new ObjectMapper();
         if (StringUtils.isBlank(jsonStr)) {
@@ -276,6 +295,14 @@ public class SdcCatalogServices {
         }
     }
 
+    /**
+     * To get List of CldsSdcResourceBasicInfo class by parsing json string.
+     *
+     * @param jsonStr
+     *            The JSOn string that must be decoded
+     * @return The list of CldsSdcResourceBasicInfo, an empty list in case of
+     *         issues
+     */
     private List<CldsSdcResourceBasicInfo> getAllSdcResourcesListFromJson(String jsonStr) {
         ObjectMapper objectMapper = new ObjectMapper();
         if (StringUtils.isBlank(jsonStr)) {
@@ -292,7 +319,7 @@ public class SdcCatalogServices {
 
     /**
      * To get CldsSdcServiceDetail by parsing json string.
-     *
+     * 
      * @param jsonStr
      * @return
      */
@@ -410,8 +437,9 @@ public class SdcCatalogServices {
 
     /**
      * Check if the SDC Info in cache has expired.
-     *
+     * 
      * @param cldsServiceData
+     * @return boolean flag
      * @throws GeneralSecurityException
      *             In case of issues with the decryting the encrypted password
      * @throws DecoderException
@@ -436,8 +464,9 @@ public class SdcCatalogServices {
 
     /**
      * Get the Service Data with Alarm Conditions for a given invariantServiceUuid.
-     *
+     * 
      * @param invariantServiceUuid
+     * @return The CldsServiceData
      * @throws GeneralSecurityException
      *             In case of issues with the decryting the encrypted password
      * @throws DecoderException
@@ -577,17 +606,17 @@ public class SdcCatalogServices {
 
     private void handleVFCtypeNode(ObjectNode currVfcNode, List<CldsVfcData> cldsVfcDataList) {
         CldsVfcData currCldsVfcData = new CldsVfcData();
-        TextNode vfcResourceName = (TextNode) currVfcNode.get("resourceInstanceName");
-        TextNode vfcInvariantResourceUuid = (TextNode) currVfcNode.get("resourceInvariantUUID");
-        currCldsVfcData.setVfcName(vfcResourceName.textValue());
-        currCldsVfcData.setVfcInvariantResourceUUID(vfcInvariantResourceUuid.textValue());
-        cldsVfcDataList.add(currCldsVfcData);
+                    TextNode vfcResourceName = (TextNode) currVfcNode.get("resourceInstanceName");
+                    TextNode vfcInvariantResourceUuid = (TextNode) currVfcNode.get("resourceInvariantUUID");
+                    currCldsVfcData.setVfcName(vfcResourceName.textValue());
+                    currCldsVfcData.setVfcInvariantResourceUUID(vfcInvariantResourceUuid.textValue());
+                    cldsVfcDataList.add(currCldsVfcData);
     }
 
     private void handleCVFCtypeNode(ObjectNode currVfcNode, List<CldsVfcData> cldsVfcDataList) {
         handleVFCtypeNode(currVfcNode, cldsVfcDataList);
-        cldsVfcDataList.addAll(getVFCfromCVFC(currVfcNode.get("resourceUUID").textValue()));
-    }
+                    cldsVfcDataList.addAll(getVFCfromCVFC(currVfcNode.get("resourceUUID").textValue()));
+                }
 
     private List<CldsVfcData> getVFCfromCVFC(String resourceUUID) {
         String catalogUrl = refProp.getStringValue(SDC_CATALOG_URL_PROPERTY_NAME);
@@ -757,6 +786,8 @@ public class SdcCatalogServices {
         cldsAlarmConditionList.add(cldsAlarmCondition);
     }
 
+
+    // Get the responses for the current artifact from the artifacts URL.
     private String getResponsesFromArtifactUrl(String artifactsUrl) {
         String hostUrl = refProp.getStringValue("sdc.hostUrl");
         String artifactsUrlReworked = artifactsUrl.replaceAll("\"", "");
@@ -770,6 +801,10 @@ public class SdcCatalogServices {
     /**
      * Service to services/resources/artifacts from sdc.Pass alarmConditions as
      * true to get alarm conditons from artifact url and else it is false
+     * 
+     * @param url The URL to trigger
+     * @return The String containing the payload
+     * 
      */
     public String getCldsServicesOrResourcesBasedOnURL(String url) {
         Date startTime = new Date();
@@ -797,9 +832,13 @@ public class SdcCatalogServices {
             logger.error("Exception occurred during query to SDC", e);
             return "";
         } catch (DecoderException e) {
+        	LoggingUtils.setResponseContext("900", "Get sdc resources failed", this.getClass().getName());
+            LoggingUtils.setErrorContext("900", "Get sdc resources error");
             logger.error("Exception when attempting to decode the Hex string", e);
             throw new SdcCommunicationException("Exception when attempting to decode the Hex string", e);
         } catch (GeneralSecurityException e) {
+        	LoggingUtils.setResponseContext("900", "Get sdc resources failed", this.getClass().getName());
+            LoggingUtils.setErrorContext("900", "Get sdc resources error");
             logger.error("Exception when attempting to decrypt the encrypted password", e);
             throw new SdcCommunicationException("Exception when attempting to decrypt the encrypted password", e);
         } finally {
@@ -884,7 +923,7 @@ public class SdcCatalogServices {
 
     /**
      * Method to get alarm conditions/alert description from Service Data.
-     *
+     * 
      * @param cldsServiceData
      *            CldsServiceData the Service Data to analyze
      * @param eventName
@@ -906,7 +945,7 @@ public class SdcCatalogServices {
 
     /**
      * Method to get alarm conditions/alert description from VF Data.
-     *
+     * 
      * @param currCldsVfData
      *            The Vf Data to analyze
      * @param eventName
@@ -926,7 +965,7 @@ public class SdcCatalogServices {
 
     /**
      * Method to get alarm conditions/alert description from VFC Data.
-     *
+     * 
      * @param currCldsVfcData
      *            The VfC Data to analyze
      * @param eventName
@@ -1044,7 +1083,7 @@ public class SdcCatalogServices {
 
     /**
      * Method to create vfc and kpi nodes inside vf node
-     *
+     * 
      * @param mapper
      * @param cldsVfDataList
      * @return
@@ -1094,7 +1133,7 @@ public class SdcCatalogServices {
     /**
      * This method searches the equivalent artifact UUID for a specific
      * artifactName in a SdcServiceDetail.
-     *
+     * 
      * @param cldsSdcServiceDetail
      *            The SdcServiceDetail that will be analyzed
      * @param artifactName
@@ -1126,6 +1165,7 @@ public class SdcCatalogServices {
         return artifactUuid;
     }
 
+    // To get all sdc VF/VFC Resources basic info.
     private List<CldsSdcResourceBasicInfo> getAllSdcVForVfcResourcesBasedOnResourceType(String resourceType) {
         String catalogUrl = refProp.getStringValue(SDC_CATALOG_URL_PROPERTY_NAME);
         String resourceUrl = catalogUrl + "resources?resourceType=" + resourceType;
@@ -1148,6 +1188,7 @@ public class SdcCatalogServices {
         return resourceUuid;
     }
 
+    // Method to get service invariant uuid from model properties.
     private String getServiceInvariantUuidFromProps(ModelProperties props) {
         String invariantUuid = "";
         Global globalProps = props.getGlobal();
@@ -1159,7 +1200,7 @@ public class SdcCatalogServices {
 
     /**
      * This method upload the BluePrint to SDC.
-     *
+     * 
      * @param prop
      *            The Clds model Properties
      * @param userid
