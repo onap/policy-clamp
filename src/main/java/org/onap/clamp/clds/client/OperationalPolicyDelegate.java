@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Send Operational Policy info to policy api. It uses the policy code to define
  * the model and communicate with it. See also the PolicyClient class.
- *
+ * 
  */
 public class OperationalPolicyDelegate implements JavaDelegate {
     protected static final EELFLogger logger        = EELFManager.getInstance()
@@ -70,19 +70,18 @@ public class OperationalPolicyDelegate implements JavaDelegate {
      * @throws BuilderException
      *             In case of issues with OperationalPolicyReq
      * @throws UnsupportedEncodingException
+     *             In case of issues with the Charset encoding
      */
     @Override
-    public void execute(DelegateExecution execution)
-            throws BuilderException, UnsupportedEncodingException {
+    public void execute(DelegateExecution execution) throws BuilderException, UnsupportedEncodingException {
         String responseMessage = null;
         ModelProperties prop = ModelProperties.create(execution);
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                String operationalPolicyRequestUuid = LoggingUtils.getRequestId();
                 Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
                         prop, prop.getType(Policy.class).getId(), policyChain);
-                responseMessage = policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
+                responseMessage = policyClient.sendBrmsPolicy(attributes, prop, LoggingUtils.getRequestId());
             }
             if (responseMessage != null) {
                 execution.setVariable("operationalPolicyResponseMessage", responseMessage.getBytes());
