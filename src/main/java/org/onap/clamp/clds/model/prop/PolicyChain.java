@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,21 +63,26 @@ public class PolicyChain {
     private String                    policyId;
     private Integer                   timeout;
     private List<PolicyItem>          policyItems;
+    private String                    policyType;
 
     public PolicyChain(JsonNode node) {
 
         policyId = AbstractModelElement.getValueByName(node, "pid");
         timeout = AbstractModelElement.getIntValueByName(node, "timeout");
-
-        // process policy configurations
-        JsonNode policyNode = node.get(node.size() - 1).get("policyConfigurations");
-        Iterator<JsonNode> itr = policyNode.elements();
-        policyItems = new ArrayList<>();
-        while (itr.hasNext()) {
-            policyItems.add(new PolicyItem(itr.next()));
-        }
+        policyType = AbstractModelElement.getValueByName(node, "policyType");
+    
+        if(node != null && node.size() > 0) {    	   	
+	        JsonNode policyNode = node.get(node.size() - 1).get("policyConfigurations");
+	        if(policyNode != null) {
+		        Iterator<JsonNode> itr = policyNode.elements();
+		        policyItems = new ArrayList<>();
+		        while (itr.hasNext()) {
+		            policyItems.add(new PolicyItem(itr.next()));
+		        }
+	    
+	         } 
+	      }  
     }
-
     /**
      * @return the policyId
      */
@@ -97,6 +102,13 @@ public class PolicyChain {
      */
     public List<PolicyItem> getPolicyItems() {
         return policyItems;
+    }
+    
+    /**
+     * @return the policyType
+     */
+    public String getPolicyType() {
+        return policyType;
     }
 
 }
