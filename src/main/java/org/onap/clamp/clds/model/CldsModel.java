@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,10 @@ package org.onap.clamp.clds.model;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,33 +43,33 @@ import org.onap.clamp.clds.dao.CldsDao;
  */
 public class CldsModel {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsModel.class);
-    private static final int UUID_LENGTH = 36;
-    private static final String STATUS_DESIGN = "DESIGN";
-    private static final String STATUS_DISTRIBUTED = "DISTRIBUTED";
-    private static final String STATUS_ACTIVE = "ACTIVE";
-    private static final String STATUS_STOPPED = "STOPPED";
-    private static final String STATUS_DELETING = "DELETING";
-    private static final String STATUS_ERROR = "ERROR";
-    private static final String STATUS_UNKNOWN = "UNKNOWN";
-    private String id;
-    private String templateId;
-    private String templateName;
-    private String name;
-    private String controlNamePrefix;
-    private String controlNameUuid;
-    private String bpmnText;
-    private String propText;
-    private String imageText;
-    private String docText;
-    private String blueprintText;
-    private CldsEvent event;
-    private String status;
-    private List<String> permittedActionCd;
+    private static final EELFLogger logger             = EELFManager.getInstance().getLogger(CldsModel.class);
+    private static final int        UUID_LENGTH        = 36;
+    private static final String     STATUS_DESIGN      = "DESIGN";
+    private static final String     STATUS_DISTRIBUTED = "DISTRIBUTED";
+    private static final String     STATUS_ACTIVE      = "ACTIVE";
+    private static final String     STATUS_STOPPED     = "STOPPED";
+    private static final String     STATUS_DELETING    = "DELETING";
+    private static final String     STATUS_ERROR       = "ERROR";
+    private static final String     STATUS_UNKNOWN     = "UNKNOWN";
+    private String                  id;
+    private String                  templateId;
+    private String                  templateName;
+    private String                  name;
+    private String                  controlNamePrefix;
+    private String                  controlNameUuid;
+    private String                  bpmnText;
+    private String                  propText;
+    private String                  imageText;
+    private String                  docText;
+    private String                  blueprintText;
+    private CldsEvent               event;
+    private String                  status;
+    private List<String>            permittedActionCd;
     private List<CldsModelInstance> cldsModelInstanceList;
-    private String typeId;
-    private String typeName;
-    private String deploymentId;
+    private String                  typeId;
+    private String                  typeName;
+    private String                  deploymentId;
 
     /**
      * Construct empty model.
@@ -93,7 +96,8 @@ public class CldsModel {
         boolean canCall = false;
         /* Below checks the clds event is submit/resubmit */
 
-        if ((event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT))) {
+        if ((event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT)
+                || event.isActionCd(CldsEvent.ACTION_SUBMITDCAE))) {
             canCall = true;
         }
         return canCall;
@@ -121,6 +125,7 @@ public class CldsModel {
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_CREATE, CldsEvent.ACTION_STATE_ANY)
                 || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_ANY)
                 || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_ANY)
+                || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_STATE_ANY)
                 || event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)) {
             status = STATUS_DESIGN;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DISTRIBUTE, CldsEvent.ACTION_STATE_RECEIVED)
@@ -176,6 +181,9 @@ public class CldsModel {
         switch (actionCd) {
             case CldsEvent.ACTION_CREATE:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST);
+                if (isSimplifiedModel()) {
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_TEST);
+                }
                 break;
             case CldsEvent.ACTION_SUBMIT:
             case CldsEvent.ACTION_RESUBMIT:
@@ -183,12 +191,22 @@ public class CldsModel {
                 // requires manually deleting artifact from sdc
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT);
                 break;
+            case CldsEvent.ACTION_SUBMITDCAE:
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE);
+                break;
             case CldsEvent.ACTION_DISTRIBUTE:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT);
+                if (isSimplifiedModel()) {
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_SUBMITDCAE);
+                }
                 break;
             case CldsEvent.ACTION_UNDEPLOY:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
                         CldsEvent.ACTION_RESUBMIT);
+                if (isSimplifiedModel()) {
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
+                            CldsEvent.ACTION_SUBMITDCAE);
+                }
                 break;
             case CldsEvent.ACTION_DEPLOY:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UNDEPLOY,
@@ -215,6 +233,22 @@ public class CldsModel {
             default:
                 logger.warn("Invalid current actionCd: " + actionCd);
         }
+    }
+
+    private boolean isSimplifiedModel() {
+        boolean result = false;
+        try {
+            if (propText != null) {
+                JsonNode modelJson = new ObjectMapper().readTree(propText);
+                JsonNode simpleModelJson = modelJson.get("simpleModel");
+                if (simpleModelJson != null && simpleModelJson.asBoolean()) {
+                    result = true;
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Error while parsing propText json", e);
+        }
+        return result;
     }
 
     /**
@@ -452,6 +486,10 @@ public class CldsModel {
 
     public void setDeploymentId(String deploymentId) {
         this.deploymentId = deploymentId;
+    }
+
+    public List<String> getPermittedActionCd() {
+        return permittedActionCd;
     }
 
 }
