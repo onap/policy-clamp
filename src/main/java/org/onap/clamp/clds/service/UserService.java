@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -29,16 +29,18 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import io.swagger.annotations.Api;
+import org.springframework.stereotype.Component;
 
 /**
  * User service used for authorization verification at the login page. Do not
  * remove this class.
  */
-@Api(value = "/user")
+@Component
 @Path("/user")
-@Produces({ MediaType.TEXT_PLAIN })
-public interface UserService {
+@Produces({
+        MediaType.TEXT_PLAIN
+})
+public class UserService {
 
     /**
      * REST service that returns the username.
@@ -49,6 +51,7 @@ public interface UserService {
     @GET
     @Path("/{userName}")
     @Produces(MediaType.TEXT_PLAIN)
-    String getUser(@PathParam("userName") String userName);
-
+    public String getUser(@PathParam("userName") String userName) {
+        return userName;
+    }
 }
