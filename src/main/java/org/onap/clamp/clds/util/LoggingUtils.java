@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,8 @@
 
 package org.onap.clamp.clds.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,11 +33,16 @@ import java.util.UUID;
 import javax.validation.constraints.NotNull;
 import org.apache.log4j.MDC;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 /**
  * This class handles the special info that appear in the log, like RequestID,
  * time context, ...
  */
 public final class LoggingUtils {
+	
+	protected static final EELFLogger logger = EELFManager.getInstance().getLogger(LoggingUtils.class);
 
     private static final DateFormat DATE_FORMAT = createDateFormat();
 
@@ -55,6 +62,12 @@ public final class LoggingUtils {
         MDC.put("RequestId", UUID.randomUUID().toString());
         MDC.put("ServiceName", service);
         MDC.put("PartnerName", partner);
+        try {
+        	MDC.put("ServerFQDN", InetAddress.getLocalHost().getCanonicalHostName());
+        	MDC.put("ServerIPAddress", InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+        	logger.error("Failed to initiate setRequestContext", e);
+		}
     }
 
     /**
