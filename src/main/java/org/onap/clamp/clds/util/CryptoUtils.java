@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,14 +26,17 @@ package org.onap.clamp.clds.util;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.common.base.Charsets;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Properties;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
@@ -44,6 +47,9 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public final class CryptoUtils {
 
+    /**
+     * Used to log CryptoUtils class.
+     */
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CryptoUtils.class);
     // Openssl commands:
     // Encrypt: echo -n "123456" | openssl aes-128-cbc -e -K <Private Hex key>
@@ -82,17 +88,19 @@ public final class CryptoUtils {
 
     /**
      * Encrypt a value based on the Clamp Encryption Key.
-     *
-     * @param value The value to encrypt
+     * 
+     * @param value
+     *            The value to encrypt
      * @return The encrypted string
-     * @throws GeneralSecurityException In case of issue with the encryption
-     * @throws UnsupportedEncodingException In case of issue with the charset conversion
+     * @throws GeneralSecurityException
+     *             In case of issue with the encryption
+     * @throws UnsupportedEncodingException
+     *             In case of issue with the charset conversion
      */
     public static String encrypt(String value) throws GeneralSecurityException, UnsupportedEncodingException {
         Cipher cipher = Cipher.getInstance(ALGORITHM_DETAILS, "SunJCE");
-        SecureRandom randomNumber = SecureRandom.getInstance("SHA1PRNG");
         byte[] iv = new byte[BLOCK_SIZE_IN_BYTES];
-        randomNumber.nextBytes(iv);
+        SecureRandom.getInstance("SHA1PRNG").nextBytes(iv);
         IvParameterSpec ivspec = new IvParameterSpec(iv);
         cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY_SPEC, ivspec);
         return Hex.encodeHexString(ArrayUtils.addAll(iv, cipher.doFinal(value.getBytes(Charsets.UTF_8))));
@@ -100,11 +108,15 @@ public final class CryptoUtils {
 
     /**
      * Decrypt a value based on the Clamp Encryption Key.
-     *
-     * @param message The encrypted string that must be decrypted using the Clamp Encryption Key
+     * 
+     * @param message
+     *            The encrypted string that must be decrypted using the Clamp
+     *            Encryption Key
      * @return The String decrypted
-     * @throws GeneralSecurityException In case of issue with the encryption
-     * @throws DecoderException In case of issue to decode the HexString
+     * @throws GeneralSecurityException
+     *             In case of issue with the encryption
+     * @throws DecoderException
+     *             In case of issue to decode the HexString
      */
     public static String decrypt(String message) throws GeneralSecurityException, DecoderException {
         byte[] encryptedMessage = Hex.decodeHex(message.toCharArray());
@@ -118,10 +130,12 @@ public final class CryptoUtils {
 
     /**
      * Method used to generate the SecretKeySpec from a Base64 String.
-     *
-     * @param keyString The key as a string in Base 64
+     * 
+     * @param keyString
+     *            The key as a string in Base 64
      * @return The SecretKeySpec created
-     * @throws DecoderException In case of issues with the decoding of Base64
+     * @throws DecoderException
+     *             In case of issues with the decoding of Base64
      */
     private static SecretKeySpec getSecretKeySpec(String keyString) throws DecoderException {
         byte[] key = Hex.decodeHex(keyString.toCharArray());
@@ -131,7 +145,8 @@ public final class CryptoUtils {
     /**
      * Reads SecretKeySpec from file specified by propertiesFileName
      *
-     * @param propertiesFileName File name with properties
+     * @param propertiesFileName
+     *            File name with properties
      * @return SecretKeySpec secret key spec read from propertiesFileName
      */
     private static SecretKeySpec readSecretKeySpec(String propertiesFileName) {
