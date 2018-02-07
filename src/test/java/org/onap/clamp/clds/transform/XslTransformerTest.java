@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +29,7 @@ import java.io.IOException;
 
 import javax.xml.transform.TransformerException;
 
+import org.json.JSONException;
 import org.junit.Test;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -42,12 +43,12 @@ public class XslTransformerTest {
      *             In case of issues
      * @throws IOException
      *             In case of issues
+     * @throws JSONException
      */
     @Test
-    public void xslTransformTest() throws TransformerException, IOException {
+    public void xslTransformTest() throws TransformerException, IOException, JSONException {
         XslTransformer xslTransformer = new XslTransformer();
         xslTransformer.setXslResourceName("xsl/clds-bpmn-transformer.xsl");
-
         String bpmnJson = xslTransformer
                 .doXslTransformToString(ResourceFileUtil.getResourceAsString("example/xsl-validation/modelBpmn.xml"));
         assertNotNull(bpmnJson);
