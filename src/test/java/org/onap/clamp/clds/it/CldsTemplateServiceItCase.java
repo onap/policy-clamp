@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -37,7 +37,7 @@ import java.util.List;
 import javax.ws.rs.core.SecurityContext;
 import javax.xml.transform.TransformerException;
 
-import org.junit.Before; 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -60,44 +60,42 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class CldsTemplateServiceItCase extends AbstractItCase {
-    protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(CldsTemplateServiceItCase.class);
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsTemplateServiceItCase.class);
     @Autowired
     private CldsTemplateService cldsTemplateService;
-    @Autowired 
-    private CldsDao cldsDao; 
-    private String bpmnText; 
-    private String imageText; 
+    @Autowired
+    private CldsDao cldsDao;
+    private String bpmnText;
+    private String imageText;
     private String bpmnPropText;
     private CldsTemplate cldsTemplate;
 
-    /** 
-     * Setup the variable before the tests execution. 
+    /**
+     * Setup the variable before the tests execution.
      * 
-     * @throws IOException 
-     *             In case of issues when opening the files 
-     */ 
-    @Before 
-    public void setupBefore() throws IOException { 
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class); 
-        Principal principal = Mockito.mock(Principal.class); 
-        Mockito.when(principal.getName()).thenReturn("admin"); 
+     * @throws IOException
+     *             In case of issues when opening the files
+     */
+    @Before
+    public void setupBefore() throws IOException {
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("admin");
         Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true); 
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true); 
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true); 
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|update")).thenReturn(true); 
+        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
+        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
+        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
+        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|update")).thenReturn(true);
         cldsTemplateService.setSecurityContext(securityContext);
-
-        bpmnText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-template.xml"); 
-        imageText = ResourceFileUtil.getResourceAsString("example/dao/image-template.xml"); 
-        bpmnPropText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-prop.json"); 
-
-        cldsTemplate = new CldsTemplate(); 
-        cldsTemplate.setName("testModel"); 
-        cldsTemplate.setBpmnText(bpmnText); 
+        bpmnText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-template.xml");
+        imageText = ResourceFileUtil.getResourceAsString("example/dao/image-template.xml");
+        bpmnPropText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-prop.json");
+        cldsTemplate = new CldsTemplate();
+        cldsTemplate.setName("testModel");
+        cldsTemplate.setBpmnText(bpmnText);
         cldsTemplate.setImageText(imageText);
         cldsTemplate.setPropText(bpmnPropText);
-
         try {
             cldsTemplateService.putTemplate("testModel", cldsTemplate);
         } catch (IOException e) {
@@ -106,19 +104,16 @@ public class CldsTemplateServiceItCase extends AbstractItCase {
             logger.error("Transforming exception while saving template.", ex);
         }
     }
- 
+
     @Test
     public void testPutTemplate() throws Exception {
-
-        CldsTemplate savedTemplate = cldsTemplate.retrieve(cldsDao, "testModel", false);
+        CldsTemplate savedTemplate = CldsTemplate.retrieve(cldsDao, "testModel", false);
         assertNotNull(savedTemplate);
         logger.info("saved template bpmn text is:" + savedTemplate.getBpmnText());
         assertEquals(bpmnText, savedTemplate.getBpmnText());
-
         assertEquals(imageText, savedTemplate.getImageText());
         assertEquals(bpmnPropText, savedTemplate.getPropText());
         assertEquals("testModel", savedTemplate.getName());
-
     }
 
     @Test
@@ -145,18 +140,16 @@ public class CldsTemplateServiceItCase extends AbstractItCase {
 
     @Test
     public void testGetTemplateNames() throws Exception {
-        CldsTemplate cldsTemplateNew = new CldsTemplate(); 
-
-        cldsTemplateNew.setName("testModelNew"); 
-        cldsTemplateNew.setBpmnText(bpmnText); 
+        CldsTemplate cldsTemplateNew = new CldsTemplate();
+        cldsTemplateNew.setName("testModelNew");
+        cldsTemplateNew.setBpmnText(bpmnText);
         cldsTemplateNew.setImageText(imageText);
         cldsTemplateNew.setPropText(bpmnPropText);
         cldsTemplateService.putTemplate("testModelNew", cldsTemplateNew);
-
         List<ValueItem> templateNames = cldsTemplateService.getTemplateNames();
-        boolean testModel = false; 
+        boolean testModel = false;
         boolean testModelNew = false;
-        for (ValueItem item: templateNames) {
+        for (ValueItem item : templateNames) {
             if (item.getValue().equals("testModel")) {
                 testModel = true;
             }

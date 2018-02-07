@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,10 +24,15 @@
 package org.onap.clamp.clds.it;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.NotFoundException;
 
@@ -36,6 +41,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.model.CLDSMonitoringDetails;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsTemplate;
@@ -53,6 +59,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class CldsDaoItCase extends AbstractItCase {
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
     @Autowired
     public CldsDao cldsDao;
     private String bpmnText;
@@ -140,5 +148,17 @@ public class CldsDaoItCase extends AbstractItCase {
         newModel.setDocText(newTemplate.getPropText());
         CldsEvent.insEvent(cldsDao, newModel, "user", CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_COMPLETED,
                 "process-instance-id");
+    }
+
+    @Test
+    public void testGetCLDSMonitoringDetails() {
+        List<CLDSMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CLDSMonitoringDetails>();
+        cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
+        cldsMonitoringDetailsList.forEach(clName -> {
+            logger.info(clName.getCloseloopName()); // Uncomment this line to
+                                                    // view the result on
+                                                    // console
+            assertNotNull(clName.getCloseloopName());
+        });
     }
 }

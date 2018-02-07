@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +69,7 @@ public class TcaRequestFormatterItCase extends AbstractItCase {
     }
 
     @Test
-    public void testCreatePolicyJson() throws IOException {
+    public void testCreatePolicyJson() throws IOException, JSONException {
         ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmn,
                 modelProp);
         String result = TcaRequestFormatter.createPolicyJson(refProp, prop);
@@ -82,7 +83,6 @@ public class TcaRequestFormatterItCase extends AbstractItCase {
         ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmn,
                 modelProp);
         String result = TcaRequestFormatter.updatedBlueprintWithConfiguration(refProp, prop, yamlInput);
-
         assertNotNull(result);
         assertEquals(ResourceFileUtil.getResourceAsString("example/tca-policy-req/blueprint-expected.yaml"), result);
     }
