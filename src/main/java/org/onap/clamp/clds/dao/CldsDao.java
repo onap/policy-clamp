@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.onap.clamp.clds.model.CLDSMonitoringDetails;
 import org.onap.clamp.clds.model.CldsDBServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
@@ -54,6 +56,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository("cldsDao")
 public class CldsDao {
+
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
     private JdbcTemplate jdbcTemplateObject;
     private SimpleJdbcCall procGetModel;
@@ -412,5 +415,41 @@ public class CldsDao {
             cldsModelPropList.add(cldsModelProp);
         }
         return cldsModelPropList;
+    }
+
+    /**
+     * Method to get deployed/active models with model properties.
+     * 
+     * @return list of CLDS-Monitoring-Details: CLOSELOOP_NAME | Close loop name
+     *         used in the CLDS application (prefix: ClosedLoop- + unique
+     *         ClosedLoop ID) MODEL_NAME | Model Name in CLDS application
+     *         SERVICE_TYPE_ID | TypeId returned from the DCAE application when
+     *         the ClosedLoop is submitted (DCAEServiceTypeRequest generated in
+     *         DCAE application). DEPLOYMENT_ID | Id generated when the
+     *         ClosedLoop is deployed in DCAE. TEMPLATE_NAME | Template used to
+     *         generate the ClosedLoop model. ACTION_CD | Current state of the
+     *         ClosedLoop in CLDS application.
+     */
+    public List<CLDSMonitoringDetails> getCLDSMonitoringDetails() {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        List<CLDSMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CLDSMonitoringDetails>();
+        String modelsSql = "SELECT CONCAT(M.CONTROL_NAME_PREFIX, M.CONTROL_NAME_UUID) AS CLOSELOOP_NAME , M.MODEL_NAME, M.SERVICE_TYPE_ID, M.DEPLOYMENT_ID, T.TEMPLATE_NAME, E.ACTION_CD, E.USER_ID, E.TIMESTAMP "
+                + "FROM MODEL M, TEMPLATE T, EVENT E "
+                + "WHERE M.TEMPLATE_ID = T.TEMPLATE_ID AND M.EVENT_ID = E.EVENT_ID " + "ORDER BY ACTION_CD";
+        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
+        CLDSMonitoringDetails cldsMonitoringDetails = null;
+        for (Map<String, Object> row : rows) {
+            cldsMonitoringDetails = new CLDSMonitoringDetails();
+            cldsMonitoringDetails.setCloseloopName((String) row.get("CLOSELOOP_NAME"));
+            cldsMonitoringDetails.setModelName((String) row.get("MODEL_NAME"));
+            cldsMonitoringDetails.setServiceTypeId((String) row.get("SERVICE_TYPE_ID"));
+            cldsMonitoringDetails.setDeploymentId((String) row.get("DEPLOYMENT_ID"));
+            cldsMonitoringDetails.setTemplateName((String) row.get("TEMPLATE_NAME"));
+            cldsMonitoringDetails.setAction((String) row.get("ACTION_CD"));
+            cldsMonitoringDetails.setUserid((String) row.get("USER_ID"));
+            cldsMonitoringDetails.setTimestamp(sdf.format(row.get("TIMESTAMP")));
+            cldsMonitoringDetailsList.add(cldsMonitoringDetails);
+        }
+        return cldsMonitoringDetailsList;
     }
 }

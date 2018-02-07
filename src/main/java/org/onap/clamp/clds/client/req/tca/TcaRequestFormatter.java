@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,6 @@ import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.util.Map;
@@ -39,13 +38,14 @@ import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.prop.TcaItem;
 import org.onap.clamp.clds.model.prop.TcaThreshold;
 import org.onap.clamp.clds.model.refprop.RefProp;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * Construct the requests for TCA policy and SDC.
- *
  */
 public class TcaRequestFormatter {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(TcaRequestFormatter.class);
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(TcaRequestFormatter.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     /**

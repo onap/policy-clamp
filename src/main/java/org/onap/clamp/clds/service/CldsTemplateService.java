@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,6 @@
 
 package org.onap.clamp.clds.service;
 
-import com.att.ajsc.common.AjscService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -47,17 +46,19 @@ import org.onap.clamp.clds.model.ValueItem;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Service to save and retrieve the CLDS model attributes.
  */
-@AjscService
+@Component
 @Path("/cldsTempate")
 public class CldsTemplateService extends SecureServiceBase {
+
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
-    private String                  cldsPermissionTypeTemplate;
+    private String cldsPermissionTypeTemplate;
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
-    private String                  cldsPermissionInstance;
+    private String cldsPermissionInstance;
     private SecureServicePermission permissionReadTemplate;
     private SecureServicePermission permissionUpdateTemplate;
 

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -23,27 +23,22 @@
 
 package org.onap.clamp.clds.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import java.util.Properties;
 
-import com.att.ajsc.csilogging.common.AsyncSupport;
-import com.att.ajsc.csilogging.interceptors.CsiLoggingCamelPostInterceptor;
-import com.att.ajsc.csilogging.interceptors.CsiLoggingCamelPreInterceptor;
+import javax.annotation.Resource;
 
-@Configuration
-public class CsiLoggingConfiguration {
-    @Bean
-    public CsiLoggingCamelPreInterceptor csiLoggingCamelPreInterceptor() {
-        return new CsiLoggingCamelPreInterceptor();
-    }
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
-    @Bean
-    public CsiLoggingCamelPostInterceptor csiLoggingCamelPostInterceptor() {
-        return new CsiLoggingCamelPostInterceptor();
-    }
+@Component
+public class SystemPropertiesLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Bean
-    public AsyncSupport asyncsupport() {
-        return new AsyncSupport();
+    @Resource(name = "mapper")
+    private Properties myTranslator;
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        System.getProperties().putAll(myTranslator);
     }
 }

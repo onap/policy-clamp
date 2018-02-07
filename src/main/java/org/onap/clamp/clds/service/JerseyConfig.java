@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,24 +21,21 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds;
+package org.onap.clamp.clds.service;
 
-import org.junit.BeforeClass;
-import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.model.refprop.RefProp;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.springframework.stereotype.Component;
 
-@ActiveProfiles("clamp-default")
-public abstract class AbstractItCase {
+@Component
+public class JerseyConfig extends ResourceConfig {
 
-    @Autowired
-    protected RefProp refProp;
-    @Autowired
-    protected PolicyClient policyClient;
+    public JerseyConfig() {
+        registerEndpoints();
+    }
 
-    @BeforeClass
-    public static void oneTimeSetUp() {
-        System.setProperty("CLDS_DCAE_URL", "http://localhost:13786/cl-dcae-services");
+    private void registerEndpoints() {
+        register(CldsService.class);
+        register(UserService.class);
+        register(CldsTemplateService.class);
     }
 }

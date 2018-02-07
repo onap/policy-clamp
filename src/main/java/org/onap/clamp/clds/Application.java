@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -23,22 +23,12 @@
 
 package org.onap.clamp.clds;
 
-import com.att.ajsc.common.utility.SystemPropertiesLoader;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-
-import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.catalina.connector.Connector;
-import org.camunda.bpm.spring.boot.starter.webapp.CamundaBpmWebappAutoConfiguration;
 import org.onap.clamp.clds.model.prop.Holmes;
 import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration;
@@ -51,38 +41,36 @@ import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "org.onap.clamp.clds", "com.att.ajsc" })
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, CamundaBpmWebappAutoConfiguration.class,
-        HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class, SecurityAutoConfiguration.class,
-        ManagementWebSecurityAutoConfiguration.class })
+@ComponentScan(basePackages = {
+        "org.onap.clamp.clds"
+})
+@EnableAutoConfiguration(exclude = {
+        DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class,
+        SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class
+})
 @EnableAsync
 public class Application extends SpringBootServletInitializer {
-    protected static final EELFLogger EELF_LOGGER        = EELFManager.getInstance().getLogger(Application.class);
-    @Autowired
-    private ApplicationContext        appContext;
-    private static final String       CAMEL_SERVLET_NAME = "CamelServlet";
-    private static final String       CAMEL_URL_MAPPING  = "/restservices/clds/v1/*";
+
+    protected static final EELFLogger EELF_LOGGER = EELFManager.getInstance().getLogger(Application.class);
     // This settings is an additional one to Spring config,
     // only if we want to have an additional port automatically redirected to
     // HTTPS
     @Value("${server.http-to-https-redirection.port:none}")
-    private String                    httpRedirectedPort;
+    private String httpRedirectedPort;
     /**
      * This 8080 is the default port used by spring if this parameter is not
      * specified in application.properties.
      */
     @Value("${server.port:8080}")
-    private String                    springServerPort;
+    private String springServerPort;
     @Value("${server.ssl.key-store:none}")
-    private String                    sslKeystoreFile;
+    private String sslKeystoreFile;
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
@@ -90,8 +78,6 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        // This is to load the system.properties file parameters
-        SystemPropertiesLoader.addSystemProperties();
         // This is to initialize some Onap Clamp components
         initializeComponents();
         // Start the Spring application
@@ -100,22 +86,6 @@ public class Application extends SpringBootServletInitializer {
 
     private static void initializeComponents() {
         ModelProperties.registerModelElement(Holmes.class, Holmes.getType());
-    }
-
-    @Bean
-    public ServletRegistrationBean servletRegistrationBean() {
-        ServletRegistrationBean registration = new ServletRegistrationBean();
-        registration.setName(CAMEL_SERVLET_NAME);
-        registration.setServlet(new CamelHttpTransportServlet());
-        Collection<String> urlMappings = new ArrayList<>();
-        urlMappings.add(CAMEL_URL_MAPPING);
-        registration.setUrlMappings(urlMappings);
-        return registration;
-    }
-
-    @Bean
-    public Client restClient() {
-        return ClientBuilder.newClient();
     }
 
     /**

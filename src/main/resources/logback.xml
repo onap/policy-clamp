@@ -1,5 +1,4 @@
 <configuration scan="true" scanPeriod="10 seconds" debug="false">
-		<contextName>${module.ajsc.namespace.name}</contextName>
 		<jmxConfigurator />
 		<property name="logDirectory" value="log" />
 		<!-- Example evaluator filter applied against console appender -->
@@ -148,29 +147,6 @@
 		<logger name="org.springframework.beans" level="WARN" />
 		<logger name="org.springframework.web" level="WARN" />
 		<logger name="com.blog.spring.jms" level="WARN" />
-
-		<!-- AJSC Services (bootstrap services) -->
-		<logger name="ajsc" level="WARN" />
-		<logger name="ajsc.RouteMgmtService" level="INFO" />
-		<logger name="ajsc.ComputeService" level="INFO" />
-		<logger name="ajsc.VandelayService" level="WARN" />
-		<logger name="ajsc.FilePersistenceService" level="WARN" />
-		<logger name="ajsc.UserDefinedJarService" level="WARN" />
-		<logger name="ajsc.UserDefinedBeansDefService" level="WARN" />
-		<logger name="ajsc.LoggingConfigurationService" level="WARN" />
-
-		<!-- AJSC related loggers (DME2 Registration, csi logging, restlet, servlet 
-				logging) -->
-		<logger name="ajsc.utils" level="WARN" />
-		<logger name="ajsc.utils.DME2Helper" level="INFO" />
-		<logger name="ajsc.filters" level="DEBUG" />
-		<logger name="ajsc.beans.interceptors" level="DEBUG" />
-		<logger name="ajsc.restlet" level="DEBUG" />
-		<logger name="ajsc.servlet" level="DEBUG" />
-		<logger name="com.att" level="WARN" />
-		<logger name="com.att.ajsc.csi.logging" level="DEBUG" />
-		<logger name="com.att.ajsc.filemonitor" level="WARN" />
-		<logger name="com.att.ajsc.introscope" level="info" />
 
 		<!-- Other Loggers that may help troubleshoot -->
 		<logger name="net.sf" level="WARN" />

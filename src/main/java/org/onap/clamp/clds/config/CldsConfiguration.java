@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -23,12 +23,6 @@
 
 package org.onap.clamp.clds.config;
 
-import com.att.ajsc.common.AjscProvider;
-import com.att.ajsc.common.AjscService;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.sql.DataSource;
 import javax.xml.transform.TransformerConfigurationException;
 
@@ -48,19 +42,17 @@ import org.onap.clamp.clds.client.req.sdc.SdcReq;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.transform.XslTransformer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 @Profile("clamp-default")
 public class CldsConfiguration {
-    @Autowired
-    private ApplicationContext context;
 
     /**
      * Clds Identity database DataSource configuration
@@ -73,14 +65,11 @@ public class CldsConfiguration {
         return new EncodedPasswordBasicDataSource();
     }
 
-    @Bean(name = "jaxrsProviders")
-    public List<?> jaxrsProviders() {
-        return new ArrayList(context.getBeansWithAnnotation(AjscProvider.class).values());
-    }
-
-    @Bean(name = "jaxrsServices")
-    public List<?> jaxrsServices() {
-        return new ArrayList(context.getBeansWithAnnotation(AjscService.class).values());
+    @Bean(name = "mapper")
+    public PropertiesFactoryBean mapper() {
+        PropertiesFactoryBean bean = new PropertiesFactoryBean();
+        bean.setLocation(new ClassPathResource("system.properties"));
+        return bean;
     }
 
     @Bean(name = "cldsDao")

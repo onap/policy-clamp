@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,6 @@
 
 package org.onap.clamp.clds.service;
 
-import com.att.ajsc.common.AjscService;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,6 +32,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +68,7 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.SdcCommunicationException;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
+import org.onap.clamp.clds.model.CLDSMonitoringDetails;
 import org.onap.clamp.clds.model.CldsDBServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsHealthCheck;
@@ -90,38 +91,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * Service to save and retrieve the CLDS model attributes.
  */
-@AjscService
-@Api(value = "/clds")
+@Component
 @Path("/clds")
 public class CldsService extends SecureServiceBase {
+
     protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
     @Autowired
-    private ApplicationContext        appContext;
-    private static final String       RESOURCE_NAME  = "clds-version.properties";
+    private ApplicationContext appContext;
+    private static final String RESOURCE_NAME = "clds-version.properties";
     @Value("${CLDS_PERMISSION_TYPE_CL:permission-type-cl}")
-    private String                    cldsPersmissionTypeCl;
+    private String cldsPersmissionTypeCl;
     @Value("${CLDS_PERMISSION_TYPE_CL_MANAGE:permission-type-cl-manage}")
-    private String                    cldsPermissionTypeClManage;
+    private String cldsPermissionTypeClManage;
     @Value("${CLDS_PERMISSION_TYPE_CL_EVENT:permission-type-cl-event}")
-    private String                    cldsPermissionTypeClEvent;
+    private String cldsPermissionTypeClEvent;
     @Value("${CLDS_PERMISSION_TYPE_FILTER_VF:permission-type-filter-vf}")
-    private String                    cldsPermissionTypeFilterVf;
+    private String cldsPermissionTypeFilterVf;
     @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
-    private String                    cldsPermissionTypeTemplate;
+    private String cldsPermissionTypeTemplate;
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
-    private String                    cldsPermissionInstance;
-    private SecureServicePermission   permissionReadCl;
-    private SecureServicePermission   permissionUpdateCl;
-    private SecureServicePermission   permissionReadTemplate;
-    private SecureServicePermission   permissionUpdateTemplate;
+    private String cldsPermissionInstance;
+    private SecureServicePermission permissionReadCl;
+    private SecureServicePermission permissionUpdateCl;
+    private SecureServicePermission permissionReadTemplate;
+    private SecureServicePermission permissionUpdateTemplate;
 
     @PostConstruct
     private final void afterConstruction() {
@@ -134,28 +133,51 @@ public class CldsService extends SecureServiceBase {
     }
 
     @Value("${org.onap.clamp.config.files.globalClds:'classpath:/clds/globalClds.properties'}")
-    private String                 globalClds;
-    private Properties             globalCldsProperties;
+    private String globalClds;
+    private Properties globalCldsProperties;
     @Autowired
-    private CldsDao                cldsDao;
+    private CldsDao cldsDao;
     @Autowired
-    private RuntimeService         runtimeService;
+    private RuntimeService runtimeService;
     @Autowired
-    private XslTransformer         cldsBpmnTransformer;
+    private XslTransformer cldsBpmnTransformer;
     @Autowired
-    private RefProp                refProp;
+    private RefProp refProp;
     @Autowired
-    private SdcCatalogServices     sdcCatalogServices;
+    private SdcCatalogServices sdcCatalogServices;
     @Autowired
     private DcaeDispatcherServices dcaeDispatcherServices;
     @Autowired
-    private DcaeInventoryServices  dcaeInventoryServices;
+    private DcaeInventoryServices dcaeInventoryServices;
 
     /*
-     *
+     * @return list of CLDS-Monitoring-Details: CLOSELOOP_NAME | Close loop name
+     * used in the CLDS application (prefix: ClosedLoop- + unique ClosedLoop ID)
+     * MODEL_NAME | Model Name in CLDS application SERVICE_TYPE_ID | TypeId
+     * returned from the DCAE application when the ClosedLoop is submitted
+     * (DCAEServiceTypeRequest generated in DCAE application). DEPLOYMENT_ID |
+     * Id generated when the ClosedLoop is deployed in DCAE. TEMPLATE_NAME |
+     * Template used to generate the ClosedLoop model. ACTION_CD | Current state
+     * of the ClosedLoop in CLDS application.
+     */
+    @GET
+    @Path("/cldsDetails")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<CLDSMonitoringDetails> getCLDSDetails() {
+        Date startTime = new Date();
+        LoggingUtils.setRequestContext("CldsService: GET model details", getPrincipalName());
+        List<CLDSMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CLDSMonitoringDetails>();
+        cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
+        // audit log
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "Get cldsDetails success", this.getClass().getName());
+        auditLogger.info("GET cldsDetails completed");
+        return cldsMonitoringDetailsList;
+    }
+
+    /*
      * CLDS IFO service will return 3 things 1. User Name 2. CLDS code version
      * that is currently installed from pom.xml file 3. User permissions
-     *
      */
     @GET
     @Path("/cldsInfo")
@@ -229,7 +251,6 @@ public class CldsService extends SecureServiceBase {
      * @param modelName
      * @return bpmn xml text - content of bpmn given name
      */
-    @ApiOperation(value = "Retrieves BPMN for a CLDS model name from the database", notes = "This is only expected to be used for testing purposes, not by the UI", response = String.class)
     @GET
     @Path("/model/bpmn/{modelName}")
     @Produces(MediaType.TEXT_XML)
@@ -254,7 +275,6 @@ public class CldsService extends SecureServiceBase {
      * @param modelName
      * @return image xml text - content of image given name
      */
-    @ApiOperation(value = "Retrieves image for a CLDS model name from the database", notes = "This is only expected to be used for testing purposes, not by the UI", response = String.class)
     @GET
     @Path("/model/image/{modelName}")
     @Produces(MediaType.TEXT_XML)
@@ -277,7 +297,6 @@ public class CldsService extends SecureServiceBase {
      * @param modelName
      * @return clds model - clds model for the given model name
      */
-    @ApiOperation(value = "Retrieves a CLDS model by name from the database", notes = "", response = String.class)
     @GET
     @Path("/model/{modelName}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -288,15 +307,10 @@ public class CldsService extends SecureServiceBase {
         logger.debug("GET model for  modelName={}", modelName);
         CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
         isAuthorizedForVf(cldsModel);
-        /**
-         * Checking condition whether our CLDS model can call INventory Method
-         */
+        // Checking condition whether our CLDS model can call Inventory Method
         if (cldsModel.canInventoryCall()) {
             try {
-                /*
-                 * Below is the method to for inventory call and DB insert for
-                 * event methods
-                 */
+                // Method to call dcae inventory and invoke insert event method
                 dcaeInventoryServices.setEventInventory(cldsModel, getUserId());
             } catch (Exception e) {
                 LoggingUtils.setErrorContext("900", "Set event inventory error");
@@ -315,7 +329,6 @@ public class CldsService extends SecureServiceBase {
      *
      * @param modelName
      */
-    @ApiOperation(value = "Saves a CLDS model by name in the database", notes = "", response = String.class)
     @PUT
     @Path("/model/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -350,7 +363,6 @@ public class CldsService extends SecureServiceBase {
      *
      * @return model names in JSON
      */
-    @ApiOperation(value = "Retrieves a list of CLDS model names", notes = "", response = String.class)
     @GET
     @Path("/model-names")
     @Produces(MediaType.APPLICATION_JSON)
@@ -384,7 +396,6 @@ public class CldsService extends SecureServiceBase {
      * @throws DecoderException
      *             In case of issues with the Hex String decoding
      */
-    @ApiOperation(value = "Saves and processes an action for a CLDS model by name", notes = "", response = String.class)
     @PUT
     @Path("/action/{action}/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -476,8 +487,9 @@ public class CldsService extends SecureServiceBase {
         }
         // refresh model info from db (get fresh event info)
         CldsModel retreivedModel = CldsModel.retrieve(cldsDao, modelName, false);
-        if (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
-                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)) {
+        if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
+                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
+                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
             // To verify inventory status and modify model status to distribute
             dcaeInventoryServices.setEventInventory(retreivedModel, getUserId());
             retreivedModel.save(cldsDao, getUserId());
@@ -495,7 +507,6 @@ public class CldsService extends SecureServiceBase {
      * @param test
      * @param dcaeEvent
      */
-    @ApiOperation(value = "Accepts events for a model", notes = "", response = String.class)
     @POST
     @Path("/dcae/event")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -550,9 +561,7 @@ public class CldsService extends SecureServiceBase {
      *             In case of issue when decryting the SDC password
      * @throws DecoderException
      *             In case of issues with the decoding of the Hex String
-     *
      */
-    @ApiOperation(value = "Retrieves sdc services", notes = "", response = String.class)
     @GET
     @Path("/sdc/services")
     @Produces(MediaType.APPLICATION_JSON)
@@ -580,9 +589,7 @@ public class CldsService extends SecureServiceBase {
      * 
      * @throws IOException
      *             In case of issues
-     *
      */
-    @ApiOperation(value = "Retrieves total properties required by UI", notes = "", response = String.class)
     @GET
     @Path("/properties")
     @Produces(MediaType.APPLICATION_JSON)
@@ -598,9 +605,7 @@ public class CldsService extends SecureServiceBase {
      *             In case of issues with the decryting the encrypted password
      * @throws DecoderException
      *             In case of issues with the decoding of the Hex String
-     * 
      */
-    @ApiOperation(value = "Retrieves total properties by using invariantUUID based on refresh and non refresh", notes = "", response = String.class)
     @GET
     @Path("/properties/{serviceInvariantUUID}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -950,7 +955,6 @@ public class CldsService extends SecureServiceBase {
                             && resourceVf.get(0).equalsIgnoreCase(currentVf.get(0))) {
                         throw new BadRequestException("Same Service/VF already exists in " + cldsModelProp.getName()
                                 + " model, please select different Service/VF.");
-
                     }
                 }
             }
