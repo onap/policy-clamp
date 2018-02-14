@@ -26,21 +26,7 @@ package org.onap.clamp.clds.config;
 import javax.sql.DataSource;
 import javax.xml.transform.TransformerConfigurationException;
 
-import org.onap.clamp.clds.client.CldsEventDelegate;
-import org.onap.clamp.clds.client.DcaeDispatcherServices;
-import org.onap.clamp.clds.client.DcaeInventoryServices;
-import org.onap.clamp.clds.client.HolmesPolicyDelegate;
-import org.onap.clamp.clds.client.HolmesPolicyDeleteDelegate;
-import org.onap.clamp.clds.client.OperationalPolicyDelegate;
-import org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate;
-import org.onap.clamp.clds.client.SdcSendReqDelegate;
-import org.onap.clamp.clds.client.TcaPolicyDelegate;
-import org.onap.clamp.clds.client.TcaPolicyDeleteDelegate;
-import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
-import org.onap.clamp.clds.client.req.sdc.SdcReq;
 import org.onap.clamp.clds.dao.CldsDao;
-import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -84,75 +70,5 @@ public class CldsConfiguration {
         XslTransformer xslTransformer = new XslTransformer();
         xslTransformer.setXslResourceName("xsl/clds-bpmn-transformer.xsl");
         return xslTransformer;
-    }
-
-    @Bean
-    public RefProp getRefProp() {
-        return new RefProp();
-    }
-
-    @Bean
-    public SdcReq getSdcReq() {
-        return new SdcReq();
-    }
-
-    @Bean
-    public PolicyClient getPolicyClient() {
-        return new PolicyClient();
-    }
-
-    @Bean(name = "cldsEventDelegate")
-    public CldsEventDelegate getCldsEventDelegate() {
-        return new CldsEventDelegate();
-    }
-
-    @Bean(name = "sdcSendReqDelegate")
-    public SdcSendReqDelegate getSdcSendReqDelegate() {
-        return new SdcSendReqDelegate();
-    }
-
-    @Bean(name = "operationalPolicyDelegate")
-    public OperationalPolicyDelegate getOperationalPolicyDelegate() {
-        return new OperationalPolicyDelegate();
-    }
-
-    @Bean(name = "operationalPolicyDeleteDelegate")
-    public OperationalPolicyDeleteDelegate getOperationalPolicyDeleteDelegate() {
-        return new OperationalPolicyDeleteDelegate();
-    }
-
-    @Bean(name = "sdcCatalogServices")
-    public SdcCatalogServices getSdcCatalogServices() {
-        return new SdcCatalogServices();
-    }
-
-    @Bean(name = "dcaeDispatcherServices")
-    public DcaeDispatcherServices getDcaeDispatcherServices() {
-        return new DcaeDispatcherServices();
-    }
-
-    @Bean(name = "dcaeInventoryServices")
-    public DcaeInventoryServices getDcaeInventoryServices() {
-        return new DcaeInventoryServices();
-    }
-
-    @Bean(name = "tcaPolicyDelegate")
-    public TcaPolicyDelegate getTcaPolicyDelegate() {
-        return new TcaPolicyDelegate();
-    }
-
-    @Bean(name = "tcaPolicyDeleteDelegate")
-    public TcaPolicyDeleteDelegate getTcaPolicyDeleteDelegate() {
-        return new TcaPolicyDeleteDelegate();
-    }
-
-    @Bean(name = "holmesPolicyDelegate")
-    public HolmesPolicyDelegate getHolmesPolicyDelegate() {
-        return new HolmesPolicyDelegate();
-    }
-
-    @Bean(name = "holmesPolicyDeleteDelegate")
-    public HolmesPolicyDeleteDelegate getHolmesPolicyDeleteDelegate() {
-        return new HolmesPolicyDeleteDelegate();
     }
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,7 +44,6 @@ import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -53,8 +52,8 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class PolicyClientItCase extends AbstractItCase {
+
     String modelProp;
     String modelBpmnProp;
     String modelName;
@@ -65,8 +64,8 @@ public class PolicyClientItCase extends AbstractItCase {
      */
     @Before
     public void setUp() throws IOException {
-        modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
-        modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
+        modelProp = ResourceFileUtil.getResourceAsString("example/model-properties/policy/modelBpmnProperties.json");
+        modelBpmnProp = ResourceFileUtil.getResourceAsString("example/model-properties/policy/modelBpmn.json");
         modelName = "example-model06";
         controlName = "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf";
     }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,67 +23,85 @@
 
 package org.onap.clamp.clds.it;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.codec.DecoderException;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
+import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.sdc.SdcReq;
-import org.onap.clamp.clds.model.CldsSdcResource;
-import org.onap.clamp.clds.model.CldsSdcServiceDetail;
-import org.onap.clamp.clds.model.prop.Global;
+import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-no-camunda.properties")
-public class SdcReqItCase {
-    String         baseUrl              = "AYBABTU";
-    String         serviceInvariantUuid = "serviceInvariantUUID";
+public class SdcReqItCase extends AbstractItCase {
+
     @Autowired
     private SdcReq sdcReq;
+    private String modelBpmnProp;
+    private String modelBpmn;
+    private String modelName;
+    private String controlName;
+    private ModelProperties modelProperties;
+    private String jsonWithYamlInside;
+
+    /**
+     * Initialize Test.
+     */
+    @Before
+    public void setUp() throws IOException {
+        modelBpmnProp = ResourceFileUtil.getResourceAsString("example/model-properties/tca/modelBpmnProperties.json");
+        modelBpmn = ResourceFileUtil.getResourceAsString("example/model-properties/tca/modelBpmn.json");
+        modelName = "example-model01";
+        controlName = "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf";
+        modelProperties = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmn,
+                modelBpmnProp);
+        jsonWithYamlInside = ResourceFileUtil.getResourceAsString("example/tca-policy-req/prop-text.json");
+    }
 
     @Test
-    public void getSdcReqUrlsListNoGlobalPropTest() throws GeneralSecurityException, DecoderException {
-        ModelProperties prop = mock(ModelProperties.class);
-        SdcCatalogServices sdcCatalogServices = mock(SdcCatalogServices.class);
-        DelegateExecution delegateExecution = mock(DelegateExecution.class);
-        CldsSdcResource cldsSdcResource = mock(CldsSdcResource.class);
-        List<CldsSdcResource> cldsSdcResources = new ArrayList<>();
-        cldsSdcResources.add(cldsSdcResource);
-        List<String> resourceVf = new ArrayList<>();
-        resourceVf.add(serviceInvariantUuid);
-        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-        Global global = mock(Global.class);
-        when(prop.getGlobal()).thenReturn(global);
-        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-        when(global.getService()).thenReturn(serviceInvariantUuid);
-        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-        CldsSdcServiceDetail cldsSdcServiceDetail = mock(CldsSdcServiceDetail.class);
-        when(sdcCatalogServices.getCldsSdcServiceDetailFromJson(null)).thenReturn(cldsSdcServiceDetail);
-        when(global.getResourceVf()).thenReturn(new ArrayList<>());
-        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-        when(cldsSdcServiceDetail.getResources()).thenReturn(cldsSdcResources);
-        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-        when(cldsSdcResource.getResoucreType()).thenReturn("VF");
-        Assert.assertTrue(sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution).isEmpty());
-        when(global.getResourceVf()).thenReturn(resourceVf);
-        when(cldsSdcResource.getResourceInvariantUUID()).thenReturn(serviceInvariantUuid);
-        when(cldsSdcResource.getResourceInstanceName()).thenReturn("Resource instance name");
-        List<String> expected = new ArrayList<>();
-        expected.add("AYBABTU/null/resourceInstances/resourceinstancename/artifacts");
-        Assert.assertEquals(expected, sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, delegateExecution));
+    public void formatBlueprintTest() throws IOException {
+        String blueprintFormatted = sdcReq.formatBlueprint(modelProperties, jsonWithYamlInside);
+        assertEquals(ResourceFileUtil.getResourceAsString("example/tca-policy-req/blueprint-expected.yaml"),
+                blueprintFormatted);
+    }
+
+    @Test
+    public void formatSdcLocationsReqTest() {
+        String blueprintFormatted = sdcReq.formatSdcLocationsReq(modelProperties, "testos");
+        assertEquals(
+                "{\"artifactName\":\"testos\",\"locations\":[\"SNDGCA64\",\"ALPRGAED\",\"LSLEILAA\",\"MDTWNJC1\"]}",
+                blueprintFormatted);
+    }
+
+    @Test
+    public void formatSdcReqTest() {
+        String jsonResult = sdcReq.formatSdcReq("payload", "artifactName", "artifactLabel", "artifactType");
+        JSONAssert.assertEquals(
+                "{\"payloadData\" : \"cGF5bG9hZA==\",\"artifactLabel\" : \"artifactLabel\",\"artifactName\" :\"artifactName\",\"artifactType\" : \"artifactType\","
+                        + "\"artifactGroupType\" : \"DEPLOYMENT\",\"description\" : \"from CLAMP Cockpit\"}",
+                jsonResult, true);
+    }
+
+    @Test
+    public void getSdcReqUrlsListTest() throws GeneralSecurityException, DecoderException {
+        List<String> listUrls = sdcReq.getSdcReqUrlsList(modelProperties, refProp.getStringValue("sdc.serviceUrl"));
+        assertNotNull(listUrls);
+        assertTrue(listUrls.size() == 1);
+        assertTrue(listUrls.get(0).contains(
+                "/sdc/v1/catalog/services/56441b4b-0467-41dc-9a0e-e68613838219/resourceInstances/vpacketgen0/artifacts"));
     }
 }

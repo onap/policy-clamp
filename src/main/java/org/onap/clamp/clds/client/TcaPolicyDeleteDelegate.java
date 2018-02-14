@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,46 +23,44 @@
 
 package org.onap.clamp.clds.client;
 
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
+import org.springframework.stereotype.Component;
 
 /**
  * Delete Tca Policy via policy api.
- *
- *
  */
-public class TcaPolicyDeleteDelegate implements JavaDelegate {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(TcaPolicyDeleteDelegate.class);
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+@Component
+public class TcaPolicyDeleteDelegate {
 
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(TcaPolicyDeleteDelegate.class);
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private PolicyClient            policyClient;
+    private PolicyClient policyClient;
 
     /**
      * Perform activity. Delete Tca Policy via policy api.
      *
-     * @param execution
+     * @param camelExchange
+     *            The Camel Exchange object containing the properties
      */
-    @Override
-    public void execute(DelegateExecution execution) throws Exception {
-
-        ModelProperties prop = ModelProperties.create(execution);
+    @Handler
+    public void execute(Exchange camelExchange) {
+        ModelProperties prop = ModelProperties.create(camelExchange);
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             prop.setCurrentModelElementId(tca.getId());
-
             String responseMessage = policyClient.deleteMicrosService(prop);
             if (responseMessage != null) {
-                execution.setVariable("tcaPolicyDeleteResponseMessage", responseMessage.getBytes());
+                camelExchange.setProperty("tcaPolicyDeleteResponseMessage", responseMessage.getBytes());
             }
         }
     }
-
 }

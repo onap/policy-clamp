@@ -56,11 +56,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerException;
 
+import org.apache.camel.Produce;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.StringUtils;
-import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.json.simple.parser.ParseException;
+import org.onap.clamp.clds.camel.CamelProxy;
 import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
@@ -101,6 +101,8 @@ import org.springframework.web.client.HttpClientErrorException;
 @Path("/clds")
 public class CldsService extends SecureServiceBase {
 
+    @Produce(uri = "direct:processSubmit")
+    private CamelProxy camelProxy;
     protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
     @Autowired
     private ApplicationContext appContext;
@@ -137,8 +139,6 @@ public class CldsService extends SecureServiceBase {
     private Properties globalCldsProperties;
     @Autowired
     private CldsDao cldsDao;
-    @Autowired
-    private RuntimeService runtimeService;
     @Autowired
     private XslTransformer cldsBpmnTransformer;
     @Autowired
@@ -410,7 +410,7 @@ public class CldsService extends SecureServiceBase {
                 cldsPermissionInstance, actionCd);
         isAuthorized(permisionManage);
         isAuthorizedForVf(model);
-        String userid = getUserId();
+        String userId = getUserId();
         String actionStateCd = CldsEvent.ACTION_STATE_INITIATED;
         String processDefinitionKey = "clds-process-action-wf";
         logger.info("PUT actionCd={}", actionCd);
@@ -420,7 +420,7 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT test={}", test);
         logger.info("PUT bpmnText={}", model.getBpmnText());
         logger.info("PUT propText={}", model.getPropText());
-        logger.info("PUT userid={}", userid);
+        logger.info("PUT userId={}", userId);
         logger.info("PUT getTypeId={}", model.getTypeId());
         logger.info("PUT deploymentId={}", model.getDeploymentId());
         if (model.getTemplateName() != null) {
@@ -462,7 +462,7 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
         // determine if requested action is permitted
         model.validateAction(actionCd);
-        // input variables to camunda process
+        // input variables for Camel process
         Map<String, Object> variables = new HashMap<>();
         variables.put("actionCd", actionCd);
         variables.put("modelProp", prop.getBytes());
@@ -471,18 +471,18 @@ public class CldsService extends SecureServiceBase {
         variables.put("controlName", controlName);
         variables.put("docText", docText.getBytes());
         variables.put("isTest", isTest);
-        variables.put("userid", userid);
+        variables.put("userid", userId);
         variables.put("isInsertTestEvent", isInsertTestEvent);
         logger.info("modelProp - " + prop);
         logger.info("docText - " + docText);
+        // ModelProperties modelProperties = new ModelProperties(modelName,
+        // controlName, actionCd, isTest, modelBpmnProp, modelProp);
         try {
-            // start camunda process
-            ProcessInstance pi = runtimeService.startProcessInstanceByKey(processDefinitionKey, variables);
-            // log process info
-            logger.info("Started processDefinitionId={}, processInstanceId={}", pi.getProcessDefinitionId(),
-                    pi.getProcessInstanceId());
+            String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest, userId,
+                    isInsertTestEvent);
+            logger.info("Starting Camel flow on request, result is: ", result);
         } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
-            logger.error("Exception occured during invoking bpmn process", e);
+            logger.error("Exception occured during invoking Camel process", e);
             throw new CldsConfigException(e.getMessage(), e);
         }
         // refresh model info from db (get fresh event info)
@@ -605,39 +605,26 @@ public class CldsService extends SecureServiceBase {
      *             In case of issues with the decryting the encrypted password
      * @throws DecoderException
      *             In case of issues with the decoding of the Hex String
+     * @throws IOException
+     *             In case of issue to convert CldsServiceCache to InputStream
      */
     @GET
     @Path("/properties/{serviceInvariantUUID}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSdcPropertiesByServiceUUIDForRefresh(
             @PathParam("serviceInvariantUUID") String serviceInvariantUUID,
-            @DefaultValue("false") @QueryParam("refresh") String refresh)
-            throws GeneralSecurityException, DecoderException {
+            @DefaultValue("false") @QueryParam("refresh") boolean refresh)
+            throws GeneralSecurityException, DecoderException, IOException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc properties by uuid", getPrincipalName());
         CldsServiceData cldsServiceData = new CldsServiceData();
         cldsServiceData.setServiceInvariantUUID(serviceInvariantUUID);
-        boolean isCldsSdcDataExpired = true;
-        // To getcldsService information from database cache using invariantUUID
-        // only when refresh = false
-        if (refresh != null && refresh.equalsIgnoreCase("false")) {
-            cldsServiceData = cldsServiceData.getCldsServiceCache(cldsDao, serviceInvariantUUID);
-            // If cldsService is available in database Cache , verify is data
-            // expired or not
-            if (cldsServiceData != null) {
-                isCldsSdcDataExpired = sdcCatalogServices.isCldsSdcCacheDataExpired(cldsServiceData);
-            }
+        if (!refresh) {
+            cldsServiceData = cldsDao.getCldsServiceCache(serviceInvariantUUID);
         }
-        // If user Requested for refresh or database cache expired , get all
-        // data from sdc api.
-        if ((refresh != null && refresh.equalsIgnoreCase("true")) || isCldsSdcDataExpired) {
+        if (sdcCatalogServices.isCldsSdcCacheDataExpired(cldsServiceData)) {
             cldsServiceData = sdcCatalogServices.getCldsServiceDataWithAlarmConditions(serviceInvariantUUID);
-            CldsDBServiceCache cldsDBServiceCache = sdcCatalogServices
-                    .getCldsDbServiceCacheUsingCldsServiceData(cldsServiceData);
-            if (cldsDBServiceCache != null && cldsDBServiceCache.getInvariantId() != null
-                    && cldsDBServiceCache.getServiceId() != null) {
-                cldsServiceData.setCldsServiceCache(cldsDao, cldsDBServiceCache);
-            }
+            cldsDao.setCldsServiceCache(new CldsDBServiceCache(cldsServiceData));
         }
         // filter out VFs the user is not authorized for
         cldsServiceData.filterVfs(this);

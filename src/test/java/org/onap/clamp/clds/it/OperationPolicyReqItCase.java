@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,25 +45,24 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
 import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class OperationPolicyReqItCase extends AbstractItCase {
+
     @Test
     public void formatAttributesTest() throws IOException, BuilderException {
-        String modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
-        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
-        ModelProperties prop = new ModelProperties("testModel", "controlNameTest", CldsEvent.ACTION_SUBMIT, true,
-                modelBpmnProp, modelProp);
+        String modelBpmnProp = ResourceFileUtil
+                .getResourceAsString("example/model-properties/policy/modelBpmnProperties.json");
+        String modelBpmn = ResourceFileUtil.getResourceAsString("example/model-properties/policy/modelBpmn.json");
+        ModelProperties modelProperties = new ModelProperties("testModel", "controlNameTest", CldsEvent.ACTION_SUBMIT,
+                true, modelBpmn, modelBpmnProp);
         List<Map<AttributeType, Map<String, String>>> attributes = new ArrayList<>();
-        if (prop.getType(Policy.class).isFound()) {
-            for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-
-                attributes.add(OperationalPolicyReq.formatAttributes(refProp, prop, prop.getType(Policy.class).getId(),
-                        policyChain));
+        if (modelProperties.getType(Policy.class).isFound()) {
+            for (PolicyChain policyChain : modelProperties.getType(Policy.class).getPolicyChains()) {
+                attributes.add(OperationalPolicyReq.formatAttributes(refProp, modelProperties,
+                        modelProperties.getType(Policy.class).getId(), policyChain));
             }
         }
         assertFalse(attributes.isEmpty());
@@ -77,9 +76,7 @@ public class OperationPolicyReqItCase extends AbstractItCase {
         // Remove this field as not always present (depends of policy api)
         yaml = yaml.replaceAll("  pnf: null" + System.lineSeparator(), "");
         yaml = yaml.substring(yaml.indexOf("controlLoop:"), yaml.length());
-
         assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-1.yaml"), yaml);
-
         yaml = URLDecoder.decode(attributes.get(1).get(AttributeType.RULE).get("ControlLoopYaml"), "UTF-8");
         yaml = yaml.replaceAll("trigger_policy: (.*)", "trigger_policy: <generatedId>");
         yaml = yaml.replaceAll("id: (.*)", "id: <generatedId>");
@@ -87,7 +84,6 @@ public class OperationPolicyReqItCase extends AbstractItCase {
         // Remove this field as not always present (depends of policy api)
         yaml = yaml.replaceAll("  pnf: null" + System.lineSeparator(), "");
         yaml = yaml.substring(yaml.indexOf("controlLoop:"), yaml.length());
-
         assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-2.yaml"), yaml);
     }
 }

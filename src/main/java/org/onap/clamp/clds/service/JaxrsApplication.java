@@ -23,19 +23,12 @@
 
 package org.onap.clamp.clds.service;
 
-import org.glassfish.jersey.server.ResourceConfig;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+
 import org.springframework.stereotype.Component;
 
 @Component
-public class JerseyConfig extends ResourceConfig {
-
-    public JerseyConfig() {
-        registerEndpoints();
-    }
-
-    private void registerEndpoints() {
-        register(CldsService.class);
-        register(UserService.class);
-        register(CldsTemplateService.class);
-    }
+@ApplicationPath("/restservices/clds/v1")
+public class JaxrsApplication extends Application {
 }

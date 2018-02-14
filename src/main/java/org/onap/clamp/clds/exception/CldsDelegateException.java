@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -21,30 +21,39 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.config;
+package org.onap.clamp.clds.exception;
 
-import java.security.GeneralSecurityException;
+/**
+ * New exception to CldsDelegate errors.
+ */
+public class CldsDelegateException extends RuntimeException {
 
-import javax.sql.DataSource;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-
-@Configuration
-public class CamundaEngineConfiguration {
     /**
-     * Camunda Identity database DataSource configuration
      * 
-     * @return
-     * @throws GeneralSecurityException
-     *             In case of issue during the decoding of the password
      */
-    @Primary
-    @Bean(name = "camundaBpmDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.camunda")
-    public DataSource dataSource() {
-        return new EncodedPasswordBasicDataSource();
+    private static final long serialVersionUID = -2705212640916671093L;
+
+    /**
+     * This constructor can be used to create a new CldsDelegateException.
+     * 
+     * @param message
+     *            A string message detailing the problem
+     * @param e
+     *            The exception sent by the code
+     */
+    public CldsDelegateException(String message, Throwable e) {
+        super(message, e);
+    }
+
+    /**
+     * This constructor can be used to create a new CldsDelegateException. Use
+     * this constructor only if you are creating a new exception stack, not if
+     * an exception was already raised by another code.
+     *
+     * @param message
+     *            A string message detailing the problem
+     */
+    public CldsDelegateException(String message) {
+        super(message);
     }
 }

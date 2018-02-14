@@ -29,8 +29,8 @@ import com.att.eelf.configuration.EELFManager;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.ModelProperties;
@@ -41,41 +41,42 @@ import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.policy.api.AttributeType;
 import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Send Operational Policy info to policy api. It uses the policy code to define
  * the model and communicate with it. See also the PolicyClient class.
- * 
  */
-public class OperationalPolicyDelegate implements JavaDelegate {
-    protected static final EELFLogger logger        = EELFManager.getInstance()
-            .getLogger(OperationalPolicyDelegate.class);
+@Component
+public class OperationalPolicyDelegate {
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     /**
      * Automatically injected by Spring, define in CldsConfiguration as a bean.
      */
     @Autowired
-    private PolicyClient              policyClient;
+    private PolicyClient policyClient;
     /**
      * Automatically injected by Spring, define in CldsConfiguration as a bean.
      */
     @Autowired
-    private RefProp                   refProp;
+    private RefProp refProp;
 
     /**
      * Perform activity. Send Operational Policy info to policy api.
      *
-     * @param execution
-     *            The DelegateExecution
+     * @param camelExchange
+     *            The Camel Exchange object containing the properties
      * @throws BuilderException
      *             In case of issues with OperationalPolicyReq
      * @throws UnsupportedEncodingException
      *             In case of issues with the Charset encoding
      */
-    @Override
-    public void execute(DelegateExecution execution) throws BuilderException, UnsupportedEncodingException {
+    @Handler
+    public void execute(Exchange camelExchange) throws BuilderException, UnsupportedEncodingException {
         String responseMessage = null;
-        ModelProperties prop = ModelProperties.create(execution);
+        ModelProperties prop = ModelProperties.create(camelExchange);
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
@@ -84,7 +85,7 @@ public class OperationalPolicyDelegate implements JavaDelegate {
                 responseMessage = policyClient.sendBrmsPolicy(attributes, prop, LoggingUtils.getRequestId());
             }
             if (responseMessage != null) {
-                execution.setVariable("operationalPolicyResponseMessage", responseMessage.getBytes());
+                camelExchange.setProperty("operationalPolicyResponseMessage", responseMessage.getBytes());
             }
         }
     }

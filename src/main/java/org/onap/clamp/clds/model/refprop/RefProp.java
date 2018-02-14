@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,18 +25,22 @@ package org.onap.clamp.clds.model.refprop;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.Properties;
+import org.springframework.stereotype.Component;
 
 /**
  * Holds reference properties.
  */
+@Component
 public class RefProp {
 
     @Autowired
@@ -103,5 +107,4 @@ public class RefProp {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(getStringValue(key1, key2), JsonNode.class);
     }
-
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,33 +35,21 @@ public class CustomModelElementTest {
     }
 
     @Test
-    public void testNewElement() {
-
-        try {
-            String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/modelBpmnProp.json");
-            String modelProp = ResourceFileUtil.getResourceAsString("example/modelProp.json");
-            String modName = "example-model-name";
-            String controlName = "example-control-name";
-
-            CustomModelElement customModelElement = null;
-
-            // Instantiate first, we should not have our CustomModelElement yet
-            ModelProperties prop = new ModelProperties(modName, controlName, null, true, modelBpmnProp, modelProp);
-
-            Assert.assertNotNull(prop);
-
-            customModelElement = prop.getType(CustomModelElement.class);
-
-            Assert.assertNull(customModelElement);
-
-            ModelProperties.registerModelElement(CustomModelElement.class, CustomModelElement.getType());
-
-            customModelElement = prop.getType(CustomModelElement.class);
-
-            Assert.assertNotNull(customModelElement);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void testCustomElement() throws IOException {
+        String modelBpmnProp = ResourceFileUtil.getResourceAsString("example/model-properties/custom/modelBpmn.json");
+        String modelProp = ResourceFileUtil
+                .getResourceAsString("example/model-properties/custom/modelBpmnProperties.json");
+        String modName = "example-model-name";
+        String controlName = "example-control-name";
+        CustomModelElement customModelElement = null;
+        // Instantiate first, we should not have our CustomModelElement yet
+        ModelProperties prop = new ModelProperties(modName, controlName, null, true, modelBpmnProp, modelProp);
+        Assert.assertNotNull(prop);
+        customModelElement = prop.getType(CustomModelElement.class);
+        Assert.assertNull(customModelElement);
+        ModelProperties.registerModelElement(CustomModelElement.class, CustomModelElement.getType());
+        customModelElement = prop.getType(CustomModelElement.class);
+        Assert.assertNotNull(customModelElement);
+        Assert.assertEquals("This is a test", customModelElement.getTest());
     }
 }

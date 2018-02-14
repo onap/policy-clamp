@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +25,6 @@ package org.onap.clamp.clds.model.prop;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.camunda.bpm.engine.delegate.DelegateExecution;
+import org.apache.camel.Exchange;
 import org.onap.clamp.clds.exception.ModelBpmnException;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
@@ -47,22 +46,21 @@ import org.onap.clamp.clds.service.CldsService;
  * Parse model properties.
  */
 public class ModelProperties {
-    protected static final EELFLogger                                 logger              = EELFManager.getInstance()
-            .getLogger(CldsService.class);
-    protected static final EELFLogger                                 auditLogger         = EELFManager.getInstance()
-            .getAuditLogger();
-    private ModelBpmn                                                 modelBpmn;
-    private JsonNode                                                  modelJson;
-    private final String                                              modelName;
-    private final String                                              controlName;
-    private final String                                              actionCd;
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsService.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+    private ModelBpmn modelBpmn;
+    private JsonNode modelJson;
+    private final String modelName;
+    private final String controlName;
+    private final String actionCd;
     // Flag indicate whether it is triggered by Validation Test button from UI
-    private final boolean                                             testOnly;
-    private Global                                                    global;
-    private final Map<String, AbstractModelElement>                   modelElements       = new ConcurrentHashMap<>();
-    private String                                                    currentModelElementId;
-    private String                                                    policyUniqueId;
-    private static final Object                                       lock                = new Object();
+    private final boolean testOnly;
+    private Global global;
+    private final Map<String, AbstractModelElement> modelElements = new ConcurrentHashMap<>();
+    private String currentModelElementId;
+    private String policyUniqueId;
+    private static final Object lock = new Object();
     private static Map<Class<? extends AbstractModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
     static {
         synchronized (lock) {
@@ -107,11 +105,9 @@ public class ModelProperties {
 
     /**
      * This method is meant to ensure that one ModelElement instance exists for
-     * each ModelElement class.
-     *
-     * As new ModelElement classes could have been registered after
-     * instantiation of this ModelProperties, we need to build the missing
-     * ModelElement instances.
+     * each ModelElement class. As new ModelElement classes could have been
+     * registered after instantiation of this ModelProperties, we need to build
+     * the missing ModelElement instances.
      */
     private final void instantiateMissingModelElements() {
         if (modelElementClasses.size() != modelElements.size()) {
@@ -160,20 +156,21 @@ public class ModelProperties {
     }
 
     /**
-     * Create ModelProperties for Camunda Delegate.
+     * Create ModelProperties extracted from a CamelExchange.
      *
-     * @param execution
-     * @return
-     * @throws JsonProcessingException
-     * @throws IOException
+     * @param camelExchange
+     *            The camel Exchange object that contains all info provided to
+     *            the flow
+     * @return A model Properties created from the parameters found in
+     *         camelExchange object
      */
-    public static ModelProperties create(DelegateExecution execution) {
-        String modelProp = new String((byte[]) execution.getVariable("modelProp"));
-        String modelBpmnProp = (String) execution.getVariable("modelBpmnProp");
-        String modelName = (String) execution.getVariable("modelName");
-        String controlName = (String) execution.getVariable("controlName");
-        String actionCd = (String) execution.getVariable("actionCd");
-        boolean isTest = (boolean) execution.getVariable("isTest");
+    public static ModelProperties create(Exchange camelExchange) {
+        String modelProp = (String) camelExchange.getProperty("modelProp");
+        String modelBpmnProp = (String) camelExchange.getProperty("modelBpmnProp");
+        String modelName = (String) camelExchange.getProperty("modelName");
+        String controlName = (String) camelExchange.getProperty("controlName");
+        String actionCd = (String) camelExchange.getProperty("actionCd");
+        boolean isTest = (boolean) camelExchange.getProperty("isTest");
         return new ModelProperties(modelName, controlName, actionCd, isTest, modelBpmnProp, modelProp);
     }
 

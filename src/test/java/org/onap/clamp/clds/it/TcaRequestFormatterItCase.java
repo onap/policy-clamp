@@ -39,7 +39,6 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -47,14 +46,14 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class TcaRequestFormatterItCase extends AbstractItCase {
 
-    String modelProp;
-    String modelBpmn;
-    String modelName;
-    String controlName;
-    String yamlInput;
+    private String modelProp;
+    private String modelBpmn;
+    private String modelName;
+    private String controlName;
+    private String yamlInput;
+    private ModelProperties modelProperties;
 
     /**
      * Initialize Test.
@@ -66,13 +65,13 @@ public class TcaRequestFormatterItCase extends AbstractItCase {
         yamlInput = ResourceFileUtil.getResourceAsString("example/tca-policy-req/blueprint-input.yaml");
         modelName = "example-model01";
         controlName = "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf";
+        modelProperties = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmn,
+                modelProp);
     }
 
     @Test
     public void testCreatePolicyJson() throws IOException, JSONException {
-        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmn,
-                modelProp);
-        String result = TcaRequestFormatter.createPolicyJson(refProp, prop);
+        String result = TcaRequestFormatter.createPolicyJson(refProp, modelProperties);
         assertNotNull(result);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("example/tca-policy-req/tca-policy-expected.json"),
                 result, true);
@@ -80,9 +79,7 @@ public class TcaRequestFormatterItCase extends AbstractItCase {
 
     @Test
     public void testUpdatedBlueprintWithConfiguration() throws IOException {
-        ModelProperties prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmn,
-                modelProp);
-        String result = TcaRequestFormatter.updatedBlueprintWithConfiguration(refProp, prop, yamlInput);
+        String result = TcaRequestFormatter.updatedBlueprintWithConfiguration(refProp, modelProperties, yamlInput);
         assertNotNull(result);
         assertEquals(ResourceFileUtil.getResourceAsString("example/tca-policy-req/blueprint-expected.yaml"), result);
     }

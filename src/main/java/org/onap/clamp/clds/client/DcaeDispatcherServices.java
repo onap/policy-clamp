@@ -35,24 +35,26 @@ import org.onap.clamp.clds.exception.DcaeDeploymentException;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * This class implements the communication with DCAE for the service
  * deployments.
- *
  */
+@Component
 public class DcaeDispatcherServices {
-    protected static final EELFLogger logger                       = EELFManager.getInstance()
-            .getLogger(DcaeDispatcherServices.class);
-    protected static final EELFLogger metricsLogger                = EELFManager.getInstance().getMetricsLogger();
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeDispatcherServices.class);
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private RefProp                   refProp;
-    private static final String       STATUS_URL_LOG               = "Status URL extracted: ";
-    private static final String       DCAE_URL_PREFIX              = "/dcae-deployments/";
-    private static final String       DCAE_URL_PROPERTY_NAME       = "DCAE_DISPATCHER_URL";
-    public static final String        DCAE_REQUESTID_PROPERTY_NAME = "dcae.header.requestId";
-    private static final String       DCAE_LINK_FIELD              = "links";
-    private static final String       DCAE_STATUS_FIELD            = "status";
+    private RefProp refProp;
+    private static final String STATUS_URL_LOG = "Status URL extracted: ";
+    private static final String DCAE_URL_PREFIX = "/dcae-deployments/";
+    private static final String DCAE_URL_PROPERTY_NAME = "DCAE_DISPATCHER_URL";
+    private static final String DCAE_REQUEST_FAILED_LOG = "RequestFailed - responseStr=";
+    public static final String DCAE_REQUESTID_PROPERTY_NAME = "dcae.header.requestId";
+    private static final String DCAE_LINK_FIELD = "links";
+    private static final String DCAE_STATUS_FIELD = "status";
 
     /**
      * Delete the deployment on DCAE.
@@ -76,7 +78,7 @@ public class DcaeDispatcherServices {
             LoggingUtils.setResponseContext("0", "Delete deployments success", this.getClass().getName());
             return statusUrl;
         } catch (Exception e) {
-        	//Log StatusCode during exception in metrics log 
+            // Log StatusCode during exception in metrics log
             LoggingUtils.setResponseContext("900", "Delete deployments failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Delete deployments error");
             logger.error("Exception occurred during Delete Deployment Operation with DCAE", e);
@@ -93,7 +95,6 @@ public class DcaeDispatcherServices {
      * @param statusUrl
      *            The URL provided by a previous DCAE Query
      * @return The status
-     * 
      */
     public String getOperationStatus(String statusUrl) {
         // Assigning processing status to monitor operation status further
@@ -111,7 +112,7 @@ public class DcaeDispatcherServices {
             LoggingUtils.setResponseContext("0", "Get operation status success", this.getClass().getName());
             opStatus = status;
         } catch (Exception e) {
-        	//Log StatusCode during exception in metrics log 
+            // Log StatusCode during exception in metrics log
             LoggingUtils.setResponseContext("900", "Get operation status failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get operation status error");
             logger.error("Exception occurred during getOperationStatus Operation with DCAE", e);
@@ -124,7 +125,6 @@ public class DcaeDispatcherServices {
 
     /**
      * This method send a getDeployments operation to DCAE.
-     * 
      */
     public void getDeployments() {
         Date startTime = new Date();
@@ -134,7 +134,7 @@ public class DcaeDispatcherServices {
             DcaeHttpConnectionManager.doDcaeHttpQuery(url, "GET", null, null);
             LoggingUtils.setResponseContext("0", "Get deployments success", this.getClass().getName());
         } catch (Exception e) {
-        	//Log StatusCode during exception in metrics log 
+            // Log StatusCode during exception in metrics log
             LoggingUtils.setResponseContext("900", "Get deployments failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get deployments error");
             logger.error("Exception occurred during getDeployments Operation with DCAE", e);
@@ -174,7 +174,7 @@ public class DcaeDispatcherServices {
             LoggingUtils.setResponseContext("0", "Create new deployment failed", this.getClass().getName());
             return statusUrl;
         } catch (Exception e) {
-        	//Log StatusCode during exception in metrics log 
+            // Log StatusCode during exception in metrics log
             LoggingUtils.setResponseContext("900", "Create new deployment failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Create new deployment error");
             logger.error("Exception occurred during createNewDeployment Operation with DCAE", e);
@@ -212,7 +212,7 @@ public class DcaeDispatcherServices {
             LoggingUtils.setResponseContext("0", "Delete existing deployment success", this.getClass().getName());
             return statusUrl;
         } catch (Exception e) {
-        	//Log StatusCode during exception in metrics log 
+            // Log StatusCode during exception in metrics log
             LoggingUtils.setResponseContext("900", "Delete existing deployment failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Delete existing deployment error");
             logger.error("Exception occurred during deleteExistingDeployment Operation with DCAE", e);

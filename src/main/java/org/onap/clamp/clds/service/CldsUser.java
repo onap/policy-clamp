@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -29,9 +29,8 @@ import java.util.Arrays;
  * The class represents the CldsUser that can be extracted from cldsusers.json.
  */
 public class CldsUser {
-
-    private String user;
-    private String password;
+    private String                    user;
+    private String                    password;
     private SecureServicePermission[] permissions;
 
     /**

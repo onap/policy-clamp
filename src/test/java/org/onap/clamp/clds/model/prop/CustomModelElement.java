@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class CustomModelElement extends AbstractModelElement {
 
+    private String test;
     private static final String CUSTOM_TYPE = "customType";
 
     /**
@@ -38,10 +39,18 @@ public class CustomModelElement extends AbstractModelElement {
     public CustomModelElement(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
         super(CUSTOM_TYPE, modelProp, modelBpmn, modelJson);
         topicPublishes = getValueByName("topicPublishes");
+        test = this.getValueByName("test");
     }
 
     public static final String getType() {
         return CUSTOM_TYPE;
     }
 
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
+    }
 }

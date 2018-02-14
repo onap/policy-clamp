@@ -1,0 +1,6 @@
+{
+	"service": {
+		"4cc5b45a-1f63-4194-8100-cd8e14248c92": "vFirewall",
+		"c95b0e7c-c1f0-4287-9928-7964c5377a46": "vLoadBalancer"
+	}
+}

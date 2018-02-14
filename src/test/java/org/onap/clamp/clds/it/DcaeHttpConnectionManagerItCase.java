@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -59,30 +59,35 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:https/https-test.properties")
 public class DcaeHttpConnectionManagerItCase extends AbstractItCase {
+
     @Value("${server.port}")
     private String httpsPort;
     @Value("${server.http-to-https-redirection.port}")
     private String httpPort;
-    private static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
-        @Override
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
+    private static TrustManager[] trustAllCerts = new TrustManager[] {
+            new X509TrustManager() {
 
-        @Override
-        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-        }
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
 
-        @Override
-        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-        }
-    } };
+                @Override
+                public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                }
+            }
+    };
 
     private void enableSslNoCheck() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sc = SSLContext.getInstance("SSL");
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         HostnameVerifier allHostsValid = new HostnameVerifier() {
+
             @Override
             public boolean verify(String hostname, SSLSession session) {
                 return true;
@@ -119,20 +124,20 @@ public class DcaeHttpConnectionManagerItCase extends AbstractItCase {
     public void testHttpsGet404() throws IOException {
         DcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
                 "GET", null, null);
-        fail("Should have raised an BadRequestException exception");
+        fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpsPost404() throws IOException {
         DcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
                 "POST", "", "application/json");
-        fail("Should have raised an BadRequestException exception");
+        fail("Should have raised an BadRequestException");
     }
 
-    @Test(expected = IOException.class)
+    @Test(expected = BadRequestException.class)
     public void testHttpException() throws IOException {
         DcaeHttpConnectionManager.doDcaeHttpQuery("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
                 null, null);
-        fail("Should have raised an IOException exception");
+        fail("Should have raised an BadRequestException");
     }
 }

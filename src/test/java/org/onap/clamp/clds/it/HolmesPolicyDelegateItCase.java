@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +35,6 @@ import org.onap.clamp.clds.model.prop.Holmes;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -43,8 +42,8 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class HolmesPolicyDelegateItCase extends AbstractItCase {
+
     @Test
     public void testCreatePolicyJson() throws IOException {
         String modelBpmnProp = ResourceFileUtil

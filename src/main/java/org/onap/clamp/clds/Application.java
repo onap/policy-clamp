@@ -26,6 +26,7 @@ package org.onap.clamp.clds;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.catalina.connector.Connector;
 import org.onap.clamp.clds.model.prop.Holmes;
 import org.onap.clamp.clds.model.prop.ModelProperties;
@@ -41,6 +42,7 @@ import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -86,6 +88,19 @@ public class Application extends SpringBootServletInitializer {
 
     private static void initializeComponents() {
         ModelProperties.registerModelElement(Holmes.class, Holmes.getType());
+    }
+
+    /**
+     * This method is used to declare the camel servlet.
+     * 
+     * @return A servlet bean
+     */
+    @Bean
+    public ServletRegistrationBean camelServletRegistrationBean() {
+        ServletRegistrationBean registration = new ServletRegistrationBean(new CamelHttpTransportServlet(),
+                "/restservices/clds/v2");
+        registration.setName("CamelServlet");
+        return registration;
     }
 
     /**

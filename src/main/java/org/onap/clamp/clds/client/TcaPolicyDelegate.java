@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,44 +28,46 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.util.UUID;
 
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Tca;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Send Tca info to policy api.
- *
- *
  */
-public class TcaPolicyDelegate implements JavaDelegate {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(TcaPolicyDelegate.class);
+@Component
+public class TcaPolicyDelegate {
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(TcaPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private RefProp                   refProp;
+    private RefProp refProp;
     @Autowired
-    private PolicyClient              policyClient;
+    private PolicyClient policyClient;
 
     /**
      * Perform activity. Send Tca info to policy api.
      *
-     * @param execution
+     * @param camelExchange
+     *            The Camel Exchange object containing the properties
      */
-    @Override
-    public void execute(DelegateExecution execution) throws Exception {
+    @Handler
+    public void execute(Exchange camelExchange) {
         String tcaPolicyRequestUuid = UUID.randomUUID().toString();
-        execution.setVariable("tcaPolicyRequestUuid", tcaPolicyRequestUuid);
-        ModelProperties prop = ModelProperties.create(execution);
+        camelExchange.setProperty("tcaPolicyRequestUuid", tcaPolicyRequestUuid);
+        ModelProperties prop = ModelProperties.create(camelExchange);
         Tca tca = prop.getType(Tca.class);
         if (tca.isFound()) {
             String policyJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
             String responseMessage = policyClient.sendMicroServiceInOther(policyJson, prop);
             if (responseMessage != null) {
-                execution.setVariable("tcaPolicyResponseMessage", responseMessage.getBytes());
+                camelExchange.setProperty("tcaPolicyResponseMessage", responseMessage.getBytes());
             }
         }
     }

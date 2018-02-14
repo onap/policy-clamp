@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,35 +26,36 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.IOException;
-
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.prop.Policy;
 import org.onap.clamp.clds.model.prop.PolicyChain;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Delete Operational Policy via policy api.
  */
-public class OperationalPolicyDeleteDelegate implements JavaDelegate {
-    protected static final EELFLogger logger        = EELFManager.getInstance()
+@Component
+public class OperationalPolicyDeleteDelegate {
+
+    protected static final EELFLogger logger = EELFManager.getInstance()
             .getLogger(OperationalPolicyDeleteDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private PolicyClient              policyClient;
+    private PolicyClient policyClient;
 
     /**
      * Perform activity. Delete Operational Policy via policy api.
      *
-     * @param execution
-     * @throws IOException
+     * @param camelExchange
+     *            The Camel Exchange object containing the properties
      */
-    @Override
-    public void execute(DelegateExecution execution) {
-        ModelProperties prop = ModelProperties.create(execution);
+    @Handler
+    public void execute(Exchange camelExchange) {
+        ModelProperties prop = ModelProperties.create(camelExchange);
         Policy policy = prop.getType(Policy.class);
         prop.setCurrentModelElementId(policy.getId());
         String responseMessage = "";
@@ -64,7 +65,7 @@ public class OperationalPolicyDeleteDelegate implements JavaDelegate {
                 responseMessage = policyClient.deleteBrms(prop);
             }
             if (responseMessage != null) {
-                execution.setVariable("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
+                camelExchange.setProperty("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
             }
         }
     }

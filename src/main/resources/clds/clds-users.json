@@ -7,8 +7,7 @@
 	               "permission-type-cl|dev|update",
 	               "permission-type-cl-manage|dev|*",
 	               "permission-type-filter-vf|dev|*",
-	               "permission-type-template|dev|read",
-	               "permission-type-template|dev|update"
+	               "permission-type-template|dev|read"
 	            ]
 	},
 	{

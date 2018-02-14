@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,34 +26,34 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.IOException;
-
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.Holmes;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Delete Holmes Policy via policy api.
  */
-public class HolmesPolicyDeleteDelegate implements JavaDelegate {
-    protected static final EELFLogger logger        = EELFManager.getInstance()
-            .getLogger(HolmesPolicyDeleteDelegate.class);
+@Component
+public class HolmesPolicyDeleteDelegate {
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(HolmesPolicyDeleteDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private PolicyClient              policyClient;
+    private PolicyClient policyClient;
 
     /**
      * Perform activity. Delete Holmes Policy via policy api.
      *
-     * @param execution
-     * @throws IOException
+     * @param camelExchange
+     *            The Camel Exchange object containing the properties
      */
-    @Override
-    public void execute(DelegateExecution execution) {
-        ModelProperties prop = ModelProperties.create(execution);
+    @Handler
+    public void execute(Exchange camelExchange) {
+        ModelProperties prop = ModelProperties.create(camelExchange);
         Holmes holmes = prop.getType(Holmes.class);
         if (holmes.isFound()) {
             prop.setCurrentModelElementId(holmes.getId());

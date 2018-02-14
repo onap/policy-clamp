@@ -57,23 +57,26 @@ import org.onap.policy.api.PushPolicyParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * Policy utility methods - specifically, send the policy.
  */
+@Component
 public class PolicyClient {
-    protected static final String     POLICY_PREFIX_BASE            = "Config_";
-    protected static final String     LOG_POLICY_PREFIX             = "Response is ";
+
+    protected static final String POLICY_PREFIX_BASE = "Config_";
+    protected static final String LOG_POLICY_PREFIX = "Response is ";
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyClient.class);
-    protected static final EELFLogger metricsLogger                 = EELFManager.getInstance().getMetricsLogger();
-    protected static final String     POLICY_MSTYPE_PROPERTY_NAME   = "policy.ms.type";
-    protected static final String     POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    protected static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
+    protected static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
     @Value("${org.onap.clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
-    protected String                  cldsPolicyConfigFile;
+    protected String cldsPolicyConfigFile;
     @Autowired
-    protected ApplicationContext      appContext;
+    protected ApplicationContext appContext;
     @Autowired
-    protected RefProp                 refProp;
+    protected RefProp refProp;
 
     /**
      * Perform BRMS policy type.
@@ -229,19 +232,19 @@ public class PolicyClient {
                 responseMessage = response.getResponseMessage();
             }
         } catch (Exception e) {
-        	LoggingUtils.setResponseContext("900", "Policy send failed", this.getClass().getName());
-        	LoggingUtils.setErrorContext("900", "Policy send error");
+            LoggingUtils.setResponseContext("900", "Policy send failed", this.getClass().getName());
+            LoggingUtils.setErrorContext("900", "Policy send error");
             logger.error("Exception occurred during policy communication", e);
             throw new PolicyClientException("Exception while communicating with Policy", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
         LoggingUtils.setTimeContext(startTime, new Date());
         if (response.getResponseCode() == 200) {
-        	LoggingUtils.setResponseContext("0", "Policy send success", this.getClass().getName());
+            LoggingUtils.setResponseContext("0", "Policy send success", this.getClass().getName());
             logger.info("Policy send successful");
             metricsLogger.info("Policy send success");
         } else {
-        	LoggingUtils.setResponseContext("900", "Policy send failed", this.getClass().getName());
+            LoggingUtils.setResponseContext("900", "Policy send failed", this.getClass().getName());
             logger.warn("Policy send failed: " + responseMessage);
             metricsLogger.info("Policy send failure");
             throw new BadRequestException("Policy send failed: " + responseMessage);
@@ -278,25 +281,25 @@ public class PolicyClient {
         PolicyChangeResponse response;
         String responseMessage = "";
         try {
-        	LoggingUtils.setTargetContext("Policy", "pushPolicy");
+            LoggingUtils.setTargetContext("Policy", "pushPolicy");
             logger.info("Attempting to push policy...");
             response = getPolicyEngine().pushPolicy(pushPolicyParameters);
             if (response != null) {
                 responseMessage = response.getResponseMessage();
             }
         } catch (Exception e) {
-        	LoggingUtils.setResponseContext("900", "Policy push failed", this.getClass().getName());
+            LoggingUtils.setResponseContext("900", "Policy push failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Policy push error");
             logger.error("Exception occurred during policy communication", e);
             throw new PolicyClientException("Exception while communicating with Policy", e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
         if (response != null && (response.getResponseCode() == 200 || response.getResponseCode() == 204)) {
-        	LoggingUtils.setResponseContext("0", "Policy push success", this.getClass().getName());
+            LoggingUtils.setResponseContext("0", "Policy push success", this.getClass().getName());
             logger.info("Policy push successful");
             metricsLogger.info("Policy push success");
         } else {
-        	LoggingUtils.setResponseContext("900", "Policy push failed", this.getClass().getName());
+            LoggingUtils.setResponseContext("900", "Policy push failed", this.getClass().getName());
             logger.warn("Policy push failed: " + responseMessage);
             metricsLogger.info("Policy push failure");
             throw new BadRequestException("Policy push failed: " + responseMessage);
@@ -350,7 +353,7 @@ public class PolicyClient {
     private PolicyEngine getPolicyEngine() {
         PolicyEngine policyEngine;
         try {
-            policyEngine = new PolicyEngine(appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
+            policyEngine = new PolicyEngine(appContext.getResource(cldsPolicyConfigFile).getURL().getPath());
         } catch (IOException e1) {
             throw new PolicyClientException("Exception when opening policy config file", e1);
         } catch (PolicyEngineException e) {
@@ -399,7 +402,6 @@ public class PolicyClient {
      *
      * @param prop
      *            The ModelProperties
-     *
      * @return The response message from policy
      */
     protected String deletePolicy(ModelProperties prop, String policyType) {

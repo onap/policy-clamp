@@ -50,10 +50,12 @@ import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * This class implements the communication with DCAE for the service inventory.
  */
+@Component
 public class DcaeInventoryServices {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
@@ -107,12 +109,12 @@ public class DcaeInventoryServices {
             dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
             LoggingUtils.setResponseContext("0", "Set inventory success", this.getClass().getName());
         } catch (JsonProcessingException e) {
-        	LoggingUtils.setResponseContext("900", "Set inventory failed", this.getClass().getName());
-        	LoggingUtils.setErrorContext("900", "Set inventory error");
+            LoggingUtils.setResponseContext("900", "Set inventory failed", this.getClass().getName());
+            LoggingUtils.setErrorContext("900", "Set inventory error");
             logger.error("Error during JSON decoding", e);
         } catch (IOException ex) {
-        	LoggingUtils.setResponseContext("900", "Set inventory failed", this.getClass().getName());
-        	LoggingUtils.setErrorContext("900", "Set inventory error");
+            LoggingUtils.setResponseContext("900", "Set inventory failed", this.getClass().getName());
+            LoggingUtils.setErrorContext("900", "Set inventory error");
             logger.error("Error during DCAE communication", ex);
         } finally {
             LoggingUtils.setTimeContext(startTime, new Date());
@@ -209,7 +211,7 @@ public class DcaeInventoryServices {
      *            The vf UUID
      * @return The DCAE inventory type id
      */
-    public String createUpdateDCAEServiceType(String blueprintTemplate, String owner, String typeName, int typeVersion,
+    public String createupdateDCAEServiceType(String blueprintTemplate, String owner, String typeName, int typeVersion,
             String asdcServiceId, String asdcResourceId) {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "createDCAEServiceType");
@@ -237,20 +239,22 @@ public class DcaeInventoryServices {
             Object obj0 = parser.parse(responseStr);
             JSONObject jsonObj = (JSONObject) obj0;
             typeId = (String) jsonObj.get("typeId"); // need to save this
-                                                            // as
-                                                            // service_type_id
-                                                            // in model table
+                                                     // as
+                                                     // service_type_id
+                                                     // in model table
         } catch (IOException | ParseException e) {
             logger.error("Exception occurred during createupdateDCAEServiceType Operation with DCAE", e);
             throw new BadRequestException("Exception occurred during createupdateDCAEServiceType Operation with DCAE",
                     e);
         } finally {
-        	if(typeId != null) {
-        		LoggingUtils.setResponseContext("0", "Create update DCAE ServiceType success", this.getClass().getName());
-        	} else {
-        		LoggingUtils.setResponseContext("900", "Create update DCAE ServiceType failed", this.getClass().getName());
+            if (typeId != null) {
+                LoggingUtils.setResponseContext("0", "Create update DCAE ServiceType success",
+                        this.getClass().getName());
+            } else {
+                LoggingUtils.setResponseContext("900", "Create update DCAE ServiceType failed",
+                        this.getClass().getName());
                 LoggingUtils.setErrorContext("900", "Create update DCAE ServiceType error");
-        	}
+            }
             LoggingUtils.setTimeContext(startTime, new Date());
             metricsLogger.info("createupdateDCAEServiceType complete");
         }

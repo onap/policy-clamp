@@ -66,12 +66,13 @@
 				<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 				<docker.mariadb.port.host>3306</docker.mariadb.port.host>
+				<docker.http-cache.port.host>2080</docker.http-cache.port.host>
 				<project.scm.id>git-server</project.scm.id>
 				<java.version>1.8</java.version>
 
 				<eelf.core.version>1.0.0</eelf.core.version>
 				<camel.version>2.20.1</camel.version>
-				<springboot.version>1.5.9.RELEASE</springboot.version>
+				<springboot.version>1.5.10.RELEASE</springboot.version>
 
 				<sonar.language>java</sonar.language>
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -85,6 +86,8 @@
 				<skip.docker.build>true</skip.docker.build>
 				<skip.docker.push>true</skip.docker.push>
 				<skip.staging.artifacts>false</skip.staging.artifacts>
+				<http.proxy></http.proxy>
+
 		</properties>
 
 		<distributionManagement>
@@ -153,14 +156,6 @@
 								<type>pom</type>
 								<scope>import</scope>
 						</dependency>
-						<!-- Camunda BOM -->
-						<dependency>
-								<groupId>org.camunda.bpm</groupId>
-								<artifactId>camunda-bom</artifactId>
-								<version>7.6.0</version>
-								<scope>import</scope>
-								<type>pom</type>
-						</dependency>
 						<!-- Camel BOM -->
 						<dependency>
 								<groupId>org.apache.camel</groupId>
@@ -182,7 +177,6 @@
 				<dependency>
 						<groupId>org.apache.camel</groupId>
 						<artifactId>camel-spring-boot-starter</artifactId>
-
 				</dependency>
 				<dependency>
 						<groupId>org.apache.camel</groupId>
@@ -190,7 +184,7 @@
 				</dependency>
 				<dependency>
 						<groupId>org.apache.camel</groupId>
-						<artifactId>camel-cxf-starter</artifactId>
+						<artifactId>camel-servlet-starter</artifactId>
 				</dependency>
 				<!-- Spring famework -->
 				<dependency>
@@ -202,8 +196,9 @@
 						<artifactId>spring-boot-starter-tomcat</artifactId>
 				</dependency>
 				<dependency>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-starter-jersey</artifactId>
+						<groupId>com.paypal.springboot</groupId>
+						<artifactId>resteasy-spring-boot-starter</artifactId>
+						<version>2.3.4-RELEASE</version>
 				</dependency>
 				<dependency>
 						<groupId>org.springframework</groupId>
@@ -221,18 +216,28 @@
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-starter-test</artifactId>
 						<scope>test</scope>
+						<exclusions>
+								<exclusion>
+										<groupId>com.vaadin.external.google</groupId>
+										<artifactId>android-json</artifactId>
+								</exclusion>
+						</exclusions>
 				</dependency>
-
-				<!-- For CAmunda -->
+				<!-- Others dependencies -->
 				<dependency>
-						<groupId>org.camunda.bpm.extension.springboot</groupId>
-						<artifactId>camunda-bpm-spring-boot-starter</artifactId>
-						<version>2.0.0</version>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-core</artifactId>
+						<version>1.2.3</version>
 				</dependency>
 				<dependency>
-						<groupId>org.camunda.bpm.extension.springboot</groupId>
-						<artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-						<version>2.0.0</version>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+						<version>1.2.3</version>
+				</dependency>
+				<dependency>
+						<groupId>commons-dbcp</groupId>
+						<artifactId>commons-dbcp</artifactId>
+						<version>1.4</version>
 				</dependency>
 				<dependency>
 						<groupId>commons-io</groupId>
@@ -264,11 +269,6 @@
 				<dependency>
 						<groupId>junit</groupId>
 						<artifactId>junit</artifactId>
-				</dependency>
-				<dependency>
-						<groupId>org.mockito</groupId>
-						<artifactId>mockito-all</artifactId>
-						<version>1.9.5</version>
 				</dependency>
 				<dependency>
 						<groupId>com.fasterxml.jackson.core</groupId>
@@ -770,13 +770,42 @@
 																</ports>
 														</run>
 												</image>
+												<image>
+														<name>python:2</name>
+														<alias>python</alias>
+														<run>
+																<hostname>python</hostname>
+																<volumes>
+																		<bind>
+																				<volume>${project.basedir}/src/test/resources/http-cache/:/usr/src/http-cache-app</volume>
+																				<volume>${project.basedir}/src/test/resources/http-cache/sdc-example/:/usr/src/http-cache-app/data-cache</volume>
+																		</bind>
+																</volumes>
+																<wait>
+																		<tcp>
+																				<ports>
+																						<port>8080</port>
+																				</ports>
+																				<mode>direct</mode>
+																		</tcp>
+																		<time>120000</time>
+																</wait>
+																<ports>
+																		<port>${docker.http-cache.port.host}:8080</port>
+																</ports>
+																<workingDir>/usr/src/http-cache-app</workingDir>
+																<cmd>
+																		<shell>./start_http_cache.sh ${http.proxy}</shell>
+																</cmd>
+														</run>
+												</image>
 										</images>
 										<skip>${skipITs}</skip>
 								</configuration>
 
 								<executions>
 										<execution>
-												<id>mariadb-start-for-it</id>
+												<id>docker-start-for-it</id>
 												<phase>pre-integration-test</phase>
 												<goals>
 														<goal>start</goal>
@@ -786,7 +815,7 @@
 												</configuration>
 										</execution>
 										<execution>
-												<id>mariadb-stop-for-it</id>
+												<id>docker-stop-for-it</id>
 												<phase>post-integration-test</phase>
 												<goals>
 														<goal>stop</goal>

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,82 +26,88 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
+import org.apache.commons.codec.DecoderException;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.client.req.sdc.SdcReq;
 import org.onap.clamp.clds.model.DcaeEvent;
+import org.onap.clamp.clds.model.prop.Global;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Send control loop model to dcae proxy.
  */
-public class SdcSendReqDelegate implements JavaDelegate {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(SdcSendReqDelegate.class);
+@Component
+public class SdcSendReqDelegate {
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSendReqDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private SdcReq                    sdcReq;
+    private SdcCatalogServices sdcCatalogServices;
     @Autowired
-    private RefProp                   refProp;
+    private SdcReq sdcReq;
     @Autowired
-    private SdcCatalogServices        sdcCatalogServices;
-    private String                    baseUrl;
-    private String                    artifactType;
-    private String                    locationArtifactType;
-    private String                    artifactLabel;
-    private String                    locationArtifactLabel;
+    private RefProp refProp;
 
     /**
      * Perform activity. Send to sdc proxy.
      *
-     * @param execution
+     * @param camelExchange
+     *            The camel object that contains all fields
+     * @throws DecoderException
+     *             In case of issues with password decryption
+     * @throws GeneralSecurityException
+     *             In case of issues with password decryption
+     * @throws IOException
+     *             In case of issues with file opening
      */
-    @Override
-    public void execute(DelegateExecution execution) throws Exception {
-        String userid = (String) execution.getVariable("userid");
-        logger.info("userid=" + userid);
-        String docText = new String((byte[]) execution.getVariable("docText"));
-        String artifactName = (String) execution.getVariable("controlName") + DcaeEvent.ARTIFACT_NAME_SUFFIX;
-        execution.setVariable("artifactName", artifactName);
-        getSdcAttributes((String) execution.getVariable("controlName"));
-        ModelProperties prop = ModelProperties.create(execution);
-        String bluprintPayload = sdcReq.formatBlueprint(prop, docText);
+    @Handler
+    public void execute(Exchange camelExchange) throws GeneralSecurityException, DecoderException, IOException {
+        String controlName = (String) camelExchange.getProperty("controlName");
+        String baseUrl = refProp.getStringValue("sdc.serviceUrl");
+        String artifactLabel = sdcReq
+                .normalizeResourceInstanceName(refProp.getStringValue("sdc.artifactLabel") + "-" + controlName);
+        String locationArtifactLabel = sdcReq
+                .normalizeResourceInstanceName(refProp.getStringValue("sdc.locationArtifactLabel") + "-" + controlName);
+        String artifactType = refProp.getStringValue("sdc.artifactType");
+        String locationArtifactType = refProp.getStringValue("sdc.locationArtifactType");
+        String userid = (String) camelExchange.getProperty("userid");
+        String docText = (String) camelExchange.getProperty("docText");
+        String artifactName = (String) camelExchange.getProperty("controlName") + DcaeEvent.ARTIFACT_NAME_SUFFIX;
+        camelExchange.setProperty("artifactName", artifactName);
+        ModelProperties prop = ModelProperties.create(camelExchange);
+        String bluprintPayload;
+        bluprintPayload = sdcReq.formatBlueprint(prop, docText);
         // no need to upload blueprint for Holmes, thus blueprintPayload for
         // Holmes is empty
         if (!bluprintPayload.isEmpty()) {
             String formattedSdcReq = sdcReq.formatSdcReq(bluprintPayload, artifactName, artifactLabel, artifactType);
             if (formattedSdcReq != null) {
-                execution.setVariable("formattedArtifactReq", formattedSdcReq.getBytes());
+                camelExchange.setProperty("formattedArtifactReq", formattedSdcReq.getBytes());
             }
-            List<String> sdcReqUrlsList = sdcReq.getSdcReqUrlsList(prop, baseUrl, sdcCatalogServices, execution);
+            Global globalProps = prop.getGlobal();
+            if (globalProps != null && globalProps.getService() != null) {
+                String serviceInvariantUUID = globalProps.getService();
+                camelExchange.setProperty("serviceInvariantUUID", serviceInvariantUUID);
+            }
+            List<String> sdcReqUrlsList = sdcReq.getSdcReqUrlsList(prop, baseUrl);
             String sdcLocationsPayload = sdcReq.formatSdcLocationsReq(prop, artifactName);
-            String locationArtifactName = (String) execution.getVariable("controlName") + "-location.json";
+            String locationArtifactName = (String) camelExchange.getProperty("controlName") + "-location.json";
             String formattedSdcLocationReq = sdcReq.formatSdcReq(sdcLocationsPayload, locationArtifactName,
                     locationArtifactLabel, locationArtifactType);
             if (formattedSdcLocationReq != null) {
-                execution.setVariable("formattedLocationReq", formattedSdcLocationReq.getBytes());
+                camelExchange.setProperty("formattedLocationReq", formattedSdcLocationReq.getBytes());
             }
             sdcCatalogServices.uploadToSdc(prop, userid, sdcReqUrlsList, formattedSdcReq, formattedSdcLocationReq,
                     artifactName, locationArtifactName);
         }
-    }
-
-    /**
-     * Method to get sdc service values from properties file.
-     * 
-     * @param controlName
-     */
-    private void getSdcAttributes(String controlName) {
-        baseUrl = refProp.getStringValue("sdc.serviceUrl");
-        artifactLabel = sdcReq
-                .normalizeResourceInstanceName(refProp.getStringValue("sdc.artifactLabel") + "-" + controlName);
-        locationArtifactLabel = sdcReq
-                .normalizeResourceInstanceName(refProp.getStringValue("sdc.locationArtifactLabel") + "-" + controlName);
-        artifactType = refProp.getStringValue("sdc.artifactType");
-        locationArtifactType = refProp.getStringValue("sdc.locationArtifactType");
     }
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,41 +28,45 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.util.UUID;
 
-import org.camunda.bpm.engine.delegate.DelegateExecution;
-import org.camunda.bpm.engine.delegate.JavaDelegate;
+import org.apache.camel.Exchange;
+import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.model.prop.Holmes;
 import org.onap.clamp.clds.model.prop.ModelProperties;
 import org.onap.clamp.clds.model.refprop.RefProp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Send Holmes info to policy api.
  */
-public class HolmesPolicyDelegate implements JavaDelegate {
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(HolmesPolicyDelegate.class);
+@Component
+public class HolmesPolicyDelegate {
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(HolmesPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private PolicyClient              policyClient;
+    private PolicyClient policyClient;
     @Autowired
-    private RefProp                   refProp;
+    private RefProp refProp;
 
     /**
      * Perform activity. Send Holmes info to policy api.
      *
-     * @param execution
+     * @param camelExchange
+     *            The Camel Exchange object containing the properties
      */
-    @Override
-    public void execute(DelegateExecution execution) {
+    @Handler
+    public void execute(Exchange camelExchange) {
         String holmesPolicyRequestUuid = UUID.randomUUID().toString();
-        execution.setVariable("holmesPolicyRequestUuid", holmesPolicyRequestUuid);
-        ModelProperties prop = ModelProperties.create(execution);
+        camelExchange.setProperty("holmesPolicyRequestUuid", holmesPolicyRequestUuid);
+        ModelProperties prop = ModelProperties.create(camelExchange);
         Holmes holmes = prop.getType(Holmes.class);
         if (holmes.isFound()) {
             String responseMessage = policyClient.sendBasePolicyInOther(formatHolmesConfigBody(prop, holmes),
                     holmes.getConfigPolicyName(), prop, holmesPolicyRequestUuid);
             if (responseMessage != null) {
-                execution.setVariable("holmesPolicyResponseMessage", responseMessage.getBytes());
+                camelExchange.setProperty("holmesPolicyResponseMessage", responseMessage.getBytes());
             }
         }
     }
