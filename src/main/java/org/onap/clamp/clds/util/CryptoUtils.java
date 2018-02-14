@@ -53,13 +53,14 @@ public final class CryptoUtils {
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CryptoUtils.class);
     // Openssl commands:
     // Encrypt: echo -n "123456" | openssl aes-128-cbc -e -K <Private Hex key>
-    // -iv <16 Hex Bytes iv> | xxd -u -g100
+    // -iv <16 Bytes iv (HEX), be careful it's 32 Hex Chars> | xxd -u -g100
     // Final result is to put in properties file is: IV + Outcome of openssl
     // command
     // ************************************************************
     // Decrypt: echo -n 'Encrypted string' | xxd -r -ps | openssl aes-128-cbc -d
     // -K
-    // <Private Hex Key> -iv <16 Bytes IV extracted from Encrypted String>
+    // <Private Hex Key> -iv <16 Bytes IV extracted from Encrypted String, be
+    // careful it's 32 Hex Chars>
     /**
      * Definition of encryption algorithm.
      */
@@ -68,8 +69,11 @@ public final class CryptoUtils {
      * Detailed definition of encryption algorithm.
      */
     private static final String ALGORITHM_DETAILS = ALGORITHM + "/CBC/PKCS5PADDING";
-    private static final int BLOCK_SIZE_IN_BITS = 128;
-    private static final int BLOCK_SIZE_IN_BYTES = BLOCK_SIZE_IN_BITS / 8;
+    private static final int IV_BLOCK_SIZE_IN_BITS = 128;
+    /**
+     * An Initial Vector of 16 Bytes, so 32 Hexadecimal Chars.
+     */
+    private static final int IV_BLOCK_SIZE_IN_BYTES = IV_BLOCK_SIZE_IN_BITS / 8;
     /**
      * Key to read in the key.properties file.
      */
@@ -97,9 +101,9 @@ public final class CryptoUtils {
      * @throws UnsupportedEncodingException
      *             In case of issue with the charset conversion
      */
-    public static String encrypt(String value) throws GeneralSecurityException, UnsupportedEncodingException {
+    public static String encrypt(String value) throws GeneralSecurityException {
         Cipher cipher = Cipher.getInstance(ALGORITHM_DETAILS, "SunJCE");
-        byte[] iv = new byte[BLOCK_SIZE_IN_BYTES];
+        byte[] iv = new byte[IV_BLOCK_SIZE_IN_BYTES];
         SecureRandom.getInstance("SHA1PRNG").nextBytes(iv);
         IvParameterSpec ivspec = new IvParameterSpec(iv);
         cipher.init(Cipher.ENCRYPT_MODE, SECRET_KEY_SPEC, ivspec);
@@ -121,8 +125,8 @@ public final class CryptoUtils {
     public static String decrypt(String message) throws GeneralSecurityException, DecoderException {
         byte[] encryptedMessage = Hex.decodeHex(message.toCharArray());
         Cipher cipher = Cipher.getInstance(ALGORITHM_DETAILS, "SunJCE");
-        IvParameterSpec ivspec = new IvParameterSpec(ArrayUtils.subarray(encryptedMessage, 0, BLOCK_SIZE_IN_BYTES));
-        byte[] realData = ArrayUtils.subarray(encryptedMessage, BLOCK_SIZE_IN_BYTES, encryptedMessage.length);
+        IvParameterSpec ivspec = new IvParameterSpec(ArrayUtils.subarray(encryptedMessage, 0, IV_BLOCK_SIZE_IN_BYTES));
+        byte[] realData = ArrayUtils.subarray(encryptedMessage, IV_BLOCK_SIZE_IN_BYTES, encryptedMessage.length);
         cipher.init(Cipher.DECRYPT_MODE, SECRET_KEY_SPEC, ivspec);
         byte[] decrypted = cipher.doFinal(realData);
         return new String(decrypted);
