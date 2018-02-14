@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -87,10 +87,7 @@ function DashboardCtrl($scope, $rootScope, $resource, $http, $timeout,
 		}
 
 		$rootScope.initProjectExplorer();
-
-		visibility_model();
 		changecolor(selected_model);
-
 	};
 	$scope.selectActivityTestSet = function() {
 		console.log("selectActivityTestSet");

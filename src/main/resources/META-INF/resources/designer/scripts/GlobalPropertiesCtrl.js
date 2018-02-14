@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -40,7 +40,7 @@ app.controller('GlobalPropertiesCtrl',
 		 		}
 				setMultiSelect();
 				
-				if(readOnly||readMOnly){
+				if(readMOnly){
 					$("#savePropsBtn").attr("disabled", "");
 					$('select[multiple] option').each(function() {
 			          var input = $('input[value="' + $(this).val() + '"]');

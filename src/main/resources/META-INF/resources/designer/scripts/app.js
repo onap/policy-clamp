@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -272,16 +272,13 @@ var app = angular.module('clds-app', ['ngRoute',
       'Datafactory',
       'userPreferencesService',
       'cldsModelService',
-      'cldsTemplateService',
       'extraUserInfoService',
       function($scope, $rootScope, $timeout, dialogs,
         $location, MenuService, Datafactory,
-        userPreferencesService, cldsModelService,
-        cldsTemplateService, extraUserInfoService) {
+        userPreferencesService, cldsModelService, extraUserInfoService) {
         console.log("MenuCtrl");
         $rootScope.screenName = "Universal Test Modeler";
         $rootScope.testSet = null;
-        $rootScope.isNew = false;
         var testingType = "";
         $rootScope.contactUs = function() {
           console.log("contactUs");
@@ -294,20 +291,13 @@ var app = angular.module('clds-app', ['ngRoute',
           .then(
             function(pars) {
               $scope.userInfo = pars;
-              if (!($scope.userInfo["permissionUpdateTemplate"])) {
-                readTOnly = true;
-              };
               if (!($scope.userInfo["permissionUpdateCl"])) {
                 readMOnly = true;
               };
             });
 
         $scope.emptyMenuClick = function(value, name) {
-          if ($rootScope.isNew &&
-            (name != "Save Template" &&
-              name != "Close Template" && name != "Template Properties")) {
-            saveConfirmationNotificationPopUp();
-          } else if ($rootScope.isNewClosed &&
+          if ($rootScope.isNewClosed &&
             name != "Save CL" &&
             name != "Close Model" &&
             name != "Properties CL") {
@@ -323,11 +313,8 @@ var app = angular.module('clds-app', ['ngRoute',
                 if (data) {
                   if ($rootScope.isNewClosed) {
                     isSaveCheck("Save CL");
-                  } else {
-                    isSaveCheck("Save Template");
-                  }
+                  } 
                   $rootScope.isNewClosed = false;
-                  $rootScope.isNew = false;
                 } else {
                   return false;
                 }
@@ -343,24 +330,9 @@ var app = angular.module('clds-app', ['ngRoute',
               $rootScope.contactUs();
             } else if (name == "Log Out") {
               $scope.logout();
-            } else if (name == "Revert Template Changes") {
-              $scope.cldsRevertTemplate();
             } else if (name == "Revert Model Changes") {
               $scope.cldsRevertModel();
-            } else if (name == "Create Template") {
-              $rootScope.isNew = true;
-              $scope.cldsCreateTemplate();
-            } else if (name == "Open Template") {
-              $scope.cldsOpenTemplate();
-            } else if (name == "Save Template") {
-              $scope
-                .cldsTemplatePerformAction("SAVE");
-              $rootScope.isNewClosed = false;
-              $rootScope.isNew = false;
-            } else if (name == "Template Properties") {
-              $scope.cldsOpenTemplateProperties();
-            } else if (name == "Close Model" ||
-              name == "Close Template") {
+            } else if (name == "Close Model") {
               $scope.cldsClose();
             } else if (name == "Refresh ASDC") {
               $scope.cldsRefreshASDC();
@@ -371,7 +343,6 @@ var app = angular.module('clds-app', ['ngRoute',
               $scope.cldsOpenModel();
             } else if (name == "Save CL") {
               $rootScope.isNewClosed = false;
-              $rootScope.isNew = false;
               $scope.cldsPerformAction("SAVE");
             } else if (name == "Validation Test") {
               $scope.cldsPerformAction("TEST");
@@ -415,26 +386,6 @@ var app = angular.module('clds-app', ['ngRoute',
         };
 
         $scope.tabs = {
-          "Template": [{
-            link: "/cldsCreateTemplate",
-            name: "Create Template"
-          }, {
-            link: "/cldsOpenTemplate",
-            name: "Open Template"
-          }, {
-            link: "/cldsSaveTemplate",
-            name: "Save Template"
-          }, {
-            link: "/cldsOpenTemplateProperties",
-            name: "Template Properties"
-          }, {
-            link: "/RevertChanges",
-            name: "Revert Template Changes"
-          }, {
-            link: "/Close",
-            name: "Close Template"
-          }],
-
           "Closed Loop": [{
             link: "/cldsCreateModel",
             name: "Create CL"
@@ -786,63 +737,13 @@ var app = angular.module('clds-app', ['ngRoute',
          * $scope.openProject = function(){
          * $location.path('/dashboard_upload'); };
          */
-        $rootScope.cldsOpenTemplateProperties = function() {
-
-          var dlg = dialogs
-            .create(
-              'partials/portfolios/global_template_properties.html',
-              'CldsOpenTemplateCtrl', {}, {
-                size: 'lg',
-                keyboard: true,
-                backdrop: 'static',
-                windowClass: 'my-class'
-              });
-
-          dlg.result.then(function(name) {
-
-            // $scope.modelName =modelName;
-            // $("#" +
-            // selected_model).addClass("selectedcolor");
-            // alert ("model name:"+$scope.modelName);
-          }, function() {
-
-            // if(angular.equals($scope.name,''))
-            // $scope.name = 'You did not enter in your
-            // name!';
-          });
-        }
 
         $scope.cldsClose = function() {
 
           var dlg = dialogs
             .create(
               'partials/portfolios/confirmation_window.html',
-              'CldsOpenTemplateCtrl', {
-                closable: true,
-                draggable: true
-              }, {
-                size: 'lg',
-                keyboard: true,
-                backdrop: 'static',
-                windowClass: 'my-class'
-              });
-
-          dlg.result.then(function(name) {
-
-            // $scope.name = name;
-          }, function() {
-
-            // if(angular.equals($scope.name,''))
-            // $scope.name = 'You did not enter in your
-            // name!';
-          });
-        };
-        $scope.cldsOpenTemplate = function() {
-
-          var dlg = dialogs
-            .create(
-              'partials/portfolios/clds_open_template.html',
-              'CldsOpenTemplateCtrl', {
+              'CldsOpenModelCtrl', {
                 closable: true,
                 draggable: true
               }, {
@@ -885,32 +786,7 @@ var app = angular.module('clds-app', ['ngRoute',
           });
 
         };
-        $scope.cldsCreateTemplate = function() {
 
-          var dlg = dialogs
-            .create(
-              'partials/portfolios/clds_create_template.html',
-              'CldsOpenTemplateCtrl', {
-                closable: true,
-                draggable: true
-              }, {
-                size: 'lg',
-                keyboard: true,
-                backdrop: 'static',
-                windowClass: 'my-class'
-              });
-
-          dlg.result.then(function(name) {
-
-            // $scope.name = name;
-          }, function() {
-
-            // if(angular.equals($scope.name,''))
-            // $scope.name = 'You did not enter in your
-            // name!';
-          });
-
-        };
         $scope.cldsRefreshASDC = function() {
 
           var dlg = dialogs
@@ -960,84 +836,6 @@ var app = angular.module('clds-app', ['ngRoute',
             // name!';
           });
 
-        };
-
-        $scope.cldsRevertTemplate = function() {
-
-          var dlg = dialogs
-            .create(
-              'partials/portfolios/ConfirmRevertChanges.html',
-              'CldsOpenTemplateCtrl', {
-                closable: true,
-                draggable: true
-              }, {
-                size: 'lg',
-                keyboard: true,
-                backdrop: 'static',
-                windowClass: 'my-class'
-              });
-
-          dlg.result.then(function(name) {
-
-            // $scope.name = name;
-          }, function() {
-
-            // if(angular.equals($scope.name,''))
-            // $scope.name = 'You did not enter in your
-            // name!';
-          });
-
-        };
-        $scope.cldsTemplatePerformAction = function(
-          uiAction) {
-
-          var modelName = selected_model;
-          var controlNamePrefix = "ClosedLoop-";
-          var bpmnText = modelXML;
-          // serialize model properties
-          var propText = JSON.stringify(elementMap);
-
-          var svgXml = "";
-          console.log(abootDiagram.saveSVG({
-            format: true
-          }, function(err, xml) {
-
-            if (err)
-              console.log("error")
-            else
-              console.log(xml)
-            svgXml = xml;
-          }));
-          console.log("cldsTemplatePerformAction: " +
-            uiAction + " modelName=" + modelName);
-          console.log("cldsTemplatePerformAction: " +
-            uiAction + " controlNamePrefix=" +
-            controlNamePrefix);
-          console.log("cldsTemplatePerformAction: " +
-            uiAction + " bpmnText=" + bpmnText);
-          console.log("cldsTemplatePerformAction: " +
-            uiAction + " propText=" + propText);
-          cldsTemplateService
-            .processAction(uiAction, modelName,
-              controlNamePrefix, bpmnText,
-              propText, svgXml)
-            .then(
-              function(pars) {
-                console
-                  .log("processAction");
-                console
-                  .log("cldsTemplatePerformAction: pars=" +
-                    pars);
-                cldsTemplateService
-                  .processActionResponse(
-                    modelName,
-                    pars);
-              },
-              function(data) {
-
-                // alert("setModel failed: "
-                // + data);
-              });
         };
 
         $rootScope.cldsOpenModelProperties = function() {
@@ -1133,16 +931,8 @@ var app = angular.module('clds-app', ['ngRoute',
           var propText = JSON.stringify(elementMap);
           var templateName = selected_template
 
-          var svgXml = "";
-          console.log(abootDiagram.saveSVG({
-            format: true
-          }, function(err, xml) {
-            if (err)
-              console.log("error")
-            else
-              console.log(xml)
-            svgXml = xml;
-          }));
+          var svgXml = $("#svgContainer").html(); 
+
           console.log("cldsPerformAction: " + uiAction +
             " modelName=" + modelName);
           console.log("cldsPerformAction: " + uiAction +
@@ -1177,16 +967,7 @@ var app = angular.module('clds-app', ['ngRoute',
         };
         $scope.refreshStatus = function() {
             var modelName = selected_model;
-            var svgXml = "";
-            console.log(abootDiagram.saveSVG({
-              format: true
-            }, function(err, xml) {
-              if (err)
-                console.log("error")
-              else
-                console.log(xml)
-              svgXml = xml;
-            }));
+            var svgXml = $("#svgContainer").html(); 
             console.log("refreStatus modelName=" + modelName);
             cldsModelService
               .getModel(modelName)
@@ -1237,17 +1018,8 @@ var app = angular.module('clds-app', ['ngRoute',
           // serialize model properties
           var propText = JSON.stringify(elementMap);
           var templateName = selected_template;
-          var svgXml = "";
+          var svgXml = $("#svgContainer").html();
 
-          console.log(abootDiagram.saveSVG({
-            format: true
-          }, function(err, xml) {
-            if (err)
-              console.log("error")
-            else
-              console.log(xml)
-            svgXml = xml;
-          }));
           console.log("cldsPerformAction: " + uiAction +
             " modelName=" + modelName);
           console.log("cldsPerformAction: " + uiAction +
@@ -1323,28 +1095,6 @@ var app = angular.module('clds-app', ['ngRoute',
         };
         $scope.VesCollectorWindow = function(vesCollector) {
 
-          if (isTemplate) {
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/Template_model.html',
-                'ImportSchemaCtrl',
-                vesCollector, {
-                  closable: true,
-                  draggable: true
-                }, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: 'static',
-                  windowClass: 'my-class'
-                });
-            dlg.result.then(function(name) {
-
-            }, function() {
-
-
-            });
-          } else { // if (isTemplate)
-
             var dlg = dialogs
               .create(
                 'partials/portfolios/vesCollector_properties.html',
@@ -1364,16 +1114,12 @@ var app = angular.module('clds-app', ['ngRoute',
 
             });
 
-          }
+
         };
 
         $scope.HolmesWindow = function(holmes) {
 
-          if (isTemplate) {
-            var partial = 'partials/portfolios/Template_model.html'
-          } else {
-            var partial = 'partials/portfolios/holmes_properties.html'
-          }
+          var partial = 'partials/portfolios/holmes_properties.html'
 
           var dlg = dialogs
             .create(
@@ -1391,26 +1137,7 @@ var app = angular.module('clds-app', ['ngRoute',
         };
 
         $scope.TCAWindow = function(tca) {
-          if (isTemplate) {
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/Template_model.html',
-                'ImportSchemaCtrl',
-                tca, {
-                  closable: true,
-                  draggable: true
-                }, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: 'static',
-                  windowClass: 'my-class'
-                });
-            dlg.result.then(function(name) {}, function() {
-              // if(angular.equals($scope.name,''))
-              // $scope.name = 'You did not enter in
-              // your name!';
-            });
-          } else {
+
             var dlg = dialogs
               .create(
                 'partials/portfolios/tca_properties.html',
@@ -1431,34 +1158,10 @@ var app = angular.module('clds-app', ['ngRoute',
               // $scope.name = 'You did not enter in
               // your name!';
             });
-          }
+
         };
 
         $scope.PolicyWindow = function(policy) {
-
-          if (isTemplate) {
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/Template_model.html',
-                'ImportSchemaCtrl',
-                policy, {
-                  closable: true,
-                  draggable: true
-                }, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: 'static',
-                  windowClass: 'my-class'
-                });
-            dlg.result.then(function(name) {
-
-            }, function() {
-
-              // if(angular.equals($scope.name,''))
-              // $scope.name = 'You did not enter in
-              // your name!';
-            });
-          } else {
             var dlg = dialogs
               .create(
                 'partials/portfolios/PolicyWindow_properties.html',
@@ -1482,7 +1185,6 @@ var app = angular.module('clds-app', ['ngRoute',
               // your name!';
             });
 
-          }
         };
 
       }

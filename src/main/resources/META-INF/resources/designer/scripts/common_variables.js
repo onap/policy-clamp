@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -50,9 +50,7 @@ var lastElementSelected=null
 var isTemplate=null;
 var vf_Services=null;
 var asdc_Services=null;
-var readOnly=false;//for when the user select read only on clamp app
-var readMOnly=false;
-var readTOnly=false;
+var readMOnly=false; // model is readonly
 var runningInstances={}
 var typeID = '';
 var deploymentId = '';

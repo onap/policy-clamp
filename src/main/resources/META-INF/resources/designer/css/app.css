@@ -63,7 +63,7 @@ a:link {
 .canvas{
 	margin-top: -20px;
 }
-.content .canvas,
+
 .content.with-error .canvas {
   visibility: hidden;
 }

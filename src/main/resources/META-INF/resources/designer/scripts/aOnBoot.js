@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,6 +20,7 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
+
 
 //When element is first created it should have a red box because it hasn't been edited
 function newElementProcessor(id) {
@@ -60,7 +61,7 @@ var isObject = function(a) {
 };
 
 function loadPropertyWindow(type) {
-  if (readOnly || readMOnly) {
+  if (readMOnly) {
     if ($("#add_one_more").length == 1) {
       $("#add_one_more").off();
       $("#add_one_more").click(function(event) {
@@ -70,11 +71,6 @@ function loadPropertyWindow(type) {
     $("input,#savePropsBtn").attr("disabled", "");
     $(".modal-body button").attr("disabled", "");
     ($("select:not([multiple])")).multiselect("disable");
-  }
-
-  if (readTOnly) {
-    $("textarea").attr("disabled", "");
-    $("#savePropsBtn").attr("disabled", "");
   }
 
   var props = defaults_props[type];
@@ -313,7 +309,6 @@ function setASDCFields() {
 function reloadDefaultVariables(isTemp) {
   isTemplate = isTemp;
   vf_Services = null;
-  readOnly = false;
 }
 
 $(window).load(function() {

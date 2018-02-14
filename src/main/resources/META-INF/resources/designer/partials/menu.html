@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP CLAMP
   ================================================================================
-  Copyright (C) 2017 AT&T Intellectual Property. All rights
+  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
                               reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -147,22 +147,9 @@
 							id="{{section.name}}" role="presentation"
 							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
 						</li>
-						
+
 						<li ng-repeat="section in tabs[dropDownName]"
-							ng-if="section.name==='Create Template'"><a
-							id="{{section.name}}" role="presentation"
-							ng-click="emptyMenuClick(section.link,section.name)"
-							ng-class="{true:'ThisLink', false:''}[!(userInfo['permissionUpdateTemplate'])]">{{section.name}}</a>
-						</li>
-						
-						<li ng-repeat="section in tabs[dropDownName]"
-							ng-if="section.name==='Open Template'"><a
-							id="{{section.name}}" role="presentation"
-							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
-						</li>
-											
-						<li ng-repeat="section in tabs[dropDownName]"
-							ng-if="section.name != 'Create CL' && section.name != 'Create Template' && section.name != 'Open CL' && section.name != 'Open Template' && section.name != 'ECOMP User Guide - Design Overview' && section.name != 'ECOMP User Guide - Closed Loop Design' && section.name != 'ECOMP User Guide - CLAMP' && section.name != 'User Info'"><a
+							ng-if="section.name != 'Create CL' && section.name != 'Open CL' && section.name != 'ECOMP User Guide - Design Overview' && section.name != 'ECOMP User Guide - Closed Loop Design' && section.name != 'ECOMP User Guide - CLAMP' && section.name != 'User Info'"><a
 							id="{{section.name}}" role="presentation"
 							ng-click="emptyMenuClick(section.link,section.name)"
 							class="ThisLink">{{section.name}}</a>

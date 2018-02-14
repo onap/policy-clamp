@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -273,7 +273,7 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
     document.getElementById("modeler_name").textContent = headerText;
     document.getElementById("templa_name").textContent = ("Template Used - " + selected_template);
     setStatus(pars)
-    disableBPMNAddSVG(pars);
+    addSVG(pars);
     this.enableDisableMenuOptions(pars);
 
 
@@ -319,7 +319,7 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
 
   }
 
-  function disableBPMNAddSVG(pars) {
+  function addSVG(pars) {
 
     var svg = pars.imageText.substring(pars.imageText.indexOf("<svg"))
     if ($("#svgContainer").length > 0)
@@ -340,22 +340,16 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
       lastElementSelected = $($(event.target).parent()).attr("data-element-id")
       checkIfElementType(name)
 
-    })
-    $(".bjs-container").attr("hidden", "");
+    });
   }
   this.enableDisableMenuOptions = function(pars) {
 
     var permittedActionCd = pars.permittedActionCd;
 
     //dropdown options - always true
-    document.getElementById('Open Template').classList.remove('ThisLink');
     document.getElementById('Open CL').classList.remove('ThisLink');
-    document.getElementById('Save Template').classList.add('ThisLink');
-    document.getElementById('Template Properties').classList.add('ThisLink');
-    document.getElementById('Revert Template Changes').classList.add('ThisLink');
-    document.getElementById('Close Template').classList.add('ThisLink');
 
-    if (readOnly || readMOnly) {
+    if (readMOnly) {
       //enable model options
       document.getElementById('Properties CL').classList.remove('ThisLink');
       document.getElementById('Close Model').classList.remove('ThisLink');
@@ -376,11 +370,6 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
       document.getElementById('Validation Test').classList.remove('ThisLink');
       document.getElementById('Refresh Status').classList.remove('ThisLink');
       document.getElementById('Refresh ASDC').classList.remove('ThisLink');
-    }
-    if (readTOnly) {
-      document.getElementById('Create Template').classList.add('ThisLink');
-    } else {
-      document.getElementById('Create Template').classList.remove('ThisLink');
     }
 
     // enable/disable menu options based on permittedActionCd list

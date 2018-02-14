@@ -68,16 +68,6 @@ module.exports = function(grunt) {
           }
         ]
       },
-      bpmn_js: {
-        files: [
-          {
-            expand: true,
-            cwd: resolvePath('bpmn-js', 'assets'),
-            src: ['**/*.*', '!**/*.js'],
-            dest: '<%= config.dist %>/vendor'
-          }
-        ]
-      },
       app: {
         files: [
           {

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -44,8 +44,8 @@ app.controller('CldsOpenModelCtrl',
 
 			$scope.paramsRetry = function() {
 				//$("#paramsWarn").hide();
-				var currentValue = $("#service").val() == null ? previous : $("#service").val();
-				$("#ridinSpinners").css("display","")
+				var currentValue = $("#service").val() == null ? previous : $("#service").val();	
+			$("#ridinSpinners").css("display","")
 				loadSharedPropertyByService(currentValue,true,callBack);
 				$("#ridinSpinners").css("display","none")
 			};
@@ -144,14 +144,13 @@ app.controller('CldsOpenModelCtrl',
 
 				cldsTemplateService.getTemplate( templateName ).then(function(pars) {
         			
-        			var tempImageText=pars.imageText
-        			var bpmnText=pars.bpmnText
+        		  var tempImageText=pars.imageText;
         			var authorizedToUp = pars.userAuthorizedToUpdate;
         			pars={}
         			
         			pars.imageText=tempImageText
         			pars.status= "DESIGN";
-        			if (readOnly || readMOnly){
+        			if (readMOnly){
         				pars.permittedActionCd=[""];
         			} else {
         				pars.permittedActionCd=["TEST", "SUBMIT"];
@@ -164,8 +163,6 @@ app.controller('CldsOpenModelCtrl',
     				
     				// set model bpmn and open diagram
         			$rootScope.isPalette = true;
-        			modelXML = bpmnText;
-        			visibility_model();
         		},
         		function(data) {
         			//alert("getModel failed");
@@ -202,7 +199,6 @@ app.controller('CldsOpenModelCtrl',
 				cldsModelService.getModel( originalModel ).then(function(pars) {
         			
         			// process data returned
-        			var bpmnText = pars.bpmnText;
         			var propText = pars.propText;
         			var status = pars.status;
         			var controlNamePrefix = pars.controlNamePrefix;
@@ -210,7 +206,7 @@ app.controller('CldsOpenModelCtrl',
         			selected_template=pars.templateName;
         			typeID = pars.typeId;
         			pars.status="DESIGN";
-        			if (readOnly || readMOnly){
+        			if (readMOnly){
         				pars.permittedActionCd=[""];
         			} else {
         				pars.permittedActionCd=["TEST", "SUBMIT"];
@@ -235,8 +231,6 @@ app.controller('CldsOpenModelCtrl',
     				
     				// set model bpmn and open diagram
         			$rootScope.isPalette = true;
-        			modelXML = bpmnText;
-        			visibility_model();
         		},
         		function(data) {
         			//alert("getModel failed");
@@ -271,28 +265,6 @@ app.controller('CldsOpenModelCtrl',
 				// set model bpmn and open diagram
     			$rootScope.isPalette = true;
 
-    	        var initialDiagram =
-    	                '<?xml version="1.0" encoding="UTF-8"?>' +
-    	                '<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-    	                'xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" ' +
-    	                'xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" ' +
-    	                'xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" ' +
-    	                'targetNamespace="http://bpmn.io/schema/bpmn" ' +
-    	                'id="Definitions_1">' +
-    	                '<bpmn:process id="Process_1" isExecutable="false">' +
-    	                '<bpmn:startEvent id="StartEvent_1"/>' +
-    	                '</bpmn:process>' +
-    	                '<bpmndi:BPMNDiagram id="BPMNDiagram_1">' +
-    	                '<bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">' +
-    	                '<bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">' +
-    	                '<dc:Bounds x="50" y="162" width="36" height="36" />' +
-    	                '</bpmndi:BPMNShape>' +
-    	                '</bpmndi:BPMNPlane>' +
-    	                '</bpmndi:BPMNDiagram>' +
-    	                '</bpmn:definitions>';
-    	                
-    			modelXML = initialDiagram;
-    			visibility_model();
     			$modalInstance.close("closed");
 			}
 			$scope.revertChanges=function(){
@@ -301,7 +273,7 @@ app.controller('CldsOpenModelCtrl',
 			$scope.openModel = function(){
 				reloadDefaultVariables(false)
 				if(document.getElementById("readOnly")){
-					readOnly=document.getElementById("readOnly").checked;
+					readMOnly=document.getElementById("readOnly").checked;
 				}
  				var modelName = document.getElementById("modelName").value;    
 				
@@ -319,7 +291,6 @@ app.controller('CldsOpenModelCtrl',
 				
 				cldsModelService.getModel( modelName ).then(function(pars) {
         			// process data returned
-        			var bpmnText = pars.bpmnText;
         			var propText = pars.propText;
         			var status = pars.status;
         			controlNamePrefix = pars.controlNamePrefix;
@@ -333,7 +304,7 @@ app.controller('CldsOpenModelCtrl',
         			actionStateCd = pars.event.actionStateCd;
         			deploymentId = pars.deploymentId;
 
-        			if (readMOnly || readOnly){
+        			if (readMOnly){
         				pars.permittedActionCd= [""];
         			}
         			cldsModelService.processActionResponse(modelName, pars);
@@ -348,8 +319,6 @@ app.controller('CldsOpenModelCtrl',
     				
     				// set model bpmn and open diagram
         			$rootScope.isPalette = true;
-        			modelXML = bpmnText;
-        			visibility_model();
         		},
         		function(data) {
         			//alert("getModel failed");

@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP CLAMP
   ================================================================================
-  Copyright (C) 2017 AT&T Intellectual Property. All rights
+  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
                               reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -510,7 +510,7 @@
             $('#formId'+count+' #closedLoopEventStatus').val(str[3]).multiselect('refresh');
 					}
 
-					if ((!(readOnly||readMOnly)) && ($('#formId'+count + ' #deleteThresh').prop('disabled'))) {
+					if ((!(readMOnly)) && ($('#formId'+count + ' #deleteThresh').prop('disabled'))) {
 						$('#formId'+count + ' #deleteThresh').prop('disabled', false);
 					}
 				}
