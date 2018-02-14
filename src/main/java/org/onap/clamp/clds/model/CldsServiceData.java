@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,20 +32,17 @@ import java.util.List;
 
 import javax.ws.rs.NotAuthorizedException;
 
-import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.service.CldsService;
 
 public class CldsServiceData implements Serializable {
 
-    private static final long         serialVersionUID = -9153372664377279423L;
-
-    protected static final EELFLogger logger           = EELFManager.getInstance().getLogger(CldsServiceData.class);
-    protected static final EELFLogger auditLogger      = EELFManager.getInstance().getAuditLogger();
-
-    private String                    serviceInvariantUUID;
-    private String                    serviceUUID;
-    private Long                      ageOfRecord;
-    private List<CldsVfData>          cldsVfs;
+    private static final long serialVersionUID = -9153372664377279423L;
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsServiceData.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+    private String serviceInvariantUUID;
+    private String serviceUUID;
+    private Long ageOfRecord;
+    private List<CldsVfData> cldsVfs;
 
     public String getServiceInvariantUUID() {
         return serviceInvariantUUID;
@@ -69,14 +66,6 @@ public class CldsServiceData implements Serializable {
 
     public void setServiceUUID(String serviceUUID) {
         this.serviceUUID = serviceUUID;
-    }
-
-    public CldsServiceData getCldsServiceCache(CldsDao cldsDao, String invariantServiceUUID) {
-        return cldsDao.getCldsServiceCache(invariantServiceUUID);
-    }
-
-    public void setCldsServiceCache(CldsDao cldsDao, CldsDBServiceCache cldsDBServiceCache) {
-        cldsDao.setCldsServiceCache(cldsDBServiceCache);
     }
 
     public Long getAgeOfRecord() {

@@ -354,19 +354,31 @@ public class CldsDao {
         return template;
     }
 
+    public void clearServiceCache() {
+        String clearCldsServiceCacheSql = "TRUNCATE clds_service_cache";
+        jdbcTemplateObject.execute(clearCldsServiceCacheSql);
+    }
+
     public CldsServiceData getCldsServiceCache(String invariantUUID) {
         CldsServiceData cldsServiceData = null;
-        List<CldsServiceData> cldsServiceDataList = new ArrayList<>();
         try {
             String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
             cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] {
                     invariantUUID
             }, new CldsServiceDataMapper());
-            logger.info("value of cldsServiceDataList: {}", cldsServiceDataList);
+            if (cldsServiceData != null) {
+                logger.info("CldsServiceData found in cache for Service Invariant ID:"
+                        + cldsServiceData.getServiceInvariantUUID());
+                return cldsServiceData;
+            } else {
+                logger.warn("CldsServiceData not found in cache for Service Invariant ID:" + invariantUUID);
+                return null;
+            }
         } catch (EmptyResultDataAccessException e) {
-            logger.warn("cache row not found for invariantUUID: " + invariantUUID, e);
+            logger.info("CldsServiceData not found in cache for Service Invariant ID: " + invariantUUID);
+            logger.debug("CldsServiceData not found in cache for Service Invariant ID: " + invariantUUID, e);
+            return null;
         }
-        return cldsServiceData;
     }
 
     public void setCldsServiceCache(CldsDBServiceCache cldsDBServiceCache) {
@@ -401,7 +413,7 @@ public class CldsDao {
      * @return list of CldsModelProp
      */
     public List<CldsModelProp> getDeployedModelProperties() {
-        List<CldsModelProp> cldsModelPropList = new ArrayList<CldsModelProp>();
+        List<CldsModelProp> cldsModelPropList = new ArrayList<>();
         String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, model_properties mp, event e "
                 + "WHERE m.model_prop_id = mp.model_prop_id and m.event_id = e.event_id and e.action_cd = 'DEPLOY'";
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);

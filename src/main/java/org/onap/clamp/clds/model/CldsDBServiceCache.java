@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -31,9 +31,15 @@ import java.io.ObjectOutputStream;
 
 public class CldsDBServiceCache {
 
-    private String      invariantId;
-    private String      serviceId;
+    private String invariantId;
+    private String serviceId;
     private InputStream cldsDataInstream;
+
+    public CldsDBServiceCache(CldsServiceData cldsServiceData) throws IOException {
+        setCldsDataInstream(cldsServiceData);
+        setInvariantId(cldsServiceData.getServiceInvariantUUID());
+        setServiceId(cldsServiceData.getServiceUUID());
+    }
 
     public String getInvariantId() {
         return invariantId;
@@ -53,6 +59,10 @@ public class CldsDBServiceCache {
 
     public InputStream getCldsDataInstream() {
         return cldsDataInstream;
+    }
+
+    public void setCldsDataInstream(InputStream cldsDataInputstream) {
+        this.cldsDataInstream = cldsDataInputstream;
     }
 
     public void setCldsDataInstream(CldsServiceData cldsServiceData) throws IOException {

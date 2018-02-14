@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -26,17 +26,21 @@ package org.onap.clamp.clds.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.util.Properties;
 
 import javax.ws.rs.core.SecurityContext;
 
+import org.apache.commons.codec.DecoderException;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,13 +50,14 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
+import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -60,7 +65,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations = "classpath:application-no-camunda.properties")
 public class CldsServiceItCase extends AbstractItCase {
 
     @Autowired
@@ -169,5 +173,43 @@ public class CldsServiceItCase extends AbstractItCase {
         cldsService.putModel(randomNameModel, newModel);
         // Verify whether it has been added properly or not
         assertNotNull(cldsDao.getModel(randomNameModel));
+    }
+
+    @Test
+    public void testGetSdcServices() throws GeneralSecurityException, DecoderException, JSONException, IOException {
+        String result = cldsService.getSdcServices();
+        JSONAssert.assertEquals(
+                ResourceFileUtil.getResourceAsString("example/sdc/expected-result/all-sdc-services.json"), result,
+                true);
+    }
+
+    @Test
+    public void testGetSdcPropertiesByServiceUUIDForRefresh()
+            throws GeneralSecurityException, DecoderException, JSONException, IOException {
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Principal principal = Mockito.mock(Principal.class);
+        Mockito.when(principal.getName()).thenReturn("admin");
+        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
+        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
+        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
+        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
+        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|update")).thenReturn(true);
+        Mockito.when(securityContext.isUserInRole("permission-type-filter-vf|dev|*")).thenReturn(true);
+        cldsService.setSecurityContext(securityContext);
+        // Test basic functionalities
+        String result = cldsService.getSdcPropertiesByServiceUUIDForRefresh("4cc5b45a-1f63-4194-8100-cd8e14248c92",
+                false);
+        JSONAssert.assertEquals(
+                ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-4cc5b45a.json"),
+                result, true);
+        // Now test the Cache effect
+        CldsServiceData cldsServiceDataCache = cldsDao.getCldsServiceCache("c95b0e7c-c1f0-4287-9928-7964c5377a46");
+        // Should not be there, so should be null
+        assertNull(cldsServiceDataCache);
+        cldsService.getSdcPropertiesByServiceUUIDForRefresh("c95b0e7c-c1f0-4287-9928-7964c5377a46", true);
+        // Should be there now, so should NOT be null
+        cldsServiceDataCache = cldsDao.getCldsServiceCache("c95b0e7c-c1f0-4287-9928-7964c5377a46");
+        assertNotNull(cldsServiceDataCache);
+        cldsDao.clearServiceCache();
     }
 }

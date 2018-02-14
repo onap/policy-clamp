@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,35 +27,33 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import org.apache.commons.io.serialization.ValidatingObjectInputStream;
-import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import org.apache.commons.io.serialization.ValidatingObjectInputStream;
 import org.onap.clamp.clds.model.CldsServiceData;
+import org.onap.clamp.clds.model.CldsVfData;
+import org.onap.clamp.clds.model.CldsVfcData;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
  * Generic mapper for CldsDBServiceCache
  */
 public final class CldsServiceDataMapper implements RowMapper<CldsServiceData> {
+
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
 
     @Override
     public CldsServiceData mapRow(ResultSet rs, int rowNum) throws SQLException {
         CldsServiceData cldsServiceData = new CldsServiceData();
-        long age;
-        age = rs.getLong(5);
-        Blob blob = rs.getBlob(4);
-        InputStream is = blob.getBinaryStream();
-        try (ValidatingObjectInputStream oip = new ValidatingObjectInputStream(is)) {
-        	oip.accept(CldsServiceData.class);
+        try (ValidatingObjectInputStream oip = new ValidatingObjectInputStream(rs.getBlob(4).getBinaryStream())) {
+            oip.accept(CldsServiceData.class, ArrayList.class, CldsVfData.class, CldsVfcData.class);
             cldsServiceData = (CldsServiceData) oip.readObject();
-            cldsServiceData.setAgeOfRecord(age);
+            cldsServiceData.setAgeOfRecord(rs.getLong(5));
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("Error caught while retrieving cldsServiceData from database", e);
+            logger.error("Error caught while deserializing cldsServiceData from database", e);
+            return null;
         }
         return cldsServiceData;
     }
