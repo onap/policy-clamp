@@ -34,4 +34,4 @@ fi
 echo 'Installing requests packages for Python'
 pip install requests
 echo 'Executing the Http proxy in Cache mode only'
-python sdc_proxy.py --port 2080 --root /usr/src/http-cache-app/data-cache
+python sdc_proxy.py --port 8080 --root /usr/src/http-cache-app/data-cache

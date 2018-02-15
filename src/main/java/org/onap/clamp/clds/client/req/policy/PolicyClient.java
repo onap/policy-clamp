@@ -353,7 +353,7 @@ public class PolicyClient {
     private PolicyEngine getPolicyEngine() {
         PolicyEngine policyEngine;
         try {
-            policyEngine = new PolicyEngine(appContext.getResource(cldsPolicyConfigFile).getURL().getPath());
+            policyEngine = new PolicyEngine(appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
         } catch (IOException e1) {
             throw new PolicyClientException("Exception when opening policy config file", e1);
         } catch (PolicyEngineException e) {
