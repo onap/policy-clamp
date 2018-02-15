@@ -39,12 +39,12 @@ import java.util.Map;
 
 import javax.ws.rs.BadRequestException;
 
-import org.onap.clamp.clds.model.prop.Global;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.prop.PolicyChain;
-import org.onap.clamp.clds.model.prop.PolicyItem;
-import org.onap.clamp.clds.model.prop.Tca;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.model.properties.Global;
+import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.model.properties.PolicyChain;
+import org.onap.clamp.clds.model.properties.PolicyItem;
+import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.policy.api.AttributeType;
 import org.onap.policy.controlloop.policy.OperationsAccumulateParams;
 import org.onap.policy.controlloop.policy.Policy;
@@ -80,7 +80,7 @@ public class OperationalPolicyReq {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    public static Map<AttributeType, Map<String, String>> formatAttributes(RefProp refProp, ModelProperties prop,
+    public static Map<AttributeType, Map<String, String>> formatAttributes(CldsReferenceProperties refProp, ModelProperties prop,
             String modelElementId, PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
@@ -163,7 +163,7 @@ public class OperationalPolicyReq {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    protected static String formatOpenLoopYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+    protected static String formatOpenLoopYaml(CldsReferenceProperties refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
@@ -193,7 +193,7 @@ public class OperationalPolicyReq {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    protected static String formatYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+    protected static String formatYaml(CldsReferenceProperties refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
@@ -251,7 +251,7 @@ public class OperationalPolicyReq {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    protected static String formateNodeBYaml(RefProp refProp, ModelProperties prop, String modelElementId,
+    protected static String formateNodeBYaml(CldsReferenceProperties refProp, ModelProperties prop, String modelElementId,
             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
@@ -329,7 +329,7 @@ public class OperationalPolicyReq {
      * @param inOrigList
      * @return
      */
-    private static List<PolicyItem> addAOTSActorRecipe(RefProp refProp, String service, List<PolicyItem> inOrigList) {
+    private static List<PolicyItem> addAOTSActorRecipe(CldsReferenceProperties refProp, String service, List<PolicyItem> inOrigList) {
         List<PolicyItem> outList = new ArrayList<>();
         try {
             PolicyItem policyItem = inOrigList.get(0);

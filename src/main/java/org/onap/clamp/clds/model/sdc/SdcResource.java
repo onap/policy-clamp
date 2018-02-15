@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.model;
+package org.onap.clamp.clds.model.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -31,18 +31,18 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CldsSdcResource implements Comparable<CldsSdcResource> {
+public class SdcResource implements Comparable<SdcResource> {
 
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(CldsSdcResource.class);
+    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(SdcResource.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     private String                    resourceInstanceName;
     private String                    resourceName;
-    private String                    resourceInvariantUuid;
+    private String                    resourceInvariantUUID;
     private String                    resourceVersion;
     private String                    resoucreType;
     private String                    resourceUuid;
-    private List<CldsSdcArtifact>     artifacts;
+    private List<SdcArtifact>     artifacts;
 
     public String getResourceInstanceName() {
         return resourceInstanceName;
@@ -61,11 +61,11 @@ public class CldsSdcResource implements Comparable<CldsSdcResource> {
     }
 
     public String getResourceInvariantUUID() {
-        return resourceInvariantUuid;
+        return resourceInvariantUUID;
     }
 
-    public void setResourceInvariantUUID(String resourceInvariantUUID) {
-        this.resourceInvariantUuid = resourceInvariantUUID;
+    public void setResourceInvariantUUID(String resourceInvUuid) {
+        this.resourceInvariantUUID = resourceInvUuid;
     }
 
     public String getResourceVersion() {
@@ -92,16 +92,16 @@ public class CldsSdcResource implements Comparable<CldsSdcResource> {
         this.resourceUuid = resourceUUID;
     }
 
-    public List<CldsSdcArtifact> getArtifacts() {
+    public List<SdcArtifact> getArtifacts() {
         return artifacts;
     }
 
-    public void setArtifacts(List<CldsSdcArtifact> artifacts) {
+    public void setArtifacts(List<SdcArtifact> artifacts) {
         this.artifacts = artifacts;
     }
 
     @Override
-    public int compareTo(CldsSdcResource in) {
+    public int compareTo(SdcResource in) {
         // Compares this object with the specified object for order.
         // Returns a negative integer, zero, or a positive integer as this
         // object is less than, equal to, or greater than the specified object.
@@ -134,7 +134,7 @@ public class CldsSdcResource implements Comparable<CldsSdcResource> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CldsSdcResource other = (CldsSdcResource) obj;
+        SdcResource other = (SdcResource) obj;
         if (resourceInstanceName == null) {
             if (other.resourceInstanceName != null)
                 return false;

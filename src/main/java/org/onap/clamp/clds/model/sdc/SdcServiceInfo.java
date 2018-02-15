@@ -21,16 +21,16 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.model;
+package org.onap.clamp.clds.model.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.math.BigDecimal;
 
-public class CldsSdcServiceInfo implements Comparable<CldsSdcServiceInfo> {
+public class SdcServiceInfo implements Comparable<SdcServiceInfo> {
 
-    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(CldsSdcServiceInfo.class);
+    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(SdcServiceInfo.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
     private String                    uuid;
@@ -119,7 +119,7 @@ public class CldsSdcServiceInfo implements Comparable<CldsSdcServiceInfo> {
      * Compare using name and then version. Version is converted to a decimal.
      */
     @Override
-    public int compareTo(CldsSdcServiceInfo in) {
+    public int compareTo(SdcServiceInfo in) {
         // Compares this object with the specified object for order.
         // Returns a negative integer, zero, or a positive integer as this
         // object is less than, equal to, or greater than the specified object.
@@ -152,7 +152,7 @@ public class CldsSdcServiceInfo implements Comparable<CldsSdcServiceInfo> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CldsSdcServiceInfo other = (CldsSdcServiceInfo) obj;
+        SdcServiceInfo other = (SdcServiceInfo) obj;
         if (name == null) {
             if (other.name != null)
                 return false;

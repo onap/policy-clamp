@@ -41,12 +41,12 @@ import java.util.Map.Entry;
 
 import org.apache.commons.codec.DecoderException;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
-import org.onap.clamp.clds.model.CldsSdcResource;
-import org.onap.clamp.clds.model.CldsSdcServiceDetail;
-import org.onap.clamp.clds.model.prop.Global;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.prop.Tca;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.model.properties.Global;
+import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.model.properties.Tca;
+import org.onap.clamp.clds.model.sdc.SdcResource;
+import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,14 +54,14 @@ import org.springframework.stereotype.Component;
  * Construct a Sdc request given CLDS objects.
  */
 @Component
-public class SdcReq {
+public class SdcRequests {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcReq.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcRequests.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
     @Autowired
-    protected RefProp refProp;
+    protected CldsReferenceProperties refProp;
 
     /**
      * Format the Blueprint from a Yaml
@@ -132,48 +132,48 @@ public class SdcReq {
                 + "} \n";
     }
 
+    private List<String> filterVfResourceList(String serviceUuid, List<SdcResource> sdcResourcesList,
+            List<String> cldsResourceVfList) {
+        List<String> urlList = new ArrayList<>();
+        for (SdcResource cldsSdcResource : sdcResourcesList) {
+            if (cldsSdcResource != null && cldsSdcResource.getResoucreType() != null
+                    && cldsSdcResource.getResoucreType().equalsIgnoreCase("VF")
+                    && cldsResourceVfList.contains(cldsSdcResource.getResourceInvariantUUID())) {
+                String normalizedResourceInstanceName = normalizeResourceInstanceName(
+                        cldsSdcResource.getResourceInstanceName());
+                String svcUrl = createUrlForResource(normalizedResourceInstanceName, serviceUuid);
+                urlList.add(svcUrl);
+            }
+        }
+        return urlList;
+    }
+
+    private String createUrlForResource(String normalizedResourceInstanceName, String serviceUuid) {
+        return refProp.getStringValue("sdc.serviceUrl") + "/" + serviceUuid + "/resourceInstances/"
+                + normalizedResourceInstanceName + "/artifacts";
+    }
+
     /**
      * To get List of urls for all vfresources
      *
      * @param prop
      *            The model properties JSON describing the closed loop flow
-     * @param baseUrl
-     *            The URL to trigger
      * @return A list of Service URL
      * @throws GeneralSecurityException
      *             In case of issues when decrypting the password
      * @throws DecoderException
      *             In case of issues when decoding the Hex String
      */
-    public List<String> getSdcReqUrlsList(ModelProperties prop, String baseUrl)
-            throws GeneralSecurityException, DecoderException {
+    public List<String> getSdcReqUrlsList(ModelProperties prop) throws GeneralSecurityException, DecoderException {
         List<String> urlList = new ArrayList<>();
         Global globalProps = prop.getGlobal();
-        if (globalProps != null && globalProps.getService() != null) {
-            String serviceInvariantUUID = globalProps.getService();
-            List<String> resourceVfList = globalProps.getResourceVf();
-            String serviceUUID = sdcCatalogServices.getServiceUuidFromServiceInvariantId(serviceInvariantUUID);
-            CldsSdcServiceDetail cldsSdcServiceDetail = sdcCatalogServices
-                    .getCldsSdcServiceDetailFromJson(sdcCatalogServices.getSdcServicesInformation(serviceUUID));
-            if (cldsSdcServiceDetail != null && resourceVfList != null) {
-                List<CldsSdcResource> cldsSdcResourcesList = cldsSdcServiceDetail.getResources();
-                if (cldsSdcResourcesList != null && !cldsSdcResourcesList.isEmpty()) {
-                    for (CldsSdcResource cldsSdcResource : cldsSdcResourcesList) {
-                        if (cldsSdcResource != null && cldsSdcResource.getResoucreType() != null
-                                && cldsSdcResource.getResoucreType().equalsIgnoreCase("VF")
-                                && resourceVfList.contains(cldsSdcResource.getResourceInvariantUUID())) {
-                            String normalizedResourceInstanceName = normalizeResourceInstanceName(
-                                    cldsSdcResource.getResourceInstanceName());
-                            String svcUrl = baseUrl + "/" + serviceUUID + "/resourceInstances/"
-                                    + normalizedResourceInstanceName + "/artifacts";
-                            urlList.add(svcUrl);
-                        } else {
-                            logger.warn("The VF Resource invariant UUID (" + cldsSdcResource.getResourceInvariantUUID()
-                                    + ") has not been found in the Service (Invariant ID:" + serviceInvariantUUID
-                                    + ")VF resource list");
-                        }
-                    }
-                }
+        if (globalProps != null && globalProps.getService() != null && globalProps.getResourceVf() != null) {
+            String serviceUuid = sdcCatalogServices.getServiceUuidFromServiceInvariantId(globalProps.getService());
+            SdcServiceDetail sdcServiceDetail = sdcCatalogServices
+                    .decodeCldsSdcServiceDetailFromJson(sdcCatalogServices.getSdcServicesInformation(serviceUuid));
+            if (sdcServiceDetail != null) {
+                urlList = filterVfResourceList(serviceUuid, sdcServiceDetail.getResources(),
+                        globalProps.getResourceVf());
             }
         } else {
             logger.warn("GlobalProperties json is empty, skipping getSdcReqUrlsList and returning empty list");

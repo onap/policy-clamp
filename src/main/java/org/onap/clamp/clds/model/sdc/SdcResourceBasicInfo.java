@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.model;
+package org.onap.clamp.clds.model.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -30,10 +30,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CldsSdcResourceBasicInfo implements Comparable<CldsSdcResourceBasicInfo> {
+public class SdcResourceBasicInfo implements Comparable<SdcResourceBasicInfo> {
 
     protected static final EELFLogger logger        = EELFManager.getInstance()
-            .getLogger(CldsSdcResourceBasicInfo.class);
+            .getLogger(SdcResourceBasicInfo.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
     private String                    uuid;
@@ -48,7 +48,7 @@ public class CldsSdcResourceBasicInfo implements Comparable<CldsSdcResourceBasic
     private String                    lastUpdaterUserId;
 
     @Override
-    public int compareTo(CldsSdcResourceBasicInfo in) {
+    public int compareTo(SdcResourceBasicInfo in) {
         // Compares this object with the specified object for order.
         // Returns a negative integer, zero, or a positive integer as this
         // object is less than, equal to, or greater than the specified object.
@@ -80,7 +80,7 @@ public class CldsSdcResourceBasicInfo implements Comparable<CldsSdcResourceBasic
             return false;
         if (getClass() != obj.getClass())
             return false;
-        CldsSdcResourceBasicInfo other = (CldsSdcResourceBasicInfo) obj;
+        SdcResourceBasicInfo other = (SdcResourceBasicInfo) obj;
         if (name == null) {
             if (other.name != null)
                 return false;

@@ -36,9 +36,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractItCase;
-import org.onap.clamp.clds.client.req.sdc.SdcReq;
+import org.onap.clamp.clds.client.req.sdc.SdcRequests;
 import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class SdcReqItCase extends AbstractItCase {
 
     @Autowired
-    private SdcReq sdcReq;
+    private SdcRequests sdcReq;
     private String modelBpmnProp;
     private String modelBpmn;
     private String modelName;
@@ -98,7 +98,7 @@ public class SdcReqItCase extends AbstractItCase {
 
     @Test
     public void getSdcReqUrlsListTest() throws GeneralSecurityException, DecoderException {
-        List<String> listUrls = sdcReq.getSdcReqUrlsList(modelProperties, refProp.getStringValue("sdc.serviceUrl"));
+        List<String> listUrls = sdcReq.getSdcReqUrlsList(modelProperties);
         assertNotNull(listUrls);
         assertTrue(listUrls.size() == 1);
         assertTrue(listUrls.get(0).contains(

@@ -28,8 +28,8 @@ import com.att.eelf.configuration.EELFManager;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.catalina.connector.Connector;
-import org.onap.clamp.clds.model.prop.Holmes;
-import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.model.properties.Holmes;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration;

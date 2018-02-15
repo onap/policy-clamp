@@ -34,11 +34,11 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.apache.commons.codec.DecoderException;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
-import org.onap.clamp.clds.client.req.sdc.SdcReq;
+import org.onap.clamp.clds.client.req.sdc.SdcRequests;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
 import org.onap.clamp.clds.model.DcaeEvent;
-import org.onap.clamp.clds.model.prop.Global;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.model.properties.Global;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,9 +53,9 @@ public class SdcSendReqDelegate {
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
     @Autowired
-    private SdcReq sdcReq;
+    private SdcRequests sdcReq;
     @Autowired
-    private RefProp refProp;
+    private CldsReferenceProperties refProp;
 
     /**
      * Perform activity. Send to sdc proxy.
@@ -72,7 +72,6 @@ public class SdcSendReqDelegate {
     @Handler
     public void execute(Exchange camelExchange) throws GeneralSecurityException, DecoderException, IOException {
         String controlName = (String) camelExchange.getProperty("controlName");
-        String baseUrl = refProp.getStringValue("sdc.serviceUrl");
         String artifactLabel = sdcReq
                 .normalizeResourceInstanceName(refProp.getStringValue("sdc.artifactLabel") + "-" + controlName);
         String locationArtifactLabel = sdcReq
@@ -98,7 +97,7 @@ public class SdcSendReqDelegate {
                 String serviceInvariantUUID = globalProps.getService();
                 camelExchange.setProperty("serviceInvariantUUID", serviceInvariantUUID);
             }
-            List<String> sdcReqUrlsList = sdcReq.getSdcReqUrlsList(prop, baseUrl);
+            List<String> sdcReqUrlsList = sdcReq.getSdcReqUrlsList(prop);
             String sdcLocationsPayload = sdcReq.formatSdcLocationsReq(prop, artifactName);
             String locationArtifactName = (String) camelExchange.getProperty("controlName") + "-location.json";
             String formattedSdcLocationReq = sdcReq.formatSdcReq(sdcLocationsPayload, locationArtifactName,

@@ -25,7 +25,7 @@ package org.onap.clamp.clds;
 
 import org.junit.BeforeClass;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -33,7 +33,7 @@ import org.springframework.test.context.ActiveProfiles;
 public abstract class AbstractItCase {
 
     @Autowired
-    protected RefProp refProp;
+    protected CldsReferenceProperties refProp;
     @Autowired
     protected PolicyClient policyClient;
 

@@ -25,6 +25,10 @@ package org.onap.clamp.clds.model.prop;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import org.onap.clamp.clds.model.properties.AbstractModelElement;
+import org.onap.clamp.clds.model.properties.ModelBpmn;
+import org.onap.clamp.clds.model.properties.ModelProperties;
+
 /**
  * A CustomModelElement to test the capability to add new elements on the fly.
  */

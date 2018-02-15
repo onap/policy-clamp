@@ -21,7 +21,7 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.model.refprop;
+package org.onap.clamp.clds.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
  * Holds reference properties.
  */
 @Component
-public class RefProp {
+public class CldsReferenceProperties {
 
     @Autowired
     private ApplicationContext appContext;

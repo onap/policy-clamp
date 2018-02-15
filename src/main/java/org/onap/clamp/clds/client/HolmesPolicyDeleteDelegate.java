@@ -29,8 +29,8 @@ import com.att.eelf.configuration.EELFManager;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.model.prop.Holmes;
-import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.model.properties.Holmes;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

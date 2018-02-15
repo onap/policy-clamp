@@ -32,9 +32,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.prop.Tca;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.model.properties.Tca;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +47,7 @@ public class TcaPolicyDelegate {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(TcaPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private RefProp refProp;
+    private CldsReferenceProperties refProp;
     @Autowired
     private PolicyClient policyClient;
 

@@ -378,6 +378,10 @@
 										<groupId>org.mariadb.jdbc</groupId>
 										<artifactId>mariadb-java-client</artifactId>
 								</exclusion>
+								<exclusion>
+										<groupId>com.att.nsa</groupId>
+										<artifactId>dmaapClient</artifactId>
+								</exclusion>
 						</exclusions>
 				</dependency>
 				<dependency>

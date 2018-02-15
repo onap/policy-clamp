@@ -41,9 +41,9 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RefPropItCase extends AbstractItCase {
+public class CldsReferencePropertiesItCase extends AbstractItCase {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(RefPropItCase.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsReferencePropertiesItCase.class);
 
     /**
      * Test getting prop value as a JSON Node / template.

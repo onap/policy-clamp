@@ -32,6 +32,10 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 import org.onap.clamp.clds.model.CldsModel;
+import org.onap.clamp.clds.model.properties.Holmes;
+import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.model.properties.Policy;
+import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
 /**

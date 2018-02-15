@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
 public class CustomModelElementTest {

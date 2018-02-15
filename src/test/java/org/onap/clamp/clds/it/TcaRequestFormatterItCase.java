@@ -35,7 +35,7 @@ import org.junit.runner.RunWith;
 import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.prop.ModelProperties;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.boot.test.context.SpringBootTest;

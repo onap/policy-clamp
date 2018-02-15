@@ -35,10 +35,10 @@ import org.mockito.Mockito;
 import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.model.CldsAlarmCondition;
-import org.onap.clamp.clds.model.CldsSdcResource;
-import org.onap.clamp.clds.model.CldsSdcResourceBasicInfo;
-import org.onap.clamp.clds.model.CldsSdcServiceInfo;
 import org.onap.clamp.clds.model.CldsServiceData;
+import org.onap.clamp.clds.model.sdc.SdcResource;
+import org.onap.clamp.clds.model.sdc.SdcResourceBasicInfo;
+import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -55,33 +55,33 @@ public class SdcCatalogServicesItCase extends AbstractItCase {
 
     @Test
     public void removeDuplicateServicesTest() {
-        CldsSdcServiceInfo service1a = new CldsSdcServiceInfo();
+        SdcServiceInfo service1a = new SdcServiceInfo();
         service1a.setName("service1");
         service1a.setVersion("1.0");
         service1a.setInvariantUUID("invariantUUID1.0");
-        List<CldsSdcServiceInfo> rawCldsSdcServiceList = new LinkedList<>();
+        List<SdcServiceInfo> rawCldsSdcServiceList = new LinkedList<>();
         rawCldsSdcServiceList.add(service1a);
         rawCldsSdcServiceList.add(service1a);
-        CldsSdcServiceInfo service1b = new CldsSdcServiceInfo();
+        SdcServiceInfo service1b = new SdcServiceInfo();
         service1b.setName("service1");
         service1b.setVersion("1.1");
         service1b.setInvariantUUID("invariantUUID1.1");
         rawCldsSdcServiceList.add(service1b);
-        CldsSdcServiceInfo service1c = new CldsSdcServiceInfo();
+        SdcServiceInfo service1c = new SdcServiceInfo();
         service1c.setName("service1");
         service1c.setVersion("1.2");
         service1c.setInvariantUUID("invariantUUID1.2");
         rawCldsSdcServiceList.add(service1c);
-        CldsSdcServiceInfo service2 = new CldsSdcServiceInfo();
+        SdcServiceInfo service2 = new SdcServiceInfo();
         service2.setName("service2");
         service2.setVersion("1.0");
         service2.setInvariantUUID("invariantUUID2.0");
         rawCldsSdcServiceList.add(service2);
         SdcCatalogServices catalogServices = new SdcCatalogServices();
-        List<CldsSdcServiceInfo> resultList = catalogServices.removeDuplicateServices(rawCldsSdcServiceList);
+        List<SdcServiceInfo> resultList = catalogServices.removeDuplicateServices(rawCldsSdcServiceList);
         assertTrue(resultList.size() == 2);
-        CldsSdcServiceInfo res1;
-        CldsSdcServiceInfo res2;
+        SdcServiceInfo res1;
+        SdcServiceInfo res2;
         if ("service1".equals(resultList.get(0).getName())) {
             res1 = resultList.get(0);
             res2 = resultList.get(1);
@@ -97,27 +97,27 @@ public class SdcCatalogServicesItCase extends AbstractItCase {
 
     @Test
     public void removeDuplicateSdcResourceInstancesTest() {
-        List<CldsSdcResource> rawCldsSdcResourceList = new LinkedList<>();
-        CldsSdcResource sdcResource1a = new CldsSdcResource();
+        List<SdcResource> rawCldsSdcResourceList = new LinkedList<>();
+        SdcResource sdcResource1a = new SdcResource();
         sdcResource1a.setResourceInstanceName("resource1");
         sdcResource1a.setResourceVersion("1.0");
         rawCldsSdcResourceList.add(sdcResource1a);
-        CldsSdcResource sdcResource1b = new CldsSdcResource();
+        SdcResource sdcResource1b = new SdcResource();
         sdcResource1b.setResourceInstanceName("resource1");
         sdcResource1b.setResourceVersion("1.1");
         rawCldsSdcResourceList.add(sdcResource1b);
-        CldsSdcResource sdcResource1c = new CldsSdcResource();
+        SdcResource sdcResource1c = new SdcResource();
         sdcResource1c.setResourceInstanceName("resource1");
         sdcResource1c.setResourceVersion("1.2");
         rawCldsSdcResourceList.add(sdcResource1c);
-        CldsSdcResource sdcResource2 = new CldsSdcResource();
+        SdcResource sdcResource2 = new SdcResource();
         sdcResource2.setResourceInstanceName("resource2");
         sdcResource2.setResourceVersion("1.0");
         rawCldsSdcResourceList.add(sdcResource2);
         SdcCatalogServices catalogServices = new SdcCatalogServices();
-        List<CldsSdcResource> resultList = catalogServices.removeDuplicateSdcResourceInstances(rawCldsSdcResourceList);
-        CldsSdcResource res1;
-        CldsSdcResource res2;
+        List<SdcResource> resultList = catalogServices.removeDuplicateSdcResourceInstances(rawCldsSdcResourceList);
+        SdcResource res1;
+        SdcResource res2;
         if ("resource1".equals(resultList.get(0).getResourceInstanceName())) {
             res1 = resultList.get(0);
             res2 = resultList.get(1);
@@ -133,28 +133,28 @@ public class SdcCatalogServicesItCase extends AbstractItCase {
 
     @Test
     public void removeDuplicateSdcResourceBasicInfoTest() {
-        List<CldsSdcResourceBasicInfo> rawCldsSdcResourceList = new LinkedList<>();
-        CldsSdcResourceBasicInfo sdcResource1a = new CldsSdcResourceBasicInfo();
+        List<SdcResourceBasicInfo> rawCldsSdcResourceList = new LinkedList<>();
+        SdcResourceBasicInfo sdcResource1a = new SdcResourceBasicInfo();
         sdcResource1a.setName("resource1");
         sdcResource1a.setVersion("1.0");
         rawCldsSdcResourceList.add(sdcResource1a);
-        CldsSdcResourceBasicInfo sdcResource1b = new CldsSdcResourceBasicInfo();
+        SdcResourceBasicInfo sdcResource1b = new SdcResourceBasicInfo();
         sdcResource1b.setName("resource1");
         sdcResource1b.setVersion("1.1");
         rawCldsSdcResourceList.add(sdcResource1b);
-        CldsSdcResourceBasicInfo sdcResource1c = new CldsSdcResourceBasicInfo();
+        SdcResourceBasicInfo sdcResource1c = new SdcResourceBasicInfo();
         sdcResource1c.setName("resource1");
         sdcResource1c.setVersion("1.2");
         rawCldsSdcResourceList.add(sdcResource1c);
-        CldsSdcResourceBasicInfo sdcResource2 = new CldsSdcResourceBasicInfo();
+        SdcResourceBasicInfo sdcResource2 = new SdcResourceBasicInfo();
         sdcResource2.setName("resource2");
         sdcResource2.setVersion("1.0");
         rawCldsSdcResourceList.add(sdcResource2);
         SdcCatalogServices catalogServices = new SdcCatalogServices();
-        List<CldsSdcResourceBasicInfo> resultList = catalogServices
+        List<SdcResourceBasicInfo> resultList = catalogServices
                 .removeDuplicateSdcResourceBasicInfo(rawCldsSdcResourceList);
-        CldsSdcResourceBasicInfo res1;
-        CldsSdcResourceBasicInfo res2;
+        SdcResourceBasicInfo res1;
+        SdcResourceBasicInfo res2;
         if ("resource1".equals(resultList.get(0).getName())) {
             res1 = resultList.get(0);
             res2 = resultList.get(1);

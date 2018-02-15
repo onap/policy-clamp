@@ -58,20 +58,20 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
 import org.onap.clamp.clds.exception.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsAlarmCondition;
-import org.onap.clamp.clds.model.CldsSdcArtifact;
-import org.onap.clamp.clds.model.CldsSdcResource;
-import org.onap.clamp.clds.model.CldsSdcResourceBasicInfo;
-import org.onap.clamp.clds.model.CldsSdcServiceDetail;
-import org.onap.clamp.clds.model.CldsSdcServiceInfo;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsVfData;
 import org.onap.clamp.clds.model.CldsVfKPIData;
 import org.onap.clamp.clds.model.CldsVfcData;
-import org.onap.clamp.clds.model.prop.Global;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.model.properties.Global;
+import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.model.sdc.SdcArtifact;
+import org.onap.clamp.clds.model.sdc.SdcResource;
+import org.onap.clamp.clds.model.sdc.SdcResourceBasicInfo;
+import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
+import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
 import org.onap.clamp.clds.util.CryptoUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,7 @@ public class SdcCatalogServices {
     private static final String SDC_INSTANCE_ID_CLAMP = "CLAMP-Tool";
     private static final String RESOURCE_URL_PREFIX = "resources";
     @Autowired
-    private RefProp refProp;
+    private CldsReferenceProperties refProp;
 
     /**
      * Return SDC id and pw as a HTTP Basic Auth string (for example: Basic
@@ -165,8 +165,8 @@ public class SdcCatalogServices {
      *            A list of CldsSdcServiceInfo
      * @return A list of CldsSdcServiceInfo without duplicate service UUID
      */
-    public List<CldsSdcServiceInfo> removeDuplicateServices(List<CldsSdcServiceInfo> rawCldsSdcServiceList) {
-        List<CldsSdcServiceInfo> cldsSdcServiceInfoList = null;
+    public List<SdcServiceInfo> removeDuplicateServices(List<SdcServiceInfo> rawCldsSdcServiceList) {
+        List<SdcServiceInfo> cldsSdcServiceInfoList = null;
         if (rawCldsSdcServiceList != null && !rawCldsSdcServiceList.isEmpty()) {
             // sort list
             Collections.sort(rawCldsSdcServiceList);
@@ -176,7 +176,7 @@ public class SdcCatalogServices {
             for (int i = 1; i < rawCldsSdcServiceList.size(); i++) {
                 // compare name with previous - if not equal, then keep the
                 // previous (it's the last with that name)
-                CldsSdcServiceInfo prev = rawCldsSdcServiceList.get(i - 1);
+                SdcServiceInfo prev = rawCldsSdcServiceList.get(i - 1);
                 if (!rawCldsSdcServiceList.get(i).getName().equals(prev.getName())) {
                     cldsSdcServiceInfoList.add(prev);
                 }
@@ -193,8 +193,8 @@ public class SdcCatalogServices {
      * @param rawCldsSdcResourceList
      * @return List of CldsSdcResource
      */
-    public List<CldsSdcResource> removeDuplicateSdcResourceInstances(List<CldsSdcResource> rawCldsSdcResourceList) {
-        List<CldsSdcResource> cldsSdcResourceList = null;
+    public List<SdcResource> removeDuplicateSdcResourceInstances(List<SdcResource> rawCldsSdcResourceList) {
+        List<SdcResource> cldsSdcResourceList = null;
         if (rawCldsSdcResourceList != null && !rawCldsSdcResourceList.isEmpty()) {
             // sort list
             Collections.sort(rawCldsSdcResourceList);
@@ -204,7 +204,7 @@ public class SdcCatalogServices {
             for (int i = 1; i < rawCldsSdcResourceList.size(); i++) {
                 // compare name with previous - if not equal, then keep the
                 // previous (it's the last with that name)
-                CldsSdcResource prev = rawCldsSdcResourceList.get(i - 1);
+                SdcResource prev = rawCldsSdcResourceList.get(i - 1);
                 if (!rawCldsSdcResourceList.get(i).getResourceInstanceName().equals(prev.getResourceInstanceName())) {
                     cldsSdcResourceList.add(prev);
                 }
@@ -221,9 +221,9 @@ public class SdcCatalogServices {
      * @param rawCldsSdcResourceListBasicList
      * @return List of CldsSdcResourceBasicInfo
      */
-    public List<CldsSdcResourceBasicInfo> removeDuplicateSdcResourceBasicInfo(
-            List<CldsSdcResourceBasicInfo> rawCldsSdcResourceListBasicList) {
-        List<CldsSdcResourceBasicInfo> cldsSdcResourceBasicInfoList = null;
+    public List<SdcResourceBasicInfo> removeDuplicateSdcResourceBasicInfo(
+            List<SdcResourceBasicInfo> rawCldsSdcResourceListBasicList) {
+        List<SdcResourceBasicInfo> cldsSdcResourceBasicInfoList = null;
         if (rawCldsSdcResourceListBasicList != null && !rawCldsSdcResourceListBasicList.isEmpty()) {
             // sort list
             Collections.sort(rawCldsSdcResourceListBasicList);
@@ -233,7 +233,7 @@ public class SdcCatalogServices {
             for (int i = 1; i < rawCldsSdcResourceListBasicList.size(); i++) {
                 // compare name with previous - if not equal, then keep the
                 // previous (it's the last with that name)
-                CldsSdcResourceBasicInfo prev = rawCldsSdcResourceListBasicList.get(i - 1);
+                SdcResourceBasicInfo prev = rawCldsSdcResourceListBasicList.get(i - 1);
                 if (!rawCldsSdcResourceListBasicList.get(i).getName().equals(prev.getName())) {
                     cldsSdcResourceBasicInfoList.add(prev);
                 }
@@ -260,10 +260,10 @@ public class SdcCatalogServices {
             throws GeneralSecurityException, DecoderException {
         String serviceUuid = "";
         String responseStr = getSdcServicesInformation(null);
-        List<CldsSdcServiceInfo> rawCldsSdcServicesList = getCldsSdcServicesListFromJson(responseStr);
-        List<CldsSdcServiceInfo> cldsSdcServicesList = removeDuplicateServices(rawCldsSdcServicesList);
+        List<SdcServiceInfo> rawCldsSdcServicesList = getCldsSdcServicesListFromJson(responseStr);
+        List<SdcServiceInfo> cldsSdcServicesList = removeDuplicateServices(rawCldsSdcServicesList);
         if (cldsSdcServicesList != null && !cldsSdcServicesList.isEmpty()) {
-            for (CldsSdcServiceInfo currCldsSdcServiceInfo : cldsSdcServicesList) {
+            for (SdcServiceInfo currCldsSdcServiceInfo : cldsSdcServicesList) {
                 if (currCldsSdcServiceInfo != null && currCldsSdcServiceInfo.getInvariantUUID() != null
                         && currCldsSdcServiceInfo.getInvariantUUID().equalsIgnoreCase(invariantId)) {
                     serviceUuid = currCldsSdcServiceInfo.getUuid();
@@ -282,14 +282,14 @@ public class SdcCatalogServices {
      * @return The list of CldsSdcServiceInfo, if there is a failure it return
      *         an empty list
      */
-    private List<CldsSdcServiceInfo> getCldsSdcServicesListFromJson(String jsonStr) {
+    private List<SdcServiceInfo> getCldsSdcServicesListFromJson(String jsonStr) {
         ObjectMapper objectMapper = new ObjectMapper();
         if (StringUtils.isBlank(jsonStr)) {
             return new ArrayList<>();
         }
         try {
             return objectMapper.readValue(jsonStr,
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, CldsSdcServiceInfo.class));
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, SdcServiceInfo.class));
         } catch (IOException e) {
             logger.error("Error when attempting to decode the JSON containing CldsSdcServiceInfo", e);
             return new ArrayList<>();
@@ -304,14 +304,14 @@ public class SdcCatalogServices {
      * @return The list of CldsSdcResourceBasicInfo, an empty list in case of
      *         issues
      */
-    private List<CldsSdcResourceBasicInfo> getAllSdcResourcesListFromJson(String jsonStr) {
+    private List<SdcResourceBasicInfo> getAllSdcResourcesListFromJson(String jsonStr) {
         ObjectMapper objectMapper = new ObjectMapper();
         if (StringUtils.isBlank(jsonStr)) {
             return new ArrayList<>();
         }
         try {
             return objectMapper.readValue(jsonStr,
-                    objectMapper.getTypeFactory().constructCollectionType(List.class, CldsSdcResourceBasicInfo.class));
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, SdcResourceBasicInfo.class));
         } catch (IOException e) {
             logger.error("Exception occurred when attempting to decode the list of CldsSdcResourceBasicInfo JSON", e);
             return new ArrayList<>();
@@ -324,10 +324,10 @@ public class SdcCatalogServices {
      * @param jsonStr
      * @return
      */
-    public CldsSdcServiceDetail getCldsSdcServiceDetailFromJson(String jsonStr) {
+    public SdcServiceDetail decodeCldsSdcServiceDetailFromJson(String jsonStr) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(jsonStr, CldsSdcServiceDetail.class);
+            return objectMapper.readValue(jsonStr, SdcServiceDetail.class);
         } catch (IOException e) {
             logger.error("Exception when attempting to decode the CldsSdcServiceDetail JSON", e);
             return null;
@@ -472,9 +472,9 @@ public class SdcCatalogServices {
         ObjectMapper objectMapper = new ObjectMapper();
         CldsServiceData cldsServiceData = new CldsServiceData();
         if (responseStr != null) {
-            CldsSdcServiceDetail cldsSdcServiceDetail;
+            SdcServiceDetail cldsSdcServiceDetail;
             try {
-                cldsSdcServiceDetail = objectMapper.readValue(responseStr, CldsSdcServiceDetail.class);
+                cldsSdcServiceDetail = objectMapper.readValue(responseStr, SdcServiceDetail.class);
             } catch (IOException e) {
                 logger.error("Exception when decoding the CldsServiceData JSON from SDC", e);
                 throw new SdcCommunicationException("Exception when decoding the CldsServiceData JSON from SDC", e);
@@ -484,11 +484,11 @@ public class SdcCatalogServices {
             if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getResources() != null) {
                 cldsServiceData.setServiceUUID(cldsSdcServiceDetail.getUuid());
                 cldsServiceData.setServiceInvariantUUID(cldsSdcServiceDetail.getInvariantUUID());
-                List<CldsSdcResource> cldsSdcResourceList = removeDuplicateSdcResourceInstances(
+                List<SdcResource> cldsSdcResourceList = removeDuplicateSdcResourceInstances(
                         cldsSdcServiceDetail.getResources());
                 if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
                     List<CldsVfData> cldsVfDataList = new ArrayList<>();
-                    for (CldsSdcResource currCldsSdcResource : cldsSdcResourceList) {
+                    for (SdcResource currCldsSdcResource : cldsSdcResourceList) {
                         if (currCldsSdcResource != null && currCldsSdcResource.getResoucreType() != null
                                 && "VF".equalsIgnoreCase(currCldsSdcResource.getResoucreType())) {
                             CldsVfData currCldsVfData = new CldsVfData();
@@ -511,9 +511,8 @@ public class SdcCatalogServices {
             throws GeneralSecurityException {
         // todo : refact this..
         if (cldsVfDataList != null && !cldsVfDataList.isEmpty()) {
-            List<CldsSdcResourceBasicInfo> allVfResources = getAllSdcVForVfcResourcesBasedOnResourceType(
-                    RESOURCE_VF_TYPE);
-            List<CldsSdcResourceBasicInfo> allVfcResources = getAllSdcVForVfcResourcesBasedOnResourceType(
+            List<SdcResourceBasicInfo> allVfResources = getAllSdcVForVfcResourcesBasedOnResourceType(RESOURCE_VF_TYPE);
+            List<SdcResourceBasicInfo> allVfcResources = getAllSdcVForVfcResourcesBasedOnResourceType(
                     RESOURCE_VFC_TYPE);
             allVfcResources.addAll(getAllSdcVForVfcResourcesBasedOnResourceType(RESOURCE_CVFC_TYPE));
             for (CldsVfData currCldsVfData : cldsVfDataList) {
@@ -1128,18 +1127,18 @@ public class SdcCatalogServices {
      *            The artifact name that will be searched
      * @return The artifact UUID found
      */
-    public String getArtifactIdIfArtifactAlreadyExists(CldsSdcServiceDetail cldsSdcServiceDetail, String artifactName) {
+    public String getArtifactIdIfArtifactAlreadyExists(SdcServiceDetail cldsSdcServiceDetail, String artifactName) {
         String artifactUuid = null;
         boolean artifactExists = false;
         if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getResources() != null
                 && !cldsSdcServiceDetail.getResources().isEmpty()) {
-            for (CldsSdcResource currCldsSdcResource : cldsSdcServiceDetail.getResources()) {
+            for (SdcResource currCldsSdcResource : cldsSdcServiceDetail.getResources()) {
                 if (artifactExists) {
                     break;
                 }
                 if (currCldsSdcResource != null && currCldsSdcResource.getArtifacts() != null
                         && !currCldsSdcResource.getArtifacts().isEmpty()) {
-                    for (CldsSdcArtifact currCldsSdcArtifact : currCldsSdcResource.getArtifacts()) {
+                    for (SdcArtifact currCldsSdcArtifact : currCldsSdcResource.getArtifacts()) {
                         if (currCldsSdcArtifact != null && currCldsSdcArtifact.getArtifactName() != null
                                 && currCldsSdcArtifact.getArtifactName().equalsIgnoreCase(artifactName)) {
                             artifactUuid = currCldsSdcArtifact.getArtifactUUID();
@@ -1154,7 +1153,7 @@ public class SdcCatalogServices {
     }
 
     // To get all sdc VF/VFC Resources basic info.
-    private List<CldsSdcResourceBasicInfo> getAllSdcVForVfcResourcesBasedOnResourceType(String resourceType) {
+    private List<SdcResourceBasicInfo> getAllSdcVForVfcResourcesBasedOnResourceType(String resourceType) {
         String catalogUrl = refProp.getStringValue(SDC_CATALOG_URL_PROPERTY_NAME);
         String resourceUrl = catalogUrl + "resources?resourceType=" + resourceType;
         String allSdcVfcResources = getCldsServicesOrResourcesBasedOnURL(resourceUrl);
@@ -1162,10 +1161,10 @@ public class SdcCatalogServices {
     }
 
     private String getResourceUuidFromResourceInvariantUuid(String resourceInvariantUuid,
-            List<CldsSdcResourceBasicInfo> resourceInfoList) {
+            List<SdcResourceBasicInfo> resourceInfoList) {
         String resourceUuid = null;
         if (resourceInfoList != null && !resourceInfoList.isEmpty()) {
-            for (CldsSdcResourceBasicInfo currResource : resourceInfoList) {
+            for (SdcResourceBasicInfo currResource : resourceInfoList) {
                 if (currResource != null && currResource.getInvariantUUID() != null && currResource.getUuid() != null
                         && currResource.getInvariantUUID().equalsIgnoreCase(resourceInvariantUuid)) {
                     resourceUuid = currResource.getUuid();
@@ -1220,7 +1219,7 @@ public class SdcCatalogServices {
                     String originalServiceUuid = getServiceUuidFromServiceInvariantId(serviceInvariantUuid);
                     logger.info("ServiceUUID used before upload in url:" + originalServiceUuid);
                     String sdcServicesInformation = getSdcServicesInformation(originalServiceUuid);
-                    CldsSdcServiceDetail cldsSdcServiceDetail = getCldsSdcServiceDetailFromJson(sdcServicesInformation);
+                    SdcServiceDetail cldsSdcServiceDetail = decodeCldsSdcServiceDetailFromJson(sdcServicesInformation);
                     String uploadedArtifactUuid = getArtifactIdIfArtifactAlreadyExists(cldsSdcServiceDetail,
                             artifactName);
                     // Upload artifacts to sdc
@@ -1233,7 +1232,7 @@ public class SdcCatalogServices {
                     }
                     logger.info("ServiceUUID used after upload in ulr:" + updatedServiceUuid);
                     sdcServicesInformation = getSdcServicesInformation(updatedServiceUuid);
-                    cldsSdcServiceDetail = getCldsSdcServiceDetailFromJson(sdcServicesInformation);
+                    cldsSdcServiceDetail = decodeCldsSdcServiceDetailFromJson(sdcServicesInformation);
                     uploadedArtifactUuid = getArtifactIdIfArtifactAlreadyExists(cldsSdcServiceDetail,
                             locationArtifactName);
                     // To send location information also to sdc

@@ -21,14 +21,14 @@
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
 
-package org.onap.clamp.clds.model;
+package org.onap.clamp.clds.model.sdc;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CldsSdcServiceDetail {
+public class SdcServiceDetail {
 
     private String                uuid;
     private String                invariantUUID;
@@ -40,8 +40,8 @@ public class CldsSdcServiceDetail {
     private String                lastUpdaterUserId;
     private String                distributionStatus;
     private String                lastUpdaterFullName;
-    private List<CldsSdcResource> resources;
-    private List<CldsSdcArtifact> artifacts;
+    private List<SdcResource> resources;
+    private List<SdcArtifact> artifacts;
 
     public String getUuid() {
         return uuid;
@@ -123,19 +123,19 @@ public class CldsSdcServiceDetail {
         this.lastUpdaterFullName = lastUpdaterFullName;
     }
 
-    public List<CldsSdcResource> getResources() {
+    public List<SdcResource> getResources() {
         return resources;
     }
 
-    public void setResources(List<CldsSdcResource> resources) {
+    public void setResources(List<SdcResource> resources) {
         this.resources = resources;
     }
 
-    public List<CldsSdcArtifact> getArtifacts() {
+    public List<SdcArtifact> getArtifacts() {
         return artifacts;
     }
 
-    public void setArtifacts(List<CldsSdcArtifact> artifacts) {
+    public void setArtifacts(List<SdcArtifact> artifacts) {
         this.artifacts = artifacts;
     }
 

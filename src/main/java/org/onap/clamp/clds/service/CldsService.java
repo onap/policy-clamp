@@ -64,6 +64,7 @@ import org.onap.clamp.clds.camel.CamelProxy;
 import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.SdcCommunicationException;
@@ -75,16 +76,15 @@ import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelProp;
-import org.onap.clamp.clds.model.CldsSdcResource;
-import org.onap.clamp.clds.model.CldsSdcServiceDetail;
-import org.onap.clamp.clds.model.CldsSdcServiceInfo;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.ValueItem;
-import org.onap.clamp.clds.model.prop.AbstractModelElement;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.model.properties.AbstractModelElement;
+import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.model.sdc.SdcResource;
+import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
+import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +142,7 @@ public class CldsService extends SecureServiceBase {
     @Autowired
     private XslTransformer cldsBpmnTransformer;
     @Autowired
-    private RefProp refProp;
+    private CldsReferenceProperties refProp;
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
     @Autowired
@@ -680,14 +680,14 @@ public class CldsService extends SecureServiceBase {
             return "";
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        List<CldsSdcServiceInfo> rawList = objectMapper.readValue(responseStr,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, CldsSdcServiceInfo.class));
+        List<SdcServiceInfo> rawList = objectMapper.readValue(responseStr,
+                objectMapper.getTypeFactory().constructCollectionType(List.class, SdcServiceInfo.class));
         ObjectNode invariantIdServiceNode = objectMapper.createObjectNode();
         ObjectNode serviceNode = objectMapper.createObjectNode();
         logger.info("value of cldsserviceiNfolist: {}", rawList);
         if (rawList != null && !rawList.isEmpty()) {
-            List<CldsSdcServiceInfo> cldsSdcServiceInfoList = sdcCatalogServices.removeDuplicateServices(rawList);
-            for (CldsSdcServiceInfo currCldsSdcServiceInfo : cldsSdcServiceInfoList) {
+            List<SdcServiceInfo> cldsSdcServiceInfoList = sdcCatalogServices.removeDuplicateServices(rawList);
+            for (SdcServiceInfo currCldsSdcServiceInfo : cldsSdcServiceInfoList) {
                 if (currCldsSdcServiceInfo != null) {
                     invariantIdServiceNode.put(currCldsSdcServiceInfo.getInvariantUUID(),
                             currCldsSdcServiceInfo.getName());
@@ -700,7 +700,7 @@ public class CldsService extends SecureServiceBase {
 
     private String createPropertiesObjectByUUID(String globalProps, String cldsResponseStr) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        CldsSdcServiceDetail cldsSdcServiceDetail = mapper.readValue(cldsResponseStr, CldsSdcServiceDetail.class);
+        SdcServiceDetail cldsSdcServiceDetail = mapper.readValue(cldsResponseStr, SdcServiceDetail.class);
         ObjectNode globalPropsJson = null;
         if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getUuid() != null) {
             /**
@@ -745,18 +745,18 @@ public class CldsService extends SecureServiceBase {
     }
 
     private void createVfObjectNode(ObjectNode vfObjectNode2, ObjectMapper mapper,
-            List<CldsSdcResource> rawCldsSdcResourceList) {
+            List<SdcResource> rawCldsSdcResourceList) {
         ObjectNode vfNode = mapper.createObjectNode();
         vfNode.put("", "");
         // To remove repeated resource instance name from
         // resourceInstanceList
-        List<CldsSdcResource> cldsSdcResourceList = sdcCatalogServices
+        List<SdcResource> cldsSdcResourceList = sdcCatalogServices
                 .removeDuplicateSdcResourceInstances(rawCldsSdcResourceList);
         /**
          * Creating vf resource node using cldsSdcResource Object
          */
         if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
-            for (CldsSdcResource cldsSdcResource : cldsSdcResourceList) {
+            for (SdcResource cldsSdcResource : cldsSdcResourceList) {
                 if (cldsSdcResource != null && "VF".equalsIgnoreCase(cldsSdcResource.getResoucreType())) {
                     vfNode.put(cldsSdcResource.getResourceUUID(), cldsSdcResource.getResourceName());
                 }
@@ -792,7 +792,7 @@ public class CldsService extends SecureServiceBase {
         vfObjectNode2.putPOJO("alarmCondition", alarmStringJsonNode);
     }
 
-    private ObjectNode createByVFCObjectNode(ObjectMapper mapper, List<CldsSdcResource> cldsSdcResourceList) {
+    private ObjectNode createByVFCObjectNode(ObjectMapper mapper, List<SdcResource> cldsSdcResourceList) {
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         ObjectNode vfCObjectNode = mapper.createObjectNode();
@@ -800,7 +800,7 @@ public class CldsService extends SecureServiceBase {
         ObjectNode subVfCObjectNode = mapper.createObjectNode();
         subVfCObjectNode.putPOJO("vfc", emptyObjectNode);
         if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
-            for (CldsSdcResource cldsSdcResource : cldsSdcResourceList) {
+            for (SdcResource cldsSdcResource : cldsSdcResourceList) {
                 if (cldsSdcResource != null && "VF".equalsIgnoreCase(cldsSdcResource.getResoucreType())) {
                     vfCObjectNode.putPOJO(cldsSdcResource.getResourceUUID(), subVfCObjectNode);
                 }

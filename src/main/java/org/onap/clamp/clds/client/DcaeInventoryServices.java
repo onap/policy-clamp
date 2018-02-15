@@ -41,13 +41,13 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.DcaeEvent;
-import org.onap.clamp.clds.model.prop.Global;
-import org.onap.clamp.clds.model.prop.ModelProperties;
-import org.onap.clamp.clds.model.refprop.RefProp;
+import org.onap.clamp.clds.model.properties.Global;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -63,7 +63,7 @@ public class DcaeInventoryServices {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private static final String DCAE_INVENTORY_URL = "DCAE_INVENTORY_URL";
     @Autowired
-    private RefProp refProp;
+    private CldsReferenceProperties refProp;
     @Autowired
     private CldsDao cldsDao;
 
