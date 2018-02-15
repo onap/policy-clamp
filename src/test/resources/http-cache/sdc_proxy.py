@@ -91,6 +91,9 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self.check_credentials()
 
         cached_file = '%s/%s' % (CACHE_ROOT, self.path,)
+        print("Cached file name before escaping : %s" % cached_file)
+        cached_file = cached_file.replace('<','&#60;').replace('>','&#62;').replace('?','&#63;').replace('*','&#42;').replace('\\','&#42;').replace(':','&#58;').replace('|','&#124;')
+        print("Cached file name after escaping (used for cache storage) : %s" % cached_file)
         cached_file_content = "%s/.file" % (cached_file,)
         cached_file_header = "%s/.header" % (cached_file,)
 
@@ -100,7 +103,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             return "404 Not found"
 
         if not _file_available:
-            print("Request for not cached file : %s" % (cached_file,))
+            print("SDC Request for data currently not present in cache: %s" % (cached_file,))
             url = '%s%s' % (SDC_HOST, self.path)
             response = requests.get(url, auth=SDC_AUTH, headers=SDC_HEADERS, stream=True)
 
