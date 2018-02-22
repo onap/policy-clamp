@@ -59,7 +59,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.onap.clamp.clds.config.CldsReferenceProperties;
-import org.onap.clamp.clds.exception.SdcCommunicationException;
+import org.onap.clamp.clds.exception.sdc.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsAlarmCondition;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsVfData;

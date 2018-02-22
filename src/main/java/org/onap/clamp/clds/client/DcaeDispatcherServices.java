@@ -32,7 +32,7 @@ import java.util.Date;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.onap.clamp.clds.config.CldsReferenceProperties;
-import org.onap.clamp.clds.exception.DcaeDeploymentException;
+import org.onap.clamp.clds.exception.dcae.DcaeDeploymentException;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
