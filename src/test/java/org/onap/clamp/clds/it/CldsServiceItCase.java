@@ -45,7 +45,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.model.CldsInfo;
@@ -65,7 +64,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CldsServiceItCase extends AbstractItCase {
+public class CldsServiceItCase {
 
     @Autowired
     private CldsService cldsService;

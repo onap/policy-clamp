@@ -35,8 +35,8 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
@@ -44,12 +44,16 @@ import org.onap.clamp.clds.model.properties.PolicyChain;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
 import org.onap.policy.controlloop.policy.builder.BuilderException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class OperationPolicyReqItCase extends AbstractItCase {
+public class OperationPolicyReqItCase {
+
+    @Autowired
+    private CldsReferenceProperties refProp;
 
     @Test
     public void formatAttributesTest() throws IOException, BuilderException {

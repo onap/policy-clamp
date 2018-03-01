@@ -33,9 +33,10 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
+import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
+import org.onap.clamp.clds.config.CldsReferenceProperties;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
@@ -43,6 +44,7 @@ import org.onap.clamp.clds.model.properties.PolicyChain;
 import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -52,8 +54,12 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PolicyClientItCase extends AbstractItCase {
+public class PolicyClientItCase {
 
+    @Autowired
+    private CldsReferenceProperties refProp;
+    @Autowired
+    protected PolicyClient policyClient;
     String modelProp;
     String modelBpmnProp;
     String modelName;

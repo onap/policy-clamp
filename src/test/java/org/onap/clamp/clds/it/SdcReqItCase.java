@@ -35,7 +35,6 @@ import org.apache.commons.codec.DecoderException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.sdc.SdcRequests;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
@@ -47,7 +46,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SdcReqItCase extends AbstractItCase {
+public class SdcReqItCase {
 
     @Autowired
     private SdcRequests sdcReq;
