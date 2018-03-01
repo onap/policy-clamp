@@ -44,7 +44,6 @@ import javax.ws.rs.BadRequestException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.DcaeHttpConnectionManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,7 +57,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:https/https-test.properties")
-public class DcaeHttpConnectionManagerItCase extends AbstractItCase {
+public class DcaeHttpConnectionManagerItCase {
 
     @Value("${server.port}")
     private String httpsPort;

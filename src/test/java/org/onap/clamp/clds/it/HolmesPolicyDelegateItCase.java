@@ -29,7 +29,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.HolmesPolicyDelegate;
 import org.onap.clamp.clds.model.properties.Holmes;
 import org.onap.clamp.clds.model.properties.ModelProperties;
@@ -42,7 +41,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class HolmesPolicyDelegateItCase extends AbstractItCase {
+public class HolmesPolicyDelegateItCase {
 
     @Test
     public void testCreatePolicyJson() throws IOException {

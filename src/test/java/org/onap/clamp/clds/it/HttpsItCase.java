@@ -38,7 +38,6 @@ import javax.net.ssl.X509TrustManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractItCase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -55,11 +54,10 @@ import org.springframework.web.client.RestTemplate;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @TestPropertySource(locations = "classpath:https/https-test.properties")
-public class HttpsItCase extends AbstractItCase {
+public class HttpsItCase {
 
     @Value("${server.port}")
     private String httpsPort;
-
     @Value("${server.http-to-https-redirection.port}")
     private String httpPort;
 
@@ -68,7 +66,6 @@ public class HttpsItCase extends AbstractItCase {
      */
     @BeforeClass
     public static void setUp() {
-
         try {
             // setup ssl context to ignore certificate errors
             SSLContext ctx = SSLContext.getInstance("TLS");
@@ -89,12 +86,13 @@ public class HttpsItCase extends AbstractItCase {
                     return null;
                 }
             };
-            ctx.init(null, new TrustManager[] { tm }, null);
+            ctx.init(null, new TrustManager[] {
+                    tm
+            }, null);
             SSLContext.setDefault(ctx);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
 
     @Test
@@ -108,16 +106,13 @@ public class HttpsItCase extends AbstractItCase {
             }
         });
         template.setRequestFactory(factory);
-
         ResponseEntity<String> entity = template
                 .getForEntity("http://localhost:" + this.httpPort + "/designer/index.html", String.class);
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-
         ResponseEntity<String> httpsEntity = template
                 .getForEntity("https://localhost:" + this.httpsPort + "/designer/index.html", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpsEntity.getBody()).contains("CLDS");
-
     }
 
     /**
@@ -141,5 +136,4 @@ public class HttpsItCase extends AbstractItCase {
             super.prepareConnection(connection, httpMethod);
         }
     }
-
 }

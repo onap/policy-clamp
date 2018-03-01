@@ -41,7 +41,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
@@ -57,7 +56,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class CldsTemplateServiceItCase extends AbstractItCase {
+public class CldsTemplateServiceItCase {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsTemplateServiceItCase.class);
     @Autowired

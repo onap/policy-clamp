@@ -42,7 +42,6 @@ import org.apache.commons.codec.DecoderException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.AbstractItCase;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CLDSMonitoringDetails;
@@ -62,7 +61,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CldsDaoItCase extends AbstractItCase {
+public class CldsDaoItCase {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
     @Autowired
