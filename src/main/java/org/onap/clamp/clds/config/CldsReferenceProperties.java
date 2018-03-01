@@ -50,10 +50,18 @@ public class CldsReferenceProperties {
     private String cldsReferenceValuesFile;
 
     @PostConstruct
-    public void loadConfig() throws IOException {
+    public void loadConfiguration() throws IOException {
         prop = new Properties();
         Resource resource = appContext.getResource(cldsReferenceValuesFile);
         prop.load(resource.getInputStream());
+    }
+
+    public CldsReferenceProperties(String referenceValuesFile) throws IOException {
+        cldsReferenceValuesFile = referenceValuesFile;
+        loadConfiguration();
+    }
+
+    public CldsReferenceProperties() {
     }
 
     /**
@@ -105,6 +113,7 @@ public class CldsReferenceProperties {
      */
     public JsonNode getJsonTemplate(String key1, String key2) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(getStringValue(key1, key2), JsonNode.class);
+        String result = getStringValue(key1, key2);
+        return (result != null) ? objectMapper.readValue(result, JsonNode.class) : null;
     }
 }

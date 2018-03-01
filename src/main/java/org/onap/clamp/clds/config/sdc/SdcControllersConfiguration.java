@@ -1,0 +1,94 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * ONAP CLAMP
+ * ================================================================================
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ *                             reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * ============LICENSE_END============================================
+ * ===================================================================
+ * ECOMP is a trademark and service mark of AT&T Intellectual Property.
+ */
+
+package org.onap.clamp.clds.config.sdc;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
+
+/**
+ * This class maps the SDC config JSON file. This JSON can have multiple
+ * sdc-controller config. So the json is loaded in a static way and the instance
+ * must specify the controller name that it represents.
+ */
+@Component
+public class SdcControllersConfiguration {
+
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcControllersConfiguration.class);
+    public static final String CONTROLLER_SUBTREE_KEY = "sdc-connections";
+    @Autowired
+    protected ApplicationContext appContext;
+    /**
+     * The file name that will be loaded by Spring.
+     */
+    @Value("${org.onap.clamp.config.files.sdcController:'classpath:/clds/sdc-controllers-config.json'}")
+    protected String sdcControllerFile;
+    /**
+     * The root of the JSON.
+     */
+    private JsonNode jsonRootNode;
+
+    @PostConstruct
+    public void loadConfiguration() throws IOException {
+        Resource resource = appContext.getResource(sdcControllerFile);
+        // Try to load json tree
+        jsonRootNode = new ObjectMapper().readValue(resource.getInputStream(), JsonNode.class);
+    }
+
+    public SdcSingleControllerConfiguration getSdcSingleControllerConfiguration(String controllerName) {
+        Map<String, SdcSingleControllerConfiguration> controllerMap = getAllDefinedControllers();
+        return controllerMap.get(controllerName);
+    }
+
+    /**
+     * This method reads all Controllers configurations and returns them.
+     *
+     * @return A list of controller Names defined in the config
+     */
+    public Map<String, SdcSingleControllerConfiguration> getAllDefinedControllers() {
+        Map<String, SdcSingleControllerConfiguration> result = new HashMap<>();
+        if (jsonRootNode.get(CONTROLLER_SUBTREE_KEY) != null) {
+            jsonRootNode.get(CONTROLLER_SUBTREE_KEY).fields().forEachRemaining(entry -> result.put(entry.getKey(),
+                    new SdcSingleControllerConfiguration(entry.getValue(), entry.getKey())));
+        } else {
+            throw new SdcParametersException(
+                    CONTROLLER_SUBTREE_KEY + " key not found in the file: " + sdcControllerFile);
+        }
+        return result;
+    }
+}
