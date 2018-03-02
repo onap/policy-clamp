@@ -34,9 +34,7 @@ import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -348,6 +346,9 @@ public class CldsService extends SecureServiceBase {
             if (template != null) {
                 cldsModel.setTemplateId(template.getId());
                 cldsModel.setDocText(template.getPropText());
+                // This is to provide the Bpmn XML when Template part in UI is
+                // disabled
+                cldsModel.setBpmnText(template.getBpmnText());
             }
         }
         cldsModel.save(cldsDao, getUserId());
@@ -428,6 +429,9 @@ public class CldsService extends SecureServiceBase {
             if (template != null) {
                 model.setTemplateId(template.getId());
                 model.setDocText(template.getPropText());
+                // This is to provide the Bpmn XML when Template part in UI is
+                // disabled
+                model.setBpmnText(template.getBpmnText());
             }
         }
         // save model to db
@@ -462,21 +466,8 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
         // determine if requested action is permitted
         model.validateAction(actionCd);
-        // input variables for Camel process
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("actionCd", actionCd);
-        variables.put("modelProp", prop.getBytes());
-        variables.put("modelBpmnProp", bpmnJson);
-        variables.put("modelName", modelName);
-        variables.put("controlName", controlName);
-        variables.put("docText", docText.getBytes());
-        variables.put("isTest", isTest);
-        variables.put("userid", userId);
-        variables.put("isInsertTestEvent", isInsertTestEvent);
         logger.info("modelProp - " + prop);
         logger.info("docText - " + docText);
-        // ModelProperties modelProperties = new ModelProperties(modelName,
-        // controlName, actionCd, isTest, modelBpmnProp, modelProp);
         try {
             String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest, userId,
                     isInsertTestEvent);
