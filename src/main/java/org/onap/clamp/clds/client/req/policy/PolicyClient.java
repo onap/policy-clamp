@@ -37,7 +37,7 @@ import java.util.UUID;
 
 import javax.ws.rs.BadRequestException;
 
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -76,7 +76,7 @@ public class PolicyClient {
     @Autowired
     protected ApplicationContext appContext;
     @Autowired
-    protected CldsReferenceProperties refProp;
+    protected ClampProperties refProp;
 
     /**
      * Perform BRMS policy type.

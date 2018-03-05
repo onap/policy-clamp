@@ -35,7 +35,7 @@ import org.apache.camel.Handler;
 import org.apache.commons.codec.DecoderException;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.client.req.sdc.SdcRequests;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.properties.Global;
 import org.onap.clamp.clds.model.properties.ModelProperties;
@@ -55,7 +55,7 @@ public class SdcSendReqDelegate {
     @Autowired
     private SdcRequests sdcReq;
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
 
     /**
      * Perform activity. Send to sdc proxy.

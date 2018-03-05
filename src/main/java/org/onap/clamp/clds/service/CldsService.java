@@ -62,7 +62,7 @@ import org.onap.clamp.clds.camel.CamelProxy;
 import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
@@ -105,17 +105,17 @@ public class CldsService extends SecureServiceBase {
     @Autowired
     private ApplicationContext appContext;
     private static final String RESOURCE_NAME = "clds-version.properties";
-    @Value("${CLDS_PERMISSION_TYPE_CL:permission-type-cl}")
+    @Value("${clamp.config.security.permission.type.cl:permission-type-cl}")
     private String cldsPersmissionTypeCl;
-    @Value("${CLDS_PERMISSION_TYPE_CL_MANAGE:permission-type-cl-manage}")
+    @Value("${clamp.config.security.permission.type.cl.manage:permission-type-cl-manage}")
     private String cldsPermissionTypeClManage;
-    @Value("${CLDS_PERMISSION_TYPE_CL_EVENT:permission-type-cl-event}")
+    @Value("${clamp.config.security.permission.type.cl.event:permission-type-cl-event}")
     private String cldsPermissionTypeClEvent;
-    @Value("${CLDS_PERMISSION_TYPE_FILTER_VF:permission-type-filter-vf}")
+    @Value("${clamp.config.security.permission.type.filter.vf:permission-type-filter-vf}")
     private String cldsPermissionTypeFilterVf;
-    @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
+    @Value("${clamp.config.security.permission.type.template:permission-type-template}")
     private String cldsPermissionTypeTemplate;
-    @Value("${CLDS_PERMISSION_INSTANCE:dev}")
+    @Value("${clamp.config.security.permission.instance:dev}")
     private String cldsPermissionInstance;
     private SecureServicePermission permissionReadCl;
     private SecureServicePermission permissionUpdateCl;
@@ -140,7 +140,7 @@ public class CldsService extends SecureServiceBase {
     @Autowired
     private XslTransformer cldsBpmnTransformer;
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
     @Autowired

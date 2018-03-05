@@ -41,7 +41,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
@@ -63,7 +63,7 @@ public class DcaeInventoryServices {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
     @Autowired
     private CldsDao cldsDao;
 

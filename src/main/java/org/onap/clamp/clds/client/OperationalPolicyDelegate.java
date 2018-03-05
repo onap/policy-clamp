@@ -33,7 +33,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
 import org.onap.clamp.clds.model.properties.PolicyChain;
@@ -61,7 +61,7 @@ public class OperationalPolicyDelegate {
      * Automatically injected by Spring, define in CldsConfiguration as a bean.
      */
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
 
     /**
      * Perform activity. Send Operational Policy info to policy api.

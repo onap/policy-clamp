@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.util.Map;
 
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.TcaRequestFormatterException;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Tca;
@@ -64,7 +64,7 @@ public class TcaRequestFormatter {
      *            The Model Prop created from BPMN JSON and BPMN properties JSON
      * @return The Json string containing that should be sent to policy
      */
-    public static String createPolicyJson(CldsReferenceProperties refProp, ModelProperties modelProperties) {
+    public static String createPolicyJson(ClampProperties refProp, ModelProperties modelProperties) {
         try {
             String service = modelProperties.getGlobal().getService();
             Tca tca = modelProperties.getType(Tca.class);
@@ -103,7 +103,7 @@ public class TcaRequestFormatter {
      *            modelProperties.setCurrentModelElementId will be used
      * @return The Json node containing what should be sent to policy
      */
-    public static JsonNode createPolicyContent(CldsReferenceProperties refProp, ModelProperties modelProperties, String service,
+    public static JsonNode createPolicyContent(ClampProperties refProp, ModelProperties modelProperties, String service,
             String policyName, Tca tca) {
         try {
             String serviceToUse = service;
@@ -153,7 +153,7 @@ public class TcaRequestFormatter {
      *            The Model Properties created from BPMN JSON and BPMN
      *            properties JSON
      */
-    private static void addThresholds(CldsReferenceProperties refProp, String service, ObjectNode appendToNode, TcaItem tcaItem,
+    private static void addThresholds(ClampProperties refProp, String service, ObjectNode appendToNode, TcaItem tcaItem,
             ModelProperties modelProperties) {
         ArrayNode tcaNodes = appendToNode.withArray("thresholds");
         ObjectNode tcaNode;
@@ -185,7 +185,7 @@ public class TcaRequestFormatter {
      *            The yaml string received from the UI
      * @return The updated YAML as a string
      */
-    public static String updatedBlueprintWithConfiguration(CldsReferenceProperties refProp, ModelProperties modelProperties,
+    public static String updatedBlueprintWithConfiguration(ClampProperties refProp, ModelProperties modelProperties,
             String yamlValue) {
         String jsonPolicy = ((ObjectNode) createPolicyContent(refProp, modelProperties, null, null, null)).toString();
         logger.info("Yaml that will be updated:" + yamlValue);

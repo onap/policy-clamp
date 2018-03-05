@@ -58,7 +58,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.sdc.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsAlarmCondition;
 import org.onap.clamp.clds.model.CldsServiceData;
@@ -93,7 +93,7 @@ public class SdcCatalogServices {
     private static final String SDC_INSTANCE_ID_CLAMP = "CLAMP-Tool";
     private static final String RESOURCE_URL_PREFIX = "resources";
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
 
     /**
      * Return SDC id and pw as a HTTP Basic Auth string (for example: Basic

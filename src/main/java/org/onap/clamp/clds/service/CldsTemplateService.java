@@ -55,9 +55,9 @@ import org.springframework.stereotype.Component;
 @Path("/cldsTempate")
 public class CldsTemplateService extends SecureServiceBase {
 
-    @Value("${CLDS_PERMISSION_TYPE_TEMPLATE:permission-type-template}")
+    @Value("${clamp.config.security.permission.type.template:permission-type-template}")
     private String cldsPermissionTypeTemplate;
-    @Value("${CLDS_PERMISSION_INSTANCE:dev}")
+    @Value("${clamp.config.security.permission.instance:dev}")
     private String cldsPermissionInstance;
     private SecureServicePermission permissionReadTemplate;
     private SecureServicePermission permissionUpdateTemplate;

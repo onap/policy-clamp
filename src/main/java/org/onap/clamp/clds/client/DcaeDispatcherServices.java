@@ -31,7 +31,7 @@ import java.util.Date;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.dcae.DcaeDeploymentException;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class DcaeDispatcherServices {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeDispatcherServices.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
     private static final String STATUS_URL_LOG = "Status URL extracted: ";
     private static final String DCAE_URL_PREFIX = "/dcae-deployments/";
     private static final String DCAE_URL_PROPERTY_NAME = "dcae.dispatcher.url";
