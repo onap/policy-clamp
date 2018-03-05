@@ -1,0 +1,44 @@
+{
+	"eNodeBRecipes": [
+		{
+			"Actor": "AOTS",
+			"Recipe": "checkENodeBTicketHours",
+			"ParentPolicy": "",
+			"PPConditions": "",
+			"Retry": "0",
+			"TimeLimit": "120"
+		},
+		{
+			"Actor": "AOTS",
+			"Recipe": "checkEquipmentStatus",
+			"ParentPolicy": "checkENodeBTicketHours",
+			"PPConditions": "Success",
+			"Retry": "0",
+			"TimeLimit": "120"
+		},
+		{
+			"Actor": "AOTS",
+			"Recipe": "checkEimStatus",
+			"ParentPolicy": "checkEquipmentStatus",
+			"PPConditions": "Success",
+			"Retry": "0",
+			"TimeLimit": "120"
+		},
+		{
+			"Actor": "AOTS",
+			"Recipe": "checkMaintenanceWindow",
+			"ParentPolicy": "checkEimStatus",
+			"PPConditions": "Success",
+			"Retry": "0",
+			"TimeLimit": "120"
+		},
+		{
+			"Actor": "SDNR",
+			"Recipe": "Reset",
+			"ParentPolicy": "checkMaintenanceWindow",
+			"PPConditions": "Success",
+			"Retry": "",
+			"TimeLimit": ""
+		}
+	]
+}

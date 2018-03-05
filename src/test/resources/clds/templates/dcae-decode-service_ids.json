@@ -1,0 +1,20 @@
+{
+	"vUSP": [
+		"vUSP - vCTS"
+	],
+	"Trinity": [
+		"ASBGv TLS VNF",
+		"ASBGv No TLS",
+		"ASBGv (NO TLS) VNF",
+		"ASBGv TLS",
+		"NSBGv VNF",
+		"NSBGv"
+	],
+	"vSCP": [
+		"AKRON_vSCP_F5_FW-SVC/vSCP_F5_FW 1",
+		"ALLEN_vSCP_F5_FW-SVC/vSCP_F5_FW 1"
+	],
+	"vProbes": [
+		"vProbes - FW"
+	]
+}

@@ -27,10 +27,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -65,10 +68,11 @@ public class CldsReferenceProperties {
     }
 
     /**
-     * get property value
+     * get property value.
      *
      * @param key
-     * @return
+     *            The first key
+     * @return The string with the value
      */
     public String getStringValue(String key) {
         return prop.getProperty(key);
@@ -79,8 +83,10 @@ public class CldsReferenceProperties {
      * use key1.
      *
      * @param key1
+     *            The first key
      * @param key2
-     * @return
+     *            The second key after a dot
+     * @return The string with the value
      */
     public String getStringValue(String key1, String key2) {
         String value = getStringValue(key1 + "." + key2);
@@ -91,29 +97,77 @@ public class CldsReferenceProperties {
     }
 
     /**
-     * Return json as objects that can be updated
+     * Return json as objects that can be updated. The value obtained from the
+     * clds-reference file will be used as a filename.
      *
      * @param key
-     * @return
+     *            The key that will be used to access the clds-reference file
+     * @return A jsonNode
      * @throws IOException
+     *             In case of issues with the JSON parser
      */
     public JsonNode getJsonTemplate(String key) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(getStringValue(key), JsonNode.class);
+        String fileReference = getStringValue(key);
+        return (fileReference != null) ? objectMapper.readValue(getFileContentFromPath(fileReference), JsonNode.class)
+                : null;
     }
 
     /**
      * Return json as objects that can be updated. First try with combo key
-     * (key1 + "." + key2), otherwise default to just key1.
+     * (key1 + "." + key2), otherwise default to just key1. The value obtained
+     * from the clds-reference file will be used as a filename.
      *
      * @param key1
+     *            The first key
      * @param key2
-     * @return
+     *            The second key after a dot
+     * @return A JsonNode
      * @throws IOException
+     *             In case of issues with the JSON parser
      */
     public JsonNode getJsonTemplate(String key1, String key2) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String result = getStringValue(key1, key2);
-        return (result != null) ? objectMapper.readValue(result, JsonNode.class) : null;
+        String fileReference = getStringValue(key1, key2);
+        return (fileReference != null) ? objectMapper.readValue(getFileContentFromPath(fileReference), JsonNode.class)
+                : null;
+    }
+
+    /**
+     * Return the file content. The value obtained from the clds-reference file
+     * will be used as a filename.
+     *
+     * @param key
+     *            The key that will be used to access the clds-reference file
+     * @return File content in String
+     * @throws IOException
+     *             In case of issues with the JSON parser
+     */
+    public String getFileContent(String key) throws IOException {
+        String fileReference = getStringValue(key);
+        return (fileReference != null) ? getFileContentFromPath(fileReference) : null;
+    }
+
+    /**
+     * Return the file content. First try with combo key (key1 + "." + key2),
+     * otherwise default to just key1. The value obtained from the
+     * clds-reference file will be used as a filename.
+     *
+     * @param key1
+     *            The first key
+     * @param key2
+     *            The second key after a dot
+     * @return File content in String
+     * @throws IOException
+     *             In case of issues with the JSON parser
+     */
+    public String getFileContent(String key1, String key2) throws IOException {
+        String fileReference = getStringValue(key1, key2);
+        return (fileReference != null) ? getFileContentFromPath(fileReference) : null;
+    }
+
+    private String getFileContentFromPath(String filepath) throws IOException {
+        URL url = appContext.getResource(filepath).getURL();
+        return IOUtils.toString(url, StandardCharsets.UTF_8);
     }
 }

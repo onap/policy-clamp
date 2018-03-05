@@ -61,7 +61,7 @@ public class DcaeInventoryServices {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    private static final String DCAE_INVENTORY_URL = "DCAE_INVENTORY_URL";
+    private static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
     @Autowired
     private CldsReferenceProperties refProp;
     @Autowired
