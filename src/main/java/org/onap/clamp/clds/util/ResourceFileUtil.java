@@ -28,7 +28,7 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 /**
- * Utility methods supporting transforms.
+ * Utility methods supporting resources accesses.
  */
 public final class ResourceFileUtil {
 

@@ -50,7 +50,7 @@ public class DcaeDispatcherServices {
     private CldsReferenceProperties refProp;
     private static final String STATUS_URL_LOG = "Status URL extracted: ";
     private static final String DCAE_URL_PREFIX = "/dcae-deployments/";
-    private static final String DCAE_URL_PROPERTY_NAME = "DCAE_DISPATCHER_URL";
+    private static final String DCAE_URL_PROPERTY_NAME = "dcae.dispatcher.url";
     private static final String DCAE_REQUEST_FAILED_LOG = "RequestFailed - responseStr=";
     public static final String DCAE_REQUESTID_PROPERTY_NAME = "dcae.header.requestId";
     private static final String DCAE_LINK_FIELD = "links";

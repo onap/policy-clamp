@@ -59,6 +59,7 @@ public class CldsReferencePropertiesItCase {
         assertEquals(refProp.getStringValue("policy.ms.policyNamePrefix", ""), "Config_MS_");
         assertEquals(refProp.getStringValue("policy.ms.policyNamePrefix", "testos"), "Config_MS_");
         assertEquals(refProp.getStringValue("policy.ms", "policyNamePrefix"), "Config_MS_");
+        assertNull(refProp.getStringValue("does.not.exist"));
     }
 
     /**
@@ -68,7 +69,7 @@ public class CldsReferencePropertiesItCase {
      *             when JSON parsing fails
      */
     @Test
-    public void testJsonTemplate() throws IOException {
+    public void testGetJsonTemplate() throws IOException {
         // ui.location.default={"DC1":"Data Center 1","DC2":"Data Center
         // 2","DC3":"Data Center 3"}
         ObjectNode root = (ObjectNode) refProp.getJsonTemplate("ui.location.default");
@@ -80,5 +81,20 @@ public class CldsReferencePropertiesItCase {
         assertEquals(root.get("DC1").asText(), "Data Center 1");
         root = (ObjectNode) refProp.getJsonTemplate("ui.location", "");
         assertNull(root);
+    }
+
+    /**
+     * Test getting prop value as a JSON Node / template.
+     *
+     * @throws IOException
+     *             when JSON parsing fails
+     */
+    @Test
+    public void testGetFileContent() throws IOException {
+        String content = refProp.getFileContent("sdc.decode.service_ids");
+        assertEquals("{}", content);
+        // Test composite key
+        content = refProp.getFileContent("sdc.decode", "service_ids");
+        assertEquals("{}", content);
     }
 }
