@@ -33,7 +33,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -46,7 +46,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CldsReferencePropertiesItCase {
 
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
 
     /**
      * Test getting a value the properties in string.

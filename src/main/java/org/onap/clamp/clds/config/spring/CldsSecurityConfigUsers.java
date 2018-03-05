@@ -45,28 +45,22 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * This class is used to enable the HTTP authentication to login. It requires a
  * specific JSON file containing the user definition
  * (classpath:etc/config/clds/clds-users.json).
- *
  */
 @Configuration
 @EnableWebSecurity
 @Profile("clamp-spring-authentication")
 public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
 
-    protected static final EELFLogger logger        = EELFManager.getInstance()
-            .getLogger(CldsSecurityConfigUsers.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsSecurityConfigUsers.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-
     @Autowired
-    private ApplicationContext        appContext;
-
+    private ApplicationContext appContext;
     @Value("${org.onap.clamp.config.files.cldsUsers:'classpath:etc/config/clds/clds-users.json'}")
-    private String                    cldsUsersFile;
-
-    @Value("${CLDS_PERMISSION_TYPE_CL:permission-type-cl}")
-    private String                    cldsPersmissionTypeCl;
-
+    private String cldsUsersFile;
+    @Value("${clamp.config.security.permission.type.cl:permission-type-cl}")
+    private String cldsPersmissionTypeCl;
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
-    private String                    cldsPermissionInstance;
+    private String cldsPermissionInstance;
 
     /**
      * This method configures on which URL the authorization will be enabled.
@@ -93,13 +87,11 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         try {
             CldsUser[] usersList = loadUsers();
-
             // no users defined
             if (null == usersList) {
                 logger.warn("No users defined. Users should be defined under " + cldsUsersFile);
                 return;
             }
-
             for (CldsUser user : usersList) {
                 auth.inMemoryAuthentication().withUser(user.getUser()).password(user.getPassword())
                         .roles(user.getPermissionsString());

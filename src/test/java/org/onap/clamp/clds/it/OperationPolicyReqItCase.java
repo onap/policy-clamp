@@ -36,7 +36,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
@@ -53,7 +53,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class OperationPolicyReqItCase {
 
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
 
     @Test
     public void formatAttributesTest() throws IOException, BuilderException {

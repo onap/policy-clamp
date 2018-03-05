@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.CldsAlarmCondition;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.sdc.SdcResource;
@@ -51,7 +51,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class SdcCatalogServicesItCase {
 
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
     @Autowired
     private SdcCatalogServices sdcCatalogWired = new SdcCatalogServices();
 

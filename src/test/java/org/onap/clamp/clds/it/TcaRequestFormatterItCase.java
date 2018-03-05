@@ -33,7 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.ResourceFileUtil;
@@ -50,7 +50,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class TcaRequestFormatterItCase {
 
     @Autowired
-    private CldsReferenceProperties refProp;
+    private ClampProperties refProp;
     private String modelProp;
     private String modelBpmn;
     private String modelName;

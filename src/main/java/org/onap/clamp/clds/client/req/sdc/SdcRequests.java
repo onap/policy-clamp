@@ -41,7 +41,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.codec.DecoderException;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
-import org.onap.clamp.clds.config.CldsReferenceProperties;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.properties.Global;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Tca;
@@ -61,7 +61,7 @@ public class SdcRequests {
     @Autowired
     private SdcCatalogServices sdcCatalogServices;
     @Autowired
-    protected CldsReferenceProperties refProp;
+    protected ClampProperties refProp;
 
     /**
      * Format the Blueprint from a Yaml

@@ -29,43 +29,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 /**
- * Holds reference properties.
+ * Holds Clamp properties and add some functionalities.
  */
 @Component
-public class CldsReferenceProperties {
+public class ClampProperties {
 
     @Autowired
     private ApplicationContext appContext;
-    private Properties prop;
-    @Value("${org.onap.clamp.config.files.cldsReference:'classpath:/clds/clds-reference.properties'}")
-    private String cldsReferenceValuesFile;
-
-    @PostConstruct
-    public void loadConfiguration() throws IOException {
-        prop = new Properties();
-        Resource resource = appContext.getResource(cldsReferenceValuesFile);
-        prop.load(resource.getInputStream());
-    }
-
-    public CldsReferenceProperties(String referenceValuesFile) throws IOException {
-        cldsReferenceValuesFile = referenceValuesFile;
-        loadConfiguration();
-    }
-
-    public CldsReferenceProperties() {
-    }
+    @Autowired
+    private Environment env;
+    public static final String CONFIG_PREFIX = "clamp.config.";
 
     /**
      * get property value.
@@ -75,7 +56,7 @@ public class CldsReferenceProperties {
      * @return The string with the value
      */
     public String getStringValue(String key) {
-        return prop.getProperty(key);
+        return env.getProperty(CONFIG_PREFIX + key);
     }
 
     /**
