@@ -87,7 +87,6 @@ import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -102,9 +101,8 @@ public class CldsService extends SecureServiceBase {
     @Produce(uri = "direct:processSubmit")
     private CamelProxy camelProxy;
     protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
-    @Autowired
-    private ApplicationContext appContext;
     private static final String RESOURCE_NAME = "clds-version.properties";
+    public static final String GLOBAL_PROPERTIES_KEY = "files.globalProperties";
     @Value("${clamp.config.security.permission.type.cl:permission-type-cl}")
     private String cldsPersmissionTypeCl;
     @Value("${clamp.config.security.permission.type.cl.manage:permission-type-cl-manage}")
@@ -132,9 +130,6 @@ public class CldsService extends SecureServiceBase {
                 "update");
     }
 
-    @Value("${org.onap.clamp.config.files.globalClds:'classpath:/clds/globalClds.properties'}")
-    private String globalClds;
-    private Properties globalCldsProperties;
     @Autowired
     private CldsDao cldsDao;
     @Autowired
@@ -585,7 +580,7 @@ public class CldsService extends SecureServiceBase {
     @Path("/properties")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSdcProperties() throws IOException {
-        return createPropertiesObjectByUUID(getGlobalCldsString(), "{}");
+        return createPropertiesObjectByUUID("{}");
     }
 
     /**
@@ -620,7 +615,7 @@ public class CldsService extends SecureServiceBase {
         // filter out VFs the user is not authorized for
         cldsServiceData.filterVfs(this);
         // format retrieved data into properties json
-        String sdcProperties = sdcCatalogServices.createPropertiesObjectByUUID(getGlobalCldsString(), cldsServiceData);
+        String sdcProperties = sdcCatalogServices.createPropertiesObjectByUUID(cldsServiceData);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Get sdc properties by uuid success", this.getClass().getName());
@@ -689,10 +684,10 @@ public class CldsService extends SecureServiceBase {
         return serviceNode.toString();
     }
 
-    private String createPropertiesObjectByUUID(String globalProps, String cldsResponseStr) throws IOException {
+    private String createPropertiesObjectByUUID(String cldsResponseStr) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         SdcServiceDetail cldsSdcServiceDetail = mapper.readValue(cldsResponseStr, SdcServiceDetail.class);
-        ObjectNode globalPropsJson = null;
+        ObjectNode globalPropsJson = (ObjectNode) refProp.getJsonTemplate(GLOBAL_PROPERTIES_KEY);
         if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getUuid() != null) {
             /**
              * to create json with vf, alarm and locations
@@ -711,14 +706,8 @@ public class CldsService extends SecureServiceBase {
              */
             ObjectNode emptyvfcobjectNode = createByVFCObjectNode(mapper, cldsSdcServiceDetail.getResources());
             byServiceBasicObjetNode.putPOJO("byVf", emptyvfcobjectNode);
-            globalPropsJson = (ObjectNode) mapper.readValue(globalProps, JsonNode.class);
             globalPropsJson.putPOJO("shared", byServiceBasicObjetNode);
             logger.info("valuie of objNode: {}", globalPropsJson);
-        } else {
-            /**
-             * to create json with total properties when no serviceUUID passed
-             */
-            globalPropsJson = (ObjectNode) mapper.readValue(globalProps, JsonNode.class);
         }
         return globalPropsJson.toString();
     }
@@ -901,19 +890,6 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setResponseContext("0", "Undeploy model success", this.getClass().getName());
         auditLogger.info("Undeploy model completed");
         return model;
-    }
-
-    private String getGlobalCldsString() {
-        try {
-            if (null == globalCldsProperties) {
-                globalCldsProperties = new Properties();
-                globalCldsProperties.load(appContext.getResource(globalClds).getInputStream());
-            }
-            return (String) globalCldsProperties.get("globalCldsProps");
-        } catch (IOException e) {
-            logger.error("Unable to load the globalClds due to an exception", e);
-            throw new CldsConfigException("Unable to load the globalClds due to an exception", e);
-        }
     }
 
     private void checkForDuplicateServiceVf(String modelName, String modelPropText) throws IOException {

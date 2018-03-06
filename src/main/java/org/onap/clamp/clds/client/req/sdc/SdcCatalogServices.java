@@ -72,6 +72,7 @@ import org.onap.clamp.clds.model.sdc.SdcResource;
 import org.onap.clamp.clds.model.sdc.SdcResourceBasicInfo;
 import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
 import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
+import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.CryptoUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -840,11 +841,13 @@ public class SdcCatalogServices {
      * @param globalProps
      * @param cldsServiceData
      * @return
+     * @throws IOException
+     *             In case of issues during the parsing of the Global Properties
      */
-    public String createPropertiesObjectByUUID(String globalProps, CldsServiceData cldsServiceData) {
+    public String createPropertiesObjectByUUID(CldsServiceData cldsServiceData) throws IOException {
         String totalPropsStr;
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode globalPropsJson;
+        ObjectNode globalPropsJson = (ObjectNode) refProp.getJsonTemplate(CldsService.GLOBAL_PROPERTIES_KEY);
         if (cldsServiceData != null && cldsServiceData.getServiceUUID() != null) {
             // Objectnode to save all byservice, byvf , byvfc and byalarm nodes
             ObjectNode byIdObjectNode = mapper.createObjectNode();
@@ -886,26 +889,11 @@ public class SdcCatalogServices {
                     "alertDescription");
             ObjectNode alertDescObjectNodeByAlert = createAlarmCondObjectNodeByAlarmKey(mapper, allAlertDescriptions);
             byIdObjectNode.putPOJO("byAlertDescription", alertDescObjectNodeByAlert);
-            globalPropsJson = decodeGlobalProp(globalProps, mapper);
             globalPropsJson.putPOJO("shared", byIdObjectNode);
             logger.info("Global properties JSON created with SDC info:" + globalPropsJson);
-        } else {
-            /**
-             * to create json with total properties when no serviceUUID passed
-             */
-            globalPropsJson = decodeGlobalProp(globalProps, mapper);
         }
         totalPropsStr = globalPropsJson.toString();
         return totalPropsStr;
-    }
-
-    private ObjectNode decodeGlobalProp(String globalProps, ObjectMapper mapper) {
-        try {
-            return (ObjectNode) mapper.readValue(globalProps, JsonNode.class);
-        } catch (IOException e) {
-            logger.error("Exception occurred during decoding of the global props, returning an empty objectNode", e);
-            return mapper.createObjectNode();
-        }
     }
 
     /**
