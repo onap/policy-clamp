@@ -28,12 +28,12 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
 
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.CldsUserJsonDecoder;
 import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -44,7 +44,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /**
  * This class is used to enable the HTTP authentication to login. It requires a
  * specific JSON file containing the user definition
- * (classpath:etc/config/clds/clds-users.json).
+ * (classpath:clds/clds-users.json).
  */
 @Configuration
 @EnableWebSecurity
@@ -54,9 +54,7 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsSecurityConfigUsers.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private ApplicationContext appContext;
-    @Value("${org.onap.clamp.config.files.cldsUsers:'classpath:etc/config/clds/clds-users.json'}")
-    private String cldsUsersFile;
+    private ClampProperties refProp;
     @Value("${clamp.config.security.permission.type.cl:permission-type-cl}")
     private String cldsPersmissionTypeCl;
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
@@ -89,7 +87,7 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
             CldsUser[] usersList = loadUsers();
             // no users defined
             if (null == usersList) {
-                logger.warn("No users defined. Users should be defined under " + cldsUsersFile);
+                logger.warn("No users defined. Users should be defined under clds-users.json");
                 return;
             }
             for (CldsUser user : usersList) {
@@ -107,14 +105,11 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
      * CldsUser.
      * 
      * @return The array of CldsUser
+     * @throws IOException
+     *             In case of the file is not found
      */
-    private CldsUser[] loadUsers() {
-        try {
-            logger.info("Load from clds-users.properties");
-            return CldsUserJsonDecoder.decodeJson(appContext.getResource(cldsUsersFile).getInputStream());
-        } catch (IOException e) {
-            logger.error("Unable to decode the User Json file", e);
-            throw new CldsUsersException("Load from clds-users.properties", e);
-        }
+    private CldsUser[] loadUsers() throws IOException {
+        logger.info("Load from clds-users.properties");
+        return CldsUserJsonDecoder.decodeJson(refProp.getFileContent("files.cldsUsers"));
     }
 }

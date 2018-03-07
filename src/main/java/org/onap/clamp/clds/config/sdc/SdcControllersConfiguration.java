@@ -56,7 +56,7 @@ public class SdcControllersConfiguration {
     /**
      * The file name that will be loaded by Spring.
      */
-    @Value("${org.onap.clamp.config.files.sdcController:'classpath:/clds/sdc-controllers-config.json'}")
+    @Value("${clamp.config.files.sdcController:'classpath:/clds/sdc-controllers-config.json'}")
     protected String sdcControllerFile;
     /**
      * The root of the JSON.

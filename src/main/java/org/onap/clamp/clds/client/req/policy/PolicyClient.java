@@ -71,7 +71,7 @@ public class PolicyClient {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     protected static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
     protected static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
-    @Value("${org.onap.clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
+    @Value("${clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
     protected String cldsPolicyConfigFile;
     @Autowired
     protected ApplicationContext appContext;

@@ -472,19 +472,19 @@ public class CldsService extends SecureServiceBase {
             throw new CldsConfigException(e.getMessage(), e);
         }
         // refresh model info from db (get fresh event info)
-        CldsModel retreivedModel = CldsModel.retrieve(cldsDao, modelName, false);
+        CldsModel retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
         if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                 || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                 || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
             // To verify inventory status and modify model status to distribute
-            dcaeInventoryServices.setEventInventory(retreivedModel, getUserId());
-            retreivedModel.save(cldsDao, getUserId());
+            dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
+            retrievedModel.save(cldsDao, getUserId());
         }
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Process model action success", this.getClass().getName());
         auditLogger.info("Process model action completed");
-        return retreivedModel;
+        return retrievedModel;
     }
 
     /**
@@ -853,7 +853,7 @@ public class CldsService extends SecureServiceBase {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public CldsModel unDeployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
-            @QueryParam("test") String test, CldsModel model) throws IOException {
+            @QueryParam("test") String test, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
         String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),

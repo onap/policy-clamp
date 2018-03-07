@@ -27,11 +27,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
 
 public class CldsUserJsonDecoder {
+
     /**
      * This method decodes the JSON file provided to a CldsUser Array. The
      * stream is closed after this call, this is not possible to reuse it.
@@ -43,9 +46,17 @@ public class CldsUserJsonDecoder {
      */
     public static CldsUser[] decodeJson(InputStream cldsUsersFile) {
         try {
+            return decodeJson(IOUtils.toString(cldsUsersFile, StandardCharsets.UTF_8.name()));
+        } catch (IOException e) {
+            throw new CldsUsersException("Exception occurred during the decoding of the clds-users.json", e);
+        }
+    }
+
+    public static CldsUser[] decodeJson(String cldsUsersString) {
+        try {
             // the ObjectMapper readValue method closes the stream no need to do
             // it
-            return new ObjectMapper().readValue(cldsUsersFile, CldsUser[].class);
+            return new ObjectMapper().readValue(cldsUsersString, CldsUser[].class);
         } catch (IOException e) {
             throw new CldsUsersException("Exception occurred during the decoding of the clds-users.json", e);
         }
