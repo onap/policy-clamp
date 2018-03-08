@@ -23,12 +23,54 @@
 
 package org.onap.clamp.clds.service;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 
 @Component
 @ApplicationPath("/restservices/clds/v1")
 public class JaxrsApplication extends Application {
+
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(JaxrsApplication.class);
+
+    private Function<BeanDefinition, Optional<Class<?>>> beanDefinitionToClass = b -> {
+        try {
+            return Optional.of(Class.forName(b.getBeanClassName()));
+        } catch (ClassNotFoundException e) {
+            logger.error("Could not get class annotated with @Path for swagger documentation generation", e);
+            return Optional.empty();
+        }
+    };
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> resources = new HashSet<>();
+        resources.add(io.swagger.v3.jaxrs2.integration.resources.OpenApiResource.class);
+        resources.addAll(scan());
+        return resources;
+    }
+
+    private List<Class<?>> scan() {
+        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(javax.ws.rs.Path.class));
+        return scanner.findCandidateComponents("org.onap.clamp.clds").stream()
+                .map(beanDefinitionToClass)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
 }
