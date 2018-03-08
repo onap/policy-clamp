@@ -214,6 +214,7 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
 
       })
       .error(function(data) {
+        def.resolve(data);
         alertService.alertMessage("Action Failure:" + uiAction, 2);
         //def         alertService.alertMessage("Action Successful:"+uiAction,1);
         def.reject(svcAction + " not successful");

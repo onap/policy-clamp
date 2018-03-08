@@ -52,6 +52,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
 
 import org.apache.camel.Produce;
@@ -207,7 +208,7 @@ public class CldsService extends SecureServiceBase {
 
     /**
      * REST service that retrieves clds healthcheck information.
-     * 
+     *
      * @return CldsHealthCheck class containing healthcheck info
      */
     @GET
@@ -396,95 +397,106 @@ public class CldsService extends SecureServiceBase {
     @Path("/action/{action}/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CldsModel putModelAndProcessAction(@PathParam("action") String action,
+    public Response putModelAndProcessAction(@PathParam("action") String action,
             @PathParam("modelName") String modelName, @QueryParam("test") String test, CldsModel model)
             throws TransformerException, ParseException, GeneralSecurityException, DecoderException {
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
-        String actionCd = action.toUpperCase();
-        SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
-                cldsPermissionInstance, actionCd);
-        isAuthorized(permisionManage);
-        isAuthorizedForVf(model);
-        String userId = getUserId();
-        String actionStateCd = CldsEvent.ACTION_STATE_INITIATED;
-        String processDefinitionKey = "clds-process-action-wf";
-        logger.info("PUT actionCd={}", actionCd);
-        logger.info("PUT actionStateCd={}", actionStateCd);
-        logger.info("PUT processDefinitionKey={}", processDefinitionKey);
-        logger.info("PUT modelName={}", modelName);
-        logger.info("PUT test={}", test);
-        logger.info("PUT bpmnText={}", model.getBpmnText());
-        logger.info("PUT propText={}", model.getPropText());
-        logger.info("PUT userId={}", userId);
-        logger.info("PUT getTypeId={}", model.getTypeId());
-        logger.info("PUT deploymentId={}", model.getDeploymentId());
-        if (model.getTemplateName() != null) {
-            CldsTemplate template = cldsDao.getTemplate(model.getTemplateName());
-            if (template != null) {
-                model.setTemplateId(template.getId());
-                model.setDocText(template.getPropText());
-                // This is to provide the Bpmn XML when Template part in UI is
-                // disabled
-                model.setBpmnText(template.getBpmnText());
-            }
-        }
-        // save model to db
-        model.setName(modelName);
-        model.save(cldsDao, getUserId());
-        // get vars and format if necessary
-        String prop = model.getPropText();
-        String bpmn = model.getBpmnText();
-        String docText = model.getDocText();
-        String controlName = model.getControlName();
-        String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
-        logger.info("PUT bpmnJson={}", bpmnJson);
-        // Flag indicates whether it is triggered by Validation Test button from
-        // UI
-        boolean isTest = false;
-        if (test != null && test.equalsIgnoreCase("true")) {
-            isTest = true;
-        } else {
-            String actionTestOverride = refProp.getStringValue("action.test.override");
-            if (actionTestOverride != null && actionTestOverride.equalsIgnoreCase("true")) {
-                logger.info("PUT actionTestOverride={}", actionTestOverride);
-                logger.info("PUT override test indicator and setting it to true");
-                isTest = true;
-            }
-        }
-        logger.info("PUT isTest={}", isTest);
-        boolean isInsertTestEvent = false;
-        String insertTestEvent = refProp.getStringValue("action.insert.test.event");
-        if (insertTestEvent != null && insertTestEvent.equalsIgnoreCase("true")) {
-            isInsertTestEvent = true;
-        }
-        logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
-        // determine if requested action is permitted
-        model.validateAction(actionCd);
-        logger.info("modelProp - " + prop);
-        logger.info("docText - " + docText);
+        CldsModel retrievedModel = null;
+        Boolean errorCase = false;
         try {
-            String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest, userId,
-                    isInsertTestEvent);
-            logger.info("Starting Camel flow on request, result is: ", result);
-        } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
-            logger.error("Exception occured during invoking Camel process", e);
-            throw new CldsConfigException(e.getMessage(), e);
+            LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
+            String actionCd = action.toUpperCase();
+            SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
+                    cldsPermissionInstance, actionCd);
+            isAuthorized(permisionManage);
+            isAuthorizedForVf(model);
+            String userId = getUserId();
+            String actionStateCd = CldsEvent.ACTION_STATE_INITIATED;
+            String processDefinitionKey = "clds-process-action-wf";
+            logger.info("PUT actionCd={}", actionCd);
+            logger.info("PUT actionStateCd={}", actionStateCd);
+            logger.info("PUT processDefinitionKey={}", processDefinitionKey);
+            logger.info("PUT modelName={}", modelName);
+            logger.info("PUT test={}", test);
+            logger.info("PUT bpmnText={}", model.getBpmnText());
+            logger.info("PUT propText={}", model.getPropText());
+            logger.info("PUT userId={}", userId);
+            logger.info("PUT getTypeId={}", model.getTypeId());
+            logger.info("PUT deploymentId={}", model.getDeploymentId());
+            if (model.getTemplateName() != null) {
+                CldsTemplate template = cldsDao.getTemplate(model.getTemplateName());
+                if (template != null) {
+                    model.setTemplateId(template.getId());
+                    model.setDocText(template.getPropText());
+                    // This is to provide the Bpmn XML when Template part in UI is
+                    // disabled
+                    model.setBpmnText(template.getBpmnText());
+                }
+            }
+            // save model to db
+            model.setName(modelName);
+            model.save(cldsDao, getUserId());
+            // get vars and format if necessary
+            String prop = model.getPropText();
+            String bpmn = model.getBpmnText();
+            String docText = model.getDocText();
+            String controlName = model.getControlName();
+            String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
+            logger.info("PUT bpmnJson={}", bpmnJson);
+            // Flag indicates whether it is triggered by Validation Test button from
+            // UI
+            boolean isTest = false;
+            if (test != null && test.equalsIgnoreCase("true")) {
+                isTest = true;
+            } else {
+                String actionTestOverride = refProp.getStringValue("action.test.override");
+                if (actionTestOverride != null && actionTestOverride.equalsIgnoreCase("true")) {
+                    logger.info("PUT actionTestOverride={}", actionTestOverride);
+                    logger.info("PUT override test indicator and setting it to true");
+                    isTest = true;
+                }
+            }
+            logger.info("PUT isTest={}", isTest);
+            boolean isInsertTestEvent = false;
+            String insertTestEvent = refProp.getStringValue("action.insert.test.event");
+            if (insertTestEvent != null && insertTestEvent.equalsIgnoreCase("true")) {
+                isInsertTestEvent = true;
+            }
+            logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
+            // determine if requested action is permitted
+            model.validateAction(actionCd);
+            logger.info("modelProp - " + prop);
+            logger.info("docText - " + docText);
+            try {
+                String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest, userId,
+                        isInsertTestEvent);
+                logger.info("Starting Camel flow on request, result is: ", result);
+            } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
+                errorCase = true;
+                logger.error("Exception occured during invoking Camel process", e);
+            }
+            // refresh model info from db (get fresh event info)
+            retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
+            if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
+                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
+                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
+                // To verify inventory status and modify model status to distribute
+                dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
+                retrievedModel.save(cldsDao, getUserId());
+            }
+            // audit log
+            LoggingUtils.setTimeContext(startTime, new Date());
+            LoggingUtils.setResponseContext("0", "Process model action success", this.getClass().getName());
+            auditLogger.info("Process model action completed");
+        } catch (Exception e) {
+            errorCase = true;
+            logger.error("Exception occured during putModelAndProcessAction", e);
         }
-        // refresh model info from db (get fresh event info)
-        CldsModel retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
-        if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
-                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
-                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-            // To verify inventory status and modify model status to distribute
-            dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
-            retrievedModel.save(cldsDao, getUserId());
+
+        if (errorCase) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(retrievedModel).build();
         }
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Process model action success", this.getClass().getName());
-        auditLogger.info("Process model action completed");
-        return retrievedModel;
+        return Response.status(Response.Status.OK).entity(retrievedModel).build();
     }
 
     /**
@@ -542,7 +554,7 @@ public class CldsService extends SecureServiceBase {
 
     /**
      * REST service that retrieves sdc services
-     * 
+     *
      * @throws GeneralSecurityException
      *             In case of issue when decryting the SDC password
      * @throws DecoderException
@@ -572,7 +584,7 @@ public class CldsService extends SecureServiceBase {
 
     /**
      * REST service that retrieves total properties required by UI
-     * 
+     *
      * @throws IOException
      *             In case of issues
      */
@@ -586,7 +598,7 @@ public class CldsService extends SecureServiceBase {
     /**
      * REST service that retrieves total properties by using invariantUUID based
      * on refresh and non refresh
-     * 
+     *
      * @throws GeneralSecurityException
      *             In case of issues with the decryting the encrypted password
      * @throws DecoderException
@@ -794,102 +806,123 @@ public class CldsService extends SecureServiceBase {
     @Path("/deploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CldsModel deployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
+    public Response deployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
             @QueryParam("test") String test, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
+        Boolean errorCase = false;
         try {
-            checkForDuplicateServiceVf(modelName, model.getPropText());
-        } catch (IOException | BadRequestException e) {
-            logger.error("Exception occured during duplicate check for service and VF", e);
-            throw new CldsConfigException(e.getMessage(), e);
-        }
-        String deploymentId = "";
-        // If model is already deployed then pass same deployment id
-        if (model.getDeploymentId() != null && !model.getDeploymentId().isEmpty()) {
-            deploymentId = model.getDeploymentId();
-        } else {
-            deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";
-        }
-        String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
-                model.getTypeId());
-        String operationStatus = "processing";
-        long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
-        while ("processing".equalsIgnoreCase(operationStatus)) {
-            // Break the loop if waiting for more than 10 mins
-            if (waitingTime < System.nanoTime()) {
-                break;
+            try {
+                checkForDuplicateServiceVf(modelName, model.getPropText());
+            } catch (IOException | BadRequestException e) {
+                errorCase = true;
+                logger.error("Exception occured during duplicate check for service and VF", e);
             }
-            operationStatus = dcaeDispatcherServices.getOperationStatus(createNewDeploymentStatusUrl);
-        }
-        if ("succeeded".equalsIgnoreCase(operationStatus)) {
-            String artifactName = model.getControlName();
-            if (artifactName != null) {
-                artifactName = artifactName + ".yml";
+            String deploymentId = "";
+            // If model is already deployed then pass same deployment id
+            if (model.getDeploymentId() != null && !model.getDeploymentId().isEmpty()) {
+                deploymentId = model.getDeploymentId();
+            } else {
+                deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";
             }
-            DcaeEvent dcaeEvent = new DcaeEvent();
-            /* set dcae events */
-            dcaeEvent.setArtifactName(artifactName);
-            dcaeEvent.setEvent(DcaeEvent.EVENT_DEPLOYMENT);
-            CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
-                    CldsEvent.ACTION_STATE_RECEIVED, null);
-            model.setDeploymentId(deploymentId);
-            model.save(cldsDao, getUserId());
-        } else {
-            logger.info("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+            String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
+                    model.getTypeId());
+            String operationStatus = "processing";
+            long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
+            while ("processing".equalsIgnoreCase(operationStatus)) {
+                // Break the loop if waiting for more than 10 mins
+                if (waitingTime < System.nanoTime()) {
+                    break;
+                }
+                operationStatus = dcaeDispatcherServices.getOperationStatus(createNewDeploymentStatusUrl);
+            }
+            if ("succeeded".equalsIgnoreCase(operationStatus)) {
+                String artifactName = model.getControlName();
+                if (artifactName != null) {
+                    artifactName = artifactName + ".yml";
+                }
+                DcaeEvent dcaeEvent = new DcaeEvent();
+                /* set dcae events */
+                dcaeEvent.setArtifactName(artifactName);
+                dcaeEvent.setEvent(DcaeEvent.EVENT_DEPLOYMENT);
+                CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
+                        CldsEvent.ACTION_STATE_RECEIVED, null);
+                model.setDeploymentId(deploymentId);
+                model.save(cldsDao, getUserId());
+            } else {
+                logger.info("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+                throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+            }
+            logger.info("Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
+            // audit log
+            LoggingUtils.setTimeContext(startTime, new Date());
+            LoggingUtils.setResponseContext("0", "Deploy model success", this.getClass().getName());
+            auditLogger.info("Deploy model completed");
+        } catch (Exception e) {
+            errorCase = true;
+            logger.error("Exception occured during deployModel", e);
         }
-        logger.info("Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Deploy model success", this.getClass().getName());
-        auditLogger.info("Deploy model completed");
-        return model;
+
+        if (errorCase) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+        }
+        return Response.status(Response.Status.OK).entity(model).build();
     }
 
     @PUT
     @Path("/undeploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CldsModel unDeployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
+    public Response unDeployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
             @QueryParam("test") String test, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
-        String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
-                model.getTypeId());
-        String operationStatus = "processing";
-        long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
-        while ("processing".equalsIgnoreCase(operationStatus)) {
-            if (waitingTime < System.nanoTime()) {
-                break;
+
+        Boolean errorCase = false;
+        try {
+            String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
+                    model.getTypeId());
+            String operationStatus = "processing";
+            long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
+            while ("processing".equalsIgnoreCase(operationStatus)) {
+                if (waitingTime < System.nanoTime()) {
+                    break;
+                }
+                operationStatus = dcaeDispatcherServices.getOperationStatus(operationStatusUndeployUrl);
             }
-            operationStatus = dcaeDispatcherServices.getOperationStatus(operationStatusUndeployUrl);
-        }
-        if ("succeeded".equalsIgnoreCase(operationStatus)) {
-            String artifactName = model.getControlName();
-            if (artifactName != null) {
-                artifactName = artifactName + ".yml";
+            if ("succeeded".equalsIgnoreCase(operationStatus)) {
+                String artifactName = model.getControlName();
+                if (artifactName != null) {
+                    artifactName = artifactName + ".yml";
+                }
+                DcaeEvent dcaeEvent = new DcaeEvent();
+                // set dcae events
+                dcaeEvent.setArtifactName(artifactName);
+                dcaeEvent.setEvent(DcaeEvent.EVENT_UNDEPLOYMENT);
+                CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
+                        CldsEvent.ACTION_STATE_RECEIVED, null);
+                model.setDeploymentId(null);
+                model.save(cldsDao, getUserId());
+            } else {
+                logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+                throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
             }
-            DcaeEvent dcaeEvent = new DcaeEvent();
-            // set dcae events
-            dcaeEvent.setArtifactName(artifactName);
-            dcaeEvent.setEvent(DcaeEvent.EVENT_UNDEPLOYMENT);
-            CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
-                    CldsEvent.ACTION_STATE_RECEIVED, null);
-            model.setDeploymentId(null);
-            model.save(cldsDao, getUserId());
-        } else {
-            logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+            logger.info("Undeploy model (" + modelName + ") succeeded.");
+            // audit log
+            LoggingUtils.setTimeContext(startTime, new Date());
+            LoggingUtils.setResponseContext("0", "Undeploy model success", this.getClass().getName());
+            auditLogger.info("Undeploy model completed");
+        } catch (Exception e) {
+            errorCase = true;
+            logger.error("Exception occured during unDeployModel", e);
         }
-        logger.info("Undeploy model (" + modelName + ") succeeded.");
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Undeploy model success", this.getClass().getName());
-        auditLogger.info("Undeploy model completed");
-        return model;
+
+        if (errorCase) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+        }
+        return Response.status(Response.Status.OK).entity(model).build();
     }
 
     private void checkForDuplicateServiceVf(String modelName, String modelPropText) throws IOException {
