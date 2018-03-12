@@ -125,7 +125,7 @@ public class PolicyClient {
         PolicyParameters policyParameters = new PolicyParameters();
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-        policyParameters.setEcompName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
+        policyParameters.setOnapName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         policyParameters.setConfigBody(policyJson);
         policyParameters.setConfigBodyType(PolicyType.JSON);
@@ -159,7 +159,7 @@ public class PolicyClient {
         PolicyParameters policyParameters = new PolicyParameters();
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.Base);
-        policyParameters.setEcompName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
+        policyParameters.setOnapName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         policyParameters.setConfigBody(configBody);
         policyParameters.setConfigBodyType(PolicyType.OTHER);
@@ -187,7 +187,7 @@ public class PolicyClient {
         PolicyParameters policyParameters = new PolicyParameters();
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.MicroService);
-        policyParameters.setEcompName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
+        policyParameters.setOnapName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         policyParameters.setConfigBody(configBody);
         String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
