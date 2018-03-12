@@ -71,8 +71,7 @@ public class SdcControllersConfiguration {
     }
 
     public SdcSingleControllerConfiguration getSdcSingleControllerConfiguration(String controllerName) {
-        Map<String, SdcSingleControllerConfiguration> controllerMap = getAllDefinedControllers();
-        return controllerMap.get(controllerName);
+        return getAllDefinedControllers().get(controllerName);
     }
 
     /**
