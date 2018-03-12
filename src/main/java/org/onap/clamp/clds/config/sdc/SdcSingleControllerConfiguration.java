@@ -56,14 +56,14 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     public static final String CONSUMER_GROUP_ATTRIBUTE_NAME = "consumerGroup";
     public static final String CONSUMER_ID_ATTRIBUTE_NAME = "consumerId";
     public static final String ENVIRONMENT_NAME_ATTRIBUTE_NAME = "environmentName";
-    public static final String PASSWORD_ATTRIBUTE_NAME = "password";
+    public static final String SDC_KEY_ATTRIBUTE_NAME = "password";
     public static final String POLLING_INTERVAL_ATTRIBUTE_NAME = "pollingInterval";
     public static final String RELEVANT_ARTIFACT_TYPES_ATTRIBUTE_NAME = "relevantArtifactTypes";
     public static final String USER_ATTRIBUTE_NAME = "user";
     public static final String SDC_ADDRESS_ATTRIBUTE_NAME = "sdcAddress";
     public static final String POLLING_TIMEOUT_ATTRIBUTE_NAME = "pollingTimeout";
     public static final String ACTIVATE_SERVER_TLS_AUTH = "activateServerTLSAuth";
-    public static final String KEY_STORE_PASSWORD = "keyStorePassword";
+    public static final String KEY_STORE_KEY = "keyStorePassword";
     public static final String KEY_STORE_PATH = "keyStorePath";
     private String errorMessageKeyNotFound;
     /**
@@ -109,6 +109,30 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
         testAllRequiredParameters();
     }
 
+    private String getStringConfig(String key) {
+        if (jsonRootNode != null && jsonRootNode.get(key) != null) {
+            String config = jsonRootNode.get(key).asText();
+            return config.isEmpty() ? null : config;
+        }
+        return null;
+    }
+
+    private Integer getIntConfig(String key) {
+        if (jsonRootNode != null && jsonRootNode.get(key) != null) {
+            return jsonRootNode.get(key).asInt();
+        } else {
+            return 0;
+        }
+    }
+
+    private String getEncryptedStringConfig(String key) throws GeneralSecurityException, DecoderException {
+        if (jsonRootNode != null && jsonRootNode.get(key) != null) {
+            String config = CryptoUtils.decrypt(jsonRootNode.get(key).asText());
+            return config.isEmpty() ? null : config;
+        }
+        return null;
+    }
+
     @Override
     public java.lang.Boolean isUseHttpsWithDmaap() {
         return false;
@@ -125,42 +149,27 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     @Override
     public String getConsumerID() {
-        if (jsonRootNode != null && jsonRootNode.get(CONSUMER_ID_ATTRIBUTE_NAME) != null) {
-            String config = jsonRootNode.get(CONSUMER_ID_ATTRIBUTE_NAME).asText();
-            return config.isEmpty() ? null : config;
-        }
-        return null;
+        return getStringConfig(CONSUMER_ID_ATTRIBUTE_NAME);
     }
 
     @Override
     public String getEnvironmentName() {
-        if (jsonRootNode != null && jsonRootNode.get(ENVIRONMENT_NAME_ATTRIBUTE_NAME) != null) {
-            String config = jsonRootNode.get(ENVIRONMENT_NAME_ATTRIBUTE_NAME).asText();
-            return config.isEmpty() ? null : config;
-        }
-        return null;
+        return getStringConfig(ENVIRONMENT_NAME_ATTRIBUTE_NAME);
     }
 
     @Override
     public String getPassword() {
         try {
-            if (jsonRootNode != null && jsonRootNode.get(PASSWORD_ATTRIBUTE_NAME) != null) {
-                String config = CryptoUtils.decrypt(jsonRootNode.get(PASSWORD_ATTRIBUTE_NAME).asText());
-                return config.isEmpty() ? null : config;
-            }
+            return getEncryptedStringConfig(SDC_KEY_ATTRIBUTE_NAME);
         } catch (GeneralSecurityException | DecoderException e) {
             logger.error("Unable to decrypt the SDC password", e);
+            return null;
         }
-        return null;
     }
 
     @Override
     public int getPollingInterval() {
-        if (jsonRootNode != null && jsonRootNode.get(POLLING_INTERVAL_ATTRIBUTE_NAME) != null) {
-            return jsonRootNode.get(POLLING_INTERVAL_ATTRIBUTE_NAME).asInt();
-        } else {
-            return 0;
-        }
+        return getIntConfig(POLLING_INTERVAL_ATTRIBUTE_NAME);
     }
 
     @Override
@@ -172,29 +181,17 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     @Override
     public String getUser() {
-        if (jsonRootNode != null && jsonRootNode.get(USER_ATTRIBUTE_NAME) != null) {
-            String config = jsonRootNode.get(USER_ATTRIBUTE_NAME).asText();
-            return config.isEmpty() ? null : config;
-        }
-        return null;
+        return getStringConfig(USER_ATTRIBUTE_NAME);
     }
 
     @Override
     public String getAsdcAddress() {
-        if (jsonRootNode != null && jsonRootNode.get(SDC_ADDRESS_ATTRIBUTE_NAME) != null) {
-            String config = jsonRootNode.get(SDC_ADDRESS_ATTRIBUTE_NAME).asText();
-            return config.isEmpty() ? null : config;
-        }
-        return null;
+        return getStringConfig(SDC_ADDRESS_ATTRIBUTE_NAME);
     }
 
     @Override
     public int getPollingTimeout() {
-        if (jsonRootNode != null && jsonRootNode.get(POLLING_TIMEOUT_ATTRIBUTE_NAME) != null) {
-            return jsonRootNode.get(POLLING_TIMEOUT_ATTRIBUTE_NAME).asInt();
-        } else {
-            return 0;
-        }
+        return getIntConfig(POLLING_TIMEOUT_ATTRIBUTE_NAME);
     }
 
     @Override
@@ -209,23 +206,16 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     @Override
     public String getKeyStorePassword() {
         try {
-            if (jsonRootNode != null && jsonRootNode.get(KEY_STORE_PASSWORD) != null) {
-                String config = CryptoUtils.decrypt(jsonRootNode.get(KEY_STORE_PASSWORD).asText());
-                return config.isEmpty() ? null : config;
-            }
+            return getEncryptedStringConfig(KEY_STORE_KEY);
         } catch (GeneralSecurityException | DecoderException e) {
             logger.error("Unable to decrypt the SDC password", e);
+            return null;
         }
-        return null;
     }
 
     @Override
     public String getKeyStorePath() {
-        if (jsonRootNode != null && jsonRootNode.get(KEY_STORE_PATH) != null) {
-            String config = jsonRootNode.get(KEY_STORE_PATH).asText();
-            return config.isEmpty() ? null : config;
-        }
-        return null;
+        return getStringConfig(KEY_STORE_PATH);
     }
 
     /**
@@ -252,7 +242,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
             throw new SdcParametersException(SDC_ADDRESS_ATTRIBUTE_NAME + errorMessageKeyNotFound);
         }
         if (this.getPassword() == null || this.getPassword().isEmpty()) {
-            throw new SdcParametersException(PASSWORD_ATTRIBUTE_NAME + errorMessageKeyNotFound);
+            throw new SdcParametersException(SDC_KEY_ATTRIBUTE_NAME + errorMessageKeyNotFound);
         }
         if (this.getPollingInterval() == 0) {
             throw new SdcParametersException(POLLING_INTERVAL_ATTRIBUTE_NAME + errorMessageKeyNotFound);
