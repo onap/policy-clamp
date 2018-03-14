@@ -52,7 +52,7 @@ public final class ResourceFileUtil {
     }
 
     /**
-     * Return resource as a Stream.
+     * Return resource as a String.
      */
     public static String getResourceAsString(String name) throws IOException {
         InputStream is = getResourceAsStream(name);
