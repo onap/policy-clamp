@@ -485,8 +485,15 @@
 				<dependency>
 						<groupId>org.openecomp.sdc.sdc-distribution-client</groupId>
 						<artifactId>sdc-distribution-client</artifactId>
-						<version>1.2.3</version>
+						<version>1.2.2</version>
 				</dependency>
+				<dependency>
+					<groupId>org.openecomp.sdc.sdc-tosca</groupId>
+					<artifactId>sdc-tosca</artifactId>
+					<version>1.2.2</version>
+				</dependency>
+				
+				
 		</dependencies>
 
 		<build>
@@ -497,6 +504,7 @@
 								<directory>src/test/resources</directory>
 								<excludes>
 										<exclude>**/*.jks</exclude>
+										<exclude>**/*.csar</exclude>
 								</excludes>
 								<filtering>true</filtering>
 						</testResource>
@@ -507,6 +515,14 @@
 								</includes>
 								<filtering>false</filtering>
 								<targetPath>https</targetPath>
+						</testResource>
+					  <testResource>
+								<directory>src/test/resources/example/sdc</directory>
+								<includes>
+										<include>**.csar</include>
+								</includes>
+								<filtering>false</filtering>
+								<targetPath>example/sdc</targetPath>
 						</testResource>
 				</testResources>
 				<resources>
