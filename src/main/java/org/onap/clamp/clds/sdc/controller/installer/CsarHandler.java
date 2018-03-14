@@ -35,7 +35,6 @@ import java.util.List;
 
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
-import org.onap.clamp.clds.sdc.controller.SdcSingleController;
 import org.openecomp.sdc.api.notification.IArtifactInfo;
 import org.openecomp.sdc.api.notification.INotificationData;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
@@ -48,7 +47,7 @@ import org.openecomp.sdc.tosca.parser.impl.SdcToscaParserFactory;
  */
 public class CsarHandler {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSingleController.class);
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarHandler.class);
     private IArtifactInfo artifactElement;
     private String filePath;
     private String controllerName;
