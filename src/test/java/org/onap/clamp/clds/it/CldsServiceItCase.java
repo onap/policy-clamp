@@ -183,7 +183,7 @@ public class CldsServiceItCase {
     }
 
     @Test
-    public void testGetSdcPropertiesByServiceUUIDForRefresh()
+    public void testGetSdcPropertiesByServiceUuidForRefresh()
             throws GeneralSecurityException, DecoderException, JSONException, IOException {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Principal principal = Mockito.mock(Principal.class);

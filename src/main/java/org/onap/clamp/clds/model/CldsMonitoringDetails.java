@@ -26,7 +26,7 @@ package org.onap.clamp.clds.model;
 /**
  * Maintains model and template details.
  */
-public class CLDSMonitoringDetails {
+public class CldsMonitoringDetails {
 
     private String closeloopName;
     private String modelName;

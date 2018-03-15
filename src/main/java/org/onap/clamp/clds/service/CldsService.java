@@ -68,8 +68,8 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.exception.sdc.SdcCommunicationException;
-import org.onap.clamp.clds.model.CLDSMonitoringDetails;
-import org.onap.clamp.clds.model.CldsDBServiceCache;
+import org.onap.clamp.clds.model.CldsMonitoringDetails;
+import org.onap.clamp.clds.model.CldsDbServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.model.CldsInfo;
@@ -157,10 +157,10 @@ public class CldsService extends SecureServiceBase {
     @GET
     @Path("/cldsDetails")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<CLDSMonitoringDetails> getCLDSDetails() {
+    public List<CldsMonitoringDetails> getCLDSDetails() {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model details", getPrincipalName());
-        List<CLDSMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CLDSMonitoringDetails>();
+        List<CldsMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CldsMonitoringDetails>();
         cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
@@ -622,7 +622,7 @@ public class CldsService extends SecureServiceBase {
         }
         if (sdcCatalogServices.isCldsSdcCacheDataExpired(cldsServiceData)) {
             cldsServiceData = sdcCatalogServices.getCldsServiceDataWithAlarmConditions(serviceInvariantUUID);
-            cldsDao.setCldsServiceCache(new CldsDBServiceCache(cldsServiceData));
+            cldsDao.setCldsServiceCache(new CldsDbServiceCache(cldsServiceData));
         }
         // filter out VFs the user is not authorized for
         cldsServiceData.filterVfs(this);

@@ -40,7 +40,7 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
  */
 public class SdcSingleControllerConfigurationTest {
 
-    public final SdcSingleControllerConfiguration loadControllerConfiguration(String fileName, String sdcControllerName)
+    private SdcSingleControllerConfiguration loadControllerConfiguration(String fileName, String sdcControllerName)
             throws JsonParseException, JsonMappingException, IOException {
         JsonNode jsonNode = new ObjectMapper().readValue(ResourceFileUtil.getResourceAsStream(fileName),
                 JsonNode.class);
@@ -78,7 +78,7 @@ public class SdcSingleControllerConfigurationTest {
     }
 
     @Test
-    public final void testConsumerGroupWithNULL() throws JsonParseException, JsonMappingException, IOException {
+    public final void testConsumerGroupWithNull() throws JsonParseException, JsonMappingException, IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-NULL.json",
                 "sdc-controller1");
         assertTrue(sdcConfig.getConsumerGroup() == null);

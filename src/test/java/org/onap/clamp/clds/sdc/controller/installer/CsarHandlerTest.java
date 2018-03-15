@@ -68,17 +68,17 @@ public class CsarHandlerTest {
         Mockito.when(serviceArtifact.getArtifactName()).thenReturn(csarArtifactName);
         List<IArtifactInfo> servicesList = new ArrayList<>();
         servicesList.add(serviceArtifact);
-        INotificationData iNotifData = Mockito.mock(INotificationData.class);
-        Mockito.when(iNotifData.getServiceArtifacts()).thenReturn(servicesList);
-        CsarHandler csar = new CsarHandler(iNotifData, "test-controller", sdcFolder);
+        INotificationData notifData = Mockito.mock(INotificationData.class);
+        Mockito.when(notifData.getServiceArtifacts()).thenReturn(servicesList);
+        CsarHandler csar = new CsarHandler(notifData, "test-controller", sdcFolder);
         assertEquals(sdcFolder + "/test-controller" + "/" + csarArtifactName, csar.getFilePath());
     }
 
     @Test(expected = CsarHandlerException.class)
     public void testFailingConstructor() throws CsarHandlerException {
-        INotificationData iNotifData = Mockito.mock(INotificationData.class);
-        Mockito.when(iNotifData.getServiceArtifacts()).thenReturn(new ArrayList<>());
-        new CsarHandler(iNotifData, "test-controller", "/tmp/csar-handler-tests");
+        INotificationData notifData = Mockito.mock(INotificationData.class);
+        Mockito.when(notifData.getServiceArtifacts()).thenReturn(new ArrayList<>());
+        new CsarHandler(notifData, "test-controller", "/tmp/csar-handler-tests");
         fail("Exception should have been raised");
     }
 
@@ -90,9 +90,9 @@ public class CsarHandlerTest {
         Mockito.when(serviceArtifact.getArtifactName()).thenReturn(csarArtifactName);
         List<IArtifactInfo> servicesList = new ArrayList<>();
         servicesList.add(serviceArtifact);
-        INotificationData iNotifData = Mockito.mock(INotificationData.class);
-        Mockito.when(iNotifData.getServiceArtifacts()).thenReturn(servicesList);
-        CsarHandler csar = new CsarHandler(iNotifData, "test-controller", "/tmp/csar-handler-tests");
+        INotificationData notifData = Mockito.mock(INotificationData.class);
+        Mockito.when(notifData.getServiceArtifacts()).thenReturn(servicesList);
+        CsarHandler csar = new CsarHandler(notifData, "test-controller", "/tmp/csar-handler-tests");
         IDistributionClientDownloadResult resultArtifact = Mockito.mock(IDistributionClientDownloadResult.class);
         Mockito.when(resultArtifact.getArtifactPayload()).thenReturn(
                 IOUtils.toByteArray(ResourceFileUtil.getResourceAsStream("example/sdc/service-Simsfoimap0112.csar")));
