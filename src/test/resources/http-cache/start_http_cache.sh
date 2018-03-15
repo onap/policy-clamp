@@ -27,11 +27,11 @@ if [ $# -eq 1 ]
 		echo 'input parameter is set (proxy http)';
 		export http_proxy=$1
 		export https_proxy=$1
-	else 
+	else
 		echo 'input parameter is not set (proxy http)';
 fi
 
 echo 'Installing requests packages for Python'
 pip install requests
 echo 'Executing the Http proxy in Cache mode only'
-python sdc_proxy.py --port 8080 --root /usr/src/http-cache-app/data-cache
+python third_party_proxy.py --port 8080 --root /usr/src/http-cache-app/data-cache
