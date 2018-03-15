@@ -33,7 +33,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class CldsDBServiceCacheTest {
+public class CldsDbServiceCacheTest {
 
     @Test
     public void testConstructor() throws IOException, ClassNotFoundException {
@@ -52,8 +52,8 @@ public class CldsDBServiceCacheTest {
         cldsVfData.setCldsKPIList(cldsKPIList);
         cldsVfs.add(cldsVfData);
         cldsServiceData.setCldsVfs(cldsVfs);
-        CldsDBServiceCache cldsDBServiceCache = new CldsDBServiceCache(cldsServiceData);
-        ObjectInputStream reader = new ObjectInputStream(cldsDBServiceCache.getCldsDataInstream());
+        CldsDbServiceCache cldsDbServiceCache = new CldsDbServiceCache(cldsServiceData);
+        ObjectInputStream reader = new ObjectInputStream(cldsDbServiceCache.getCldsDataInstream());
         CldsServiceData cldsServiceDataResult = (CldsServiceData) reader.readObject();
         assertNotNull(cldsServiceDataResult);
         assertNotNull(cldsServiceDataResult.getCldsVfs());

@@ -50,11 +50,9 @@ public class CldsReferencePropertiesItCase {
 
     /**
      * Test getting a value the properties in string.
-     * 
-     * @throws IOException
      */
     @Test
-    public void testGetStringValue() throws IOException {
+    public void testGetStringValue() {
         assertEquals(refProp.getStringValue("policy.onap.name"), "DCAE");
         assertEquals(refProp.getStringValue("policy.ms.policyNamePrefix", ""), "Config_MS_");
         assertEquals(refProp.getStringValue("policy.ms.policyNamePrefix", "testos"), "Config_MS_");

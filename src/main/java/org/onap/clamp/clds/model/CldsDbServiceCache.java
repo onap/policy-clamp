@@ -29,13 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 
-public class CldsDBServiceCache {
+public class CldsDbServiceCache {
 
     private String invariantId;
     private String serviceId;
     private InputStream cldsDataInstream;
 
-    public CldsDBServiceCache(CldsServiceData cldsServiceData) throws IOException {
+    public CldsDbServiceCache(CldsServiceData cldsServiceData) throws IOException {
         setCldsDataInstream(cldsServiceData);
         setInvariantId(cldsServiceData.getServiceInvariantUUID());
         setServiceId(cldsServiceData.getServiceUUID());

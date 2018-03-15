@@ -35,8 +35,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.onap.clamp.clds.model.CLDSMonitoringDetails;
-import org.onap.clamp.clds.model.CldsDBServiceCache;
+import org.onap.clamp.clds.model.CldsMonitoringDetails;
+import org.onap.clamp.clds.model.CldsDbServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelInstance;
@@ -381,7 +381,7 @@ public class CldsDao {
         }
     }
 
-    public void setCldsServiceCache(CldsDBServiceCache cldsDBServiceCache) {
+    public void setCldsServiceCache(CldsDbServiceCache cldsDBServiceCache) {
         if (cldsDBServiceCache != null && cldsDBServiceCache.getInvariantId() != null
                 && cldsDBServiceCache.getServiceId() != null) {
             String invariantUuid = cldsDBServiceCache.getInvariantId();
@@ -442,16 +442,16 @@ public class CldsDao {
      *         generate the ClosedLoop model. ACTION_CD | Current state of the
      *         ClosedLoop in CLDS application.
      */
-    public List<CLDSMonitoringDetails> getCLDSMonitoringDetails() {
+    public List<CldsMonitoringDetails> getCLDSMonitoringDetails() {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-        List<CLDSMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CLDSMonitoringDetails>();
+        List<CldsMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CldsMonitoringDetails>();
         String modelsSql = "SELECT CONCAT(M.CONTROL_NAME_PREFIX, M.CONTROL_NAME_UUID) AS CLOSELOOP_NAME , M.MODEL_NAME, M.SERVICE_TYPE_ID, M.DEPLOYMENT_ID, T.TEMPLATE_NAME, E.ACTION_CD, E.USER_ID, E.TIMESTAMP "
                 + "FROM MODEL M, TEMPLATE T, EVENT E "
                 + "WHERE M.TEMPLATE_ID = T.TEMPLATE_ID AND M.EVENT_ID = E.EVENT_ID " + "ORDER BY ACTION_CD";
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
-        CLDSMonitoringDetails cldsMonitoringDetails = null;
+        CldsMonitoringDetails cldsMonitoringDetails = null;
         for (Map<String, Object> row : rows) {
-            cldsMonitoringDetails = new CLDSMonitoringDetails();
+            cldsMonitoringDetails = new CldsMonitoringDetails();
             cldsMonitoringDetails.setCloseloopName((String) row.get("CLOSELOOP_NAME"));
             cldsMonitoringDetails.setModelName((String) row.get("MODEL_NAME"));
             cldsMonitoringDetails.setServiceTypeId((String) row.get("SERVICE_TYPE_ID"));

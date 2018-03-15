@@ -44,6 +44,7 @@ public class XslTransformerTest {
      * @throws IOException
      *             In case of issues
      * @throws JSONException
+     *             In case of issues to decode Json
      */
     @Test
     public void xslTransformTest() throws TransformerException, IOException, JSONException {
