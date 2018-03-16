@@ -35,7 +35,6 @@ import java.security.Principal;
 import java.util.List;
 
 import javax.ws.rs.core.SecurityContext;
-import javax.xml.transform.TransformerException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -93,13 +92,7 @@ public class CldsTemplateServiceItCase {
         cldsTemplate.setBpmnText(bpmnText);
         cldsTemplate.setImageText(imageText);
         cldsTemplate.setPropText(bpmnPropText);
-        try {
-            cldsTemplateService.putTemplate("testModel", cldsTemplate);
-        } catch (IOException e) {
-            logger.error("IOException while saving template", e);
-        } catch (TransformerException ex) {
-            logger.error("Transforming exception while saving template.", ex);
-        }
+        cldsTemplateService.putTemplate("testModel", cldsTemplate);
     }
 
     @Test

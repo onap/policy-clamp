@@ -38,7 +38,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.xml.transform.TransformerException;
 
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsTemplate;
@@ -156,8 +155,7 @@ public class CldsTemplateService extends SecureServiceBase {
     @Path("/template/{templateName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public CldsTemplate putTemplate(@PathParam("templateName") String templateName, CldsTemplate cldsTemplate)
-            throws TransformerException, IOException {
+    public CldsTemplate putTemplate(@PathParam("templateName") String templateName, CldsTemplate cldsTemplate) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsTemplateService: PUT template", getPrincipalName());
         isAuthorized(permissionUpdateTemplate);
@@ -166,15 +164,6 @@ public class CldsTemplateService extends SecureServiceBase {
         logger.info("PUT propText=" + cldsTemplate.getPropText());
         logger.info("PUT imageText=" + cldsTemplate.getImageText());
         cldsTemplate.setName(templateName);
-        String bpmnText = cldsTemplate.getBpmnText();
-        String imageText = cldsTemplate.getImageText();
-        String propText = cldsTemplate.getPropText();
-        cldsTemplate.setBpmnText(bpmnText);
-        cldsTemplate.setImageText(imageText);
-        cldsTemplate.setPropText(propText);
-        logger.info(" bpmnText : " + cldsTemplate.getBpmnText());
-        logger.info(" Image Text : " + cldsTemplate.getImageText());
-        logger.info(" Prop Text : " + cldsTemplate.getPropText());
         cldsTemplate.save(cldsDao, null);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
