@@ -38,7 +38,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
@@ -53,13 +52,6 @@ public class CsarHandlerTest {
 
     private static final String sdcFolder = "/tmp/csar-handler-tests";
     private static final String csarArtifactName = "testArtifact.csar";
-
-    @AfterClass
-    public static void removeAllFiles() throws IOException {
-        // Do some cleanup
-        Path path = Paths.get(sdcFolder + "/test-controller/" + csarArtifactName);
-        Files.deleteIfExists(path);
-    }
 
     @Test
     public void testConstructor() throws CsarHandlerException {
@@ -96,9 +88,18 @@ public class CsarHandlerTest {
         IDistributionClientDownloadResult resultArtifact = Mockito.mock(IDistributionClientDownloadResult.class);
         Mockito.when(resultArtifact.getArtifactPayload()).thenReturn(
                 IOUtils.toByteArray(ResourceFileUtil.getResourceAsStream("example/sdc/service-Simsfoimap0112.csar")));
+        // Test the save
         csar.save(resultArtifact);
         assertTrue((new File(sdcFolder + "/test-controller/" + csarArtifactName)).exists());
         assertEquals(csarArtifactName, csar.getArtifactElement().getArtifactName());
         assertNotNull(csar.getSdcCsarHelper());
+        // Test dcaeBlueprint
+        String blueprint = csar.getDcaeBlueprint();
+        assertNotNull(blueprint);
+        assertTrue(!blueprint.isEmpty());
+        assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
+        // Do some cleanup
+        Path path = Paths.get(sdcFolder + "/test-controller/" + csarArtifactName);
+        Files.deleteIfExists(path);
     }
 }
