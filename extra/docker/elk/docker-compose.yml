@@ -1,0 +1,74 @@
+version: '3.1'
+
+services:
+  elasticsearch:
+    image: elasticsearch
+    ports:
+      - 9200:9200
+    networks:
+      es_net:
+        aliases:
+          - elasticsearch
+
+  logstash:
+    image: logstash
+    volumes:
+      - ./logstash-conf:/config-dir
+    command: logstash -f /config-dir/logstash.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      es_net:
+    environment:
+
+  kibana:
+    image: kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    networks:
+      es_net:
+
+  backup:
+    image: taskrabbit/elasticsearch-dump
+    depends_on:
+      - elasticsearch
+    command:
+      - --input=http://elasticsearch:9200/.kibana
+      - --output=/backups/backup.json
+      - --type=data
+    volumes:
+      - ./es_backup/:/backups/
+    networks:
+      es_net:
+
+  restore:
+    image: taskrabbit/elasticsearch-dump
+    depends_on:
+      - elasticsearch
+    command:
+      - --output=http://elasticsearch:9200/.kibana
+      - --input=/backups/backup.json
+      - --type=data
+    volumes:
+      - ./es_backup/:/backups/
+    networks:
+      es_net:
+
+  default:
+    image: taskrabbit/elasticsearch-dump
+    depends_on:
+      - elasticsearch
+    command:
+      - --output=http://elasticsearch:9200/.kibana
+      - --input=/backups/default.json
+      - --type=data
+    volumes:
+      - ./es_backup/:/backups/
+    networks:
+      es_net:
+
+
+networks:
+  es_net:
