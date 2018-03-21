@@ -28,8 +28,6 @@ services:
     volumes:
       - "../../../src/test/resources/http-cache/sdc-example/:/sdc:ro"
       - "../../../src/test/resources/http-cache/:/script/:ro"
-    depends_on:
-      - clamp
     ports:
       - "8085:8085"
     command: /bin/sh -c "pip install requests && python /script/sdc_proxy.py --port 8085 --root /sdc"
