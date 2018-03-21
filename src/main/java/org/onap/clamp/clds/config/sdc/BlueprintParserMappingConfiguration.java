@@ -39,6 +39,7 @@ import java.util.List;
 public class BlueprintParserMappingConfiguration {
 
     private String blueprintKey;
+    private boolean dcaeDeployable;
     private BlueprintParserFilesConfiguration files;
 
     public String getBlueprintKey() {
@@ -55,6 +56,10 @@ public class BlueprintParserMappingConfiguration {
 
     public void setFiles(BlueprintParserFilesConfiguration filesConfig) {
         this.files = filesConfig;
+    }
+
+    public boolean isDcaeDeployable() {
+        return dcaeDeployable;
     }
 
     public static List<BlueprintParserMappingConfiguration> createFromJson(InputStream json) throws IOException {

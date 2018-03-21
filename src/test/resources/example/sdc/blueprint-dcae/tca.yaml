@@ -9,7 +9,14 @@ inputs:
     type: string
   service_id:
     type: string
+  policy_id:
+    type: string
 node_templates:
+  policy_0:
+    type: dcae.nodes.policy
+    properties:
+      policy_id: 
+        get_input: policy_id
   cdap_host_host:
     type: dcae.nodes.StreamingAnalytics.SelectedCDAPInfrastructure
     properties:
@@ -78,5 +85,20 @@ node_templates:
         get_input: service_id
       streamname: TCASubscriberOutputStream
     relationships:
+    - target: topic0
+      type: dcae.relationships.subscribe_to_events
+    - target: topic1
+      type: dcae.relationships.publish_events
     - target: cdap_host_host
       type: dcae.relationships.component_contained_in
+    - target: policy_0
+      type: dcae.relationships.depends_on
+  topic0:
+    type: dcae.nodes.Topic
+    properties:
+      topic_name: ''
+  topic1:
+    type: dcae.nodes.Topic
+    properties:
+      topic_name: ''
+      

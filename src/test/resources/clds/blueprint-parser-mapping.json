@@ -1,6 +1,7 @@
 [
 	{
 		"blueprintKey": "tca_",
+		"dcaeDeployable":"true",
 		"files": {
 			"bpmnXmlFilePath": "classpath:/clds/templates/bpmn/tca-template.xml",
 			"svgXmlFilePath": "classpath:/clds/templates/bpmn/tca-img.xml"
@@ -8,6 +9,7 @@
 	},
 	{
 		"blueprintKey": "holmes_",
+		"dcaeDeployable":"false",
 		"files": {
 			"bpmnXmlFilePath": "classpath:/clds/templates/bpmn/holmes-template.xml",
 			"svgXmlFilePath": "classpath:/clds/templates/bpmn/holmes-img.xml"

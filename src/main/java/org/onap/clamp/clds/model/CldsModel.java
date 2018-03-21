@@ -43,33 +43,36 @@ import org.onap.clamp.clds.dao.CldsDao;
  */
 public class CldsModel {
 
-    private static final EELFLogger logger             = EELFManager.getInstance().getLogger(CldsModel.class);
-    private static final int        UUID_LENGTH        = 36;
-    private static final String     STATUS_DESIGN      = "DESIGN";
-    private static final String     STATUS_DISTRIBUTED = "DISTRIBUTED";
-    private static final String     STATUS_ACTIVE      = "ACTIVE";
-    private static final String     STATUS_STOPPED     = "STOPPED";
-    private static final String     STATUS_DELETING    = "DELETING";
-    private static final String     STATUS_ERROR       = "ERROR";
-    private static final String     STATUS_UNKNOWN     = "UNKNOWN";
-    private String                  id;
-    private String                  templateId;
-    private String                  templateName;
-    private String                  name;
-    private String                  controlNamePrefix;
-    private String                  controlNameUuid;
-    private String                  bpmnText;
-    private String                  propText;
-    private String                  imageText;
-    private String                  docText;
-    private String                  blueprintText;
-    private CldsEvent               event;
-    private String                  status;
-    private List<String>            permittedActionCd;
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsModel.class);
+    private static final int UUID_LENGTH = 36;
+    private static final String STATUS_DESIGN = "DESIGN";
+    private static final String STATUS_DISTRIBUTED = "DISTRIBUTED";
+    private static final String STATUS_ACTIVE = "ACTIVE";
+    private static final String STATUS_STOPPED = "STOPPED";
+    private static final String STATUS_DELETING = "DELETING";
+    private static final String STATUS_ERROR = "ERROR";
+    private static final String STATUS_UNKNOWN = "UNKNOWN";
+    private String id;
+    private String templateId;
+    private String templateName;
+    private String name;
+    private String controlNamePrefix;
+    private String controlNameUuid;
+    private String bpmnText;
+    private String propText;
+    private String imageText;
+    private String docText;
+    private String blueprintText;
+    private CldsEvent event;
+    private String status;
+    private List<String> permittedActionCd;
     private List<CldsModelInstance> cldsModelInstanceList;
-    private String                  typeId;
-    private String                  typeName;
-    private String                  deploymentId;
+    /**
+     * The service type Id received from DCAE by querying it
+     */
+    private String typeId;
+    private String typeName;
+    private String deploymentId;
 
     /**
      * Construct empty model.
@@ -95,7 +98,6 @@ public class CldsModel {
     public boolean canInventoryCall() {
         boolean canCall = false;
         /* Below checks the clds event is submit/resubmit */
-
         if ((event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT)
                 || event.isActionCd(CldsEvent.ACTION_SUBMITDCAE))) {
             canCall = true;
@@ -116,7 +118,6 @@ public class CldsModel {
      * set the status in the model
      */
     private void determineStatus() {
-
         status = STATUS_UNKNOWN;
         if (event == null || event.getActionCd() == null) {
             status = STATUS_DESIGN;
@@ -141,7 +142,6 @@ public class CldsModel {
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_STOP, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_STOPPED;
         }
-
     }
 
     /**
@@ -491,5 +491,4 @@ public class CldsModel {
     public List<String> getPermittedActionCd() {
         return permittedActionCd;
     }
-
 }

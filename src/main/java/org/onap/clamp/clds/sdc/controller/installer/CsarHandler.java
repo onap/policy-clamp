@@ -43,6 +43,7 @@ import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.openecomp.sdc.api.notification.IArtifactInfo;
 import org.openecomp.sdc.api.notification.INotificationData;
+import org.openecomp.sdc.api.notification.IResourceInstance;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
@@ -61,9 +62,14 @@ public class CsarHandler {
     private SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
     private ISdcCsarHelper sdcCsarHelper;
     private String dcaeBlueprint;
+    private String blueprintArtifactName;
+    private String blueprintInvariantResourceUuid;
+    private String blueprintInvariantServiceUuid;
     public static final String CSAR_TYPE = "TOSCA_CSAR";
+    private INotificationData sdcNotification;
 
     public CsarHandler(INotificationData iNotif, String controller, String clampCsarPath) throws CsarHandlerException {
+        this.sdcNotification = iNotif;
         this.controllerName = controller;
         this.artifactElement = searchForUniqueCsar(iNotif);
         this.csarFilePath = buildFilePathForCsar(artifactElement, clampCsarPath);
@@ -96,9 +102,24 @@ public class CsarHandler {
             }
             sdcCsarHelper = factory.getSdcCsarHelper(csarFilePath);
             this.loadDcaeBlueprint();
+            this.loadBlueprintArtifactDetails();
         } catch (IOException e) {
             throw new SdcArtifactInstallerException(
                     "Exception caught when trying to write the CSAR on the file system to " + csarFilePath, e);
+        }
+    }
+
+    private void loadBlueprintArtifactDetails() {
+        blueprintInvariantServiceUuid = this.getSdcNotification().getServiceInvariantUUID();
+        for (IResourceInstance resource : this.getSdcNotification().getResources()) {
+            if ("VF".equals(resource.getResourceType())) {
+                for (IArtifactInfo artifact : resource.getArtifacts()) {
+                    if ("DCAE_INVENTORY_BLUEPRINT".equals(artifact.getArtifactType())) {
+                        blueprintArtifactName = artifact.getArtifactName();
+                        blueprintInvariantResourceUuid = resource.getResourceInvariantUUID();
+                    }
+                }
+            }
         }
     }
 
@@ -135,5 +156,21 @@ public class CsarHandler {
 
     public synchronized String getDcaeBlueprint() {
         return dcaeBlueprint;
+    }
+
+    public INotificationData getSdcNotification() {
+        return sdcNotification;
+    }
+
+    public String getBlueprintArtifactName() {
+        return blueprintArtifactName;
+    }
+
+    public String getBlueprintInvariantResourceUuid() {
+        return blueprintInvariantResourceUuid;
+    }
+
+    public String getBlueprintInvariantServiceUuid() {
+        return blueprintInvariantServiceUuid;
     }
 }

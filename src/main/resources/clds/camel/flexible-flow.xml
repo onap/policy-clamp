@@ -4,7 +4,6 @@
 				<choice>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'SUBMIT' || ${exchangeProperty.actionCd} == 'RESUBMIT'</simple>
-								<to uri="bean:org.onap.clamp.clds.client.SdcSendReqDelegate" />	
 								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />

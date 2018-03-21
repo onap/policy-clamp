@@ -22,6 +22,11 @@ inputs:
   topic1_client_role:
     type: string
 node_templates:
+  policy_0:
+    type: dcae.nodes.policy
+    properties:
+      policy_model: policy.nodes.holmes
+      policy_filter: "DCAE.Config_Holmes.*"
   docker_host_host:
     type: dcae.nodes.SelectedDockerHost
     properties:
@@ -157,6 +162,8 @@ node_templates:
       type: dcae.relationships.subscribe_to_events
     - target: topic1
       type: dcae.relationships.subscribe_to_events
+    - target: policy_0
+      type: dcae.relationships.depends_on
   topic0:
     type: dcae.nodes.Topic
     properties:

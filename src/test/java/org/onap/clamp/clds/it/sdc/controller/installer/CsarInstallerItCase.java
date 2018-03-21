@@ -38,6 +38,7 @@ import org.mockito.Mockito;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
+import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
@@ -90,7 +91,7 @@ public class CsarInstallerItCase {
         Mockito.when(csarHelper.getServiceMetadata()).thenReturn(data);
         Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
         csarInstaller.installTheCsar(csarHandler);
-        // Get it back from DB
+        // Get the template back from DB
         CldsTemplate templateFromDB = CldsTemplate.retrieve(cldsDao,
                 generatedName + CsarInstallerImpl.TEMPLATE_NAME_SUFFIX, false);
         assertNotNull(templateFromDB);
@@ -98,5 +99,12 @@ public class CsarInstallerItCase {
         assertNotNull(templateFromDB.getImageText());
         assertNotNull(templateFromDB.getPropText());
         assertEquals(templateFromDB.getName(), generatedName + CsarInstallerImpl.TEMPLATE_NAME_SUFFIX);
+        // Get the Model back from DB
+        CldsModel modelFromDB = CldsModel.retrieve(cldsDao, generatedName + CsarInstallerImpl.MODEL_NAME_SUFFIX, false);
+        assertNotNull(modelFromDB);
+        assertNotNull(modelFromDB.getBpmnText());
+        assertNotNull(modelFromDB.getImageText());
+        assertNotNull(modelFromDB.getPropText());
+        assertEquals(modelFromDB.getName(), generatedName + CsarInstallerImpl.MODEL_NAME_SUFFIX);
     }
 }
