@@ -1,0 +1,16 @@
+[
+	{
+		"blueprintKey": "tca_",
+		"files": {
+			"bpmnXmlFilePath": "classpath:/clds/templates/bpmn/tca-template.xml",
+			"svgXmlFilePath": "classpath:/clds/templates/bpmn/tca-img.xml"
+		}
+	},
+	{
+		"blueprintKey": "holmes_",
+		"files": {
+			"bpmnXmlFilePath": "classpath:/clds/templates/bpmn/holmes-template.xml",
+			"svgXmlFilePath": "classpath:/clds/templates/bpmn/holmes-img.xml"
+		}
+	}
+]
