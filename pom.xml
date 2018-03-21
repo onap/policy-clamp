@@ -506,8 +506,8 @@
 					<artifactId>sdc-tosca</artifactId>
 					<version>1.2.2</version>
 				</dependency>
-				
-				
+
+
 		</dependencies>
 
 		<build>
@@ -829,7 +829,7 @@
 																<volumes>
 																		<bind>
 																				<volume>${project.basedir}/src/test/resources/http-cache/:/usr/src/http-cache-app</volume>
-																				<volume>${project.basedir}/src/test/resources/http-cache/sdc-example/:/usr/src/http-cache-app/data-cache</volume>
+																				<volume>${project.basedir}/src/test/resources/http-cache/example/:/usr/src/http-cache-app/data-cache</volume>
 																		</bind>
 																</volumes>
 																<wait>

@@ -23,13 +23,13 @@ services:
     ports:
       - "8080:8080"
 
-  sdc_proxy:
+  third_party_proxy:
     image: python:2-slim
     volumes:
-      - "../../../src/test/resources/http-cache/sdc-example/:/sdc:ro"
+      - "../../../src/test/resources/http-cache/example/:/thirdparty:rw"
       - "../../../src/test/resources/http-cache/:/script/:ro"
     depends_on:
       - clamp
     ports:
       - "8085:8085"
-    command: /bin/sh -c "pip install requests && python /script/sdc_proxy.py --port 8085 --root /sdc"
+    command: /bin/sh -c "pip install requests &&  pip install simplejson && python -u /script/third_party_proxy.py -v true --port 8085 --root /thirdparty"
