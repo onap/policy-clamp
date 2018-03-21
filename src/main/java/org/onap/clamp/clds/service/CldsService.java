@@ -806,8 +806,8 @@ public class CldsService extends SecureServiceBase {
     @Path("/deploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
-            @QueryParam("test") String test, CldsModel model) {
+    public Response deployModel(@PathParam("modelName") String modelName,
+            CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         Boolean errorCase = false;
@@ -874,8 +874,8 @@ public class CldsService extends SecureServiceBase {
     @Path("/undeploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response unDeployModel(@PathParam("action") String action, @PathParam("modelName") String modelName,
-            @QueryParam("test") String test, CldsModel model) {
+    public Response unDeployModel(@PathParam("modelName") String modelName,
+            CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
 
