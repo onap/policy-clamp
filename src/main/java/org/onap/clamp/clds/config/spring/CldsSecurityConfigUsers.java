@@ -130,7 +130,7 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
         if ("bcrypt".equals(cldsEncoderMethod)) {
             return new BCryptPasswordEncoder(cldsBcryptEncoderStrength);
         } else {
-            throw new CldsConfigException("Invalid clamp.config.security.encoder value. Must be one of [bcrypt, none]");
+            throw new CldsConfigException("Invalid clamp.config.security.encoder value. 'bcrypt' is the only option at this time.");
         }
     }
 }

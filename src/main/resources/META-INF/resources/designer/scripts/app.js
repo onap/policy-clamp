@@ -46,7 +46,6 @@ var app = angular.module('clds-app', ['ngRoute',
     'ui.grid.exporter',
     'angucomplete',
     'kendo.directives',
-    'angular-md5'
   ])
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 
@@ -77,8 +76,6 @@ var app = angular.module('clds-app', ['ngRoute',
       function($routeProvider, $locationProvider,
         cfpLoadingBarProvider, $timeout, dialogs,
         $cookies) {
-        console
-          .log("$routeProvider','$locationProvider', '$compileProvider','cfpLoadingBarProvider','md5'")
         $locationProvider.html5Mode(false);
         // alert("App.js");
 
