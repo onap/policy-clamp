@@ -48,16 +48,19 @@ import org.onap.clamp.clds.service.CldsTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
-@Component
+/**
+ * This class will be instantiated by spring config, and used by Sdc Controller.
+ * There is no state kept by the bean. It's used to deploy the csar/notification
+ * received from SDC in DB.
+ */
 public class CsarInstallerImpl implements CsarInstaller {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);
     private Map<String, BlueprintParserFilesConfiguration> bpmnMapping = new HashMap<>();
     public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-ClosedLoopTemplate-";
-    public static final String MODEL_NAME_PREFIX = "DCAE-Designer-ClosedLoopInstance-";
+    public static final String MODEL_NAME_PREFIX = "ClosedLoop-";
     /**
      * The file name that will be loaded by Spring.
      */
@@ -83,16 +86,14 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     @Override
     public boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
-        return false;
+        return (CldsModel.retrieve(cldsDao, csar.getSdcCsarHelper().getServiceMetadata().getValue("name"),
+                false) != null) ? true : false;
     }
 
     @Override
     public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException {
         try {
             String serviceTypeId = queryDcaeToGetServiceTypeId(csar);
-            String policyName = searchForPolicyName(csar);
-            if (policyName.contains("*")) {
-            }
             createFakeCldsModel(csar, createFakeCldsTemplate(csar, this.searchForRightMapping(csar)), serviceTypeId);
         } catch (IOException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Csar installation in database", e);
@@ -161,7 +162,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         template.setBpmnId("Sdc-Generated");
         template.setBpmnText(
                 IOUtils.toString(appContext.getResource(configFiles.getBpmnXmlFilePath()).getInputStream()));
-        template.setPropText(csar.getDcaeBlueprint());
+        template.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\"" + csar.getDcaeBlueprint() + "\"]}]}");
         template.setImageText(
                 IOUtils.toString(appContext.getResource(configFiles.getSvgXmlFilePath()).getInputStream()));
         template.setName(TEMPLATE_NAME_PREFIX + csar.getSdcCsarHelper().getServiceMetadata().getValue("name"));
@@ -169,15 +170,25 @@ public class CsarInstallerImpl implements CsarInstaller {
         return template;
     }
 
-    private CldsModel createFakeCldsModel(CsarHandler csar, CldsTemplate cldsTemplate, String serviceTypeId) {
+    private CldsModel createFakeCldsModel(CsarHandler csar, CldsTemplate cldsTemplate, String serviceTypeId)
+            throws SdcArtifactInstallerException {
         CldsModel cldsModel = new CldsModel();
-        cldsModel.setControlNamePrefix(MODEL_NAME_PREFIX);
+        String policyName = searchForPolicyName(csar);
+        if (policyName.contains("*")) {
+            // It's a filter must add a specific prefix
+            cldsModel.setControlNamePrefix(policyName);
+        } else {
+            cldsModel.setControlNamePrefix(MODEL_NAME_PREFIX);
+        }
         cldsModel.setName(csar.getSdcCsarHelper().getServiceMetadata().getValue("name"));
         cldsModel.setBlueprintText(csar.getDcaeBlueprint());
         cldsModel.setTemplateName(cldsTemplate.getName());
         cldsModel.setTemplateId(cldsTemplate.getId());
-        cldsModel.setDocText(cldsTemplate.getPropText());
-        cldsModel.setPropText("{}");
+        // cldsModel.setDocText(cldsTemplate.getPropText());
+        cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
+                + csar.getSdcNotification().getServiceInvariantUUID() + "\"]},{\"name\":\"vf\",\"value\":[\""
+                + csar.getBlueprintInvariantResourceUuid()
+                + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]}]}");
         cldsModel.setBpmnText(cldsTemplate.getBpmnText());
         cldsModel.setTypeId(serviceTypeId);
         cldsModel.save(cldsDao, null);

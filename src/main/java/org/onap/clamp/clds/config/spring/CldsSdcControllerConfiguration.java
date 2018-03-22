@@ -1,0 +1,92 @@
+/*-
+ * ============LICENSE_START=======================================================
+ * ONAP CLAMP
+ * ================================================================================
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ *                             reserved.
+ * ================================================================================
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ * ============LICENSE_END============================================
+ * ===================================================================
+ * ECOMP is a trademark and service mark of AT&T Intellectual Property.
+ */
+
+package org.onap.clamp.clds.config.spring;
+
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import org.onap.clamp.clds.config.sdc.SdcControllersConfiguration;
+import org.onap.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
+import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
+import org.onap.clamp.clds.sdc.controller.SdcSingleController;
+import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
+import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
+@Configuration
+@Profile("clamp-sdc-controller")
+public class CldsSdcControllerConfiguration {
+
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsSdcControllerConfiguration.class);
+    private List<SdcSingleController> sdcControllersList = new ArrayList<>();
+
+    @PostConstruct
+    public void loadSdcControllers(
+            @Qualifier("sdcControllersConfiguration") SdcControllersConfiguration sdcControllersConfig) {
+        sdcControllersConfig.getAllDefinedControllers().forEach((k, v) -> {
+            SdcSingleController sdcController = getSdcSingleController(v);
+            try {
+                sdcController.initSdc();
+            } catch (SdcControllerException e) {
+                logger.error("Exception caught during initialization of sdc controller", e);
+            }
+            sdcControllersList.add(getSdcSingleController(v));
+        });
+    }
+
+    @PreDestroy
+    public void killSdcControllers() {
+        sdcControllersList.forEach(e -> {
+            try {
+                e.closeSdc();
+            } catch (SdcControllerException e1) {
+                logger.error("Exception caught during initialization of sdc controller", e);
+            }
+        });
+    }
+
+    @Bean(name = "csarInstaller")
+    public CsarInstaller getCsarInstaller() {
+        return new CsarInstallerImpl();
+    }
+
+    @Bean(name = "sdcSingleController")
+    public SdcSingleController getSdcSingleController(SdcSingleControllerConfiguration sdcControllerConfig) {
+        return new SdcSingleController(sdcControllerConfig, true);
+    }
+
+    @Bean(name = "sdcControllersConfiguration")
+    public SdcControllersConfiguration getSdcControllersConfiguration() {
+        return new SdcControllersConfiguration();
+    }
+}

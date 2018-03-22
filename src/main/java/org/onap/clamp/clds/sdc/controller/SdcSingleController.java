@@ -50,13 +50,16 @@ import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.utils.DistributionActionResultEnum;
 import org.openecomp.sdc.utils.DistributionStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * This class handles one sdc controller defined in the config. It's
+ * instantiated by Spring config.
+ */
 public class SdcSingleController {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSingleController.class);
     protected boolean isAsdcClientAutoManaged = false;
+    @Autowired
     protected CsarInstaller resourceInstaller;
     @Autowired
     protected ClampProperties refProp;
@@ -125,6 +128,11 @@ public class SdcSingleController {
     // ***** END of Controller STATUS code
     protected SdcSingleControllerConfiguration sdcConfig;
     private IDistributionClient distributionClient;
+
+    public SdcSingleController(SdcSingleControllerConfiguration sdcSingleConfig, boolean isClientAutoManaged) {
+        this.isAsdcClientAutoManaged = isClientAutoManaged;
+        sdcConfig = sdcSingleConfig;
+    }
 
     /**
      * This method initializes the SDC Controller and the SDC Client.

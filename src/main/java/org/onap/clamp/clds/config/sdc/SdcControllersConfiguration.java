@@ -39,14 +39,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 
 /**
  * This class maps the SDC config JSON file. This JSON can have multiple
  * sdc-controller config. So the json is loaded in a static way and the instance
  * must specify the controller name that it represents.
  */
-@Component
 public class SdcControllersConfiguration {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcControllersConfiguration.class);
