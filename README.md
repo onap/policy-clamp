@@ -92,3 +92,18 @@ With the default log settings, all logs will be generated into console and into 
 ### Api
 
 You can see the swagger definition for the jaxrs apis at `/restservices/clds/v1/openapi.json`
+
+
+## Clamp Credentials
+
+Credentials should be specified in `src/main/resources/clds/clds-users.json`. You might specify you own credential file by redefining the `clamp.config.files.cldsUsers` in `application.properties`.
+
+Passwords should be hashed using md5, then using Bcrypt :
+```
+# pip3 install bcrypt  # if you don't have the bcrypt python lib installed, should be done once.
+# python3 -c 'import bcrypt; import hashlib; m = hashlib.md5(); m.update("password".encode()); m.hexdigest(); print(bcrypt.hashpw(m.hexdigest().encode(), bcrypt.gensalt(rounds=10, prefix=b"2a")))'
+```
+
+Default credentials are admin/password and cs0008/password.
+
+

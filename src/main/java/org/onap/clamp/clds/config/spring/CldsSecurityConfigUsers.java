@@ -30,6 +30,7 @@ import java.io.IOException;
 
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.CldsUserJsonDecoder;
+import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * This class is used to enable the HTTP authentication to login. It requires a
@@ -59,6 +62,10 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
     private String cldsPersmissionTypeCl;
     @Value("${CLDS_PERMISSION_INSTANCE:dev}")
     private String cldsPermissionInstance;
+    @Value("${clamp.config.security.encoder:bcrypt}")
+    private String cldsEncoderMethod;
+    @Value("${clamp.config.security.encoder.bcrypt.strength:10}")
+    private Integer cldsBcryptEncoderStrength;
 
     /**
      * This method configures on which URL the authorization will be enabled.
@@ -83,6 +90,9 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
+        // configure algorithm used for password hashing
+        final PasswordEncoder passwordEncoder = getPasswordEncoder();
+
         try {
             CldsUser[] usersList = loadUsers();
             // no users defined
@@ -92,7 +102,7 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
             }
             for (CldsUser user : usersList) {
                 auth.inMemoryAuthentication().withUser(user.getUser()).password(user.getPassword())
-                        .roles(user.getPermissionsString());
+                    .roles(user.getPermissionsString()).and().passwordEncoder(passwordEncoder);
             }
         } catch (Exception e) {
             logger.error("Exception occurred during the setup of the Web users in memory", e);
@@ -111,5 +121,16 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
     private CldsUser[] loadUsers() throws IOException {
         logger.info("Load from clds-users.properties");
         return CldsUserJsonDecoder.decodeJson(refProp.getFileContent("files.cldsUsers"));
+    }
+
+    /**
+     * This methods returns the chosen encoder for password hashing.
+     */
+    private PasswordEncoder getPasswordEncoder() {
+        if ("bcrypt".equals(cldsEncoderMethod)) {
+            return new BCryptPasswordEncoder(cldsBcryptEncoderStrength);
+        } else {
+            throw new CldsConfigException("Invalid clamp.config.security.encoder value. Must be one of [bcrypt, none]");
+        }
     }
 }

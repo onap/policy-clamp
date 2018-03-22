@@ -1,6 +1,6 @@
  [{
 	"user":"admin",
-	"password":"5f4dcc3b5aa765d61d8327deb882cf99",
+	"password":"$2a$10$j7wM0G1gcpJTJygRY2ZG8O2HafSwlvM.tIb18/eusVPKBhrpwB6xC",
 	"permissions":
 	            [
 	               "permission-type-cl|dev|read",
@@ -12,7 +12,7 @@
 	},
 	{
 	"user":"cs0008",
-	"password":"5f4dcc3b5aa765d61d8327deb882cf99",
+	"password":"$2a$10$j7wM0G1gcpJTJygRY2ZG8O2HafSwlvM.tIb18/eusVPKBhrpwB6xC",
 	"permissions":
 	            [
 	               "permission-type-cl|dev|read",
