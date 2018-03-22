@@ -369,7 +369,7 @@ var app = angular.module('clds-app', ['ngRoute',
               $scope.cldsOpenModelProperties();
             } else if (name == "Deploy") {
               $scope
-                .cldsConfirmToggleDeployPerformAction("Deploy");
+                .cldsAskDeployParametersPerformAction();
             } else if (name == "UnDeploy") {
               $scope
                 .cldsConfirmToggleDeployPerformAction("UnDeploy");
@@ -994,6 +994,18 @@ var app = angular.module('clds-app', ['ngRoute',
 
             // $modalInstance.close("closed");
           });
+        };
+
+        $scope.cldsAskDeployParametersPerformAction = function() {
+            var dlg = dialogs.create('partials/portfolios/deploy_parameters.html',
+                                     'DeploymentCtrl',
+                                     {}, {keyboard: true, backdrop: true, windowClass: 'deploy-parameters'});
+            dlg.result.then(function() {
+                var confirm = dialogs.confirm('Deploy', 'Are you sure you want to deploy the closed loop?');
+                confirm.result.then(function() {
+                    cldsToggleDeploy("deploy");
+                });
+            });
         };
 
         $scope.cldsConfirmToggleDeployPerformAction = function(
