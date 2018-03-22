@@ -49,19 +49,15 @@ import org.openecomp.sdc.impl.DistributionClientFactory;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.utils.DistributionActionResultEnum;
 import org.openecomp.sdc.utils.DistributionStatusEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * This class handles one sdc controller defined in the config. It's
- * instantiated by Spring config.
+ * This class handles one sdc controller defined in the config.
  */
 public class SdcSingleController {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSingleController.class);
     protected boolean isAsdcClientAutoManaged = false;
-    @Autowired
-    protected CsarInstaller resourceInstaller;
-    @Autowired
+    protected CsarInstaller csarInstaller;
     protected ClampProperties refProp;
     public static final String CONFIG_SDC_FOLDER = "sdc.csarFolder";
 
@@ -129,9 +125,12 @@ public class SdcSingleController {
     protected SdcSingleControllerConfiguration sdcConfig;
     private IDistributionClient distributionClient;
 
-    public SdcSingleController(SdcSingleControllerConfiguration sdcSingleConfig, boolean isClientAutoManaged) {
+    public SdcSingleController(ClampProperties clampProp, CsarInstaller csarInstaller,
+            SdcSingleControllerConfiguration sdcSingleConfig, boolean isClientAutoManaged) {
         this.isAsdcClientAutoManaged = isClientAutoManaged;
-        sdcConfig = sdcSingleConfig;
+        this.sdcConfig = sdcSingleConfig;
+        this.refProp = clampProp;
+        this.csarInstaller = csarInstaller;
     }
 
     /**
@@ -206,12 +205,12 @@ public class SdcSingleController {
             this.changeControllerStatus(SdcSingleControllerStatus.BUSY);
             csar = new CsarHandler(iNotif, this.sdcConfig.getSdcControllerName(),
                     refProp.getStringValue(CONFIG_SDC_FOLDER));
-            if (resourceInstaller.isCsarAlreadyDeployed(csar)) {
+            if (csarInstaller.isCsarAlreadyDeployed(csar)) {
                 csar.save(downloadTheArtifact(csar.getArtifactElement()));
                 this.sendASDCNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_OK, null,
                         System.currentTimeMillis());
-                resourceInstaller.installTheCsar(csar);
+                csarInstaller.installTheCsar(csar);
                 this.sendASDCNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_OK, null,
                         System.currentTimeMillis());

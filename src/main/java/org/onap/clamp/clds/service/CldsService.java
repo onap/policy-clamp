@@ -401,72 +401,8 @@ public class CldsService extends SecureServiceBase {
             @PathParam("modelName") String modelName, @QueryParam("test") String test, CldsModel model)
             throws TransformerException, ParseException, GeneralSecurityException, DecoderException {
         Date startTime = new Date();
-<<<<<<< Upstream, based on f7e5aab99d6c2a0a9d5e56b561ba0513aafd504e
         CldsModel retrievedModel = null;
         Boolean errorCase = false;
-=======
-        LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
-        String actionCd = action.toUpperCase();
-        SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
-                cldsPermissionInstance, actionCd);
-        isAuthorized(permisionManage);
-        isAuthorizedForVf(model);
-        String userId = getUserId();
-        String actionStateCd = CldsEvent.ACTION_STATE_INITIATED;
-        logger.info("PUT actionCd={}", actionCd);
-        logger.info("PUT actionStateCd={}", actionStateCd);
-        logger.info("PUT modelName={}", modelName);
-        logger.info("PUT test={}", test);
-        logger.info("PUT bpmnText={}", model.getBpmnText());
-        logger.info("PUT propText={}", model.getPropText());
-        logger.info("PUT userId={}", userId);
-        logger.info("PUT getTypeId={}", model.getTypeId());
-        logger.info("PUT deploymentId={}", model.getDeploymentId());
-        if (model.getTemplateName() != null) {
-            CldsTemplate template = cldsDao.getTemplate(model.getTemplateName());
-            if (template != null) {
-                model.setTemplateId(template.getId());
-                model.setDocText(template.getPropText());
-                // This is to provide the Bpmn XML when Template part in UI is
-                // disabled
-                model.setBpmnText(template.getBpmnText());
-            }
-        }
-        // save model to db
-        model.setName(modelName);
-        model.save(cldsDao, getUserId());
-        // get vars and format if necessary
-        String prop = model.getPropText();
-        String bpmn = model.getBpmnText();
-        String docText = model.getDocText();
-        String controlName = model.getControlName();
-        String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
-        logger.info("PUT bpmnJson={}", bpmnJson);
-        // Flag indicates whether it is triggered by Validation Test button from
-        // UI
-        boolean isTest = false;
-        if (test != null && test.equalsIgnoreCase("true")) {
-            isTest = true;
-        } else {
-            String actionTestOverride = refProp.getStringValue("action.test.override");
-            if (actionTestOverride != null && actionTestOverride.equalsIgnoreCase("true")) {
-                logger.info("PUT actionTestOverride={}", actionTestOverride);
-                logger.info("PUT override test indicator and setting it to true");
-                isTest = true;
-            }
-        }
-        logger.info("PUT isTest={}", isTest);
-        boolean isInsertTestEvent = false;
-        String insertTestEvent = refProp.getStringValue("action.insert.test.event");
-        if (insertTestEvent != null && insertTestEvent.equalsIgnoreCase("true")) {
-            isInsertTestEvent = true;
-        }
-        logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
-        // determine if requested action is permitted
-        model.validateAction(actionCd);
-        logger.info("modelProp - " + prop);
-        logger.info("docText - " + docText);
->>>>>>> 95a4d95 Remove the test flag
         try {
             LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
             String actionCd = action.toUpperCase();
@@ -476,10 +412,8 @@ public class CldsService extends SecureServiceBase {
             isAuthorizedForVf(model);
             String userId = getUserId();
             String actionStateCd = CldsEvent.ACTION_STATE_INITIATED;
-            String processDefinitionKey = "clds-process-action-wf";
             logger.info("PUT actionCd={}", actionCd);
             logger.info("PUT actionStateCd={}", actionStateCd);
-            logger.info("PUT processDefinitionKey={}", processDefinitionKey);
             logger.info("PUT modelName={}", modelName);
             logger.info("PUT test={}", test);
             logger.info("PUT bpmnText={}", model.getBpmnText());
@@ -870,12 +804,8 @@ public class CldsService extends SecureServiceBase {
     @Path("/deploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-<<<<<<< Upstream, based on f7e5aab99d6c2a0a9d5e56b561ba0513aafd504e
     public Response deployModel(@PathParam("modelName") String modelName,
             CldsModel model) {
-=======
-    public CldsModel deployModel(@PathParam("modelName") String modelName, CldsModel model) {
->>>>>>> 95a4d95 Remove the test flag
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         Boolean errorCase = false;
@@ -942,12 +872,8 @@ public class CldsService extends SecureServiceBase {
     @Path("/undeploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-<<<<<<< Upstream, based on f7e5aab99d6c2a0a9d5e56b561ba0513aafd504e
     public Response unDeployModel(@PathParam("modelName") String modelName,
             CldsModel model) {
-=======
-    public CldsModel unDeployModel(@PathParam("modelName") String modelName, CldsModel model) {
->>>>>>> 95a4d95 Remove the test flag
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
 

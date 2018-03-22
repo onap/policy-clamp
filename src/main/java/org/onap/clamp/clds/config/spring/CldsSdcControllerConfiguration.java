@@ -32,13 +32,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcControllersConfiguration;
-import org.onap.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.sdc.controller.SdcSingleController;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -49,18 +49,23 @@ public class CldsSdcControllerConfiguration {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsSdcControllerConfiguration.class);
     private List<SdcSingleController> sdcControllersList = new ArrayList<>();
+    @Autowired
+    private ClampProperties clampProp;
+    @Autowired
+    protected CsarInstaller csarInstaller;
 
     @PostConstruct
-    public void loadSdcControllers(
-            @Qualifier("sdcControllersConfiguration") SdcControllersConfiguration sdcControllersConfig) {
+    public void loadSdcControllers() {
+        SdcControllersConfiguration sdcControllersConfig = getSdcControllersConfiguration();
         sdcControllersConfig.getAllDefinedControllers().forEach((k, v) -> {
-            SdcSingleController sdcController = getSdcSingleController(v);
+            logger.info("Instantiating controller :" + k);
+            SdcSingleController sdcController = new SdcSingleController(clampProp, csarInstaller, v, true);
             try {
                 sdcController.initSdc();
             } catch (SdcControllerException e) {
                 logger.error("Exception caught during initialization of sdc controller", e);
             }
-            sdcControllersList.add(getSdcSingleController(v));
+            sdcControllersList.add(sdcController);
         });
     }
 
@@ -78,11 +83,6 @@ public class CldsSdcControllerConfiguration {
     @Bean(name = "csarInstaller")
     public CsarInstaller getCsarInstaller() {
         return new CsarInstallerImpl();
-    }
-
-    @Bean(name = "sdcSingleController")
-    public SdcSingleController getSdcSingleController(SdcSingleControllerConfiguration sdcControllerConfig) {
-        return new SdcSingleController(sdcControllerConfig, true);
     }
 
     @Bean(name = "sdcControllersConfiguration")
