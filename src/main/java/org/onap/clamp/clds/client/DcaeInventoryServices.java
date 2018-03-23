@@ -30,13 +30,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 
-import org.apache.commons.codec.DecoderException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -46,6 +44,7 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.DcaeEvent;
+import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.model.properties.Global;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -61,7 +60,9 @@ public class DcaeInventoryServices {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    private static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
+    public static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
+    public static final String DCAE_TYPE_NAME = "typeName";
+    public static final String DCAE_TYPE_ID = "typeId";
     @Autowired
     private ClampProperties refProp;
     @Autowired
@@ -74,18 +75,13 @@ public class DcaeInventoryServices {
      *            The CldsModel
      * @param userId
      *            The user ID
-     * @throws GeneralSecurityException
-     *             In case of issue when decryting the DCAE password
      * @throws ParseException
      *             In case of DCAE Json parse exception
-     * @throws DecoderException
-     *             In case of issues with HexString decoding
      */
-    public void setEventInventory(CldsModel cldsModel, String userId)
-            throws GeneralSecurityException, ParseException, DecoderException {
+    public void setEventInventory(CldsModel cldsModel, String userId) throws ParseException {
         String artifactName = cldsModel.getControlName();
         DcaeEvent dcaeEvent = new DcaeEvent();
-        String isDcaeInfoAvailable = null;
+        DcaeInventoryResponse dcaeResponse = null;
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "setEventInventory");
         if (artifactName != null) {
@@ -103,7 +99,7 @@ public class DcaeInventoryServices {
                 resourceUuid = resourceUuidList.get(0);
             }
             /* Inventory service url is called in this method */
-            isDcaeInfoAvailable = getDcaeInformation(artifactName, invariantServiceUuid, resourceUuid);
+            dcaeResponse = getDcaeInformation(artifactName, invariantServiceUuid, resourceUuid);
             /* set dcae events */
             dcaeEvent.setArtifactName(artifactName);
             dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
@@ -120,22 +116,21 @@ public class DcaeInventoryServices {
             LoggingUtils.setTimeContext(startTime, new Date());
             metricsLogger.info("setEventInventory complete");
         }
-        /* Null whether the DCAE has items lenght or not */
-        if (isDcaeInfoAvailable != null) {
-            /* Inserting Event in to DB */
-            logger.info(isDcaeInfoAvailable);
-            JSONParser parser = new JSONParser();
-            Object obj0 = parser.parse(isDcaeInfoAvailable);
-            JSONObject jsonObj = (JSONObject) obj0;
+        this.analyzeAndSaveDcaeResponse(dcaeResponse, cldsModel, dcaeEvent, userId);
+    }
+
+    private void analyzeAndSaveDcaeResponse(DcaeInventoryResponse dcaeResponse, CldsModel cldsModel,
+            DcaeEvent dcaeEvent, String userId) throws ParseException {
+        if (dcaeResponse != null) {
+            logger.info("Dcae Response for query on inventory: " + dcaeResponse);
             String oldTypeId = cldsModel.getTypeId();
             String newTypeId = "";
-            if (jsonObj.get("typeId") != null) {
-                newTypeId = jsonObj.get("typeId").toString();
-                cldsModel.setTypeId(jsonObj.get("typeId").toString());
+            if (dcaeResponse.getTypeId() != null) {
+                newTypeId = dcaeResponse.getTypeId();
+                cldsModel.setTypeId(dcaeResponse.getTypeId());
             }
-            // cldsModel.setTypeName(cldsModel.getControlName().toString()+".yml");
-            if (jsonObj.get("typeName") != null) {
-                cldsModel.setTypeName(jsonObj.get("typeName").toString());
+            if (dcaeResponse.getTypeName() != null) {
+                cldsModel.setTypeName(dcaeResponse.getTypeName());
             }
             if (oldTypeId == null || !oldTypeId.equalsIgnoreCase(newTypeId)
                     || cldsModel.getEvent().getActionCd().equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE)) {
@@ -157,13 +152,13 @@ public class DcaeInventoryServices {
      *            The service UUID
      * @param resourceUuid
      *            The resource UUID
-     * @return The DCAE inventory for the artifact
+     * @return The DCAE inventory for the artifact in DcaeInventoryResponse
      * @throws IOException
      *             In case of issues with the stream
      * @throws ParseException
      *             In case of issues with the Json parsing
      */
-    public String getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
+    public DcaeInventoryResponse getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
             throws IOException, ParseException {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
@@ -171,25 +166,23 @@ public class DcaeInventoryServices {
                 + artifactName;
         String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types" + queryString;
         logger.info("Dcae Inventory Service full url - " + fullUrl);
-        String daceInventoryResponse = null;
+        String dcaeInventoryResponse = null;
         String responseStr = DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
         JSONParser parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
         Long totalCount = (Long) jsonObj.get("totalCount");
         int numServices = totalCount.intValue();
-        if (numServices == 0) {
-            daceInventoryResponse = null;
-        } else if (numServices > 0) {
+        if (numServices > 0) {
             JSONArray itemsArray = (JSONArray) jsonObj.get("items");
             JSONObject dcaeServiceType0 = (JSONObject) itemsArray.get(0);
-            daceInventoryResponse = dcaeServiceType0.toString();
-            logger.info(daceInventoryResponse);
+            dcaeInventoryResponse = dcaeServiceType0.toString();
+            logger.info("getDcaeInformation, answer from DCAE inventory:" + dcaeInventoryResponse);
         }
         LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
         LoggingUtils.setTimeContext(startTime, new Date());
         metricsLogger.info("getDcaeInformation complete: number services returned=" + numServices);
-        return daceInventoryResponse;
+        return new ObjectMapper().readValue(dcaeInventoryResponse, DcaeInventoryResponse.class);
     }
 
     /**

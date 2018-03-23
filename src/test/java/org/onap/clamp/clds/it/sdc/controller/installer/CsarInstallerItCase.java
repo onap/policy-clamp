@@ -25,6 +25,7 @@ package org.onap.clamp.clds.it.sdc.controller.installer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
@@ -47,27 +48,21 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.openecomp.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.openecomp.sdc.toscaparser.api.elements.Metadata;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CsarInstallerItCase {
 
-    private static final String sdcFolder = "/tmp/csar-handler-tests";
-    private static final String csarArtifactName = "testArtifact.csar";
+    private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
+    private static final String SERVICE_UUID = "serviceUUID";
+    private static final String RESOURCE1_UUID = "resource1UUID";
     @Autowired
     private CsarInstaller csarInstaller;
     @Autowired
     private CldsDao cldsDao;
-
-    private void loadFile(String fileName) throws IOException {
-        ReflectionTestUtils.setField(csarInstaller, "blueprintMappingFile", fileName);
-        ((CsarInstallerImpl) csarInstaller).loadConfiguration();
-    }
 
     @Test(expected = SdcArtifactInstallerException.class)
     public void testInstallTheCsarFail()
@@ -79,10 +74,7 @@ public class CsarInstallerItCase {
         fail("Should have raised an SdcArtifactInstallerException");
     }
 
-    @Test(expected = SdcArtifactInstallerException.class)
-    public void testInstallTheCsarTca()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
-        String generatedName = RandomStringUtils.randomAlphanumeric(5);
+    private CsarHandler buildFakeCsarHandler(String generatedName) throws IOException {
         CsarHandler csarHandler = Mockito.mock(CsarHandler.class);
         Mockito.when(csarHandler.getDcaeBlueprint())
                 .thenReturn(ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml"));
@@ -91,7 +83,26 @@ public class CsarInstallerItCase {
         Mockito.when(data.getValue("name")).thenReturn(generatedName);
         Mockito.when(csarHelper.getServiceMetadata()).thenReturn(data);
         Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
+        Mockito.when(csarHandler.getBlueprintArtifactName()).thenReturn(CSAR_ARTIFACT_NAME);
+        Mockito.when(csarHandler.getBlueprintInvariantServiceUuid()).thenReturn(SERVICE_UUID);
+        Mockito.when(csarHandler.getBlueprintInvariantResourceUuid()).thenReturn(RESOURCE1_UUID);
+        return csarHandler;
+    }
+
+    @Test
+    public void testIsCsarAlreadyDeployedTca()
+            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+        String generatedName = RandomStringUtils.randomAlphanumeric(5);
+        CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csarHandler);
+        assertTrue(csarInstaller.isCsarAlreadyDeployed(csarHandler));
+    }
+
+    @Test
+    public void testInstallTheCsarTca()
+            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+        String generatedName = RandomStringUtils.randomAlphanumeric(5);
+        csarInstaller.installTheCsar(buildFakeCsarHandler(generatedName));
         // Get the template back from DB
         CldsTemplate templateFromDB = CldsTemplate.retrieve(cldsDao,
                 CsarInstallerImpl.TEMPLATE_NAME_PREFIX + generatedName, false);
@@ -99,15 +110,16 @@ public class CsarInstallerItCase {
         assertNotNull(templateFromDB.getBpmnText());
         assertNotNull(templateFromDB.getImageText());
         assertNotNull(templateFromDB.getPropText());
+        assertTrue(templateFromDB.getPropText().contains("global")
+                && templateFromDB.getPropText().contains("node_templates:"));
         assertEquals(templateFromDB.getName(), CsarInstallerImpl.TEMPLATE_NAME_PREFIX + generatedName);
-        JSONAssert.assertEquals(templateFromDB.getPropText(),
-                ResourceFileUtil.getResourceAsString("example/dao/template-doc-content.json"), true);
         // Get the Model back from DB
-        CldsModel modelFromDB = CldsModel.retrieve(cldsDao, generatedName, false);
+        CldsModel modelFromDB = CldsModel.retrieve(cldsDao, generatedName, true);
         assertNotNull(modelFromDB);
         assertNotNull(modelFromDB.getBpmnText());
         assertNotNull(modelFromDB.getImageText());
         assertNotNull(modelFromDB.getPropText());
         assertEquals(modelFromDB.getName(), generatedName);
+        assertEquals(CsarInstallerImpl.MODEL_NAME_PREFIX, modelFromDB.getControlNamePrefix());
     }
 }
