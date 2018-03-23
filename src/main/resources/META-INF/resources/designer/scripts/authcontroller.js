@@ -23,7 +23,7 @@
 
 'use strict';
 
-function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $location, $cookies, md5) {
+function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $location, $cookies) {
   console.log("//////////AuthenticateCtrl");
   $scope.getInclude = function() {
     console.log("getInclude011111111");
@@ -50,10 +50,9 @@ function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $locati
       $window.localStorage.setItem("isInvalidUser", true);
       return;
     }
-    var hashpass = md5.createHash(pass);
     var headers = username ? {
       authorization: "Basic " +
-        btoa(username + ":" + hashpass)
+        btoa(username + ":" + pass)
     } : {};
     // send request to a test API with the username/password to verify the authorization
     $http.get('/restservices/clds/v1/user/testUser', {
