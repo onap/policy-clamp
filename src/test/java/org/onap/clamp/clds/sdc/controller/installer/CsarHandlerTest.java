@@ -45,25 +45,29 @@ import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerExceptio
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.openecomp.sdc.api.notification.IArtifactInfo;
 import org.openecomp.sdc.api.notification.INotificationData;
+import org.openecomp.sdc.api.notification.IResourceInstance;
 import org.openecomp.sdc.api.results.IDistributionClientDownloadResult;
 import org.openecomp.sdc.tosca.parser.exceptions.SdcToscaParserException;
 
 public class CsarHandlerTest {
 
-    private static final String sdcFolder = "/tmp/csar-handler-tests";
-    private static final String csarArtifactName = "testArtifact.csar";
+    private static final String SDC_FOLDER = "/tmp/csar-handler-tests";
+    private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
+    private static final String SERVICE_UUID = "serviceUUID";
+    private static final String RESOURCE1_UUID = "resource1UUID";
+    private static final String BLUEPRINT1_NAME = "blueprint1-name";
 
     @Test
     public void testConstructor() throws CsarHandlerException {
         IArtifactInfo serviceArtifact = Mockito.mock(IArtifactInfo.class);
         Mockito.when(serviceArtifact.getArtifactType()).thenReturn(CsarHandler.CSAR_TYPE);
-        Mockito.when(serviceArtifact.getArtifactName()).thenReturn(csarArtifactName);
+        Mockito.when(serviceArtifact.getArtifactName()).thenReturn(CSAR_ARTIFACT_NAME);
         List<IArtifactInfo> servicesList = new ArrayList<>();
         servicesList.add(serviceArtifact);
         INotificationData notifData = Mockito.mock(INotificationData.class);
         Mockito.when(notifData.getServiceArtifacts()).thenReturn(servicesList);
-        CsarHandler csar = new CsarHandler(notifData, "test-controller", sdcFolder);
-        assertEquals(sdcFolder + "/test-controller" + "/" + csarArtifactName, csar.getFilePath());
+        CsarHandler csar = new CsarHandler(notifData, "test-controller", SDC_FOLDER);
+        assertEquals(SDC_FOLDER + "/test-controller" + "/" + CSAR_ARTIFACT_NAME, csar.getFilePath());
     }
 
     @Test(expected = CsarHandlerException.class)
@@ -74,32 +78,61 @@ public class CsarHandlerTest {
         fail("Exception should have been raised");
     }
 
-    @Test
-    public void testSave()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+    private INotificationData buildFakeSdcNotification() {
+        // BUild what is needed for CSAR
         IArtifactInfo serviceArtifact = Mockito.mock(IArtifactInfo.class);
         Mockito.when(serviceArtifact.getArtifactType()).thenReturn(CsarHandler.CSAR_TYPE);
-        Mockito.when(serviceArtifact.getArtifactName()).thenReturn(csarArtifactName);
+        Mockito.when(serviceArtifact.getArtifactName()).thenReturn(CSAR_ARTIFACT_NAME);
         List<IArtifactInfo> servicesList = new ArrayList<>();
         servicesList.add(serviceArtifact);
         INotificationData notifData = Mockito.mock(INotificationData.class);
         Mockito.when(notifData.getServiceArtifacts()).thenReturn(servicesList);
-        CsarHandler csar = new CsarHandler(notifData, "test-controller", "/tmp/csar-handler-tests");
+        // Build what is needed for UUID
+        Mockito.when(notifData.getServiceInvariantUUID()).thenReturn(SERVICE_UUID);
+        // Build fake resource with one artifact BLUEPRINT
+        List<IResourceInstance> resourcesList = new ArrayList<>();
+        List<IArtifactInfo> artifactsListForResource = new ArrayList<>();
+        IResourceInstance resource1 = Mockito.mock(IResourceInstance.class);
+        Mockito.when(resource1.getResourceType()).thenReturn("VF");
+        Mockito.when(resource1.getResourceInvariantUUID()).thenReturn(RESOURCE1_UUID);
+        // Create a fake artifact for resource
+        IArtifactInfo blueprintArtifact = Mockito.mock(IArtifactInfo.class);
+        Mockito.when(blueprintArtifact.getArtifactType()).thenReturn(CsarHandler.BLUEPRINT_TYPE);
+        Mockito.when(blueprintArtifact.getArtifactName()).thenReturn(BLUEPRINT1_NAME);
+        artifactsListForResource.add(blueprintArtifact);
+        Mockito.when(resource1.getArtifacts()).thenReturn(artifactsListForResource);
+        resourcesList.add(resource1);
+        Mockito.when(notifData.getResources()).thenReturn(resourcesList);
+        return notifData;
+    }
+
+    private IDistributionClientDownloadResult buildFakeSdcResut() throws IOException {
         IDistributionClientDownloadResult resultArtifact = Mockito.mock(IDistributionClientDownloadResult.class);
         Mockito.when(resultArtifact.getArtifactPayload()).thenReturn(
                 IOUtils.toByteArray(ResourceFileUtil.getResourceAsStream("example/sdc/service-Simsfoimap0112.csar")));
+        return resultArtifact;
+    }
+
+    @Test
+    public void testSave()
+            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+        CsarHandler csar = new CsarHandler(buildFakeSdcNotification(), "test-controller", "/tmp/csar-handler-tests");
         // Test the save
-        csar.save(resultArtifact);
-        assertTrue((new File(sdcFolder + "/test-controller/" + csarArtifactName)).exists());
-        assertEquals(csarArtifactName, csar.getArtifactElement().getArtifactName());
+        csar.save(buildFakeSdcResut());
+        assertTrue((new File(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME)).exists());
+        assertEquals(CSAR_ARTIFACT_NAME, csar.getArtifactElement().getArtifactName());
         assertNotNull(csar.getSdcCsarHelper());
         // Test dcaeBlueprint
         String blueprint = csar.getDcaeBlueprint();
         assertNotNull(blueprint);
         assertTrue(!blueprint.isEmpty());
         assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
+        // Test additional properties from Sdc notif
+        assertEquals(BLUEPRINT1_NAME, csar.getBlueprintArtifactName());
+        assertEquals(RESOURCE1_UUID, csar.getBlueprintInvariantResourceUuid());
+        assertEquals(SERVICE_UUID, csar.getBlueprintInvariantServiceUuid());
         // Do some cleanup
-        Path path = Paths.get(sdcFolder + "/test-controller/" + csarArtifactName);
+        Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         Files.deleteIfExists(path);
     }
 }

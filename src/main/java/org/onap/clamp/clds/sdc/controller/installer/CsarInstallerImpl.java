@@ -24,8 +24,6 @@
 package org.onap.clamp.clds.sdc.controller.installer;
 
 import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,7 +55,6 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class CsarInstallerImpl implements CsarInstaller {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);
     private Map<String, BlueprintParserFilesConfiguration> bpmnMapping = new HashMap<>();
     public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-ClosedLoopTemplate-";
     public static final String MODEL_NAME_PREFIX = "ClosedLoop-";
@@ -153,11 +150,11 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     private String queryDcaeToGetServiceTypeId(CsarHandler csar) throws IOException, ParseException {
         return dcaeInventoryService.getDcaeInformation(csar.getBlueprintArtifactName(),
-                csar.getBlueprintInvariantServiceUuid(), csar.getBlueprintInvariantResourceUuid());
+                csar.getBlueprintInvariantServiceUuid(), csar.getBlueprintInvariantResourceUuid()).getTypeId();
     }
 
     private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintParserFilesConfiguration configFiles)
-            throws IOException, SdcArtifactInstallerException {
+            throws IOException {
         CldsTemplate template = new CldsTemplate();
         template.setBpmnId("Sdc-Generated");
         template.setBpmnText(
@@ -184,9 +181,8 @@ public class CsarInstallerImpl implements CsarInstaller {
         cldsModel.setBlueprintText(csar.getDcaeBlueprint());
         cldsModel.setTemplateName(cldsTemplate.getName());
         cldsModel.setTemplateId(cldsTemplate.getId());
-        // cldsModel.setDocText(cldsTemplate.getPropText());
         cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
-                + csar.getSdcNotification().getServiceInvariantUUID() + "\"]},{\"name\":\"vf\",\"value\":[\""
+                + csar.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
                 + csar.getBlueprintInvariantResourceUuid()
                 + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]}]}");
         cldsModel.setBpmnText(cldsTemplate.getBpmnText());

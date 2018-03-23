@@ -56,20 +56,24 @@ import org.openecomp.sdc.utils.DistributionStatusEnum;
 public class SdcSingleController {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSingleController.class);
-    protected boolean isAsdcClientAutoManaged = false;
-    protected CsarInstaller csarInstaller;
-    protected ClampProperties refProp;
+    private boolean isSdcClientAutoManaged = false;
+    private CsarInstaller csarInstaller;
+    private ClampProperties refProp;
     public static final String CONFIG_SDC_FOLDER = "sdc.csarFolder";
+    private int nbOfNotificationsOngoing = 0;
+    private SdcSingleControllerStatus controllerStatus = SdcSingleControllerStatus.STOPPED;
+    private SdcSingleControllerConfiguration sdcConfig;
+    private IDistributionClient distributionClient;
 
     /**
      * Inner class for Notification callback
      */
-    private final class ASDCNotificationCallBack implements INotificationCallback {
+    private final class SdcNotificationCallBack implements INotificationCallback {
 
-        private SdcSingleController asdcController;
+        private SdcSingleController sdcController;
 
-        ASDCNotificationCallBack(SdcSingleController controller) {
-            asdcController = controller;
+        SdcNotificationCallBack(SdcSingleController controller) {
+            sdcController = controller;
         }
 
         /**
@@ -79,23 +83,27 @@ public class SdcSingleController {
         @Override
         public void activateCallback(INotificationData iNotif) {
             Date startTime = new Date();
-            String event = "Receive a callback notification in ASDC, nb of resources: " + iNotif.getResources().size();
+            String event = "Receive a callback notification in SDC, nb of resources: " + iNotif.getResources().size();
             logger.debug(event);
-            asdcController.treatNotification(iNotif);
+            sdcController.treatNotification(iNotif);
             LoggingUtils.setTimeContext(startTime, new Date());
             LoggingUtils.setResponseContext("0", "SDC Notification received and processed successfully",
                     this.getClass().getName());
         }
     }
 
-    // ***** Controller STATUS code
-    protected int nbOfNotificationsOngoing = 0;
-
     public int getNbOfNotificationsOngoing() {
         return nbOfNotificationsOngoing;
     }
 
-    private SdcSingleControllerStatus controllerStatus = SdcSingleControllerStatus.STOPPED;
+    private void changeControllerStatusIdle() {
+        if (this.nbOfNotificationsOngoing > 1) {
+            --this.nbOfNotificationsOngoing;
+        } else {
+            this.nbOfNotificationsOngoing = 0;
+            this.controllerStatus = SdcSingleControllerStatus.IDLE;
+        }
+    }
 
     protected final synchronized void changeControllerStatus(SdcSingleControllerStatus newControllerStatus) {
         switch (newControllerStatus) {
@@ -104,12 +112,7 @@ public class SdcSingleController {
                 this.controllerStatus = newControllerStatus;
                 break;
             case IDLE:
-                if (this.nbOfNotificationsOngoing > 1) {
-                    --this.nbOfNotificationsOngoing;
-                } else {
-                    this.nbOfNotificationsOngoing = 0;
-                    this.controllerStatus = newControllerStatus;
-                }
+                this.changeControllerStatusIdle();
                 break;
             default:
                 this.controllerStatus = newControllerStatus;
@@ -121,13 +124,9 @@ public class SdcSingleController {
         return this.controllerStatus;
     }
 
-    // ***** END of Controller STATUS code
-    protected SdcSingleControllerConfiguration sdcConfig;
-    private IDistributionClient distributionClient;
-
     public SdcSingleController(ClampProperties clampProp, CsarInstaller csarInstaller,
             SdcSingleControllerConfiguration sdcSingleConfig, boolean isClientAutoManaged) {
-        this.isAsdcClientAutoManaged = isClientAutoManaged;
+        this.isSdcClientAutoManaged = isClientAutoManaged;
         this.sdcConfig = sdcSingleConfig;
         this.refProp = clampProp;
         this.csarInstaller = csarInstaller;
@@ -151,9 +150,9 @@ public class SdcSingleController {
         if (this.distributionClient == null) {
             distributionClient = DistributionClientFactory.createDistributionClient();
         }
-        IDistributionClientResult result = this.distributionClient.init(sdcConfig, new ASDCNotificationCallBack(this));
+        IDistributionClientResult result = this.distributionClient.init(sdcConfig, new SdcNotificationCallBack(this));
         if (!result.getDistributionActionResult().equals(DistributionActionResultEnum.SUCCESS)) {
-            logger.error("ASDC distribution client init failed with reason:" + result.getDistributionMessageResult());
+            logger.error("SDC distribution client init failed with reason:" + result.getDistributionMessageResult());
             this.changeControllerStatus(SdcSingleControllerStatus.STOPPED);
             throw new SdcControllerException("Initialization of the SDC Controller failed with reason: "
                     + result.getDistributionMessageResult());
@@ -177,15 +176,15 @@ public class SdcSingleController {
      */
     public void closeSdc() throws SdcControllerException {
         if (this.getControllerStatus() == SdcSingleControllerStatus.BUSY) {
-            throw new SdcControllerException("Cannot close the ASDC controller as it's currently in BUSY state");
+            throw new SdcControllerException("Cannot close the SDC controller as it's currently in BUSY state");
         }
         if (this.distributionClient != null) {
             this.distributionClient.stop();
             // If auto managed we can set it to Null, SdcController controls it.
             // In the other case the client of this class has specified it, so
             // we can't reset it
-            if (isAsdcClientAutoManaged) {
-                // Next init will initialize it with a new Sdc Client
+            if (isSdcClientAutoManaged) {
+                // Next init will initialize it with a new SDC Client
                 this.distributionClient = null;
             }
         }
@@ -207,38 +206,39 @@ public class SdcSingleController {
                     refProp.getStringValue(CONFIG_SDC_FOLDER));
             if (csarInstaller.isCsarAlreadyDeployed(csar)) {
                 csar.save(downloadTheArtifact(csar.getArtifactElement()));
-                this.sendASDCNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
+                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_OK, null,
                         System.currentTimeMillis());
                 csarInstaller.installTheCsar(csar);
-                this.sendASDCNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
+                this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_OK, null,
                         System.currentTimeMillis());
             } else {
-                this.sendASDCNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
+                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(),
                         DistributionStatusEnum.ALREADY_DOWNLOADED, null, System.currentTimeMillis());
-                this.sendASDCNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
+                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.ALREADY_DEPLOYED,
                         null, System.currentTimeMillis());
             }
         } catch (SdcArtifactInstallerException e) {
             logger.error("SdcArtifactInstallerException exception caught during the notification processing", e);
-            this.sendASDCNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
+            this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
                     sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_ERROR,
                     e.getMessage(), System.currentTimeMillis());
         } catch (SdcDownloadException e) {
             logger.error("SdcDownloadException exception caught during the notification processing", e);
-            this.sendASDCNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
+            this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
                     sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_ERROR,
                     e.getMessage(), System.currentTimeMillis());
         } catch (CsarHandlerException e) {
             logger.error("CsarHandlerException exception caught during the notification processing", e);
-            this.sendASDCNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                    sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_ERROR,
-                    e.getMessage(), System.currentTimeMillis());
+            this.sendSdcNotification(NotificationType.DOWNLOAD, null, sdcConfig.getConsumerID(),
+                    iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_ERROR, e.getMessage(),
+                    System.currentTimeMillis());
         } catch (SdcToscaParserException e) {
-            this.sendASDCNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
+            logger.error("SdcToscaParserException exception caught during the notification processing", e);
+            this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
                     sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_ERROR,
                     e.getMessage(), System.currentTimeMillis());
         } catch (RuntimeException e) {
@@ -270,17 +270,17 @@ public class SdcSingleController {
                     + artifact.getArtifactUUID() + "Size of payload " + downloadResult.getArtifactPayload().length);
         } else {
             throw new SdcDownloadException("Artifact " + artifact.getArtifactName()
-                    + " could not be downloaded from ASDC URL " + artifact.getArtifactURL() + " UUID "
+                    + " could not be downloaded from SDC URL " + artifact.getArtifactURL() + " UUID "
                     + artifact.getArtifactUUID() + ")" + System.lineSeparator() + "Error message is "
                     + downloadResult.getDistributionMessageResult() + System.lineSeparator());
         }
         return downloadResult;
     }
 
-    private void sendASDCNotification(NotificationType notificationType, String artifactURL, String consumerID,
+    private void sendSdcNotification(NotificationType notificationType, String artifactURL, String consumerID,
             String distributionID, DistributionStatusEnum status, String errorReason, long timestamp) {
         String event = "Sending " + notificationType.name() + "(" + status.name() + ")"
-                + " notification to ASDC for artifact:" + artifactURL;
+                + " notification to SDC for artifact:" + artifactURL;
         if (errorReason != null) {
             event = event + "(" + errorReason + ")";
         }
@@ -291,27 +291,35 @@ public class SdcSingleController {
                     status, timestamp);
             switch (notificationType) {
                 case DOWNLOAD:
-                    if (errorReason != null) {
-                        this.distributionClient.sendDownloadStatus(message, errorReason);
-                    } else {
-                        this.distributionClient.sendDownloadStatus(message);
-                    }
+                    this.sendDownloadStatus(message, errorReason);
                     action = "sendDownloadStatus";
                     break;
                 case DEPLOY:
-                    if (errorReason != null) {
-                        this.distributionClient.sendDeploymentStatus(message, errorReason);
-                    } else {
-                        this.distributionClient.sendDeploymentStatus(message);
-                    }
+                    this.sendDeploymentStatus(message, errorReason);
                     action = "sendDeploymentdStatus";
                     break;
                 default:
                     break;
             }
         } catch (RuntimeException e) {
-            logger.warn("Unable to send the Sdc Notification (" + action + ") due to an exception", e);
+            logger.warn("Unable to send the SDC Notification (" + action + ") due to an exception", e);
         }
-        logger.info("Sdc Notification sent successfully(" + action + ")");
+        logger.info("SDC Notification sent successfully(" + action + ")");
+    }
+
+    private void sendDownloadStatus(IDistributionStatusMessage message, String errorReason) {
+        if (errorReason != null) {
+            this.distributionClient.sendDownloadStatus(message, errorReason);
+        } else {
+            this.distributionClient.sendDownloadStatus(message);
+        }
+    }
+
+    private void sendDeploymentStatus(IDistributionStatusMessage message, String errorReason) {
+        if (errorReason != null) {
+            this.distributionClient.sendDeploymentStatus(message, errorReason);
+        } else {
+            this.distributionClient.sendDeploymentStatus(message);
+        }
     }
 }

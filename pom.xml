@@ -66,7 +66,7 @@
 				<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 				<docker.mariadb.port.host>3306</docker.mariadb.port.host>
-				<docker.http-cache.port.host>2080</docker.http-cache.port.host>
+				<docker.http-cache.port.host>8085</docker.http-cache.port.host>
 				<project.scm.id>git-server</project.scm.id>
 				<java.version>1.8</java.version>
 

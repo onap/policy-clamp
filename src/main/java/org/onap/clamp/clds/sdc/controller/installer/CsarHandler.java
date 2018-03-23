@@ -66,6 +66,7 @@ public class CsarHandler {
     private String blueprintInvariantResourceUuid;
     private String blueprintInvariantServiceUuid;
     public static final String CSAR_TYPE = "TOSCA_CSAR";
+    public static final String BLUEPRINT_TYPE = "DCAE_INVENTORY_BLUEPRINT";
     private INotificationData sdcNotification;
 
     public CsarHandler(INotificationData iNotif, String controller, String clampCsarPath) throws CsarHandlerException {
@@ -114,7 +115,7 @@ public class CsarHandler {
         for (IResourceInstance resource : this.getSdcNotification().getResources()) {
             if ("VF".equals(resource.getResourceType())) {
                 for (IArtifactInfo artifact : resource.getArtifacts()) {
-                    if ("DCAE_INVENTORY_BLUEPRINT".equals(artifact.getArtifactType())) {
+                    if (BLUEPRINT_TYPE.equals(artifact.getArtifactType())) {
                         blueprintArtifactName = artifact.getArtifactName();
                         blueprintInvariantResourceUuid = resource.getResourceInvariantUUID();
                     }
@@ -129,7 +130,7 @@ public class CsarHandler {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                if (entry.getName().contains("DCAE_INVENTORY_BLUEPRINT")) {
+                if (entry.getName().contains(BLUEPRINT_TYPE)) {
                     listEntries.add(entry);
                 }
             }
