@@ -56,10 +56,14 @@ import org.openecomp.sdc.utils.DistributionStatusEnum;
 public class SdcSingleController {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcSingleController.class);
-    protected boolean isAsdcClientAutoManaged = false;
-    protected CsarInstaller csarInstaller;
-    protected ClampProperties refProp;
+    private boolean isAsdcClientAutoManaged = false;
+    private CsarInstaller csarInstaller;
+    private ClampProperties refProp;
     public static final String CONFIG_SDC_FOLDER = "sdc.csarFolder";
+    private int nbOfNotificationsOngoing = 0;
+    private SdcSingleControllerStatus controllerStatus = SdcSingleControllerStatus.STOPPED;
+    private SdcSingleControllerConfiguration sdcConfig;
+    private IDistributionClient distributionClient;
 
     /**
      * Inner class for Notification callback
@@ -88,14 +92,18 @@ public class SdcSingleController {
         }
     }
 
-    // ***** Controller STATUS code
-    protected int nbOfNotificationsOngoing = 0;
-
     public int getNbOfNotificationsOngoing() {
         return nbOfNotificationsOngoing;
     }
 
-    private SdcSingleControllerStatus controllerStatus = SdcSingleControllerStatus.STOPPED;
+    private void changeControllerStatusIdle() {
+        if (this.nbOfNotificationsOngoing > 1) {
+            --this.nbOfNotificationsOngoing;
+        } else {
+            this.nbOfNotificationsOngoing = 0;
+            this.controllerStatus = SdcSingleControllerStatus.IDLE;
+        }
+    }
 
     protected final synchronized void changeControllerStatus(SdcSingleControllerStatus newControllerStatus) {
         switch (newControllerStatus) {
@@ -104,12 +112,7 @@ public class SdcSingleController {
                 this.controllerStatus = newControllerStatus;
                 break;
             case IDLE:
-                if (this.nbOfNotificationsOngoing > 1) {
-                    --this.nbOfNotificationsOngoing;
-                } else {
-                    this.nbOfNotificationsOngoing = 0;
-                    this.controllerStatus = newControllerStatus;
-                }
+                this.changeControllerStatusIdle();
                 break;
             default:
                 this.controllerStatus = newControllerStatus;
@@ -120,10 +123,6 @@ public class SdcSingleController {
     public final synchronized SdcSingleControllerStatus getControllerStatus() {
         return this.controllerStatus;
     }
-
-    // ***** END of Controller STATUS code
-    protected SdcSingleControllerConfiguration sdcConfig;
-    private IDistributionClient distributionClient;
 
     public SdcSingleController(ClampProperties clampProp, CsarInstaller csarInstaller,
             SdcSingleControllerConfiguration sdcSingleConfig, boolean isClientAutoManaged) {
@@ -234,10 +233,11 @@ public class SdcSingleController {
                     e.getMessage(), System.currentTimeMillis());
         } catch (CsarHandlerException e) {
             logger.error("CsarHandlerException exception caught during the notification processing", e);
-            this.sendASDCNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                    sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_ERROR,
-                    e.getMessage(), System.currentTimeMillis());
+            this.sendASDCNotification(NotificationType.DOWNLOAD, null, sdcConfig.getConsumerID(),
+                    iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_ERROR, e.getMessage(),
+                    System.currentTimeMillis());
         } catch (SdcToscaParserException e) {
+            logger.error("SdcToscaParserException exception caught during the notification processing", e);
             this.sendASDCNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
                     sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_ERROR,
                     e.getMessage(), System.currentTimeMillis());
@@ -291,19 +291,11 @@ public class SdcSingleController {
                     status, timestamp);
             switch (notificationType) {
                 case DOWNLOAD:
-                    if (errorReason != null) {
-                        this.distributionClient.sendDownloadStatus(message, errorReason);
-                    } else {
-                        this.distributionClient.sendDownloadStatus(message);
-                    }
+                    this.sendDownloadStatus(message, errorReason);
                     action = "sendDownloadStatus";
                     break;
                 case DEPLOY:
-                    if (errorReason != null) {
-                        this.distributionClient.sendDeploymentStatus(message, errorReason);
-                    } else {
-                        this.distributionClient.sendDeploymentStatus(message);
-                    }
+                    this.sendDeploymentStatus(message, errorReason);
                     action = "sendDeploymentdStatus";
                     break;
                 default:
@@ -313,5 +305,21 @@ public class SdcSingleController {
             logger.warn("Unable to send the Sdc Notification (" + action + ") due to an exception", e);
         }
         logger.info("Sdc Notification sent successfully(" + action + ")");
+    }
+
+    private void sendDownloadStatus(IDistributionStatusMessage message, String errorReason) {
+        if (errorReason != null) {
+            this.distributionClient.sendDownloadStatus(message, errorReason);
+        } else {
+            this.distributionClient.sendDownloadStatus(message);
+        }
+    }
+
+    private void sendDeploymentStatus(IDistributionStatusMessage message, String errorReason) {
+        if (errorReason != null) {
+            this.distributionClient.sendDeploymentStatus(message, errorReason);
+        } else {
+            this.distributionClient.sendDeploymentStatus(message);
+        }
     }
 }
