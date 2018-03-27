@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright © 2017 AT&T Intellectual Property. All rights reserved.
+.. Copyright (c) 2017-2018 AT&T Intellectual Property. All rights reserved.
 
 CLAMP - Closed Loop Automation Management Platform
 ==================================================
@@ -40,32 +40,48 @@ CLAMP uses the API's exposed by the following ONAP components:
 Delivery
 --------
 CLAMP component is composed of a UI layer and a BackEnd layer and packaged into a single container.
-CLAMP also requires a database instance with 2 DB, it uses MariaDB.
+CLAMP also requires a database instance with 1 DB, it uses MariaDB.
+CLAMP also uses an ELK stack (Elastic Search, Logstash and Kibana) for the Dashboard.
 
 .. blockdiag::
 
 
    blockdiag layers {
-   orientation = portrait
-   CLAMP_UI -> CLAMP_BACKEND;
-   CLAMP_BACKEND -> CAMUNDADB;
-   CLAMP_BACKEND -> CLDSDB;
-   group l1 {
-   color = blue;
-   label = "CLAMP container";
-   CLAMP_UI; CLAMP_BACKEND;
+       orientation = portrait
+       CLAMP_UI -> CLAMP_BACKEND;
+       CLAMP_BACKEND -> CLDSDB;
+       CLAMP_KIBANA -> CLAMP_ELASTICSEARCH;
+       CLAMP_LOGSTASH -> CLAMP_ELASTICSEARCH;
+       group l1 {
+       color = blue;
+       label = "CLAMP container";
+       CLAMP_UI; CLAMP_BACKEND;
+       }
+       group l3 {
+       color = orange;
+       label = "MariaDB container";
+       CLDSDB;
+       }
+       group l4 {
+       color = green;
+       label = "E_Search container";
+       CLAMP_ELASTICSEARCH;
+       }
+       group l5 {
+          color = green;
+          label = "Kibana container";
+          CLAMP_KIBANA;
+       }
+       group l6 {
+          color = green;
+          label = "LogStash container";
+          CLAMP_LOGSTASH;
+       }
    }
-   group l3 {
-   color = orange;
-   label = "MariaDB container";
-   CAMUNDADB; CLDSDB;
-   }
-   }
-
 
 Logging & Diagnostic Information
 --------------------------------
-CLAMP uses logback framework to generate logs. The logback.xml file cand be found under the [src/main/resources/ folder](src/main/resources).
+CLAMP uses logback framework to generate logs. The logback.xml file can be found under the [src/main/resources/ folder](src/main/resources).
 
 With the default log settings, all logs will be generated into console and into root.log file under the CLAMP root folder. The root.log file is not allowed to be appended, thus restarting the CLAMP will result in cleaning of the old log files.
 
