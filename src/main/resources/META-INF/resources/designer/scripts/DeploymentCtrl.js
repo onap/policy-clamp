@@ -30,11 +30,11 @@ app.controller('DeploymentCtrl',
                    elementMap["global"] = [];
                }
 
-               var index = elementMap["global"].findIndex(function (e) { return (typeof e == "object" && !(e instanceof Array)) && "deployParameters" in e; });
-               if (index == -1) {
-                   elementMap["global"].push({"deployParameters": parameters});
-               } else {
-                   elementMap["global"][index]["deployParameters"] =  parameters;
+               var index = elementMap["global"].findIndex(function (e) { return (typeof e == "object" && !(e instanceof Array)) && "deployParameters" == e["name"]; }); 
+               if (index == -1) { 
+                   elementMap["global"].push({"name": "deployParameters", "value": parameters}); 
+               } else { 
+                   elementMap["global"][index]["value"] =  parameters; 
                }
            }
 
