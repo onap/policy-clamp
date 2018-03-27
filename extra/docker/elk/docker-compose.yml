@@ -19,6 +19,15 @@ services:
       - elasticsearch
     networks:
       es_net:
+    environment:
+      - dmaap_base_url=http://localhost:3904/
+      - dmaap_user=user
+      - dmaap_password=password
+      - dmaap_consumer_group=CG42
+      - dmaap_consumer_id=C42
+      - event_topic=EVENT_TOPIC
+      - notification_topic=NOTIFICATION_TOPIC
+      - request_topic=REQUEST_TOPIC
 
   kibana:
     image: kibana
