@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -45,7 +46,6 @@ import org.springframework.stereotype.Component;
 public class JaxrsApplication extends Application {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(JaxrsApplication.class);
-
     private Function<BeanDefinition, Optional<Class<?>>> beanDefinitionToClass = b -> {
         try {
             return Optional.of(Class.forName(b.getBeanClassName()));
@@ -58,6 +58,7 @@ public class JaxrsApplication extends Application {
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
+        resources.add(JacksonObjectMapperProvider.class);
         resources.add(io.swagger.v3.jaxrs2.integration.resources.OpenApiResource.class);
         resources.addAll(scan());
         return resources;
@@ -66,11 +67,7 @@ public class JaxrsApplication extends Application {
     private List<Class<?>> scan() {
         ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
         scanner.addIncludeFilter(new AnnotationTypeFilter(javax.ws.rs.Path.class));
-        return scanner.findCandidateComponents("org.onap.clamp.clds").stream()
-                .map(beanDefinitionToClass)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        return scanner.findCandidateComponents("org.onap.clamp.clds").stream().map(beanDefinitionToClass)
+                .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
     }
-
 }

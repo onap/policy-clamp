@@ -24,13 +24,13 @@
 package org.onap.clamp.clds.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
+import org.onap.clamp.clds.util.JacksonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -88,9 +88,10 @@ public class ClampProperties {
      *             In case of issues with the JSON parser
      */
     public JsonNode getJsonTemplate(String key) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String fileReference = getStringValue(key);
-        return (fileReference != null) ? objectMapper.readValue(getFileContentFromPath(fileReference), JsonNode.class)
+        return (fileReference != null)
+                ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference),
+                        JsonNode.class)
                 : null;
     }
 
@@ -108,9 +109,10 @@ public class ClampProperties {
      *             In case of issues with the JSON parser
      */
     public JsonNode getJsonTemplate(String key1, String key2) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String fileReference = getStringValue(key1, key2);
-        return (fileReference != null) ? objectMapper.readValue(getFileContentFromPath(fileReference), JsonNode.class)
+        return (fileReference != null)
+                ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference),
+                        JsonNode.class)
                 : null;
     }
 

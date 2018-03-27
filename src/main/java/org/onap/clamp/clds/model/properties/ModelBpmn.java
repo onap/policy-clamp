@@ -26,7 +26,6 @@ package org.onap.clamp.clds.model.properties;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -40,6 +39,7 @@ import java.util.Map.Entry;
 
 import org.onap.clamp.clds.exception.ModelBpmnException;
 import org.onap.clamp.clds.service.CldsService;
+import org.onap.clamp.clds.util.JacksonUtils;
 
 /**
  * Parse Model BPMN properties.
@@ -47,15 +47,15 @@ import org.onap.clamp.clds.service.CldsService;
  * Example json: {"policy" :[{"id":"Policy_0oxeocn", "from":"StartEvent_1"}]}
  */
 public class ModelBpmn {
-    protected static final EELFLogger               logger        = EELFManager.getInstance()
-            .getLogger(CldsService.class);
-    protected static final EELFLogger               auditLogger   = EELFManager.getInstance().getAuditLogger();
+
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsService.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     // for each type, an array of entries
     private final Map<String, List<ModelBpmnEntry>> entriesByType = new HashMap<>();
     // for each id, an array of entries
-    private final Map<String, List<ModelBpmnEntry>> entriesById   = new HashMap<>();
+    private final Map<String, List<ModelBpmnEntry>> entriesById = new HashMap<>();
     // List of all elementIds
-    private List<String>                            bpmnElementIds;
+    private List<String> bpmnElementIds;
 
     /**
      * Create ModelBpmn and populate maps from json
@@ -66,8 +66,7 @@ public class ModelBpmn {
     public static ModelBpmn create(String modelBpmnPropText) {
         try {
             ModelBpmn modelBpmn = new ModelBpmn();
-            ObjectMapper objectMapper = new ObjectMapper();
-            ObjectNode root = objectMapper.readValue(modelBpmnPropText, ObjectNode.class);
+            ObjectNode root = JacksonUtils.getObjectMapperInstance().readValue(modelBpmnPropText, ObjectNode.class);
             // iterate over each entry like:
             // "Policy":[{"id":"Policy","from":"StartEvent_1"}]
             Iterator<Entry<String, JsonNode>> entryItr = root.fields();

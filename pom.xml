@@ -42,7 +42,7 @@
            By Default "mvn clean install" command will execute also the unit tests
            and the integration tests. The integration tests require a docker engine running.
 
-           If you want to skip the intergation test you can by doing:
+           If you want to skip the integration test you can by doing:
            "mvn clean install -DskipITs=true"
 
            For Spring it's possible to specify the application.properties location
@@ -471,26 +471,6 @@
 					<groupId>org.jboss.spec.javax.ws.rs</groupId>
 					<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
 					<version>1.0.1.Final</version>
-				</dependency>
-				<dependency>
-						<artifactId>jackson-databind</artifactId>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<version>2.9.4</version>
-				</dependency>
-				<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-annotations</artifactId>
-						<version>2.9.4</version>
-				</dependency>
-				<dependency>
-						<groupId>com.fasterxml.jackson.core</groupId>
-						<artifactId>jackson-core</artifactId>
-						<version>2.9.4</version>
-				</dependency>
-				<dependency>
-						<groupId>com.fasterxml.jackson.dataformat</groupId>
-						<artifactId>jackson-dataformat-yaml</artifactId>
-						<version>2.9.4</version>
 				</dependency>
 				<!-- Remove the MYSQL connector and replace it by Mariadb -->
 				<dependency>

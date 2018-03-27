@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -23,8 +23,6 @@
 
 package org.onap.clamp.clds.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
+import org.onap.clamp.clds.util.JacksonUtils;
 
 public class CldsUserJsonDecoder {
 
@@ -56,7 +55,7 @@ public class CldsUserJsonDecoder {
         try {
             // the ObjectMapper readValue method closes the stream no need to do
             // it
-            return new ObjectMapper().readValue(cldsUsersString, CldsUser[].class);
+            return JacksonUtils.getObjectMapperInstance().readValue(cldsUsersString, CldsUser[].class);
         } catch (IOException e) {
             throw new CldsUsersException("Exception occurred during the decoding of the clds-users.json", e);
         }

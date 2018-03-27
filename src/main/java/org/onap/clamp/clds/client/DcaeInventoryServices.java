@@ -26,7 +26,6 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
@@ -47,6 +46,7 @@ import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.model.properties.Global;
 import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.util.JacksonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -182,7 +182,7 @@ public class DcaeInventoryServices {
         LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
         LoggingUtils.setTimeContext(startTime, new Date());
         metricsLogger.info("getDcaeInformation complete: number services returned=" + numServices);
-        return new ObjectMapper().readValue(dcaeInventoryResponse, DcaeInventoryResponse.class);
+        return JacksonUtils.getObjectMapperInstance().readValue(dcaeInventoryResponse, DcaeInventoryResponse.class);
     }
 
     /**
@@ -210,8 +210,7 @@ public class DcaeInventoryServices {
         LoggingUtils.setTargetContext("DCAE", "createDCAEServiceType");
         String typeId = null;
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode dcaeServiceTypeRequest = mapper.createObjectNode();
+            ObjectNode dcaeServiceTypeRequest = JacksonUtils.getObjectMapperInstance().createObjectNode();
             dcaeServiceTypeRequest.put("blueprintTemplate", blueprintTemplate);
             dcaeServiceTypeRequest.put("owner", owner);
             dcaeServiceTypeRequest.put("typeName", typeName);

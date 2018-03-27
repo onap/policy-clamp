@@ -26,7 +26,6 @@ package org.onap.clamp.clds.config.sdc;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,6 +34,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
+import org.onap.clamp.clds.util.JacksonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -65,7 +65,7 @@ public class SdcControllersConfiguration {
     public void loadConfiguration() throws IOException {
         Resource resource = appContext.getResource(sdcControllerFile);
         // Try to load json tree
-        jsonRootNode = new ObjectMapper().readValue(resource.getInputStream(), JsonNode.class);
+        jsonRootNode = JacksonUtils.getObjectMapperInstance().readValue(resource.getInputStream(), JsonNode.class);
     }
 
     public SdcSingleControllerConfiguration getSdcSingleControllerConfiguration(String controllerName) {
