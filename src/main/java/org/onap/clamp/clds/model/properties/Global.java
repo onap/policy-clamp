@@ -23,11 +23,11 @@
 
 package org.onap.clamp.clds.model.properties;
 
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.util.List;
 
 /**
  * Parse global json properties.
@@ -38,14 +38,15 @@ import com.fasterxml.jackson.databind.JsonNode;
  * ,"kings_mountain","Secaucus","lisle","concord","houston","akron"]}]
  */
 public class Global {
-    protected static final EELFLogger       logger      = EELFManager.getInstance().getLogger(Global.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private String                  service;
-    private String                  actionSet;
-    private List<String>            resourceVf;
-    private List<String>            resourceVfc;
-    private List<String>            location;
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(Global.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+    private String service;
+    private String actionSet;
+    private List<String> resourceVf;
+    private List<String> resourceVfc;
+    private JsonNode deployParameters;
+    private List<String> location;
 
     /**
      * Parse global given json node.
@@ -58,6 +59,7 @@ public class Global {
         actionSet = AbstractModelElement.getValueByName(globalNode, "actionSet");
         resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
         resourceVfc = AbstractModelElement.getValuesByName(globalNode, "vfc");
+        deployParameters = AbstractModelElement.getJsonNodeByName(globalNode, "deployParameters");
         location = AbstractModelElement.getValuesByName(globalNode, "location");
     }
 
@@ -81,6 +83,10 @@ public class Global {
      */
     public String getActionSet() {
         return actionSet;
+    }
+
+    public void setActionSet(String actionSet) {
+        this.actionSet = actionSet;
     }
 
     /**
@@ -128,4 +134,11 @@ public class Global {
         this.location = location;
     }
 
+    public JsonNode getDeployParameters() {
+        return deployParameters;
+    }
+
+    public void setDeployParameters(JsonNode deployParameters) {
+        this.deployParameters = deployParameters;
+    }
 }

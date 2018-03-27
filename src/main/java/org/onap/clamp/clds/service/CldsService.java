@@ -377,6 +377,20 @@ public class CldsService extends SecureServiceBase {
         return names;
     }
 
+    private void fillInCldsModel(CldsModel model) {
+        if (model.getTemplateName() != null) {
+            CldsTemplate template = cldsDao.getTemplate(model.getTemplateName());
+            if (template != null) {
+                model.setTemplateId(template.getId());
+                model.setDocText(template.getPropText());
+                // This is to provide the Bpmn XML when Template part in UI
+                // is
+                // disabled
+                model.setBpmnText(template.getBpmnText());
+            }
+        }
+    }
+
     /**
      * REST service that saves and processes an action for a CLDS model by name.
      *
@@ -400,7 +414,7 @@ public class CldsService extends SecureServiceBase {
     @Produces(MediaType.APPLICATION_JSON)
     public Response putModelAndProcessAction(@PathParam("action") String action,
             @PathParam("modelName") String modelName, @QueryParam("test") String test, CldsModel model)
-            throws TransformerException, ParseException, GeneralSecurityException, DecoderException {
+            throws TransformerException, ParseException {
         Date startTime = new Date();
         CldsModel retrievedModel = null;
         Boolean errorCase = false;
@@ -412,9 +426,7 @@ public class CldsService extends SecureServiceBase {
             isAuthorized(permisionManage);
             isAuthorizedForVf(model);
             String userId = getUserId();
-            String actionStateCd = CldsEvent.ACTION_STATE_INITIATED;
             logger.info("PUT actionCd={}", actionCd);
-            logger.info("PUT actionStateCd={}", actionStateCd);
             logger.info("PUT modelName={}", modelName);
             logger.info("PUT test={}", test);
             logger.info("PUT bpmnText={}", model.getBpmnText());
@@ -422,17 +434,7 @@ public class CldsService extends SecureServiceBase {
             logger.info("PUT userId={}", userId);
             logger.info("PUT getTypeId={}", model.getTypeId());
             logger.info("PUT deploymentId={}", model.getDeploymentId());
-            if (model.getTemplateName() != null) {
-                CldsTemplate template = cldsDao.getTemplate(model.getTemplateName());
-                if (template != null) {
-                    model.setTemplateId(template.getId());
-                    model.setDocText(template.getPropText());
-                    // This is to provide the Bpmn XML when Template part in UI
-                    // is
-                    // disabled
-                    model.setBpmnText(template.getBpmnText());
-                }
-            }
+            this.fillInCldsModel(model);
             // save model to db
             model.setName(modelName);
             model.save(cldsDao, getUserId());
@@ -568,9 +570,8 @@ public class CldsService extends SecureServiceBase {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc services", getPrincipalName());
         String retStr;
-        String responseStr = sdcCatalogServices.getSdcServicesInformation(null);
         try {
-            retStr = createUiServiceFormatJson(responseStr);
+            retStr = createUiServiceFormatJson(sdcCatalogServices.getSdcServicesInformation(null));
         } catch (IOException e) {
             logger.error("IOException during SDC communication", e);
             throw new SdcCommunicationException("IOException during SDC communication", e);
@@ -814,12 +815,12 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         Boolean errorCase = false;
         try {
-            try {
-                checkForDuplicateServiceVf(modelName, model.getPropText());
-            } catch (IOException | BadRequestException e) {
-                errorCase = true;
-                logger.error("Exception occured during duplicate check for service and VF", e);
-            }
+            fillInCldsModel(model);
+            String bpmnJson = cldsBpmnTransformer.doXslTransformToString(model.getBpmnText());
+            logger.info("PUT bpmnJson={}", bpmnJson);
+            ModelProperties modelProp = new ModelProperties(modelName, model.getControlName(), CldsEvent.ACTION_DEPLOY,
+                    false, bpmnJson, model.getPropText());
+            checkForDuplicateServiceVf(modelName, model.getPropText());
             String deploymentId = "";
             // If model is already deployed then pass same deployment id
             if (model.getDeploymentId() != null && !model.getDeploymentId().isEmpty()) {
@@ -828,7 +829,7 @@ public class CldsService extends SecureServiceBase {
                 deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";
             }
             String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
-                    model.getTypeId());
+                    model.getTypeId(), modelProp.getGlobal().getDeployParameters());
             String operationStatus = "processing";
             long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
             while ("processing".equalsIgnoreCase(operationStatus)) {
@@ -930,7 +931,8 @@ public class CldsService extends SecureServiceBase {
         if (service != null && resourceVf != null && !resourceVf.isEmpty()) {
             List<CldsModelProp> cldsModelPropList = cldsDao.getDeployedModelProperties();
             for (CldsModelProp cldsModelProp : cldsModelPropList) {
-                JsonNode currentNode = JacksonUtils.getObjectMapperInstance().readTree(cldsModelProp.getPropText()).get("global");
+                JsonNode currentNode = JacksonUtils.getObjectMapperInstance().readTree(cldsModelProp.getPropText())
+                        .get("global");
                 String currentService = AbstractModelElement.getValueByName(currentNode, "service");
                 List<String> currentVf = AbstractModelElement.getValuesByName(currentNode, "vf");
                 if (currentVf != null && !currentVf.isEmpty()) {

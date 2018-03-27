@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +85,17 @@ public class ModelPropertiesTest {
                 tca.getTcaItem().getTcaThresholds().get(1).getFieldPath());
         assertEquals("GREATER_OR_EQUAL", tca.getTcaItem().getTcaThresholds().get(1).getOperator());
         assertEquals(Integer.valueOf(123), tca.getTcaItem().getTcaThresholds().get(1).getThreshold());
+        // Test global prop
+        assertEquals("vnfRecipe", prop.getGlobal().getActionSet());
+        assertEquals("4cc5b45a-1f63-4194-8100-cd8e14248c92", prop.getGlobal().getService());
+        assertTrue(Arrays.equals(new String[] {
+                "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad"
+        }, prop.getGlobal().getResourceVf().toArray()));
+        assertTrue(Arrays.equals(new String[] {
+                "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1"
+        }, prop.getGlobal().getLocation().toArray()));
+        assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").asText());
+        assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").asText());
     }
 
     @Test
@@ -108,6 +120,17 @@ public class ModelPropertiesTest {
         assertTrue(holmes.isFound());
         assertEquals("configPolicy1", holmes.getConfigPolicyName());
         assertEquals("blabla", holmes.getCorrelationLogic());
+        // Test global prop
+        assertEquals("vnfRecipe", prop.getGlobal().getActionSet());
+        assertEquals("4cc5b45a-1f63-4194-8100-cd8e14248c92", prop.getGlobal().getService());
+        assertTrue(Arrays.equals(new String[] {
+                "f5213e3a-9191-4362-93b5-b67f8d770e44"
+        }, prop.getGlobal().getResourceVf().toArray()));
+        assertTrue(Arrays.equals(new String[] {
+                "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1"
+        }, prop.getGlobal().getLocation().toArray()));
+        assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").asText());
+        assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").asText());
     }
 
     @Test
