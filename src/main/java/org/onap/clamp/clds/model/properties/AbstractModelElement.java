@@ -26,29 +26,26 @@ package org.onap.clamp.clds.model.properties;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Provide base ModelElement functionality. Perform base parsing of properties
- * for a ModelElement (such as, VesCollector, Policy, Tca, Holmes,
- * ...)
+ * for a ModelElement (such as, VesCollector, Policy, Tca, Holmes, ...)
  */
 public abstract class AbstractModelElement {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(AbstractModelElement.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-
     private final String type;
     private final ModelBpmn modelBpmn;
     private final String id;
     protected String topicPublishes;
     protected final JsonNode modelElementJsonNode;
     private boolean isFound;
-
     private final ModelProperties modelProp;
-
     private static final String LOG_ELEMENT_NOT_FOUND = "Value '{}' for key 'name' not found in JSON";
     private static final String LOG_ELEMENT_NOT_FOUND_IN_JSON = "Value '{}' for key 'name' not found in JSON {}";
 
@@ -115,6 +112,27 @@ public abstract class AbstractModelElement {
             logger.debug(LOG_ELEMENT_NOT_FOUND_IN_JSON, name, nodeIn.toString());
         }
         return value;
+    }
+
+    /**
+     * Return the Json value field of the json node element that has a name
+     * field equals to the given name.
+     */
+    public static JsonNode getJsonNodeByName(JsonNode nodeIn, String name) {
+        JsonNode vnode = null;
+        if (nodeIn != null) {
+            for (JsonNode node : nodeIn) {
+                if (node.path("name").asText().equals(name)) {
+                    vnode = node.path("value");
+                }
+            }
+        }
+        if (vnode == null) {
+            logger.warn(LOG_ELEMENT_NOT_FOUND, name);
+        } else {
+            logger.debug(LOG_ELEMENT_NOT_FOUND_IN_JSON, name, nodeIn.toString());
+        }
+        return vnode;
     }
 
     /**

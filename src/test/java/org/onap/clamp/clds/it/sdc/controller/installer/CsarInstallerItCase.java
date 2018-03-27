@@ -57,8 +57,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class CsarInstallerItCase {
 
     private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
-    private static final String SERVICE_UUID = "serviceUUID";
-    private static final String RESOURCE1_UUID = "resource1UUID";
+    private static final String INVARIANT_SERVICE_UUID = "4cc5b45a-1f63-4194-8100-cd8e14248c92";
+    private static final String INVARIANT_RESOURCE1_UUID = "ba4d4b5d-f861-4155-886b-b1cdba5e0957";
     @Autowired
     private CsarInstaller csarInstaller;
     @Autowired
@@ -84,8 +84,8 @@ public class CsarInstallerItCase {
         Mockito.when(csarHelper.getServiceMetadata()).thenReturn(data);
         Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
         Mockito.when(csarHandler.getBlueprintArtifactName()).thenReturn(CSAR_ARTIFACT_NAME);
-        Mockito.when(csarHandler.getBlueprintInvariantServiceUuid()).thenReturn(SERVICE_UUID);
-        Mockito.when(csarHandler.getBlueprintInvariantResourceUuid()).thenReturn(RESOURCE1_UUID);
+        Mockito.when(csarHandler.getBlueprintInvariantServiceUuid()).thenReturn(INVARIANT_SERVICE_UUID);
+        Mockito.when(csarHandler.getBlueprintInvariantResourceUuid()).thenReturn(INVARIANT_RESOURCE1_UUID);
         return csarHandler;
     }
 
