@@ -26,7 +26,6 @@ package org.onap.clamp.clds.model.properties;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -41,6 +40,7 @@ import org.onap.clamp.clds.exception.ModelBpmnException;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.service.CldsService;
+import org.onap.clamp.clds.util.JacksonUtils;
 
 /**
  * Parse model properties.
@@ -96,7 +96,7 @@ public class ModelProperties {
             this.actionCd = actionCd;
             this.testOnly = isATest;
             modelBpmn = ModelBpmn.create(modelBpmnText);
-            modelJson = new ObjectMapper().readTree(modelPropText);
+            modelJson = JacksonUtils.getObjectMapperInstance().readTree(modelPropText);
             instantiateMissingModelElements();
         } catch (IOException e) {
             throw new ModelBpmnException("Exception occurred when trying to decode the BPMN Properties JSON", e);
@@ -141,8 +141,7 @@ public class ModelProperties {
     public static String getVf(CldsModel model) {
         List<String> vfs = null;
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode modelJson = mapper.readTree(model.getPropText());
+            JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(model.getPropText());
             Global global = new Global(modelJson);
             vfs = global.getResourceVf();
         } catch (IOException e) {

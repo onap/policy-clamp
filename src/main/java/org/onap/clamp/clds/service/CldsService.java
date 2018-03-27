@@ -85,6 +85,7 @@ import org.onap.clamp.clds.model.sdc.SdcResource;
 import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
 import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
 import org.onap.clamp.clds.transform.XslTransformer;
+import org.onap.clamp.clds.util.JacksonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -426,7 +427,8 @@ public class CldsService extends SecureServiceBase {
                 if (template != null) {
                     model.setTemplateId(template.getId());
                     model.setDocText(template.getPropText());
-                    // This is to provide the Bpmn XML when Template part in UI is
+                    // This is to provide the Bpmn XML when Template part in UI
+                    // is
                     // disabled
                     model.setBpmnText(template.getBpmnText());
                 }
@@ -441,7 +443,8 @@ public class CldsService extends SecureServiceBase {
             String controlName = model.getControlName();
             String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
             logger.info("PUT bpmnJson={}", bpmnJson);
-            // Flag indicates whether it is triggered by Validation Test button from
+            // Flag indicates whether it is triggered by Validation Test button
+            // from
             // UI
             boolean isTest = false;
             if (test != null && test.equalsIgnoreCase("true")) {
@@ -466,8 +469,8 @@ public class CldsService extends SecureServiceBase {
             logger.info("modelProp - " + prop);
             logger.info("docText - " + docText);
             try {
-                String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest, userId,
-                        isInsertTestEvent);
+                String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest,
+                        userId, isInsertTestEvent);
                 logger.info("Starting Camel flow on request, result is: ", result);
             } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
                 errorCase = true;
@@ -478,7 +481,8 @@ public class CldsService extends SecureServiceBase {
             if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-                // To verify inventory status and modify model status to distribute
+                // To verify inventory status and modify model status to
+                // distribute
                 dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
                 retrievedModel.save(cldsDao, getUserId());
             }
@@ -490,7 +494,6 @@ public class CldsService extends SecureServiceBase {
             errorCase = true;
             logger.error("Exception occured during putModelAndProcessAction", e);
         }
-
         if (errorCase) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(retrievedModel).build();
         }
@@ -675,7 +678,7 @@ public class CldsService extends SecureServiceBase {
         if (StringUtils.isBlank(responseStr)) {
             return "";
         }
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = JacksonUtils.getObjectMapperInstance();
         List<SdcServiceInfo> rawList = objectMapper.readValue(responseStr,
                 objectMapper.getTypeFactory().constructCollectionType(List.class, SdcServiceInfo.class));
         ObjectNode invariantIdServiceNode = objectMapper.createObjectNode();
@@ -695,26 +698,26 @@ public class CldsService extends SecureServiceBase {
     }
 
     private String createPropertiesObjectByUUID(String cldsResponseStr) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
         SdcServiceDetail cldsSdcServiceDetail = mapper.readValue(cldsResponseStr, SdcServiceDetail.class);
         ObjectNode globalPropsJson = (ObjectNode) refProp.getJsonTemplate(GLOBAL_PROPERTIES_KEY);
         if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getUuid() != null) {
             /**
              * to create json with vf, alarm and locations
              */
-            ObjectNode serviceObjectNode = createEmptyVfAlarmObject(mapper);
+            ObjectNode serviceObjectNode = createEmptyVfAlarmObject();
             ObjectNode vfObjectNode = mapper.createObjectNode();
             /**
              * to create json with vf and vfresourceId
              */
-            createVfObjectNode(vfObjectNode, mapper, cldsSdcServiceDetail.getResources());
+            createVfObjectNode(vfObjectNode, cldsSdcServiceDetail.getResources());
             serviceObjectNode.putPOJO(cldsSdcServiceDetail.getInvariantUUID(), vfObjectNode);
             ObjectNode byServiceBasicObjetNode = mapper.createObjectNode();
             byServiceBasicObjetNode.putPOJO("byService", serviceObjectNode);
             /**
              * to create json with VFC Node
              */
-            ObjectNode emptyvfcobjectNode = createByVFCObjectNode(mapper, cldsSdcServiceDetail.getResources());
+            ObjectNode emptyvfcobjectNode = createByVFCObjectNode(cldsSdcServiceDetail.getResources());
             byServiceBasicObjetNode.putPOJO("byVf", emptyvfcobjectNode);
             globalPropsJson.putPOJO("shared", byServiceBasicObjetNode);
             logger.info("valuie of objNode: {}", globalPropsJson);
@@ -722,7 +725,8 @@ public class CldsService extends SecureServiceBase {
         return globalPropsJson.toString();
     }
 
-    private ObjectNode createEmptyVfAlarmObject(ObjectMapper mapper) {
+    private ObjectNode createEmptyVfAlarmObject() {
+        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         emptyObjectNode.put("", "");
         ObjectNode vfObjectNode = mapper.createObjectNode();
@@ -734,8 +738,8 @@ public class CldsService extends SecureServiceBase {
         return emptyServiceObjectNode;
     }
 
-    private void createVfObjectNode(ObjectNode vfObjectNode2, ObjectMapper mapper,
-            List<SdcResource> rawCldsSdcResourceList) {
+    private void createVfObjectNode(ObjectNode vfObjectNode2, List<SdcResource> rawCldsSdcResourceList) {
+        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
         ObjectNode vfNode = mapper.createObjectNode();
         vfNode.put("", "");
         // To remove repeated resource instance name from
@@ -782,7 +786,8 @@ public class CldsService extends SecureServiceBase {
         vfObjectNode2.putPOJO("alarmCondition", alarmStringJsonNode);
     }
 
-    private ObjectNode createByVFCObjectNode(ObjectMapper mapper, List<SdcResource> cldsSdcResourceList) {
+    private ObjectNode createByVFCObjectNode(List<SdcResource> cldsSdcResourceList) {
+        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
         ObjectNode emptyObjectNode = mapper.createObjectNode();
         ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
         ObjectNode vfCObjectNode = mapper.createObjectNode();
@@ -804,8 +809,7 @@ public class CldsService extends SecureServiceBase {
     @Path("/deploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deployModel(@PathParam("modelName") String modelName,
-            CldsModel model) {
+    public Response deployModel(@PathParam("modelName") String modelName, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         Boolean errorCase = false;
@@ -861,7 +865,6 @@ public class CldsService extends SecureServiceBase {
             errorCase = true;
             logger.error("Exception occured during deployModel", e);
         }
-
         if (errorCase) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
         }
@@ -872,11 +875,9 @@ public class CldsService extends SecureServiceBase {
     @Path("/undeploy/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response unDeployModel(@PathParam("modelName") String modelName,
-            CldsModel model) {
+    public Response unDeployModel(@PathParam("modelName") String modelName, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
-
         Boolean errorCase = false;
         try {
             String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
@@ -916,7 +917,6 @@ public class CldsService extends SecureServiceBase {
             errorCase = true;
             logger.error("Exception occured during unDeployModel", e);
         }
-
         if (errorCase) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
         }
@@ -924,15 +924,13 @@ public class CldsService extends SecureServiceBase {
     }
 
     private void checkForDuplicateServiceVf(String modelName, String modelPropText) throws IOException {
-        JsonNode modelJson = new ObjectMapper().readTree(modelPropText);
-        JsonNode globalNode = modelJson.get("global");
+        JsonNode globalNode = JacksonUtils.getObjectMapperInstance().readTree(modelPropText).get("global");
         String service = AbstractModelElement.getValueByName(globalNode, "service");
         List<String> resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
         if (service != null && resourceVf != null && !resourceVf.isEmpty()) {
             List<CldsModelProp> cldsModelPropList = cldsDao.getDeployedModelProperties();
             for (CldsModelProp cldsModelProp : cldsModelPropList) {
-                JsonNode currentJson = new ObjectMapper().readTree(cldsModelProp.getPropText());
-                JsonNode currentNode = currentJson.get("global");
+                JsonNode currentNode = JacksonUtils.getObjectMapperInstance().readTree(cldsModelProp.getPropText()).get("global");
                 String currentService = AbstractModelElement.getValueByName(currentNode, "service");
                 List<String> currentVf = AbstractModelElement.getValuesByName(currentNode, "vf");
                 if (currentVf != null && !currentVf.isEmpty()) {

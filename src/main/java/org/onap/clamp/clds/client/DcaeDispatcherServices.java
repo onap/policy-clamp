@@ -152,6 +152,8 @@ public class DcaeDispatcherServices {
      *            The deployment ID
      * @param serviceTypeId
      *            Service type ID
+     * @param blueprintInput
+     *            The value for each blueprint parameters in a flat JSON
      * @return The status URL
      */
     public String createNewDeployment(String deploymentId, String serviceTypeId) {

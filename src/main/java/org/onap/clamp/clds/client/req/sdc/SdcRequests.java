@@ -47,6 +47,7 @@ import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.clamp.clds.model.sdc.SdcResource;
 import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
+import org.onap.clamp.clds.util.JacksonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -95,7 +96,7 @@ public class SdcRequests {
      * @return SDC Locations request in the JSON Format
      */
     public String formatSdcLocationsReq(ModelProperties prop, String artifactName) {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = JacksonUtils.getObjectMapperInstance();
         Global global = prop.getGlobal();
         List<String> locationsList = global.getLocation();
         ArrayNode locationsArrayNode = objectMapper.createArrayNode();
@@ -203,9 +204,8 @@ public class SdcRequests {
      *             In case of issues with the Json parser
      */
     protected String getYamlvalue(String jsonGlobal) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
         String yamlFileValue = "";
-        ObjectNode root = objectMapper.readValue(jsonGlobal, ObjectNode.class);
+        ObjectNode root = JacksonUtils.getObjectMapperInstance().readValue(jsonGlobal, ObjectNode.class);
         Iterator<Entry<String, JsonNode>> entryItr = root.fields();
         while (entryItr.hasNext()) {
             Entry<String, JsonNode> entry = entryItr.next();

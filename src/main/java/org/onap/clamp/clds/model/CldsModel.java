@@ -26,7 +26,6 @@ package org.onap.clamp.clds.model;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +36,7 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.util.JacksonUtils;
 
 /**
  * Represent a CLDS Model.
@@ -239,7 +239,7 @@ public class CldsModel {
         boolean result = false;
         try {
             if (propText != null) {
-                JsonNode modelJson = new ObjectMapper().readTree(propText);
+                JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(propText);
                 JsonNode simpleModelJson = modelJson.get("simpleModel");
                 if (simpleModelJson != null && simpleModelJson.asBoolean()) {
                     result = true;
