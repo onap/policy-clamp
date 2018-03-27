@@ -19,7 +19,6 @@ services:
       - elasticsearch
     networks:
       es_net:
-    environment:
 
   kibana:
     image: kibana

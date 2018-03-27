@@ -194,11 +194,6 @@ class CLStatus(object):
             yield Notification.final().success(**config)
         raise StopIteration()
 
-DMaaPMessage.dmaap_host_url = "http://uebsb93kcdc.it.att.com:3904"
-Event.topic = "APPC-TEST-AMDOCS1-1607-E2E"
-Notification.topic = "APPC-TEST-AMDOCS1-1607-IST"
-# Request.topic = "APPC-TEST-AMDOCS1-1607-RY303T"
-
 test_datas = [CLStatus(missing=False, disabled=False, op_failure=False) for i in range(45)]  \
              + [CLStatus(missing=True, disabled=False, op_failure=False) for i in range(5)]  \
              + [CLStatus(missing=False, disabled=True, op_failure=False) for i in range(6)]  \
@@ -209,7 +204,6 @@ random.shuffle(test_datas)
 for current_i, status in enumerate(test_datas):
     time.sleep(random.randint(0,6))
     for s in status:
-        # print(s)
         status_code = s.publish()
         if status_code != 200:
             print("Error when publishing : status_code={}".format(status_code))
