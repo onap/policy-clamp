@@ -194,19 +194,41 @@ class CLStatus(object):
             yield Notification.final().success(**config)
         raise StopIteration()
 
-test_datas = [CLStatus(missing=False, disabled=False, op_failure=False) for i in range(45)]  \
+def print_usage():
+    print("""
+    ./ds_mocker.py <DMAAP_URL> <EVENT_TOPIC> [NOTIFICATION_TOPIC [REQUEST_TOPIC]]
+    """)
+    exit()
+
+def push(test_datas):
+    for current_i, status in enumerate(test_datas):
+        time.sleep(random.randint(0,6))
+        for s in status:
+            # print(s)
+            status_code = s.publish()
+            if status_code != 200:
+                print("Error when publishing : status_code={}".format(status_code))
+                exit(1)
+            time.sleep(random.randint(0,3))
+        print("%03d,missing:%5s,disabled:%5s,op_failure:%5s - %s" % (current_i, status._missing, status._disabled, status._op_failure, status._config))
+
+
+def generate_dataset_1():
+    test_datas = [CLStatus(missing=False, disabled=False, op_failure=False) for i in range(45)]  \
              + [CLStatus(missing=True, disabled=False, op_failure=False) for i in range(5)]  \
              + [CLStatus(missing=False, disabled=True, op_failure=False) for i in range(6)]  \
              + [CLStatus(missing=False, disabled=False, op_failure=True) for i in range(7)]
-random.shuffle(test_datas)
-random.shuffle(test_datas)
+    random.shuffle(test_datas)
+    return test_datas
 
-for current_i, status in enumerate(test_datas):
-    time.sleep(random.randint(0,6))
-    for s in status:
-        status_code = s.publish()
-        if status_code != 200:
-            print("Error when publishing : status_code={}".format(status_code))
-            exit(1)
-        time.sleep(random.randint(0,3))
-    print("%03d,missing:%5s,disabled:%5s,op_failure:%5s - %s" % (current_i, status._missing, status._disabled, status._op_failure, status._config))
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) < 3:
+        print_usage()
+
+    DMaaPMessage.dmaap_host_url = sys.argv[1]
+    Event.topic = sys.argv[2]
+    Notification.topic = len(sys.argv) > 3 and sys.argv[3] or sys.argv[2]
+    # Request.topic = len(sys.argv) > 4 or Notification.topic
+    push(generate_dataset_1())
