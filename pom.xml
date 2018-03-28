@@ -306,7 +306,7 @@
 				<dependency>
 						<groupId>org.onap.policy.engine</groupId>
 						<artifactId>PolicyEngineAPI</artifactId>
-						<version>1.1.0</version>
+						<version>1.2.0</version>
 						<exclusions>
 								<exclusion>
 										<groupId>com.google.guava</groupId>
@@ -337,7 +337,7 @@
 				<dependency>
 						<groupId>org.onap.policy.common</groupId>
 						<artifactId>ONAP-Logging</artifactId>
-						<version>1.1.0</version>
+						<version>1.1.3</version>
 						<exclusions>
 								<exclusion>
 										<artifactId>log4j</artifactId>
@@ -356,7 +356,7 @@
 				<dependency>
 						<groupId>org.onap.policy.engine</groupId>
 						<artifactId>PolicyEngineUtils</artifactId>
-						<version>1.1.0</version>
+						<version>1.1.3</version>
 						<exclusions>
 								<exclusion>
 										<artifactId>log4j</artifactId>
@@ -387,7 +387,7 @@
 				<dependency>
 						<groupId>org.onap.policy.drools-applications</groupId>
 						<artifactId>policy-yaml</artifactId>
-						<version>1.1.0</version>
+						<version>1.1.3</version>
 						<exclusions>
 								<exclusion>
 										<artifactId>log4j</artifactId>
@@ -406,7 +406,7 @@
 				<dependency>
 						<groupId>org.onap.policy.drools-applications</groupId>
 						<artifactId>sdc</artifactId>
-						<version>1.1.0</version>
+						<version>1.1.3</version>
 						<exclusions>
 								<exclusion>
 										<artifactId>log4j</artifactId>
@@ -425,7 +425,7 @@
 				<dependency>
 						<groupId>org.onap.policy.drools-applications</groupId>
 						<artifactId>aai</artifactId>
-						<version>1.1.0</version>
+						<version>1.1.3</version>
 						<exclusions>
 								<exclusion>
 										<artifactId>log4j</artifactId>
