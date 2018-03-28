@@ -41,6 +41,7 @@ parser.add_argument("--root",     "-r", default=tempfile.mkdtemp, type=str, help
 parser.add_argument("--proxy"         , type=str, help="Url of the  Act as a proxy. If not set, this script only uses the cache and will return a 404 if files aren't found")
 parser.add_argument("--port",     "-P", type=int, default="8081", help="Port on which the proxy should listen to")
 parser.add_argument("--verbose",  "-v", type=bool, help="Print more information in case of error")
+parser.add_argument("--proxyaddress","-a", type=str, help="Address of this proxy, generally either third_party_proxy:8085 or localhost:8085 depending if started with docker-compose or not")
 options = parser.parse_args()
 
 
@@ -49,6 +50,7 @@ HOST = options.proxy
 AUTH = (options.username, options.password)
 HEADERS = {'X-ECOMP-InstanceID':'CLAMP'}
 CACHE_ROOT = options.root
+PROXY_ADDRESS=options.proxyaddress
 
 def signal_handler(signal_sent, frame):
     global httpd
@@ -116,7 +118,17 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
                 os.makedirs(cached_file, True)
                 with open(cached_file_header, 'w') as f:
-                    f.write("{\"Content-Length\": \"144\", \"Content-Type\": \"application/json\"}")
+                    f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+                with open(cached_file_content, 'w') as f:
+                    f.write(jsonGenerated)
+            elif self.path.startswith("/dcae-operationstatus"):
+                print "self.path start with /dcae-operationstatus, generating response json..."
+                jsonGenerated =  "{\"operationType\": \"operationType1\", \"status\": \"succeeded\"}"
+                print "jsonGenerated: " + jsonGenerated
+
+                os.makedirs(cached_file, True)
+                with open(cached_file_header, 'w') as f:
+                    f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
                 with open(cached_file_content, 'w') as f:
                     f.write(jsonGenerated)
             else:
@@ -215,27 +227,91 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         cached_file_header = "%s/.header" % (cached_file,)
 
         _file_available = os.path.exists(cached_file_content)
-        if not _file_available and not HOST:
-            print("No file corresponding in cache and no HOST specified: %s" % HOST)
-            self.send_response(404)
-            return "404 Not found"
 
         if not _file_available:
-            print("Request for data currently not present in cache: %s" % (cached_file,))
+            if self.path.startswith("/dcae-deployments/"):
+                print "self.path start with /dcae-deployments/, generating response json..."
+                #jsondata = json.loads(self.data_string)
+                jsonGenerated = "{\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus\",\"test2\":\"test2\"}}"
+                print "jsonGenerated: " + jsonGenerated
 
-            url = '%s%s' % (HOST, self.path)
-            print("url: %s" % (url,))
-            response = requests.put(url, data=self.data_string, headers=self.headers, stream=True)
-
-            if response.status_code == 200:
-                self._write_cache(cached_file, cached_file_header, cached_file_content, response)
+                os.makedirs(cached_file, True)
+                with open(cached_file_header, 'w') as f:
+                    f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+                with open(cached_file_content, 'w') as f:
+                    f.write(jsonGenerated)
             else:
-                print('Error when requesting file :')
-                print('Requested url : %s' % (url,))
-                print('Status code : %s' % (response.status_code,))
-                print('Content : %s' % (response.content,))
-                self.send_response(response.status_code)
-                return response.content
+                if not HOST:
+                    self.send_response(404)
+                    return "404 Not found"
+
+                print("Request for data currently not present in cache: %s" % (cached_file,))
+
+                url = '%s%s' % (HOST, self.path)
+                print("url: %s" % (url,))
+                response = requests.put(url, data=self.data_string, headers=self.headers, stream=True)
+
+                if response.status_code == 200:
+                    self._write_cache(cached_file, cached_file_header, cached_file_content, response)
+                else:
+                    print('Error when requesting file :')
+                    print('Requested url : %s' % (url,))
+                    print('Status code : %s' % (response.status_code,))
+                    print('Content : %s' % (response.content,))
+                    self.send_response(response.status_code)
+                    return response.content
+        else:
+            print("Request for data present in cache: %s" % (cached_file,))
+
+        self._send_content(cached_file_header, cached_file_content)
+
+
+    def do_DELETE(self):
+        print("\n\n\nGot a DELETE for %s " % self.path)
+        self.check_credentials()
+        print("self.headers:\n %s" % self.headers)
+
+        cached_file = '%s/%s' % (CACHE_ROOT, self.path,)
+        print("Cached file name before escaping : %s" % cached_file)
+        cached_file = cached_file.replace('<','&#60;').replace('>','&#62;').replace('?','&#63;').replace('*','&#42;').replace('\\','&#42;').replace(':','&#58;').replace('|','&#124;')
+        print("Cached file name after escaping (used for cache storage) : %s" % cached_file)
+        cached_file_content = "%s/.file" % (cached_file,)
+        cached_file_header = "%s/.header" % (cached_file,)
+
+        _file_available = os.path.exists(cached_file_content)
+
+        if not _file_available:
+            if self.path.startswith("/dcae-deployments/"):
+                print "self.path start with /dcae-deployments/, generating response json..."
+                #jsondata = json.loads(self.data_string)
+                jsonGenerated = "{\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus\",\"test2\":\"test2\"}}"
+                print "jsonGenerated: " + jsonGenerated
+
+                os.makedirs(cached_file, True)
+                with open(cached_file_header, 'w') as f:
+                    f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+                with open(cached_file_content, 'w') as f:
+                    f.write(jsonGenerated)
+            else:
+                if not HOST:
+                    self.send_response(404)
+                    return "404 Not found"
+
+                print("Request for data currently not present in cache: %s" % (cached_file,))
+
+                url = '%s%s' % (HOST, self.path)
+                print("url: %s" % (url,))
+                response = requests.put(url, data=self.data_string, headers=self.headers, stream=True)
+
+                if response.status_code == 200:
+                    self._write_cache(cached_file, cached_file_header, cached_file_content, response)
+                else:
+                    print('Error when requesting file :')
+                    print('Requested url : %s' % (url,))
+                    print('Status code : %s' % (response.status_code,))
+                    print('Content : %s' % (response.content,))
+                    self.send_response(response.status_code)
+                    return response.content
         else:
             print("Request for data present in cache: %s" % (cached_file,))
 

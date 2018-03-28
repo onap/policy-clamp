@@ -30,4 +30,4 @@ services:
       - "../../../src/test/resources/http-cache/:/script/:ro"
     ports:
       - "8085:8085"
-    command: /bin/sh -c "pip install requests &&  pip install simplejson && python -u /script/third_party_proxy.py -v true --port 8085 --root /thirdparty"
+    command: /bin/sh -c "pip install requests &&  pip install simplejson && python -u /script/third_party_proxy.py -v true --port 8085 --root /thirdparty --proxyaddress third_party_proxy:8085"
