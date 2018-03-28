@@ -267,7 +267,7 @@
 	"jnxSpaceSNAProcessUp": "vDBE-EMS-Juniper: jnxSpaceSNAProcessUp",
 	"jnxSpaceNodeDown": "vDBE-EMS-Juniper: jnxSpaceNodeDown",
 	"jnxSpaceNodeUp": "vDBE-EMS-Juniper: jnxSpaceNodeUp",
-	" jnxSpaceNodeRemoval": "vDBE-EMS-Juniper:  jnxSpaceNodeRemoval",
+	"jnxSpaceNodeRemoval": "vDBE-EMS-Juniper:  jnxSpaceNodeRemoval",
 	"jnxCmCfgChange": "vDBE-Juniper: jnxCmCfgChange",
 	"jnxCmRescueChange": "vDBE-Juniper: jnxCmRescueChange",
 	"jnxEventTrap": "vDBE-Juniper: jnxEventTrap",
