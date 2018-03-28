@@ -18,11 +18,11 @@ def now_notification_time():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f+00:00")
 
 CONTROL_LOOP_NAMES = [
-    'ClosedLoop-vUSP-SIG-d925ed73-8231-4d02-9545-db4e101f88f8',
-    'ClosedLoop-vUSP-SIG-37b1c91e-fd6b-4abd-af15-771902d5fdb1',
-    'ClosedLoop-vUSP-SIG-c2597657-7113-4efb-a1f9-397a7a24c3e1',
-    'ClosedLoop-vUSP-SIG-a11318ba-4c61-46b8-a9da-bd40bec11d45',
-    'ClosedLoop-vUSP-SIG-5321c558-2254-4efb-ac24-99dd54edc94f',
+    'CL-vCPE-d925ed73',
+    'CL-vCPE-37b1c91e',
+    'CL-vCPE-c2597657',
+    'CL-vCPE-a11318ba',
+    'CL-vCPE-5321c558',
 ]
 
 TEMPLATES = {
@@ -202,7 +202,7 @@ def print_usage():
 
 def push(test_datas):
     for current_i, status in enumerate(test_datas):
-        time.sleep(random.randint(0,6))
+        time.sleep(random.randint(0,3))
         for s in status:
             # print(s)
             status_code = s.publish()
