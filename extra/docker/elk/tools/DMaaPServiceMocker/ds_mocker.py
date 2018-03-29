@@ -39,6 +39,13 @@ TEMPLATES = {
     'notification_rejected_missing'  :'notification_rejected_missing.json',
 }
 
+ERROR_MESSAGES = [
+    ('APPC', 'APPC1 : timeout on restart','RESTART'),
+    ('APPC', 'APPC2 : cannot restart','RESTART'),
+    ('SO', 'SO1 : scale up failed', 'SCALEUP'),
+    ('SO', 'SO2 : scale down failed', 'SCALEDOWN'),
+]
+
 for key in TEMPLATES:
     with open(TEMPLATES[key]) as f:
         content = f.read()
@@ -110,7 +117,11 @@ class Notification(DMaaPMessage):
                 return FinalNotification.from_template('notification_final_success', **kwargs)
             @staticmethod
             def failed(**kwargs):
-                return FinalNotification.from_template('notification_final_failed', **kwargs)
+                msg = FinalNotification.from_template('notification_final_failed', **kwargs)
+                error = ERROR_MESSAGES[random.randint(0, len(ERROR_MESSAGES) - 1)]
+                h = msg['history'][-1]
+                h['actor'],h['message'],h['operation'] = error[0],error[1],error[2]
+                return msg
             @staticmethod
             def open(**kwargs):
                 return FinalNotification.from_template('notification_final_open', **kwargs)
@@ -149,7 +160,7 @@ class CLStatus(object):
     def __init__(self, dmaap_url=None,
                  missing=None, disabled=None, op_failure=None):
         self._stopped = False
-        def maybe(thing):
+        def maybe(thing, ):
             if thing is None:
                 thing = not luck(10)
             return thing
@@ -213,14 +224,25 @@ def push(test_datas):
         print("%03d,missing:%5s,disabled:%5s,op_failure:%5s - %s" % (current_i, status._missing, status._disabled, status._op_failure, status._config))
 
 
+
 def generate_dataset_1():
-    test_datas = [CLStatus(missing=False, disabled=False, op_failure=False) for i in range(45)]  \
+    test_datas = [CLStatus(missing=False, disabled=False, op_failure=False) for i in range(300)]  \
              + [CLStatus(missing=True, disabled=False, op_failure=False) for i in range(5)]  \
              + [CLStatus(missing=False, disabled=True, op_failure=False) for i in range(6)]  \
-             + [CLStatus(missing=False, disabled=False, op_failure=True) for i in range(7)]
+             + [CLStatus(missing=False, disabled=False, op_failure=True) for i in range(12)]
     random.shuffle(test_datas)
     return test_datas
 
+def generate_error_dataset_1():
+    test_datas = [CLStatus(missing=False, disabled=False, op_failure=True) for i in range(60)]
+    random.shuffle(test_datas)
+    return test_datas
+
+
+DATASETS = {
+    'dataset_1': generate_dataset_1,
+    'op_failure_1': generate_error_dataset_1,
+}
 
 if __name__ == "__main__":
     import sys
@@ -231,4 +253,5 @@ if __name__ == "__main__":
     Event.topic = sys.argv[2]
     Notification.topic = len(sys.argv) > 3 and sys.argv[3] or sys.argv[2]
     # Request.topic = len(sys.argv) > 4 or Notification.topic
-    push(generate_dataset_1())
+    #push(DATASETS['op_failure_1']())
+    push(DATASETS['dataset_1']())
