@@ -28,6 +28,7 @@ import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +66,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     public static final String ACTIVATE_SERVER_TLS_AUTH = "activateServerTLSAuth";
     public static final String KEY_STORE_KEY = "keyStorePassword";
     public static final String KEY_STORE_PATH = "keyStorePath";
+    public static final String MESSAGE_BUS_ADDRESSES = "messageBusAddresses";
     private String errorMessageKeyNotFound;
     /**
      * Supported artifact types.
@@ -239,7 +241,10 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
             throw new SdcParametersException(ENVIRONMENT_NAME_ATTRIBUTE_NAME + errorMessageKeyNotFound);
         }
         if (this.getAsdcAddress() == null || this.getAsdcAddress().isEmpty()) {
-            throw new SdcParametersException(SDC_ADDRESS_ATTRIBUTE_NAME + errorMessageKeyNotFound);
+            if (this.getMsgBusAddress() == null || this.getMsgBusAddress().isEmpty()) {
+                throw new SdcParametersException(SDC_ADDRESS_ATTRIBUTE_NAME + " and " + MESSAGE_BUS_ADDRESSES
+                        + " are not set, one of them should be set for SDC client" + errorMessageKeyNotFound);
+            }
         }
         if (this.getPassword() == null || this.getPassword().isEmpty()) {
             throw new SdcParametersException(SDC_KEY_ATTRIBUTE_NAME + errorMessageKeyNotFound);
@@ -265,11 +270,17 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
      */
     @Override
     public boolean isFilterInEmptyResources() {
-        return true;
+        return false;
     }
 
     @Override
     public List<String> getMsgBusAddress() {
-        return null;
+        List<String> addressesList = new ArrayList<>();
+        if (jsonRootNode != null && jsonRootNode.get(MESSAGE_BUS_ADDRESSES) != null) {
+            jsonRootNode.get(MESSAGE_BUS_ADDRESSES).forEach(k -> addressesList.add(k.asText()));
+            return addressesList;
+        } else {
+            return addressesList;
+        }
     }
 }

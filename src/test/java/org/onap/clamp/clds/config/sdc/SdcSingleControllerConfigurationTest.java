@@ -20,6 +20,7 @@
 
 package org.onap.clamp.clds.config.sdc;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -65,6 +66,9 @@ public class SdcSingleControllerConfigurationTest {
                 sdcConfig.getRelevantArtifactTypes().size());
         assertTrue(sdcConfig.activateServerTLSAuth());
         assertEquals("ThePassword", sdcConfig.getKeyStorePassword());
+        assertArrayEquals(new String[] {
+                "localhost"
+        }, sdcConfig.getMsgBusAddress().toArray());
     }
 
     @Test(expected = SdcParametersException.class)
@@ -74,6 +78,15 @@ public class SdcSingleControllerConfigurationTest {
         // No exception should be raised
         sdcConfig.testAllRequiredParameters();
         sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-bad.json", "sdc-controller1");
+        fail("Should have raised an exception");
+    }
+
+    @Test(expected = SdcParametersException.class)
+    public final void testAllRequiredParametersAddresses()
+            throws JsonParseException, JsonMappingException, IOException {
+        SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration(
+                "clds/sdc-controller-config-bad-address.json", "sdc-controller1");
+        sdcConfig.testAllRequiredParameters();
         fail("Should have raised an exception");
     }
 
