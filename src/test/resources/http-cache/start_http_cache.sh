@@ -22,16 +22,23 @@
 # ECOMP is a trademark and service mark of AT&T Intellectual Property.
 ###
 
-if [ $# -eq 1 ]
+if [ $# -eq 2 ]
 	then
-		echo 'input parameter is set (proxy http)';
+		echo 'Setting http_proxy and proxyaddress script parameters';
 		export http_proxy=$1
 		export https_proxy=$1
+		python_proxyaddress=$2
+		echo 'http_proxy was set to '$http_proxy
+		echo 'python_proxyaddress was set to '$python_proxyaddress
 	else
-		echo 'input parameter is not set (proxy http)';
+		echo 'Required parameters are not set';
+		echo 'Command Format:  start_http_cache.sh <http_proxy_adress> <host_running_test:port>';
+		echo '  http_proxy_adress, like http://my.proxy.com:8080 and will be set to http_proxy/https_proxy environment variables';
+		echo '  host_running_test, like localhost:8080 and will be set as --proxyaddress, this is the adress returned by DCAE simulator response';
+		exit 1
 fi
 
 echo 'Installing requests packages for Python'
 pip install requests
 echo 'Executing the Http proxy in Cache mode only'
-python third_party_proxy.py --port 8080 --root /usr/src/http-cache-app/data-cache --proxyaddress localhost:8085
+python third_party_proxy.py --port 8080 --root /usr/src/http-cache-app/data-cache --proxyaddress $python_proxyaddress
