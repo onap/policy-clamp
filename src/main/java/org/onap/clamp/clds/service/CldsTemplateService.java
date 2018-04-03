@@ -23,10 +23,6 @@
 
 package org.onap.clamp.clds.service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -147,9 +143,8 @@ public class CldsTemplateService extends SecureServiceBase {
      * REST service that saves a CLDS template by name in the database.
      *
      * @param templateName
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonParseException
+     * @param cldsTemplate
+     * @return The CldsTemplate modified and saved in DB
      */
     @PUT
     @Path("/template/{templateName}")

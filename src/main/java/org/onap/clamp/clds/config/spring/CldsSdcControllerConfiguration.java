@@ -75,7 +75,7 @@ public class CldsSdcControllerConfiguration {
             try {
                 e.closeSdc();
             } catch (SdcControllerException e1) {
-                logger.error("Exception caught during initialization of sdc controller", e);
+                logger.error("Exception caught during initialization of sdc controller", e1);
             }
         });
     }
