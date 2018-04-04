@@ -110,39 +110,60 @@ There are two needed datasource for Clamp. By default, both will try to connect 
 .. code-block:: json
 
     {
-        "spring.datasource.camunda.url": "jdbc:mariadb://anotherDB.onap.org:3306/camundabpm?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
-        "spring.datasource.camunda.username": "admin",
-        "spring.datasource.camunda.password": "password",
         "spring.datasource.cldsdb.url": "jdbc:mariadb://anotherDB.onap.org:3306/cldsdb4?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
         "spring.datasource.cldsdb.username": "admin",
-        "spring.datasource.cldsdb.password": "password"
+        "spring.datasource.cldsdb.password": "password",
+
+        "clamp.config.sdc.catalog.url": "https://sdchost:8443/sdc/v1/catalog/",
+        "clamp.config.sdc.hostUrl": "https://sdchost:8443/",
+        "clamp.config.sdc.serviceUrl": "https://sdchost:8443/sdc/v1/catalog/services",
+        "clamp.config.sdc.serviceUsername": "clamp",
+        "clamp.config.sdc.servicePassword": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
+        "clamp.config.dcae.inventory.url": "http://dcaegen2.host:8080",
+        "clamp.config.dcae.dispatcher.url": "http://dcaegen2.host:8080",
+        "clamp.config.policy.pdpUrl1": "https://policy-pdp.host:9091/pdp/ , testpdp, alpha123",
+        "clamp.config.policy.pdpUrl2": "https://policy-pdp.host:9091/pdp/ , testpdp, alpha123",
+        "clamp.config.policy.papUrl": "https://policy-pap.host:8443/pap/ , testpap, alpha123",
+        "clamp.config.policy.clientKey": "5CE79532B3A2CB4D132FC0C04BF916A7"
+        "clamp.config.files.sdcController":"file:/opt/clamp/config/sdc-controllers-config.json"
     }
 
-OR
+SDC-Controllers config
+----------------------
+This file is a JSON that must be specified to Spring config, here is an example:
 
 .. code-block:: json
+	{
+	  "sdc-connections":{
+	    "sdc-controller1":{
+	        "user": "User1",
+	        "consumerGroup": "consumerGroup1",
+	        "consumerId": "consumerId1",
+	        "environmentName": "environmentName1",
+	        "sdcAddress": "sdc.api.simpledemo.onap.org:8080",
+	        "password": "bb3871669d893c7fb8aaacda31b77b4f537E67A081C2726889548ED7BC4C2DE6",
+	        "pollingInterval":10,
+	        "pollingTimeout":30,
+	        "messageBusAddresses":["localhost"]
+	    },
+	     "sdc-controller2":{
+	        "user": "User2",
+	        "consumerGroup": "consumerGroup2",
+	        "consumerId": "consumerId2",
+	        "environmentName": "environmentName2",
+	        "sdcAddress": "sdc.api.simpledemo.onap.org:8080",
+	        "password": "bb3871669d893c7fb8aaacda31b77b4f537E67A081C2726889548ED7BC4C2DE6",
+	        "pollingInterval":10,
+	        "pollingTimeout":30,
+	        "messageBusAddresses":["localhost"]
+	    }
+	  }
+	}
 
-    {
-        "spring":
-        {
-            "datasource":
-            {
-                "camunda":
-                {
-                    "url": "jdbc:mariadb://anotherDB.onap.org:3306/camundabpm?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
-                    "username": "admin",
-                    "password": "password"
-                },
-
-                "cldsdb":
-                {
-                "url": "jdbc:mariadb://anotherDB.onap.org:3306/cldsdb4?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
-                "username": "admin",
-                "password": "password"
-                }
-            }
-        }
-    }
+Multiple controllers can be configured so that Clamp is able to receive the notifications from different SDC servers.
+Each Clamp existing in a cluster should have different consumerGroup and consumerId so that they can each consume the SDC notification.
+The environmentName is normally the Dmaap Topic used by SDC. 
+If the sdcAddress is not specified or not available (connection failure) the messageBusAddresses will be used (Dmaap servers) 
 
 Administration
 --------------
