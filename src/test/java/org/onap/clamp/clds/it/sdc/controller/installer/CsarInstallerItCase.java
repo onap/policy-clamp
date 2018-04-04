@@ -104,22 +104,22 @@ public class CsarInstallerItCase {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         csarInstaller.installTheCsar(buildFakeCsarHandler(generatedName));
         // Get the template back from DB
-        CldsTemplate templateFromDB = CldsTemplate.retrieve(cldsDao,
+        CldsTemplate templateFromDb = CldsTemplate.retrieve(cldsDao,
                 CsarInstallerImpl.TEMPLATE_NAME_PREFIX + generatedName, false);
-        assertNotNull(templateFromDB);
-        assertNotNull(templateFromDB.getBpmnText());
-        assertNotNull(templateFromDB.getImageText());
-        assertNotNull(templateFromDB.getPropText());
-        assertTrue(templateFromDB.getPropText().contains("global")
-                && templateFromDB.getPropText().contains("node_templates:"));
-        assertEquals(templateFromDB.getName(), CsarInstallerImpl.TEMPLATE_NAME_PREFIX + generatedName);
+        assertNotNull(templateFromDb);
+        assertNotNull(templateFromDb.getBpmnText());
+        assertNotNull(templateFromDb.getImageText());
+        assertNotNull(templateFromDb.getPropText());
+        assertTrue(templateFromDb.getPropText().contains("global")
+                && templateFromDb.getPropText().contains("node_templates:"));
+        assertEquals(templateFromDb.getName(), CsarInstallerImpl.TEMPLATE_NAME_PREFIX + generatedName);
         // Get the Model back from DB
-        CldsModel modelFromDB = CldsModel.retrieve(cldsDao, generatedName, true);
-        assertNotNull(modelFromDB);
-        assertNotNull(modelFromDB.getBpmnText());
-        assertNotNull(modelFromDB.getImageText());
-        assertNotNull(modelFromDB.getPropText());
-        assertEquals(modelFromDB.getName(), generatedName);
-        assertEquals(CsarInstallerImpl.MODEL_NAME_PREFIX, modelFromDB.getControlNamePrefix());
+        CldsModel modelFromDb = CldsModel.retrieve(cldsDao, generatedName, true);
+        assertNotNull(modelFromDb);
+        assertNotNull(modelFromDb.getBpmnText());
+        assertNotNull(modelFromDb.getImageText());
+        assertNotNull(modelFromDb.getPropText());
+        assertEquals(modelFromDb.getName(), generatedName);
+        assertEquals(CsarInstallerImpl.MODEL_NAME_PREFIX, modelFromDb.getControlNamePrefix());
     }
 }

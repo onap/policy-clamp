@@ -90,8 +90,6 @@ public class CsarHandlerTest {
         // Build what is needed for UUID
         Mockito.when(notifData.getServiceInvariantUUID()).thenReturn(SERVICE_UUID);
         // Build fake resource with one artifact BLUEPRINT
-        List<IResourceInstance> resourcesList = new ArrayList<>();
-        List<IArtifactInfo> artifactsListForResource = new ArrayList<>();
         IResourceInstance resource1 = Mockito.mock(IResourceInstance.class);
         Mockito.when(resource1.getResourceType()).thenReturn("VF");
         Mockito.when(resource1.getResourceInvariantUUID()).thenReturn(RESOURCE1_UUID);
@@ -99,8 +97,10 @@ public class CsarHandlerTest {
         IArtifactInfo blueprintArtifact = Mockito.mock(IArtifactInfo.class);
         Mockito.when(blueprintArtifact.getArtifactType()).thenReturn(CsarHandler.BLUEPRINT_TYPE);
         Mockito.when(blueprintArtifact.getArtifactName()).thenReturn(BLUEPRINT1_NAME);
+        List<IArtifactInfo> artifactsListForResource = new ArrayList<>();
         artifactsListForResource.add(blueprintArtifact);
         Mockito.when(resource1.getArtifacts()).thenReturn(artifactsListForResource);
+        List<IResourceInstance> resourcesList = new ArrayList<>();
         resourcesList.add(resource1);
         Mockito.when(notifData.getResources()).thenReturn(resourcesList);
         return notifData;
