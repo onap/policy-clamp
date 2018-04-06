@@ -135,4 +135,29 @@ public class CsarHandlerTest {
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         Files.deleteIfExists(path);
     }
+
+    @Test
+    public void testDoubleSave()
+            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+        CsarHandler csar = new CsarHandler(buildFakeSdcNotification(), "test-controller", "/tmp/csar-handler-tests");
+        // Test the save
+        csar.save(buildFakeSdcResut());
+        assertTrue((new File(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME)).exists());
+        assertEquals(CSAR_ARTIFACT_NAME, csar.getArtifactElement().getArtifactName());
+        assertNotNull(csar.getSdcCsarHelper());
+        // Test dcaeBlueprint
+        String blueprint = csar.getDcaeBlueprint();
+        assertNotNull(blueprint);
+        assertTrue(!blueprint.isEmpty());
+        assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
+        // Test additional properties from Sdc notif
+        assertEquals(BLUEPRINT1_NAME, csar.getBlueprintArtifactName());
+        assertEquals(RESOURCE1_UUID, csar.getBlueprintInvariantResourceUuid());
+        assertEquals(SERVICE_UUID, csar.getBlueprintInvariantServiceUuid());
+        Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
+        // A double save should simply overwrite the existing
+        csar.save(buildFakeSdcResut());
+        // Do some cleanup
+        Files.deleteIfExists(path);
+    }
 }

@@ -27,9 +27,9 @@ import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -97,9 +97,9 @@ public class CsarHandler {
                     + artifactElement.getArtifactUUID() + ")");
             Path path = Paths.get(csarFilePath);
             Files.createDirectories(path.getParent());
-            Files.createFile(path);
-            try (FileOutputStream outFile = new FileOutputStream(csarFilePath)) {
-                outFile.write(resultArtifact.getArtifactPayload(), 0, resultArtifact.getArtifactPayload().length);
+            // Create or replace the file
+            try (OutputStream out = Files.newOutputStream(path)) {
+                out.write(resultArtifact.getArtifactPayload(), 0, resultArtifact.getArtifactPayload().length);
             }
             sdcCsarHelper = factory.getSdcCsarHelper(csarFilePath);
             this.loadDcaeBlueprint();
