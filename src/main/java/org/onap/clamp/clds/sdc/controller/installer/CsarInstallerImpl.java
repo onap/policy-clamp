@@ -84,8 +84,8 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     @Override
     public boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
-        return (CldsModel.retrieve(cldsDao, csar.getSdcCsarHelper().getServiceMetadata().getValue("name"),
-                false) != null) ? true : false;
+        return (CldsModel.retrieve(cldsDao, csar.getSdcCsarHelper().getServiceMetadata().getValue("name"), true)
+                .getId() != null) ? true : false;
     }
 
     @Override

@@ -204,8 +204,8 @@ public class SdcSingleController {
             this.changeControllerStatus(SdcSingleControllerStatus.BUSY);
             csar = new CsarHandler(iNotif, this.sdcConfig.getSdcControllerName(),
                     refProp.getStringValue(CONFIG_SDC_FOLDER));
+            csar.save(downloadTheArtifact(csar.getArtifactElement()));
             if (csarInstaller.isCsarAlreadyDeployed(csar)) {
-                csar.save(downloadTheArtifact(csar.getArtifactElement()));
                 this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_OK, null,
                         System.currentTimeMillis());
