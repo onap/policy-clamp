@@ -32,7 +32,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -121,6 +120,7 @@ public class CldsService extends SecureServiceBase {
     private SecureServicePermission permissionUpdateCl;
     private SecureServicePermission permissionReadTemplate;
     private SecureServicePermission permissionUpdateTemplate;
+    private static final long DCAE_DEPLOY_WAITING_TIME = TimeUnit.SECONDS.toNanos(30);
 
     @PostConstruct
     private final void afterConstruction() {
@@ -161,8 +161,7 @@ public class CldsService extends SecureServiceBase {
     public List<CldsMonitoringDetails> getCLDSDetails() {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model details", getPrincipalName());
-        List<CldsMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CldsMonitoringDetails>();
-        cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
+        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         LoggingUtils.setResponseContext("0", "Get cldsDetails success", this.getClass().getName());
@@ -831,12 +830,14 @@ public class CldsService extends SecureServiceBase {
             String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
                     model.getTypeId(), modelProp.getGlobal().getDeployParameters());
             String operationStatus = "processing";
-            long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
+            long waitingTime = System.nanoTime() + DCAE_DEPLOY_WAITING_TIME;
             while ("processing".equalsIgnoreCase(operationStatus)) {
-                // Break the loop if waiting for more than 10 mins
                 if (waitingTime < System.nanoTime()) {
+                    logger.info("Waiting is over for DCAE deployment");
                     break;
                 }
+                logger.info("Waiting 5s before sending query to DCAE");
+                Thread.sleep(5000);
                 operationStatus = dcaeDispatcherServices.getOperationStatus(createNewDeploymentStatusUrl);
             }
             if ("succeeded".equalsIgnoreCase(operationStatus)) {
