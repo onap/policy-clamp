@@ -22,6 +22,7 @@ package org.onap.clamp.clds.config.sdc;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -59,7 +60,7 @@ public class SdcSingleControllerConfigurationTest {
         assertEquals("consumerGroup", sdcConfig.getConsumerGroup());
         assertEquals("consumerId", sdcConfig.getConsumerID());
         assertEquals("environmentName", sdcConfig.getEnvironmentName());
-        assertEquals("hostname", sdcConfig.getAsdcAddress());
+        assertEquals("hostname:8080", sdcConfig.getAsdcAddress());
         assertEquals(10, sdcConfig.getPollingInterval());
         assertEquals(30, sdcConfig.getPollingTimeout());
         assertEquals(SdcSingleControllerConfiguration.SUPPORTED_ARTIFACT_TYPES_LIST.size(),
@@ -81,13 +82,13 @@ public class SdcSingleControllerConfigurationTest {
         fail("Should have raised an exception");
     }
 
-    @Test(expected = SdcParametersException.class)
-    public final void testAllRequiredParametersAddresses()
+    @Test
+    public final void testAllRequiredParametersEmptyEncrypted()
             throws JsonParseException, JsonMappingException, IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration(
-                "clds/sdc-controller-config-bad-address.json", "sdc-controller1");
+                "clds/sdc-controller-config-empty-encrypted.json", "sdc-controller1");
         sdcConfig.testAllRequiredParameters();
-        fail("Should have raised an exception");
+        assertNull(sdcConfig.getKeyStorePassword());
     }
 
     @Test

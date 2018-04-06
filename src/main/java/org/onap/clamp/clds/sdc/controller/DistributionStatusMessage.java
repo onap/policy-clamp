@@ -23,8 +23,8 @@
 
 package org.onap.clamp.clds.sdc.controller;
 
-import org.openecomp.sdc.api.consumer.IDistributionStatusMessage;
-import org.openecomp.sdc.utils.DistributionStatusEnum;
+import org.onap.sdc.api.consumer.IDistributionStatusMessage;
+import org.onap.sdc.utils.DistributionStatusEnum;
 
 public class DistributionStatusMessage implements IDistributionStatusMessage {
 
