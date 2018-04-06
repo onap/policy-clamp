@@ -67,26 +67,32 @@ This file is a JSON that must be specified to Spring config, here is an example:
 {
   "sdc-connections":{
     "sdc-controller1":{
-        "user": "User1",
+        "user": "clamp",
         "consumerGroup": "consumerGroup1",
         "consumerId": "consumerId1",
-        "environmentName": "environmentName1",
-        "sdcAddress": "sdc.api.simpledemo.onap.org:8080",
-        "password": "bb3871669d893c7fb8aaacda31b77b4f537E67A081C2726889548ED7BC4C2DE6",
-        "pollingInterval":10,
+        "environmentName": "AUTO",
+        "sdcAddress": "localhost:8443",
+        "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
+        "pollingInterval":30,
         "pollingTimeout":30,
-        "messageBusAddresses":["localhost"]
+        "activateServerTLSAuth":"false",
+        "keyStorePassword":"",
+        "keyStorePath":"",
+        "messageBusAddresses":["dmaaphost.com"]
     },
-     "sdc-controller2":{
-        "user": "User2",
-        "consumerGroup": "consumerGroup2",
-        "consumerId": "consumerId2",
-        "environmentName": "environmentName2",
-        "sdcAddress": "sdc.api.simpledemo.onap.org:8080",
-        "password": "bb3871669d893c7fb8aaacda31b77b4f537E67A081C2726889548ED7BC4C2DE6",
-        "pollingInterval":10,
+    "sdc-controller2":{
+        "user": "clamp",
+        "consumerGroup": "consumerGroup1",
+        "consumerId": "consumerId1",
+        "environmentName": "AUTO",
+        "sdcAddress": "localhost:8443",
+        "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
+        "pollingInterval":30,
         "pollingTimeout":30,
-        "messageBusAddresses":["localhost"]
+        "activateServerTLSAuth":"false",
+        "keyStorePassword":"",
+        "keyStorePath":"",
+        "messageBusAddresses":["dmaaphost.com"]
     }
   }
 }
