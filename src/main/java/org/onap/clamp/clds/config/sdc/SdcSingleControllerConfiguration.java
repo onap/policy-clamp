@@ -36,7 +36,7 @@ import java.util.List;
 import org.apache.commons.codec.DecoderException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
 import org.onap.clamp.clds.util.CryptoUtils;
-import org.openecomp.sdc.api.consumer.IConfiguration;
+import org.onap.sdc.api.consumer.IConfiguration;
 
 /**
  * This class maps the SDC config JSON for one controller.
@@ -129,8 +129,8 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     private String getEncryptedStringConfig(String key) throws GeneralSecurityException, DecoderException {
         if (jsonRootNode != null && jsonRootNode.get(key) != null) {
-            String config = CryptoUtils.decrypt(jsonRootNode.get(key).asText());
-            return config.isEmpty() ? null : config;
+            return jsonRootNode.get(key).asText().isEmpty() ? null
+                    : CryptoUtils.decrypt(jsonRootNode.get(key).asText());
         }
         return null;
     }
@@ -241,10 +241,10 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
             throw new SdcParametersException(ENVIRONMENT_NAME_ATTRIBUTE_NAME + errorMessageKeyNotFound);
         }
         if (this.getAsdcAddress() == null || this.getAsdcAddress().isEmpty()) {
-            if (this.getMsgBusAddress() == null || this.getMsgBusAddress().isEmpty()) {
-                throw new SdcParametersException(SDC_ADDRESS_ATTRIBUTE_NAME + " and " + MESSAGE_BUS_ADDRESSES
-                        + " are not set, one of them should be set for SDC client" + errorMessageKeyNotFound);
-            }
+            throw new SdcParametersException(SDC_ADDRESS_ATTRIBUTE_NAME + errorMessageKeyNotFound);
+        }
+        if (this.getMsgBusAddress() == null || this.getMsgBusAddress().isEmpty()) {
+            throw new SdcParametersException(MESSAGE_BUS_ADDRESSES + errorMessageKeyNotFound);
         }
         if (this.getPassword() == null || this.getPassword().isEmpty()) {
             throw new SdcParametersException(SDC_KEY_ATTRIBUTE_NAME + errorMessageKeyNotFound);

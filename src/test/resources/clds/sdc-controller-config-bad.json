@@ -5,7 +5,7 @@
 			"consumerGroup": "consumerGroup",
 			"consumerId": "consumerId",
 			"environmentName": "environmentName",
-			"sdcAddress": "hostname1",
+			"sdcAddress": "hostname1:8080",
 			"pollingInterval": 10,
 			"pollingTimeout": 30
 		}
