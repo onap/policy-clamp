@@ -58,6 +58,7 @@ public class CsarInstallerImpl implements CsarInstaller {
     private Map<String, BlueprintParserFilesConfiguration> bpmnMapping = new HashMap<>();
     public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-ClosedLoopTemplate-";
     public static final String MODEL_NAME_PREFIX = "ClosedLoop-";
+    public static final String GET_INPUT_BLUEPRINT_PARAM = "get_input";
     /**
      * The file name that will be loaded by Spring.
      */
@@ -132,9 +133,9 @@ public class CsarInstallerImpl implements CsarInstaller {
                 policyNameList.add(filteredPolicyName);
             } else {
                 String inputPolicyName = (String) ((Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>) ef
-                        .getValue()).get("properties")).get("policy_id")).get("get_input");
+                        .getValue()).get("properties")).get("policy_id")).get(GET_INPUT_BLUEPRINT_PARAM);
                 if (inputPolicyName != null) {
-                    policyNameList.add("get_input");
+                    policyNameList.add(GET_INPUT_BLUEPRINT_PARAM);
                 }
             }
         });
@@ -184,7 +185,8 @@ public class CsarInstallerImpl implements CsarInstaller {
         cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
                 + csar.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
                 + csar.getBlueprintInvariantResourceUuid()
-                + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]}]}");
+                + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},{\"name\":\"deployParameters\",\"value\":{\n"
+                + "        \"policy_id\": \"" + "test" + "\"" + "      }}]}");
         cldsModel.setBpmnText(cldsTemplate.getBpmnText());
         cldsModel.setTypeId(serviceTypeId);
         cldsModel.save(cldsDao, null);
