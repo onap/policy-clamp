@@ -24,6 +24,7 @@
 package org.onap.clamp.clds.it.sdc.controller.installer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -94,6 +95,7 @@ public class CsarInstallerItCase {
             throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
+        assertFalse(csarInstaller.isCsarAlreadyDeployed(csarHandler));
         csarInstaller.installTheCsar(csarHandler);
         assertTrue(csarInstaller.isCsarAlreadyDeployed(csarHandler));
     }
