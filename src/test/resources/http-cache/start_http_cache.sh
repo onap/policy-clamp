@@ -22,17 +22,18 @@
 # ECOMP is a trademark and service mark of AT&T Intellectual Property.
 ###
 
+echo "Starting HTTP CACHE python script"
 for i in "$@"
 do
 case $i in
-    --python_proxyaddress=*)
+     --python_proxyaddress=*)
       python_proxyaddress="--proxyaddress ${i#*=}"
       echo "- Using python_proxyaddress and set it to: $python_proxyaddress"
       shift # past argument=value
       ;;
-    --http_proxyaddress=*)
+     --http_proxyaddress=*)
       export http_proxy="${i#*=}"
-      export https_proxy=$http_proxy
+      export https_proxy="${i#*=}"
       echo "- Defining http_proxy/https_proxy env variables to: $http_proxy"
       shift # past argument=value
       ;;
