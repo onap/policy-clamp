@@ -207,19 +207,19 @@ public class SdcSingleController {
             csar.save(downloadTheArtifact(csar.getArtifactElement()));
             if (csarInstaller.isCsarAlreadyDeployed(csar)) {
                 this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
+                        sdcConfig.getConsumerID(), iNotif.getDistributionID(),
+                        DistributionStatusEnum.ALREADY_DOWNLOADED, null, System.currentTimeMillis());
+                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
+                        sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.ALREADY_DEPLOYED,
+                        null, System.currentTimeMillis());
+            } else {
+                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_OK, null,
                         System.currentTimeMillis());
                 csarInstaller.installTheCsar(csar);
                 this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
                         sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_OK, null,
                         System.currentTimeMillis());
-            } else {
-                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                        sdcConfig.getConsumerID(), iNotif.getDistributionID(),
-                        DistributionStatusEnum.ALREADY_DOWNLOADED, null, System.currentTimeMillis());
-                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                        sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.ALREADY_DEPLOYED,
-                        null, System.currentTimeMillis());
             }
         } catch (SdcArtifactInstallerException e) {
             logger.error("SdcArtifactInstallerException exception caught during the notification processing", e);
