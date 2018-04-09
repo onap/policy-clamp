@@ -331,6 +331,10 @@
 										<groupId>commons-io</groupId>
 										<artifactId>commons-io</artifactId>
 								</exclusion>
+								<exclusion>
+										<artifactId>grizzly-http</artifactId>
+										<groupId>org.glassfish.grizzly</groupId>
+								</exclusion>
 						</exclusions>
 				</dependency>
 				<dependency>
