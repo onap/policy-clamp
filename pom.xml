@@ -88,7 +88,7 @@
 				<skip.docker.build>true</skip.docker.build>
 				<skip.docker.push>true</skip.docker.push>
 				<skip.staging.artifacts>false</skip.staging.artifacts>
-				<http.proxy></http.proxy>
+				<python.http.proxy.param></python.http.proxy.param>
 		</properties>
 
 		<distributionManagement>
@@ -830,7 +830,7 @@
 																</ports>
 																<workingDir>/usr/src/http-cache-app</workingDir>
 																<cmd>
-																		<shell>./start_http_cache.sh ${http.proxy} --python_proxyaddress localhost:${docker.http-cache.port.host}</shell>
+																		<shell>./start_http_cache.sh ${python.http.proxy.param} --python_proxyaddress=localhost:${docker.http-cache.port.host}</shell>
 																</cmd>
 														</run>
 												</image>
