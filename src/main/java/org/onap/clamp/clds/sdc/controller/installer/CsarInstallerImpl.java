@@ -43,6 +43,7 @@ import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -89,6 +90,7 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     @Override
+    @Transactional
     public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException {
         try {
             String serviceTypeId = queryDcaeToGetServiceTypeId(csar);
