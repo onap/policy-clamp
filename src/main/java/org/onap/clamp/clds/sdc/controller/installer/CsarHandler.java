@@ -33,9 +33,10 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -61,13 +62,12 @@ public class CsarHandler {
     private String controllerName;
     private SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
     private ISdcCsarHelper sdcCsarHelper;
-    private String dcaeBlueprint;
-    private String blueprintArtifactName;
-    private String blueprintInvariantResourceUuid;
-    private String blueprintInvariantServiceUuid;
+    private Map<String, BlueprintArtifact> mapOfBlueprints = new HashMap<>();
     public static final String CSAR_TYPE = "TOSCA_CSAR";
     public static final String BLUEPRINT_TYPE = "DCAE_INVENTORY_BLUEPRINT";
     private INotificationData sdcNotification;
+    public static final String RESOURCE_INSTANCE_NAME_PREFIX = "/Artifacts/Resources/";
+    public static final String RESOURCE_INSTANCE_NAME_SUFFIX = "/Deployment/";
 
     public CsarHandler(INotificationData iNotif, String controller, String clampCsarPath) throws CsarHandlerException {
         this.sdcNotification = iNotif;
@@ -103,42 +103,47 @@ public class CsarHandler {
             }
             sdcCsarHelper = factory.getSdcCsarHelper(csarFilePath);
             this.loadDcaeBlueprint();
-            this.loadBlueprintArtifactDetails();
         } catch (IOException e) {
             throw new SdcArtifactInstallerException(
                     "Exception caught when trying to write the CSAR on the file system to " + csarFilePath, e);
         }
     }
 
-    private void loadBlueprintArtifactDetails() {
-        blueprintInvariantServiceUuid = this.getSdcNotification().getServiceInvariantUUID();
-        for (IResourceInstance resource : this.getSdcNotification().getResources()) {
-            if ("VF".equals(resource.getResourceType())) {
-                for (IArtifactInfo artifact : resource.getArtifacts()) {
-                    if (BLUEPRINT_TYPE.equals(artifact.getArtifactType())) {
-                        blueprintArtifactName = artifact.getArtifactName();
-                        blueprintInvariantResourceUuid = resource.getResourceInvariantUUID();
-                    }
-                }
+    private IResourceInstance searchForResourceByInstanceName(String blueprintResourceInstanceName)
+            throws SdcArtifactInstallerException {
+        for (IResourceInstance resource : this.sdcNotification.getResources()) {
+            String filteredString = resource.getResourceInstanceName().replaceAll("-", "");
+            filteredString = filteredString.replaceAll(" ", "");
+            if (filteredString.equals(blueprintResourceInstanceName)) {
+                return resource;
             }
         }
+        throw new SdcArtifactInstallerException("Error when searching for " + blueprintResourceInstanceName
+                + " as ResourceInstanceName in Sdc notification and did not find it");
     }
 
     private void loadDcaeBlueprint() throws IOException, SdcArtifactInstallerException {
-        List<ZipEntry> listEntries = new ArrayList<>();
         try (ZipFile zipFile = new ZipFile(csarFilePath)) {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (entry.getName().contains(BLUEPRINT_TYPE)) {
-                    listEntries.add(entry);
+                    BlueprintArtifact blueprintArtifact = new BlueprintArtifact();
+                    blueprintArtifact.setBlueprintArtifactName(
+                            entry.getName().substring(entry.getName().lastIndexOf('/') + 1, entry.getName().length()));
+                    blueprintArtifact
+                            .setBlueprintInvariantServiceUuid(this.getSdcNotification().getServiceInvariantUUID());
+                    try (InputStream stream = zipFile.getInputStream(entry)) {
+                        blueprintArtifact.setDcaeBlueprint(IOUtils.toString(stream));
+                    }
+                    IResourceInstance resource = searchForResourceByInstanceName(entry.getName().substring(
+                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX)
+                                    + RESOURCE_INSTANCE_NAME_PREFIX.length(),
+                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX)));
+                    blueprintArtifact.setBlueprintInvariantResourceUuid(resource.getResourceInvariantUUID());
+                    blueprintArtifact.setBlueprintResourceInstanceName(resource.getResourceInstanceName());
+                    this.mapOfBlueprints.put(blueprintArtifact.getBlueprintResourceInstanceName(), blueprintArtifact);
                 }
-            }
-            if (listEntries.size() > 1) {
-                throw new SdcArtifactInstallerException("There are multiple entries in the DCAE inventory");
-            }
-            try (InputStream stream = zipFile.getInputStream(listEntries.get(0))) {
-                this.dcaeBlueprint = IOUtils.toString(stream);
             }
         }
     }
@@ -155,23 +160,11 @@ public class CsarHandler {
         return sdcCsarHelper;
     }
 
-    public synchronized String getDcaeBlueprint() {
-        return dcaeBlueprint;
-    }
-
     public INotificationData getSdcNotification() {
         return sdcNotification;
     }
 
-    public String getBlueprintArtifactName() {
-        return blueprintArtifactName;
-    }
-
-    public String getBlueprintInvariantResourceUuid() {
-        return blueprintInvariantResourceUuid;
-    }
-
-    public String getBlueprintInvariantServiceUuid() {
-        return blueprintInvariantServiceUuid;
+    public Map<String, BlueprintArtifact> getMapOfBlueprints() {
+        return mapOfBlueprints;
     }
 }

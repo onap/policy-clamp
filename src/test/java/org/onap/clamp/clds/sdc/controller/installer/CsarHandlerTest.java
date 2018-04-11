@@ -55,7 +55,9 @@ public class CsarHandlerTest {
     private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
     private static final String SERVICE_UUID = "serviceUUID";
     private static final String RESOURCE1_UUID = "resource1UUID";
-    private static final String BLUEPRINT1_NAME = "blueprint1-name";
+    private static final String RESOURCE1_INSTANCE_NAME = "sim-1802 0";
+    private static final String RESOURCE1_INSTANCE_NAME_IN_CSAR = "sim18020";
+    private static final String BLUEPRINT1_NAME = "FOI.Simfoimap223S0112.event_proc_bp.yaml";
 
     @Test
     public void testConstructor() throws CsarHandlerException {
@@ -93,10 +95,10 @@ public class CsarHandlerTest {
         IResourceInstance resource1 = Mockito.mock(IResourceInstance.class);
         Mockito.when(resource1.getResourceType()).thenReturn("VF");
         Mockito.when(resource1.getResourceInvariantUUID()).thenReturn(RESOURCE1_UUID);
+        Mockito.when(resource1.getResourceInstanceName()).thenReturn(RESOURCE1_INSTANCE_NAME);
         // Create a fake artifact for resource
         IArtifactInfo blueprintArtifact = Mockito.mock(IArtifactInfo.class);
         Mockito.when(blueprintArtifact.getArtifactType()).thenReturn(CsarHandler.BLUEPRINT_TYPE);
-        Mockito.when(blueprintArtifact.getArtifactName()).thenReturn(BLUEPRINT1_NAME);
         List<IArtifactInfo> artifactsListForResource = new ArrayList<>();
         artifactsListForResource.add(blueprintArtifact);
         Mockito.when(resource1.getArtifacts()).thenReturn(artifactsListForResource);
@@ -123,14 +125,17 @@ public class CsarHandlerTest {
         assertEquals(CSAR_ARTIFACT_NAME, csar.getArtifactElement().getArtifactName());
         assertNotNull(csar.getSdcCsarHelper());
         // Test dcaeBlueprint
-        String blueprint = csar.getDcaeBlueprint();
+        String blueprint = csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getDcaeBlueprint();
         assertNotNull(blueprint);
         assertTrue(!blueprint.isEmpty());
         assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
         // Test additional properties from Sdc notif
-        assertEquals(BLUEPRINT1_NAME, csar.getBlueprintArtifactName());
-        assertEquals(RESOURCE1_UUID, csar.getBlueprintInvariantResourceUuid());
-        assertEquals(SERVICE_UUID, csar.getBlueprintInvariantServiceUuid());
+        assertEquals(BLUEPRINT1_NAME,
+                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
+        assertEquals(RESOURCE1_UUID,
+                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantResourceUuid());
+        assertEquals(SERVICE_UUID,
+                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
         // Do some cleanup
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         Files.deleteIfExists(path);
@@ -146,14 +151,17 @@ public class CsarHandlerTest {
         assertEquals(CSAR_ARTIFACT_NAME, csar.getArtifactElement().getArtifactName());
         assertNotNull(csar.getSdcCsarHelper());
         // Test dcaeBlueprint
-        String blueprint = csar.getDcaeBlueprint();
+        String blueprint = csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getDcaeBlueprint();
         assertNotNull(blueprint);
         assertTrue(!blueprint.isEmpty());
         assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
         // Test additional properties from Sdc notif
-        assertEquals(BLUEPRINT1_NAME, csar.getBlueprintArtifactName());
-        assertEquals(RESOURCE1_UUID, csar.getBlueprintInvariantResourceUuid());
-        assertEquals(SERVICE_UUID, csar.getBlueprintInvariantServiceUuid());
+        assertEquals(BLUEPRINT1_NAME,
+                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
+        assertEquals(RESOURCE1_UUID,
+                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantResourceUuid());
+        assertEquals(SERVICE_UUID,
+                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         // A double save should simply overwrite the existing
         csar.save(buildFakeSdcResut());

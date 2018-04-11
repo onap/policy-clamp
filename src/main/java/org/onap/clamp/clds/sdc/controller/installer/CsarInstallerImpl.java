@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 
@@ -85,16 +86,23 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     @Override
     public boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
-        return (CldsModel.retrieve(cldsDao, csar.getSdcCsarHelper().getServiceMetadata().getValue("name"), true)
-                .getId() != null) ? true : false;
+        return (CldsModel.retrieve(cldsDao, buildModelName(csar), true).getId() != null) ? true : false;
+    }
+
+    public static String buildModelName(CsarHandler csar) {
+        return csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + " v"
+                + csar.getSdcNotification().getServiceVersion();
     }
 
     @Override
     @Transactional
     public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException {
         try {
-            String serviceTypeId = queryDcaeToGetServiceTypeId(csar);
-            createFakeCldsModel(csar, createFakeCldsTemplate(csar, this.searchForRightMapping(csar)), serviceTypeId);
+            for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
+                String serviceTypeId = queryDcaeToGetServiceTypeId(blueprint.getValue());
+                createFakeCldsModel(csar, blueprint.getValue(), createFakeCldsTemplate(csar, blueprint.getValue(),
+                        this.searchForRightMapping(blueprint.getValue())), serviceTypeId);
+            }
         } catch (IOException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Csar installation in database", e);
         } catch (ParseException | InterruptedException e) {
@@ -102,12 +110,12 @@ public class CsarInstallerImpl implements CsarInstaller {
         }
     }
 
-    private BlueprintParserFilesConfiguration searchForRightMapping(CsarHandler csar)
+    private BlueprintParserFilesConfiguration searchForRightMapping(BlueprintArtifact blueprintArtifact)
             throws SdcArtifactInstallerException {
         List<BlueprintParserFilesConfiguration> listConfig = new ArrayList<>();
         Yaml yaml = new Yaml();
         Map<String, Object> templateNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
-                .load(csar.getDcaeBlueprint())).get("node_templates"));
+                .load(blueprintArtifact.getDcaeBlueprint())).get("node_templates"));
         bpmnMapping.entrySet().forEach(e -> {
             if (templateNodes.keySet().stream().anyMatch(t -> t.contains(e.getKey()))) {
                 listConfig.add(e.getValue());
@@ -122,12 +130,12 @@ public class CsarInstallerImpl implements CsarInstaller {
         return listConfig.get(0);
     }
 
-    private String searchForPolicyName(CsarHandler csar) throws SdcArtifactInstallerException {
+    private String searchForPolicyName(BlueprintArtifact blueprintArtifact) throws SdcArtifactInstallerException {
         String policyName = null;
         Yaml yaml = new Yaml();
         List<String> policyNameList = new ArrayList<>();
         Map<String, Object> templateNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
-                .load(csar.getDcaeBlueprint())).get("node_templates"));
+                .load(blueprintArtifact.getDcaeBlueprint())).get("node_templates"));
         templateNodes.entrySet().stream().filter(e -> e.getKey().contains("policy_")).forEach(ef -> {
             String filteredPolicyName = (String) ((Map<String, Object>) ((Map<String, Object>) ef.getValue())
                     .get("properties")).get("policy_filter");
@@ -151,42 +159,44 @@ public class CsarInstallerImpl implements CsarInstaller {
         return policyNameList.get(0);
     }
 
-    private String queryDcaeToGetServiceTypeId(CsarHandler csar) throws IOException, ParseException, InterruptedException {
-        return dcaeInventoryService.getDcaeInformation(csar.getBlueprintArtifactName(),
-                csar.getBlueprintInvariantServiceUuid(), csar.getBlueprintInvariantResourceUuid()).getTypeId();
+    private String queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact) throws IOException, ParseException {
+        return dcaeInventoryService.getDcaeInformation(blueprintArtifact.getBlueprintArtifactName(),
+                blueprintArtifact.getBlueprintInvariantServiceUuid(),
+                blueprintArtifact.getBlueprintInvariantResourceUuid()).getTypeId();
     }
 
-    private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintParserFilesConfiguration configFiles)
-            throws IOException {
+    private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintArtifact blueprintArtifact,
+            BlueprintParserFilesConfiguration configFiles) throws IOException {
         CldsTemplate template = new CldsTemplate();
         template.setBpmnId("Sdc-Generated");
         template.setBpmnText(
                 IOUtils.toString(appContext.getResource(configFiles.getBpmnXmlFilePath()).getInputStream()));
-        template.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\"" + csar.getDcaeBlueprint() + "\"]}]}");
+        template.setPropText(
+                "{\"global\":[{\"name\":\"service\",\"value\":[\"" + blueprintArtifact.getDcaeBlueprint() + "\"]}]}");
         template.setImageText(
                 IOUtils.toString(appContext.getResource(configFiles.getSvgXmlFilePath()).getInputStream()));
-        template.setName(TEMPLATE_NAME_PREFIX + csar.getSdcCsarHelper().getServiceMetadata().getValue("name"));
+        template.setName(TEMPLATE_NAME_PREFIX + buildModelName(csar));
         template.save(cldsDao, null);
         return template;
     }
 
-    private CldsModel createFakeCldsModel(CsarHandler csar, CldsTemplate cldsTemplate, String serviceTypeId)
-            throws SdcArtifactInstallerException {
+    private CldsModel createFakeCldsModel(CsarHandler csar, BlueprintArtifact blueprintArtifact,
+            CldsTemplate cldsTemplate, String serviceTypeId) throws SdcArtifactInstallerException {
         CldsModel cldsModel = new CldsModel();
-        String policyName = searchForPolicyName(csar);
+        String policyName = searchForPolicyName(blueprintArtifact);
         if (policyName.contains("*")) {
             // It's a filter must add a specific prefix
             cldsModel.setControlNamePrefix(policyName);
         } else {
             cldsModel.setControlNamePrefix(MODEL_NAME_PREFIX);
         }
-        cldsModel.setName(csar.getSdcCsarHelper().getServiceMetadata().getValue("name"));
-        cldsModel.setBlueprintText(csar.getDcaeBlueprint());
+        cldsModel.setName(buildModelName(csar));
+        cldsModel.setBlueprintText(blueprintArtifact.getDcaeBlueprint());
         cldsModel.setTemplateName(cldsTemplate.getName());
         cldsModel.setTemplateId(cldsTemplate.getId());
         cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
-                + csar.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
-                + csar.getBlueprintInvariantResourceUuid()
+                + blueprintArtifact.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
+                + blueprintArtifact.getBlueprintInvariantResourceUuid()
                 + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},{\"name\":\"deployParameters\",\"value\":{\n"
                 + "        \"policy_id\": \"" + "test" + "\"" + "      }}]}");
         cldsModel.setBpmnText(cldsTemplate.getBpmnText());
