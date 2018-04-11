@@ -97,7 +97,7 @@ public class CsarInstallerImpl implements CsarInstaller {
             createFakeCldsModel(csar, createFakeCldsTemplate(csar, this.searchForRightMapping(csar)), serviceTypeId);
         } catch (IOException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Csar installation in database", e);
-        } catch (ParseException e) {
+        } catch (ParseException | InterruptedException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Dcae query to get ServiceTypeId", e);
         }
     }
@@ -151,7 +151,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         return policyNameList.get(0);
     }
 
-    private String queryDcaeToGetServiceTypeId(CsarHandler csar) throws IOException, ParseException {
+    private String queryDcaeToGetServiceTypeId(CsarHandler csar) throws IOException, ParseException, InterruptedException {
         return dcaeInventoryService.getDcaeInformation(csar.getBlueprintArtifactName(),
                 csar.getBlueprintInvariantServiceUuid(), csar.getBlueprintInvariantResourceUuid()).getTypeId();
     }

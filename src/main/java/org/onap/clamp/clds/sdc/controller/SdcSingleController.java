@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
@@ -200,6 +201,10 @@ public class SdcSingleController {
     public void treatNotification(INotificationData iNotif) {
         CsarHandler csar = null;
         try {
+            // wait for a random time, so that 2 running Clamp will not treat the same Notification at the same time 
+            int i = ThreadLocalRandom.current().nextInt(1, 5);
+            Thread.sleep(i * 1000);
+
             logger.info("Notification received for service UUID:" + iNotif.getServiceUUID());
             this.changeControllerStatus(SdcSingleControllerStatus.BUSY);
             csar = new CsarHandler(iNotif, this.sdcConfig.getSdcControllerName(),
@@ -241,6 +246,8 @@ public class SdcSingleController {
             this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
                     sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_ERROR,
                     e.getMessage(), System.currentTimeMillis());
+        } catch (InterruptedException e) {
+            logger.error("Interrupt exception caught during the notification processing", e);
         } catch (RuntimeException e) {
             logger.error("Unexpected exception caught during the notification processing", e);
         } finally {
