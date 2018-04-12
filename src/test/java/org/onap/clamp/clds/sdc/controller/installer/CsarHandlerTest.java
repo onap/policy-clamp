@@ -132,8 +132,8 @@ public class CsarHandlerTest {
         // Test additional properties from Sdc notif
         assertEquals(BLUEPRINT1_NAME,
                 csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
-        assertEquals(RESOURCE1_UUID,
-                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantResourceUuid());
+        assertEquals(RESOURCE1_UUID, csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached()
+                .getResourceInvariantUUID());
         assertEquals(SERVICE_UUID,
                 csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
         // Do some cleanup
@@ -158,8 +158,8 @@ public class CsarHandlerTest {
         // Test additional properties from Sdc notif
         assertEquals(BLUEPRINT1_NAME,
                 csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
-        assertEquals(RESOURCE1_UUID,
-                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantResourceUuid());
+        assertEquals(RESOURCE1_UUID, csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached()
+                .getResourceInvariantUUID());
         assertEquals(SERVICE_UUID,
                 csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);

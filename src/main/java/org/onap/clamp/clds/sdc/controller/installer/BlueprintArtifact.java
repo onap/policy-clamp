@@ -20,20 +20,21 @@
  * ===================================================================
  * ECOMP is a trademark and service mark of AT&T Intellectual Property.
  */
-
 /**
  * This class is useful to store the information concerning
  * blueprint artifact extracted from SDC CSAR
  */
+
 package org.onap.clamp.clds.sdc.controller.installer;
+
+import org.onap.sdc.api.notification.IResourceInstance;
 
 public class BlueprintArtifact {
 
     private String dcaeBlueprint;
     private String blueprintArtifactName;
-    private String blueprintInvariantResourceUuid;
     private String blueprintInvariantServiceUuid;
-    private String blueprintResourceInstanceName;
+    private IResourceInstance resourceAttached;
 
     public String getDcaeBlueprint() {
         return dcaeBlueprint;
@@ -51,14 +52,6 @@ public class BlueprintArtifact {
         this.blueprintArtifactName = blueprintArtifactName;
     }
 
-    public String getBlueprintInvariantResourceUuid() {
-        return blueprintInvariantResourceUuid;
-    }
-
-    public void setBlueprintInvariantResourceUuid(String blueprintInvariantResourceUuid) {
-        this.blueprintInvariantResourceUuid = blueprintInvariantResourceUuid;
-    }
-
     public String getBlueprintInvariantServiceUuid() {
         return blueprintInvariantServiceUuid;
     }
@@ -67,11 +60,11 @@ public class BlueprintArtifact {
         this.blueprintInvariantServiceUuid = blueprintInvariantServiceUuid;
     }
 
-    public String getBlueprintResourceInstanceName() {
-        return blueprintResourceInstanceName;
+    public IResourceInstance getResourceAttached() {
+        return resourceAttached;
     }
 
-    public void setBlueprintResourceInstanceName(String blueprintResourceInstanceName) {
-        this.blueprintResourceInstanceName = blueprintResourceInstanceName;
+    public void setResourceAttached(IResourceInstance resourceAttached) {
+        this.resourceAttached = resourceAttached;
     }
 }

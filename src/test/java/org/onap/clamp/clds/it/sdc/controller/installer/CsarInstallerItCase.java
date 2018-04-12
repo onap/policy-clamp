@@ -67,6 +67,7 @@ public class CsarInstallerItCase {
     private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
     private static final String INVARIANT_SERVICE_UUID = "4cc5b45a-1f63-4194-8100-cd8e14248c92";
     private static final String INVARIANT_RESOURCE1_UUID = "07e266fc-49ab-4cd7-8378-ca4676f1b9ec";
+    private static final String INSTANCE_NAME_RESOURCE1 = "ResourceInstanceName";
     @Autowired
     private CsarInstaller csarInstaller;
     @Autowired
@@ -77,6 +78,7 @@ public class CsarInstallerItCase {
             throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
         CsarHandler csarHandler = Mockito.mock(CsarHandler.class);
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
+        Mockito.when(blueprintArtifact.getResourceAttached()).thenReturn(Mockito.mock(IResourceInstance.class));
         Map<String, BlueprintArtifact> blueprintMap = new HashMap<>();
         blueprintMap.put("resourceid", blueprintArtifact);
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
@@ -93,8 +95,9 @@ public class CsarInstallerItCase {
         // Create fake resource in notification
         List<IResourceInstance> listResources = new ArrayList<>();
         IResourceInstance resource = Mockito.mock(IResourceInstance.class);
-        Mockito.when(resource.getResourceInstanceName()).thenReturn("mm-e 0");
-        Mockito.when(resource.getResourceInvariantUUID()).thenReturn("mme0-invariantUuid");
+        Mockito.when(resource.getResourceInstanceName()).thenReturn(INSTANCE_NAME_RESOURCE1);
+        Mockito.when(resource.getResourceInvariantUUID()).thenReturn(INVARIANT_RESOURCE1_UUID);
+        listResources.add(resource);
         Mockito.when(notificationData.getResources()).thenReturn(listResources);
         // Create fake blueprint artifact
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
@@ -102,7 +105,7 @@ public class CsarInstallerItCase {
                 .thenReturn(ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml"));
         Mockito.when(blueprintArtifact.getBlueprintArtifactName()).thenReturn(CSAR_ARTIFACT_NAME);
         Mockito.when(blueprintArtifact.getBlueprintInvariantServiceUuid()).thenReturn(INVARIANT_SERVICE_UUID);
-        Mockito.when(blueprintArtifact.getBlueprintInvariantResourceUuid()).thenReturn(INVARIANT_RESOURCE1_UUID);
+        Mockito.when(blueprintArtifact.getResourceAttached()).thenReturn(resource);
         Map<String, BlueprintArtifact> blueprintMap = new HashMap<>();
         blueprintMap.put("resourceid", blueprintArtifact);
         // Build fake csarhandler

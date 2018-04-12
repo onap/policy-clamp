@@ -135,15 +135,15 @@ public class CsarHandler {
                     try (InputStream stream = zipFile.getInputStream(entry)) {
                         blueprintArtifact.setDcaeBlueprint(IOUtils.toString(stream));
                     }
-                    IResourceInstance resource = searchForResourceByInstanceName(entry.getName().substring(
+                    blueprintArtifact.setResourceAttached(searchForResourceByInstanceName(entry.getName().substring(
                             entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX)
                                     + RESOURCE_INSTANCE_NAME_PREFIX.length(),
-                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX)));
-                    blueprintArtifact.setBlueprintInvariantResourceUuid(resource.getResourceInvariantUUID());
-                    blueprintArtifact.setBlueprintResourceInstanceName(resource.getResourceInstanceName());
+                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX))));
+                    this.mapOfBlueprints.put(blueprintArtifact.getResourceAttached().getResourceInstanceName(),
+                            blueprintArtifact);
                     logger.info("Found a blueprint entry in the CSAR " + blueprintArtifact.getBlueprintArtifactName()
-                            + " for resource instance Name " + resource.getResourceInstanceName());
-                    this.mapOfBlueprints.put(blueprintArtifact.getBlueprintResourceInstanceName(), blueprintArtifact);
+                            + " for resource instance Name "
+                            + blueprintArtifact.getResourceAttached().getResourceInstanceName());
                 }
             }
             logger.info(this.mapOfBlueprints.size() + " blueprint(s) will be converted to closed loop");
