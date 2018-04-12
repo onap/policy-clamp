@@ -61,6 +61,8 @@ public class DcaeInventoryServices {
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     public static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
+    public static final String DCAE_INVENTORY_RETRY_INTERVAL = "dcae.intentory.retry.interval";
+    public static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
     public static final String DCAE_TYPE_NAME = "typeName";
     public static final String DCAE_TYPE_ID = "typeId";
     @Autowired
@@ -78,7 +80,7 @@ public class DcaeInventoryServices {
      * @throws ParseException
      *             In case of DCAE Json parse exception
      */
-    public void setEventInventory(CldsModel cldsModel, String userId) throws ParseException {
+    public void setEventInventory(CldsModel cldsModel, String userId) throws ParseException, InterruptedException {
         String artifactName = cldsModel.getControlName();
         DcaeEvent dcaeEvent = new DcaeEvent();
         DcaeInventoryResponse dcaeResponse = null;
@@ -159,7 +161,7 @@ public class DcaeInventoryServices {
      *             In case of issues with the Json parsing
      */
     public DcaeInventoryResponse getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
-            throws IOException, ParseException {
+            throws IOException, ParseException, InterruptedException {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
         String queryString = "?asdcResourceId=" + resourceUuid + "&asdcServiceId=" + serviceUuid + "&typeName="
@@ -167,7 +169,8 @@ public class DcaeInventoryServices {
         String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types" + queryString;
         logger.info("Dcae Inventory Service full url - " + fullUrl);
         String dcaeInventoryResponse = null;
-        String responseStr = DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
+
+        String responseStr = queryDCAEInventory (fullUrl);
         JSONParser parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
@@ -185,6 +188,34 @@ public class DcaeInventoryServices {
         return JacksonUtils.getObjectMapperInstance().readValue(dcaeInventoryResponse, DcaeInventoryResponse.class);
     }
 
+    private String queryDCAEInventory (String fullUrl) throws IOException, InterruptedException {
+        int retryInterval = 0;
+        int retryLimit = 1;
+        if (refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT) != null) {
+            retryLimit = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT));
+        }
+        if (refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL) != null) {
+        	retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
+        }
+
+        int i = 0;
+        while (i < retryLimit) {
+            i++;
+            try {
+                return DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
+            } catch (BadRequestException e) {
+                if (i == retryLimit) {
+                    // reach the retry limit, but still failed to connect to DCAE
+                    throw e;
+                } else {
+                    // wait for a while and try to connect to DCAE again
+                    Thread.sleep(retryInterval);
+                }
+            }
+        }
+        // normally it should not go to this branch. It should either return the DCAE query result, or throw exception
+        return null;
+    }
     /**
      * Inserts a new DCAEServiceType or updates an existing instance. If the
      * typeName is same second time(already exists) then the
