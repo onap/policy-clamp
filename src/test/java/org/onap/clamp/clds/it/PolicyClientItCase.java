@@ -23,6 +23,8 @@
 
 package org.onap.clamp.clds.it;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -37,6 +39,7 @@ import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.clds.config.PolicyConfiguration;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
@@ -56,6 +59,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class PolicyClientItCase {
 
+    @Autowired
+    private PolicyConfiguration policyConfiguration;
     @Autowired
     private ClampProperties refProp;
     @Autowired
@@ -143,5 +148,31 @@ public class PolicyClientItCase {
         createUpdateTcaPolicy(CldsEvent.ACTION_SUBMIT);
         TimeUnit.SECONDS.sleep(20);
         deleteTcaPolicy(CldsEvent.ACTION_DELETE);
+    }
+
+    @Test
+    public void testPolicyConfiguration() {
+        assertNotNull(policyConfiguration.getPdpUrl1());
+        assertNotNull(policyConfiguration.getPdpUrl2());
+        assertNotNull(policyConfiguration.getPapUrl());
+        assertNotNull(policyConfiguration.getPolicyEnvironment());
+        assertNotNull(policyConfiguration.getClientId());
+        assertNotNull(policyConfiguration.getClientKey());
+        assertNotNull(policyConfiguration.getNotificationType());
+        assertNotNull(policyConfiguration.getNotificationUebServers());
+        assertEquals(8, policyConfiguration.getProperties().size());
+        assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PDP_URL1))
+                .contains("/pdp/ , testpdp, alpha123"));
+        assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PDP_URL2))
+                .contains("/pdp/ , testpdp, alpha123"));
+        assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PAP_URL))
+                .contains("/pap/ , testpap, alpha123"));
+        assertEquals("websocket", policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_TYPE));
+        assertEquals("localhost",
+                policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_UEB_SERVERS));
+        assertEquals("myclientid", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_ID));
+        assertEquals("5CE79532B3A2CB4D132FC0C04BF916A7",
+                policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_KEY));
+        assertEquals("DEVL", policyConfiguration.getProperties().get(PolicyConfiguration.ENVIRONMENT));
     }
 }

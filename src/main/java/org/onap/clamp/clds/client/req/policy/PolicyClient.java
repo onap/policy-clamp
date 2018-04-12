@@ -26,7 +26,6 @@ package org.onap.clamp.clds.client.req.policy;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,6 +37,7 @@ import java.util.UUID;
 import javax.ws.rs.BadRequestException;
 
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.clds.config.PolicyConfiguration;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -55,7 +55,6 @@ import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.api.PolicyType;
 import org.onap.policy.api.PushPolicyParameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -71,12 +70,12 @@ public class PolicyClient {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     protected static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
     protected static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
-    @Value("${clamp.config.files.cldsPolicyConfig:'classpath:/clds/clds-policy-config.properties'}")
-    protected String cldsPolicyConfigFile;
     @Autowired
     protected ApplicationContext appContext;
     @Autowired
     protected ClampProperties refProp;
+    @Autowired
+    private PolicyConfiguration policyConfiguration;
 
     /**
      * Perform BRMS policy type.
@@ -353,9 +352,7 @@ public class PolicyClient {
     private PolicyEngine getPolicyEngine() {
         PolicyEngine policyEngine;
         try {
-            policyEngine = new PolicyEngine(appContext.getResource(cldsPolicyConfigFile).getFile().getAbsolutePath());
-        } catch (IOException e1) {
-            throw new PolicyClientException("Exception when opening policy config file", e1);
+            policyEngine = new PolicyEngine(policyConfiguration.getProperties());
         } catch (PolicyEngineException e) {
             throw new PolicyClientException("Exception when creating a new policy engine", e);
         }
