@@ -84,8 +84,7 @@ public class SdcSingleController {
         @Override
         public void activateCallback(INotificationData iNotif) {
             Date startTime = new Date();
-            String event = "Receive a callback notification in SDC, nb of resources: " + iNotif.getResources().size();
-            logger.debug(event);
+            logger.info("Receive a callback notification in SDC, nb of resources: " + iNotif.getResources().size());
             sdcController.treatNotification(iNotif);
             LoggingUtils.setTimeContext(startTime, new Date());
             LoggingUtils.setResponseContext("0", "SDC Notification received and processed successfully",
@@ -144,7 +143,7 @@ public class SdcSingleController {
      *             If there is an issue with the parameters provided
      */
     public void initSdc() throws SdcControllerException {
-        logger.debug("Attempt to initialize the SDC Controller");
+        logger.info("Attempt to initialize the SDC Controller");
         if (this.getControllerStatus() != SdcSingleControllerStatus.STOPPED) {
             throw new SdcControllerException("The controller is already initialized, call the closeSDC method first");
         }
@@ -160,7 +159,7 @@ public class SdcSingleController {
         }
         result = this.distributionClient.start();
         if (!result.getDistributionActionResult().equals(DistributionActionResultEnum.SUCCESS)) {
-            logger.debug("SDC distribution client start failed with reason:" + result.getDistributionMessageResult());
+            logger.error("SDC distribution client start failed with reason:" + result.getDistributionMessageResult());
             this.changeControllerStatus(SdcSingleControllerStatus.STOPPED);
             throw new SdcControllerException(
                     "Startup of the SDC Controller failed with reason: " + result.getDistributionMessageResult());
@@ -260,7 +259,7 @@ public class SdcSingleController {
     }
 
     private IDistributionClientDownloadResult downloadTheArtifact(IArtifactInfo artifact) throws SdcDownloadException {
-        logger.debug("Trying to download the artifact : " + artifact.getArtifactURL() + " UUID: "
+        logger.info("Trying to download the artifact : " + artifact.getArtifactURL() + " UUID: "
                 + artifact.getArtifactUUID());
         IDistributionClientDownloadResult downloadResult;
         try {

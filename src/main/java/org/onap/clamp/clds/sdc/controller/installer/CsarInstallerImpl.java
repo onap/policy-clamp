@@ -24,6 +24,8 @@
 package org.onap.clamp.clds.sdc.controller.installer;
 
 import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class CsarInstallerImpl implements CsarInstaller {
 
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);
     private Map<String, BlueprintParserFilesConfiguration> bpmnMapping = new HashMap<>();
     public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-ClosedLoopTemplate-";
     public static final String MODEL_NAME_PREFIX = "ClosedLoop-";
@@ -98,11 +101,14 @@ public class CsarInstallerImpl implements CsarInstaller {
     @Transactional
     public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException {
         try {
+            logger.info("Installing the CSAR " + csar.getFilePath());
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
+                logger.info("Processing blueprint " + blueprint.getValue().getBlueprintArtifactName());
                 String serviceTypeId = queryDcaeToGetServiceTypeId(blueprint.getValue());
                 createFakeCldsModel(csar, blueprint.getValue(), createFakeCldsTemplate(csar, blueprint.getValue(),
                         this.searchForRightMapping(blueprint.getValue())), serviceTypeId);
             }
+            logger.info("Successfully installed the CSAR " + csar.getFilePath());
         } catch (IOException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Csar installation in database", e);
         } catch (ParseException | InterruptedException e) {
@@ -127,6 +133,8 @@ public class CsarInstallerImpl implements CsarInstaller {
         } else if (listConfig.isEmpty()) {
             throw new SdcArtifactInstallerException("There is no recognized MicroService found in the blueprint");
         }
+        logger.info("Mapping found for blueprint " + blueprintArtifact.getBlueprintArtifactName() + " is "
+                + listConfig.get(0).getBpmnXmlFilePath());
         return listConfig.get(0);
     }
 
@@ -156,6 +164,8 @@ public class CsarInstallerImpl implements CsarInstaller {
             throw new SdcArtifactInstallerException(
                     "There is no recognized Policy MicroService found in the blueprint");
         }
+        logger.info("policyName found in blueprint " + blueprintArtifact.getBlueprintArtifactName() + " is "
+                + policyNameList.get(0));
         return policyNameList.get(0);
     }
 
@@ -177,6 +187,8 @@ public class CsarInstallerImpl implements CsarInstaller {
                 IOUtils.toString(appContext.getResource(configFiles.getSvgXmlFilePath()).getInputStream()));
         template.setName(TEMPLATE_NAME_PREFIX + buildModelName(csar));
         template.save(cldsDao, null);
+        logger.info("Fake Clds Template created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
+                + " with name " + template.getName());
         return template;
     }
 
@@ -202,6 +214,8 @@ public class CsarInstallerImpl implements CsarInstaller {
         cldsModel.setBpmnText(cldsTemplate.getBpmnText());
         cldsModel.setTypeId(serviceTypeId);
         cldsModel.save(cldsDao, null);
+        logger.info("Fake Clds Model created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
+                + " with name " + cldsModel.getName());
         return cldsModel;
     }
 }

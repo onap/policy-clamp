@@ -93,8 +93,7 @@ public class CsarHandler {
     public synchronized void save(IDistributionClientDownloadResult resultArtifact)
             throws SdcArtifactInstallerException, SdcToscaParserException {
         try {
-            logger.info("Writing CSAR file : " + artifactElement.getArtifactURL() + " UUID "
-                    + artifactElement.getArtifactUUID() + ")");
+            logger.info("Writing CSAR file to: " + csarFilePath + " UUID " + artifactElement.getArtifactUUID() + ")");
             Path path = Paths.get(csarFilePath);
             Files.createDirectories(path.getParent());
             // Create or replace the file
@@ -142,9 +141,12 @@ public class CsarHandler {
                             entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX)));
                     blueprintArtifact.setBlueprintInvariantResourceUuid(resource.getResourceInvariantUUID());
                     blueprintArtifact.setBlueprintResourceInstanceName(resource.getResourceInstanceName());
+                    logger.info("Found a blueprint entry in the CSAR " + blueprintArtifact.getBlueprintArtifactName()
+                            + " for resource instance Name " + resource.getResourceInstanceName());
                     this.mapOfBlueprints.put(blueprintArtifact.getBlueprintResourceInstanceName(), blueprintArtifact);
                 }
             }
+            logger.info(this.mapOfBlueprints.size() + " blueprint(s) will be converted to closed loop");
         }
     }
 
