@@ -200,10 +200,10 @@ public class SdcSingleController {
     public void treatNotification(INotificationData iNotif) {
         CsarHandler csar = null;
         try {
-            // wait for a random time, so that 2 running Clamp will not treat the same Notification at the same time 
-            int i = ThreadLocalRandom.current().nextInt(1, 5);
-            Thread.sleep(i * 1000);
-
+            // wait for a random time, so that 2 running Clamp will not treat
+            // the same Notification at the same time
+            long i = ThreadLocalRandom.current().nextInt(1, 5);
+            Thread.sleep(i * 1000L);
             logger.info("Notification received for service UUID:" + iNotif.getServiceUUID());
             this.changeControllerStatus(SdcSingleControllerStatus.BUSY);
             csar = new CsarHandler(iNotif, this.sdcConfig.getSdcControllerName(),
@@ -247,6 +247,7 @@ public class SdcSingleController {
                     e.getMessage(), System.currentTimeMillis());
         } catch (InterruptedException e) {
             logger.error("Interrupt exception caught during the notification processing", e);
+            Thread.currentThread().interrupt();
         } catch (RuntimeException e) {
             logger.error("Unexpected exception caught during the notification processing", e);
         } finally {
