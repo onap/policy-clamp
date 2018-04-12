@@ -46,10 +46,10 @@ import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -169,7 +169,8 @@ public class CsarInstallerImpl implements CsarInstaller {
         return policyNameList.get(0);
     }
 
-    private String queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact) throws IOException, ParseException {
+    private String queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact)
+            throws IOException, ParseException, InterruptedException {
         return dcaeInventoryService.getDcaeInformation(blueprintArtifact.getBlueprintArtifactName(),
                 blueprintArtifact.getBlueprintInvariantServiceUuid(),
                 blueprintArtifact.getBlueprintInvariantResourceUuid()).getTypeId();
