@@ -173,7 +173,7 @@ public class CsarInstallerImpl implements CsarInstaller {
             throws IOException, ParseException, InterruptedException {
         return dcaeInventoryService.getDcaeInformation(blueprintArtifact.getBlueprintArtifactName(),
                 blueprintArtifact.getBlueprintInvariantServiceUuid(),
-                blueprintArtifact.getBlueprintInvariantResourceUuid()).getTypeId();
+                blueprintArtifact.getResourceAttached().getResourceInvariantUUID()).getTypeId();
     }
 
     private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintArtifact blueprintArtifact,
@@ -209,7 +209,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         cldsModel.setTemplateId(cldsTemplate.getId());
         cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
                 + blueprintArtifact.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
-                + blueprintArtifact.getBlueprintInvariantResourceUuid()
+                + blueprintArtifact.getResourceAttached().getResourceInvariantUUID()
                 + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},{\"name\":\"deployParameters\",\"value\":{\n"
                 + "        \"policy_id\": \"" + "test" + "\"" + "      }}]}");
         cldsModel.setBpmnText(cldsTemplate.getBpmnText());
