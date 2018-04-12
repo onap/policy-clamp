@@ -85,7 +85,7 @@ public class Application extends SpringBootServletInitializer {
         // This is to initialize some Onap Clamp components
         initializeComponents();
         // Start the Spring application
-        SpringApplication.run(Application.class, args); // NOSONAR
+        SpringApplication.run(Application.class, args);
     }
 
     private static void initializeComponents() {

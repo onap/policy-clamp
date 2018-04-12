@@ -29,8 +29,9 @@ import java.util.Arrays;
  * The class represents the CldsUser that can be extracted from cldsusers.json.
  */
 public class CldsUser {
-    private String                    user;
-    private String                    password;
+
+    private String user;
+    private String password;
     private SecureServicePermission[] permissions;
 
     /**
@@ -81,7 +82,7 @@ public class CldsUser {
     }
 
     public String[] getPermissionsString() {
-        return Arrays.stream(getPermissions()).map(SecureServicePermission::getKey).toArray(String[]::new);// NOSONAR
+        return Arrays.stream(getPermissions()).map(SecureServicePermission::getKey).toArray(String[]::new);
     }
 
     /**
