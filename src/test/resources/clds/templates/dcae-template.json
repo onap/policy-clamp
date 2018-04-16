@@ -16,7 +16,7 @@
 				"closedLoopControlName": "",
 				"closedLoopEventClient": "configuration.dcae.microservice.tca.xml",
 				"policyName": "",
-				"policyScope": "service=vSCP;resource=F5;type=configuration",
+				"policyScope": "CLAMP",
 				"policyVersion": "v0.0.1",
 				"serviceConfigurations": {
 				}

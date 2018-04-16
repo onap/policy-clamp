@@ -4,7 +4,7 @@
 		{
 			"eventName": "???",
 			"controlLoopSchemaType": "VNF",
-			"policyScope": "DCAE",
+			"policyScope": "CLAMP",
 			"policyName": "???",
 			"policyVersion": "v0.0.1",
 			"thresholds": [
