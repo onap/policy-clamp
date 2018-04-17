@@ -93,8 +93,8 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     public static String buildModelName(CsarHandler csar) {
-        return csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + " v"
-                + csar.getSdcNotification().getServiceVersion();
+        return csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
+                + csar.getSdcNotification().getServiceVersion().replace('.', '_');
     }
 
     @Override
