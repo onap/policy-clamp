@@ -4,6 +4,7 @@
 	"location": "SampleServiceLocation",
 	"configName": "SampleConfigName",
 	"uuid": "test",
+	"policyScope":"CLAMP",
 	"templateVersion": "OpenSource.version.1",
 	"policyName": "MicroService",
 	"description": "MicroService Policy",
