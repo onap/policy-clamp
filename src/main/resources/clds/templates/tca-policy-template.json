@@ -5,7 +5,7 @@
 	"configName": "SampleConfigName",
 	"uuid": "test",
 	"templateVersion": "OpenSource.version.1",
-	"policyName": "MicroService",
+	"policyName": "???",
 	"description": "MicroService Policy",
 	"priority": "1",
 	"riskType": "SampleRiskType",
