@@ -64,12 +64,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class PolicyClient {
 
-    protected static final String POLICY_PREFIX_BASE = "Config_";
     protected static final String LOG_POLICY_PREFIX = "Response is ";
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyClient.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    protected static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
-    protected static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
+    public static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
+    public static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
+    public static final String POLICY_BASENAME_PREFIX_PROPERTY_NAME = "policy.base.policyNamePrefix";
+    public static final String POLICY_OP_NAME_PREFIX_PROPERTY_NAME = "policy.op.policyNamePrefix";
+    public static final String POLICY_MS_NAME_PREFIX_PROPERTY_NAME = "policy.ms.policyNamePrefix";
+    public static final String POLICY_OP_TYPE_PROPERTY_NAME = "policy.op.type";
     @Autowired
     protected ApplicationContext appContext;
     @Autowired
@@ -102,9 +105,9 @@ public class PolicyClient {
         policyParameters.setAttributes(attributes);
         // Set a random UUID(Mandatory)
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
-        String policyNamePrefix = refProp.getStringValue("policy.op.policyNamePrefix");
+        String policyNamePrefix = refProp.getStringValue(POLICY_OP_NAME_PREFIX_PROPERTY_NAME);
         String rtnMsg = send(policyParameters, prop, policyNamePrefix);
-        String policyType = refProp.getStringValue("policy.op.type");
+        String policyType = refProp.getStringValue(POLICY_OP_TYPE_PROPERTY_NAME);
         push(policyType, prop);
         return rtnMsg;
     }
@@ -129,7 +132,7 @@ public class PolicyClient {
         policyParameters.setConfigBody(policyJson);
         policyParameters.setConfigBodyType(PolicyType.JSON);
         policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
-        String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
+        String policyNamePrefix = refProp.getStringValue(POLICY_MS_NAME_PREFIX_PROPERTY_NAME);
         // Adding this line to clear the policy id from policy name while
         // pushing to policy engine
         prop.setPolicyUniqueId("");
@@ -168,7 +171,7 @@ public class PolicyClient {
         // Adding this line to clear the policy id from policy name while
         // pushing to policy engine
         prop.setPolicyUniqueId("");
-        String rtnMsg = send(policyParameters, prop, POLICY_PREFIX_BASE);
+        String rtnMsg = send(policyParameters, prop, refProp.getStringValue(POLICY_BASENAME_PREFIX_PROPERTY_NAME));
         push(PolicyConfigType.Base.toString(), prop);
         return rtnMsg;
     }
@@ -189,7 +192,7 @@ public class PolicyClient {
         policyParameters.setOnapName(refProp.getStringValue(POLICY_ONAPNAME_PROPERTY_NAME));
         policyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         policyParameters.setConfigBody(configBody);
-        String policyNamePrefix = refProp.getStringValue("policy.ms.policyNamePrefix");
+        String policyNamePrefix = refProp.getStringValue(POLICY_MS_NAME_PREFIX_PROPERTY_NAME);
         // Adding this line to clear the policy id from policy name while
         // pushing to policy engine
         prop.setPolicyUniqueId("");
@@ -390,7 +393,7 @@ public class PolicyClient {
      * @return The response message from policy
      */
     public String deleteBrms(ModelProperties prop) {
-        String policyType = refProp.getStringValue("policy.op.type");
+        String policyType = refProp.getStringValue(POLICY_OP_TYPE_PROPERTY_NAME);
         return deletePolicy(prop, policyType);
     }
 
