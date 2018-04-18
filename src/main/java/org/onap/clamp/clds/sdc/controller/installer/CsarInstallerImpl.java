@@ -62,8 +62,10 @@ public class CsarInstallerImpl implements CsarInstaller {
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);
     private Map<String, BlueprintParserFilesConfiguration> bpmnMapping = new HashMap<>();
     public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-ClosedLoopTemplate-";
-    public static final String MODEL_NAME_PREFIX = "ClosedLoop-";
+    public static final String CONTROL_NAME_PREFIX = "ClosedLoop-";
     public static final String GET_INPUT_BLUEPRINT_PARAM = "get_input";
+    // This will be used later as the policy scope
+    public static final String MODEL_NAME_PREFIX = "CLAMP";
     /**
      * The file name that will be loaded by Spring.
      */
@@ -93,7 +95,7 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     public static String buildModelName(CsarHandler csar) {
-        return csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
+        return MODEL_NAME_PREFIX + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
                 + csar.getSdcNotification().getServiceVersion().replace('.', '_');
     }
 
@@ -201,7 +203,7 @@ public class CsarInstallerImpl implements CsarInstaller {
             // It's a filter must add a specific prefix
             cldsModel.setControlNamePrefix(policyName);
         } else {
-            cldsModel.setControlNamePrefix(MODEL_NAME_PREFIX);
+            cldsModel.setControlNamePrefix(CONTROL_NAME_PREFIX);
         }
         cldsModel.setName(buildModelName(csar));
         cldsModel.setBlueprintText(blueprintArtifact.getDcaeBlueprint());
