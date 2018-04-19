@@ -35,17 +35,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
+import javax.xml.transform.TransformerException;
 
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.BlueprintParserFilesConfiguration;
 import org.onap.clamp.clds.config.sdc.BlueprintParserMappingConfiguration;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsTemplate;
+import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
+import org.onap.clamp.clds.transform.XslTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -81,6 +85,10 @@ public class CsarInstallerImpl implements CsarInstaller {
     CldsService cldsService;
     @Autowired
     DcaeInventoryServices dcaeInventoryService;
+    @Autowired
+    private XslTransformer cldsBpmnTransformer;
+    @Autowired
+    private ClampProperties refProp;
 
     @PostConstruct
     public void loadConfiguration() throws IOException {
@@ -197,28 +205,37 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     private CldsModel createFakeCldsModel(CsarHandler csar, BlueprintArtifact blueprintArtifact,
             CldsTemplate cldsTemplate, String serviceTypeId) throws SdcArtifactInstallerException {
-        CldsModel cldsModel = new CldsModel();
-        String policyName = searchForPolicyName(blueprintArtifact);
-        if (policyName.contains("*")) {
-            // It's a filter must add a specific prefix
-            cldsModel.setControlNamePrefix(policyName);
-        } else {
-            cldsModel.setControlNamePrefix(CONTROL_NAME_PREFIX);
+        try {
+            CldsModel cldsModel = new CldsModel();
+            cldsModel.setName(buildModelName(csar));
+            cldsModel.setBlueprintText(blueprintArtifact.getDcaeBlueprint());
+            cldsModel.setTemplateName(cldsTemplate.getName());
+            cldsModel.setTemplateId(cldsTemplate.getId());
+            cldsModel.setBpmnText(cldsTemplate.getBpmnText());
+            cldsModel.setTypeId(serviceTypeId);
+            ModelProperties modelProp = new ModelProperties(cldsModel.getName(), "test", "PUT", false,
+                    cldsBpmnTransformer.doXslTransformToString(cldsTemplate.getBpmnText()), "{}");
+            String policyName = searchForPolicyName(blueprintArtifact);
+            String inputParams = "";
+            if (policyName.contains("*")) {
+                // It's a filter must add a specific prefix
+                cldsModel.setControlNamePrefix(policyName);
+            } else {
+                cldsModel.setControlNamePrefix(CONTROL_NAME_PREFIX);
+                inputParams = "{\"name\":\"deployParameters\",\"value\":{\n" + "\"policy_id\": \""
+                        + modelProp.getPolicyNameForDcaeDeploy(refProp) + "\"" + "}}";
+            }
+            cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
+                    + blueprintArtifact.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
+                    + blueprintArtifact.getResourceAttached().getResourceInvariantUUID()
+                    + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},"
+                    + inputParams + "]}");
+            cldsModel.save(cldsDao, null);
+            logger.info("Fake Clds Model created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
+                    + " with name " + cldsModel.getName());
+            return cldsModel;
+        } catch (TransformerException e) {
+            throw new SdcArtifactInstallerException("TransformerException when decoding the BpmnText", e);
         }
-        cldsModel.setName(buildModelName(csar));
-        cldsModel.setBlueprintText(blueprintArtifact.getDcaeBlueprint());
-        cldsModel.setTemplateName(cldsTemplate.getName());
-        cldsModel.setTemplateId(cldsTemplate.getId());
-        cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
-                + blueprintArtifact.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
-                + blueprintArtifact.getResourceAttached().getResourceInvariantUUID()
-                + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},{\"name\":\"deployParameters\",\"value\":{\n"
-                + "        \"policy_id\": \"" + "test" + "\"" + "      }}]}");
-        cldsModel.setBpmnText(cldsTemplate.getBpmnText());
-        cldsModel.setTypeId(serviceTypeId);
-        cldsModel.save(cldsDao, null);
-        logger.info("Fake Clds Model created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
-                + " with name " + cldsModel.getName());
-        return cldsModel;
     }
 }

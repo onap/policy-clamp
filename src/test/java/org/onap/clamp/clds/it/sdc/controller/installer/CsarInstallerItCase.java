@@ -155,6 +155,6 @@ public class CsarInstallerItCase {
         assertNotNull(modelFromDb.getImageText());
         assertNotNull(modelFromDb.getPropText());
         assertEquals(CsarInstallerImpl.buildModelName(csar), modelFromDb.getName());
-        assertEquals(CsarInstallerImpl.MODEL_NAME_PREFIX, modelFromDb.getControlNamePrefix());
+        assertEquals(CsarInstallerImpl.CONTROL_NAME_PREFIX, modelFromDb.getControlNamePrefix());
     }
 }

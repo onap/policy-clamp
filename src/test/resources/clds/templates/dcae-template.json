@@ -16,7 +16,7 @@
 				"closedLoopControlName": "",
 				"closedLoopEventClient": "configuration.dcae.microservice.tca.xml",
 				"policyName": "",
-				"policyScope": "CLAMP",
+				"policyScope": "DCAE",
 				"policyVersion": "v0.0.1",
 				"serviceConfigurations": {
 				}

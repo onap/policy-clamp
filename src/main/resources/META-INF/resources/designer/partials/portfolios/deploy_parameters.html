@@ -30,7 +30,7 @@
 		  <div style="height: 30px">
         Deployment parameters as JSON.
       </div>
-      <textarea class="form-control" focus="true" name="deployProperties"  id="deployProperties" />
+      <textarea class="form-control" focus="true" name="deployProperties" id="deployProperties" ng-init="load_deploy_parameters()"/>
 	</div>
 	<div class="modal-footer">
       <button ng-click="deploy()"  class="btn btn-primary">Deploy</button>
