@@ -35,12 +35,12 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.onap.clamp.clds.model.CldsMonitoringDetails;
 import org.onap.clamp.clds.model.CldsDbServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelInstance;
 import org.onap.clamp.clds.model.CldsModelProp;
+import org.onap.clamp.clds.model.CldsMonitoringDetails;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
@@ -311,13 +311,10 @@ public class CldsDao {
         template.setId((String) (out.get("v_template_id")));
         template.setBpmnUserid((String) (out.get("v_template_bpmn_user_id")));
         template.setBpmnId((String) (out.get("v_template_bpmn_id")));
-        template.setBpmnText((String) (out.get("v_template_bpmn_text")));
         template.setImageId((String) (out.get("v_template_image_id")));
         template.setImageUserid((String) out.get("v_template_image_user_id"));
-        template.setImageText((String) out.get("v_template_image_text"));
         template.setPropId((String) (out.get("v_template_doc_id")));
         template.setPropUserid((String) out.get("v_template_doc_user_id"));
-        template.setPropText((String) out.get("v_template_doc_text"));
     }
 
     /**
