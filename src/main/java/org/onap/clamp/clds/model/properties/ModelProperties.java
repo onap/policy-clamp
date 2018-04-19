@@ -36,6 +36,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.camel.Exchange;
+import org.onap.clamp.clds.client.req.policy.PolicyClient;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.ModelBpmnException;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
@@ -220,6 +222,15 @@ public class ModelProperties {
      */
     public String getCurrentPolicyScopeAndPolicyName() {
         return normalizePolicyScopeName(modelName + "." + getCurrentPolicyName());
+    }
+
+    /**
+     * @return The policyName that wil be used in input parameters of DCAE
+     *         deploy
+     */
+    public String getPolicyNameForDcaeDeploy(ClampProperties refProp) {
+        return normalizePolicyScopeName(modelName + "."
+                + refProp.getStringValue(PolicyClient.POLICY_MS_NAME_PREFIX_PROPERTY_NAME) + getCurrentPolicyName());
     }
 
     /**

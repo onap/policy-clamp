@@ -25,6 +25,16 @@ app.controller('DeploymentCtrl',
                ['$scope','$rootScope','$modalInstance','data','dialogs', 'cldsModelService',
        function( $scope,  $rootScope,  $modalInstance,  data,  dialogs,   cldsModelService) {
 
+           function validate_and_set_deploy_parameters () {
+        	   var parameters = $("#deployProperties").val();
+               try {
+                   parameters = JSON.parse(parameters);
+                   set_deploy_parameters(parameters);
+               } catch (e) {
+                   console.error("Couldn't parse deploy parameters json");
+               }
+           }
+
            function set_deploy_parameters(parameters) {
                if (!'global' in elementMap) {
                    elementMap["global"] = [];
@@ -38,15 +48,16 @@ app.controller('DeploymentCtrl',
                }
            }
 
-           $scope.deploy = function() {
-               var parameters = $("#deployProperties").val();
-               try {
-                   parameters = JSON.parse(parameters);
-                   set_deploy_parameters(parameters);
-                   $modalInstance.close();
-               } catch (e) {
-                   console.error("Couldn't parse deploy parameters json");
+           $scope.load_deploy_parameters = function () {
+        	   var index = elementMap["global"].findIndex(function (e) { return (typeof e == "object" && !(e instanceof Array)) && "deployParameters" == e["name"]; }); 
+               if (index != -1) { 
+            	   $('#deployProperties').val(JSON.stringify(elementMap["global"][index]["value"]))
                }
+           }
+
+           $scope.deploy = function() {
+        	   validate_and_set_deploy_parameters ();
+               $modalInstance.close();
            };
 
            $scope.close = function() {
