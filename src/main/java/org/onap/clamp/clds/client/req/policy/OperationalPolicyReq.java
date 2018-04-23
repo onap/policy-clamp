@@ -80,8 +80,9 @@ public class OperationalPolicyReq {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    public static Map<AttributeType, Map<String, String>> formatAttributes(ClampProperties refProp, ModelProperties prop,
-            String modelElementId, PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+    public static Map<AttributeType, Map<String, String>> formatAttributes(ClampProperties refProp,
+            ModelProperties prop, String modelElementId, PolicyChain policyChain)
+            throws BuilderException, UnsupportedEncodingException {
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
         prop.setPolicyUniqueId(policyChain.getPolicyId());
@@ -91,23 +92,17 @@ public class OperationalPolicyReq {
         String controller = "";
         Tca tca = prop.getType(Tca.class);
         if (tca != null && tca.isFound()) {
-            if (!global.getActionSet().equalsIgnoreCase("enbRecipe")) {
-                throw new BadRequestException(
-                        "Operation Policy validation problem: action set is not selected properly.");
+            if (global.getActionSet().equalsIgnoreCase("enbRecipe")) {
+                templateName = refProp.getStringValue("op.eNodeB.templateName", global.getService());
+                operationTopic = refProp.getStringValue("op.eNodeB.operationTopic", global.getService());
+                notificationTopic = refProp.getStringValue("op.eNodeB.notificationTopic", global.getService());
+                controller = refProp.getStringValue("op.eNodeB.controller", global.getService());
+            } else {
+                templateName = refProp.getStringValue("op.templateName", global.getService());
+                operationTopic = refProp.getStringValue("op.operationTopic", global.getService());
+                notificationTopic = refProp.getStringValue("op.notificationTopic", global.getService());
+                controller = refProp.getStringValue("op.controller", global.getService());
             }
-            templateName = refProp.getStringValue("op.eNodeB.templateName", global.getService());
-            operationTopic = refProp.getStringValue("op.eNodeB.operationTopic", global.getService());
-            notificationTopic = refProp.getStringValue("op.eNodeB.notificationTopic", global.getService());
-            controller = refProp.getStringValue("op.eNodeB.controller", global.getService());
-        } else {
-            if (!global.getActionSet().equalsIgnoreCase("vnfRecipe")) {
-                throw new BadRequestException(
-                        "Operation Policy validation problem: Action set is not selected properly.");
-            }
-            templateName = refProp.getStringValue("op.templateName", global.getService());
-            operationTopic = refProp.getStringValue("op.operationTopic", global.getService());
-            notificationTopic = refProp.getStringValue("op.notificationTopic", global.getService());
-            controller = refProp.getStringValue("op.controller", global.getService());
         }
         String recipeTopic = refProp.getStringValue("op.recipeTopic", global.getService());
         // ruleAttributes
@@ -329,7 +324,8 @@ public class OperationalPolicyReq {
      * @param inOrigList
      * @return
      */
-    private static List<PolicyItem> addAOTSActorRecipe(ClampProperties refProp, String service, List<PolicyItem> inOrigList) {
+    private static List<PolicyItem> addAOTSActorRecipe(ClampProperties refProp, String service,
+            List<PolicyItem> inOrigList) {
         List<PolicyItem> outList = new ArrayList<>();
         try {
             PolicyItem policyItem = inOrigList.get(0);
