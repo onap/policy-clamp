@@ -20,7 +20,7 @@
 # limitations under the License.
 # ============LICENSE_END============================================
 # ===================================================================
-# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+# 
 ###
 
 cd /docker-entrypoint-initdb.d/bulkload

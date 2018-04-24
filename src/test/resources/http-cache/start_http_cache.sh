@@ -19,7 +19,7 @@
 # limitations under the License.
 # ============LICENSE_END============================================
 # ===================================================================
-# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+#
 ###
 
 echo "Starting HTTP CACHE python script"
