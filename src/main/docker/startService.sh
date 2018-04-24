@@ -20,7 +20,7 @@
 # limitations under the License.
 # ============LICENSE_END============================================
 # ===================================================================
-# ECOMP is a trademark and service mark of AT&T Intellectual Property.
+# 
 ###
 
 java -Djava.security.egd=file:/dev/./urandom -Xms1024m -Xmx1024m -jar ./app.jar
