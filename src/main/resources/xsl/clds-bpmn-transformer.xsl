@@ -19,7 +19,6 @@
   limitations under the License.
   ============LICENSE_END============================================
   ===================================================================
-  ECOMP is a trademark and service mark of AT&T Intellectual Property.
   -->
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
