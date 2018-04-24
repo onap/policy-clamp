@@ -837,15 +837,6 @@ label {
 				            });
 						}
 						break;
-					} else if (asSel == "enbRecipe"){
-						if (vf_Services["policy"][asSel]){
-							$.each((vf_Services["policy"][asSel]), function(val, text) {
-				                $('#recipe').append(
-				                    $('<option></option>').val(val).html(text)
-				                );
-				            });
-						}
-						break;
 					}
 				};
 			};

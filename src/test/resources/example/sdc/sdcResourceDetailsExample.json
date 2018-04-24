@@ -108,17 +108,6 @@
             "artifactVersion": "1",
             "artifactLabel": "heatartifact2",
             "artifactGroupType": "DEPLOYMENT"
-        },
-        {
-            "artifactName": "eNodeB_Thresholds.csv",
-            "artifactType": "OTHER",
-            "artifactURL": "/sdc/v1/catalog/resources/84855843-5247-4e97-a2bd-5395a510253b/artifacts/d57ac7ec-f3c3-4793-983a-c75ac3a43153",
-            "artifactDescription": "kpis with nfNamingCode",
-            "artifactChecksum": "YTc1MDU0ZDFhODUwMGM5YmIwM2FmMWUzMmRiY2NlMGI=",
-            "artifactUUID": "d57ac7ec-f3c3-4793-983a-c75ac3a43153",
-            "artifactVersion": "1",
-            "artifactLabel": "kpis",
-            "artifactGroupType": "DEPLOYMENT"
         }
     ],
 

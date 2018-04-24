@@ -16,93 +16,36 @@ controlLoop:
   trigger_policy: <generatedId>
   version: 2.0.0
 policies:
-- actor: AOTS
-  description: checkENodeBTicketHours Policy - the trigger (no parent) policy - created by CLDS
-  failure: FINAL_FAILURE
-  failure_exception: FINAL_FAILURE_EXCEPTION
+- actor: APPC
+  description: restart Policy - the trigger (no parent) policy - created by CLDS
+  failure: <generatedId>
+  failure_exception: <generatedId>
   failure_guard: FINAL_FAILURE_GUARD
-  failure_retries: FINAL_FAILURE_RETRIES
-  failure_timeout: FINAL_FAILURE_TIMEOUT
+  failure_retries: <generatedId>
+  failure_timeout: <generatedId>
   id: <generatedId>
-  name: checkENodeBTicketHours Policy
+  name: restart Policy
   operationsAccumulateParams: null
-  payload:
-    timeWindow: '35'
-  recipe: checkENodeBTicketHours
-  retry: 0
+  payload: null
+  recipe: restart
+  retry: 3
   success: <generatedId>
   target:
     resourceID: resource-id
     type: VM
-  timeout: 120
-- actor: AOTS
-  description: checkEquipmentStatus Policy - triggered conditionally by checkENodeBTicketHours Policy - created by CLDS
-  failure: FINAL_FAILURE
-  failure_exception: FINAL_FAILURE_EXCEPTION
+  timeout: 180
+- actor: APPC
+  description: rebuild Policy - triggered conditionally by restart Policy - created by CLDS
+  failure: <generatedId>
+  failure_exception: <generatedId>
   failure_guard: FINAL_FAILURE_GUARD
-  failure_retries: FINAL_FAILURE_RETRIES
-  failure_timeout: FINAL_FAILURE_TIMEOUT
+  failure_retries: <generatedId>
+  failure_timeout: <generatedId>
   id: <generatedId>
-  name: checkEquipmentStatus Policy
+  name: rebuild Policy
   operationsAccumulateParams: null
   payload: null
-  recipe: checkEquipmentStatus
-  retry: 0
-  success: <generatedId>
-  target:
-    resourceID: resource-id
-    type: VM
-  timeout: 120
-- actor: AOTS
-  description: checkEimStatus Policy - triggered conditionally by checkEquipmentStatus Policy - created by CLDS
-  failure: FINAL_FAILURE
-  failure_exception: FINAL_FAILURE_EXCEPTION
-  failure_guard: FINAL_FAILURE_GUARD
-  failure_retries: FINAL_FAILURE_RETRIES
-  failure_timeout: FINAL_FAILURE_TIMEOUT
-  id: <generatedId>
-  name: checkEimStatus Policy
-  operationsAccumulateParams: null
-  payload: null
-  recipe: checkEimStatus
-  retry: 0
-  success: <generatedId>
-  target:
-    resourceID: resource-id
-    type: VM
-  timeout: 120
-- actor: AOTS
-  description: checkMaintenanceWindow Policy - triggered conditionally by checkEimStatus Policy - created by CLDS
-  failure: FINAL_FAILURE
-  failure_exception: FINAL_FAILURE_EXCEPTION
-  failure_guard: FINAL_FAILURE_GUARD
-  failure_retries: FINAL_FAILURE_RETRIES
-  failure_timeout: FINAL_FAILURE_TIMEOUT
-  id: <generatedId>
-  name: checkMaintenanceWindow Policy
-  operationsAccumulateParams: null
-  payload: null
-  recipe: checkMaintenanceWindow
-  retry: 0
-  success: <generatedId>
-  target:
-    resourceID: resource-id
-    type: VM
-  timeout: 120
-- actor: SDNR
-  description: Reset Policy - triggered conditionally by checkMaintenanceWindow Policy - created by CLDS
-  failure: FINAL_FAILURE
-  failure_exception: FINAL_FAILURE_EXCEPTION
-  failure_guard: FINAL_FAILURE_GUARD
-  failure_retries: FINAL_FAILURE_RETRIES
-  failure_timeout: FINAL_FAILURE_TIMEOUT
-  id: <generatedId>
-  name: Reset Policy
-  operationsAccumulateParams:
-    limit: 2
-    period: 10s
-  payload: null
-  recipe: Reset
+  recipe: rebuild
   retry: 3
   success: <generatedId>
   target:
