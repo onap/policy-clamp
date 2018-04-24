@@ -36,8 +36,7 @@
 	},
 	"global": {
 		"actionSet": {
-			"vnfRecipe": "VNF",
-			"enbRecipe": "eNodeB"
+			"vnfRecipe": "VNF"
 		},
 		"location": {
 			"DC1": "Data Center 1",
@@ -54,10 +53,6 @@
 			"rebuild": "Rebuild",
 			"migrate": "Migrate",
 			"healthCheck": "Health Check"
-		},
-		"enbRecipe": {
-			"": "",
-			"reset": "Reset"
 		},
 		"maxRetries": "3",
 		"retryTimeLimit": 180,

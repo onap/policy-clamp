@@ -622,20 +622,7 @@
         "lifecycleState": "READY_FOR_CERTIFICATION",
         "lastUpdaterUserId": "rx827p"
     },
-
-    {
-        "uuid": "e01dfc8f-2529-423b-9765-08b57df6ba51",
-        "invariantUUID": "6c7aaec2-59eb-41d9-8681-b7f976ab668d",
-        "name": "eNodeB-vf",
-        "version": "1.1",
-        "toscaModelURL": "/sdc/v1/catalog/resources/e01dfc8f-2529-423b-9765-08b57df6ba51/toscaModel",
-        "category": "Application L4+",
-        "subCategory": "Application Server",
-        "resourceType": "VF",
-        "lifecycleState": "CERTIFICATION_IN_PROGRESS",
-        "lastUpdaterUserId": "rx827p"
-    },
-
+    
     {
         "uuid": "d26e8473-b1c9-4751-bf7c-be0e10ba71ac",
         "invariantUUID": "e06a2a94-5ff9-4ab7-879f-c2d5cfaef1ca",
@@ -1479,19 +1466,6 @@
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
         "lastUpdaterUserId": "sa997j"
-    },
-
-    {
-        "uuid": "e01dfc8f-2529-423b-9765-08b57df6ba51",
-        "invariantUUID": "6c7aaec2-59eb-41d9-8681-b7f976ab668d",
-        "name": "eNodeB-vf",
-        "version": "2.0",
-        "toscaModelURL": "/sdc/v1/catalog/resources/e01dfc8f-2529-423b-9765-08b57df6ba51/toscaModel",
-        "category": "Application L4+",
-        "subCategory": "Application Server",
-        "resourceType": "VF",
-        "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "af3193"
     },
 
     {
