@@ -74,20 +74,24 @@ public class OperationPolicyReqItCase {
         // now validate the Yaml, to do so we replace the dynamic ID by a known
         // key so that we can compare it
         String yaml = URLDecoder.decode(attributes.get(0).get(AttributeType.RULE).get("ControlLoopYaml"), "UTF-8");
-        yaml = yaml.replaceAll("trigger_policy: (.*)", "trigger_policy: <generatedId>");
-        yaml = yaml.replaceAll("id: (.*)", "id: <generatedId>");
-        yaml = yaml.replaceAll("success: (.*)", "success: <generatedId>");
-        // Remove this field as not always present (depends of policy api)
-        yaml = yaml.replaceAll("  pnf: null" + System.lineSeparator(), "");
-        yaml = yaml.substring(yaml.indexOf("controlLoop:"), yaml.length());
+        yaml = replaceGeneratedValues(yaml);
         assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-1.yaml"), yaml);
         yaml = URLDecoder.decode(attributes.get(1).get(AttributeType.RULE).get("ControlLoopYaml"), "UTF-8");
+        yaml = replaceGeneratedValues(yaml);
+        assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-2.yaml"), yaml);
+    }
+
+    private String replaceGeneratedValues(String yaml) {
         yaml = yaml.replaceAll("trigger_policy: (.*)", "trigger_policy: <generatedId>");
         yaml = yaml.replaceAll("id: (.*)", "id: <generatedId>");
         yaml = yaml.replaceAll("success: (.*)", "success: <generatedId>");
         // Remove this field as not always present (depends of policy api)
         yaml = yaml.replaceAll("  pnf: null" + System.lineSeparator(), "");
+        yaml = yaml.replaceAll("failure: (.*)", "failure: <generatedId>");
+        yaml = yaml.replaceAll("failure_exception: (.*)", "failure_exception: <generatedId>");
+        yaml = yaml.replaceAll("failure_retries: (.*)", "failure_retries: <generatedId>");
+        yaml = yaml.replaceAll("failure_timeout: (.*)", "failure_timeout: <generatedId>");
         yaml = yaml.substring(yaml.indexOf("controlLoop:"), yaml.length());
-        assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-2.yaml"), yaml);
+        return yaml;
     }
 }
