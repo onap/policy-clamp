@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * ECOMP is a trademark and service mark of AT&T Intellectual Property.
+ * 
  */
 app.controller('CldsOpenModelCtrl',
 	['$scope', '$rootScope', '$modalInstance','cldsModelService', '$location', 'dialogs','cldsTemplateService',
