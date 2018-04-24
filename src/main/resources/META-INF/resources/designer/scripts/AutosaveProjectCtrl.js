@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * ECOMP is a trademark and service mark of AT&T Intellectual Property.
+ * 
  */
 
 function AutosaveProject($scope,$rootScope,$resource, $http, $timeout, $location, $interval, $q, Datafactory) 
