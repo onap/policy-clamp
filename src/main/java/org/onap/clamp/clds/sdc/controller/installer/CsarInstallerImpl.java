@@ -154,7 +154,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         List<String> policyNameList = new ArrayList<>();
         Map<String, Object> templateNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
                 .load(blueprintArtifact.getDcaeBlueprint())).get("node_templates"));
-        templateNodes.entrySet().stream().filter(e -> e.getKey().contains("policy_")).forEach(ef -> {
+        templateNodes.entrySet().stream().filter(e -> e.getKey().contains("policy")).forEach(ef -> {
             String filteredPolicyName = (String) ((Map<String, Object>) ((Map<String, Object>) ef.getValue())
                     .get("properties")).get("policy_filter");
             if (policyName != null) {
@@ -230,7 +230,7 @@ public class CsarInstallerImpl implements CsarInstaller {
                     + blueprintArtifact.getResourceAttached().getResourceInvariantUUID()
                     + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},"
                     + inputParams + "]}");
-            cldsModel.save(cldsDao, null);
+            cldsModel = cldsModel.save(cldsDao, null);
             logger.info("Fake Clds Model created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
                     + " with name " + cldsModel.getName());
             return cldsModel;

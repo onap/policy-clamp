@@ -108,10 +108,11 @@ public class CldsModel {
     /**
      * Save model to DB.
      */
-    public void save(CldsDao cldsDao, String userid) {
-        cldsDao.setModel(this, userid);
+    public CldsModel save(CldsDao cldsDao, String userid) {
+        CldsModel cldsModel = cldsDao.setModel(this, userid);
         determineStatus();
         determinePermittedActionCd();
+        return cldsModel;
     }
 
     /**

@@ -113,7 +113,7 @@ public class CsarHandler {
         for (IResourceInstance resource : this.sdcNotification.getResources()) {
             String filteredString = resource.getResourceInstanceName().replaceAll("-", "");
             filteredString = filteredString.replaceAll(" ", "");
-            if (filteredString.equals(blueprintResourceInstanceName)) {
+            if (filteredString.equalsIgnoreCase(blueprintResourceInstanceName)) {
                 return resource;
             }
         }
