@@ -48,8 +48,6 @@
            "mvn clean install -Dspring.config.location=classpath:application-test.properties"
 
            The application.properties contains the location of the CLAMP parameters files:
-				- org.onap.clamp.config.files.cldsReference=classpath:/clds/clds-reference.properties
-				- org.onap.clamp.config.files.cldsPolicyConfig=classpath:/clds/clds-policy-config.properties
 				- org.onap.clamp.config.files.cldsUsers=classpath:/clds/clds-users.json
 				- org.onap.clamp.config.files.globalClds=classpath:/clds/globalClds.properties
 
