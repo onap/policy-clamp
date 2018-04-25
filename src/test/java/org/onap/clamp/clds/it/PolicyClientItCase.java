@@ -170,9 +170,8 @@ public class PolicyClientItCase {
         assertEquals("websocket", policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_TYPE));
         assertEquals("localhost",
                 policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_UEB_SERVERS));
-        assertEquals("myclientid", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_ID));
-        assertEquals("5CE79532B3A2CB4D132FC0C04BF916A7",
-                policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_KEY));
+        assertEquals("python", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_ID));
+        assertEquals("dGVzdA==", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_KEY));
         assertEquals("DEVL", policyConfiguration.getProperties().get(PolicyConfiguration.ENVIRONMENT));
     }
 }
