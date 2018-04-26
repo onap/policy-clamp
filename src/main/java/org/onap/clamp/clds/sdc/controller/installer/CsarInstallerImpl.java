@@ -99,12 +99,19 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     @Override
     public boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
-        return (CldsModel.retrieve(cldsDao, buildModelName(csar), true).getId() != null) ? true : false;
+        boolean alreadyInstalled = true;
+        for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
+            alreadyInstalled = alreadyInstalled
+                    && (CldsModel.retrieve(cldsDao, buildModelName(csar, blueprint.getKey()), true).getId() != null)
+                            ? true
+                            : false;
+        }
+        return alreadyInstalled;
     }
 
-    public static String buildModelName(CsarHandler csar) {
+    public static String buildModelName(CsarHandler csar, String resourceInstanceName) {
         return MODEL_NAME_PREFIX + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
-                + csar.getSdcNotification().getServiceVersion().replace('.', '_');
+                + csar.getSdcNotification().getServiceVersion().replace('.', '_') + "_" + resourceInstanceName;
     }
 
     @Override
@@ -196,7 +203,8 @@ public class CsarInstallerImpl implements CsarInstaller {
                 "{\"global\":[{\"name\":\"service\",\"value\":[\"" + blueprintArtifact.getDcaeBlueprint() + "\"]}]}");
         template.setImageText(
                 IOUtils.toString(appContext.getResource(configFiles.getSvgXmlFilePath()).getInputStream()));
-        template.setName(TEMPLATE_NAME_PREFIX + buildModelName(csar));
+        template.setName(TEMPLATE_NAME_PREFIX
+                + buildModelName(csar, blueprintArtifact.getResourceAttached().getResourceInstanceName()));
         template.save(cldsDao, null);
         logger.info("Fake Clds Template created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
                 + " with name " + template.getName());
@@ -207,7 +215,7 @@ public class CsarInstallerImpl implements CsarInstaller {
             CldsTemplate cldsTemplate, String serviceTypeId) throws SdcArtifactInstallerException {
         try {
             CldsModel cldsModel = new CldsModel();
-            cldsModel.setName(buildModelName(csar));
+            cldsModel.setName(buildModelName(csar, blueprintArtifact.getResourceAttached().getResourceInstanceName()));
             cldsModel.setBlueprintText(blueprintArtifact.getDcaeBlueprint());
             cldsModel.setTemplateName(cldsTemplate.getName());
             cldsModel.setTemplateId(cldsTemplate.getId());
