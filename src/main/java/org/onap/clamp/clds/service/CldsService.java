@@ -214,27 +214,34 @@ public class CldsService extends SecureServiceBase {
     @GET
     @Path("/healthcheck")
     @Produces(MediaType.APPLICATION_JSON)
-    public CldsHealthCheck gethealthcheck() {
+    public Response gethealthcheck() {
         CldsHealthCheck cldsHealthCheck = new CldsHealthCheck();
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET healthcheck", getPrincipalName());
+        LoggingUtils.setRequestContext("CldsService: GET healthcheck", "Clamp-Health-Check");
         LoggingUtils.setTimeContext(startTime, new Date());
+        boolean healthcheckFailed = false;
         try {
             cldsDao.doHealthCheck();
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("UP");
             cldsHealthCheck.setDescription("OK");
+            LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
         } catch (Exception e) {
+            healthcheckFailed = true;
             logger.error("CLAMP application DB Error", e);
+            LoggingUtils.setResponseContext("999", "Get healthcheck failed", this.getClass().getName());
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("DOWN");
             cldsHealthCheck.setDescription("NOT-OK");
         }
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
-        securityLogger.info("GET healthcheck completed");
-        return cldsHealthCheck;
+        logger.info("GET healthcheck completed");
+        if (healthcheckFailed) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cldsHealthCheck).build();
+        } else {
+            return Response.status(Response.Status.OK).entity(cldsHealthCheck).build();
+        }
     }
 
     /**

@@ -37,6 +37,7 @@ import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.util.Properties;
 
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.codec.DecoderException;
@@ -127,7 +128,8 @@ public class CldsServiceItCase {
 
     @Test
     public void testGetHealthCheck() {
-        CldsHealthCheck cldsHealthCheck = cldsService.gethealthcheck();
+        Response response = cldsService.gethealthcheck();
+        CldsHealthCheck cldsHealthCheck = (CldsHealthCheck) response.getEntity();
         assertNotNull(cldsHealthCheck);
         assertEquals("UP", cldsHealthCheck.getHealthCheckStatus());
         assertEquals("CLDS-APP", cldsHealthCheck.getHealthCheckComponent());
