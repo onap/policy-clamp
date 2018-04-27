@@ -170,6 +170,7 @@ public class CsarInstallerItCase {
         assertNotNull(modelFromDb.getBpmnText());
         assertNotNull(modelFromDb.getImageText());
         assertNotNull(modelFromDb.getPropText());
+        assertTrue(modelFromDb.getPropText().contains("policy_id"));
         assertEquals(CsarInstallerImpl.buildModelName(csar, INSTANCE_NAME_RESOURCE2), modelFromDb.getName());
         assertEquals(CsarInstallerImpl.CONTROL_NAME_PREFIX, modelFromDb.getControlNamePrefix());
     }
