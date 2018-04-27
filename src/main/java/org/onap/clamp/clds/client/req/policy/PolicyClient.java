@@ -330,7 +330,7 @@ public class PolicyClient {
         } else {
             policyName = prop.getCurrentPolicyScopeAndFullPolicyName(policyNamePrefix);
         }
-        logger.info("policyName=" + policyName);
+        logger.info("Search in Policy Engine for policyName=" + policyName);
         configRequestParameters.setPolicyName(policyName);
         try {
             Collection<PolicyConfig> response = getPolicyEngine().getConfig(configRequestParameters);
