@@ -489,10 +489,16 @@ public class CldsService extends SecureServiceBase {
             if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-                // To verify inventory status and modify model status to
-                // distribute
-                dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
-                retrievedModel.save(cldsDao, getUserId());
+                if (retrievedModel.getDeploymentId() == null) {
+                    // This should be done only when the call to DCAE
+                    // has not yet been done. When CL comes from SDC
+                    // this is not required as the DCAE inventory call is done
+                    // during the CL deployment.
+                    dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
+                    retrievedModel.save(cldsDao, getUserId());
+                } else {
+                    logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
+                }
             }
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
