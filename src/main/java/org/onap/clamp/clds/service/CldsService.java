@@ -489,7 +489,7 @@ public class CldsService extends SecureServiceBase {
             if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-                if (retrievedModel.getDeploymentId() == null) {
+                if (retrievedModel.getTypeId() == null) {
                     // This should be done only when the call to DCAE
                     // has not yet been done. When CL comes from SDC
                     // this is not required as the DCAE inventory call is done
