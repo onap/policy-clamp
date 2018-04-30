@@ -217,11 +217,15 @@ public class ModelProperties {
         return normalizePolicyScopeName(controlName + "_" + currentModelElementId);
     }
 
+    private String createScopeSeparator(String policyScope) {
+        return policyScope.contains(".") ? "" : ".";
+    }
+
     /**
      * @return the currentPolicyScopeAndPolicyName
      */
     public String getCurrentPolicyScopeAndPolicyName() {
-        return normalizePolicyScopeName(modelName + "." + getCurrentPolicyName());
+        return normalizePolicyScopeName(modelName + createScopeSeparator(modelName) + getCurrentPolicyName());
     }
 
     /**
@@ -229,7 +233,7 @@ public class ModelProperties {
      *         deploy
      */
     public String getPolicyNameForDcaeDeploy(ClampProperties refProp) {
-        return normalizePolicyScopeName(modelName + "."
+        return normalizePolicyScopeName(modelName + createScopeSeparator(modelName)
                 + refProp.getStringValue(PolicyClient.POLICY_MS_NAME_PREFIX_PROPERTY_NAME) + getCurrentPolicyName());
     }
 
@@ -237,22 +241,16 @@ public class ModelProperties {
      * @return the policyScopeAndNameWithUniqueId
      */
     public String getPolicyScopeAndNameWithUniqueId() {
-        return normalizePolicyScopeName(modelName + "." + getCurrentPolicyName() + "_" + policyUniqueId);
+        return normalizePolicyScopeName(
+                modelName + createScopeSeparator(modelName) + getCurrentPolicyName() + "_" + policyUniqueId);
     }
 
     /**
      * @return the currentPolicyScopeAndFullPolicyName
      */
     public String getCurrentPolicyScopeAndFullPolicyName(String policyNamePrefix) {
-        return normalizePolicyScopeName(modelName + "." + policyNamePrefix + getCurrentPolicyName());
-    }
-
-    /**
-     * @return the currentPolicyScopeAndFullPolicyNameWithVersion
-     */
-    public String getCurrentPolicyScopeAndFullPolicyNameWithVersion(String policyNamePrefix, int version) {
         return normalizePolicyScopeName(
-                modelName + "." + policyNamePrefix + getCurrentPolicyName() + "." + version + ".xml");
+                modelName + createScopeSeparator(modelName) + policyNamePrefix + getCurrentPolicyName());
     }
 
     /**

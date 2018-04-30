@@ -65,7 +65,7 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);
     private Map<String, BlueprintParserFilesConfiguration> bpmnMapping = new HashMap<>();
-    public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-ClosedLoopTemplate-";
+    public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-Template-";
     public static final String CONTROL_NAME_PREFIX = "ClosedLoop-";
     public static final String GET_INPUT_BLUEPRINT_PARAM = "get_input";
     // This will be used later as the policy scope
@@ -109,8 +109,17 @@ public class CsarInstallerImpl implements CsarInstaller {
         return alreadyInstalled;
     }
 
-    public static String buildModelName(CsarHandler csar, String resourceInstanceName) {
-        return MODEL_NAME_PREFIX + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
+    public static String buildModelName(CsarHandler csar, String resourceInstanceName)
+            throws SdcArtifactInstallerException {
+        String policyScopePrefix = searchForPolicyScopePrefix(csar.getMapOfBlueprints().get(resourceInstanceName));
+        if (policyScopePrefix.contains("*")) {
+            // This is policy_filter type
+            policyScopePrefix = policyScopePrefix.replaceAll("\\*", "");
+        } else {
+            // This is normally the get_input case
+            policyScopePrefix = MODEL_NAME_PREFIX;
+        }
+        return policyScopePrefix + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
                 + csar.getSdcNotification().getServiceVersion().replace('.', '_') + "_" + resourceInstanceName;
     }
 
@@ -155,7 +164,8 @@ public class CsarInstallerImpl implements CsarInstaller {
         return listConfig.get(0);
     }
 
-    private String searchForPolicyName(BlueprintArtifact blueprintArtifact) throws SdcArtifactInstallerException {
+    private static String searchForPolicyScopePrefix(BlueprintArtifact blueprintArtifact)
+            throws SdcArtifactInstallerException {
         String policyName = null;
         Yaml yaml = new Yaml();
         List<String> policyNameList = new ArrayList<>();
@@ -186,6 +196,17 @@ public class CsarInstallerImpl implements CsarInstaller {
         return policyNameList.get(0);
     }
 
+    /**
+     * This call must be done when deploying the SDC notification as this call
+     * get the latest version of the artifact (version can be specified to DCAE
+     * call)
+     * 
+     * @param blueprintArtifact
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     * @throws InterruptedException
+     */
     private String queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact)
             throws IOException, ParseException, InterruptedException {
         return dcaeInventoryService.getDcaeInformation(blueprintArtifact.getBlueprintArtifactName(),
@@ -194,7 +215,7 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintArtifact blueprintArtifact,
-            BlueprintParserFilesConfiguration configFiles) throws IOException {
+            BlueprintParserFilesConfiguration configFiles) throws IOException, SdcArtifactInstallerException {
         CldsTemplate template = new CldsTemplate();
         template.setBpmnId("Sdc-Generated");
         template.setBpmnText(
@@ -221,29 +242,33 @@ public class CsarInstallerImpl implements CsarInstaller {
             cldsModel.setTemplateId(cldsTemplate.getId());
             cldsModel.setBpmnText(cldsTemplate.getBpmnText());
             cldsModel.setTypeId(serviceTypeId);
-            ModelProperties modelProp = new ModelProperties(cldsModel.getName(), "test", "PUT", false,
-                    cldsBpmnTransformer.doXslTransformToString(cldsTemplate.getBpmnText()), "{}");
-            String policyName = searchForPolicyName(blueprintArtifact);
-            String inputParams = "";
-            if (policyName.contains("*")) {
-                // It's a filter must add a specific prefix
-                cldsModel.setControlNamePrefix(policyName);
-            } else {
-                cldsModel.setControlNamePrefix(CONTROL_NAME_PREFIX);
-                inputParams = "{\"name\":\"deployParameters\",\"value\":{\n" + "\"policy_id\": \""
-                        + modelProp.getPolicyNameForDcaeDeploy(refProp) + "\"" + "}}";
-            }
-            cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
-                    + blueprintArtifact.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
-                    + blueprintArtifact.getResourceAttached().getResourceInvariantUUID()
-                    + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},"
-                    + inputParams + "]}");
+            cldsModel.setControlNamePrefix(CONTROL_NAME_PREFIX);
+            // We must save it otherwise object won't be created in db
+            // and proptext will always be null
+            cldsModel.setPropText("{\"global\":[]}");
+            // Must save first to have the generated id available to generate
+            // the policyId
             cldsModel = cldsModel.save(cldsDao, null);
+            cldsModel = setModelPropText(cldsModel, blueprintArtifact, cldsTemplate);
             logger.info("Fake Clds Model created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
                     + " with name " + cldsModel.getName());
             return cldsModel;
         } catch (TransformerException e) {
             throw new SdcArtifactInstallerException("TransformerException when decoding the BpmnText", e);
         }
+    }
+
+    private CldsModel setModelPropText(CldsModel cldsModel, BlueprintArtifact blueprintArtifact,
+            CldsTemplate cldsTemplate) throws TransformerException {
+        ModelProperties modelProp = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), "PUT", false,
+                cldsBpmnTransformer.doXslTransformToString(cldsTemplate.getBpmnText()), "{}");
+        String inputParams = "{\"name\":\"deployParameters\",\"value\":{\n" + "\"policy_id\": \""
+                + "AUTO_GENERATED_POLICY_ID_AT_SUBMIT" + "\"" + "}}";
+        cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
+                + blueprintArtifact.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
+                + blueprintArtifact.getResourceAttached().getResourceInvariantUUID()
+                + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},"
+                + inputParams + "]}");
+        return cldsModel.save(cldsDao, null);
     }
 }
