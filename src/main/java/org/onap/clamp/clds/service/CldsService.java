@@ -491,18 +491,19 @@ public class CldsService extends SecureServiceBase {
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
                 if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
-                    // This should be done only when the call to DCAE
-                    // has not yet been done. When CL comes from SDC
-                    // this is not required as the DCAE inventory call is done
-                    // during the CL deployment.
-                    dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
-                } else {
+                    // SDC artifact case
                     logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
                     DcaeEvent dcaeEvent = new DcaeEvent();
                     dcaeEvent.setArtifactName("SDC artifact-" + retrievedModel.getName());
                     dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
                     CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
                             CldsEvent.ACTION_STATE_RECEIVED, null);
+                } else {
+                    // This should be done only when the call to DCAE
+                    // has not yet been done. When CL comes from SDC
+                    // this is not required as the DCAE inventory call is done
+                    // during the CL deployment.
+                    dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
                 }
                 retrievedModel.save(cldsDao, getUserId());
             }
