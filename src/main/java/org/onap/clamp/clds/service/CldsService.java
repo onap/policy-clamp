@@ -83,6 +83,7 @@ import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.sdc.SdcResource;
 import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
 import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
+import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.JacksonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -489,16 +490,21 @@ public class CldsService extends SecureServiceBase {
             if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-                if (retrievedModel.getTypeId() == null) {
+                if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
                     // This should be done only when the call to DCAE
                     // has not yet been done. When CL comes from SDC
                     // this is not required as the DCAE inventory call is done
                     // during the CL deployment.
                     dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
-                    retrievedModel.save(cldsDao, getUserId());
                 } else {
                     logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
+                    DcaeEvent dcaeEvent = new DcaeEvent();
+                    dcaeEvent.setArtifactName("SDC artifact-" + retrievedModel.getName());
+                    dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
+                    CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
+                            CldsEvent.ACTION_STATE_RECEIVED, null);
                 }
+                retrievedModel.save(cldsDao, getUserId());
             }
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());

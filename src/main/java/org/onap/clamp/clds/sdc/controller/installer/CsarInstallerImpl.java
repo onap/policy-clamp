@@ -46,6 +46,7 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsTemplate;
+import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
@@ -120,7 +121,8 @@ public class CsarInstallerImpl implements CsarInstaller {
             policyScopePrefix = MODEL_NAME_PREFIX;
         }
         return policyScopePrefix + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
-                + csar.getSdcNotification().getServiceVersion().replace('.', '_') + "_" + resourceInstanceName;
+                + csar.getSdcNotification().getServiceVersion().replace('.', '_') + "_"
+                + resourceInstanceName.replaceAll(" ", "");
     }
 
     @Override
@@ -130,9 +132,10 @@ public class CsarInstallerImpl implements CsarInstaller {
             logger.info("Installing the CSAR " + csar.getFilePath());
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
                 logger.info("Processing blueprint " + blueprint.getValue().getBlueprintArtifactName());
-                String serviceTypeId = queryDcaeToGetServiceTypeId(blueprint.getValue());
-                createFakeCldsModel(csar, blueprint.getValue(), createFakeCldsTemplate(csar, blueprint.getValue(),
-                        this.searchForRightMapping(blueprint.getValue())), serviceTypeId);
+                createFakeCldsModel(csar, blueprint.getValue(),
+                        createFakeCldsTemplate(csar, blueprint.getValue(),
+                                this.searchForRightMapping(blueprint.getValue())),
+                        queryDcaeToGetServiceTypeId(blueprint.getValue()));
             }
             logger.info("Successfully installed the CSAR " + csar.getFilePath());
         } catch (IOException e) {
@@ -202,16 +205,16 @@ public class CsarInstallerImpl implements CsarInstaller {
      * call)
      * 
      * @param blueprintArtifact
-     * @return
+     * @return The DcaeInventoryResponse object containing the dcae values
      * @throws IOException
      * @throws ParseException
      * @throws InterruptedException
      */
-    private String queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact)
+    private DcaeInventoryResponse queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact)
             throws IOException, ParseException, InterruptedException {
         return dcaeInventoryService.getDcaeInformation(blueprintArtifact.getBlueprintArtifactName(),
                 blueprintArtifact.getBlueprintInvariantServiceUuid(),
-                blueprintArtifact.getResourceAttached().getResourceInvariantUUID()).getTypeId();
+                blueprintArtifact.getResourceAttached().getResourceInvariantUUID());
     }
 
     private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintArtifact blueprintArtifact,
@@ -233,7 +236,8 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     private CldsModel createFakeCldsModel(CsarHandler csar, BlueprintArtifact blueprintArtifact,
-            CldsTemplate cldsTemplate, String serviceTypeId) throws SdcArtifactInstallerException {
+            CldsTemplate cldsTemplate, DcaeInventoryResponse dcaeInventoryResponse)
+            throws SdcArtifactInstallerException {
         try {
             CldsModel cldsModel = new CldsModel();
             cldsModel.setName(buildModelName(csar, blueprintArtifact.getResourceAttached().getResourceInstanceName()));
@@ -241,7 +245,8 @@ public class CsarInstallerImpl implements CsarInstaller {
             cldsModel.setTemplateName(cldsTemplate.getName());
             cldsModel.setTemplateId(cldsTemplate.getId());
             cldsModel.setBpmnText(cldsTemplate.getBpmnText());
-            cldsModel.setTypeId(serviceTypeId);
+            cldsModel.setTypeId(dcaeInventoryResponse.getTypeId());
+            cldsModel.setTypeName(dcaeInventoryResponse.getTypeName());
             cldsModel.setControlNamePrefix(CONTROL_NAME_PREFIX);
             // We must save it otherwise object won't be created in db
             // and proptext will always be null
