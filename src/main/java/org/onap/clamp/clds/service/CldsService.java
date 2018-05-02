@@ -494,7 +494,7 @@ public class CldsService extends SecureServiceBase {
                     // SDC artifact case
                     logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
                     DcaeEvent dcaeEvent = new DcaeEvent();
-                    dcaeEvent.setArtifactName("SDC artifact-" + retrievedModel.getName());
+                    dcaeEvent.setArtifactName(retrievedModel.getName() + ".yml");
                     dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
                     CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
                             CldsEvent.ACTION_STATE_RECEIVED, null);
