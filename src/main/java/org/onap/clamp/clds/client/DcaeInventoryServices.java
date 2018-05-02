@@ -122,7 +122,7 @@ public class DcaeInventoryServices {
     }
 
     private void analyzeAndSaveDcaeResponse(DcaeInventoryResponse dcaeResponse, CldsModel cldsModel,
-            DcaeEvent dcaeEvent, String userId) throws ParseException {
+            DcaeEvent dcaeEvent, String userId) {
         if (dcaeResponse != null) {
             logger.info("Dcae Response for query on inventory: " + dcaeResponse);
             String oldTypeId = cldsModel.getTypeId();
@@ -169,8 +169,7 @@ public class DcaeInventoryServices {
         String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types" + queryString;
         logger.info("Dcae Inventory Service full url - " + fullUrl);
         String dcaeInventoryResponse = null;
-
-        String responseStr = queryDCAEInventory (fullUrl);
+        String responseStr = queryDCAEInventory(fullUrl);
         JSONParser parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
@@ -188,16 +187,15 @@ public class DcaeInventoryServices {
         return JacksonUtils.getObjectMapperInstance().readValue(dcaeInventoryResponse, DcaeInventoryResponse.class);
     }
 
-    private String queryDCAEInventory (String fullUrl) throws IOException, InterruptedException {
+    private String queryDCAEInventory(String fullUrl) throws IOException, InterruptedException {
         int retryInterval = 0;
         int retryLimit = 1;
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT) != null) {
             retryLimit = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT));
         }
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL) != null) {
-        	retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
+            retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
         }
-
         int i = 0;
         while (i < retryLimit) {
             i++;
@@ -205,7 +203,8 @@ public class DcaeInventoryServices {
                 return DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
             } catch (BadRequestException e) {
                 if (i == retryLimit) {
-                    // reach the retry limit, but still failed to connect to DCAE
+                    // reach the retry limit, but still failed to connect to
+                    // DCAE
                     throw e;
                 } else {
                     // wait for a while and try to connect to DCAE again
@@ -213,9 +212,11 @@ public class DcaeInventoryServices {
                 }
             }
         }
-        // normally it should not go to this branch. It should either return the DCAE query result, or throw exception
+        // normally it should not go to this branch. It should either return the
+        // DCAE query result, or throw exception
         return null;
     }
+
     /**
      * Inserts a new DCAEServiceType or updates an existing instance. If the
      * typeName is same second time(already exists) then the
