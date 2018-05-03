@@ -39,7 +39,6 @@ import javax.xml.transform.TransformerException;
 
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.BlueprintParserFilesConfiguration;
 import org.onap.clamp.clds.config.sdc.BlueprintParserMappingConfiguration;
 import org.onap.clamp.clds.dao.CldsDao;
@@ -88,8 +87,6 @@ public class CsarInstallerImpl implements CsarInstaller {
     DcaeInventoryServices dcaeInventoryService;
     @Autowired
     private XslTransformer cldsBpmnTransformer;
-    @Autowired
-    private ClampProperties refProp;
 
     @PostConstruct
     public void loadConfiguration() throws IOException {
@@ -265,7 +262,8 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     private CldsModel setModelPropText(CldsModel cldsModel, BlueprintArtifact blueprintArtifact,
             CldsTemplate cldsTemplate) throws TransformerException {
-        ModelProperties modelProp = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), "PUT", false,
+        // Do a test to validate the BPMN
+        new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), "PUT", false,
                 cldsBpmnTransformer.doXslTransformToString(cldsTemplate.getBpmnText()), "{}");
         String inputParams = "{\"name\":\"deployParameters\",\"value\":{\n" + "\"policy_id\": \""
                 + "AUTO_GENERATED_POLICY_ID_AT_SUBMIT" + "\"" + "}}";
