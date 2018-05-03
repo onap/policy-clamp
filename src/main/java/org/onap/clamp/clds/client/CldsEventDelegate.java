@@ -28,11 +28,8 @@ import com.att.eelf.configuration.EELFManager;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.CldsModel;
-import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,8 +43,6 @@ public class CldsEventDelegate {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
     private CldsDao cldsDao;
-    @Autowired
-    private ClampProperties refProp;
 
     /**
      * Insert event using process variables.
@@ -70,15 +65,5 @@ public class CldsEventDelegate {
             // won't really have userid here...
             CldsEvent.insEvent(cldsDao, controlName, userid, actionCd, actionStateCd, camelExchange.getExchangeId());
         }
-        generateAutoPolicyId(camelExchange);
-    }
-
-    private void generateAutoPolicyId(Exchange camelExchange) {
-        ModelProperties prop = ModelProperties.create(camelExchange);
-        ;
-        CldsModel cldsModel = CldsModel.retrieve(cldsDao, (String) camelExchange.getProperty("modelName"), false);
-        cldsModel.setPropText(cldsModel.getPropText().replaceAll("AUTO_GENERATED_POLICY_ID_AT_SUBMIT",
-                prop.getPolicyNameForDcaeDeploy(refProp)));
-        cldsModel.save(cldsDao, (String) camelExchange.getProperty("userid"));
     }
 }

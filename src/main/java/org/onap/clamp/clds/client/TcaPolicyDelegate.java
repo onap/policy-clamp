@@ -33,6 +33,8 @@ import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Tca;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,8 @@ public class TcaPolicyDelegate {
     private ClampProperties refProp;
     @Autowired
     private PolicyClient policyClient;
+    @Autowired
+    private CldsDao cldsDao;
 
     /**
      * Perform activity. Send Tca info to policy api.
@@ -69,6 +73,10 @@ public class TcaPolicyDelegate {
             if (responseMessage != null) {
                 camelExchange.setProperty("tcaPolicyResponseMessage", responseMessage.getBytes());
             }
+            CldsModel cldsModel = CldsModel.retrieve(cldsDao, (String) camelExchange.getProperty("modelName"), false);
+            cldsModel.setPropText(cldsModel.getPropText().replaceAll("AUTO_GENERATED_POLICY_ID_AT_SUBMIT",
+                    prop.getPolicyNameForDcaeDeploy(refProp)));
+            cldsModel.save(cldsDao, (String) camelExchange.getProperty("userid"));
         }
     }
 }

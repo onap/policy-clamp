@@ -32,6 +32,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.properties.Holmes;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,8 @@ public class HolmesPolicyDelegate {
     private PolicyClient policyClient;
     @Autowired
     private ClampProperties refProp;
+    @Autowired
+    private CldsDao cldsDao;
 
     /**
      * Perform activity. Send Holmes info to policy api.
@@ -68,6 +72,10 @@ public class HolmesPolicyDelegate {
             if (responseMessage != null) {
                 camelExchange.setProperty("holmesPolicyResponseMessage", responseMessage.getBytes());
             }
+            CldsModel cldsModel = CldsModel.retrieve(cldsDao, (String) camelExchange.getProperty("modelName"), false);
+            cldsModel.setPropText(cldsModel.getPropText().replaceAll("AUTO_GENERATED_POLICY_ID_AT_SUBMIT",
+                    prop.getPolicyNameForDcaeDeploy(refProp)));
+            cldsModel.save(cldsDao, (String) camelExchange.getProperty("userid"));
         }
     }
 
