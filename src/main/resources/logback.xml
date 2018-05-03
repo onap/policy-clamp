@@ -132,7 +132,7 @@
 		</logger>
 		
 		<!-- CLDS related loggers -->
-		<logger name="org.onap.policy.std" level="OFF" additivity="true">
+		<logger name="com.att.eelf.error" level="OFF" additivity="true">
 				<appender-ref ref="ERROR" />
 		</logger>
 		<!-- EELF related loggers -->
