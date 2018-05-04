@@ -145,6 +145,25 @@ public class DcaeInventoryServices {
         }
     }
 
+    private int getTotalCountFromDcaeInventoryResponse(String responseStr) throws ParseException {
+        JSONParser parser = new JSONParser();
+        Object obj0 = parser.parse(responseStr);
+        JSONObject jsonObj = (JSONObject) obj0;
+        Long totalCount = (Long) jsonObj.get("totalCount");
+        return totalCount.intValue();
+    }
+
+    private DcaeInventoryResponse getItemsFromDcaeInventoryResponse(String responseStr)
+            throws ParseException, IOException {
+        JSONParser parser = new JSONParser();
+        Object obj0 = parser.parse(responseStr);
+        JSONObject jsonObj = (JSONObject) obj0;
+        JSONArray itemsArray = (JSONArray) jsonObj.get("items");
+        JSONObject dcaeServiceType0 = (JSONObject) itemsArray.get(0);
+        return JacksonUtils.getObjectMapperInstance().readValue(dcaeServiceType0.toString(),
+                DcaeInventoryResponse.class);
+    }
+
     /**
      * DO a query to DCAE to get some Information.
      * 
@@ -168,26 +187,14 @@ public class DcaeInventoryServices {
                 + artifactName;
         String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types" + queryString;
         logger.info("Dcae Inventory Service full url - " + fullUrl);
-        String dcaeInventoryResponse = null;
-        String responseStr = queryDCAEInventory(fullUrl);
-        JSONParser parser = new JSONParser();
-        Object obj0 = parser.parse(responseStr);
-        JSONObject jsonObj = (JSONObject) obj0;
-        Long totalCount = (Long) jsonObj.get("totalCount");
-        int numServices = totalCount.intValue();
-        if (numServices > 0) {
-            JSONArray itemsArray = (JSONArray) jsonObj.get("items");
-            JSONObject dcaeServiceType0 = (JSONObject) itemsArray.get(0);
-            dcaeInventoryResponse = dcaeServiceType0.toString();
-            logger.info("getDcaeInformation, answer from DCAE inventory:" + dcaeInventoryResponse);
-        }
+        DcaeInventoryResponse response = queryDcaeInventory(fullUrl);
         LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
         LoggingUtils.setTimeContext(startTime, new Date());
-        metricsLogger.info("getDcaeInformation complete: number services returned=" + numServices);
-        return JacksonUtils.getObjectMapperInstance().readValue(dcaeInventoryResponse, DcaeInventoryResponse.class);
+        return response;
     }
 
-    private String queryDCAEInventory(String fullUrl) throws IOException, InterruptedException {
+    private DcaeInventoryResponse queryDcaeInventory(String fullUrl)
+            throws IOException, InterruptedException, ParseException {
         int retryInterval = 0;
         int retryLimit = 1;
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT) != null) {
@@ -196,24 +203,21 @@ public class DcaeInventoryServices {
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL) != null) {
             retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
         }
-        int i = 0;
-        while (i < retryLimit) {
-            i++;
-            try {
-                return DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
-            } catch (BadRequestException e) {
-                if (i == retryLimit) {
-                    // reach the retry limit, but still failed to connect to
-                    // DCAE
-                    throw e;
-                } else {
-                    // wait for a while and try to connect to DCAE again
-                    Thread.sleep(retryInterval);
-                }
+        for (int i = 0; i < retryLimit; i++) {
+            metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
+            String response = DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
+            int totalCount = getTotalCountFromDcaeInventoryResponse(response);
+            metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
+            if (totalCount > 0) {
+                logger.info("getDcaeInformation, answer from DCAE inventory:" + response);
+                return getItemsFromDcaeInventoryResponse(response);
             }
+            logger.info(
+                    "Dcae inventory totalCount returned is 0, so waiting " + retryInterval + "ms before retrying ...");
+            // wait for a while and try to connect to DCAE again
+            Thread.sleep(retryInterval);
         }
-        // normally it should not go to this branch. It should either return the
-        // DCAE query result, or throw exception
+        logger.warn("Dcae inventory totalCount returned is still 0, after " + retryLimit + " attempts, returning NULL");
         return null;
     }
 

@@ -64,6 +64,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PolicyClient {
 
+    protected PolicyEngine policyEngine;
     protected static final String LOG_POLICY_PREFIX = "Response is ";
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyClient.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
@@ -352,10 +353,11 @@ public class PolicyClient {
      * 
      * @return A new policy engine
      */
-    private PolicyEngine getPolicyEngine() {
-        PolicyEngine policyEngine;
+    private synchronized PolicyEngine getPolicyEngine() {
         try {
-            policyEngine = new PolicyEngine(policyConfiguration.getProperties());
+            if (policyEngine == null) {
+                policyEngine = new PolicyEngine(policyConfiguration.getProperties());
+            }
         } catch (PolicyEngineException e) {
             throw new PolicyClientException("Exception when creating a new policy engine", e);
         }
