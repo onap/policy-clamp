@@ -285,6 +285,7 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
     deploymentId = pars.deploymentId;
     setStatus(pars);
     this.enableDisableMenuOptions(pars);
+    elementMap = JSON.parse(pars.propText);
   }
 
   function setStatus(pars) {
