@@ -18,7 +18,6 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- *
  */
 
 package org.onap.clamp.clds.service;
@@ -28,6 +27,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 import org.springframework.stereotype.Component;
 
@@ -41,6 +42,8 @@ import org.springframework.stereotype.Component;
         MediaType.TEXT_PLAIN
 })
 public class UserService {
+    @Context
+    private SecurityContext           securityContext;
 
     /**
      * REST service that returns the username.
@@ -49,9 +52,11 @@ public class UserService {
      * @return the user name
      */
     @GET
-    @Path("/{userName}")
+    @Path("/getUser")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getUser(@PathParam("userName") String userName) {
+    public String getUser() {
+        UserNameHandler    userNameHandler = new DefaultUserNameHandler();
+        String userName = userNameHandler.retrieveUserName(securityContext);
         return userName;
     }
 }

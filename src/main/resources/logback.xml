@@ -126,7 +126,13 @@
 				<queueSize>256</queueSize>
 				<appender-ref ref="SECURITY" />
 		</appender>
-
+		<!-- AAF related loggers -->
+		<logger name="org.onap.aaf" level="INFO" additivity="true">
+				<appender-ref ref="DEBUG" />
+		</logger>
+		<logger name="org.apache.catalina.core" level="INFO" additivity="true">
+				<appender-ref ref="DEBUG" />
+		</logger>
 		<!-- CLDS related loggers -->
 		<logger name="org.onap.clamp.clds" level="INFO" additivity="true">
 				<appender-ref ref="ERROR" />

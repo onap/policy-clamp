@@ -18,7 +18,6 @@
   limitations under the License.
   ============LICENSE_END============================================
   ===================================================================
-  
   -->
 <style>
 .divRow {
@@ -41,20 +40,13 @@
 <head>
 	<title>CLDS</title>
 </head>
-<div ng-controller="AuthenticateCtrl">
+<div ng-controller="AuthenticateCtrl" ng-init="authenticate()">
 	<div id='head'>
 		<div ng-include="'menu_simplified.html'"></div>
 	</div>
 
 	<div  id='main'>
-		<div class="divRow"><b>Welcome to Clamp. Please login first.</b></div>
-		<div class="divForm">
-		<form ng-submit="authenticate()" method="post" autocomplete="off">
-			<div class="divFormRow"><label>User Name :  <input type="text" ng-model="username" name="username"/> </label></div>
-			<div class="divFormRow"><label>Password:  <input type="password" ng-model="password" name="password"/> </label></div>
-			<div class="divFormRow"><input type="submit" value=" Sign In"/></div>
-		</form>
-		</div>
+		<div class="divRow"><b>Welcome to Clamp.</b></div>
 	</div>
 </div>
 

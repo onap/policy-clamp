@@ -3,11 +3,12 @@
 	"password":"$2a$10$H/e21kl04Dw9C978CHuM7OewyMGUN5WGzAAx7SgIaR4ix8.wTcssi",
 	"permissions":
 	            [
-	               "permission-type-cl|dev|read",
-	               "permission-type-cl|dev|update",
-	               "permission-type-cl-manage|dev|*",
-	               "permission-type-filter-vf|dev|*",
-	               "permission-type-template|dev|read"
+	               "org.onap.clamp.clds.cl|dev|read",
+	               "org.onap.clamp.clds.cl|dev|update",
+	               "org.onap.clamp.clds.cl.manage|dev|*",
+	               "org.onap.clamp.clds.filter.vf|dev|*",
+	               "org.onap.clamp.clds.template|dev|read",
+	               "org.onap.clamp.clds.template|dev|update"
 	            ]
 	},
 	{
@@ -15,12 +16,12 @@
 	"password":"$2a$10$H/e21kl04Dw9C978CHuM7OewyMGUN5WGzAAx7SgIaR4ix8.wTcssi",
 	"permissions":
 	            [
-	               "permission-type-cl|dev|read",
-	               "permission-type-cl|dev|update",
-	               "permission-type-cl-manage|dev|*",
-	               "permission-type-filter-vf|dev|*",
-	               "permission-type-template|dev|read",
-	               "permission-type-template|dev|update"
+	               "org.onap.clamp.clds.cl|dev|read",
+	               "org.onap.clamp.clds.cl|dev|update",
+	               "org.onap.clamp.clds.cl.manage|dev|*",
+	               "org.onap.clamp.clds.filter.vf|dev|*",
+	               "org.onap.clamp.clds.template|dev|read",
+	               "org.onap.clamp.clds.template|dev|update"
 	            ]
 	}
 ]
