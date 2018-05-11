@@ -849,17 +849,7 @@ public class CldsService extends SecureServiceBase {
             }
             String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
                     model.getTypeId(), modelProp.getGlobal().getDeployParameters());
-            String operationStatus = "processing";
-            long waitingTime = System.nanoTime() + DCAE_DEPLOY_WAITING_TIME;
-            while ("processing".equalsIgnoreCase(operationStatus)) {
-                if (waitingTime < System.nanoTime()) {
-                    logger.info("Waiting is over for DCAE deployment");
-                    break;
-                }
-                logger.info("Waiting 5s before sending query to DCAE");
-                Thread.sleep(5000);
-                operationStatus = dcaeDispatcherServices.getOperationStatus(createNewDeploymentStatusUrl);
-            }
+            String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(createNewDeploymentStatusUrl);
             if ("succeeded".equalsIgnoreCase(operationStatus)) {
                 String artifactName = model.getControlName();
                 if (artifactName != null) {
@@ -904,14 +894,7 @@ public class CldsService extends SecureServiceBase {
         try {
             String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
                     model.getTypeId());
-            String operationStatus = "processing";
-            long waitingTime = System.nanoTime() + TimeUnit.MINUTES.toNanos(10);
-            while ("processing".equalsIgnoreCase(operationStatus)) {
-                if (waitingTime < System.nanoTime()) {
-                    break;
-                }
-                operationStatus = dcaeDispatcherServices.getOperationStatus(operationStatusUndeployUrl);
-            }
+            String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(operationStatusUndeployUrl);
             if ("succeeded".equalsIgnoreCase(operationStatus)) {
                 String artifactName = model.getControlName();
                 if (artifactName != null) {

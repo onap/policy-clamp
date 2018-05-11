@@ -90,6 +90,22 @@ public class DcaeDispatcherServices {
         }
     }
 
+    public String getOperationStatusWithRetry(String operationStatusUrl) throws InterruptedException {
+        String operationStatus = "";
+        for (int i = 0; i < Integer.valueOf(refProp.getStringValue("dcae.dispatcher.retry.limit")); i++) {
+            logger.info("Trying to get Operation status on DCAE for url:" + operationStatusUrl);
+            operationStatus = getOperationStatus(operationStatusUrl);
+            logger.info("Current Status is:" + operationStatus);
+            if (!"processing".equalsIgnoreCase(operationStatus)) {
+                return operationStatus;
+            } else {
+                Thread.sleep(Integer.valueOf(refProp.getStringValue("dcae.dispatcher.retry.interval")));
+            }
+        }
+        logger.warn("Number of attempts on DCAE is over, stopping the getOperationStatus method");
+        return operationStatus;
+    }
+
     /**
      * Get the Operation Status from a specified URL.
      * 
