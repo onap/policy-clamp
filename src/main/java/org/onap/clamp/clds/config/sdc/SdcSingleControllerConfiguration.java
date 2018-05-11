@@ -81,7 +81,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     public static final String TOSCA_CSAR = "TOSCA_CSAR";
     public static final String VF_MODULES_METADATA = "VF_MODULES_METADATA";
     private static final String[] SUPPORTED_ARTIFACT_TYPES = {
-            HEAT, HEAT_ARTIFACT, HEAT_ENV, HEAT_NESTED, HEAT_NET, HEAT_VOL, OTHER, TOSCA_CSAR, VF_MODULES_METADATA
+            TOSCA_CSAR, VF_MODULES_METADATA
     };
     public static final List<String> SUPPORTED_ARTIFACT_TYPES_LIST = Collections
             .unmodifiableList(Arrays.asList(SUPPORTED_ARTIFACT_TYPES));
