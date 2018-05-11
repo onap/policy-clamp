@@ -36,12 +36,14 @@ import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcControllersConfiguration;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.sdc.controller.SdcSingleController;
+import org.onap.clamp.clds.sdc.controller.SdcSingleControllerStatus;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
 @Profile("clamp-sdc-controller")
@@ -63,10 +65,25 @@ public class CldsSdcControllerConfiguration {
             try {
                 sdcController.initSdc();
             } catch (SdcControllerException e) {
-                logger.error("Exception caught during initialization of sdc controller", e);
+                logger.error("Exception caught when starting sdc controller", e);
             }
             sdcControllersList.add(sdcController);
         });
+    }
+
+    @Scheduled(fixedRate = 120000)
+    public void checkAllSdcControllers() {
+        logger.info("Checking that all SDC Controllers defined are up and running");
+        for (SdcSingleController controller : sdcControllersList) {
+            try {
+                if (SdcSingleControllerStatus.STOPPED.equals(controller.getControllerStatus())) {
+                    controller.initSdc();
+                }
+            } catch (SdcControllerException e) {
+                logger.error("Exception caught when rebooting sdc controller", e);
+            }
+        }
+        logger.info("SDC Controllers check completed");
     }
 
     @PreDestroy
@@ -75,7 +92,7 @@ public class CldsSdcControllerConfiguration {
             try {
                 e.closeSdc();
             } catch (SdcControllerException e1) {
-                logger.error("Exception caught during initialization of sdc controller", e1);
+                logger.error("Exception caught when stopping sdc controller", e1);
             }
         });
     }
