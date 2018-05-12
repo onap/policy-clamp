@@ -56,6 +56,7 @@ import org.onap.sdc.api.notification.IResourceInstance;
 import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.toscaparser.api.elements.Metadata;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -152,26 +153,42 @@ public class CsarInstallerItCase {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
+        CldsModel cldsModel1 = verifyClosedLoopModelLoadedInDb(csar, generatedName, INSTANCE_NAME_RESOURCE1);
+        JSONAssert.assertEquals(
+                IOUtils.toString(
+                        ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json")),
+                cldsModel1.getPropText(), true);
+        CldsModel cldsModel2 = verifyClosedLoopModelLoadedInDb(csar, generatedName, INSTANCE_NAME_RESOURCE2);
+        JSONAssert.assertEquals(
+                IOUtils.toString(
+                        ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca-2.json")),
+                cldsModel2.getPropText(), true);
+    }
+
+    private CldsModel verifyClosedLoopModelLoadedInDb(CsarHandler csar, String generatedName,
+            String instanceNameResource) throws SdcArtifactInstallerException {
         // Get the template back from DB
-        CldsTemplate templateFromDb = CldsTemplate.retrieve(cldsDao, CsarInstallerImpl.TEMPLATE_NAME_PREFIX
-                + CsarInstallerImpl.buildModelName(csar, INSTANCE_NAME_RESOURCE1), false);
+        CldsTemplate templateFromDb = CldsTemplate.retrieve(cldsDao,
+                CsarInstallerImpl.TEMPLATE_NAME_PREFIX + CsarInstallerImpl.buildModelName(csar, instanceNameResource),
+                false);
         assertNotNull(templateFromDb);
         assertNotNull(templateFromDb.getBpmnText());
         assertNotNull(templateFromDb.getImageText());
         assertNotNull(templateFromDb.getPropText());
         assertTrue(templateFromDb.getPropText().contains("global")
                 && templateFromDb.getPropText().contains("node_templates:"));
-        assertEquals(templateFromDb.getName(), CsarInstallerImpl.TEMPLATE_NAME_PREFIX
-                + CsarInstallerImpl.buildModelName(csar, INSTANCE_NAME_RESOURCE1));
+        assertEquals(templateFromDb.getName(),
+                CsarInstallerImpl.TEMPLATE_NAME_PREFIX + CsarInstallerImpl.buildModelName(csar, instanceNameResource));
         // Get the Model back from DB
         CldsModel modelFromDb = CldsModel.retrieve(cldsDao,
-                CsarInstallerImpl.buildModelName(csar, INSTANCE_NAME_RESOURCE2), true);
+                CsarInstallerImpl.buildModelName(csar, instanceNameResource), true);
         assertNotNull(modelFromDb);
         assertNotNull(modelFromDb.getBpmnText());
         assertNotNull(modelFromDb.getImageText());
         assertNotNull(modelFromDb.getPropText());
         assertTrue(modelFromDb.getPropText().contains("policy_id"));
-        assertEquals(CsarInstallerImpl.buildModelName(csar, INSTANCE_NAME_RESOURCE2), modelFromDb.getName());
+        assertEquals(CsarInstallerImpl.buildModelName(csar, instanceNameResource), modelFromDb.getName());
         assertEquals(CsarInstallerImpl.CONTROL_NAME_PREFIX, modelFromDb.getControlNamePrefix());
+        return modelFromDb;
     }
 }

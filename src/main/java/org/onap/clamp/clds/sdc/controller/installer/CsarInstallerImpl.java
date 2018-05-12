@@ -26,6 +26,7 @@ package org.onap.clamp.clds.sdc.controller.installer;
 import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
 import org.onap.clamp.clds.transform.XslTransformer;
+import org.onap.clamp.clds.util.JacksonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -164,6 +166,25 @@ public class CsarInstallerImpl implements CsarInstaller {
         return listConfig.get(0);
     }
 
+    private static String getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact) {
+        ObjectNode node = JacksonUtils.getObjectMapperInstance().createObjectNode();
+        Yaml yaml = new Yaml();
+        Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
+                .load(blueprintArtifact.getDcaeBlueprint())).get("inputs"));
+        inputsNodes.entrySet().stream().filter(e -> !e.getKey().contains("policy_id")).forEach(elem -> {
+            Object defaultNode = ((Map<String, Object>) elem.getValue()).get("default");
+            if (defaultNode != null && defaultNode instanceof String) {
+                node.put(elem.getKey(), (String) defaultNode);
+            } else if (defaultNode != null) {
+                node.putPOJO(elem.getKey(), defaultNode);
+            } else {
+                node.put(elem.getKey(), "");
+            }
+        });
+        node.put("policy_id", "AUTO_GENERATED_POLICY_ID_AT_SUBMIT");
+        return node.toString();
+    }
+
     private static String searchForPolicyScopePrefix(BlueprintArtifact blueprintArtifact)
             throws SdcArtifactInstallerException {
         String policyName = null;
@@ -265,8 +286,8 @@ public class CsarInstallerImpl implements CsarInstaller {
         // Do a test to validate the BPMN
         new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), "PUT", false,
                 cldsBpmnTransformer.doXslTransformToString(cldsTemplate.getBpmnText()), "{}");
-        String inputParams = "{\"name\":\"deployParameters\",\"value\":{\n" + "\"policy_id\": \""
-                + "AUTO_GENERATED_POLICY_ID_AT_SUBMIT" + "\"" + "}}";
+        String inputParams = "{\"name\":\"deployParameters\",\"value\":"
+                + getAllBlueprintParametersInJson(blueprintArtifact) + "}";
         cldsModel.setPropText("{\"global\":[{\"name\":\"service\",\"value\":[\""
                 + blueprintArtifact.getBlueprintInvariantServiceUuid() + "\"]},{\"name\":\"vf\",\"value\":[\""
                 + blueprintArtifact.getResourceAttached().getResourceInvariantUUID()
