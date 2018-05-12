@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.onap.clamp.clds.config.ClampProperties;
@@ -36,6 +37,7 @@ import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerExceptio
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcDownloadException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
+import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -191,6 +193,29 @@ public class SdcSingleController {
         this.changeControllerStatus(SdcSingleControllerStatus.STOPPED);
     }
 
+    private void sendAllNotificationForCsarHandler(INotificationData iNotif, CsarHandler csar,
+            NotificationType notificationType, DistributionStatusEnum distributionStatus, String errorMessage) {
+        if (csar != null) {
+            // Notify for the CSAR
+            this.sendSdcNotification(notificationType, csar.getArtifactElement().getArtifactURL(),
+                    sdcConfig.getConsumerID(), iNotif.getDistributionID(), distributionStatus, errorMessage,
+                    System.currentTimeMillis());
+            // Notify for all VF resources found
+            for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
+                // Normally always 1 artifact in resource for Clamp as we
+                // specified
+                // only VF_METADATA type
+                this.sendSdcNotification(notificationType,
+                        blueprint.getValue().getResourceAttached().getArtifacts().get(0).getArtifactURL(),
+                        sdcConfig.getConsumerID(), iNotif.getDistributionID(), distributionStatus, errorMessage,
+                        System.currentTimeMillis());
+            }
+        } else {
+            this.sendSdcNotification(notificationType, null, sdcConfig.getConsumerID(), iNotif.getDistributionID(),
+                    distributionStatus, errorMessage, System.currentTimeMillis());
+        }
+    }
+
     /**
      * This method processes the notification received from Sdc.
      * 
@@ -202,54 +227,41 @@ public class SdcSingleController {
         try {
             // wait for a random time, so that 2 running Clamp will not treat
             // the same Notification at the same time
-            long i = ThreadLocalRandom.current().nextInt(1, 5);
-            Thread.sleep(i * 1000L);
+            Thread.sleep(ThreadLocalRandom.current().nextInt(1, 10) * 1000L);
             logger.info("Notification received for service UUID:" + iNotif.getServiceUUID());
             this.changeControllerStatus(SdcSingleControllerStatus.BUSY);
             csar = new CsarHandler(iNotif, this.sdcConfig.getSdcControllerName(),
                     refProp.getStringValue(CONFIG_SDC_FOLDER));
             csar.save(downloadTheArtifact(csar.getArtifactElement()));
             if (csarInstaller.isCsarAlreadyDeployed(csar)) {
-                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                        sdcConfig.getConsumerID(), iNotif.getDistributionID(),
-                        DistributionStatusEnum.ALREADY_DOWNLOADED, null, System.currentTimeMillis());
-                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                        sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.ALREADY_DEPLOYED,
-                        null, System.currentTimeMillis());
+                sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DOWNLOAD,
+                        DistributionStatusEnum.ALREADY_DOWNLOADED, null);
+                sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
+                        DistributionStatusEnum.ALREADY_DEPLOYED, null);
             } else {
-                this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                        sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_OK, null,
-                        System.currentTimeMillis());
+                sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DOWNLOAD,
+                        DistributionStatusEnum.DOWNLOAD_OK, null);
                 csarInstaller.installTheCsar(csar);
-                this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
-                        sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_OK, null,
-                        System.currentTimeMillis());
+                sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
+                        DistributionStatusEnum.DEPLOY_OK, null);
             }
-        } catch (SdcArtifactInstallerException e) {
+        } catch (SdcArtifactInstallerException | SdcToscaParserException e) {
             logger.error("SdcArtifactInstallerException exception caught during the notification processing", e);
-            this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
-                    sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_ERROR,
-                    e.getMessage(), System.currentTimeMillis());
-        } catch (SdcDownloadException e) {
+            sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
+                    DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
+        } catch (SdcDownloadException | CsarHandlerException e) {
             logger.error("SdcDownloadException exception caught during the notification processing", e);
-            this.sendSdcNotification(NotificationType.DOWNLOAD, csar.getArtifactElement().getArtifactURL(),
-                    sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_ERROR,
-                    e.getMessage(), System.currentTimeMillis());
-        } catch (CsarHandlerException e) {
-            logger.error("CsarHandlerException exception caught during the notification processing", e);
-            this.sendSdcNotification(NotificationType.DOWNLOAD, null, sdcConfig.getConsumerID(),
-                    iNotif.getDistributionID(), DistributionStatusEnum.DOWNLOAD_ERROR, e.getMessage(),
-                    System.currentTimeMillis());
-        } catch (SdcToscaParserException e) {
-            logger.error("SdcToscaParserException exception caught during the notification processing", e);
-            this.sendSdcNotification(NotificationType.DEPLOY, csar.getArtifactElement().getArtifactURL(),
-                    sdcConfig.getConsumerID(), iNotif.getDistributionID(), DistributionStatusEnum.DEPLOY_ERROR,
-                    e.getMessage(), System.currentTimeMillis());
+            sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DOWNLOAD,
+                    DistributionStatusEnum.DOWNLOAD_ERROR, e.getMessage());
         } catch (InterruptedException e) {
             logger.error("Interrupt exception caught during the notification processing", e);
+            sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
+                    DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
             Thread.currentThread().interrupt();
         } catch (RuntimeException e) {
             logger.error("Unexpected exception caught during the notification processing", e);
+            sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
+                    DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
         } finally {
             this.changeControllerStatus(SdcSingleControllerStatus.IDLE);
         }
