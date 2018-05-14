@@ -4,13 +4,12 @@
 		"tcaInt": "1",
 		"tcaVio": "1",
 		"eventName": {
-			"vCPEvGMUXPacketLoss": "vCPEvGMUXPacketLoss",
 			"vLoadBalancer": "vLoadBalancer",
-			"vFirewallBroadcastPackets": "vFirewallBroadcastPackets"
+			"vFirewallBroadcastPackets": "vFirewallBroadcastPackets",
+			"Measurement_vGMUX":"Measurement_vGMUX"
 		},
 		"fieldPathM": {
-			"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated": "receivedBroadcastPacketsAccumulated",
-			"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta": "receivedDiscardedPacketsDelta"
+			"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value": "Packet-loss-rate"
 		},
 		"operator": {
 			">": "GREATER",
@@ -52,7 +51,9 @@
 			"restart": "Restart",
 			"rebuild": "Rebuild",
 			"migrate": "Migrate",
-			"healthCheck": "Health Check"
+			"healthCheck": "Health Check",
+			"modifyConfig": "ModifyConfig",
+			"vfModuleCreate":"VF Module Create"
 		},
 		"maxRetries": "3",
 		"retryTimeLimit": 180,
