@@ -24,18 +24,18 @@
           "policyVersion": "v0.0.1",
           "thresholds": [
             {
-              "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
+              "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_0",
               "version": "1.0.2",
-              "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+              "fieldPath": "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
               "thresholdValue": 123,
               "direction": "GREATER_OR_EQUAL",
               "severity": "MAJOR",
               "closedLoopEventStatus": "ONSET"
             },
             {
-              "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_null",
+              "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_0",
               "version": "1.0.2",
-              "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+              "fieldPath": "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
               "thresholdValue": 123,
               "direction": "GREATER_OR_EQUAL",
               "severity": "MAJOR",
