@@ -1,6 +1,7 @@
 <configuration scan="true" scanPeriod="10 seconds" debug="false">
 		<jmxConfigurator />
-		<property name="logDirectory" value="log" />
+		<property resource="application.properties" />
+		<property name="logDirectory" value="${clamp.config.log.path}" />
 		<!-- Example evaluator filter applied against console appender -->
 		<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 				<!-- filter class="ch.qos.logback.classic.filter.LevelFilter"> <level>ERROR</level> 
@@ -20,7 +21,7 @@
 				<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 						<level>INFO</level>
 				</filter>
-				<file>${logDirectory}/CLAMP/error.log</file>
+				<file>${logDirectory}/clamp/error.log</file>
 				<append>true</append>
 				<encoder>
 						<pattern>%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX", UTC}|%X{RequestId}|%.20thread|%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}|%.-5level|%X{ErrorCode}|%X{ErrorDescription}|%msg%n</pattern>
@@ -28,7 +29,7 @@
 				<rollingPolicy
 						class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 						<maxIndex>10</maxIndex>
-						<FileNamePattern>${logDirectory}/CLAMP/error.%i.log.zip
+						<FileNamePattern>${logDirectory}/clamp/error.%i.log.zip
 						</FileNamePattern>
 				</rollingPolicy>
 				<triggeringPolicy
@@ -39,13 +40,13 @@
 
 		<appender name="DEBUG"
 				class="ch.qos.logback.core.rolling.RollingFileAppender">
-				<file>${logDirectory}/CLAMP/debug.log</file>
+				<file>${logDirectory}/clamp/debug.log</file>
 				<append>true</append>
 				<encoder>
 						<pattern>%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX",UTC}|%X{RequestId}|%.20thread|%.-5level|%logger{36}|%msg%n</pattern>
 				</encoder>
 				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-					<fileNamePattern>${logDirectory}/CLAMP/debug.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+					<fileNamePattern>${logDirectory}/clamp/debug.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
 					<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 						<maxFileSize>10MB</maxFileSize>
 					</timeBasedFileNamingAndTriggeringPolicy>
@@ -55,7 +56,7 @@
 
 		<appender name="AUDIT"
 				class="ch.qos.logback.core.rolling.RollingFileAppender">
-				<file>${logDirectory}/CLAMP/audit.log</file>
+				<file>${logDirectory}/clamp/audit.log</file>
 				<append>true</append>
 				<encoder>
 						<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
@@ -64,7 +65,7 @@
 				<rollingPolicy
 						class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 						<maxIndex>10</maxIndex>
-						<FileNamePattern>${logDirectory}/CLAMP/audit.%i.log.zip
+						<FileNamePattern>${logDirectory}/clamp/audit.%i.log.zip
 						</FileNamePattern>
 				</rollingPolicy>
 				<triggeringPolicy
@@ -79,7 +80,7 @@
 
 		<appender name="METRIC"
 				class="ch.qos.logback.core.rolling.RollingFileAppender">
-				<file>${logDirectory}/CLAMP/metric.log</file>
+				<file>${logDirectory}/clamp/metric.log</file>
 				<append>true</append>
 				<encoder>
 						<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{TargetVirtualEntity}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|
@@ -88,7 +89,7 @@
 				<rollingPolicy
 						class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 						<maxIndex>10</maxIndex>
-						<FileNamePattern>${logDirectory}/CLAMP/metric.%i.log.zip
+						<FileNamePattern>${logDirectory}/clamp/metric.%i.log.zip
 						</FileNamePattern>
 				</rollingPolicy>
 				<triggeringPolicy
@@ -104,7 +105,7 @@
 		<!-- SECURITY related loggers -->
 		<appender name="SECURITY"
 				class="ch.qos.logback.core.rolling.RollingFileAppender">
-				<file>${logDirectory}/CLAMP/security.log</file>
+				<file>${logDirectory}/clamp/security.log</file>
 				<append>true</append>
 				<encoder>
 						<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
@@ -113,7 +114,7 @@
 				<rollingPolicy
 						class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 						<maxIndex>10</maxIndex>
-						<FileNamePattern>${logDirectory}/CLAMP/security.%i.log.zip
+						<FileNamePattern>${logDirectory}/clamp/security.%i.log.zip
 						</FileNamePattern>
 				</rollingPolicy>
 				<triggeringPolicy
