@@ -69,6 +69,8 @@ public class TcaRequestFormatter {
             String service = modelProperties.getGlobal().getService();
             Tca tca = modelProperties.getType(Tca.class);
             modelProperties.setCurrentModelElementId(tca.getId());
+            // Always one tcaItem so must be set to id 0
+            modelProperties.setPolicyUniqueId("0");
             ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.policy.template", service);
             String policyName = modelProperties.getCurrentPolicyScopeAndPolicyName();
             rootNode.put("policyName", policyName);

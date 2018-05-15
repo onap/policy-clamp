@@ -24,13 +24,13 @@
 			{
 				"serviceConfigurations": [
 					[
-						"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated",
+						"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
 						"LESS_OR_EQUAL",
 						"123",
 						"ABATED"
 					],
 					[
-						"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+						"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
 						"GREATER_OR_EQUAL",
 						"123",
 						"ONSET"

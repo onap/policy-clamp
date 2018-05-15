@@ -75,13 +75,12 @@ public class ModelPropertiesTest {
         assertEquals("f734f031-10aa-t8fb-330f-04dde2886325", tca.getTcaItem().getTcaUuId());
         assertEquals(2, tca.getTcaItem().getTcaThresholds().size());
         assertEquals("ABATED", tca.getTcaItem().getTcaThresholds().get(0).getClosedLoopEventStatus());
-        assertEquals(
-                "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated",
+        assertEquals("$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
                 tca.getTcaItem().getTcaThresholds().get(0).getFieldPath());
         assertEquals("LESS_OR_EQUAL", tca.getTcaItem().getTcaThresholds().get(0).getOperator());
         assertEquals(Integer.valueOf(123), tca.getTcaItem().getTcaThresholds().get(0).getThreshold());
         assertEquals("ONSET", tca.getTcaItem().getTcaThresholds().get(1).getClosedLoopEventStatus());
-        assertEquals("$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+        assertEquals("$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
                 tca.getTcaItem().getTcaThresholds().get(1).getFieldPath());
         assertEquals("GREATER_OR_EQUAL", tca.getTcaItem().getTcaThresholds().get(1).getOperator());
         assertEquals(Integer.valueOf(123), tca.getTcaItem().getTcaThresholds().get(1).getThreshold());
