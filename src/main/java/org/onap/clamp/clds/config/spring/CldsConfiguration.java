@@ -26,20 +26,27 @@ package org.onap.clamp.clds.config.spring;
 import javax.sql.DataSource;
 import javax.xml.transform.TransformerConfigurationException;
 
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.EncodedPasswordBasicDataSource;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.transform.XslTransformer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.ClassPathResource;
 
 @Configuration
 @Profile("clamp-default")
 public class CldsConfiguration {
+
+    @Autowired
+    private ApplicationContext appContext;
+    @Autowired
+    private ClampProperties refProp;
 
     /**
      * Clds Identity database DataSource configuration
@@ -55,7 +62,7 @@ public class CldsConfiguration {
     @Bean(name = "mapper")
     public PropertiesFactoryBean mapper() {
         PropertiesFactoryBean bean = new PropertiesFactoryBean();
-        bean.setLocation(new ClassPathResource("system.properties"));
+        bean.setLocation(appContext.getResource(refProp.getStringValue("files.systemProperties")));
         return bean;
     }
 
