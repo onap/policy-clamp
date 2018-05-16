@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.BadRequestException;
@@ -121,7 +120,6 @@ public class CldsService extends SecureServiceBase {
     private SecureServicePermission permissionUpdateCl;
     private SecureServicePermission permissionReadTemplate;
     private SecureServicePermission permissionUpdateTemplate;
-    private static final long DCAE_DEPLOY_WAITING_TIME = TimeUnit.SECONDS.toNanos(30);
 
     @PostConstruct
     private final void afterConstruction() {
