@@ -145,7 +145,7 @@ public class SdcSingleController {
      *             If there is an issue with the parameters provided
      */
     public void initSdc() throws SdcControllerException {
-        logger.info("Attempt to initialize the SDC Controller");
+        logger.info("Attempt to initialize the SDC Controller: " + sdcConfig.getSdcControllerName());
         if (this.getControllerStatus() != SdcSingleControllerStatus.STOPPED) {
             throw new SdcControllerException("The controller is already initialized, call the closeSDC method first");
         }
@@ -159,6 +159,8 @@ public class SdcSingleController {
             throw new SdcControllerException("Initialization of the SDC Controller failed with reason: "
                     + result.getDistributionMessageResult());
         }
+        logger.info("SDC Controller successfully initialized: " + sdcConfig.getSdcControllerName());
+        logger.info("Attempt to start the SDC Controller: " + sdcConfig.getSdcControllerName());
         result = this.distributionClient.start();
         if (!result.getDistributionActionResult().equals(DistributionActionResultEnum.SUCCESS)) {
             logger.error("SDC distribution client start failed with reason:" + result.getDistributionMessageResult());
@@ -166,6 +168,7 @@ public class SdcSingleController {
             throw new SdcControllerException(
                     "Startup of the SDC Controller failed with reason: " + result.getDistributionMessageResult());
         }
+        logger.info("SDC Controller successfully started: " + sdcConfig.getSdcControllerName());
         this.changeControllerStatus(SdcSingleControllerStatus.IDLE);
     }
 

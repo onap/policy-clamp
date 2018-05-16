@@ -60,13 +60,8 @@ public class CldsSdcControllerConfiguration {
     public void loadSdcControllers() {
         SdcControllersConfiguration sdcControllersConfig = getSdcControllersConfiguration();
         sdcControllersConfig.getAllDefinedControllers().forEach((k, v) -> {
-            logger.info("Instantiating controller :" + k);
+            logger.info("Creating controller instance:" + k);
             SdcSingleController sdcController = new SdcSingleController(clampProp, csarInstaller, v, true);
-            try {
-                sdcController.initSdc();
-            } catch (SdcControllerException e) {
-                logger.error("Exception caught when starting sdc controller", e);
-            }
             sdcControllersList.add(sdcController);
         });
     }
@@ -80,7 +75,7 @@ public class CldsSdcControllerConfiguration {
                     controller.initSdc();
                 }
             } catch (SdcControllerException e) {
-                logger.error("Exception caught when rebooting sdc controller", e);
+                logger.error("Exception caught when booting sdc controller", e);
             }
         }
         logger.info("SDC Controllers check completed");
