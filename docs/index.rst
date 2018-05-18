@@ -11,21 +11,23 @@ CLAMP - Closed Loop Automation Management Platform
 
 Offered APIs
 ------------
-CLAMP offers the following API:
-* HealthCheck
+The list of APIs that CLAMP has offered could be find in the following table:
 
-.. line-block::
+.. |pdf-icon| image:: images/pdf.png
+              :width: 40px
 
-   URL: http://<host>:8080/restservices/clds/v1/clds/healthcheck
-   Result: if in good health it will return OK: "HTTP/1.1 200", and the following json string content:
+.. |swagger-icon| image:: images/swagger.png
+                   :width: 40px
 
-.. code-block:: json
+.. |html-icon| image:: images/html.png
+               :width: 40px
 
-    {
-        "healthCheckComponent": "CLDS-APP",
-        "healthCheckStatus": "UP",
-        "description": "OK"
-    }
+.. csv-table::
+   :header: "|Swagger-icon|", "|html-icon|", "|pdf-icon|"
+   :widths: 60,60,60
+
+   "swagger json file", "html doc", "pdf doc"
+   ":download:`link <swagger/swagger.json>`", ":download:`link <swagger/swagger.html>`", ":download:`link <swagger/swagger.pdf>`"
 
 
 Consumed APIs

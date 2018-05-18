@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -149,7 +150,7 @@ public class CsarInstallerItCase {
 
     @Test
     public void testInstallTheCsarTca()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException, JSONException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);

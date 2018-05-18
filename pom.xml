@@ -142,6 +142,14 @@
 						<name>JBoss.org Maven repository</name>
 						<url>https://repository.jboss.org/nexus/content/groups/public</url>
 				</repository>
+				<repository>
+					<id>jcentral</id>
+					<name>bintray</name>
+					<url>http://jcenter.bintray.com</url>
+					<snapshots>
+					<enabled>false</enabled>
+					</snapshots>
+				</repository>
 		</repositories>
 
 		<dependencyManagement>
@@ -166,17 +174,6 @@
 		</dependencyManagement>
 
 		<dependencies>
-				<!-- Swagger requires at least v20 and policy is bringing version 14 -->
-				<dependency>
-					<groupId>com.google.guava</groupId>
-					<artifactId>guava</artifactId>
-					<version>${guava.version}</version>
-				</dependency>
-				<dependency>
-					<groupId>io.swagger.core.v3</groupId>
-					<artifactId>swagger-jaxrs2</artifactId>
-					<version>${swagger.jaxrs2.version}</version>
-				</dependency>
 				<dependency>
 						<groupId>com.att.eelf</groupId>
 						<artifactId>eelf-core</artifactId>
@@ -494,8 +491,36 @@
 					<artifactId>sdc-tosca</artifactId>
 					<version>1.3.0</version>
 				</dependency>
-		</dependencies>
-
+				<!-- To generate Swagger.json, swagger.html and swagger.pdf -->
+ 				<dependency>
+					<groupId>io.springfox</groupId>
+					<artifactId>springfox-swagger2</artifactId>
+					<version>2.4.0</version>
+					<scope>test</scope>
+				</dependency>
+ 				<dependency>
+					<groupId>io.github.robwin</groupId>
+					<artifactId>assertj-swagger</artifactId>
+					<version>0.2.0</version>
+					<scope>test</scope>
+				</dependency> 
+				<dependency>
+					<groupId>io.github.swagger2markup</groupId>
+					<artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+					<version>1.2.0</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<pluginRepositories>
+				<pluginRepository>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+					<id>jcenter-releases</id>
+					<name>jcenter</name>
+					<url>http://jcenter.bintray.com</url>
+				</pluginRepository>
+			</pluginRepositories>
 		<build>
 				<finalName>clamp</finalName>
 
@@ -540,6 +565,119 @@
 				</resources>
 
 				<plugins>
+					<!-- Scan Clamp code and generate the swagger.json file with all the APIs -->
+					<plugin>
+						<groupId>com.sebastian-daschner</groupId>
+						<artifactId>jaxrs-analyzer-maven-plugin</artifactId>
+						<version>0.14</version>
+						<executions>
+							<execution>
+								<phase>test</phase>
+								<goals>
+									<goal>analyze-jaxrs</goal>
+								</goals>
+								<configuration>
+									<backend>swagger</backend>
+									<resourcesDir>../docs/swagger/</resourcesDir>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Read the swagger.json file and the definition from SwaggerConfig.java;
+						generate a list of .adoc files containing the APIs info in more structured way  -->
+					<plugin>
+						<groupId>io.github.swagger2markup</groupId>
+						<artifactId>swagger2markup-maven-plugin</artifactId>
+						<version>1.3.1</version>
+						<dependencies>
+							<dependency>
+								<groupId>io.github.swagger2markup</groupId>
+								<artifactId>swagger2markup-import-files-ext</artifactId>
+								<version>1.3.1</version>
+							</dependency>
+							<dependency>
+								<groupId>io.github.swagger2markup</groupId>
+								<artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+								<version>1.3.1</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<swaggerInput>${project.basedir}/docs/swagger/swagger.json</swaggerInput>
+							<outputDir>${project.build.directory}/asciidoc/generated</outputDir>
+							<config>
+								<swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+							</config>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>test</phase>
+								<goals>
+									<goal>convertSwagger2markup</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<!-- Run the generated asciidoc through Asciidoctor to generate
+					other documentation types, such as PDFs or HTML5 -->
+					<plugin>
+						<groupId>org.asciidoctor</groupId>
+						<artifactId>asciidoctor-maven-plugin</artifactId>
+						<version>1.5.3</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.asciidoctor</groupId>
+								<artifactId>asciidoctorj-pdf</artifactId>
+								<version>1.5.0-alpha.10.1</version>
+							</dependency>
+							<dependency>
+								<groupId>org.jruby</groupId>
+								<artifactId>jruby-complete</artifactId>
+								<version>1.7.21</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<sourceDirectory>${project.basedir}/src/main/resources/asciidoc</sourceDirectory>
+							<sourceDocumentName>swagger.adoc</sourceDocumentName>
+							<attributes>
+								<doctype>book</doctype>
+								<toc>left</toc>
+								<toclevels>3</toclevels>
+								<numbered></numbered>
+								<hardbreaks></hardbreaks>
+								<sectlinks></sectlinks>
+								<sectanchors></sectanchors>
+								<generated>${project.build.directory}/asciidoc/generated</generated>
+							</attributes>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>output-html</id>
+								<phase>test</phase>
+								<goals>
+									<goal>process-asciidoc</goal>
+								</goals>
+								<configuration>
+									<backend>html5</backend>
+									<outputDirectory>${project.basedir}/docs/swagger</outputDirectory>
+									<outputDirectory>${project.basedir}/src/main/resources/META-INF/resources/</outputDirectory>
+								</configuration>
+							</execution>
+							<execution>
+								<id>output-pdf</id>
+								<phase>test</phase>
+								<goals>
+									<goal>process-asciidoc</goal>
+								</goals>
+								<configuration>
+									<backend>pdf</backend>
+									<outputDirectory>${project.basedir}/docs/swagger</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
 						<plugin>
 								<groupId>org.codehaus.groovy.maven</groupId>
 								<artifactId>gmaven-plugin</artifactId>
