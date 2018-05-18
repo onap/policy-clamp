@@ -835,6 +835,10 @@ public class CldsService extends SecureServiceBase {
             fillInCldsModel(model);
             String bpmnJson = cldsBpmnTransformer.doXslTransformToString(model.getBpmnText());
             logger.info("PUT bpmnJson={}", bpmnJson);
+            SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
+                    cldsPermissionInstance, CldsEvent.ACTION_DEPLOY);
+            isAuthorized(permisionManage);
+            isAuthorizedForVf(model);
             ModelProperties modelProp = new ModelProperties(modelName, model.getControlName(), CldsEvent.ACTION_DEPLOY,
                     false, bpmnJson, model.getPropText());
             checkForDuplicateServiceVf(modelName, model.getPropText());
@@ -890,6 +894,10 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
         Boolean errorCase = false;
         try {
+            SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
+                    cldsPermissionInstance, CldsEvent.ACTION_UNDEPLOY);
+            isAuthorized(permisionManage);
+            isAuthorizedForVf(model);
             String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
                     model.getTypeId());
             String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(operationStatusUndeployUrl);
