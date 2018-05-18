@@ -48,17 +48,17 @@ import java.util.List;
  * "targetResourceId","value":["Eace933104d443b496b8.nodes.heat.vpg"]}]]}]
  */
 public class PolicyItem implements Cloneable {
-    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(PolicyItem.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private String                    id;
-    private String                    recipe;
-    private int                       maxRetries;
-    private int                       retryTimeLimit;
-    private String                    parentPolicy;
-    private List<String>              parentPolicyConditions;
-    private String                    actor;
-    private String                    targetResourceId;
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyItem.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+    private String id;
+    private String recipe;
+    private int maxRetries;
+    private int retryTimeLimit;
+    private String parentPolicy;
+    private List<String> parentPolicyConditions;
+    private String actor;
+    private String targetResourceId;
 
     /**
      * Parse Policy given json node.
@@ -73,7 +73,9 @@ public class PolicyItem implements Cloneable {
         parentPolicy = AbstractModelElement.getValueByName(node, "parentPolicy");
         parentPolicyConditions = AbstractModelElement.getValuesByName(node, "parentPolicyConditions");
         targetResourceId = AbstractModelElement.getValueByName(node, "targetResourceId");
-
+        if (targetResourceId != null && targetResourceId.isEmpty()) {
+            this.setTargetResourceId(null);
+        }
     }
 
     /**

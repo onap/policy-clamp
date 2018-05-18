@@ -31,7 +31,7 @@ policies:
   retry: 3
   success: <generatedId>
   target:
-    resourceID: resource-id
+    resourceID: null
     type: VM
   timeout: 180
 - actor: APPC
