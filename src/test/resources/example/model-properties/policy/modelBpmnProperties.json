@@ -100,7 +100,14 @@
                             "name": "targetResourceId",
                             "value":
                             [
-                                "resource-id"
+                                ""
+                            ]
+                        },
+                        {
+                            "name": "targetResourceIdOther",
+                            "value":
+                            [
+                                ""
                             ]
                         }
                     ],
@@ -161,6 +168,13 @@
                             "value":
                             [
                                 "resource-id"
+                            ]
+                        },
+                        {
+                            "name": "targetResourceIdOther",
+                            "value":
+                            [
+                                "resource-idOther"
                             ]
                         }
                     ]
@@ -227,13 +241,6 @@
                             [
                                 ""
                             ]
-                        },
-                        {
-                            "name": "targetResourceId",
-                            "value":
-                            [
-                                "resource-id"
-                            ]
                         }
                     ],
 
@@ -293,6 +300,13 @@
                             "value":
                             [
                                 "resource-id"
+                            ]
+                        },
+                        {
+                            "name": "targetResourceIdOther",
+                            "value":
+                            [
+                                "resource-idOther"
                             ]
                         }
                     ]
