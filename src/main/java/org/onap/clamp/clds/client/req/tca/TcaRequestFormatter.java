@@ -157,10 +157,9 @@ public class TcaRequestFormatter {
     private static void addThresholds(ClampProperties refProp, String service, ObjectNode appendToNode, TcaItem tcaItem,
             ModelProperties modelProperties) {
         ArrayNode tcaNodes = appendToNode.withArray("thresholds");
-        ObjectNode tcaNode;
         try {
-            tcaNode = (ObjectNode) refProp.getJsonTemplate("tca.thresholds.template", service);
             for (TcaThreshold tcaThreshold : tcaItem.getTcaThresholds()) {
+                ObjectNode tcaNode = (ObjectNode) refProp.getJsonTemplate("tca.thresholds.template", service);
                 tcaNode.put("closedLoopControlName", modelProperties.getControlNameAndPolicyUniqueId());
                 tcaNode.put("fieldPath", tcaThreshold.getFieldPath());
                 tcaNode.put("thresholdValue", tcaThreshold.getThreshold());
