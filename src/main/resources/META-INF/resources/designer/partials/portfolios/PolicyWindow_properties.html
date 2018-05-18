@@ -286,9 +286,13 @@ label {
 							<label for="targetResourceId" class="col-sm-4 control-label">
 								Target ResourceId</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="targetResourceId"
-									name="targetResourceId"> </input>
+								<select class="form-control" name="targetResourceId" id="targetResourceId" enableFilter="true" onchange="changeTargetResourceIdOther();">
+									<option value=""></option>
+									<option value="Other:">Other:</option>
+								</select>
 							</div>
+							<input type="text" style="display:none" class="form-control" id="targetResourceIdOther"
+								name="targetResourceIdOther" value=""></input>
 						</div>
 					</div>
 				</form>
@@ -304,6 +308,14 @@ label {
 	</div>
 
 	<script>
+	function changeTargetResourceIdOther() {
+		if ($("#targetResourceId").val()==="Other:") {
+			$("#targetResourceIdOther").show();
+		} else {
+			$("#targetResourceIdOther").hide();
+			$("#targetResourceIdOther").val("");
+		}
+	}
 		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
 		// css attribute display:none
 		$("#add_one_more").click(function(event) {
@@ -345,6 +357,11 @@ label {
 			$(".formId").remove();
 			
 			if (policyObj !== undefined) {
+				// Set all the Resource Invariant UUID in the target resource ID list (+Empty and other) 
+				Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key){
+					$('#targetResourceId').append($('<option></option>').val(key).html(key));
+				});
+
 				var el = policyObj[id][3]['policyConfigurations']
 				for (var i = 0; i < el.length; i++) {
 					loadingId=true;
@@ -360,7 +377,13 @@ label {
 								parent_policy[num]=el[i][j].value 
 							if(el[i][j].name==='recipe' && el[i][j].value.toString()!==''){
 								$("#go_properties_tab"+num).text(el[i][j].value)
-							}	
+							}
+							if(el[i][j].name==="targetResourceIdOther" && el[i][j].value.toString()!=='') {
+								// Add the entry and set it
+								$('#targetResourceId').append($('<option></option>').val($('#targetResourceIdOther').val()).html($('#targetResourceIdOther').val()));
+								$('#targetResourceId').val($('#targetResourceIdOther').val());
+							}
+							
 						}
 					}
 				}
@@ -385,13 +408,14 @@ label {
 					$("#formId"+k+" #parentPolicy").change();
 				}
 				
+				// Now load all component with the right value defined in policyObj JSON
 				for (headInd in policyObj[id]){
 					if (!(policyObj[id][headInd].hasOwnProperty("policyConfigurations"))){
 						$("#" + policyObj[id][headInd].name).val(policyObj[id][headInd].value);
 					}
 				}
 			}
-			
+
 			setMultiSelect();
 			
 			if (readMOnly){
@@ -454,6 +478,10 @@ label {
 		}
 		
 		$("#savePropsBtn").click(function(event) {
+			if($("#targetResourceIdOther").is(":visible")) {
+				$('#targetResourceId').append($('<option></option>').val($("#targetResourceIdOther").val()).html($("#targetResourceIdOther").val()))
+				$("#targetResourceId").val($("#targetResourceIdOther").val());
+			}
 			$(".idError").hide();
 			if ($("#policyTable .highlight td").html() !== $("#pname").val()){
 				//repeated name
@@ -483,7 +511,7 @@ label {
 					finalSaveList[tableVal] = allPolicies[tableVal];
 				}
 			});
-			
+
 			saveProperties(finalSaveList);
 			$("#close_button").click();
 		})		
