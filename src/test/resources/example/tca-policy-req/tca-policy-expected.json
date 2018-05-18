@@ -28,9 +28,9 @@
               "version": "1.0.2",
               "fieldPath": "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
               "thresholdValue": 123,
-              "direction": "GREATER_OR_EQUAL",
+              "direction": "LESS_OR_EQUAL",
               "severity": "MAJOR",
-              "closedLoopEventStatus": "ONSET"
+              "closedLoopEventStatus": "ABATED"
             },
             {
               "closedLoopControlName": "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf_0",
