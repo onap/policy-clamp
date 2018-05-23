@@ -71,5 +71,10 @@ function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $locati
       callback && callback();
     });
   };
+  
+  $scope.logout = function() {
+      window.localStorage.removeItem("isAuth");
+      window.localStorage.removeItem("loginuser");
+  };
 
 }

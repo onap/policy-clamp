@@ -74,7 +74,11 @@ public class CldsSecurityConfigUsers extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) {
         try {
             http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
-                    .authenticated().anyRequest().permitAll().and().logout();
+                    .authenticated().anyRequest().permitAll().and().logout()
+            .and().sessionManagement()
+                .maximumSessions(1)
+            .and().invalidSessionUrl("/designer/timeout.html");
+
         } catch (Exception e) {
             logger.error("Exception occurred during the setup of the Web users in memory", e);
             throw new CldsUsersException("Exception occurred during the setup of the Web users in memory", e);
