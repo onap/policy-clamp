@@ -32,6 +32,7 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 
 import org.apache.commons.codec.DecoderException;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,7 +88,7 @@ public class SdcReqItCase {
     }
 
     @Test
-    public void formatSdcReqTest() {
+    public void formatSdcReqTest() throws JSONException {
         String jsonResult = sdcReq.formatSdcReq("payload", "artifactName", "artifactLabel", "artifactType");
         JSONAssert.assertEquals(
                 "{\"payloadData\" : \"cGF5bG9hZA==\",\"artifactLabel\" : \"artifactLabel\",\"artifactName\" :\"artifactName\",\"artifactType\" : \"artifactType\","
