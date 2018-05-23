@@ -286,7 +286,7 @@ label {
 							<label for="targetResourceId" class="col-sm-4 control-label">
 								Target ResourceId</label>
 							<div class="col-sm-8">
-								<select class="form-control" name="targetResourceId" id="targetResourceId" enableFilter="true" onchange="changeTargetResourceIdOther();">
+								<select class="form-control" name="targetResourceId" id="targetResourceId" enableFilter="true" onchange="changeTargetResourceIdOther();" >
 									<option value=""></option>
 									<option value="Other:">Other:</option>
 								</select>
@@ -308,6 +308,14 @@ label {
 	</div>
 
 	<script>
+	
+	function initTargetResourceId() {
+		// Set all the Resource Invariant UUID in the target resource ID list (+Empty and other) 
+		Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key){
+			$('#targetResourceId').append($('<option></option>').val(key).html(key));
+		});
+	}
+	
 	function changeTargetResourceIdOther() {
 		if ($("#targetResourceId").val()==="Other:") {
 			$("#targetResourceIdOther").show();
@@ -346,7 +354,8 @@ label {
 			}
 		}
 		$("#pname").val('');		
-		
+		initTargetResourceId();
+
 		//load recipes for a chosen policy
 		function disperseConfig(policyObj, id){
 			parent_policy={};
@@ -357,11 +366,6 @@ label {
 			$(".formId").remove();
 			
 			if (policyObj !== undefined) {
-				// Set all the Resource Invariant UUID in the target resource ID list (+Empty and other) 
-				Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key){
-					$('#targetResourceId').append($('<option></option>').val(key).html(key));
-				});
-
 				var el = policyObj[id][3]['policyConfigurations']
 				for (var i = 0; i < el.length; i++) {
 					loadingId=true;
