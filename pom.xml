@@ -565,6 +565,26 @@
 				</resources>
 
 				<plugins>
+					<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-antrun-plugin</artifactId>
+							<version>1.1</version>
+							<executions>
+									<execution>
+											<phase>validate</phase>
+											<goals>
+													<goal>run</goal>
+											</goals>
+											<configuration>
+													<tasks>
+															<echo>******** Displaying value of property ********</echo>
+															<echo>Docker host set:${env.DOCKER_HOST}</echo>
+													</tasks>
+											</configuration>
+									</execution>
+							</executions>
+					</plugin>
+				
 					<!-- Scan Clamp code and generate the swagger.json file with all the APIs -->
 					<plugin>
 						<groupId>com.sebastian-daschner</groupId>
@@ -765,7 +785,7 @@
 						<plugin>
 								<groupId>com.spotify</groupId>
 								<artifactId>docker-maven-plugin</artifactId>
-								<version>1.0.0</version>
+								<version>1.1.0</version>
 								<configuration>
 										<imageName>onap/clamp</imageName>
 										<dockerDirectory>src/main/docker</dockerDirectory>
