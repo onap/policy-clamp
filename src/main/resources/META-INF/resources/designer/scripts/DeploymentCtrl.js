@@ -26,10 +26,18 @@ app.controller('DeploymentCtrl',
        function( $scope,  $rootScope,  $modalInstance,  data,  dialogs,   cldsModelService) {
 
            function validate_and_set_deploy_parameters () {
-        	   var parameters = $("#deployProperties").val();
+        	   var inputList = document.getElementsByClassName("deployFormId");
+        	   var jsonParameters="{";
+        	   $.each(inputList, function(key) {
+        		   if (jsonParameters !== "{") {
+        			   jsonParameters = jsonParameters+",";
+        		   }
+        		  jsonParameters = jsonParameters+'"'+inputList[key].id+'":'+'"'+inputList[key].value+'"'
+        	   });
+        	   jsonParameters = jsonParameters+"}";
                try {
-                   parameters = JSON.parse(parameters);
-                   set_deploy_parameters(parameters);
+                   //Try to validate the json
+                   set_deploy_parameters(JSON.parse(jsonParameters));
                } catch (e) {
                    console.error("Couldn't parse deploy parameters json");
                }
@@ -39,7 +47,6 @@ app.controller('DeploymentCtrl',
                if (!'global' in elementMap) {
                    elementMap["global"] = [];
                }
-
                var index = elementMap["global"].findIndex(function (e) { return (typeof e == "object" && !(e instanceof Array)) && "deployParameters" == e["name"]; }); 
                if (index == -1) { 
                    elementMap["global"].push({"name": "deployParameters", "value": parameters}); 
@@ -50,8 +57,14 @@ app.controller('DeploymentCtrl',
 
            $scope.load_deploy_parameters = function () {
         	   var index = elementMap["global"].findIndex(function (e) { return (typeof e == "object" && !(e instanceof Array)) && "deployParameters" == e["name"]; }); 
-               if (index != -1) { 
-            	   $('#deployProperties').val(JSON.stringify(elementMap["global"][index]["value"]))
+               if (index != -1) {
+            	   $('#deployPropertiesDiv').append($('<br/>'));
+            	   $.each(elementMap["global"][index].value, function(key) {
+            		   var propertyValue=elementMap["global"][index].value[key];
+            		   $('#deployPropertiesDiv').append($('<label class="control-label">'+key+'  </label>'));
+            		   $('#deployPropertiesDiv').append($('<input style="width: 100%; clear: both;" class="deployFormId" id="'+key+'"></input>').val(propertyValue).html(propertyValue));
+            		   $('#deployPropertiesDiv').append($('<br/>'));
+    	        });
                }
            }
 
