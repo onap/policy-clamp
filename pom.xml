@@ -767,7 +767,7 @@
 								<artifactId>docker-maven-plugin</artifactId>
 								<version>1.1.0</version>
 								<configuration>
-								<dockerHost>tcp://localhost:2375</dockerHost>
+								<dockerHost>http://localhost:2375</dockerHost>
 										<imageName>onap/clamp</imageName>
 										<dockerDirectory>src/main/docker</dockerDirectory>
 										<serverId>docker-hub</serverId>
