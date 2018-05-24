@@ -571,7 +571,7 @@
 							<version>1.6.0</version>
 							<executions>
 								<execution>
-										<id>docker_info</id>
+										<id>docker_info0</id>
 										<phase>validate</phase>
 										<goals>
 												<goal>exec</goal>
@@ -585,7 +585,7 @@
 										</configuration>
 								</execution>
 								<execution>
-										<id>docker_info2</id>
+										<id>docker_info1</id>
 										<phase>validate</phase>
 										<goals>
 												<goal>exec</goal>
@@ -594,7 +594,61 @@
 												<executable>docker</executable>
 												<arguments>
 														<argument>images</argument>
-														
+												</arguments>
+										</configuration>
+								</execution>
+									<execution>
+										<id>docker_info2</id>
+										<phase>validate</phase>
+										<goals>
+												<goal>exec</goal>
+										</goals>
+										<configuration>
+												<executable>ls</executable>
+												<arguments>
+														<argument>-latr</argument>
+														<argument>/var/run/docker.sock</argument>
+												</arguments>
+										</configuration>
+								</execution>
+
+								<execution>
+										<id>docker_info3</id>
+										<phase>validate</phase>
+										<goals>
+												<goal>exec</goal>
+										</goals>
+										<configuration>
+												<executable>cat</executable>
+												<arguments>
+														<argument>/etc/hosts</argument>
+												</arguments>
+										</configuration>
+								</execution>
+								<execution>
+										<id>docker_info4</id>
+										<phase>validate</phase>
+										<goals>
+												<goal>exec</goal>
+										</goals>
+										<configuration>
+												<executable>curl</executable>
+												<arguments>
+														<argument>-v</argument> 
+														<argument>http://127.0.0.1:2375/info</argument>
+												</arguments>
+										</configuration>
+								</execution>
+								<execution>
+										<id>docker_info5</id>
+										<phase>validate</phase>
+										<goals>
+												<goal>exec</goal>
+										</goals>
+										<configuration>
+												<executable>netstat</executable>
+												<arguments>
+														<argument>-tulnp</argument> 
 												</arguments>
 										</configuration>
 								</execution>
