@@ -577,24 +577,7 @@
 												<goal>exec</goal>
 										</goals>
 										<configuration>
-												<executable>docker</executable>
-												<arguments>
-														<argument>ps</argument>
-														<argument>--all</argument>
-												</arguments>
-										</configuration>
-								</execution>
-								<execution>
-										<id>docker_info1</id>
-										<phase>validate</phase>
-										<goals>
-												<goal>exec</goal>
-										</goals>
-										<configuration>
-												<executable>docker</executable>
-												<arguments>
-														<argument>images</argument>
-												</arguments>
+												<executable>env</executable>
 										</configuration>
 								</execution>
 									<execution>
