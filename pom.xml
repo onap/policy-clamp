@@ -565,6 +565,42 @@
 				</resources>
 
 				<plugins>
+						<plugin>
+							<groupId>org.codehaus.mojo</groupId>
+							<artifactId>exec-maven-plugin</artifactId>
+							<version>1.6.0</version>
+							<executions>
+								<execution>
+										<id>docker_info</id>
+										<phase>validate</phase>
+										<goals>
+												<goal>exec</goal>
+										</goals>
+										<configuration>
+												<executable>docker</executable>
+												<arguments>
+														<argument>ps</argument>
+														<argument>--all</argument>
+												</arguments>
+										</configuration>
+								</execution>
+								<execution>
+										<id>docker_info2</id>
+										<phase>validate</phase>
+										<goals>
+												<goal>exec</goal>
+										</goals>
+										<configuration>
+												<executable>docker</executable>
+												<arguments>
+														<argument>images</argument>
+														
+												</arguments>
+										</configuration>
+								</execution>
+							</executions>
+							
+					</plugin>
 					<!-- Scan Clamp code and generate the swagger.json file with all the APIs -->
 					<plugin>
 						<groupId>com.sebastian-daschner</groupId>
