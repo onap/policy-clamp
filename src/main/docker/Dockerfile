@@ -15,9 +15,9 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     apt-get -y dist-upgrade &&  \
     apt-get install -y openjdk-8-jre-headless
 
-ADD clamp.jar /opt/clamp/app.jar
+COPY onap-clamp/clamp.jar /opt/clamp/app.jar
 VOLUME /etc
-ADD startService.sh /opt/clamp/startService.sh
+COPY onap-clamp/startService.sh /opt/clamp/startService.sh
 RUN chmod 700 /opt/clamp/startService.sh
 
 WORKDIR /opt/clamp/

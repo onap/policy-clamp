@@ -82,8 +82,9 @@
 				<sonar.projectVersion>${project.version}</sonar.projectVersion>
 
 				<docker.push.registry>localhost:5000</docker.push.registry>
-				<skip.docker.build>true</skip.docker.build>
-				<skip.docker.push>true</skip.docker.push>
+				<docker.skip.build>true</docker.skip.build>
+				<docker.skip.push>true</docker.skip.push>
+				<docker.skip.tag>true</docker.skip.tag>
 				<skip.staging.artifacts>false</skip.staging.artifacts>
 				<python.http.proxy.param></python.http.proxy.param>
 		</properties>
@@ -143,12 +144,12 @@
 						<url>https://repository.jboss.org/nexus/content/groups/public</url>
 				</repository>
 				<repository>
-					<id>jcentral</id>
-					<name>bintray</name>
-					<url>http://jcenter.bintray.com</url>
-					<snapshots>
-					<enabled>false</enabled>
-					</snapshots>
+						<id>jcentral</id>
+						<name>bintray</name>
+						<url>http://jcenter.bintray.com</url>
+						<snapshots>
+								<enabled>false</enabled>
+						</snapshots>
 				</repository>
 		</repositories>
 
@@ -196,7 +197,7 @@
 						<groupId>javax.xml.bind</groupId>
 						<artifactId>jaxb-api</artifactId>
 						<version>2.3.0</version>
-				</dependency> 
+				</dependency>
 				<!-- Spring famework -->
 				<dependency>
 						<groupId>org.springframework.boot</groupId>
@@ -460,19 +461,19 @@
 				</dependency>
 				<!-- Other dependencies to fix nexus IQ reported vulnerabilities -->
 				<dependency>
-					<groupId>org.codehaus.plexus</groupId>
-					<artifactId>plexus-utils</artifactId>
-					<version>3.0.24</version>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-utils</artifactId>
+						<version>3.0.24</version>
 				</dependency>
 				<dependency>
-					<groupId>commons-fileupload</groupId>
-					<artifactId>commons-fileupload</artifactId>
-					<version>1.3.3</version>
+						<groupId>commons-fileupload</groupId>
+						<artifactId>commons-fileupload</artifactId>
+						<version>1.3.3</version>
 				</dependency>
 				<dependency>
-					<groupId>org.jboss.spec.javax.ws.rs</groupId>
-					<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-					<version>1.0.1.Final</version>
+						<groupId>org.jboss.spec.javax.ws.rs</groupId>
+						<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
+						<version>1.0.1.Final</version>
 				</dependency>
 				<!-- Remove the MYSQL connector and replace it by Mariadb -->
 				<dependency>
@@ -487,40 +488,40 @@
 						<version>1.3.0</version>
 				</dependency>
 				<dependency>
-					<groupId>org.onap.sdc.sdc-tosca</groupId>
-					<artifactId>sdc-tosca</artifactId>
-					<version>1.3.0</version>
+						<groupId>org.onap.sdc.sdc-tosca</groupId>
+						<artifactId>sdc-tosca</artifactId>
+						<version>1.3.0</version>
 				</dependency>
 				<!-- To generate Swagger.json, swagger.html and swagger.pdf -->
- 				<dependency>
-					<groupId>io.springfox</groupId>
-					<artifactId>springfox-swagger2</artifactId>
-					<version>2.4.0</version>
-					<scope>test</scope>
-				</dependency>
- 				<dependency>
-					<groupId>io.github.robwin</groupId>
-					<artifactId>assertj-swagger</artifactId>
-					<version>0.2.0</version>
-					<scope>test</scope>
-				</dependency> 
 				<dependency>
-					<groupId>io.github.swagger2markup</groupId>
-					<artifactId>swagger2markup-spring-restdocs-ext</artifactId>
-					<version>1.2.0</version>
-					<scope>test</scope>
+						<groupId>io.springfox</groupId>
+						<artifactId>springfox-swagger2</artifactId>
+						<version>2.4.0</version>
+						<scope>test</scope>
 				</dependency>
-			</dependencies>
-			<pluginRepositories>
+				<dependency>
+						<groupId>io.github.robwin</groupId>
+						<artifactId>assertj-swagger</artifactId>
+						<version>0.2.0</version>
+						<scope>test</scope>
+				</dependency>
+				<dependency>
+						<groupId>io.github.swagger2markup</groupId>
+						<artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+						<version>1.2.0</version>
+						<scope>test</scope>
+				</dependency>
+		</dependencies>
+		<pluginRepositories>
 				<pluginRepository>
-					<snapshots>
-						<enabled>false</enabled>
-					</snapshots>
-					<id>jcenter-releases</id>
-					<name>jcenter</name>
-					<url>http://jcenter.bintray.com</url>
+						<snapshots>
+								<enabled>false</enabled>
+						</snapshots>
+						<id>jcenter-releases</id>
+						<name>jcenter</name>
+						<url>http://jcenter.bintray.com</url>
 				</pluginRepository>
-			</pluginRepositories>
+		</pluginRepositories>
 		<build>
 				<finalName>clamp</finalName>
 
@@ -541,7 +542,7 @@
 								<filtering>false</filtering>
 								<targetPath>https</targetPath>
 						</testResource>
-					  <testResource>
+						<testResource>
 								<directory>src/test/resources/example/sdc</directory>
 								<includes>
 										<include>**.csar</include>
@@ -565,192 +566,121 @@
 				</resources>
 
 				<plugins>
+						<!-- Scan Clamp code and generate the swagger.json file with all the 
+								APIs -->
 						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>exec-maven-plugin</artifactId>
-							<version>1.6.0</version>
-							<executions>
-								<execution>
-										<id>docker_info0</id>
-										<phase>validate</phase>
-										<goals>
-												<goal>exec</goal>
-										</goals>
-										<configuration>
-												<executable>env</executable>
-										</configuration>
-								</execution>
-									<execution>
-										<id>docker_info2</id>
-										<phase>validate</phase>
-										<goals>
-												<goal>exec</goal>
-										</goals>
-										<configuration>
-												<executable>ls</executable>
-												<arguments>
-														<argument>-latr</argument>
-														<argument>/var/run/docker.sock</argument>
-												</arguments>
-										</configuration>
-								</execution>
+								<groupId>com.sebastian-daschner</groupId>
+								<artifactId>jaxrs-analyzer-maven-plugin</artifactId>
+								<version>0.14</version>
+								<executions>
+										<execution>
+												<phase>test</phase>
+												<goals>
+														<goal>analyze-jaxrs</goal>
+												</goals>
+												<configuration>
+														<backend>swagger</backend>
+														<resourcesDir>../docs/swagger/</resourcesDir>
+												</configuration>
+										</execution>
+								</executions>
+						</plugin>
 
-								<execution>
-										<id>docker_info3</id>
-										<phase>validate</phase>
-										<goals>
-												<goal>exec</goal>
-										</goals>
-										<configuration>
-												<executable>cat</executable>
-												<arguments>
-														<argument>/etc/hosts</argument>
-												</arguments>
-										</configuration>
-								</execution>
-								<execution>
-										<id>docker_info4</id>
-										<phase>validate</phase>
-										<goals>
-												<goal>exec</goal>
-										</goals>
-										<configuration>
-												<executable>curl</executable>
-												<arguments>
-														<argument>-v</argument> 
-														<argument>http://127.0.0.1:2375/info</argument>
-												</arguments>
-										</configuration>
-								</execution>
-								<execution>
-										<id>docker_info5</id>
-										<phase>validate</phase>
-										<goals>
-												<goal>exec</goal>
-										</goals>
-										<configuration>
-												<executable>netstat</executable>
-												<arguments>
-														<argument>-tulnp</argument> 
-												</arguments>
-										</configuration>
-								</execution>
-							</executions>
-							
-					</plugin>
-					<!-- Scan Clamp code and generate the swagger.json file with all the APIs -->
-					<plugin>
-						<groupId>com.sebastian-daschner</groupId>
-						<artifactId>jaxrs-analyzer-maven-plugin</artifactId>
-						<version>0.14</version>
-						<executions>
-							<execution>
-								<phase>test</phase>
-								<goals>
-									<goal>analyze-jaxrs</goal>
-								</goals>
+						<!-- Read the swagger.json file and the definition from SwaggerConfig.java; 
+								generate a list of .adoc files containing the APIs info in more structured 
+								way -->
+						<plugin>
+								<groupId>io.github.swagger2markup</groupId>
+								<artifactId>swagger2markup-maven-plugin</artifactId>
+								<version>1.3.1</version>
+								<dependencies>
+										<dependency>
+												<groupId>io.github.swagger2markup</groupId>
+												<artifactId>swagger2markup-import-files-ext</artifactId>
+												<version>1.3.1</version>
+										</dependency>
+										<dependency>
+												<groupId>io.github.swagger2markup</groupId>
+												<artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+												<version>1.3.1</version>
+										</dependency>
+								</dependencies>
 								<configuration>
-									<backend>swagger</backend>
-									<resourcesDir>../docs/swagger/</resourcesDir>
+										<swaggerInput>${project.basedir}/docs/swagger/swagger.json</swaggerInput>
+										<outputDir>${project.build.directory}/asciidoc/generated</outputDir>
+										<config>
+												<swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+										</config>
 								</configuration>
-							</execution>
-						</executions>
-					</plugin>
+								<executions>
+										<execution>
+												<phase>test</phase>
+												<goals>
+														<goal>convertSwagger2markup</goal>
+												</goals>
+										</execution>
+								</executions>
+						</plugin>
 
-					<!-- Read the swagger.json file and the definition from SwaggerConfig.java;
-						generate a list of .adoc files containing the APIs info in more structured way  -->
-					<plugin>
-						<groupId>io.github.swagger2markup</groupId>
-						<artifactId>swagger2markup-maven-plugin</artifactId>
-						<version>1.3.1</version>
-						<dependencies>
-							<dependency>
-								<groupId>io.github.swagger2markup</groupId>
-								<artifactId>swagger2markup-import-files-ext</artifactId>
-								<version>1.3.1</version>
-							</dependency>
-							<dependency>
-								<groupId>io.github.swagger2markup</groupId>
-								<artifactId>swagger2markup-spring-restdocs-ext</artifactId>
-								<version>1.3.1</version>
-							</dependency>
-						</dependencies>
-						<configuration>
-							<swaggerInput>${project.basedir}/docs/swagger/swagger.json</swaggerInput>
-							<outputDir>${project.build.directory}/asciidoc/generated</outputDir>
-							<config>
-								<swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-							</config>
-						</configuration>
-						<executions>
-							<execution>
-								<phase>test</phase>
-								<goals>
-									<goal>convertSwagger2markup</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-					<!-- Run the generated asciidoc through Asciidoctor to generate
-					other documentation types, such as PDFs or HTML5 -->
-					<plugin>
-						<groupId>org.asciidoctor</groupId>
-						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<version>1.5.3</version>
-						<dependencies>
-							<dependency>
+						<!-- Run the generated asciidoc through Asciidoctor to generate other 
+								documentation types, such as PDFs or HTML5 -->
+						<plugin>
 								<groupId>org.asciidoctor</groupId>
-								<artifactId>asciidoctorj-pdf</artifactId>
-								<version>1.5.0-alpha.10.1</version>
-							</dependency>
-							<dependency>
-								<groupId>org.jruby</groupId>
-								<artifactId>jruby-complete</artifactId>
-								<version>1.7.21</version>
-							</dependency>
-						</dependencies>
-						<configuration>
-							<sourceDirectory>${project.basedir}/src/main/resources/asciidoc</sourceDirectory>
-							<sourceDocumentName>swagger.adoc</sourceDocumentName>
-							<attributes>
-								<doctype>book</doctype>
-								<toc>left</toc>
-								<toclevels>3</toclevels>
-								<numbered></numbered>
-								<hardbreaks></hardbreaks>
-								<sectlinks></sectlinks>
-								<sectanchors></sectanchors>
-								<generated>${project.build.directory}/asciidoc/generated</generated>
-							</attributes>
-						</configuration>
+								<artifactId>asciidoctor-maven-plugin</artifactId>
+								<version>1.5.3</version>
+								<dependencies>
+										<dependency>
+												<groupId>org.asciidoctor</groupId>
+												<artifactId>asciidoctorj-pdf</artifactId>
+												<version>1.5.0-alpha.10.1</version>
+										</dependency>
+										<dependency>
+												<groupId>org.jruby</groupId>
+												<artifactId>jruby-complete</artifactId>
+												<version>1.7.21</version>
+										</dependency>
+								</dependencies>
+								<configuration>
+										<sourceDirectory>${project.basedir}/src/main/resources/asciidoc</sourceDirectory>
+										<sourceDocumentName>swagger.adoc</sourceDocumentName>
+										<attributes>
+												<doctype>book</doctype>
+												<toc>left</toc>
+												<toclevels>3</toclevels>
+												<numbered></numbered>
+												<hardbreaks></hardbreaks>
+												<sectlinks></sectlinks>
+												<sectanchors></sectanchors>
+												<generated>${project.build.directory}/asciidoc/generated</generated>
+										</attributes>
+								</configuration>
 
-						<executions>
-							<execution>
-								<id>output-html</id>
-								<phase>test</phase>
-								<goals>
-									<goal>process-asciidoc</goal>
-								</goals>
-								<configuration>
-									<backend>html5</backend>
-									<outputDirectory>${project.basedir}/docs/swagger</outputDirectory>
-									<outputDirectory>${project.basedir}/src/main/resources/META-INF/resources/</outputDirectory>
-								</configuration>
-							</execution>
-							<execution>
-								<id>output-pdf</id>
-								<phase>test</phase>
-								<goals>
-									<goal>process-asciidoc</goal>
-								</goals>
-								<configuration>
-									<backend>pdf</backend>
-									<outputDirectory>${project.basedir}/docs/swagger</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
+								<executions>
+										<execution>
+												<id>output-html</id>
+												<phase>test</phase>
+												<goals>
+														<goal>process-asciidoc</goal>
+												</goals>
+												<configuration>
+														<backend>html5</backend>
+														<outputDirectory>${project.basedir}/docs/swagger</outputDirectory>
+														<outputDirectory>${project.basedir}/src/main/resources/META-INF/resources/</outputDirectory>
+												</configuration>
+										</execution>
+										<execution>
+												<id>output-pdf</id>
+												<phase>test</phase>
+												<goals>
+														<goal>process-asciidoc</goal>
+												</goals>
+												<configuration>
+														<backend>pdf</backend>
+														<outputDirectory>${project.basedir}/docs/swagger</outputDirectory>
+												</configuration>
+										</execution>
+								</executions>
+						</plugin>
 						<plugin>
 								<groupId>org.codehaus.groovy.maven</groupId>
 								<artifactId>gmaven-plugin</artifactId>
@@ -835,127 +765,7 @@
 										<skipNexusStagingDeployMojo>${skip.staging.artifacts}</skipNexusStagingDeployMojo>
 								</configuration>
 						</plugin>
-						<plugin>
-								<groupId>com.spotify</groupId>
-								<artifactId>docker-maven-plugin</artifactId>
-								<version>1.1.0</version>
-								<configuration>
 
-								<dockerHost>http://127.0.0.1:2375</dockerHost>
-										<imageName>onap/clamp</imageName>
-										<dockerDirectory>src/main/docker</dockerDirectory>
-										<serverId>docker-hub</serverId>
-										<imageTags>
-												<imageTag>latest</imageTag>
-												<imageTag>${project.docker.latesttagtimestamp.version}</imageTag>
-												<imageTag>${project.docker.latesttag.version}</imageTag>
-										</imageTags>
-										<forceTags>true</forceTags>
-										<resources>
-												<resource>
-														<targetPath>/</targetPath>
-														<directory>${project.build.directory}</directory>
-														<include>${project.build.finalName}.jar</include>
-												</resource>
-												<resource>
-														<targetPath>/</targetPath>
-														<directory>${project.build.directory}</directory>
-														<include>etc/config/**</include>
-												</resource>
-												<resource>
-														<targetPath>/</targetPath>
-														<directory>${project.build.directory}</directory>
-														<include>etc/keystore/**</include>
-												</resource>
-										</resources>
-								</configuration>
-								<executions>
-										<execution>
-												<id>build-image</id>
-												<phase>package</phase>
-												<goals>
-														<goal>build</goal>
-												</goals>
-												<configuration>
-														<skipDockerBuild>${skip.docker.build}</skipDockerBuild>
-														<buildArgs>
-																<http_proxy>${env.HTTP_PROXY}</http_proxy>
-																<https_proxy>${env.HTTPS_PROXY}</https_proxy>
-														</buildArgs>
-												</configuration>
-										</execution>
-
-										<execution>
-												<id>tag-image-latest-timestamp</id>
-												<phase>package</phase>
-												<goals>
-														<goal>tag</goal>
-												</goals>
-												<configuration>
-														<image>onap/clamp</image>
-														<newName>${docker.push.registry}/onap/clamp:${project.docker.latesttagtimestamp.version}</newName>
-														<skipDockerTag>${skip.docker.push}</skipDockerTag>
-												</configuration>
-										</execution>
-										<execution>
-												<id>push-image-latest-timestamp</id>
-												<phase>deploy</phase>
-												<goals>
-														<goal>push</goal>
-												</goals>
-												<configuration>
-														<imageName>${docker.push.registry}/onap/clamp:${project.docker.latesttagtimestamp.version}</imageName>
-														<skipDockerPush>${skip.docker.push}</skipDockerPush>
-												</configuration>
-										</execution>
-										<execution>
-												<id>tag-image-latest</id>
-												<phase>package</phase>
-												<goals>
-														<goal>tag</goal>
-												</goals>
-												<configuration>
-														<image>onap/clamp</image>
-														<newName>${docker.push.registry}/onap/clamp:${project.docker.latesttag.version}</newName>
-														<skipDockerTag>${skip.docker.push}</skipDockerTag>
-												</configuration>
-										</execution>
-										<execution>
-												<id>push-image-latest</id>
-												<phase>deploy</phase>
-												<goals>
-														<goal>push</goal>
-												</goals>
-												<configuration>
-														<imageName>${docker.push.registry}/onap/clamp:${project.docker.latesttag.version}</imageName>
-														<skipDockerPush>${skip.docker.push}</skipDockerPush>
-												</configuration>
-										</execution>
-										<execution>
-												<id>tag-image</id>
-												<phase>package</phase>
-												<goals>
-														<goal>tag</goal>
-												</goals>
-												<configuration>
-														<image>onap/clamp</image>
-														<newName>${docker.push.registry}/onap/clamp:latest</newName>
-														<skipDockerTag>${skip.docker.push}</skipDockerTag>
-												</configuration>
-										</execution>
-										<execution>
-												<id>push-image</id>
-												<phase>deploy</phase>
-												<goals>
-														<goal>push</goal>
-												</goals>
-												<configuration>
-														<imageName>${docker.push.registry}/onap/clamp:latest</imageName>
-														<skipDockerPush>${skip.docker.push}</skipDockerPush>
-												</configuration>
-										</execution>
-								</executions>
-						</plugin>
 						<plugin>
 								<groupId>org.apache.maven.plugins</groupId>
 								<artifactId>maven-surefire-plugin</artifactId>
@@ -987,12 +797,11 @@
 												</configuration>
 										</execution>
 								</executions>
-
 						</plugin>
 						<plugin>
 								<groupId>io.fabric8</groupId>
 								<artifactId>docker-maven-plugin</artifactId>
-								<version>0.16.5</version>
+								<version>0.26.0</version>
 								<configuration>
 										<verbose>true</verbose>
 										<apiVersion>1.23</apiVersion>
@@ -1049,11 +858,48 @@
 																</cmd>
 														</run>
 												</image>
+												<image>
+														<name>onap/clamp</name>
+														<alias>onap-clamp</alias>
+														<build>
+																<cleanup>true</cleanup>
+																<tags>
+																		<tag>latest</tag>
+																		<tag>${project.docker.latesttagtimestamp.version}</tag>
+																		<tag>${project.docker.latesttag.version}</tag>
+																</tags>
+																<!-- A relative path is looked up in ${project.basedir}/src/main/docker by default -->
+																<dockerFile>Dockerfile</dockerFile>
+																<assembly>
+																		<descriptor>assembly/clamp-files.xml</descriptor>
+																		<name>onap-clamp</name>
+																</assembly>
+														</build>
+												</image>
 										</images>
 										<skip>${skipITs}</skip>
 								</configuration>
-
 								<executions>
+										<execution>
+												<id>generate-images</id>
+												<phase>install</phase>
+												<goals>
+														<goal>build</goal>
+												</goals>
+												<configuration>
+														<image>onap/clamp</image>
+												</configuration>
+										</execution>
+										<execution>
+												<id>push-images</id>
+												<phase>deploy</phase>
+												<goals>
+														<goal>push</goal>
+												</goals>
+												<configuration>
+														<image>onap/clamp</image>
+												</configuration>
+										</execution>
 										<execution>
 												<id>docker-start-for-it</id>
 												<phase>pre-integration-test</phase>
@@ -1142,9 +988,9 @@
 						<id>docker</id>
 						<properties>
 								<skip.staging.artifacts>true</skip.staging.artifacts>
-								<skip.docker.build>false</skip.docker.build>
-								<skip.docker.tag>false</skip.docker.tag>
-								<skip.docker.push>false</skip.docker.push>
+								<docker.skip.build>false</docker.skip.build>
+								<docker.skip.tag>false</docker.skip.tag>
+								<docker.skip.push>false</docker.skip.push>
 						</properties>
 				</profile>
 		</profiles>
