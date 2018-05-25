@@ -354,7 +354,6 @@ label {
 			}
 		}
 		$("#pname").val('');		
-		initTargetResourceId();
 
 		//load recipes for a chosen policy
 		function disperseConfig(policyObj, id){
@@ -854,7 +853,7 @@ label {
 		}
 		
 		setASDCFields();
-		
+		initTargetResourceId();
 		//load metrics dropdown
 		if (elementMap["global"]){
 			for (var i = 0; i < (elementMap["global"].length); i++){
