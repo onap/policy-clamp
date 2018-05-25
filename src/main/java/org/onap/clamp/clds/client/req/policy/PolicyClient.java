@@ -336,8 +336,12 @@ public class PolicyClient {
         try {
             Collection<PolicyConfig> response = getPolicyEngine().getConfig(configRequestParameters);
             for (PolicyConfig policyConfig : response) {
-                Integer version = Integer.valueOf(policyConfig.getPolicyVersion());
-                versions.add(version);
+                if (policyConfig.getPolicyVersion() != null) {
+                    Integer version = Integer.valueOf(policyConfig.getPolicyVersion());
+                    versions.add(version);
+                } else {
+                    logger.warn("Policy version was null, unable to convert it to Integer");
+                }
             }
             Collections.sort(versions);
             logger.info("Policy versions.size()=" + versions.size());
