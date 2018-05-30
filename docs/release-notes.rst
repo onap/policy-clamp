@@ -8,7 +8,7 @@ Release Notes
 Version: 2.0.2
 --------------
 
-:Release Date: 2018-05-31
+:Release Date: 2018-06-07
 
 **New Features**
 
@@ -38,12 +38,16 @@ The main goal of the Beijing release was to:
 
         You have to close the CL and reopen it again. In that case the Deploy action will do something.
 
+**Security Notes**
 
-**Security Issues**
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and determined to be false positive. The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=25440749>`_.
 
-CLAMP is following the CII Best Practices Badge Program, results including security assesment can be found on the `project page <https://bestpractices.coreinfrastructure.org/projects/1197>`_.
-CLAMP Code is formally scanned during build time, the goal of Beijing Release was to ensure that all Critical items are closed.
-The remaining security issues and their workarounds are captured `here <https://wiki.onap.org/pages/viewpage.action?pageId=25440749>`_.
+Quick Links:
+ 	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
+ 	
+ 	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
+ 	
+ 	- `Project Vulnerability Review Table for CLAMP <https://wiki.onap.org/pages/viewpage.action?pageId=25440749>`_
 
 **Upgrade Notes**
 
