@@ -5,10 +5,10 @@
 Release Notes
 =============
 
-Version: 2.0.1
+Version: 2.0.2
 --------------
 
-:Release Date: 2018-06-25
+:Release Date: 2018-05-31
 
 **New Features**
 
