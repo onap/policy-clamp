@@ -141,12 +141,6 @@
 							id="{{section.name}}" role="presentation"
 							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
 						</li>
-						
-						<li ng-repeat="section in tabs[dropDownName]"
-							ng-if="section.name==='Log Out'"><a
-							id="{{section.name}}" role="presentation"
-							ng-click="emptyMenuClick(section.link,section.name)">{{section.name}}</a>
-						</li>
 
 						<li ng-repeat="section in tabs[dropDownName]"
 							ng-if="section.name != 'Create CL' && section.name != 'Open CL' && section.name != 'ECOMP User Guide - Design Overview' && section.name != 'ECOMP User Guide - Closed Loop Design' && section.name != 'ECOMP User Guide - CLAMP' && section.name != 'User Info'"><a

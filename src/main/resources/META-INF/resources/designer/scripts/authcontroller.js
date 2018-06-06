@@ -30,7 +30,7 @@ function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $locati
     var invalidUser = $window.localStorage.getItem("invalidUser");
     var isAuth = $window.localStorage.getItem("isAuth");
     if (invalidUser == 'true')
-    	return "invalid_login.html";
+      return "invalid_login.html";
     else if (isAuth == null || isAuth == 'false') {
       return "authenticate.html";
     }
@@ -44,17 +44,13 @@ function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $locati
       if (data) {
         $window.localStorage.setItem("isAuth", true);
         $rootScope.loginuser = data;
-      } 
+      }
+      window.localStorage.removeItem("invalidUser");
       callback && callback();
     }).error(function() {
       $window.localStorage.setItem("invalidUser", true);
       callback && callback();
     });
-  };
-  
-  $scope.logout = function() {
-      window.localStorage.removeItem("isAuth");
-      window.localStorage.removeItem("loginuser");
   };
 
 }

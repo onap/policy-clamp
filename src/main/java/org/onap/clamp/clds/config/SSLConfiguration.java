@@ -34,11 +34,11 @@ public class SSLConfiguration {
     private static final String TRUST_STORE_PW = "javax.net.ssl.trustStorePassword";
     private static final String TRUST_STORE_TYPE = "javax.net.ssl.trustStoreType";
 
-    @Value("${server.ssl.trust:/opt/app/osaaf/client/local/truststoreONAP.p12}")
+    @Value("${server.ssl.trust:none}")
     private String sslTruststoreFile;
-    @Value("${server.ssl.trust-password:changeit}")
+    @Value("${server.ssl.trust-password:none}")
     private String sslTruststorePw;
-    @Value("${server.ssl.trust-type:PKCS12}")
+    @Value("${server.ssl.trust-type:none}")
     private String sslTruststoreType;
 
     @PostConstruct

@@ -325,8 +325,6 @@ var app = angular.module('clds-app', ['ngRoute',
               window.open(value);
             } else if (name == "Contact Us") {
               $rootScope.contactUs();
-            } else if (name == "Log Out") {
-              $scope.logout();
             } else if (name == "Revert Model Changes") {
               $scope.cldsRevertModel();
             } else if (name == "Close Model") {
@@ -446,10 +444,6 @@ var app = angular.module('clds-app', ['ngRoute',
           }, {
             link: "/extraUserInfo",
             name: "User Info"
-          }],
-          "Log Out": [{
-            link: "/log_out.html",
-            name: "Log Out"
           }]
         };
 
@@ -1416,4 +1410,5 @@ function updateDecisionLabel(originalLabel, newLabel) {
 window.onunload = function() {
   window.localStorage.removeItem("isAuth");
   window.localStorage.removeItem("loginuser");
+  window.localStorage.removeItem("invalidUser");
 };
