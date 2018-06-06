@@ -55,6 +55,8 @@ public interface CamelProxy {
      *            The user ID coming from the UI
      * @param isInsertTestEvent
      *            Is a test or not (flag coming from the UI)
+     * @param eventAction
+     *            The latest event action in database (like CREATE, SUBMIT, ...)
      * @return A string containing the result of the Camel flow execution
      */
     String submit(@ExchangeProperty("actionCd") String actionCommand,
@@ -62,6 +64,6 @@ public interface CamelProxy {
             @ExchangeProperty("modelBpmnProp") String modelBpmnProperties,
             @ExchangeProperty("modelName") String modelName, @ExchangeProperty("controlName") String controlName,
             @ExchangeProperty("docText") String docText, @ExchangeProperty("isTest") boolean isTest,
-            @ExchangeProperty("userid") String userId,
-            @ExchangeProperty("isInsertTestEvent") boolean isInsertTestEvent);
+            @ExchangeProperty("userid") String userId, @ExchangeProperty("isInsertTestEvent") boolean isInsertTestEvent,
+            @ExchangeProperty("eventAction") String eventAction);
 }

@@ -49,12 +49,14 @@ import org.onap.clamp.clds.model.sdc.SdcResource;
 import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
 import org.onap.clamp.clds.util.JacksonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
  * Construct a Sdc request given CLDS objects.
  */
 @Component
+@Primary
 public class SdcRequests {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcRequests.class);

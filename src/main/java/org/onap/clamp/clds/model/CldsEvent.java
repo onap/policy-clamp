@@ -31,6 +31,7 @@ import org.onap.clamp.clds.dao.CldsDao;
 public class CldsEvent {
     public static final String ACTION_TEST            = "TEST";
     public static final String ACTION_CREATE          = "CREATE";
+    public static final String ACTION_MODIFY          = "MODIFY";
     public static final String ACTION_SUBMIT          = "SUBMIT";
     // an update before model is active
     public static final String ACTION_RESUBMIT        = "RESUBMIT";

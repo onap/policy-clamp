@@ -91,8 +91,8 @@ public class OperationalPolicyReq {
         logger.info("notificationTopic=" + notificationTopic);
         Map<String, String> ruleAttributes = new HashMap<>();
         ruleAttributes.put("templateName", templateName);
-        ruleAttributes.put("ClosedLoopControlName", prop.getControlNameAndPolicyUniqueId());
-        ruleAttributes.put("NotificationTopic", notificationTopic);
+        ruleAttributes.put("closedLoopControlName", prop.getControlNameAndPolicyUniqueId());
+        ruleAttributes.put("notificationTopic", notificationTopic);
         if (operationTopic == null || operationTopic.isEmpty()) {
             logger.info("recipeTopic=" + recipeTopic);
             // if no operationTopic, then don't format yaml - use first policy
@@ -115,8 +115,8 @@ public class OperationalPolicyReq {
             logger.info("operationTopic=" + operationTopic);
             // format yaml
             String yaml = formatYaml(refProp, prop, modelElementId, policyChain);
-            ruleAttributes.put("OperationTopic", operationTopic);
-            ruleAttributes.put("ControlLoopYaml", yaml);
+            ruleAttributes.put("operationTopic", operationTopic);
+            ruleAttributes.put("controlLoopYaml", yaml);
         }
         // matchingAttributes
         Map<String, String> matchingAttributes = new HashMap<>();
@@ -189,22 +189,36 @@ public class OperationalPolicyReq {
             String policyName = policyItem.getRecipe() + " Policy";
             Target target = new Target();
             target.setType(TargetType.VM);
+            // We can send target type as VM/VNF for most of recipes
+            if (policyItem.getRecipeLevel() != null && !policyItem.getRecipeLevel().isEmpty()) {
+                target.setType(TargetType.valueOf(policyItem.getRecipeLevel()));
+            }
             target.setResourceID(policyItem.getTargetResourceId());
+            String actor = refProp.getStringValue("op.policy.appc");
+            Map<String, String> payloadMap = null;
+            if ("health-diagnostic".equalsIgnoreCase(policyItem.getRecipe())) {
+                actor = refProp.getStringValue("op.policy.sdno");
+                payloadMap = new HashMap<String, String>();
+                payloadMap.put("ttl", policyItem.getRecipePayload());
+            }
+            // For reboot recipe we have to send type as SOFT/HARD in pay load
+            if (policyItem.getRecipeInfo() != null && !policyItem.getRecipeInfo().isEmpty()) {
+                payloadMap = new HashMap<String, String>();
+                payloadMap.put("type", policyItem.getRecipeInfo());
+            }
             Policy policyObj;
             if (policyItemList.indexOf(policyItem) == 0) {
                 String policyDescription = policyItem.getRecipe()
                         + " Policy - the trigger (no parent) policy - created by CLDS";
-                policyObj = builder.setTriggerPolicy(policyName, policyDescription,
-                        refProp.getStringValue("op.policy.appc"), target, policyItem.getRecipe(), null,
-                        policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
+                policyObj = builder.setTriggerPolicy(policyName, policyDescription, actor, target,
+                        policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
             } else {
                 Policy parentPolicyObj = policyObjMap.get(policyItem.getParentPolicy());
                 String policyDescription = policyItem.getRecipe() + " Policy - triggered conditionally by "
                         + parentPolicyObj.getName() + " - created by CLDS";
-                policyObj = builder.setPolicyForPolicyResult(policyName, policyDescription,
-                        refProp.getStringValue("op.policy.appc"), target, policyItem.getRecipe(), null,
-                        policyItem.getMaxRetries(), policyItem.getRetryTimeLimit(), parentPolicyObj.getId(),
-                        convertToPolicyResult(policyItem.getParentPolicyConditions()));
+                policyObj = builder.setPolicyForPolicyResult(policyName, policyDescription, actor, target,
+                        policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit(),
+                        parentPolicyObj.getId(), convertToPolicyResult(policyItem.getParentPolicyConditions()));
                 logger.info("policyObj.id=" + policyObj.getId() + "; parentPolicyObj.id=" + parentPolicyObj.getId());
             }
             policyObjMap.put(policyItem.getId(), policyObj);
@@ -215,7 +229,7 @@ public class OperationalPolicyReq {
         return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
-    private static void validate(Results results) {
+    protected static void validate(Results results) {
         if (results.isValid()) {
             logger.info("results.getSpecification()=" + results.getSpecification());
         } else {
@@ -288,7 +302,7 @@ public class OperationalPolicyReq {
      * @param resourceType
      * @return
      */
-    private static Resource[] convertToResource(List<String> stringList, ResourceType resourceType) {
+    protected static Resource[] convertToResource(List<String> stringList, ResourceType resourceType) {
         if (stringList == null || stringList.isEmpty()) {
             return new Resource[0];
         }
@@ -302,7 +316,7 @@ public class OperationalPolicyReq {
      * @param prList
      * @return
      */
-    private static PolicyResult[] convertToPolicyResult(List<String> prList) {
+    protected static PolicyResult[] convertToPolicyResult(List<String> prList) {
         if (prList == null || prList.isEmpty()) {
             return new PolicyResult[0];
         }

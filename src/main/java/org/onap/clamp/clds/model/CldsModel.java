@@ -97,9 +97,9 @@ public class CldsModel {
 
     public boolean canInventoryCall() {
         boolean canCall = false;
-        /* Below checks the clds event is submit/resubmit */
-        if ((event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT)
-                || event.isActionCd(CldsEvent.ACTION_SUBMITDCAE))) {
+        /* Below checks the clds event is submit/resubmit/distribute */
+        if (event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT)
+                || event.isActionCd(CldsEvent.ACTION_DISTRIBUTE) || event.isActionCd(CldsEvent.ACTION_SUBMITDCAE)) {
             canCall = true;
         }
         return canCall;
@@ -128,7 +128,8 @@ public class CldsModel {
                 || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_ANY)
                 || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_ANY)
                 || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)) {
+                || event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)
+                || event.isActionAndStateCd(CldsEvent.ACTION_MODIFY, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_DESIGN;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DISTRIBUTE, CldsEvent.ACTION_STATE_RECEIVED)
                 || event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_RECEIVED)) {
@@ -181,32 +182,40 @@ public class CldsModel {
         String actionCd = getCurrentActionCd();
         switch (actionCd) {
             case CldsEvent.ACTION_CREATE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST,
+                        CldsEvent.ACTION_DELETE);
                 if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_TEST);
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_TEST,
+                            CldsEvent.ACTION_DELETE);
+                }
+                break;
+            case CldsEvent.ACTION_MODIFY:
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
+                if (isSimplifiedModel()) {
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
                 }
                 break;
             case CldsEvent.ACTION_SUBMIT:
             case CldsEvent.ACTION_RESUBMIT:
-                // for 1702 delete is not currently implemented (and resubmit
-                // requires manually deleting artifact from sdc
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
                 break;
             case CldsEvent.ACTION_SUBMITDCAE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
                 break;
             case CldsEvent.ACTION_DISTRIBUTE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT);
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT,
+                        CldsEvent.ACTION_DELETE);
                 if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_SUBMITDCAE);
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_SUBMITDCAE,
+                            CldsEvent.ACTION_DELETE);
                 }
                 break;
             case CldsEvent.ACTION_UNDEPLOY:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
-                        CldsEvent.ACTION_RESUBMIT);
+                        CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
                 if (isSimplifiedModel()) {
                     permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
-                            CldsEvent.ACTION_SUBMITDCAE);
+                            CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
                 }
                 break;
             case CldsEvent.ACTION_DEPLOY:
@@ -215,19 +224,10 @@ public class CldsModel {
                 break;
             case CldsEvent.ACTION_RESTART:
             case CldsEvent.ACTION_UPDATE:
-                // for 1702 delete is not currently implemented
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE,
                         CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
                 break;
-            case CldsEvent.ACTION_DELETE:
-                if (getCurrentActionStateCd().equals(CldsEvent.ACTION_STATE_SENT)) {
-                    permittedActionCd = Arrays.asList();
-                } else {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT);
-                }
-                break;
             case CldsEvent.ACTION_STOP:
-                // for 1702 delete is not currently implemented
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
                         CldsEvent.ACTION_UNDEPLOY);
                 break;

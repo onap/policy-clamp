@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,28 +20,39 @@
  * ===================================================================
  */
 
-package org.onap.clamp.clds.swagger;
+package org.onap.clamp.clds.it;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.Application;
+import org.onap.clamp.clds.model.CldsHealthCheck;
+import org.onap.clamp.clds.service.CldsHealthcheckService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import io.github.swagger2markup.Swagger2MarkupConverter;
-
+/**
+ * Tests HealthCheck Service.
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = {
-        Application.class, SwaggerConfig.class
-})
-public class SwaggerGenerationTest {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+public class CldsHealthcheckServiceItCase {
+
+    @Autowired
+    private CldsHealthcheckService cldsHealthcheckService;
 
     @Test
-    public void convertRemoteSwaggerToAsciiDoc() {
-        Path localSwaggerFile = Paths.get("docs/swagger/swagger.json");
-        Swagger2MarkupConverter.from(localSwaggerFile).build();
+    public void testGetHealthCheck() {
+        Response response = cldsHealthcheckService.gethealthcheck();
+        CldsHealthCheck cldsHealthCheck = (CldsHealthCheck) response.getEntity();
+        assertNotNull(cldsHealthCheck);
+        assertEquals("UP", cldsHealthCheck.getHealthCheckStatus());
+        assertEquals("CLDS-APP", cldsHealthCheck.getHealthCheckComponent());
+        assertEquals("OK", cldsHealthCheck.getDescription());
     }
 }

@@ -68,8 +68,11 @@ public class CldsDao {
     private SimpleJdbcCall procGetTemplate;
     private SimpleJdbcCall procDelAllModelInstances;
     private SimpleJdbcCall procInsModelInstance;
+    private SimpleJdbcCall procDeleteModel;
     private static final String HEALTHCHECK = "Select 1";
-
+    private static final String V_CONTROL_NAME_PREFIX = "v_control_name_prefix";
+    private static final String V_CONTROL_NAME_UUID = "v_control_name_uuid";
+   
     /**
      * Log message when instantiating
      */
@@ -91,6 +94,7 @@ public class CldsDao {
         this.procSetTemplate = new SimpleJdbcCall(dataSource).withProcedureName("set_template");
         this.procInsModelInstance = new SimpleJdbcCall(dataSource).withProcedureName("ins_model_instance");
         this.procDelAllModelInstances = new SimpleJdbcCall(dataSource).withProcedureName("del_all_model_instances");
+        this.procDeleteModel = new SimpleJdbcCall(dataSource).withProcedureName("del_model");
     }
 
     /**
@@ -112,25 +116,9 @@ public class CldsDao {
         CldsModel model = new CldsModel();
         model.setName(modelName);
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName)
-                .addValue("v_control_name_uuid", controlNameUuid);
+                .addValue(V_CONTROL_NAME_UUID, controlNameUuid);
         Map<String, Object> out = logSqlExecution(procGetModel, in);
-        model.setControlNamePrefix((String) out.get("v_control_name_prefix"));
-        model.setControlNameUuid((String) out.get("v_control_name_uuid"));
-        model.setId((String) (out.get("v_model_id")));
-        model.setTemplateId((String) (out.get("v_template_id")));
-        model.setTemplateName((String) (out.get("v_template_name")));
-        model.setBpmnText((String) out.get("v_template_bpmn_text"));
-        model.setPropText((String) out.get("v_model_prop_text"));
-        model.setImageText((String) out.get("v_template_image_text"));
-        model.setDocText((String) out.get("v_template_doc_text"));
-        model.setBlueprintText((String) out.get("v_model_blueprint_text"));
-        model.getEvent().setId((String) (out.get("v_event_id")));
-        model.getEvent().setActionCd((String) out.get("v_action_cd"));
-        model.getEvent().setActionStateCd((String) out.get("v_action_state_cd"));
-        model.getEvent().setProcessInstanceId((String) out.get("v_event_process_instance_id"));
-        model.getEvent().setUserid((String) out.get("v_event_user_id"));
-        model.setTypeId((String) out.get("v_service_type_id"));
-        model.setDeploymentId((String) out.get("v_deployment_id"));
+        populateModelProperties(model, out);
         return model;
     }
 
@@ -147,23 +135,7 @@ public class CldsDao {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName);
         Map<String, Object> out = logSqlExecution(procGetModelTemplate, in);
         // todo : rationalize
-        model.setControlNamePrefix((String) out.get("v_control_name_prefix"));
-        model.setControlNameUuid((String) out.get("v_control_name_uuid"));
-        model.setId((String) (out.get("v_model_id")));
-        model.setTemplateId((String) (out.get("v_template_id")));
-        model.setTemplateName((String) (out.get("v_template_name")));
-        model.setBpmnText((String) out.get("v_template_bpmn_text"));
-        model.setPropText((String) out.get("v_model_prop_text"));
-        model.setImageText((String) out.get("v_template_image_text"));
-        model.setDocText((String) out.get("v_template_doc_text"));
-        model.setBlueprintText((String) out.get("v_model_blueprint_text"));
-        model.getEvent().setId((String) (out.get("v_event_id")));
-        model.getEvent().setActionCd((String) out.get("v_action_cd"));
-        model.getEvent().setActionStateCd((String) out.get("v_action_state_cd"));
-        model.getEvent().setProcessInstanceId((String) out.get("v_event_process_instance_id"));
-        model.getEvent().setUserid((String) out.get("v_event_user_id"));
-        model.setTypeId((String) out.get("v_service_type_id"));
-        model.setDeploymentId((String) out.get("v_deployment_id"));
+        populateModelProperties(model, out);
         Map<String, Object> modelResults = logSqlExecution(procGetModel, in);
         Object modelResultObject = modelResults.get("#result-set-1");
         if (modelResultObject != null && modelResultObject instanceof ArrayList) {
@@ -198,10 +170,10 @@ public class CldsDao {
                 .addValue("v_model_blueprint_text", model.getBlueprintText())
                 .addValue("v_service_type_id", model.getTypeId()).addValue("v_deployment_id", model.getDeploymentId())
                 .addValue("v_control_name_prefix", model.getControlNamePrefix())
-                .addValue("v_control_name_uuid", model.getControlNameUuid());
+                .addValue(V_CONTROL_NAME_UUID, model.getControlNameUuid());
         Map<String, Object> out = logSqlExecution(procSetModel, in);
-        model.setControlNamePrefix((String) out.get("v_control_name_prefix"));
-        model.setControlNameUuid((String) out.get("v_control_name_uuid"));
+        model.setControlNamePrefix((String) out.get(V_CONTROL_NAME_PREFIX));
+        model.setControlNameUuid((String) out.get(V_CONTROL_NAME_UUID));
         model.setId((String) (out.get("v_model_id")));
         model.getEvent().setId((String) (out.get("v_event_id")));
         model.getEvent().setActionCd((String) out.get("v_action_cd"));
@@ -231,7 +203,7 @@ public class CldsDao {
                 logger.debug("v_vm_name={}", currModelInstance.getVmName());
                 logger.debug("v_location={}", currModelInstance.getLocation());
                 SqlParameterSource in = new MapSqlParameterSource()
-                        .addValue("v_control_name_uuid", model.getControlNameUuid())
+                        .addValue(V_CONTROL_NAME_UUID, model.getControlNameUuid())
                         .addValue("v_vm_name", currModelInstance.getVmName())
                         .addValue("v_location", currModelInstance.getLocation());
                 Map<String, Object> out = logSqlExecution(procInsModelInstance, in);
@@ -258,7 +230,7 @@ public class CldsDao {
     public CldsEvent insEvent(String modelName, String controlNamePrefix, String controlNameUuid, CldsEvent cldsEvent) {
         CldsEvent event = new CldsEvent();
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName)
-                .addValue("v_control_name_prefix", controlNamePrefix).addValue("v_control_name_uuid", controlNameUuid)
+                .addValue(V_CONTROL_NAME_PREFIX, controlNamePrefix).addValue(V_CONTROL_NAME_UUID, controlNameUuid)
                 .addValue("v_user_id", cldsEvent.getUserid()).addValue("v_action_cd", cldsEvent.getActionCd())
                 .addValue("v_action_state_cd", cldsEvent.getActionStateCd())
                 .addValue("v_process_instance_id", cldsEvent.getProcessInstanceId());
@@ -268,7 +240,7 @@ public class CldsDao {
     }
 
     private String delAllModelInstances(String controlNameUUid) {
-        SqlParameterSource in = new MapSqlParameterSource().addValue("v_control_name_uuid", controlNameUUid);
+        SqlParameterSource in = new MapSqlParameterSource().addValue(V_CONTROL_NAME_UUID, controlNameUUid);
         Map<String, Object> out = logSqlExecution(procDelAllModelInstances, in);
         return (String) (out.get("v_model_id"));
     }
@@ -360,9 +332,8 @@ public class CldsDao {
         CldsServiceData cldsServiceData = null;
         try {
             String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
-            cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] {
-                    invariantUUID
-            }, new CldsServiceDataMapper());
+            cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] { invariantUUID },
+                    new CldsServiceDataMapper());
             if (cldsServiceData != null) {
                 logger.info("CldsServiceData found in cache for Service Invariant ID:"
                         + cldsServiceData.getServiceInvariantUUID());
@@ -461,4 +432,35 @@ public class CldsDao {
         }
         return cldsMonitoringDetailsList;
     }
+
+    /**
+     * Method to delete model from database.
+     * 
+     * @param modelName
+     */
+    public void deleteModel(String modelName) {
+        SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName);
+        logSqlExecution(procDeleteModel, in);
+    }
+    
+    private void populateModelProperties(CldsModel model, Map out) {
+        // todo : rationalize
+        model.setControlNamePrefix((String) out.get(V_CONTROL_NAME_PREFIX));
+        model.setControlNameUuid((String) out.get(V_CONTROL_NAME_UUID));
+        model.setId((String) (out.get("v_model_id")));
+        model.setTemplateId((String) (out.get("v_template_id")));
+        model.setTemplateName((String) (out.get("v_template_name")));
+        model.setBpmnText((String) out.get("v_template_bpmn_text"));
+        model.setPropText((String) out.get("v_model_prop_text"));
+        model.setImageText((String) out.get("v_template_image_text"));
+        model.setDocText((String) out.get("v_template_doc_text"));
+        model.setBlueprintText((String) out.get("v_model_blueprint_text"));
+        model.getEvent().setId((String) (out.get("v_event_id")));
+        model.getEvent().setActionCd((String) out.get("v_action_cd"));
+        model.getEvent().setActionStateCd((String) out.get("v_action_state_cd"));
+        model.getEvent().setProcessInstanceId((String) out.get("v_event_process_instance_id"));
+        model.getEvent().setUserid((String) out.get("v_event_user_id"));
+        model.setTypeId((String) out.get("v_service_type_id"));
+        model.setDeploymentId((String) out.get("v_deployment_id"));        	
+    }    
 }

@@ -48,9 +48,9 @@ import java.util.List;
  * "targetResourceId","value":["Eace933104d443b496b8.nodes.heat.vpg"]}]]}]
  */
 public class PolicyItem implements Cloneable {
-
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyItem.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+
     private String id;
     private String recipe;
     private int maxRetries;
@@ -59,6 +59,11 @@ public class PolicyItem implements Cloneable {
     private List<String> parentPolicyConditions;
     private String actor;
     private String targetResourceId;
+    private String recipeInfo;
+    private String recipeLevel;
+    private String recipePayload;
+    private String oapRop;
+    private String oapLimit;
 
     /**
      * Parse Policy given json node.
@@ -76,6 +81,11 @@ public class PolicyItem implements Cloneable {
         if (targetResourceId != null && targetResourceId.isEmpty()) {
             this.setTargetResourceId(null);
         }
+        recipeInfo = AbstractModelElement.getValueByName(node, "recipeInfo");
+        recipeLevel = AbstractModelElement.getValueByName(node, "recipeLevel");
+        recipePayload = AbstractModelElement.getValueByName(node, "recipeInput");
+        oapRop = AbstractModelElement.getValueByName(node, "oapRop");
+        oapLimit = AbstractModelElement.getValueByName(node, "oapLimit");
     }
 
     /**
@@ -182,6 +192,32 @@ public class PolicyItem implements Cloneable {
 
     public void setTargetResourceId(String targetResourceId) {
         this.targetResourceId = targetResourceId;
+    }
+
+    public String getRecipeInfo() {
+        return recipeInfo;
+    }
+
+    public String getRecipeLevel() {
+        return recipeLevel;
+    }
+
+    public String getRecipePayload() {
+        return recipePayload;
+    }
+
+    public String getOapRop() {
+        if (oapRop == null) {
+            oapRop = "0m";
+        }
+        return oapRop;
+    }
+
+    public String getOapLimit() {
+        if (oapLimit == null) {
+            oapLimit = "0";
+        }
+        return oapLimit;
     }
 
     @Override

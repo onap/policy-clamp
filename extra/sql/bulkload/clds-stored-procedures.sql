@@ -14,6 +14,7 @@ DROP PROCEDURE IF EXISTS get_model;
 DROP PROCEDURE IF EXISTS get_model_template;
 DROP PROCEDURE IF EXISTS set_template;
 DROP PROCEDURE IF EXISTS get_template;
+DROP PROCEDURE IF EXISTS del_model;
 DELIMITER //
 CREATE PROCEDURE get_template
   (IN v_template_name VARCHAR(80),
@@ -444,6 +445,16 @@ BEGIN
   UPDATE event
 	SET process_instance_id = v_process_instance_id
 	WHERE event_id = v_event_id;
+END;
+CREATE PROCEDURE del_model (IN v_model_name VARCHAR(80))
+BEGIN
+    DECLARE v_model_id VARCHAR(36);
+    SELECT model_id INTO v_model_id from model where model_name = v_model_name;
+    UPDATE model set event_id = null, model_blueprint_id = null, model_prop_id = null where model_id = v_model_id;
+	DELETE from event where model_id = v_model_id;
+	DELETE from model_blueprint where model_id = v_model_id;
+	DELETE from model_properties where model_id = v_model_id;
+    DELETE from model where model_id = v_model_id;
 END
 //
 DELIMITER ;

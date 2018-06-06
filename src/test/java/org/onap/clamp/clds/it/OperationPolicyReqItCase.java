@@ -73,10 +73,10 @@ public class OperationPolicyReqItCase {
         assertTrue(attributes.size() == 2);
         // now validate the Yaml, to do so we replace the dynamic ID by a known
         // key so that we can compare it
-        String yaml = URLDecoder.decode(attributes.get(0).get(AttributeType.RULE).get("ControlLoopYaml"), "UTF-8");
+        String yaml = URLDecoder.decode(attributes.get(0).get(AttributeType.RULE).get("controlLoopYaml"), "UTF-8");
         yaml = replaceGeneratedValues(yaml);
         assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-1.yaml"), yaml);
-        yaml = URLDecoder.decode(attributes.get(1).get(AttributeType.RULE).get("ControlLoopYaml"), "UTF-8");
+        yaml = URLDecoder.decode(attributes.get(1).get(AttributeType.RULE).get("controlLoopYaml"), "UTF-8");
         yaml = replaceGeneratedValues(yaml);
         assertEquals(ResourceFileUtil.getResourceAsString("example/operational-policy/yaml-policy-chain-2.yaml"), yaml);
     }

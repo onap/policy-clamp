@@ -353,6 +353,8 @@ public class CldsService extends SecureServiceBase {
                 cldsModel.setBpmnText(template.getBpmnText());
             }
         }
+        updateAndInsertNewEvent(cldsModel.getName(), cldsModel.getControlNamePrefix(), cldsModel.getEvent(),
+                CldsEvent.ACTION_MODIFY);
         cldsModel.save(cldsDao, getUserId());
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
@@ -442,6 +444,7 @@ public class CldsService extends SecureServiceBase {
             this.fillInCldsModel(model);
             // save model to db
             model.setName(modelName);
+            updateAndInsertNewEvent(modelName, model.getControlNamePrefix(), model.getEvent(), CldsEvent.ACTION_MODIFY);
             model.save(cldsDao, getUserId());
             // get vars and format if necessary
             String prop = model.getPropText();
@@ -477,14 +480,16 @@ public class CldsService extends SecureServiceBase {
             logger.info("docText - " + docText);
             try {
                 String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest,
-                        userId, isInsertTestEvent);
+                        userId, isInsertTestEvent, model.getEvent().getActionCd());
                 logger.info("Starting Camel flow on request, result is: ", result);
             } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
                 errorCase = true;
                 logger.error("Exception occured during invoking Camel process", e);
             }
-            // refresh model info from db (get fresh event info)
-            retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
+            if (!actionCd.equalsIgnoreCase(CldsEvent.ACTION_DELETE)) {
+                // refresh model info from db (get fresh event info)
+                retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
+            }
             if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
@@ -953,6 +958,21 @@ public class CldsService extends SecureServiceBase {
                     }
                 }
             }
+        }
+    }
+
+    private void updateAndInsertNewEvent(String cldsModelName, String cldsControlNamePrfx, CldsEvent event,
+            String newAction) {
+        // If model action is in submit/resubmit/distributed and user try
+        // to save then we are changing action back to create.
+        if (event != null && (CldsEvent.ACTION_SUBMIT.equalsIgnoreCase(event.getActionCd())
+                || CldsEvent.ACTION_RESUBMIT.equalsIgnoreCase(event.getActionCd())
+                || CldsEvent.ACTION_DISTRIBUTE.equalsIgnoreCase(event.getActionCd()))) {
+            CldsEvent newEvent = new CldsEvent();
+            newEvent.setUserid(getUserId());
+            newEvent.setActionCd(newAction);
+            newEvent.setActionStateCd(CldsEvent.ACTION_STATE_COMPLETED);
+            cldsDao.insEvent(cldsModelName, cldsControlNamePrfx, null, newEvent);
         }
     }
 }

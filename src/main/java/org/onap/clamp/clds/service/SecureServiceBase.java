@@ -103,39 +103,20 @@ public abstract class SecureServiceBase {
      *             In case of issues with the permission test, error is returned
      *             in this exception
      */
-    public boolean isAuthorized(SecureServicePermission inPermission) throws NotAuthorizedException {
-        boolean authorized = false;
-       
-        Date startTime = new Date();
-        LoggingUtils.setTargetContext("CLDS", "isAuthorized");
-        LoggingUtils.setTimeContext(startTime, new Date());
-        
-        securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
-        
-        // check if the user has the permission key or the permission key with a
-        // combination of all instance and/or all action.
-        if (securityContext.isUserInRole(inPermission.getKey())) {
-            securityLogger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());            
-            authorized = true;
-            // the rest of these don't seem to be required - isUserInRole method
-            // appears to take * as a wildcard
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstance())) {
-            securityLogger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(), inPermission.getKey());
-            authorized = true;
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstanceAction())) {
-             securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());            
-            authorized = true;
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllAction())) {
-            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());            
-            authorized = true;
-        } else {
-            String msg = getPrincipalName() + " does not have permission: " + inPermission;
-            LoggingUtils.setErrorContext("100", "Authorization Error");
-            securityLogger.warn(msg);
-            throw new NotAuthorizedException(msg);
-        }
-        return authorized;
-    }
+	public boolean isAuthorized(SecureServicePermission inPermission) throws NotAuthorizedException {
+		Date startTime = new Date();
+		LoggingUtils.setTargetContext("CLDS", "isAuthorized");
+		LoggingUtils.setTimeContext(startTime, new Date());
+		securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+		try {
+			return isUserPermitted(inPermission);
+		} catch (NotAuthorizedException nae) {
+			String msg = getPrincipalName() + " does not have permission: " + inPermission;
+			LoggingUtils.setErrorContext("100", "Authorization Error");
+			securityLogger.warn(msg);
+			throw new NotAuthorizedException(msg);
+		}
+	}
 
     /**
      * Check if user is authorized for the given aaf permission. Allow matches
@@ -150,38 +131,20 @@ public abstract class SecureServiceBase {
      * @return A boolean to indicate if the user has the permission to do
      *         execute the inPermission
      */
-    public boolean isAuthorizedNoException(SecureServicePermission inPermission) {
-        boolean authorized = false;
-        
-        securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
-        Date startTime = new Date();
-        LoggingUtils.setTargetContext("CLDS", "isAuthorizedNoException");
-        LoggingUtils.setTimeContext(startTime, new Date());
-        
-        // check if the user has the permission key or the permission key with a
-        // combination of all instance and/or all action.
-        if (securityContext.isUserInRole(inPermission.getKey())) {
-            securityLogger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());
-            authorized = true;
-            // the rest of these don't seem to be required - isUserInRole method
-            // appears to take * as a wildcard
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstance())) {
-            securityLogger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(),inPermission.getKey());
-            authorized = true;
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstanceAction())) {
-            securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());
-            authorized = true;
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllAction())) {
-            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());
-            authorized = true;
-        } else {
-            String msg = getPrincipalName() + " does not have permission: " + inPermission;
-            LoggingUtils.setErrorContext("100", "Authorization Error");
-            securityLogger.warn(msg);
-            logger.warn(msg);
-        }
-        return authorized;
-    }
+	public boolean isAuthorizedNoException(SecureServicePermission inPermission) {
+		securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+		Date startTime = new Date();
+		LoggingUtils.setTargetContext("CLDS", "isAuthorizedNoException");
+		LoggingUtils.setTimeContext(startTime, new Date());
+		try {
+			return isUserPermitted(inPermission);
+		} catch (NotAuthorizedException nae) {
+			String msg = getPrincipalName() + " does not have permission: " + inPermission;
+			LoggingUtils.setErrorContext("100", "Authorization Error");
+			securityLogger.warn(msg);
+		}
+		return false;
+	}
 
     /**
      * This method can be used by the Application.class to set the
@@ -200,5 +163,28 @@ public abstract class SecureServiceBase {
     public void setSecurityContext(SecurityContext securityContext) {
         this.securityContext = securityContext;
     }
-
+    
+    private boolean isUserPermitted(SecureServicePermission inPermission) throws NotAuthorizedException {
+    	boolean authorized = false;
+    	// check if the user has the permission key or the permission key with a
+        // combination of  all instance and/or all action.
+        if (securityContext.isUserInRole(inPermission.getKey())) {
+            securityLogger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());            
+            authorized = true;
+            // the rest of these don't seem to be required - isUserInRole method
+            // appears to take * as a wildcard
+        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstance())) {
+            securityLogger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(), inPermission.getKey());
+            authorized = true;
+        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstanceAction())) {
+             securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());            
+            authorized = true;
+        } else if (securityContext.isUserInRole(inPermission.getKeyAllAction())) {
+            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());            
+            authorized = true;
+        } else {
+            throw new NotAuthorizedException("");
+        }
+        return authorized;
+    }
 }

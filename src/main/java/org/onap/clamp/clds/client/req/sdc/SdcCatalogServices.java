@@ -77,9 +77,11 @@ import org.onap.clamp.clds.util.CryptoUtils;
 import org.onap.clamp.clds.util.JacksonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
+@Primary
 public class SdcCatalogServices {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcCatalogServices.class);
@@ -1225,6 +1227,79 @@ public class SdcCatalogServices {
                     logger.info("value of sdc Response of uploading location to sdc :" + responseStr);
                 }
             }
+        }
+    }
+
+    /**
+     * Method to delete blueprint and location json artifacts from sdc
+     * 
+     * @param prop
+     * @param userid
+     * @param sdcReqUrlsList
+     * @param artifactName
+     * @param locationArtifactName
+     * @throws GeneralSecurityException
+     * @throws DecoderException
+     */
+    public void deleteArtifactsFromSdc(ModelProperties prop, String userid, List<String> sdcReqUrlsList,
+            String artifactName, String locationArtifactName) throws GeneralSecurityException, DecoderException {
+        String serviceInvariantUuid = getServiceInvariantUuidFromProps(prop);
+        for (String url : sdcReqUrlsList) {
+            String originalServiceUuid = getServiceUuidFromServiceInvariantId(serviceInvariantUuid);
+            logger.info("ServiceUUID used before deleting in url:" + originalServiceUuid);
+            String sdcServicesInformation = getSdcServicesInformation(originalServiceUuid);
+            SdcServiceDetail cldsSdcServiceDetail = decodeCldsSdcServiceDetailFromJson(sdcServicesInformation);
+            String uploadedArtifactUuid = getArtifactIdIfArtifactAlreadyExists(cldsSdcServiceDetail, artifactName);
+            String responseStr = deleteArtifact(userid, url, uploadedArtifactUuid);
+            logger.info("value of sdc Response of deleting blueprint from sdc :" + responseStr);
+            String updatedServiceUuid = getServiceUuidFromServiceInvariantId(serviceInvariantUuid);
+            if (!originalServiceUuid.equalsIgnoreCase(updatedServiceUuid)) {
+                url = url.replace(originalServiceUuid, updatedServiceUuid);
+            }
+            logger.info("ServiceUUID used after delete in ulr:" + updatedServiceUuid);
+            sdcServicesInformation = getSdcServicesInformation(updatedServiceUuid);
+            cldsSdcServiceDetail = decodeCldsSdcServiceDetailFromJson(sdcServicesInformation);
+            uploadedArtifactUuid = getArtifactIdIfArtifactAlreadyExists(cldsSdcServiceDetail, locationArtifactName);
+            responseStr = deleteArtifact(userid, url, uploadedArtifactUuid);
+            logger.info("value of sdc Response of deleting location json from sdc :" + responseStr);
+        }
+    }
+
+    private String deleteArtifact(String userid, String url, String uploadedArtifactUuid) {
+        try {
+            String responseStr = "";
+            if (uploadedArtifactUuid != null && !uploadedArtifactUuid.isEmpty()) {
+                logger.info("userid=" + userid);
+                String basicAuth = getSdcBasicAuth();
+                String sdcXonapInstanceId = refProp.getStringValue("sdc.sdcX-InstanceID");
+                url = url + "/" + uploadedArtifactUuid;
+                URL urlObj = new URL(url);
+                HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+                conn.setDoOutput(true);
+                conn.setRequestProperty(refProp.getStringValue(SDC_INSTANCE_ID_PROPERTY_NAME), sdcXonapInstanceId);
+                conn.setRequestProperty(HttpHeaders.AUTHORIZATION, basicAuth);
+                conn.setRequestProperty("USER_ID", userid);
+                conn.setRequestMethod("DELETE");
+                conn.setRequestProperty("charset", "utf-8");
+                conn.setUseCaches(false);
+                conn.setRequestProperty(refProp.getStringValue(SDC_REQUESTID_PROPERTY_NAME),
+                        LoggingUtils.getRequestId());
+                boolean requestFailed = true;
+                int responseCode = conn.getResponseCode();
+                logger.info("responseCode=" + responseCode);
+                if (responseCode == 200) {
+                    requestFailed = false;
+                }
+                responseStr = getResponse(conn);
+                if (responseStr != null && requestFailed) {
+                    logger.error("requestFailed - responseStr=" + responseStr);
+                    throw new BadRequestException(responseStr);
+                }
+            }
+            return responseStr;
+        } catch (IOException | DecoderException | GeneralSecurityException e) {
+            logger.error("Exception when attempting to communicate with SDC", e);
+            throw new SdcCommunicationException("Exception when attempting to communicate with SDC", e);
         }
     }
 }

@@ -56,12 +56,14 @@ import org.onap.policy.api.PolicyType;
 import org.onap.policy.api.PushPolicyParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
  * Policy utility methods - specifically, send the policy.
  */
 @Component
+@Primary
 public class PolicyClient {
 
     protected PolicyEngine policyEngine;
@@ -376,8 +378,19 @@ public class PolicyClient {
      * @return The response message from Policy
      */
     public String deleteMicrosService(ModelProperties prop) {
-        String policyType = refProp.getStringValue(POLICY_MSTYPE_PROPERTY_NAME);
-        return deletePolicy(prop, policyType);
+        String deletePolicyResponse = "";
+        try {
+            String policyNamePrefix = refProp.getStringValue(POLICY_MS_NAME_PREFIX_PROPERTY_NAME);
+            List<Integer> versions = getVersions(policyNamePrefix, prop);
+            if (!versions.isEmpty()) {
+                String policyType = refProp.getStringValue(POLICY_MSTYPE_PROPERTY_NAME);
+                deletePolicyResponse = deletePolicy(prop, policyType);
+            }
+        } catch (Exception e) {
+            logger.error("Exception occurred during policy communication", e);
+            throw new PolicyClientException("Exception while communicating with Policy", e);
+        }
+        return deletePolicyResponse;
     }
 
     /**
@@ -399,8 +412,19 @@ public class PolicyClient {
      * @return The response message from policy
      */
     public String deleteBrms(ModelProperties prop) {
-        String policyType = refProp.getStringValue(POLICY_OP_TYPE_PROPERTY_NAME);
-        return deletePolicy(prop, policyType);
+        String deletePolicyResponse = "";
+        try {
+            String policyNamePrefix = refProp.getStringValue(POLICY_OP_NAME_PREFIX_PROPERTY_NAME);
+            List<Integer> versions = getVersions(policyNamePrefix, prop);
+            if (!versions.isEmpty()) {
+                String policyType = refProp.getStringValue(POLICY_OP_TYPE_PROPERTY_NAME);
+                deletePolicyResponse = deletePolicy(prop, policyType);
+            }
+        } catch (Exception e) {
+            logger.error("Exception occurred during policy communication", e);
+            throw new PolicyClientException("Exception while communicating with Policy", e);
+        }
+        return deletePolicyResponse;
     }
 
     /**

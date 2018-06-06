@@ -26,7 +26,7 @@
 		<modelVersion>4.0.0</modelVersion>
 		<groupId>org.onap.clamp</groupId>
 		<artifactId>clds</artifactId>
-		<version>2.0.2-SNAPSHOT</version>
+		<version>3.0.0-SNAPSHOT</version>
 		<name>clamp</name>
 
 		<parent>
@@ -87,6 +87,7 @@
 				<docker.skip.tag>true</docker.skip.tag>
 				<skip.staging.artifacts>false</skip.staging.artifacts>
 				<python.http.proxy.param></python.http.proxy.param>
+				<tomcat.version>8.5.28</tomcat.version>
 		</properties>
 
 		<distributionManagement>
@@ -179,6 +180,26 @@
 						<groupId>com.att.eelf</groupId>
 						<artifactId>eelf-core</artifactId>
 						<version>${eelf.core.version}</version>
+				</dependency>
+				<dependency>
+						<groupId>org.apache.tomcat.embed</groupId>
+						<artifactId>tomcat-embed-core</artifactId>
+						<version>${tomcat.version}</version>
+				</dependency>
+				<dependency>
+						<groupId>org.apache.tomcat.embed</groupId>
+						<artifactId>tomcat-embed-el</artifactId>
+						<version>${tomcat.version}</version>
+				</dependency>
+				<dependency>
+						<groupId>org.apache.tomcat.embed</groupId>
+						<artifactId>tomcat-embed-websocket</artifactId>
+						<version>${tomcat.version}</version>
+				</dependency>
+				<dependency>
+						<groupId>org.apache.tomcat</groupId>
+						<artifactId>tomcat-annotations-api</artifactId>
+						<version>${tomcat.version}</version>
 				</dependency>
 				<!-- For CAMEL -->
 				<dependency>
@@ -887,7 +908,11 @@
 														<goal>build</goal>
 												</goals>
 												<configuration>
-														<image>onap/clamp</image>
+														<images>
+															<image>
+																<alias>onap-clamp</alias>
+															</image>
+														</images>
 												</configuration>
 										</execution>
 										<execution>
@@ -897,7 +922,11 @@
 														<goal>push</goal>
 												</goals>
 												<configuration>
-														<image>onap/clamp</image>
+														<images>
+															<image>
+																<alias>onap-clamp</alias>
+															</image>
+														</images>
 												</configuration>
 										</execution>
 										<execution>
@@ -908,6 +937,14 @@
 												</goals>
 												<configuration>
 														<skip>${skipITs}</skip>
+														<images>
+															<image>
+																<alias>mariadb</alias>
+															</image>
+															<image>
+																<alias>python</alias>
+															</image>
+														</images>
 												</configuration>
 										</execution>
 										<execution>
@@ -918,6 +955,14 @@
 												</goals>
 												<configuration>
 														<skip>${skipITs}</skip>
+														<images>
+															<image>
+																<alias>mariadb</alias>
+															</image>
+															<image>
+																<alias>python</alias>
+															</image>
+														</images>
 												</configuration>
 										</execution>
 								</executions>

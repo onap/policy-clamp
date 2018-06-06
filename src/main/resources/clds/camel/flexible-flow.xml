@@ -10,11 +10,13 @@
 										<constant>30000</constant>
 								</delay>
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'DELETE'</simple>
 								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.ModelDeleteDelegate" />
 								<delay>
 										<constant>30000</constant>
 								</delay>
@@ -29,18 +31,20 @@
 										<constant>30000</constant>
 								</delay>
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'STOP'</simple>
 								<to
 										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'RESTART'</simple>
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 				</choice>
-				<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 		</route>
 
 </routes>

@@ -62,6 +62,8 @@ public final class LoggingUtils {
         MDC.put("RequestId", UUID.randomUUID().toString());
         MDC.put("ServiceName", service);
         MDC.put("PartnerName", partner);
+        //Defaulting to HTTP/1.1 protocol
+        MDC.put("Protocol", "HTTP/1.1");
         try {
         	MDC.put("ServerFQDN", InetAddress.getLocalHost().getCanonicalHostName());
         	MDC.put("ServerIPAddress", InetAddress.getLocalHost().getHostAddress());

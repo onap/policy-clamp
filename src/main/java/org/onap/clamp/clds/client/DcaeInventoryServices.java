@@ -126,15 +126,13 @@ public class DcaeInventoryServices {
         if (dcaeResponse != null) {
             logger.info("Dcae Response for query on inventory: " + dcaeResponse);
             String oldTypeId = cldsModel.getTypeId();
-            String newTypeId = "";
             if (dcaeResponse.getTypeId() != null) {
-                newTypeId = dcaeResponse.getTypeId();
                 cldsModel.setTypeId(dcaeResponse.getTypeId());
             }
             if (dcaeResponse.getTypeName() != null) {
                 cldsModel.setTypeName(dcaeResponse.getTypeName());
             }
-            if (oldTypeId == null || !oldTypeId.equalsIgnoreCase(newTypeId)
+            if (oldTypeId == null || !cldsModel.getEvent().getActionCd().equalsIgnoreCase(CldsEvent.ACTION_DISTRIBUTE)
                     || cldsModel.getEvent().getActionCd().equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE)) {
                 CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
                         CldsEvent.ACTION_STATE_RECEIVED, null);
@@ -287,5 +285,41 @@ public class DcaeInventoryServices {
             metricsLogger.info("createupdateDCAEServiceType complete");
         }
         return typeId;
+    }
+
+    /**
+     * Method to delete blueprint from dcae inventory if it's exists.
+     * 
+     * @param typeName
+     * @param serviceUuid
+     * @param resourceUuid
+     * @throws InterruptedException
+     */
+    public void deleteDCAEServiceType(String typeName, String serviceUuid, String resourceUuid)
+            throws InterruptedException {
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("DCAE", "deleteDCAEServiceType");
+        boolean result = false;
+        try {
+            DcaeInventoryResponse inventoryResponse = getDcaeInformation(typeName, serviceUuid, resourceUuid);
+            if (inventoryResponse != null && inventoryResponse.getTypeId() != null) {
+                String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types/"
+                        + inventoryResponse.getTypeId();
+                DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "DELETE", null, null);
+            }
+            result = true;
+        } catch (IOException | ParseException e) {
+            logger.error("Exception occurred during deleteDCAEServiceType Operation with DCAE", e);
+            throw new BadRequestException("Exception occurred during deleteDCAEServiceType Operation with DCAE", e);
+        } finally {
+            if (result) {
+                LoggingUtils.setResponseContext("0", "Delete DCAE ServiceType success", this.getClass().getName());
+            } else {
+                LoggingUtils.setResponseContext("900", "Delete DCAE ServiceType failed", this.getClass().getName());
+                LoggingUtils.setErrorContext("900", "Delete DCAE ServiceType error");
+            }
+            LoggingUtils.setTimeContext(startTime, new Date());
+            metricsLogger.info("deleteDCAEServiceType completed");
+        }
     }
 }

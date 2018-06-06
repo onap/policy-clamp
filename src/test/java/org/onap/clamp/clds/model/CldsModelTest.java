@@ -146,23 +146,6 @@ public class CldsModelTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testValidateActionFromDelete() {
-        CldsModel cldsModel = new CldsModel();
-        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
-        cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
-        try {
-            cldsModel.validateAction(CldsEvent.ACTION_CREATE);
-            fail("Exception should have been sent");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Exception caught IllegalArgumentException as expected");
-        }
-        cldsModel.getEvent().setActionCd(CldsEvent.ACTION_DELETE);
-        cldsModel.getEvent().setActionStateCd(CldsEvent.ACTION_STATE_SENT);
-        cldsModel.validateAction(CldsEvent.ACTION_SUBMIT);
-        fail("Exception should have been sent");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void testValidateActionFromStop() {
         CldsModel cldsModel = new CldsModel();
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_STOP);

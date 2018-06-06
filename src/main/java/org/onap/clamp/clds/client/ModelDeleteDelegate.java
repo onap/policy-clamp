@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,47 +28,30 @@ import com.att.eelf.configuration.EELFManager;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
-import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.properties.ModelProperties;
-import org.onap.clamp.clds.model.properties.Policy;
-import org.onap.clamp.clds.model.properties.PolicyChain;
+import org.onap.clamp.clds.dao.CldsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Delete Operational Policy via policy api.
+ * Delete model.
  */
 @Component
-public class OperationalPolicyDeleteDelegate {
+public class ModelDeleteDelegate {
 
-    protected static final EELFLogger logger = EELFManager.getInstance()
-            .getLogger(OperationalPolicyDeleteDelegate.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(ModelDeleteDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
-    private PolicyClient policyClient;
+    private CldsDao cldsDao;
 
     /**
-     * Perform activity. Delete Operational Policy via policy api.
+     * Insert event using process variables.
      *
      * @param camelExchange
      *            The Camel Exchange object containing the properties
      */
     @Handler
     public void execute(Exchange camelExchange) {
-        ModelProperties prop = ModelProperties.create(camelExchange);
-        Policy policy = prop.getType(Policy.class);
-        prop.setCurrentModelElementId(policy.getId());
-        String eventAction = (String) camelExchange.getProperty("eventAction");
-        String responseMessage = "";
-        if (!eventAction.equalsIgnoreCase(CldsEvent.ACTION_CREATE) && policy.isFound()) {
-            for (PolicyChain policyChain : policy.getPolicyChains()) {
-                prop.setPolicyUniqueId(policyChain.getPolicyId());
-                responseMessage = policyClient.deleteBrms(prop);
-            }
-            if (responseMessage != null) {
-                camelExchange.setProperty("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
-            }
-        }
+        String modelName = (String) camelExchange.getProperty("modelName");
+        cldsDao.deleteModel(modelName);
     }
 }
