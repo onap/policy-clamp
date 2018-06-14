@@ -918,13 +918,6 @@
 												<goals>
 														<goal>build</goal>
 												</goals>
-												<configuration>
-														<images>
-															<image>
-																<alias>onap-clamp</alias>
-															</image>
-														</images>
-												</configuration>
 										</execution>
 										<execution>
 												<id>push-images</id>
@@ -932,13 +925,6 @@
 												<goals>
 														<goal>push</goal>
 												</goals>
-												<configuration>
-														<images>
-															<image>
-																<alias>onap-clamp</alias>
-															</image>
-														</images>
-												</configuration>
 										</execution>
 										<execution>
 												<id>docker-start-for-it</id>
@@ -948,14 +934,6 @@
 												</goals>
 												<configuration>
 														<skip>${skipITs}</skip>
-														<images>
-															<image>
-																<alias>mariadb</alias>
-															</image>
-															<image>
-																<alias>python</alias>
-															</image>
-														</images>
 												</configuration>
 										</execution>
 										<execution>
@@ -966,14 +944,6 @@
 												</goals>
 												<configuration>
 														<skip>${skipITs}</skip>
-														<images>
-															<image>
-																<alias>mariadb</alias>
-															</image>
-															<image>
-																<alias>python</alias>
-															</image>
-														</images>
 												</configuration>
 										</execution>
 								</executions>
