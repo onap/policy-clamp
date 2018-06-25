@@ -543,6 +543,13 @@
 						<version>1.2.0</version>
 						<scope>test</scope>
 				</dependency>
+				<!-- TESTING -->
+				<dependency>
+						<groupId>org.assertj</groupId>
+						<artifactId>assertj-core</artifactId>
+						<version>3.10.0</version>
+						<scope>test</scope>
+				</dependency>
 		</dependencies>
 		<pluginRepositories>
 				<pluginRepository>
@@ -598,7 +605,7 @@
 				</resources>
 
 				<plugins>
-						<!-- Scan Clamp code and generate the swagger.json file with all the 
+						<!-- Scan Clamp code and generate the swagger.json file with all the
 								APIs -->
 						<plugin>
 								<groupId>com.sebastian-daschner</groupId>
@@ -618,8 +625,8 @@
 								</executions>
 						</plugin>
 
-						<!-- Read the swagger.json file and the definition from SwaggerConfig.java; 
-								generate a list of .adoc files containing the APIs info in more structured 
+						<!-- Read the swagger.json file and the definition from SwaggerConfig.java;
+								generate a list of .adoc files containing the APIs info in more structured
 								way -->
 						<plugin>
 								<groupId>io.github.swagger2markup</groupId>
@@ -654,7 +661,7 @@
 								</executions>
 						</plugin>
 
-						<!-- Run the generated asciidoc through Asciidoctor to generate other 
+						<!-- Run the generated asciidoc through Asciidoctor to generate other
 								documentation types, such as PDFs or HTML5 -->
 						<plugin>
 								<groupId>org.asciidoctor</groupId>
