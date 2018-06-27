@@ -2,7 +2,7 @@
 {
     "swagger":"2.0",
     "info":{
-        "version":"2.0.2-SNAPSHOT",
+        "version":"3.0.0-SNAPSHOT",
         "title":"clamp"
     },
     "host":"",
@@ -635,7 +635,37 @@
                 }
             }
         },
-        "/user/{userName}":{
+        "/healthcheck":{
+            "get":{
+                "description":"REST service that retrieves clds healthcheck information.",
+                "consumes":[
+                ],
+                "produces":[
+                    "application/json"
+                ],
+                "parameters":[
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK",
+                        "headers":{
+                        },
+                        "schema":{
+                            "$ref":"#/definitions/CldsHealthCheck"
+                        }
+                    },
+                    "500":{
+                        "description":"Internal Server Error",
+                        "headers":{
+                        },
+                        "schema":{
+                            "$ref":"#/definitions/CldsHealthCheck"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/getUser":{
             "get":{
                 "description":"REST service that returns the username.",
                 "consumes":[
@@ -644,12 +674,6 @@
                     "text/plain"
                 ],
                 "parameters":[
-                    {
-                        "type":"string",
-                        "name":"userName",
-                        "in":"path",
-                        "required":true
-                    }
                 ],
                 "responses":{
                     "200":{
