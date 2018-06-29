@@ -466,6 +466,10 @@
 										<groupId>com.att.nsa</groupId>
 										<artifactId>dmaapClient</artifactId>
 								</exclusion>
+								<exclusion>
+										<groupId>com.h2database</groupId>
+										<artifactId>h2</artifactId>
+								</exclusion>
 						</exclusions>
 				</dependency>
 				<dependency>

@@ -46,10 +46,10 @@ function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $locati
         $rootScope.loginuser = data;
       }
       window.localStorage.removeItem("invalidUser");
-      callback && callback();
+      
     }).error(function() {
       $window.localStorage.setItem("invalidUser", true);
-      callback && callback();
+      
     });
   };
 
