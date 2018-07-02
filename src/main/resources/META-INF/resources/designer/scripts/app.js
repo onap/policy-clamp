@@ -44,8 +44,7 @@ var app = angular.module('clds-app', ['ngRoute',
     'ngCookies',
     'ui.bootstrap.modal',
     'ui.grid.exporter',
-    'angucomplete',
-    'kendo.directives',
+    'angucomplete'
   ])
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 
@@ -511,107 +510,6 @@ var app = angular.module('clds-app', ['ngRoute',
 
         $scope.updatebreadcrumb();
 
-        $scope.createNewProject = function() {
-
-          if ($rootScope.projectName != null) {
-            var dlg = dialogs
-              .confirm('Message',
-                'Do you want to over-write  the project ?');
-
-            dlg.result
-              .then(
-                function(btn) {
-
-                  $scope.clearProject();
-                  var dlg1 = dialogs
-                    .create(
-                      'partials/portfolios/create_new_project.html',
-                      'CreateNewPrjCtrl', {}, {
-                        size: 'sm',
-                        keyboard: true,
-                        backdrop: false,
-                        windowClass: 'my-class'
-                      });
-                  dlg1.result.then(
-                    function(name) {
-
-                      // $scope.name
-                      // = name;
-                    },
-                    function() {
-
-                      // if(angular.equals($scope.name,''))
-                      // $scope.name
-                      // = 'You
-                      // did not
-                      // enter in
-                      // your
-                      // name!';
-                    });
-                },
-                function(btn) {
-
-                  // $modalInstance.close("closed");
-                });
-
-          } else {
-            var dlg = dialogs
-              .create(
-                'partials/portfolios/create_new_project.html',
-                'CreateNewPrjCtrl', {}, {
-                  size: 'lg',
-                  keyboard: true,
-                  backdrop: false,
-                  windowClass: 'my-class'
-                });
-            dlg.result.then(function(name) {
-
-              // $scope.name = name;
-            }, function() {
-
-              // if(angular.equals($scope.name,''))
-              // $scope.name = 'You did not enter in
-              // your name!';
-            });
-
-          }
-        };
-
-        $scope.clearProject = function() {
-
-          $rootScope.projectName = null;
-          $rootScope.revision = -1;
-          // $rootScope.models.length=0;
-          $rootScope.utmModels = $rootScope.$new(true);
-          $rootScope.serviceInfo = $rootScope.$new(true);
-          $rootScope.serviceInfo = null;
-          $rootScope.serviceInputPartInfo = $rootScope
-            .$new(true);
-          $rootScope.serviceOutputPartInfo = $rootScope
-            .$new(true);
-          $rootScope.servicefaultPartInfo = $rootScope
-            .$new(true);
-          $rootScope.isModel = false;
-          $("#paletteDiv").load(
-            './modeler/dist/index.html');
-          $rootScope.isPalette = false;
-          $rootScope.isTestset = false;
-          $rootScope.isRequirementCoverage = false;
-          $rootScope.ispropertyExplorer = false;
-          // $("#propertyDiv").load('./partials/portfolios/Property_Explorer.html');
-          $rootScope.modelName = "";
-          // document.getElementById('propertyExplorer').classList.remove('visible');
-          document.getElementById("modeler_name").textContent = "Activity Modeler";
-          // $( "#propertyExplorer" ).prev().css(
-          // "display", "block" );
-          $("#activity_modeler").prev().css("display",
-            "block");
-          $('div').find('.k-expand-next').click();
-
-          $rootScope.$apply();
-
-        };
-
         $scope.homePage = function() {
 
           $location.path('/dashboard');
@@ -709,25 +607,15 @@ var app = angular.module('clds-app', ['ngRoute',
           $rootScope.isTestset = false;
           $rootScope.isRequirementCoverage = true;
           document.getElementById("modeler_name").textContent = "Test Case / Requirement Coverage";
-          // document.getElementById('propertyExplorer').classList.add('visible');
-          // console.log("modeltestset"+JSON.stringify($rootScope.modeltestset));
-          // $( "#propertyExplorer" ).prev().css(
-          // "display", "none" );
+
           $('div').find('.k-collapse-next').click();
-          // $rootScope.$apply();
+
 
         };
 
         $scope.activityModelling = function() {
-
-          // window.open("./bpmn-js-examples-master/modeler/dist/index.html",
-          // "_self");
-          // $location.path('/activity_modelling');
         };
-        /*
-         * $scope.openProject = function(){
-         * $location.path('/dashboard_upload'); };
-         */
+
 
         $scope.cldsClose = function() {
 
