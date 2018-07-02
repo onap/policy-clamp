@@ -311,7 +311,7 @@ function reloadDefaultVariables(isTemp) {
   vf_Services = null;
 }
 
-$(window).load(function() {
+$(window).on('load',function() {
   $.ajax({
     dataType: "json",
     url: '/restservices/clds/v1/clds/properties',
