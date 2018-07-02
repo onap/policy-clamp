@@ -364,7 +364,7 @@
 										<artifactId>commons-io</artifactId>
 								</exclusion>
 								<exclusion>
-										<artifactId>grizzly-http</artifactId>
+										<artifactId>grizzly-http-server</artifactId>
 										<groupId>org.glassfish.grizzly</groupId>
 								</exclusion>
 						</exclusions>
