@@ -71,7 +71,7 @@
 				<guava.version>20.0</guava.version>
 				<eelf.core.version>1.0.0</eelf.core.version>
 				<camel.version>2.20.1</camel.version>
-				<springboot.version>1.5.12.RELEASE</springboot.version>
+				<springboot.version>1.5.14.RELEASE</springboot.version>
 
 				<sonar.language>java</sonar.language>
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -779,7 +779,9 @@
 						<plugin>
 								<groupId>org.springframework.boot</groupId>
 								<artifactId>spring-boot-maven-plugin</artifactId>
-								<version>${springboot.version}</version>
+								<!-- Temporary fix -->
+								<version>1.5.13.RELEASE</version>
+								<!-- <version>${springboot.version}</version> -->
 								<executions>
 										<execution>
 												<goals>
