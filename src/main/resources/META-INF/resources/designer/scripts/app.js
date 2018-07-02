@@ -27,9 +27,6 @@
 
 var app = angular.module('clds-app', ['ngRoute',
     'ngResource',
-    'angularjs-dropdown-multiselect',
-    'angularjs-dropdown-multiselect-new',
-    'hljs',
     'ui.bootstrap',
     'angular-loading-bar',
     'ngAnimate',
