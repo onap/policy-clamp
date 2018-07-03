@@ -16,10 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END=========================================================
+ * Modifications copyright (c) 2018 Nokia
+ * ================================================================================
+ *
  */
 
 package org.onap.clamp.clds.config.sdc;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -43,7 +47,7 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 public class SdcSingleControllerConfigurationTest {
 
     private SdcSingleControllerConfiguration loadControllerConfiguration(String fileName, String sdcControllerName)
-            throws JsonParseException, JsonMappingException, IOException {
+            throws IOException {
         JsonNode jsonNode = new ObjectMapper().readValue(ResourceFileUtil.getResourceAsStream(fileName),
                 JsonNode.class);
         SdcSingleControllerConfiguration sdcSingleControllerConfiguration = new SdcSingleControllerConfiguration(
@@ -63,17 +67,16 @@ public class SdcSingleControllerConfigurationTest {
         assertEquals("hostname:8080", sdcConfig.getAsdcAddress());
         assertEquals(10, sdcConfig.getPollingInterval());
         assertEquals(30, sdcConfig.getPollingTimeout());
-        assertEquals(SdcSingleControllerConfiguration.SUPPORTED_ARTIFACT_TYPES_LIST.size(),
-                sdcConfig.getRelevantArtifactTypes().size());
-        assertTrue(sdcConfig.activateServerTLSAuth());
+
+        assertThat(SdcSingleControllerConfiguration.SUPPORTED_ARTIFACT_TYPES_LIST)
+            .hasSameSizeAs(sdcConfig.getRelevantArtifactTypes());
         assertEquals("ThePassword", sdcConfig.getKeyStorePassword());
-        assertArrayEquals(new String[] {
-                "localhost"
-        }, sdcConfig.getMsgBusAddress().toArray());
+        assertTrue(sdcConfig.activateServerTLSAuth());
+        assertThat(sdcConfig.getMsgBusAddress()).contains("localhost");
     }
 
     @Test(expected = SdcParametersException.class)
-    public final void testAllRequiredParameters() throws JsonParseException, JsonMappingException, IOException {
+    public final void testAllRequiredParameters() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-TLS.json",
                 "sdc-controller1");
         // No exception should be raised
@@ -84,7 +87,7 @@ public class SdcSingleControllerConfigurationTest {
 
     @Test
     public final void testAllRequiredParametersEmptyEncrypted()
-            throws JsonParseException, JsonMappingException, IOException {
+            throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration(
                 "clds/sdc-controller-config-empty-encrypted.json", "sdc-controller1");
         sdcConfig.testAllRequiredParameters();
@@ -92,7 +95,7 @@ public class SdcSingleControllerConfigurationTest {
     }
 
     @Test
-    public final void testConsumerGroupWithNull() throws JsonParseException, JsonMappingException, IOException {
+    public final void testConsumerGroupWithNull() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-NULL.json",
                 "sdc-controller1");
         assertTrue(sdcConfig.getConsumerGroup() == null);

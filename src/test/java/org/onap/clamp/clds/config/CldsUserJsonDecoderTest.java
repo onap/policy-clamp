@@ -17,15 +17,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
 
 package org.onap.clamp.clds.config;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import org.junit.Test;
 import org.onap.clamp.clds.service.CldsUser;
 
@@ -47,34 +50,49 @@ public class CldsUserJsonDecoderTest {
 
     @Test
     public void testDecodingDoubleUsers() {
+
+        //when
         CldsUser[] usersArray = CldsUserJsonDecoder
-                .decodeJson(CldsUserJsonDecoderTest.class.getResourceAsStream("/clds/clds-users-two-users.json"));
-        assertEquals(usersArray.length, 2);
-        assertEquals(usersArray[0].getUser(), user1);
-        assertEquals(usersArray[1].getUser(), user2);
-        assertEquals(usersArray[0].getPassword(), password);
-        assertEquals(usersArray[1].getPassword(), password);
-        assertArrayEquals(usersArray[0].getPermissionsString(), normalPermissionsArray);
-        assertArrayEquals(usersArray[1].getPermissionsString(), normalPermissionsArray);
+            .decodeJson(CldsUserJsonDecoderTest.class.getResourceAsStream("/clds/clds-users-two-users.json"));
+
+        //then
+        assertThat(usersArray).hasSize(2);
+        assertThat(usersArray[0])
+            .extracting(CldsUser::getUser, CldsUser::getPassword, CldsUser::getPermissionsString)
+            .containsExactly(user1, password, normalPermissionsArray);
+
+        assertThat(usersArray[1])
+            .extracting(CldsUser::getUser, CldsUser::getPassword, CldsUser::getPermissionsString)
+            .containsExactly(user2, password, normalPermissionsArray);
+
     }
 
     @Test
     public void testDecodingNoPermission() {
+        // when
         CldsUser[] usersArray = CldsUserJsonDecoder
                 .decodeJson(this.getClass().getResourceAsStream("/clds/clds-users-no-permission.json"));
-        assertEquals(usersArray.length, 1);
-        assertEquals(usersArray[0].getUser(), user1);
-        assertEquals(usersArray[0].getPassword(), null);
-        assertArrayEquals(usersArray[0].getPermissionsString(), new String[0]);
+
+        //then
+        assertThat(usersArray).hasSize(1);
+        CldsUser user = usersArray[0];
+        assertThat(user.getUser()).isEqualTo(user1);
+        assertThat(user.getPassword()).isEqualTo(null);
+        assertThat(user.getPermissionsString()).isEmpty();
     }
 
     @Test
     public void testDecodingIncompletePermissions() {
+
+        //when
         CldsUser[] usersArray = CldsUserJsonDecoder
                 .decodeJson(this.getClass().getResourceAsStream("/clds/clds-users-incomplete-permissions.json"));
-        assertEquals(usersArray.length, 1);
-        assertEquals(usersArray[0].getUser(), user1);
-        assertEquals(usersArray[0].getPassword(), password);
-        assertArrayEquals(usersArray[0].getPermissionsString(), incompletePermissionsArray);
+
+        //then
+        assertThat(usersArray).hasSize(1);
+        CldsUser user = usersArray[0];
+        assertThat(user.getUser()).isEqualTo(user1);
+        assertThat(user.getPassword()).isEqualTo(password);
+        assertThat(user.getPermissionsString()).isEqualTo(incompletePermissionsArray);
     }
 }

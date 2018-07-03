@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -149,10 +150,10 @@ public class SdcSingleController {
         if (this.getControllerStatus() != SdcSingleControllerStatus.STOPPED) {
             throw new SdcControllerException("The controller is already initialized, call the closeSDC method first");
         }
-        if (this.distributionClient == null) {
+        if (distributionClient == null) {
             distributionClient = DistributionClientFactory.createDistributionClient();
         }
-        IDistributionClientResult result = this.distributionClient.init(sdcConfig, new SdcNotificationCallBack(this));
+        IDistributionClientResult result = distributionClient.init(sdcConfig, new SdcNotificationCallBack(this));
         if (!result.getDistributionActionResult().equals(DistributionActionResultEnum.SUCCESS)) {
             logger.error("SDC distribution client init failed with reason:" + result.getDistributionMessageResult());
             this.changeControllerStatus(SdcSingleControllerStatus.STOPPED);

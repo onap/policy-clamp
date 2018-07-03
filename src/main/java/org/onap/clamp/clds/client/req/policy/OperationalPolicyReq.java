@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -320,6 +321,6 @@ public class OperationalPolicyReq {
         if (prList == null || prList.isEmpty()) {
             return new PolicyResult[0];
         }
-        return prList.stream().map(stringElem -> PolicyResult.toResult(stringElem)).toArray(PolicyResult[]::new);
+        return prList.stream().map(PolicyResult::toResult).toArray(PolicyResult[]::new);
     }
 }
