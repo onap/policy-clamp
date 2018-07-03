@@ -316,7 +316,7 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
     // display status
     if ($("#status_clds").length >= 1)
       $("#status_clds").remove();
-    $("#activity_modeler").append('<span id="status_clds" style="position: absolute;  left: 61%;top: 51px; font-size:20px;">Status: ' + statusMsg + '</span>');
+    $("#activity_modeler").append('<span id="status_clds" style="position: absolute;  left: 61%;top: 151px; font-size:20px;">Status: ' + statusMsg + '</span>');
 
 
   }
