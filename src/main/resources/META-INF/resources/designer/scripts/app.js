@@ -31,16 +31,9 @@ var app = angular.module('clds-app', ['ngRoute',
     'angular-loading-bar',
     'ngAnimate',
     'dialogs.main',
-    'ui.grid',
-    'ui.grid.resizeColumns',
-    'ui.grid.paging',
-    'ui.grid.selection',
-    'ui.grid.cellNav',
-    'ui.grid.pinning',
     'ngSanitize',
     'ngCookies',
-    'ui.bootstrap.modal',
-    'ui.grid.exporter'
+    'ui.bootstrap.modal'
   ])
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 
