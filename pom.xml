@@ -68,7 +68,6 @@
 				<java.version>1.8</java.version>
 
 				<swagger.jaxrs2.version>2.0.0-rc4</swagger.jaxrs2.version>
-				<guava.version>20.0</guava.version>
 				<eelf.core.version>1.0.0</eelf.core.version>
 				<camel.version>2.20.1</camel.version>
 				<springboot.version>1.5.14.RELEASE</springboot.version>
@@ -534,16 +533,6 @@
 						<artifactId>commons-csv</artifactId>
 						<version>1.3</version>
 				</dependency>
-				<dependency>
-						<groupId>com.sun.faces</groupId>
-						<artifactId>jsf-api</artifactId>
-						<version>2.1.7</version>
-				</dependency>
-				<dependency>
-						<groupId>com.sun.faces</groupId>
-						<artifactId>jsf-impl</artifactId>
-						<version>2.1.7</version>
-				</dependency>
 				<!-- Other dependencies to fix nexus IQ reported vulnerabilities -->
 				<dependency>
 						<groupId>org.codehaus.plexus</groupId>
@@ -559,6 +548,11 @@
 						<groupId>org.jboss.spec.javax.ws.rs</groupId>
 						<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
 						<version>1.0.1.Final</version>
+				</dependency>
+				<dependency>
+						<groupId>com.google.guava</groupId>
+						<artifactId>guava</artifactId>
+						<version>25.1-jre</version>
 				</dependency>
 				<!-- Remove the MYSQL connector and replace it by Mariadb -->
 				<dependency>
