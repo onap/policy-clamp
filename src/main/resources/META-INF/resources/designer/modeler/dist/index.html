@@ -23,16 +23,13 @@
 
 <html>
 <head>
-    <title>bpmn-js modeler demo</title>
+    <title>Svg model display</title>
     <link rel="stylesheet" href="css/diagram-js.css"/>
-    <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css"/>
     <link rel="stylesheet" href="css/app.css"/>
     <script type="text/javascript" src="./scripts/app.js"></script>
 </head>
 <body>
 
-<button id="uploadmodel" style="display:none"></button>
-<button id="openmodel" style="display:none"></button>
 <div class="content" id="js-drop-zone" id="div_content" ng-app="clds-app" ng-controller="MenuCtrl">
     <div class="message error">
         <div class="note">
@@ -46,25 +43,6 @@
 
     <div class="canvas" id="js-canvas"></div>
 </div>
-
-<ul class="buttons">
-    <li>
-        <a id="js-download-diagram" href title="download BPMN diagram">
-            UTM diagram
-        </a>
-    </li>
-    <li>
-        <a id="js-download-svg" href title="download as SVG image">
-            SVG image
-        </a>
-    </li>
-    <li>
-        <div>
-            <a id="file_generate_test_case" href title="Generate Test Case">
-                Generate Test Cases
-            </a>
-        </div>
-</ul>
 </body>
 
 </html>
