@@ -40,8 +40,7 @@ var app = angular.module('clds-app', ['ngRoute',
     'ngSanitize',
     'ngCookies',
     'ui.bootstrap.modal',
-    'ui.grid.exporter',
-    'angucomplete'
+    'ui.grid.exporter'
   ])
   .config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 
