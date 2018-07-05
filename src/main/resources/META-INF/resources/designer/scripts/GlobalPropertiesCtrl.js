@@ -20,45 +20,50 @@
  * ===================================================================
  * 
  */
-app.controller('GlobalPropertiesCtrl',
-	['$scope', '$rootScope', '$modalInstance','cldsModelService', '$location', 'dialogs','cldsTemplateService',
-		function($scope, $rootScope, $modalInstance, cldsModelService, $location,dialogs,cldsTemplateService) {						
-			//cldsModelService.getASDCServices().then(function(pars) {
-			$scope.$watch('name', function(newValue, oldValue) {
-				var services=asdc_Services
-				setASDCFields()
-				// add blank service item as the default service, to force user chose the correct service by themselves
-				$("#service").append("<option></option>")
-				for(k in services){
-		 			$("#service").append("<option value="+k+">"+services[k]+"</option>")
-		 		}
-		 		var el = elementMap["global"];
-		 		if (el !== undefined) {
-		 			for (var i = 0; i < el.length; i++) {
-	 					$("#" + el[i].name).val(el[i].value);
-		 			}
-		 		}
-				setMultiSelect();
-				
-				if(readMOnly){
-					$("#savePropsBtn").attr("disabled", "");
-					$('select[multiple] option').each(function() {
-			          var input = $('input[value="' + $(this).val() + '"]');
-			          input.prop('disabled', true);
-			          input.parent('li').addClass('disabled');
-			        });
-					$('input[value="multiselect-all"]').prop('disabled', true).parent('li').addClass('disabled');
-					($("select:not([multiple])")).multiselect("disable");
-				}
-			});
-			$scope.retry = function(){
-				console.log("retry");
-				
-			}
-			$scope.close = function() {
-				console.log("close");
-				$modalInstance.close("closed");
-			};
+app.controller('GlobalPropertiesCtrl', [
+'$scope',
+'$rootScope',
+'$uibModalInstance',
+'cldsModelService',
+'$location',
+'dialogs',
+'cldsTemplateService',
+function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
+         dialogs, cldsTemplateService) {
+	$scope.$watch('name', function(newValue, oldValue) {
+		var services = asdc_Services
+		setASDCFields()
+		// add blank service item as the default service, to force user chose
+		// the correct service by themselves
+		$("#service").append("<option></option>")
+		for (k in services) {
+			$("#service").append(
+			"<option value=" + k + ">" + services[k] + "</option>")
 		}
-	]
-);
+		var el = elementMap["global"];
+		if (el !== undefined) {
+			for (var i = 0; i < el.length; i++) {
+				$("#" + el[i].name).val(el[i].value);
+			}
+		}
+		setMultiSelect();
+		if (readMOnly) {
+			$("#savePropsBtn").attr("disabled", "");
+			$('select[multiple] option').each(function() {
+				var input = $('input[value="' + $(this).val() + '"]');
+				input.prop('disabled', true);
+				input.parent('li').addClass('disabled');
+			});
+			$('input[value="multiselect-all"]').prop('disabled', true).parent(
+			'li').addClass('disabled');
+			($("select:not([multiple])")).multiselect("disable");
+		}
+	});
+	$scope.retry = function() {
+		console.log("retry");
+	}
+	$scope.close = function() {
+		console.log("close");
+		$uibModalInstance.close("closed");
+	};
+} ]);

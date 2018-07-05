@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,27 +20,19 @@
  * ===================================================================
  * 
  */
-
 'use strict';
-
-
-function QueryParamsHandlerCtrl($scope,$rootScope, $resource, $http, $location) 
-{
+angular.module('clds-app').controller(
+'QueryParamsHandlerCtrl',
+[ '$scope', '$rootScope', '$resource', '$http', '$location',
+function($scope, $rootScope, $resource, $http, $location) {
 	console.log("//////////QueryParamsHandlerCtrl");
-	if(!jQuery.isEmptyObject($location.search()))
-	{
-		$rootScope.urlapp = $location.search().app;		
-		$rootScope.urlparams = $location.search();		
-		$location.path('/'+$rootScope.urlapp);	
-		
-	}	
-	else if($rootScope.urlapp!=undefined && $rootScope.urlapp!="")
-	{
-		$location.path('/'+$rootScope.urlapp);
-	}	
-	else
-	{
+	if (!jQuery.isEmptyObject($location.search())) {
+		$rootScope.urlapp = $location.search().app;
+		$rootScope.urlparams = $location.search();
+		$location.path('/' + $rootScope.urlapp);
+	} else if ($rootScope.urlapp != undefined && $rootScope.urlapp != "") {
+		$location.path('/' + $rootScope.urlapp);
+	} else {
 		$location.path('/dashboard');
 	}
-		
-}
+} ]);

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,38 +20,35 @@
  * ===================================================================
  * 
  */
-
-app.controller('textAreaCtrl',['$scope','$rootScope','dialogs','Datafactory','$modalInstance',function($scope, $rootScope,dialogs, Datafactory,$modalInstance) {
+app.controller('textAreaCtrl', [ '$scope', '$rootScope', 'dialogs',
+'Datafactory', '$uibModalInstance',
+function($scope, $rootScope, dialogs, Datafactory, $uibModalInstance) {
 	console.log("//////////textAreaCtrl");
-	$scope.init = function(){
+	$scope.init = function() {
 		console.log("init");
-		$scope.textAreaModel=$rootScope.textAreaData;
-		$scope.textAreaTitle=$rootScope.textAreaTitle;
+		$scope.textAreaModel = $rootScope.textAreaData;
+		$scope.textAreaTitle = $rootScope.textAreaTitle;
 	};
-	
 	$scope.init();
-	
 	$scope.close = function() {
 		console.log("close");
 		$rootScope.textAreaData = $('textarea#mytextarea').val();
-		$modalInstance.close("closed");
+		$uibModalInstance.close("closed");
 	};
-	
-}]);
-
+} ]);
 app.directive('focusMe', function($timeout, $parse) {
 	console.log("focusMe");
-	  return {
-	    link: function(scope, element, attrs) {
-	    	console.log("link");
-	      var model = $parse(attrs.focusMe);
-	      scope.$watch(model, function(value) {
-	      	console.log("model");
-	          $timeout(function() {
-	          	console.log("setTimeout(function() {}, 10);");
-	            element[0].focus(); 
-	          });
-	      });
-	    }
-	  };
+	return {
+		link : function(scope, element, attrs) {
+			console.log("link");
+			var model = $parse(attrs.focusMe);
+			scope.$watch(model, function(value) {
+				console.log("model");
+				$timeout(function() {
+					console.log("setTimeout(function() {}, 10);");
+					element[0].focus();
+				});
+			});
+		}
+	};
 });

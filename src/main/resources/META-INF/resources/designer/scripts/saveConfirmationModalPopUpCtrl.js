@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,17 +20,15 @@
  * ===================================================================
  * 
  */
-
-app.controller('saveConfirmationModalPopUpCtrl', ['$scope', '$rootScope', '$modalInstance',
-    function($scope, $rootScope, $modalInstance) {
-    	console.log("///////////saveConfirmationModalPopUpCtrl");
-        $scope.close = function() {
-    	console.log("close");
-            $modalInstance.dismiss("no");
-        };
-        $scope.Ok = function() {
-        	console.log("ok");
-            $modalInstance.close("OK");
-        };
-    }
-]);
+app.controller('saveConfirmationModalPopUpCtrl', [ '$scope', '$rootScope',
+'$uibModalInstance', function($scope, $rootScope, $uibModalInstance) {
+	console.log("///////////saveConfirmationModalPopUpCtrl");
+	$scope.close = function() {
+		console.log("close");
+		$uibModalInstance.dismiss("no");
+	};
+	$scope.Ok = function() {
+		console.log("ok");
+		$uibModalInstance.close("OK");
+	};
+} ]);

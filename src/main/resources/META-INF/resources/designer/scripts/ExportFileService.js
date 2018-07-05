@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,57 +20,60 @@
  * ===================================================================
  * 
  */
-app.service('exportService', ['$http', '$q', function ($http, $q) {
-    console.log("/////////exportService");
-    this.exportToUrl = function(testsetValue, formatValue, exporturl){
-        console.log("exportToUrl");
-    	    	
-    	var def = $q.defer();
-    	var sets = [];
-        var testExportRequest = {testSet: testsetValue, format: formatValue};
-            	
-        if (angular.equals(formatValue,"Excel")) {
-       
-        $http({
-            url: exporturl,     method: "POST",     data: testExportRequest, //this is your json data string     headers: {
-             responseType: 'arraybuffer' }).success(function (data, status, headers, config) {
-                console.log("success");
-            	/*sets = data;
-            	def.resolve(data);*/
-            	 
-            	 var results = [];
-                 results.data = data;
-                 results.headers = headers();
-                 results.status = status;
-                 results.config = config;
-                 def.resolve(results); 
-        })
-        .error(function(data){
-            console.log("data");
-    	 	      
-       	 	def.reject("Export file not successful");
-        });
-        }
-        else {
-        	  $http.post(exporturl, testExportRequest)
-            .success(function(data, status, headers, config){
-                console.log("function");
-            	           	
-            	var results = [];
-                results.data = data;
-                results.headers = headers();
-                results.status = status;
-                results.config = config;
-
-                def.resolve(results); 
-            	//alert("Data in success without scope and q_def for scope parametes :: " + parameters);'Content-type': 'application/json',
-            }) 
-            .error(function(data){
-                console.log("data");
-           	 	//alert("Data in error :: " + data);      
-           	 	def.reject("Export file not successful");
-            });
-        }
-        return def.promise;
-    };
-}]);
+app.service('exportService', [
+'$http',
+'$q',
+function($http, $q) {
+	console.log("/////////exportService");
+	this.exportToUrl = function(testsetValue, formatValue, exporturl) {
+		console.log("exportToUrl");
+		var def = $q.defer();
+		var sets = [];
+		var testExportRequest = {
+		testSet : testsetValue,
+		format : formatValue
+		};
+		if (angular.equals(formatValue, "Excel")) {
+			$http({
+			url : exporturl,
+			method : "POST",
+			data : testExportRequest, // this is your json data string
+										// headers: {
+			responseType : 'arraybuffer'
+			}).success(function(data, status, headers, config) {
+				console.log("success");
+				/*
+				 * sets = data; def.resolve(data);
+				 */
+				var results = [];
+				results.data = data;
+				results.headers = headers();
+				results.status = status;
+				results.config = config;
+				def.resolve(results);
+			}).error(function(data) {
+				console.log("data");
+				def.reject("Export file not successful");
+			});
+		} else {
+			$http.post(exporturl, testExportRequest).success(
+			function(data, status, headers, config) {
+				console.log("function");
+				var results = [];
+				results.data = data;
+				results.headers = headers();
+				results.status = status;
+				results.config = config;
+				def.resolve(results);
+				// alert("Data in success without scope and q_def for scope
+				// parametes :: " + parameters);'Content-type':
+				// 'application/json',
+			}).error(function(data) {
+				console.log("data");
+				// alert("Data in error :: " + data);
+				def.reject("Export file not successful");
+			});
+		}
+		return def.promise;
+	};
+} ]);

@@ -20,11 +20,20 @@
  * ===================================================================
  * 
  */
-
 'use strict';
-
-function DashboardCtrl($scope, $rootScope, $resource, $http, $timeout,
-		$location, $interval, $q, Datafactory) {
+angular
+.module('clds-app')
+.controller(
+'DashboardCtrl',
+[
+'$scope',
+'$rootScope',
+'$resource',
+'$http',
+'$timeout',
+'$location',
+'$interval',
+function($scope, $rootScope, $resource, $http, $timeout, $location, $interval) {
 	console.log("//////////////DashboardCtrl");
 	$scope.autosaveInterval = 1800000;
 	$rootScope.isModel = false;
@@ -41,51 +50,35 @@ function DashboardCtrl($scope, $rootScope, $resource, $http, $timeout,
 	$rootScope.utmModels = {};
 	$rootScope.selectedModelName;
 	$rootScope.dialogName = "";
-
 	$interval(function() {
 		console.log("interval");
-		/*
-		 * AutosaveProject($scope,$rootScope,$resource, $http, $timeout,
-		 * $location, $interval, $q, Datafactory);
-		 */
 	}, $scope.autosaveInterval);
-
 	$rootScope.onSelectActivityModel = function(obj) {
 		console.log("onSelectActivityModel");
-
 		$rootScope.isPalette = true;
 		$rootScope.isTestSet = false;
 		$rootScope.isRequirementCoverage = false;
 		$rootScope.ispropertyExplorer = false;
-		// document.getElementById('propertyExplorer').classList.remove('visible');
-
-		// $( "#propertyExplorer" ).prev().css( "display" ,"block");
 		$("#activity_modeler").prev().css("display", "block");
 		$('div').find('.k-expand-next').click();
-
 		if (obj == undefined) {
 			document.getElementById("modeler_name").textContent = "Activity Modeler";
 		} else {
 			selected_model = obj;
 			document.getElementById("modeler_name").textContent = "Activity Modeler"
-					+ "  - " + selected_model;
+			+ "  - " + selected_model;
 		}
-
 		$rootScope.modelName = selected_model;
-
 		$rootScope.modeltestset = list_model_test_sets[selected_model];
 		if (list_model_schema_extensions[selected_model] == null) {
 			if (list_model_schema_extensions[$rootScope.utmModels.name] != null) {
-				list_model_schema_extensions[selected_model] = jQuery
-						.extend(
-								true,
-								{},
-								list_model_schema_extensions[$rootScope.utmModels.name]);
+				list_model_schema_extensions[selected_model] = jQuery.extend(
+				true, {},
+				list_model_schema_extensions[$rootScope.utmModels.name]);
 			} else {
 				list_model_schema_extensions[selected_model] = {};
 			}
 		}
-
 		$rootScope.initProjectExplorer();
 		changecolor(selected_model);
 	};
@@ -95,37 +88,26 @@ function DashboardCtrl($scope, $rootScope, $resource, $http, $timeout,
 		$rootScope.isRequirementCoverage = false;
 		$rootScope.isTestset = true;
 		document.getElementById("modeler_name").textContent = "UTM Test Set";
-		// document.getElementById('propertyExplorer').classList.add('visible');
-		// $( "#propertyExplorer" ).prev().css( "display" ,"none");
 		$('div').find('.k-collapse-next').click();
 		$rootScope.modeltestset = list_model_test_sets[selected_model];
 		$rootScope.$apply();
-
 	};
 	$scope.showPalette = function() {
 		console.log("showPalette");
-		// alert("showPalette()");
 		$rootScope.isModel = true;
-		// $rootScope.isPalette = true;
-
 	};
-
 	$rootScope.filterRouter = 'partials/DashboardFilters.html';
 	$scope.isActivePROD = true;
 	$scope.isActiveQC = false;
 	$rootScope.reload = function(env) {
 		console.log("reload");
 	};
-
 	$scope.showTDSSView = true;
-
-}
+} ]);
 function changecolor(selected_model) {
 	console.log("changecolor");
-
 	var i = 0;
 	// var modelNames =[];
-
 	$(".models").each(function(i) {
 		console.log("each");
 		var model_value = $(this).text().trim();
@@ -134,9 +116,7 @@ function changecolor(selected_model) {
 			$(this).addClass("selectedcolor");
 		} else {
 			$(this).removeClass("selectedcolor");
-
 		}
-
 		i++;
 	});
 }
