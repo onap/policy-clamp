@@ -377,16 +377,6 @@
 						<version>1.0.2</version>
 				</dependency>
 				<dependency>
-						<groupId>org.hibernate</groupId>
-						<artifactId>hibernate-annotations</artifactId>
-						<version>3.5.6-Final</version>
-				</dependency>
-				<dependency>
-						<groupId>dom4j</groupId>
-						<artifactId>dom4j</artifactId>
-				</dependency>
-
-				<dependency>
 						<groupId>org.onap.policy.engine</groupId>
 						<artifactId>PolicyEngineAPI</artifactId>
 						<version>1.2.0</version>
@@ -434,6 +424,10 @@
 								<exclusion>
 										<groupId>org.onap.aaf.cadi</groupId>
 										<artifactId>cadi-aaf</artifactId>
+								</exclusion>
+								<exclusion>
+										<groupId>javax.jms</groupId>
+										<artifactId>jms</artifactId>
 								</exclusion>
 						</exclusions>
 				</dependency>
