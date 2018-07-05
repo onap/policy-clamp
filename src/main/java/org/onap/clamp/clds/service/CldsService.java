@@ -19,7 +19,7 @@
  * ============LICENSE_END============================================
  * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.service;
@@ -31,15 +31,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -88,7 +84,6 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.JacksonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -104,8 +99,7 @@ public class CldsService extends SecureServiceBase {
 
     @Produce(uri = "direct:processSubmit")
     private CamelProxy camelProxy;
-    protected static final EELFLogger securityLogger = EELFManager.getInstance()
-        .getSecurityLogger();
+    protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
     static final String RESOURCE_NAME = "clds-version.properties";
     public static final String GLOBAL_PROPERTIES_KEY = "files.globalProperties";
     private final String cldsPersmissionTypeCl;
@@ -135,8 +129,7 @@ public class CldsService extends SecureServiceBase {
         @Value("${clamp.config.security.permission.type.cl.event:permission-type-cl-event}") String cldsPermissionTypeClEvent,
         @Value("${clamp.config.security.permission.type.filter.vf:permission-type-filter-vf}") String cldsPermissionTypeFilterVf,
         @Value("${clamp.config.security.permission.type.template:permission-type-template}") String cldsPermissionTypeTemplate,
-        @Value("${clamp.config.security.permission.instance:dev}") String cldsPermissionInstance
-    ) {
+        @Value("${clamp.config.security.permission.instance:dev}") String cldsPermissionInstance) {
         this.cldsDao = cldsDao;
         this.cldsBpmnTransformer = cldsBpmnTransformer;
         this.refProp = refProp;
@@ -151,19 +144,21 @@ public class CldsService extends SecureServiceBase {
         this.cldsPermissionInstance = cldsPermissionInstance;
         permissionReadCl = SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "read");
         permissionUpdateCl = SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "update");
-        permissionReadTemplate = SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "read");
-        permissionUpdateTemplate = SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "update");
+        permissionReadTemplate = SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance,
+            "read");
+        permissionUpdateTemplate = SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance,
+            "update");
     }
 
     /*
      * @return list of CLDS-Monitoring-Details: CLOSELOOP_NAME | Close loop name
      * used in the CLDS application (prefix: ClosedLoop- + unique ClosedLoop ID)
-     * MODEL_NAME | Model Name in CLDS application SERVICE_TYPE_ID | TypeId
-     * returned from the DCAE application when the ClosedLoop is submitted
-     * (DCAEServiceTypeRequest generated in DCAE application). DEPLOYMENT_ID |
-     * Id generated when the ClosedLoop is deployed in DCAE. TEMPLATE_NAME |
-     * Template used to generate the ClosedLoop model. ACTION_CD | Current state
-     * of the ClosedLoop in CLDS application.
+     * MODEL_NAME | Model Name in CLDS application SERVICE_TYPE_ID | TypeId returned
+     * from the DCAE application when the ClosedLoop is submitted
+     * (DCAEServiceTypeRequest generated in DCAE application). DEPLOYMENT_ID | Id
+     * generated when the ClosedLoop is deployed in DCAE. TEMPLATE_NAME | Template
+     * used to generate the ClosedLoop model. ACTION_CD | Current state of the
+     * ClosedLoop in CLDS application.
      */
     @GET
     @Path("/cldsDetails")
@@ -180,8 +175,8 @@ public class CldsService extends SecureServiceBase {
     }
 
     /*
-     * CLDS IFO service will return 3 things 1. User Name 2. CLDS code version
-     * that is currently installed from pom.xml file 3. User permissions
+     * CLDS IFO service will return 3 things 1. User Name 2. CLDS code version that
+     * is currently installed from pom.xml file 3. User permissions
      */
     @GET
     @Path("/cldsInfo")
@@ -220,13 +215,11 @@ public class CldsService extends SecureServiceBase {
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("UP");
             cldsHealthCheck.setDescription("OK");
-            LoggingUtils
-                .setResponseContext("0", "Get healthcheck success", this.getClass().getName());
+            LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
         } catch (Exception e) {
             healthcheckFailed = true;
             logger.error("CLAMP application DB Error", e);
-            LoggingUtils
-                .setResponseContext("999", "Get healthcheck failed", this.getClass().getName());
+            LoggingUtils.setResponseContext("999", "Get healthcheck failed", this.getClass().getName());
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("DOWN");
             cldsHealthCheck.setDescription("NOT-OK");
@@ -235,8 +228,7 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setTimeContext(startTime, new Date());
         logger.info("GET healthcheck completed");
         if (healthcheckFailed) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cldsHealthCheck)
-                .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cldsHealthCheck).build();
         } else {
             return Response.status(Response.Status.OK).entity(cldsHealthCheck).build();
         }
@@ -267,9 +259,9 @@ public class CldsService extends SecureServiceBase {
     }
 
     /**
-     * REST service that retrieves image for a CLDS model name from the
-     * database. This is subset of the json getModel. This is only expected to
-     * be used for testing purposes, not by the UI.
+     * REST service that retrieves image for a CLDS model name from the database.
+     * This is subset of the json getModel. This is only expected to be used for
+     * testing purposes, not by the UI.
      *
      * @param modelName
      * @return image xml text - content of image given name
@@ -343,8 +335,7 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT imageText={}", cldsModel.getImageText());
         cldsModel.setName(modelName);
         fillInCldsModel(cldsModel);
-        updateAndInsertNewEvent(cldsModel.getName(), cldsModel.getControlNamePrefix(),
-            cldsModel.getEvent(),
+        updateAndInsertNewEvent(cldsModel.getName(), cldsModel.getControlNamePrefix(), cldsModel.getEvent(),
             CldsEvent.ACTION_MODIFY);
         cldsModel.save(cldsDao, getUserId());
         // audit log
@@ -394,39 +385,39 @@ public class CldsService extends SecureServiceBase {
      *
      * @param action
      * @param modelName
-     * @param test
+     * @param validateFlag
      * @param model
      * @return
      * @throws TransformerException
-     *             In case of issues when doing the XSLT of the BPMN flow
+     *         In case of issues when doing the XSLT of the BPMN flow
      * @throws ParseException
-     *             In case of issues when parsing the JSON
+     *         In case of issues when parsing the JSON
      * @throws GeneralSecurityException
-     *             In case of issues when decrypting the password
+     *         In case of issues when decrypting the password
      * @throws DecoderException
-     *             In case of issues with the Hex String decoding
+     *         In case of issues with the Hex String decoding
      */
     @PUT
     @Path("/action/{action}/{modelName}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response putModelAndProcessAction(@PathParam("action") String action,
-        @PathParam("modelName") String modelName, @QueryParam("test") String test, CldsModel model)
-        throws TransformerException, ParseException {
+        @PathParam("modelName") String modelName, @QueryParam("test") String validateFlag, CldsModel model)
+            throws TransformerException, ParseException {
         Date startTime = new Date();
         CldsModel retrievedModel = null;
         Boolean errorCase = false;
         try {
             LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
             String actionCd = action.toUpperCase();
-            SecureServicePermission permisionManage = SecureServicePermission
-                .create(cldsPermissionTypeClManage, cldsPermissionInstance, actionCd);
+            SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
+                cldsPermissionInstance, actionCd);
             isAuthorized(permisionManage);
             isAuthorizedForVf(model);
             String userId = getUserId();
             logger.info("PUT actionCd={}", actionCd);
             logger.info("PUT modelName={}", modelName);
-            logger.info("PUT test={}", test);
+            logger.info("PUT test={}", validateFlag);
             logger.info("PUT bpmnText={}", model.getBpmnText());
             logger.info("PUT propText={}", model.getPropText());
             logger.info("PUT userId={}", userId);
@@ -435,8 +426,7 @@ public class CldsService extends SecureServiceBase {
             this.fillInCldsModel(model);
             // save model to db
             model.setName(modelName);
-            updateAndInsertNewEvent(modelName, model.getControlNamePrefix(), model.getEvent(),
-                CldsEvent.ACTION_MODIFY);
+            updateAndInsertNewEvent(modelName, model.getControlNamePrefix(), model.getEvent(), CldsEvent.ACTION_MODIFY);
             model.save(cldsDao, getUserId());
             // get vars and format if necessary
             String prop = model.getPropText();
@@ -448,10 +438,10 @@ public class CldsService extends SecureServiceBase {
             // Flag indicates whether it is triggered by Validation Test button
             // from
             // UI
-            boolean isTest = Boolean.getBoolean(test);
+            boolean isTest = Boolean.valueOf(validateFlag);
             if (!isTest) {
                 String actionTestOverride = refProp.getStringValue("action.test.override");
-                if (Boolean.getBoolean(actionTestOverride)) {
+                if (Boolean.valueOf(actionTestOverride)) {
                     logger.info("PUT actionTestOverride={}", actionTestOverride);
                     logger.info("PUT override test indicator and setting it to true");
                     isTest = true;
@@ -459,7 +449,7 @@ public class CldsService extends SecureServiceBase {
             }
             logger.info("PUT isTest={}", isTest);
             String insertTestEvent = refProp.getStringValue("action.insert.test.event");
-            boolean isInsertTestEvent = Boolean.getBoolean(insertTestEvent);
+            boolean isInsertTestEvent = Boolean.valueOf(insertTestEvent);
 
             logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
             // determine if requested action is permitted
@@ -467,9 +457,8 @@ public class CldsService extends SecureServiceBase {
             logger.info("modelProp - " + prop);
             logger.info("docText - " + docText);
             try {
-                String result = camelProxy
-                    .submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest,
-                        userId, isInsertTestEvent, model.getEvent().getActionCd());
+                String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest,
+                    userId, isInsertTestEvent, model.getEvent().getActionCd());
                 logger.info("Starting Camel flow on request, result is: ", result);
             } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
                 errorCase = true;
@@ -480,8 +469,8 @@ public class CldsService extends SecureServiceBase {
                 retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
             }
             if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
-                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
-                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
+                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
+                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
                 if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
                     // SDC artifact case
                     logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
@@ -489,7 +478,7 @@ public class CldsService extends SecureServiceBase {
                     dcaeEvent.setArtifactName(retrievedModel.getControlName() + ".yml");
                     dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
                     CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
-                            CldsEvent.ACTION_STATE_RECEIVED, null);
+                        CldsEvent.ACTION_STATE_RECEIVED, null);
                 } else {
                     // This should be done only when the call to DCAE
                     // has not yet been done. When CL comes from SDC
@@ -531,7 +520,7 @@ public class CldsService extends SecureServiceBase {
         // type property
         if (cldsPermissionTypeClEvent != null && cldsPermissionTypeClEvent.length() > 0) {
             SecureServicePermission permissionEvent = SecureServicePermission.create(cldsPermissionTypeClEvent,
-                    cldsPermissionInstance, dcaeEvent.getEvent());
+                cldsPermissionInstance, dcaeEvent.getEvent());
             isAuthorized(permissionEvent);
             userid = getUserId();
         }
@@ -543,8 +532,8 @@ public class CldsService extends SecureServiceBase {
             instanceCount = dcaeEvent.getInstances().size();
         }
         String msgInfo = "event=" + dcaeEvent.getEvent() + " serviceUUID=" + dcaeEvent.getServiceUUID()
-                + " resourceUUID=" + dcaeEvent.getResourceUUID() + " artifactName=" + dcaeEvent.getArtifactName()
-                + " instance count=" + instanceCount + " isTest=" + isTest;
+        + " resourceUUID=" + dcaeEvent.getResourceUUID() + " artifactName=" + dcaeEvent.getArtifactName()
+        + " instance count=" + instanceCount + " isTest=" + isTest;
         logger.info("POST dcae event {}", msgInfo);
         if (isTest) {
             logger.warn("Ignorning test event from DCAE");
@@ -553,7 +542,7 @@ public class CldsService extends SecureServiceBase {
                 CldsModel.insertModelInstance(cldsDao, dcaeEvent, userid);
             } else {
                 CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userid, dcaeEvent.getCldsActionCd(),
-                        CldsEvent.ACTION_STATE_RECEIVED, null);
+                    CldsEvent.ACTION_STATE_RECEIVED, null);
             }
         }
         // audit log
@@ -567,9 +556,9 @@ public class CldsService extends SecureServiceBase {
      * REST service that retrieves sdc services
      *
      * @throws GeneralSecurityException
-     *             In case of issue when decryting the SDC password
+     *         In case of issue when decryting the SDC password
      * @throws DecoderException
-     *             In case of issues with the decoding of the Hex String
+     *         In case of issues with the decoding of the Hex String
      */
     @GET
     @Path("/sdc/services")
@@ -596,7 +585,7 @@ public class CldsService extends SecureServiceBase {
      * REST service that retrieves total properties required by UI
      *
      * @throws IOException
-     *             In case of issues
+     *         In case of issues
      */
     @GET
     @Path("/properties")
@@ -606,22 +595,22 @@ public class CldsService extends SecureServiceBase {
     }
 
     /**
-     * REST service that retrieves total properties by using invariantUUID based
-     * on refresh and non refresh
+     * REST service that retrieves total properties by using invariantUUID based on
+     * refresh and non refresh
      *
      * @throws GeneralSecurityException
-     *             In case of issues with the decryting the encrypted password
+     *         In case of issues with the decryting the encrypted password
      * @throws DecoderException
-     *             In case of issues with the decoding of the Hex String
+     *         In case of issues with the decoding of the Hex String
      * @throws IOException
-     *             In case of issue to convert CldsServiceCache to InputStream
+     *         In case of issue to convert CldsServiceCache to InputStream
      */
     @GET
     @Path("/properties/{serviceInvariantUUID}")
     @Produces(MediaType.APPLICATION_JSON)
     public String getSdcPropertiesByServiceUUIDForRefresh(
-            @PathParam("serviceInvariantUUID") String serviceInvariantUUID,
-            @DefaultValue("false") @QueryParam("refresh") boolean refresh)
+        @PathParam("serviceInvariantUUID") String serviceInvariantUUID,
+        @DefaultValue("false") @QueryParam("refresh") boolean refresh)
             throws GeneralSecurityException, DecoderException, IOException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc properties by uuid", getPrincipalName());
@@ -656,7 +645,7 @@ public class CldsService extends SecureServiceBase {
     public boolean isAuthorizedForVf(String vfInvariantUuid) {
         if (cldsPermissionTypeFilterVf != null && !cldsPermissionTypeFilterVf.isEmpty()) {
             SecureServicePermission permission = SecureServicePermission.create(cldsPermissionTypeFilterVf,
-                    cldsPermissionInstance, vfInvariantUuid);
+                cldsPermissionInstance, vfInvariantUuid);
             return isAuthorized(permission);
         } else {
             // if CLDS_PERMISSION_TYPE_FILTER_VF property is not provided, then
@@ -689,7 +678,7 @@ public class CldsService extends SecureServiceBase {
         }
         ObjectMapper objectMapper = JacksonUtils.getObjectMapperInstance();
         List<SdcServiceInfo> rawList = objectMapper.readValue(responseStr,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, SdcServiceInfo.class));
+            objectMapper.getTypeFactory().constructCollectionType(List.class, SdcServiceInfo.class));
         ObjectNode invariantIdServiceNode = objectMapper.createObjectNode();
         ObjectNode serviceNode = objectMapper.createObjectNode();
         logger.info("value of cldsserviceiNfolist: {}", rawList);
@@ -698,7 +687,7 @@ public class CldsService extends SecureServiceBase {
             for (SdcServiceInfo currCldsSdcServiceInfo : cldsSdcServiceInfoList) {
                 if (currCldsSdcServiceInfo != null) {
                     invariantIdServiceNode.put(currCldsSdcServiceInfo.getInvariantUUID(),
-                            currCldsSdcServiceInfo.getName());
+                        currCldsSdcServiceInfo.getName());
                 }
             }
             serviceNode.putPOJO("service", invariantIdServiceNode);
@@ -747,8 +736,7 @@ public class CldsService extends SecureServiceBase {
         return emptyServiceObjectNode;
     }
 
-    private void createVfObjectNode(ObjectNode vfObjectNode2,
-        List<SdcResource> rawCldsSdcResourceList) {
+    private void createVfObjectNode(ObjectNode vfObjectNode2, List<SdcResource> rawCldsSdcResourceList) {
         ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
         ObjectNode vfNode = mapper.createObjectNode();
         vfNode.put("", "");
@@ -772,12 +760,10 @@ public class CldsService extends SecureServiceBase {
          */
         ObjectNode locationJsonNode;
         try {
-            locationJsonNode = (ObjectNode) mapper
-                .readValue(refProp.getStringValue("ui.location.default"),
-                    JsonNode.class);
+            locationJsonNode = (ObjectNode) mapper.readValue(refProp.getStringValue("ui.location.default"),
+                JsonNode.class);
         } catch (IOException e) {
-            logger.error(
-                "Unable to load ui.location.default JSON in clds-references.properties properly", e);
+            logger.error("Unable to load ui.location.default JSON in clds-references.properties properly", e);
             throw new CldsConfigException(
                 "Unable to load ui.location.default JSON in clds-references.properties properly", e);
         }
@@ -791,10 +777,9 @@ public class CldsService extends SecureServiceBase {
         try {
             alarmStringJsonNode = (ObjectNode) mapper.readValue(alarmStringValue, JsonNode.class);
         } catch (IOException e) {
-            logger
-                .error("Unable to ui.alarm.default JSON in clds-references.properties properly", e);
-            throw new CldsConfigException(
-                "Unable to load ui.alarm.default JSON in clds-references.properties properly", e);
+            logger.error("Unable to ui.alarm.default JSON in clds-references.properties properly", e);
+            throw new CldsConfigException("Unable to load ui.alarm.default JSON in clds-references.properties properly",
+                e);
         }
         vfObjectNode2.putPOJO("alarmCondition", alarmStringJsonNode);
     }
@@ -830,13 +815,11 @@ public class CldsService extends SecureServiceBase {
             fillInCldsModel(model);
             String bpmnJson = cldsBpmnTransformer.doXslTransformToString(model.getBpmnText());
             logger.info("PUT bpmnJson={}", bpmnJson);
-            SecureServicePermission permisionManage = SecureServicePermission
-                .create(cldsPermissionTypeClManage,
-                    cldsPermissionInstance, CldsEvent.ACTION_DEPLOY);
+            SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
+                cldsPermissionInstance, CldsEvent.ACTION_DEPLOY);
             isAuthorized(permisionManage);
             isAuthorizedForVf(model);
-            ModelProperties modelProp = new ModelProperties(modelName, model.getControlName(),
-                CldsEvent.ACTION_DEPLOY,
+            ModelProperties modelProp = new ModelProperties(modelName, model.getControlName(), CldsEvent.ACTION_DEPLOY,
                 false, bpmnJson, model.getPropText());
             checkForDuplicateServiceVf(modelName, model.getPropText());
             String deploymentId = "";
@@ -846,11 +829,9 @@ public class CldsService extends SecureServiceBase {
             } else {
                 deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";
             }
-            String createNewDeploymentStatusUrl = dcaeDispatcherServices
-                .createNewDeployment(deploymentId,
-                    model.getTypeId(), modelProp.getGlobal().getDeployParameters());
-            String operationStatus = dcaeDispatcherServices
-                .getOperationStatusWithRetry(createNewDeploymentStatusUrl);
+            String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
+                model.getTypeId(), modelProp.getGlobal().getDeployParameters());
+            String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(createNewDeploymentStatusUrl);
             if ("succeeded".equalsIgnoreCase(operationStatus)) {
                 String artifactName = model.getControlName();
                 if (artifactName != null) {
@@ -860,20 +841,16 @@ public class CldsService extends SecureServiceBase {
                 /* set dcae events */
                 dcaeEvent.setArtifactName(artifactName);
                 dcaeEvent.setEvent(DcaeEvent.EVENT_DEPLOYMENT);
-                CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), getUserId(),
-                    dcaeEvent.getCldsActionCd(),
+                CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
                     CldsEvent.ACTION_STATE_RECEIVED, null);
                 model.setDeploymentId(deploymentId);
                 model.save(cldsDao, getUserId());
             } else {
-                logger.info("Deploy model (" + modelName + ") failed...Operation Status is - "
-                    + operationStatus);
+                logger.info("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
                 throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Deploy model (" + modelName + ") failed...Operation Status is - "
-                        + operationStatus);
+                    "Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
             }
-            logger.info(
-                "Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
+            logger.info("Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
             LoggingUtils.setResponseContext("0", "Deploy model success", this.getClass().getName());
@@ -897,16 +874,13 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
         Boolean errorCase = false;
         try {
-            SecureServicePermission permisionManage = SecureServicePermission
-                .create(cldsPermissionTypeClManage,
-                    cldsPermissionInstance, CldsEvent.ACTION_UNDEPLOY);
+            SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
+                cldsPermissionInstance, CldsEvent.ACTION_UNDEPLOY);
             isAuthorized(permisionManage);
             isAuthorizedForVf(model);
-            String operationStatusUndeployUrl = dcaeDispatcherServices
-                .deleteExistingDeployment(model.getDeploymentId(),
-                    model.getTypeId());
-            String operationStatus = dcaeDispatcherServices
-                .getOperationStatusWithRetry(operationStatusUndeployUrl);
+            String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
+                model.getTypeId());
+            String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(operationStatusUndeployUrl);
             if ("succeeded".equalsIgnoreCase(operationStatus)) {
                 String artifactName = model.getControlName();
                 if (artifactName != null) {
@@ -916,23 +890,19 @@ public class CldsService extends SecureServiceBase {
                 // set dcae events
                 dcaeEvent.setArtifactName(artifactName);
                 dcaeEvent.setEvent(DcaeEvent.EVENT_UNDEPLOYMENT);
-                CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(),
-                    dcaeEvent.getCldsActionCd(),
+                CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
                     CldsEvent.ACTION_STATE_RECEIVED, null);
                 model.setDeploymentId(null);
                 model.save(cldsDao, getUserId());
             } else {
-                logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - "
-                    + operationStatus);
+                logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
                 throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Undeploy model (" + modelName + ") failed...Operation Status is - "
-                        + operationStatus);
+                    "Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
             }
             logger.info("Undeploy model (" + modelName + ") succeeded.");
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
-            LoggingUtils
-                .setResponseContext("0", "Undeploy model success", this.getClass().getName());
+            LoggingUtils.setResponseContext("0", "Undeploy model success", this.getClass().getName());
             auditLogger.info("Undeploy model completed");
         } catch (Exception e) {
             errorCase = true;
@@ -944,35 +914,29 @@ public class CldsService extends SecureServiceBase {
         return Response.status(Response.Status.OK).entity(model).build();
     }
 
-    private void checkForDuplicateServiceVf(String modelName, String modelPropText)
-        throws IOException {
-        JsonNode globalNode = JacksonUtils.getObjectMapperInstance().readTree(modelPropText)
-            .get("global");
+    private void checkForDuplicateServiceVf(String modelName, String modelPropText) throws IOException {
+        JsonNode globalNode = JacksonUtils.getObjectMapperInstance().readTree(modelPropText).get("global");
         String service = AbstractModelElement.getValueByName(globalNode, "service");
         List<String> resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
         if (service != null && resourceVf != null && !resourceVf.isEmpty()) {
             List<CldsModelProp> cldsModelPropList = cldsDao.getDeployedModelProperties();
             for (CldsModelProp cldsModelProp : cldsModelPropList) {
-                JsonNode currentNode = JacksonUtils.getObjectMapperInstance()
-                    .readTree(cldsModelProp.getPropText())
+                JsonNode currentNode = JacksonUtils.getObjectMapperInstance().readTree(cldsModelProp.getPropText())
                     .get("global");
                 String currentService = AbstractModelElement.getValueByName(currentNode, "service");
                 List<String> currentVf = AbstractModelElement.getValuesByName(currentNode, "vf");
                 if (currentVf != null && !currentVf.isEmpty()) {
-                    if (!modelName.equalsIgnoreCase(cldsModelProp.getName()) && service
-                        .equalsIgnoreCase(currentService)
+                    if (!modelName.equalsIgnoreCase(cldsModelProp.getName()) && service.equalsIgnoreCase(currentService)
                         && resourceVf.get(0).equalsIgnoreCase(currentVf.get(0))) {
-                        throw new BadRequestException(
-                            "Same Service/VF already exists in " + cldsModelProp.getName()
-                                + " model, please select different Service/VF.");
+                        throw new BadRequestException("Same Service/VF already exists in " + cldsModelProp.getName()
+                        + " model, please select different Service/VF.");
                     }
                 }
             }
         }
     }
 
-    private void updateAndInsertNewEvent(String cldsModelName, String cldsControlNamePrfx,
-        CldsEvent event,
+    private void updateAndInsertNewEvent(String cldsModelName, String cldsControlNamePrfx, CldsEvent event,
         String newAction) {
         // If model action is in submit/resubmit/distributed and user try
         // to save then we are changing action back to create.
