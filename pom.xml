@@ -101,6 +101,7 @@
 						</activation>
 						<properties>
 							<docker.skip.run>true</docker.skip.run>
+							<docker.skip>true</docker.skip>
 						</properties>
 				</profile>
 				<profile>
@@ -113,6 +114,7 @@
 						</activation>
 						<properties>
 							<docker.skip.run>true</docker.skip.run>
+							<docker.skip>true</docker.skip>
 						</properties>
 				</profile>
 				<profile>
@@ -125,6 +127,7 @@
 						</activation>
 						<properties>
 							<docker.skip.run>true</docker.skip.run>
+							<docker.skip>true</docker.skip>
 						</properties>
 				</profile>
 				<profile>
@@ -134,6 +137,7 @@
 								<docker.skip.build>false</docker.skip.build>
 								<docker.skip.tag>false</docker.skip.tag>
 								<docker.skip.push>false</docker.skip.push>
+								<docker.skip>false</docker.skip>
 						</properties>
 				</profile>
 		</profiles>
