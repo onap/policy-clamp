@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -227,13 +228,12 @@ public class SdcCatalogServices {
      */
     public List<SdcResourceBasicInfo> removeDuplicateSdcResourceBasicInfo(
             List<SdcResourceBasicInfo> rawCldsSdcResourceListBasicList) {
-        List<SdcResourceBasicInfo> cldsSdcResourceBasicInfoList = null;
+        List<SdcResourceBasicInfo> cldsSdcResourceBasicInfoList = new ArrayList<>();
         if (rawCldsSdcResourceListBasicList != null && !rawCldsSdcResourceListBasicList.isEmpty()) {
             // sort list
             Collections.sort(rawCldsSdcResourceListBasicList);
             // and then take only the resources with the max version (last in
             // the list with the same name)
-            cldsSdcResourceBasicInfoList = new ArrayList<>();
             for (int i = 1; i < rawCldsSdcResourceListBasicList.size(); i++) {
                 // compare name with previous - if not equal, then keep the
                 // previous (it's the last with that name)
