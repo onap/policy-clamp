@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,79 +20,68 @@
  * ===================================================================
  * 
  */
-app.directive('fileModel', ['$parse', function ($parse) {
-    console.log("////////fileModel");
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {   
-        console.log("link");     	
-            var model = $parse(attrs.fileModel);
-        	//alert("uploadFileToUrl directive model :: " + model);
-            var modelSetter = model.assign;
-            
-            element.bind('change', function(){
-                console.log("change");
-                scope.$apply(function(){
-                console.log("apply");               	
-                    modelSetter(scope, element[0].files[0]);
-                });
-            });
-        }
-    };
-}]);
-
-
-app.service('fileUpload', ['$http', '$q', function ($http, $q) {
-    console.log("fileUpload");
-    this.uploadFileToUrl = function(file, uploadUrl){
-        console.log("uploadFileToUrl");
-    	//alert("uploadFileToUrl file :: " + file + " :: url::" + uploadUrl);
-    	
-    	var def = $q.defer();
-    	var pars = [];
-    	
-        var fd = new FormData();
-        fd.append('requestFile', file);
-        $http.post(uploadUrl, fd, {
-            transformRequest: angular.identity,            
-            headers: {'Content-Type': undefined}
-        })
-        .success(function(data){
-        console.log("success");        	
-        	pars = data;
-        	def.resolve(data);        	
-        })
-        .error(function(data){
-        console.log("error");       	 	      
-       	 	def.reject("Upload file not successful");
-        });
-        
-        return def.promise;
-    };
-    
-    this.uploadFile = function(path,inputFile,uploadURL){
-        console.log("uploadFile");
-    	var def = $q.defer();
-    	var pars = [];
-    	
-        var fd = new FormData();
-        fd.append('requestFile', inputFile);
-        fd.append('path',path)
-        $http.post(uploadURL, fd, {
-            transformRequest: angular.identity,            
-            headers: {'Content-Type': undefined}
-        })
-        .success(function(data){ 
-        console.log("success");       	
-        	pars = data;
-        	def.resolve(data);        	
-        })
-        .error(function(data){
-        console.log("error");       	 	      
-       	 	def.reject("Upload file not successful");
-        });
-        
-        return def.promise;
-    	
-    };
-}]);
+app.directive('fileModel', [ '$parse', function($parse) {
+	console.log("////////fileModel");
+	return {
+	restrict : 'A',
+	link : function(scope, element, attrs) {
+		console.log("link");
+		var model = $parse(attrs.fileModel);
+		// alert("uploadFileToUrl directive model :: " + model);
+		var modelSetter = model.assign;
+		element.bind('change', function() {
+			console.log("change");
+			scope.$apply(function() {
+				console.log("apply");
+				modelSetter(scope, element[0].files[0]);
+			});
+		});
+	}
+	};
+} ]);
+app.service('fileUpload', [ '$http', '$q', function($http, $q) {
+	console.log("fileUpload");
+	this.uploadFileToUrl = function(file, uploadUrl) {
+		console.log("uploadFileToUrl");
+		var def = $q.defer();
+		var pars = [];
+		var fd = new FormData();
+		fd.append('requestFile', file);
+		$http.post(uploadUrl, fd, {
+		transformRequest : angular.identity,
+		headers : {
+			'Content-Type' : undefined
+		}
+		}).success(function(data) {
+			console.log("success");
+			pars = data;
+			def.resolve(data);
+		}).error(function(data) {
+			console.log("error");
+			def.reject("Upload file not successful");
+		});
+		return def.promise;
+	};
+	this.uploadFile = function(path, inputFile, uploadURL) {
+		console.log("uploadFile");
+		var def = $q.defer();
+		var pars = [];
+		var fd = new FormData();
+		fd.append('requestFile', inputFile);
+		fd.append('path', path)
+		$http.post(uploadURL, fd, {
+		transformRequest : angular.identity,
+		headers : {
+			'Content-Type' : undefined
+		}
+		}).success(function(data) {
+			console.log("success");
+			pars = data;
+			def.resolve(data);
+		}).error(function(data) {
+			console.log("error");
+			def.reject("Upload file not successful");
+		});
+		return def.promise;
+	};
+} ]);

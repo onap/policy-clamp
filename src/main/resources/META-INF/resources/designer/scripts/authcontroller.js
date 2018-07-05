@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,37 +20,41 @@
  * ===================================================================
  *
  */
-
 'use strict';
-
-function AuthenticateCtrl($scope, $rootScope, $window, $resource, $http, $location, $cookies) {
-  console.log("//////////AuthenticateCtrl");
-  $scope.getInclude = function() {
-    console.log("getInclude011111111");
-    var invalidUser = $window.localStorage.getItem("invalidUser");
-    var isAuth = $window.localStorage.getItem("isAuth");
-    if (invalidUser == 'true')
-      return "invalid_login.html";
-    else if (isAuth == null || isAuth == 'false') {
-      return "authenticate.html";
-    }
-    return "utmdashboard.html";
-  };
-
-  $scope.authenticate = function() {
-    // send request to a test API for authentication/authorization check
-    $http.get('/restservices/clds/v1/user/getUser', {
-    }).success(function(data) {
-      if (data) {
-        $window.localStorage.setItem("isAuth", true);
-        $rootScope.loginuser = data;
-      }
-      window.localStorage.removeItem("invalidUser");
-      
-    }).error(function() {
-      $window.localStorage.setItem("invalidUser", true);
-      
-    });
-  };
-
-}
+angular.module('clds-app').controller(
+'AuthenticateCtrl',
+[
+'$scope',
+'$rootScope',
+'$window',
+'$resource',
+'$http',
+'$location',
+'$cookies',
+function($scope, $rootScope, $window, $resource, $http, $location, $cookies) {
+	console.log("//////////AuthenticateCtrl");
+	$scope.getInclude = function() {
+		console.log("getInclude011111111");
+		var invalidUser = $window.localStorage.getItem("invalidUser");
+		var isAuth = $window.localStorage.getItem("isAuth");
+		if (invalidUser == 'true')
+			return "invalid_login.html";
+		else if (isAuth == null || isAuth == 'false') {
+			return "authenticate.html";
+		}
+		return "utmdashboard.html";
+	};
+	$scope.authenticate = function() {
+		// send request to a test API for authentication/authorization check
+		$http.get('/restservices/clds/v1/user/getUser', {}).success(
+		function(data) {
+			if (data) {
+				$window.localStorage.setItem("isAuth", true);
+				$rootScope.loginuser = data;
+			}
+			window.localStorage.removeItem("invalidUser");
+		}).error(function() {
+			$window.localStorage.setItem("invalidUser", true);
+		});
+	};
+} ]);

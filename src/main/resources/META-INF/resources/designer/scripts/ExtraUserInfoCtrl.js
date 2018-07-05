@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,18 +20,19 @@
  * ===================================================================
  * 
  */
-
-app.controller('ExtraUserInfoCtrl', 
-		['$scope', '$rootScope', '$modalInstance','extraUserInfoService', '$location', 'dialogs',
-		 function($scope, $rootScope, $modalInstance, extraUserInfoService, $location, dialogs) {
-    	//console.log("///////////ExtraUserInfoCtrl");
-    	
-    	extraUserInfoService.getUserInfo().then(function(pars){ 
-    		$scope.userInfo = pars;
-    	});
-    	
-        $scope.close = function() {
-            $modalInstance.close("closed");
-        };
-    }
-]);
+app.controller('ExtraUserInfoCtrl', [
+'$scope',
+'$rootScope',
+'$uibModalInstance',
+'extraUserInfoService',
+'$location',
+'dialogs',
+function($scope, $rootScope, $uibModalInstance, extraUserInfoService,
+         $location, dialogs) {
+	extraUserInfoService.getUserInfo().then(function(pars) {
+		$scope.userInfo = pars;
+	});
+	$scope.close = function() {
+		$uibModalInstance.close("closed");
+	};
+} ]);
