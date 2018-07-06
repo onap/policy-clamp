@@ -933,7 +933,6 @@
 															<skip>true</skip>
 														</run>
 														<build>
-																<imagePullPolicy>never</imagePullPolicy>
 																<cleanup>true</cleanup>
 																<tags>
 																		<tag>latest</tag>
