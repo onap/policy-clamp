@@ -2,13 +2,13 @@
 project: 'clamp'
 project_creation_date: '2017-06-15'
 lifecycle_state: 'Incubation'
-project_lead: &onap_releng_ptl
+project_lead: &onap_clamp_ptl
     name: 'Gervais-Martial Ngueko'
     email: 'gn422w@intl.att.com'
     id: 'osgn422w'
     company: 'ATT'
     timezone: 'Europe/Brussels'
-primary_contact: *onap_releng_ptl
+primary_contact: *onap_clamp_ptl
 issue_tracking:
     type: 'jira'
     url: 'https://jira.onap.org/projects/CLAMP'
@@ -22,6 +22,7 @@ meetings:
         repeats: 'weekly'
         time: '13:00 UTC'
 committers:
+    - <<: *onap_clamp_ptl
     - name: 'Christophe Closset'
         email: 'cc697w@intl.att.com'
         company: 'ATT'
@@ -54,3 +55,7 @@ committers:
         timezone: 'Europe/Brussels'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
+    changes:
+        - type: 'Addition'
+          name: 'Gervais-Martial Ngueko'
+          link: 'https://lists.onap.org/g/ONAP-TSC/message/3311'
