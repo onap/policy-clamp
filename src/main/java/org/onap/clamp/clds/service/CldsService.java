@@ -468,30 +468,35 @@ public class CldsService extends SecureServiceBase {
                 // refresh model info from db (get fresh event info)
                 retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
             }
-            if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
-                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
-                || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-                if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
-                    // SDC artifact case
-                    logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
-                    DcaeEvent dcaeEvent = new DcaeEvent();
-                    dcaeEvent.setArtifactName(retrievedModel.getControlName() + ".yml");
-                    dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
-                    CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
-                        CldsEvent.ACTION_STATE_RECEIVED, null);
-                } else {
-                    // This should be done only when the call to DCAE
-                    // has not yet been done. When CL comes from SDC
-                    // this is not required as the DCAE inventory call is done
-                    // during the CL deployment.
-                    dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
+            if (retrievedModel != null) {
+                if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
+                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
+                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
+                    if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
+                        // SDC artifact case
+                        logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
+                        DcaeEvent dcaeEvent = new DcaeEvent();
+                        dcaeEvent.setArtifactName(retrievedModel.getControlName() + ".yml");
+                        dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
+                        CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
+                            CldsEvent.ACTION_STATE_RECEIVED, null);
+                    } else {
+                        // This should be done only when the call to DCAE
+                        // has not yet been done. When CL comes from SDC
+                        // this is not required as the DCAE inventory call is done
+                        // during the CL deployment.
+                        dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
+                    }
+                    retrievedModel.save(cldsDao, getUserId());
                 }
-                retrievedModel.save(cldsDao, getUserId());
+                // audit log
+                LoggingUtils.setTimeContext(startTime, new Date());
+                LoggingUtils.setResponseContext("0", "Process model action success", this.getClass().getName());
+                auditLogger.info("Process model action completed");
+            } else {
+                logger.error("CldsModel not found in database with modelName: " + modelName);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("CldsModel not found in database with modelName: \" + modelName").build();
             }
-            // audit log
-            LoggingUtils.setTimeContext(startTime, new Date());
-            LoggingUtils.setResponseContext("0", "Process model action success", this.getClass().getName());
-            auditLogger.info("Process model action completed");
         } catch (Exception e) {
             errorCase = true;
             logger.error("Exception occured during putModelAndProcessAction", e);
