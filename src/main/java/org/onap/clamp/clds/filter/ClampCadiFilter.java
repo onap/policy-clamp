@@ -22,26 +22,15 @@
  */
 package org.onap.clamp.clds.filter;
 
-import javax.servlet.FilterConfig;
-
-import java.io.IOException;
-import java.security.Principal;
-import java.security.cert.X509Certificate;
 import java.util.Properties;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
 
 import org.onap.aaf.cadi.filter.CadiFilter;
 import org.onap.clamp.clds.config.AAFConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class ClampCadiFilter extends CadiFilter {
     private static final String CADI_TRUST_STORE = "cadi_truststore";
@@ -52,13 +41,13 @@ public class ClampCadiFilter extends CadiFilter {
 
     @Value("${server.ssl.key-store:none}")
     private String              keyStore;
-    
+
     @Value("${clamp.config.cadi.cadiKeystorePassword:none}")
     private String              keyStorePass;
 
     @Value("${server.ssl.trust:none}")
     private String              trustStore;
-    
+
     @Value("${clamp.config.cadi.cadiTruststorePassword:none}")
     private String              trustStorePass;
 
@@ -67,7 +56,7 @@ public class ClampCadiFilter extends CadiFilter {
 
     @Autowired
     private AAFConfiguration aafConfiguration;
-    
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Properties props = aafConfiguration.getProperties();
@@ -82,7 +71,7 @@ public class ClampCadiFilter extends CadiFilter {
 
     private String trimFileName (String fileName) {
         int index= fileName.indexOf("file:");
-        if (index == -1) { 
+        if (index == -1) {
             return fileName;
         } else {
             return fileName.substring(index+5);

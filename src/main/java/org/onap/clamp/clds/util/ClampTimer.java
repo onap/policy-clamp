@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,32 +18,37 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
+ *
  */
+package org.onap.clamp.clds.util;
 
-package org.onap.clamp.clds.service;
+import java.util.Timer;
+import java.util.TimerTask;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 
-
-
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 
 /**
- * User service used for authorization verification at the login page. Do not
- * remove this class.
+ * Define the ClampTimer and CleanupTask, to clear up the Spring Authenticataion info when time is up.
  */
-@Controller
-public class UserService {
 
-    private SecurityContext           securityContext= SecurityContextHolder.getContext();
+public class ClampTimer {
+    protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(ClampTimer.class);
+    Timer timer;
 
-    /**
-     * REST service that returns the username.
-     *
-     * @param userName
-     * @return the user name
-     */
-    public String getUser() {
-        return new DefaultUserNameHandler().retrieveUserName(securityContext);
+    public ClampTimer(int seconds) {
+        timer = new Timer();
+        timer.schedule(new CleanupTask(), seconds*1000);
+    }
+
+    class CleanupTask extends TimerTask {
+        public void run() {
+            logger.debug("Time is up, clear the Spring authenticataion settings");
+            //Clear up the spring authentication
+            SecurityContextHolder.getContext().setAuthentication(null);
+            //Terminate the timer thread
+            timer.cancel(); 
+        }
     }
 }

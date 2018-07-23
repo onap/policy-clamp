@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
-import org.apache.log4j.MDC;
+import org.slf4j.MDC;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;

@@ -5,20 +5,20 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds;
@@ -32,31 +32,32 @@ import org.onap.clamp.clds.model.properties.Holmes;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+
 @SpringBootApplication
 @ComponentScan(basePackages = {
-        "org.onap.clamp.clds"
+    "org.onap.clamp.clds"
 })
 @EnableAutoConfiguration(exclude = {
-        DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class,
-        SecurityAutoConfiguration.class, ManagementWebSecurityAutoConfiguration.class
+    DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class,
+    SecurityAutoConfiguration.class,UserDetailsServiceAutoConfiguration .class
 })
 @EnableConfigurationProperties
 @EnableAsync
@@ -96,25 +97,25 @@ public class Application extends SpringBootServletInitializer {
 
     /**
      * This method is used to declare the camel servlet.
-     * 
+     *
      * @return A servlet bean
      */
     @Bean
     public ServletRegistrationBean camelServletRegistrationBean() {
-        ServletRegistrationBean registration = new ServletRegistrationBean(new CamelHttpTransportServlet(),
-                "/restservices/clds/v2");
+        ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(),
+            "/restservices/clds/v1/*");
         registration.setName("CamelServlet");
         return registration;
     }
 
     /**
      * This method is used by Spring to create the servlet container factory.
-     * 
+     *
      * @return The TomcatEmbeddedServletContainerFactory just created
      */
     @Bean
-    public EmbeddedServletContainerFactory getEmbeddedServletContainerFactory() {
-        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
+    public ServletWebServerFactory getEmbeddedServletContainerFactory() {
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
         if (!"none".equals(httpRedirectedPort) && !"none".equals(sslKeystoreFile)) {
             // Automatically redirect to HTTPS
             tomcat = new TomcatEmbeddedServletContainerFactoryRedirection();
@@ -129,7 +130,7 @@ public class Application extends SpringBootServletInitializer {
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
             EELF_LOGGER.warn(
-                    "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1 (Connector disabled)");
+                "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1 (Connector disabled)");
             return null;
         }
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");

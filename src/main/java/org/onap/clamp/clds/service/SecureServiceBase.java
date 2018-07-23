@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.service;
@@ -26,14 +26,15 @@ package org.onap.clamp.clds.service;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.security.Principal;
 import java.util.Date;
-
 import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.SecurityContext;
 
 import org.onap.clamp.clds.util.LoggingUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Base/abstract Service class. Implements shared security methods.
@@ -46,8 +47,8 @@ public abstract class SecureServiceBase {
     // By default we'll set it to a default handler
     private static UserNameHandler    userNameHandler = new DefaultUserNameHandler();
 
-    @Context
-    private SecurityContext           securityContext;
+
+    private SecurityContext           securityContext = SecurityContextHolder.getContext();
 
     /**
      * Get the userId from AAF/CSP.
@@ -78,10 +79,10 @@ public abstract class SecureServiceBase {
      * @return
      */
     public String getPrincipalName() {
-        Principal principal = securityContext.getUserPrincipal();
+        String principal = ((UserDetails)securityContext.getAuthentication().getPrincipal()).getUsername();
         String name = "Not found";
         if (principal != null) {
-            name = principal.getName();
+            name = principal;
         }
         logger.debug("userPrincipal.getName()={}", name);
         return name;
@@ -103,20 +104,20 @@ public abstract class SecureServiceBase {
      *             In case of issues with the permission test, error is returned
      *             in this exception
      */
-	public boolean isAuthorized(SecureServicePermission inPermission) throws NotAuthorizedException {
-		Date startTime = new Date();
-		LoggingUtils.setTargetContext("CLDS", "isAuthorized");
-		LoggingUtils.setTimeContext(startTime, new Date());
-		securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
-		try {
-			return isUserPermitted(inPermission);
-		} catch (NotAuthorizedException nae) {
-			String msg = getPrincipalName() + " does not have permission: " + inPermission;
-			LoggingUtils.setErrorContext("100", "Authorization Error");
-			securityLogger.warn(msg);
-			throw new NotAuthorizedException(msg);
-		}
-	}
+    public boolean isAuthorized(SecureServicePermission inPermission) throws NotAuthorizedException {
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("CLDS", "isAuthorized");
+        LoggingUtils.setTimeContext(startTime, new Date());
+        securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+        try {
+            return isUserPermitted(inPermission);
+        } catch (NotAuthorizedException nae) {
+            String msg = getPrincipalName() + " does not have permission: " + inPermission;
+            LoggingUtils.setErrorContext("100", "Authorization Error");
+            securityLogger.warn(msg);
+            throw new NotAuthorizedException(msg);
+        }
+    }
 
     /**
      * Check if user is authorized for the given aaf permission. Allow matches
@@ -131,26 +132,26 @@ public abstract class SecureServiceBase {
      * @return A boolean to indicate if the user has the permission to do
      *         execute the inPermission
      */
-	public boolean isAuthorizedNoException(SecureServicePermission inPermission) {
-		securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
-		Date startTime = new Date();
-		LoggingUtils.setTargetContext("CLDS", "isAuthorizedNoException");
-		LoggingUtils.setTimeContext(startTime, new Date());
-		try {
-			return isUserPermitted(inPermission);
-		} catch (NotAuthorizedException nae) {
-			String msg = getPrincipalName() + " does not have permission: " + inPermission;
-			LoggingUtils.setErrorContext("100", "Authorization Error");
-			securityLogger.warn(msg);
-		}
-		return false;
-	}
+    public boolean isAuthorizedNoException(SecureServicePermission inPermission) {
+        securityLogger.debug("checking if {} has permission: {}", getPrincipalName(), inPermission);
+        Date startTime = new Date();
+        LoggingUtils.setTargetContext("CLDS", "isAuthorizedNoException");
+        LoggingUtils.setTimeContext(startTime, new Date());
+        try {
+            return isUserPermitted(inPermission);
+        } catch (NotAuthorizedException nae) {
+            String msg = getPrincipalName() + " does not have permission: " + inPermission;
+            LoggingUtils.setErrorContext("100", "Authorization Error");
+            securityLogger.warn(msg);
+        }
+        return false;
+    }
 
     /**
      * This method can be used by the Application.class to set the
      * UserNameHandler that must be used in this class. The UserNameHandler
      * where to get the User name
-     * 
+     *
      * @param handler
      *            The Handler impl to use
      */
@@ -163,28 +164,42 @@ public abstract class SecureServiceBase {
     public void setSecurityContext(SecurityContext securityContext) {
         this.securityContext = securityContext;
     }
-    
-    private boolean isUserPermitted(SecureServicePermission inPermission) throws NotAuthorizedException {
-    	boolean authorized = false;
-    	// check if the user has the permission key or the permission key with a
+
+    private boolean isUserPermitted(SecureServicePermission inPermission) {
+        boolean authorized = false;
+        // check if the user has the permission key or the permission key with a
         // combination of  all instance and/or all action.
-        if (securityContext.isUserInRole(inPermission.getKey())) {
-            securityLogger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());            
+        if (hasRole(inPermission.getKey())) {
+            securityLogger.info("{} authorized for permission: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstance())) {
+        } else if (hasRole(inPermission.getKeyAllInstance())) {
             securityLogger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllInstanceAction())) {
-             securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());            
+        } else if (hasRole(inPermission.getKeyAllInstanceAction())) {
+            securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
-        } else if (securityContext.isUserInRole(inPermission.getKeyAllAction())) {
-            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());            
+        } else if (hasRole(inPermission.getKeyAllAction())) {
+            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());
             authorized = true;
         } else {
             throw new NotAuthorizedException("");
         }
         return authorized;
+    }
+
+    protected boolean hasRole(String role) {
+        Authentication authentication = securityContext.getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+
+        for (GrantedAuthority auth : authentication.getAuthorities()) {
+            if (role.equals(auth.getAuthority()))
+                return true;
+        }
+
+        return false;
     }
 }

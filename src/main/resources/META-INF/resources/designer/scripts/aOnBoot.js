@@ -158,7 +158,7 @@ function loadSharedPropertyByService(onChangeUUID, refresh, callBack) {
     dataType: "json",
     url: serviceUrl,
     success: function(data) {
-      vf_Services = data;
+      vf_Services = JSON.parse(data);
       setASDCFields()
       if (refresh) {
         $("#paramsWarnrefresh").hide();
@@ -200,7 +200,7 @@ function loadSharedPropertyByServiceProperties(callBack) {
     dataType: "json",
     url: '/restservices/clds/v1/clds/properties/',
     success: function(data) {
-      vf_Services = data;
+      vf_Services = JSON.parse(data);
       setASDCFields();
       if (callBack && _.isFunction(callBack)) {
         callBack(true);
@@ -316,8 +316,7 @@ $(window).on('load',function() {
     dataType: "json",
     url: '/restservices/clds/v1/clds/properties',
     success: function(data) {
-
-      defaults_props = data;
+      defaults_props = JSON.parse(data);
     },
     error: function(s, a, err) {
       console.log(err)

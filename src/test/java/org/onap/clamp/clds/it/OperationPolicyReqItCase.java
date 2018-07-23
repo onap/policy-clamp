@@ -82,6 +82,7 @@ public class OperationPolicyReqItCase {
     }
 
     private String replaceGeneratedValues(String yaml) {
+        yaml = yaml.replaceAll("Policy - created" + System.lineSeparator() + "    by CLDS", "Policy - created by CLDS");
         yaml = yaml.replaceAll("trigger_policy: (.*)", "trigger_policy: <generatedId>");
         yaml = yaml.replaceAll("id: (.*)", "id: <generatedId>");
         yaml = yaml.replaceAll("success: (.*)", "success: <generatedId>");

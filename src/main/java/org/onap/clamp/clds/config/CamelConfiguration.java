@@ -18,17 +18,23 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
  */
-
-package org.onap.clamp.clds.service;
-
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-
+package org.onap.clamp.clds.config;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.rest.RestBindingMode;
+import org.onap.clamp.clds.model.CldsInfo;
 import org.springframework.stereotype.Component;
-@Component
-@ApplicationPath("/restservices/clds/v1")
-public class JaxrsApplication extends Application {
 
+@Component
+public class CamelConfiguration extends RouteBuilder {
+
+    @Override
+    public void configure() {
+    restConfiguration().component("servlet")
+          .bindingMode(RestBindingMode.json);
+
+              rest("/clds")
+              .get("/test").description("Find user by id").outType(CldsInfo.class).produces("application/json")
+                  .to("bean:org.onap.clamp.clds.service.CldsService?method=getCldsInfo()") ;
+    }
 }

@@ -35,10 +35,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.Principal;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 import org.apache.commons.codec.DecoderException;
 import org.json.JSONException;
@@ -58,6 +57,14 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -74,6 +81,8 @@ public class CldsServiceItCase {
     private String bpmnPropText;
     @Autowired
     private CldsDao cldsDao;
+    private Authentication authentication;
+    private List<GrantedAuthority> authList =  new LinkedList<GrantedAuthority>();
 
     /**
      * Setup the variable before the tests execution.
@@ -86,14 +95,24 @@ public class CldsServiceItCase {
         bpmnText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-template.xml");
         imageText = ResourceFileUtil.getResourceAsString("example/dao/image-template.xml");
         bpmnPropText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-prop.json");
+
+        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|read"));
+        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|update"));
+        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|read"));
+        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
+        authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
+        authentication =  new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
     }
 
     @Test
     public void testCldsInfoNotAuthorized() {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal principal = Mockito.mock(Principal.class);
-        Mockito.when(principal.getName()).thenReturn("admin");
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
+        Authentication localAuth = Mockito.mock(Authentication.class);
+        UserDetails userDetails = Mockito.mock(UserDetails.class);
+        Mockito.when(userDetails.getUsername()).thenReturn("admin");
+        Mockito.when(securityContext.getAuthentication()).thenReturn(localAuth);
+        Mockito.when(localAuth.getPrincipal()).thenReturn(userDetails);
+
         cldsService.setSecurityContext(securityContext);
         CldsInfo cldsInfo = cldsService.getCldsInfo();
         assertFalse(cldsInfo.isPermissionReadCl());
@@ -105,13 +124,8 @@ public class CldsServiceItCase {
     @Test
     public void testCldsInfoAuthorized() throws Exception {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal principal = Mockito.mock(Principal.class);
-        Mockito.when(principal.getName()).thenReturn("admin");
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|update")).thenReturn(true);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
         cldsService.setSecurityContext(securityContext);
         CldsInfo cldsInfo = cldsService.getCldsInfo();
         assertTrue(cldsInfo.isPermissionReadCl());
@@ -127,25 +141,9 @@ public class CldsServiceItCase {
     }
 
     @Test
-    public void testGetHealthCheck() {
-        Response response = cldsService.gethealthcheck();
-        CldsHealthCheck cldsHealthCheck = (CldsHealthCheck) response.getEntity();
-        assertNotNull(cldsHealthCheck);
-        assertEquals("UP", cldsHealthCheck.getHealthCheckStatus());
-        assertEquals("CLDS-APP", cldsHealthCheck.getHealthCheckComponent());
-        assertEquals("OK", cldsHealthCheck.getDescription());
-    }
-
-    @Test
     public void testPutModel() {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal principal = Mockito.mock(Principal.class);
-        Mockito.when(principal.getName()).thenReturn("admin");
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|update")).thenReturn(true);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         cldsService.setSecurityContext(securityContext);
         // Add the template first
         CldsTemplate newTemplate = new CldsTemplate();
@@ -188,14 +186,8 @@ public class CldsServiceItCase {
     public void testGetSdcPropertiesByServiceUuidForRefresh()
             throws GeneralSecurityException, DecoderException, JSONException, IOException {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal principal = Mockito.mock(Principal.class);
-        Mockito.when(principal.getName()).thenReturn("admin");
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|update")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-filter-vf|dev|*")).thenReturn(true);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
         cldsService.setSecurityContext(securityContext);
         // Test basic functionalities
         String result = cldsService.getSdcPropertiesByServiceUUIDForRefresh("4cc5b45a-1f63-4194-8100-cd8e14248c92",

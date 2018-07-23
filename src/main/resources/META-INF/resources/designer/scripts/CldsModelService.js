@@ -64,8 +64,12 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
 
     $http.put(deployUrl, requestData)
       .success(function(data) {
-        deploymentId = data.deploymentId;
-        def.resolve(data);
+        var newData = data;
+        if (typeof data.body !== 'undefined') {
+        	newData = data.body;
+        }
+        deploymentId = newData.deploymentId;
+        def.resolve(newData);
         alertService.alertMessage("Action Successful:" + uiAction, 1)
       })
       .error(function(data) {
@@ -281,11 +285,15 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
   };
 
   this.processRefresh = function(pars) {
-    typeID = pars.typeId;
-    deploymentId = pars.deploymentId;
-    setStatus(pars);
-    this.enableDisableMenuOptions(pars);
-    elementMap = JSON.parse(pars.propText);
+    var newPars = pars;
+    if (typeof pars.body !== 'undefined') {
+    	newPars = pars.body;
+    }
+    typeID = newPars.typeId;
+    deploymentId = newPars.deploymentId;
+    setStatus(newPars);
+    this.enableDisableMenuOptions(newPars);
+    elementMap = JSON.parse(newPars.propText);
   }
 
   function setStatus(pars) {
@@ -389,8 +397,8 @@ app.service('cldsModelService', ['alertService', '$http', '$q', function(alertSe
 
 
   this.getASDCServices().then(function(pars) {
-
-    var services = pars.service;
+	var obj = JSON.parse(pars);
+    var services = obj.service;
     asdc_Services = services
   });
 

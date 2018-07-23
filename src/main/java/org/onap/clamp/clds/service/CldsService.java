@@ -34,22 +34,11 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-
 import javax.ws.rs.BadRequestException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.NotAuthorizedException;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.xml.transform.TransformerException;
+
 
 import org.apache.camel.Produce;
 import org.apache.commons.codec.DecoderException;
@@ -61,12 +50,12 @@ import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
+
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.exception.sdc.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsDbServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelProp;
@@ -87,6 +76,7 @@ import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -94,7 +84,6 @@ import org.springframework.web.client.HttpClientErrorException;
  * Service to save and retrieve the CLDS model attributes.
  */
 @Component
-@Path("/clds")
 public class CldsService extends SecureServiceBase {
 
     @Produce(uri = "direct:processSubmit")
@@ -160,9 +149,6 @@ public class CldsService extends SecureServiceBase {
      * used to generate the ClosedLoop model. ACTION_CD | Current state of the
      * ClosedLoop in CLDS application.
      */
-    @GET
-    @Path("/cldsDetails")
-    @Produces(MediaType.APPLICATION_JSON)
     public List<CldsMonitoringDetails> getCLDSDetails() {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model details", getPrincipalName());
@@ -178,9 +164,6 @@ public class CldsService extends SecureServiceBase {
      * CLDS IFO service will return 3 things 1. User Name 2. CLDS code version that
      * is currently installed from pom.xml file 3. User permissions
      */
-    @GET
-    @Path("/cldsInfo")
-    @Produces(MediaType.APPLICATION_JSON)
     public CldsInfo getCldsInfo() {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET cldsInfo", getPrincipalName());
@@ -197,44 +180,6 @@ public class CldsService extends SecureServiceBase {
     }
 
     /**
-     * REST service that retrieves clds healthcheck information.
-     *
-     * @return CldsHealthCheck class containing healthcheck info
-     */
-    @GET
-    @Path("/healthcheck")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response gethealthcheck() {
-        CldsHealthCheck cldsHealthCheck = new CldsHealthCheck();
-        Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET healthcheck", "Clamp-Health-Check");
-        LoggingUtils.setTimeContext(startTime, new Date());
-        boolean healthcheckFailed = false;
-        try {
-            cldsDao.doHealthCheck();
-            cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
-            cldsHealthCheck.setHealthCheckStatus("UP");
-            cldsHealthCheck.setDescription("OK");
-            LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
-        } catch (Exception e) {
-            healthcheckFailed = true;
-            logger.error("CLAMP application DB Error", e);
-            LoggingUtils.setResponseContext("999", "Get healthcheck failed", this.getClass().getName());
-            cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
-            cldsHealthCheck.setHealthCheckStatus("DOWN");
-            cldsHealthCheck.setDescription("NOT-OK");
-        }
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        logger.info("GET healthcheck completed");
-        if (healthcheckFailed) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(cldsHealthCheck).build();
-        } else {
-            return Response.status(Response.Status.OK).entity(cldsHealthCheck).build();
-        }
-    }
-
-    /**
      * REST service that retrieves BPMN for a CLDS model name from the database.
      * This is subset of the json getModel. This is only expected to be used for
      * testing purposes, not by the UI.
@@ -242,10 +187,7 @@ public class CldsService extends SecureServiceBase {
      * @param modelName
      * @return bpmn xml text - content of bpmn given name
      */
-    @GET
-    @Path("/model/bpmn/{modelName}")
-    @Produces(MediaType.TEXT_XML)
-    public String getBpmnXml(@PathParam("modelName") String modelName) {
+    public String getBpmnXml(String modelName) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model bpmn", getPrincipalName());
         isAuthorized(permissionReadCl);
@@ -266,10 +208,7 @@ public class CldsService extends SecureServiceBase {
      * @param modelName
      * @return image xml text - content of image given name
      */
-    @GET
-    @Path("/model/image/{modelName}")
-    @Produces(MediaType.TEXT_XML)
-    public String getImageXml(@PathParam("modelName") String modelName) {
+    public String getImageXml(String modelName) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model image", getPrincipalName());
         isAuthorized(permissionReadCl);
@@ -288,10 +227,7 @@ public class CldsService extends SecureServiceBase {
      * @param modelName
      * @return clds model - clds model for the given model name
      */
-    @GET
-    @Path("/model/{modelName}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CldsModel getModel(@PathParam("modelName") String modelName) {
+    public CldsModel getModel(String modelName) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model", getPrincipalName());
         isAuthorized(permissionReadCl);
@@ -320,11 +256,7 @@ public class CldsService extends SecureServiceBase {
      *
      * @param modelName
      */
-    @PUT
-    @Path("/model/{modelName}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public CldsModel putModel(@PathParam("modelName") String modelName, CldsModel cldsModel) {
+    public CldsModel putModel(String modelName, CldsModel cldsModel) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: PUT model", getPrincipalName());
         isAuthorized(permissionUpdateCl);
@@ -350,9 +282,6 @@ public class CldsService extends SecureServiceBase {
      *
      * @return model names in JSON
      */
-    @GET
-    @Path("/model-names")
-    @Produces(MediaType.APPLICATION_JSON)
     public List<ValueItem> getModelNames() {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET model names", getPrincipalName());
@@ -397,12 +326,8 @@ public class CldsService extends SecureServiceBase {
      * @throws DecoderException
      *         In case of issues with the Hex String decoding
      */
-    @PUT
-    @Path("/action/{action}/{modelName}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response putModelAndProcessAction(@PathParam("action") String action,
-        @PathParam("modelName") String modelName, @QueryParam("test") String validateFlag, CldsModel model)
+    public ResponseEntity<?> putModelAndProcessAction(String action,
+        String modelName,String test, CldsModel model)
             throws TransformerException, ParseException {
         Date startTime = new Date();
         CldsModel retrievedModel = null;
@@ -417,7 +342,7 @@ public class CldsService extends SecureServiceBase {
             String userId = getUserId();
             logger.info("PUT actionCd={}", actionCd);
             logger.info("PUT modelName={}", modelName);
-            logger.info("PUT test={}", validateFlag);
+            logger.info("PUT test={}", test);
             logger.info("PUT bpmnText={}", model.getBpmnText());
             logger.info("PUT propText={}", model.getPropText());
             logger.info("PUT userId={}", userId);
@@ -438,7 +363,7 @@ public class CldsService extends SecureServiceBase {
             // Flag indicates whether it is triggered by Validation Test button
             // from
             // UI
-            boolean isTest = Boolean.valueOf(validateFlag);
+            boolean isTest = Boolean.valueOf(test);
             if (!isTest) {
                 String actionTestOverride = refProp.getStringValue("action.test.override");
                 if (Boolean.valueOf(actionTestOverride)) {
@@ -495,16 +420,16 @@ public class CldsService extends SecureServiceBase {
                 auditLogger.info("Process model action completed");
             } else {
                 logger.error("CldsModel not found in database with modelName: " + modelName);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("CldsModel not found in database with modelName: \" + modelName").build();
+                return new ResponseEntity<String>("CldsModel not found in database with modelName: \" + modelName", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
             errorCase = true;
             logger.error("Exception occured during putModelAndProcessAction", e);
         }
         if (errorCase) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(retrievedModel).build();
+            return new ResponseEntity<>(retrievedModel, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return Response.status(Response.Status.OK).entity(retrievedModel).build();
+        return new ResponseEntity<>(retrievedModel, HttpStatus.OK);
     }
 
     /**
@@ -513,11 +438,7 @@ public class CldsService extends SecureServiceBase {
      * @param test
      * @param dcaeEvent
      */
-    @POST
-    @Path("/dcae/event")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String postDcaeEvent(@QueryParam("test") String test, DcaeEvent dcaeEvent) {
+    public String postDcaeEvent(String test, DcaeEvent dcaeEvent) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Post dcae event", getPrincipalName());
         String userid = null;
@@ -565,9 +486,6 @@ public class CldsService extends SecureServiceBase {
      * @throws DecoderException
      *         In case of issues with the decoding of the Hex String
      */
-    @GET
-    @Path("/sdc/services")
-    @Produces(MediaType.APPLICATION_JSON)
     public String getSdcServices() throws GeneralSecurityException, DecoderException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc services", getPrincipalName());
@@ -592,9 +510,6 @@ public class CldsService extends SecureServiceBase {
      * @throws IOException
      *         In case of issues
      */
-    @GET
-    @Path("/properties")
-    @Produces(MediaType.APPLICATION_JSON)
     public String getSdcProperties() throws IOException {
         return createPropertiesObjectByUUID("{}");
     }
@@ -610,18 +525,14 @@ public class CldsService extends SecureServiceBase {
      * @throws IOException
      *         In case of issue to convert CldsServiceCache to InputStream
      */
-    @GET
-    @Path("/properties/{serviceInvariantUUID}")
-    @Produces(MediaType.APPLICATION_JSON)
     public String getSdcPropertiesByServiceUUIDForRefresh(
-        @PathParam("serviceInvariantUUID") String serviceInvariantUUID,
-        @DefaultValue("false") @QueryParam("refresh") boolean refresh)
+        String serviceInvariantUUID, Boolean refresh)
             throws GeneralSecurityException, DecoderException, IOException {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: GET sdc properties by uuid", getPrincipalName());
         CldsServiceData cldsServiceData = new CldsServiceData();
         cldsServiceData.setServiceInvariantUUID(serviceInvariantUUID);
-        if (!refresh) {
+        if (!Optional.ofNullable(refresh).orElse(false)) {
             cldsServiceData = cldsDao.getCldsServiceCache(serviceInvariantUUID);
         }
         if (sdcCatalogServices.isCldsSdcCacheDataExpired(cldsServiceData)) {
@@ -808,11 +719,7 @@ public class CldsService extends SecureServiceBase {
         return emptyvfcobjectNode;
     }
 
-    @PUT
-    @Path("/deploy/{modelName}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deployModel(@PathParam("modelName") String modelName, CldsModel model) {
+    public ResponseEntity<CldsModel> deployModel(String modelName, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         Boolean errorCase = false;
@@ -865,16 +772,12 @@ public class CldsService extends SecureServiceBase {
             logger.error("Exception occured during deployModel", e);
         }
         if (errorCase) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+            return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return Response.status(Response.Status.OK).entity(model).build();
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
-    @PUT
-    @Path("/undeploy/{modelName}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response unDeployModel(@PathParam("modelName") String modelName, CldsModel model) {
+    public ResponseEntity<CldsModel> unDeployModel(String modelName, CldsModel model) {
         Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
         Boolean errorCase = false;
@@ -914,9 +817,9 @@ public class CldsService extends SecureServiceBase {
             logger.error("Exception occured during unDeployModel", e);
         }
         if (errorCase) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(model).build();
+            return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return Response.status(Response.Status.OK).entity(model).build();
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     private void checkForDuplicateServiceVf(String modelName, String modelPropText) throws IOException {

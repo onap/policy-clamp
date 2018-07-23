@@ -32,9 +32,8 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.LinkedList;
 import java.util.List;
-
-import javax.ws.rs.core.SecurityContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +47,13 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
@@ -66,6 +72,8 @@ public class CldsTemplateServiceItCase {
     private String imageText;
     private String bpmnPropText;
     private CldsTemplate cldsTemplate;
+    private Authentication authentication;
+    private List<GrantedAuthority> authList =  new LinkedList<GrantedAuthority>();
 
     /**
      * Setup the variable before the tests execution.
@@ -75,14 +83,17 @@ public class CldsTemplateServiceItCase {
      */
     @Before
     public void setupBefore() throws IOException {
+        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|read"));
+        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|update"));
+        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|read"));
+        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
+        authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
+        authentication =  new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
+        
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Principal principal = Mockito.mock(Principal.class);
-        Mockito.when(principal.getName()).thenReturn("admin");
-        Mockito.when(securityContext.getUserPrincipal()).thenReturn(principal);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-cl|dev|update")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|read")).thenReturn(true);
-        Mockito.when(securityContext.isUserInRole("permission-type-template|dev|update")).thenReturn(true);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        
+        
         cldsTemplateService.setSecurityContext(securityContext);
         bpmnText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-template.xml");
         imageText = ResourceFileUtil.getResourceAsString("example/dao/image-template.xml");
