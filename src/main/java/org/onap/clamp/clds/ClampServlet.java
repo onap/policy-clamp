@@ -23,62 +23,63 @@
 
 package org.onap.clamp.clds;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.service.SecureServicePermission;
 import org.onap.clamp.clds.util.ClampTimer;
+import org.springframework.context.ApplicationContext;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 
 public class ClampServlet extends CamelHttpTransportServlet {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -7052719614021825641L;
     protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(ClampServlet.class);
     public static final String PERM_INSTANCE = "clamp.config.security.permission.instance";
     public static final String PERM_CL= "clamp.config.security.permission.type.cl";
-    public static final String PERM_TEMPLACE = "clamp.config.security.permission.type.template";
+    public static final String PERM_TEMPLATE = "clamp.config.security.permission.type.template";
 
+    @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<SecureServicePermission> permissionList = new ArrayList<>();
 
         // Get Principal info and translate it into Spring Authentication
-        // If authenticataion is null: a) the authentication info was set manually in the previous thread 
+        // If authenticataion is null: a) the authentication info was set manually in the previous thread
         //                             b) handled by Spring automatically
         // for the 2 cases above, no need for the translation, just skip the following step
         if (null == authentication) {
-           logger.debug ("Populate Spring Authenticataion info manually.");
+            logger.debug ("Populate Spring Authenticataion info manually.");
             ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
             // Start a timer to clear the authentication after 5 mins, so that the authentication will be reinitialized with AAF DB
             new ClampTimer(300);
-            String cldsPersmissionTypeCl = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
-            String cldsPermissionTypeTemplate = applicationContext.getEnvironment().getProperty(PERM_CL);
-            String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_TEMPLACE);
+            String cldsPersmissionTypeCl = applicationContext.getEnvironment().getProperty(PERM_CL);
+            String cldsPermissionTypeTemplate = applicationContext.getEnvironment().getProperty(PERM_TEMPLATE);
+            String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
 
             // set the stragety to Mode_Global, so that all thread is able to see the authentication
             SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
-            Principal p = request.getUserPrincipal(); 
+            Principal p = request.getUserPrincipal();
 
             permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "read"));
             permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "update"));
