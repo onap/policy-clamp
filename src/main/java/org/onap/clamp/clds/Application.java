@@ -26,10 +26,10 @@ package org.onap.clamp.clds;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.catalina.connector.Connector;
 import org.onap.clamp.clds.model.properties.Holmes;
 import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.util.ClampVersioning;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -85,6 +85,7 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
+        EELF_LOGGER.info("Starting ::  CLAMP  ::     (v"+ ClampVersioning.getCldsVersionFromProps()+")");
         // This is to initialize some Onap Clamp components
         initializeComponents();
         // Start the Spring application

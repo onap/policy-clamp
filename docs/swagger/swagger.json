@@ -1,939 +1,693 @@
-
 {
-    "swagger":"2.0",
-    "info":{
-        "version":"3.0.0-SNAPSHOT",
-        "title":"clamp"
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "3.0.0-SNAPSHOT",
+    "title" : "Clamp Rest API"
+  },
+  "host" : "0.0.0.0",
+  "basePath" : "/restservices/clds/v1/",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/clds/action/{action}/{modelName}?test={test}" : {
+      "put" : {
+        "operationId" : "route10",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "action",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "modelName}?test={test",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsModel"
+          }
+        } ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route10"
+      }
     },
-    "host":"",
-    "basePath":"/clamp/restservices/clds/v1",
-    "schemes":[
-        "http"
-    ],
-    "paths":{
-        "/clds/action/{action}/{modelName}":{
-            "put":{
-                "description":"REST service that saves and processes an action for a CLDS model by name.",
-                "consumes":[
-                    "application/json"
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"action",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "type":"string",
-                        "name":"modelName",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "type":"string",
-                        "name":"test",
-                        "in":"query",
-                        "required":true
-                    },
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    },
-                    "500":{
-                        "description":"Internal Server Error",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/cldsDetails":{
-            "get":{
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"array",
-                            "items":{
-                                "$ref":"#/definitions/CldsMonitoringDetails"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/cldsInfo":{
-            "get":{
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsInfo"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/dcae/event":{
-            "post":{
-                "description":"REST service that accepts events for a model.",
-                "consumes":[
-                    "application/json"
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"test",
-                        "in":"query",
-                        "required":true
-                    },
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/DcaeEvent"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/deploy/{modelName}":{
-            "put":{
-                "consumes":[
-                    "application/json"
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"modelName",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    },
-                    "500":{
-                        "description":"Internal Server Error",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/healthcheck":{
-            "get":{
-                "description":"REST service that retrieves clds healthcheck information.",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsHealthCheck"
-                        }
-                    },
-                    "500":{
-                        "description":"Internal Server Error",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsHealthCheck"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/model-names":{
-            "get":{
-                "description":"REST service that retrieves a list of CLDS model names.",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"array",
-                            "items":{
-                                "$ref":"#/definitions/ValueItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/model/bpmn/{modelName}":{
-            "get":{
-                "description":"REST service that retrieves BPMN for a CLDS model name from the database.\n This is subset of the json getModel. This is only expected to be used for\n testing purposes, not by the UI.",
-                "consumes":[
-                ],
-                "produces":[
-                    "text/xml"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"modelName",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/model/image/{modelName}":{
-            "get":{
-                "description":"REST service that retrieves image for a CLDS model name from the\n database. This is subset of the json getModel. This is only expected to\n be used for testing purposes, not by the UI.",
-                "consumes":[
-                ],
-                "produces":[
-                    "text/xml"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"modelName",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/model/{modelName}":{
-            "get":{
-                "description":"REST service that retrieves a CLDS model by name from the database.",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"modelName",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                }
+    "/clds/cldsDetails" : {
+      "get" : {
+        "operationId" : "route2",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsMonitoringDetails"
             },
-            "put":{
-                "description":"REST service that saves a CLDS model by name in the database.",
-                "consumes":[
-                    "application/json"
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"modelName",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                }
+            "schema" : {
+              "$ref" : "#/definitions/CldsMonitoringDetails"
             }
+          }
         },
-        "/clds/properties":{
-            "get":{
-                "description":"REST service that retrieves total properties required by UI",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/properties/{serviceInvariantUUID}":{
-            "get":{
-                "description":"REST service that retrieves total properties by using invariantUUID based\n on refresh and non refresh",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"serviceInvariantUUID",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "type":"boolean",
-                        "name":"refresh",
-                        "in":"query",
-                        "required":false,
-                        "default":"false"
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/sdc/services":{
-            "get":{
-                "description":"REST service that retrieves sdc services",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/clds/undeploy/{modelName}":{
-            "put":{
-                "consumes":[
-                    "application/json"
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"modelName",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    },
-                    "500":{
-                        "description":"Internal Server Error",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsModel"
-                        }
-                    }
-                }
-            }
-        },
-        "/cldsTempate/template-names":{
-            "get":{
-                "description":"REST service that retrieves a list of CLDS template names.",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"array",
-                            "items":{
-                                "$ref":"#/definitions/ValueItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/cldsTempate/template/bpmn/{templateName}":{
-            "get":{
-                "description":"REST service that retrieves BPMN for a CLDS template name from the\n database. This is subset of the json getModel. This is only expected to\n be used for testing purposes, not by the UI.",
-                "consumes":[
-                ],
-                "produces":[
-                    "text/xml"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"templateName",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/cldsTempate/template/image/{templateName}":{
-            "get":{
-                "description":"REST service that retrieves image for a CLDS template name from the\n database. This is subset of the json getModel. This is only expected to\n be used for testing purposes, not by the UI.",
-                "consumes":[
-                ],
-                "produces":[
-                    "text/xml"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"templateName",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        },
-        "/cldsTempate/template/{templateName}":{
-            "get":{
-                "description":"REST service that retrieves a CLDS template by name from the database.",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"templateName",
-                        "in":"path",
-                        "required":true
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsTemplate"
-                        }
-                    }
-                }
-            },
-            "put":{
-                "description":"REST service that saves a CLDS template by name in the database.",
-                "consumes":[
-                    "application/json"
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                    {
-                        "type":"string",
-                        "name":"templateName",
-                        "in":"path",
-                        "required":true
-                    },
-                    {
-                        "name":"body",
-                        "in":"body",
-                        "required":true,
-                        "schema":{
-                            "$ref":"#/definitions/CldsTemplate"
-                        }
-                    }
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsTemplate"
-                        }
-                    }
-                }
-            }
-        },
-        "/healthcheck":{
-            "get":{
-                "description":"REST service that retrieves clds healthcheck information.",
-                "consumes":[
-                ],
-                "produces":[
-                    "application/json"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsHealthCheck"
-                        }
-                    },
-                    "500":{
-                        "description":"Internal Server Error",
-                        "headers":{
-                        },
-                        "schema":{
-                            "$ref":"#/definitions/CldsHealthCheck"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/getUser":{
-            "get":{
-                "description":"REST service that returns the username.",
-                "consumes":[
-                ],
-                "produces":[
-                    "text/plain"
-                ],
-                "parameters":[
-                ],
-                "responses":{
-                    "200":{
-                        "description":"OK",
-                        "headers":{
-                        },
-                        "schema":{
-                            "type":"string"
-                        }
-                    }
-                }
-            }
-        }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route2"
+      }
     },
-    "definitions":{
-        "CldsEvent":{
-            "properties":{
-                "actionAndStateCd":{
-                    "type":"boolean"
-                },
-                "actionCd":{
-                    "type":"boolean"
-                },
-                "actionStateCd":{
-                    "type":"boolean"
-                },
-                "id":{
-                    "type":"string"
-                },
-                "processInstanceId":{
-                    "type":"string"
-                },
-                "userid":{
-                    "type":"string"
-                }
+    "/clds/cldsInfo" : {
+      "get" : {
+        "operationId" : "route3",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsInfo"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsInfo"
             }
+          }
         },
-        "CldsHealthCheck":{
-            "properties":{
-                "description":{
-                    "type":"string"
-                },
-                "healthCheckComponent":{
-                    "type":"string"
-                },
-                "healthCheckStatus":{
-                    "type":"string"
-                }
-            }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route3"
+      }
+    },
+    "/clds/dcae/event?test={test}" : {
+      "post" : {
+        "operationId" : "route11",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DcaeEvent"
+          }
+        } ],
+        "responses" : {
+          "200" : { }
         },
-        "CldsInfo":{
-            "properties":{
-                "cldsVersion":{
-                    "type":"string"
-                },
-                "permissionReadCl":{
-                    "type":"boolean"
-                },
-                "permissionReadTemplate":{
-                    "type":"boolean"
-                },
-                "permissionUpdateCl":{
-                    "type":"boolean"
-                },
-                "permissionUpdateTemplate":{
-                    "type":"boolean"
-                },
-                "userName":{
-                    "type":"string"
-                }
-            }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route11"
+      }
+    },
+    "/clds/deploy/{modelName}" : {
+      "put" : {
+        "operationId" : "route15",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "modelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsModel"
+          }
+        } ],
+        "responses" : {
+          "200" : { }
         },
-        "CldsModel":{
-            "properties":{
-                "blueprintText":{
-                    "type":"string"
-                },
-                "bpmnText":{
-                    "type":"string"
-                },
-                "cldsModelInstanceList":{
-                    "type":"array",
-                    "items":{
-                        "$ref":"#/definitions/CldsModelInstance"
-                    }
-                },
-                "controlName":{
-                    "type":"string"
-                },
-                "controlNamePrefix":{
-                    "type":"string"
-                },
-                "controlNameUuid":{
-                    "type":"string"
-                },
-                "deploymentId":{
-                    "type":"string"
-                },
-                "docText":{
-                    "type":"string"
-                },
-                "event":{
-                    "$ref":"#/definitions/CldsEvent"
-                },
-                "id":{
-                    "type":"string"
-                },
-                "imageText":{
-                    "type":"string"
-                },
-                "name":{
-                    "type":"string"
-                },
-                "permittedActionCd":{
-                    "type":"array",
-                    "items":{
-                        "type":"string"
-                    }
-                },
-                "propText":{
-                    "type":"string"
-                },
-                "status":{
-                    "type":"string"
-                },
-                "templateId":{
-                    "type":"string"
-                },
-                "templateName":{
-                    "type":"string"
-                },
-                "typeId":{
-                    "type":"string"
-                },
-                "typeName":{
-                    "type":"string"
-                }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route15"
+      }
+    },
+    "/clds/model-names" : {
+      "get" : {
+        "operationId" : "route9",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/ValueItem"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/ValueItem"
             }
+          }
         },
-        "CldsModelInstance":{
-            "properties":{
-                "location":{
-                    "type":"string"
-                },
-                "modelInstanceId":{
-                    "type":"string"
-                },
-                "vmName":{
-                    "type":"string"
-                }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route9"
+      }
+    },
+    "/clds/model/{modelName}" : {
+      "get" : {
+        "operationId" : "route7",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "modelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsModel"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsModel"
             }
+          }
         },
-        "CldsMonitoringDetails":{
-            "properties":{
-                "action":{
-                    "type":"string"
-                },
-                "closeloopName":{
-                    "type":"string"
-                },
-                "deploymentId":{
-                    "type":"string"
-                },
-                "modelName":{
-                    "type":"string"
-                },
-                "serviceTypeId":{
-                    "type":"string"
-                },
-                "templateName":{
-                    "type":"string"
-                },
-                "timestamp":{
-                    "type":"string"
-                },
-                "userid":{
-                    "type":"string"
-                }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route7"
+      },
+      "put" : {
+        "operationId" : "route8",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "modelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsModel"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsModel"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsModel"
             }
+          }
         },
-        "CldsTemplate":{
-            "properties":{
-                "bpmnId":{
-                    "type":"string"
-                },
-                "bpmnText":{
-                    "type":"string"
-                },
-                "bpmnUserid":{
-                    "type":"string"
-                },
-                "controlNamePrefix":{
-                    "type":"string"
-                },
-                "controlNameUuid":{
-                    "type":"string"
-                },
-                "id":{
-                    "type":"string"
-                },
-                "imageId":{
-                    "type":"string"
-                },
-                "imageText":{
-                    "type":"string"
-                },
-                "imageUserid":{
-                    "type":"string"
-                },
-                "name":{
-                    "type":"string"
-                },
-                "propId":{
-                    "type":"string"
-                },
-                "propText":{
-                    "type":"string"
-                },
-                "propUserid":{
-                    "type":"string"
-                },
-                "userAuthorizedToUpdate":{
-                    "type":"boolean"
-                }
-            }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route8"
+      }
+    },
+    "/clds/model/bpmn/{modelName}" : {
+      "get" : {
+        "operationId" : "route5",
+        "produces" : [ "text/xml" ],
+        "parameters" : [ {
+          "name" : "modelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : { }
         },
-        "DcaeEvent":{
-            "properties":{
-                "artifactName":{
-                    "type":"string"
-                },
-                "cldsActionCd":{
-                    "type":"string"
-                },
-                "controlName":{
-                    "type":"string"
-                },
-                "event":{
-                    "type":"string"
-                },
-                "instances":{
-                    "type":"array",
-                    "items":{
-                        "$ref":"#/definitions/CldsModelInstance"
-                    }
-                },
-                "resourceUUID":{
-                    "type":"string"
-                },
-                "serviceUUID":{
-                    "type":"string"
-                }
-            }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route5"
+      }
+    },
+    "/clds/model/image/{modelName}" : {
+      "get" : {
+        "operationId" : "route6",
+        "produces" : [ "text/xml" ],
+        "parameters" : [ {
+          "name" : "modelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : { }
         },
-        "ValueItem":{
-            "properties":{
-                "value":{
-                    "type":"string"
-                }
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route6"
+      }
+    },
+    "/clds/properties" : {
+      "get" : {
+        "operationId" : "route13",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route13"
+      }
+    },
+    "/clds/properties/{serviceInvariantUUID}?refresh={refresh}" : {
+      "get" : {
+        "operationId" : "route14",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "serviceInvariantUUID}?refresh={refresh",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route14"
+      }
+    },
+    "/clds/sdc/services" : {
+      "get" : {
+        "operationId" : "route12",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route12"
+      }
+    },
+    "/clds/undeploy/{modelName}" : {
+      "put" : {
+        "operationId" : "route16",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "modelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsModel"
+          }
+        } ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route16"
+      }
+    },
+    "/cldsTempate/template-names" : {
+      "get" : {
+        "operationId" : "route21",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/ValueItem"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/ValueItem"
             }
-        }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route21"
+      }
+    },
+    "/cldsTempate/template/{templateName}" : {
+      "get" : {
+        "operationId" : "route19",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "templateName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsTemplate"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsTemplate"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route19"
+      },
+      "put" : {
+        "operationId" : "route20",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "templateName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsTemplate"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsTemplate"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsTemplate"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route20"
+      }
+    },
+    "/cldsTempate/template/bpmn/{templateName}" : {
+      "get" : {
+        "operationId" : "route17",
+        "produces" : [ "text/xml" ],
+        "parameters" : [ {
+          "name" : "templateName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route17"
+      }
+    },
+    "/cldsTempate/template/image/{templateName}" : {
+      "get" : {
+        "operationId" : "route18",
+        "produces" : [ "text/xml" ],
+        "parameters" : [ {
+          "name" : "templateName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route18"
+      }
+    },
+    "/healthcheck" : {
+      "get" : {
+        "operationId" : "route4",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route4"
+      }
+    },
+    "/user/getUser" : {
+      "get" : {
+        "operationId" : "route22",
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route22"
+      }
     }
+  },
+  "definitions" : {
+    "CldsModelInstance" : {
+      "type" : "object",
+      "properties" : {
+        "modelInstanceId" : {
+          "type" : "string"
+        },
+        "location" : {
+          "type" : "string"
+        },
+        "vmName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CldsModel" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "templateId" : {
+          "type" : "string"
+        },
+        "templateName" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "controlNamePrefix" : {
+          "type" : "string"
+        },
+        "controlNameUuid" : {
+          "type" : "string"
+        },
+        "bpmnText" : {
+          "type" : "string"
+        },
+        "propText" : {
+          "type" : "string"
+        },
+        "imageText" : {
+          "type" : "string"
+        },
+        "docText" : {
+          "type" : "string"
+        },
+        "blueprintText" : {
+          "type" : "string"
+        },
+        "event" : {
+          "$ref" : "#/definitions/CldsEvent"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "permittedActionCd" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "cldsModelInstanceList" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CldsModelInstance"
+          }
+        },
+        "typeId" : {
+          "type" : "string"
+        },
+        "typeName" : {
+          "type" : "string"
+        },
+        "deploymentId" : {
+          "type" : "string"
+        },
+        "controlName" : {
+          "type" : "string"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.CldsModel"
+      }
+    },
+    "CldsEvent" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "actionCd" : {
+          "type" : "string"
+        },
+        "actionStateCd" : {
+          "type" : "string"
+        },
+        "processInstanceId" : {
+          "type" : "string"
+        },
+        "userid" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CldsMonitoringDetails" : {
+      "type" : "object",
+      "properties" : {
+        "closeloopName" : {
+          "type" : "string"
+        },
+        "modelName" : {
+          "type" : "string"
+        },
+        "serviceTypeId" : {
+          "type" : "string"
+        },
+        "deploymentId" : {
+          "type" : "string"
+        },
+        "templateName" : {
+          "type" : "string"
+        },
+        "action" : {
+          "type" : "string"
+        },
+        "userid" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.CldsMonitoringDetails"
+      }
+    },
+    "CldsInfo" : {
+      "type" : "object",
+      "properties" : {
+        "userName" : {
+          "type" : "string"
+        },
+        "cldsVersion" : {
+          "type" : "string"
+        },
+        "permissionReadCl" : {
+          "type" : "boolean"
+        },
+        "permissionUpdateCl" : {
+          "type" : "boolean"
+        },
+        "permissionReadTemplate" : {
+          "type" : "boolean"
+        },
+        "permissionUpdateTemplate" : {
+          "type" : "boolean"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.CldsInfo"
+      }
+    },
+    "DcaeEvent" : {
+      "type" : "object",
+      "properties" : {
+        "event" : {
+          "type" : "string"
+        },
+        "serviceUUID" : {
+          "type" : "string"
+        },
+        "resourceUUID" : {
+          "type" : "string"
+        },
+        "artifactName" : {
+          "type" : "string"
+        },
+        "instances" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CldsModelInstance"
+          }
+        },
+        "controlName" : {
+          "type" : "string"
+        },
+        "cldsActionCd" : {
+          "type" : "string"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.DcaeEvent"
+      }
+    },
+    "ValueItem" : {
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.ValueItem"
+      }
+    },
+    "CldsTemplate" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "controlNamePrefix" : {
+          "type" : "string"
+        },
+        "controlNameUuid" : {
+          "type" : "string"
+        },
+        "bpmnId" : {
+          "type" : "string"
+        },
+        "bpmnUserid" : {
+          "type" : "string"
+        },
+        "bpmnText" : {
+          "type" : "string"
+        },
+        "imageId" : {
+          "type" : "string"
+        },
+        "imageUserid" : {
+          "type" : "string"
+        },
+        "imageText" : {
+          "type" : "string"
+        },
+        "propId" : {
+          "type" : "string"
+        },
+        "propUserid" : {
+          "type" : "string"
+        },
+        "propText" : {
+          "type" : "string"
+        },
+        "userAuthorizedToUpdate" : {
+          "type" : "boolean"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.CldsTemplate"
+      }
+    }
+  }
 }

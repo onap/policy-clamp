@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 1.5.3">
-<title>clamp</title>
+<meta name="generator" content="Asciidoctor 1.5.6.1">
+<title>Clamp Rest API</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -17,7 +17,6 @@ audio:not([controls]){display:none;height:0}
 [hidden],template{display:none}
 script{display:none!important}
 html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body{margin:0}
 a{background:transparent}
 a:focus{outline:thin dotted}
 a:active,a:hover{outline:0}
@@ -52,7 +51,7 @@ textarea{overflow:auto;vertical-align:top}
 table{border-collapse:collapse;border-spacing:0}
 *,*:before,*:after{-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}
 html,body{font-size:100%}
-body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;font-weight:400;font-style:normal;line-height:1;position:relative;cursor:auto;tab-size:4;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
 a:hover{cursor:pointer}
 img,object,embed{max-width:100%;height:auto}
 object,embed{height:100%}
@@ -64,7 +63,6 @@ img{-ms-interpolation-mode:bicubic}
 .text-center{text-align:center!important}
 .text-justify{text-align:justify!important}
 .hide{display:none}
-body{-webkit-font-smoothing:antialiased}
 img,object,svg{display:inline-block;vertical-align:middle}
 textarea{height:auto;min-height:50px}
 select{width:100%}
@@ -91,13 +89,12 @@ strong,b{font-weight:bold;line-height:inherit}
 small{font-size:60%;line-height:inherit}
 code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
 ul,ol,dl{font-size:1em;line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
-ul,ol,ul.no-bullet,ol.no-bullet{margin-left:1.5em}
+ul,ol{margin-left:1.5em}
 ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0;font-size:1em}
 ul.square li ul,ul.circle li ul,ul.disc li ul{list-style:inherit}
 ul.square{list-style-type:square}
 ul.circle{list-style-type:circle}
 ul.disc{list-style-type:disc}
-ul.no-bullet{list-style:none}
 ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
 dl dt{margin-bottom:.3125em;font-weight:bold}
 dl dd{margin-bottom:1.25em}
@@ -119,18 +116,25 @@ table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:
 table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
 table tr.even,table tr.alt,table tr:nth-of-type(even){background:#f8f8f7}
 table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{display:table-cell;line-height:1.6}
-body{tab-size:4}
 h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
 h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
 .clearfix:before,.clearfix:after,.float-group:before,.float-group:after{content:" ";display:table}
 .clearfix:after,.float-group:after{clear:both}
-*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+*:not(pre)>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background-color:#f7f7f8;-webkit-border-radius:4px;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed;word-wrap:break-word}
+*:not(pre)>code.nobreak{word-wrap:normal}
+*:not(pre)>code.nowrap{white-space:nowrap}
 pre,pre>code{line-height:1.45;color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;text-rendering:optimizeSpeed}
+em em{font-style:normal}
+strong strong{font-weight:400}
 .keyseq{color:rgba(51,51,51,.8)}
 kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background-color:#f7f7f7;border:1px solid #ccc;-webkit-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em white inset;box-shadow:0 1px 0 rgba(0,0,0,.2),0 0 0 .1em #fff inset;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
 .keyseq kbd:first-child{margin-left:0}
 .keyseq kbd:last-child{margin-right:0}
-.menuseq,.menu{color:rgba(0,0,0,.8)}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
 b.button:before,b.button:after{position:relative;top:-1px;font-weight:400}
 b.button:before{content:"[";padding:0 3px 0 2px}
 b.button:after{content:"]";padding:0 2px 0 3px}
@@ -197,7 +201,7 @@ table.tableblock>caption.title{white-space:nowrap;overflow:visible;max-width:0}
 table.tableblock #preamble>.sectionbody>.paragraph:first-of-type p{font-size:inherit}
 .admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
 .admonitionblock>table td.icon{text-align:center;width:80px}
-.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon img{max-width:initial}
 .admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
 .admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #ddddd8;color:rgba(0,0,0,.6)}
 .admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
@@ -253,13 +257,13 @@ table.pyhltable .linenodiv{background:none!important;padding-right:0!important}
 table.tableblock{max-width:100%;border-collapse:separate}
 table.tableblock td>.paragraph:last-child p>p:last-child,table.tableblock th>p:last-child,table.tableblock td>p:last-child{margin-bottom:0}
 table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
-table.grid-all th.tableblock,table.grid-all td.tableblock{border-width:0 1px 1px 0}
-table.grid-all tfoot>tr>th.tableblock,table.grid-all tfoot>tr>td.tableblock{border-width:1px 1px 0 0}
-table.grid-cols th.tableblock,table.grid-cols td.tableblock{border-width:0 1px 0 0}
-table.grid-all *>tr>.tableblock:last-child,table.grid-cols *>tr>.tableblock:last-child{border-right-width:0}
-table.grid-rows th.tableblock,table.grid-rows td.tableblock{border-width:0 0 1px 0}
-table.grid-all tbody>tr:last-child>th.tableblock,table.grid-all tbody>tr:last-child>td.tableblock,table.grid-all thead:last-child>tr>th.tableblock,table.grid-rows tbody>tr:last-child>th.tableblock,table.grid-rows tbody>tr:last-child>td.tableblock,table.grid-rows thead:last-child>tr>th.tableblock{border-bottom-width:0}
-table.grid-rows tfoot>tr>th.tableblock,table.grid-rows tfoot>tr>td.tableblock{border-width:1px 0 0 0}
+table.grid-all>thead>tr>.tableblock,table.grid-all>tbody>tr>.tableblock{border-width:0 1px 1px 0}
+table.grid-all>tfoot>tr>.tableblock{border-width:1px 1px 0 0}
+table.grid-cols>*>tr>.tableblock{border-width:0 1px 0 0}
+table.grid-rows>thead>tr>.tableblock,table.grid-rows>tbody>tr>.tableblock{border-width:0 0 1px 0}
+table.grid-rows>tfoot>tr>.tableblock{border-width:1px 0 0 0}
+table.grid-all>*>tr>.tableblock:last-child,table.grid-cols>*>tr>.tableblock:last-child{border-right-width:0}
+table.grid-all>tbody>tr:last-child>.tableblock,table.grid-all>thead:last-child>tr>.tableblock,table.grid-rows>tbody>tr:last-child>.tableblock,table.grid-rows>thead:last-child>tr>.tableblock{border-bottom-width:0}
 table.frame-all{border-width:1px}
 table.frame-sides{border-width:0 1px}
 table.frame-topbot{border-width:1px 0}
@@ -280,10 +284,12 @@ ul li ol{margin-left:1.5em}
 dl dd{margin-left:1.125em}
 dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
 ol>li p,ul>li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
-ul.unstyled,ol.unnumbered,ul.checklist,ul.none{list-style-type:none}
-ul.unstyled,ol.unnumbered,ul.checklist{margin-left:.625em}
-ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1em;font-size:.85em}
-ul.checklist li>p:first-child>input[type="checkbox"]:first-child{width:1em;position:relative;top:1px}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+ul.checklist{margin-left:.625em}
+ul.checklist li>p:first-child>.fa-square-o:first-child,ul.checklist li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist li>p:first-child>input[type="checkbox"]:first-child{margin-right:.25em}
 ul.inline{margin:0 auto .625em auto;margin-left:-1.375em;margin-right:0;padding:0;list-style:none;overflow:hidden}
 ul.inline>li{list-style:none;float:left;margin-left:1.375em;display:block}
 ul.inline>li>*{display:block}
@@ -300,7 +306,8 @@ ol.lowergreek{list-style-type:lower-greek}
 td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
 td.hdlist1{font-weight:bold;padding-bottom:1.25em}
 .literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
-.colist>table tr>td:first-of-type{padding:0 .75em;line-height:1}
+.colist>table tr>td:first-of-type{padding:.4em .75em 0 .75em;line-height:1;vertical-align:top}
+.colist>table tr>td:first-of-type img{max-width:initial}
 .colist>table tr>td:last-of-type{padding:.25em 0}
 .thumb,.th{line-height:0;display:inline-block;border:solid 4px #fff;-webkit-box-shadow:0 0 0 1px #ddd;box-shadow:0 0 0 1px #ddd}
 .imageblock.left,.imageblock[style*="float: left"]{margin:.25em .625em 1.25em 0}
@@ -363,6 +370,7 @@ div.unbreakable{page-break-inside:avoid}
 .yellow{color:#bfbf00}
 .yellow-background{background-color:#fafa00}
 span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
 .admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
 .admonitionblock td.icon .icon-note:before{content:"\f05a";color:#19407c}
 .admonitionblock td.icon .icon-tip:before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
@@ -419,7 +427,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>clamp</h1>
+<h1>Clamp Rest API</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -431,37 +439,35 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_paths">2. Paths</a>
 <ul class="sectlevel2">
-<li><a href="#_clds_action_action_modelname_put">2.1. PUT /clds/action/{action}/{modelName}</a>
+<li><a href="#_route10">2.1. PUT /clds/action/{action}/{modelName}?test={test}</a>
 <ul class="sectlevel3">
-<li><a href="#_description">2.1.1. Description</a></li>
-<li><a href="#_parameters">2.1.2. Parameters</a></li>
-<li><a href="#_responses">2.1.3. Responses</a></li>
-<li><a href="#_consumes">2.1.4. Consumes</a></li>
-<li><a href="#_produces">2.1.5. Produces</a></li>
+<li><a href="#_parameters">2.1.1. Parameters</a></li>
+<li><a href="#_responses">2.1.2. Responses</a></li>
+<li><a href="#_consumes">2.1.3. Consumes</a></li>
+<li><a href="#_produces">2.1.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_cldsdetails_get">2.2. GET /clds/cldsDetails</a>
+<li><a href="#_route2">2.2. GET /clds/cldsDetails</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_2">2.2.1. Responses</a></li>
 <li><a href="#_produces_2">2.2.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_cldsinfo_get">2.3. GET /clds/cldsInfo</a>
+<li><a href="#_route3">2.3. GET /clds/cldsInfo</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_3">2.3.1. Responses</a></li>
 <li><a href="#_produces_3">2.3.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_dcae_event_post">2.4. POST /clds/dcae/event</a>
+<li><a href="#_route11">2.4. POST /clds/dcae/event?test={test}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_2">2.4.1. Description</a></li>
-<li><a href="#_parameters_2">2.4.2. Parameters</a></li>
-<li><a href="#_responses_4">2.4.3. Responses</a></li>
-<li><a href="#_consumes_2">2.4.4. Consumes</a></li>
-<li><a href="#_produces_4">2.4.5. Produces</a></li>
+<li><a href="#_parameters_2">2.4.1. Parameters</a></li>
+<li><a href="#_responses_4">2.4.2. Responses</a></li>
+<li><a href="#_consumes_2">2.4.3. Consumes</a></li>
+<li><a href="#_produces_4">2.4.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_deploy_modelname_put">2.5. PUT /clds/deploy/{modelName}</a>
+<li><a href="#_route15">2.5. PUT /clds/deploy/{modelName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_3">2.5.1. Parameters</a></li>
 <li><a href="#_responses_5">2.5.2. Responses</a></li>
@@ -469,135 +475,113 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_produces_5">2.5.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_healthcheck_get">2.6. GET /clds/healthcheck</a>
+<li><a href="#_route9">2.6. GET /clds/model-names</a>
 <ul class="sectlevel3">
-<li><a href="#_description_3">2.6.1. Description</a></li>
-<li><a href="#_responses_6">2.6.2. Responses</a></li>
-<li><a href="#_produces_6">2.6.3. Produces</a></li>
+<li><a href="#_responses_6">2.6.1. Responses</a></li>
+<li><a href="#_produces_6">2.6.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_model-names_get">2.7. GET /clds/model-names</a>
+<li><a href="#_route5">2.7. GET /clds/model/bpmn/{modelName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_4">2.7.1. Description</a></li>
+<li><a href="#_parameters_4">2.7.1. Parameters</a></li>
 <li><a href="#_responses_7">2.7.2. Responses</a></li>
 <li><a href="#_produces_7">2.7.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_model_bpmn_modelname_get">2.8. GET /clds/model/bpmn/{modelName}</a>
+<li><a href="#_route6">2.8. GET /clds/model/image/{modelName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_5">2.8.1. Description</a></li>
-<li><a href="#_parameters_4">2.8.2. Parameters</a></li>
-<li><a href="#_responses_8">2.8.3. Responses</a></li>
-<li><a href="#_produces_8">2.8.4. Produces</a></li>
+<li><a href="#_parameters_5">2.8.1. Parameters</a></li>
+<li><a href="#_responses_8">2.8.2. Responses</a></li>
+<li><a href="#_produces_8">2.8.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_model_image_modelname_get">2.9. GET /clds/model/image/{modelName}</a>
+<li><a href="#_route7">2.9. GET /clds/model/{modelName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_6">2.9.1. Description</a></li>
-<li><a href="#_parameters_5">2.9.2. Parameters</a></li>
-<li><a href="#_responses_9">2.9.3. Responses</a></li>
-<li><a href="#_produces_9">2.9.4. Produces</a></li>
+<li><a href="#_parameters_6">2.9.1. Parameters</a></li>
+<li><a href="#_responses_9">2.9.2. Responses</a></li>
+<li><a href="#_produces_9">2.9.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_model_modelname_get">2.10. GET /clds/model/{modelName}</a>
+<li><a href="#_route8">2.10. PUT /clds/model/{modelName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_7">2.10.1. Description</a></li>
-<li><a href="#_parameters_6">2.10.2. Parameters</a></li>
-<li><a href="#_responses_10">2.10.3. Responses</a></li>
+<li><a href="#_parameters_7">2.10.1. Parameters</a></li>
+<li><a href="#_responses_10">2.10.2. Responses</a></li>
+<li><a href="#_consumes_4">2.10.3. Consumes</a></li>
 <li><a href="#_produces_10">2.10.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_model_modelname_put">2.11. PUT /clds/model/{modelName}</a>
+<li><a href="#_route13">2.11. GET /clds/properties</a>
 <ul class="sectlevel3">
-<li><a href="#_description_8">2.11.1. Description</a></li>
-<li><a href="#_parameters_7">2.11.2. Parameters</a></li>
-<li><a href="#_responses_11">2.11.3. Responses</a></li>
-<li><a href="#_consumes_4">2.11.4. Consumes</a></li>
-<li><a href="#_produces_11">2.11.5. Produces</a></li>
+<li><a href="#_responses_11">2.11.1. Responses</a></li>
+<li><a href="#_produces_11">2.11.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_properties_get">2.12. GET /clds/properties</a>
+<li><a href="#_route14">2.12. GET /clds/properties/{serviceInvariantUUID}?refresh={refresh}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_9">2.12.1. Description</a></li>
+<li><a href="#_parameters_8">2.12.1. Parameters</a></li>
 <li><a href="#_responses_12">2.12.2. Responses</a></li>
 <li><a href="#_produces_12">2.12.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_properties_serviceinvariantuuid_get">2.13. GET /clds/properties/{serviceInvariantUUID}</a>
+<li><a href="#_route12">2.13. GET /clds/sdc/services</a>
 <ul class="sectlevel3">
-<li><a href="#_description_10">2.13.1. Description</a></li>
-<li><a href="#_parameters_8">2.13.2. Parameters</a></li>
-<li><a href="#_responses_13">2.13.3. Responses</a></li>
-<li><a href="#_produces_13">2.13.4. Produces</a></li>
+<li><a href="#_responses_13">2.13.1. Responses</a></li>
+<li><a href="#_produces_13">2.13.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_sdc_services_get">2.14. GET /clds/sdc/services</a>
+<li><a href="#_route16">2.14. PUT /clds/undeploy/{modelName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_11">2.14.1. Description</a></li>
+<li><a href="#_parameters_9">2.14.1. Parameters</a></li>
 <li><a href="#_responses_14">2.14.2. Responses</a></li>
-<li><a href="#_produces_14">2.14.3. Produces</a></li>
+<li><a href="#_consumes_5">2.14.3. Consumes</a></li>
+<li><a href="#_produces_14">2.14.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_clds_undeploy_modelname_put">2.15. PUT /clds/undeploy/{modelName}</a>
+<li><a href="#_route21">2.15. GET /cldsTempate/template-names</a>
 <ul class="sectlevel3">
-<li><a href="#_parameters_9">2.15.1. Parameters</a></li>
-<li><a href="#_responses_15">2.15.2. Responses</a></li>
-<li><a href="#_consumes_5">2.15.3. Consumes</a></li>
-<li><a href="#_produces_15">2.15.4. Produces</a></li>
+<li><a href="#_responses_15">2.15.1. Responses</a></li>
+<li><a href="#_produces_15">2.15.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_cldstempate_template-names_get">2.16. GET /cldsTempate/template-names</a>
+<li><a href="#_route17">2.16. GET /cldsTempate/template/bpmn/{templateName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_12">2.16.1. Description</a></li>
+<li><a href="#_parameters_10">2.16.1. Parameters</a></li>
 <li><a href="#_responses_16">2.16.2. Responses</a></li>
 <li><a href="#_produces_16">2.16.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_cldstempate_template_bpmn_templatename_get">2.17. GET /cldsTempate/template/bpmn/{templateName}</a>
+<li><a href="#_route18">2.17. GET /cldsTempate/template/image/{templateName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_13">2.17.1. Description</a></li>
-<li><a href="#_parameters_10">2.17.2. Parameters</a></li>
-<li><a href="#_responses_17">2.17.3. Responses</a></li>
-<li><a href="#_produces_17">2.17.4. Produces</a></li>
+<li><a href="#_parameters_11">2.17.1. Parameters</a></li>
+<li><a href="#_responses_17">2.17.2. Responses</a></li>
+<li><a href="#_produces_17">2.17.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_cldstempate_template_image_templatename_get">2.18. GET /cldsTempate/template/image/{templateName}</a>
+<li><a href="#_route19">2.18. GET /cldsTempate/template/{templateName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_14">2.18.1. Description</a></li>
-<li><a href="#_parameters_11">2.18.2. Parameters</a></li>
-<li><a href="#_responses_18">2.18.3. Responses</a></li>
-<li><a href="#_produces_18">2.18.4. Produces</a></li>
+<li><a href="#_parameters_12">2.18.1. Parameters</a></li>
+<li><a href="#_responses_18">2.18.2. Responses</a></li>
+<li><a href="#_produces_18">2.18.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_cldstempate_template_templatename_get">2.19. GET /cldsTempate/template/{templateName}</a>
+<li><a href="#_route20">2.19. PUT /cldsTempate/template/{templateName}</a>
 <ul class="sectlevel3">
-<li><a href="#_description_15">2.19.1. Description</a></li>
-<li><a href="#_parameters_12">2.19.2. Parameters</a></li>
-<li><a href="#_responses_19">2.19.3. Responses</a></li>
+<li><a href="#_parameters_13">2.19.1. Parameters</a></li>
+<li><a href="#_responses_19">2.19.2. Responses</a></li>
+<li><a href="#_consumes_6">2.19.3. Consumes</a></li>
 <li><a href="#_produces_19">2.19.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_cldstempate_template_templatename_put">2.20. PUT /cldsTempate/template/{templateName}</a>
+<li><a href="#_route4">2.20. GET /healthcheck</a>
 <ul class="sectlevel3">
-<li><a href="#_description_16">2.20.1. Description</a></li>
-<li><a href="#_parameters_13">2.20.2. Parameters</a></li>
-<li><a href="#_responses_20">2.20.3. Responses</a></li>
-<li><a href="#_consumes_6">2.20.4. Consumes</a></li>
-<li><a href="#_produces_20">2.20.5. Produces</a></li>
+<li><a href="#_responses_20">2.20.1. Responses</a></li>
+<li><a href="#_produces_20">2.20.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_healthcheck_get">2.21. GET /healthcheck</a>
+<li><a href="#_route22">2.21. GET /user/getUser</a>
 <ul class="sectlevel3">
-<li><a href="#_description_17">2.21.1. Description</a></li>
-<li><a href="#_responses_21">2.21.2. Responses</a></li>
-<li><a href="#_produces_21">2.21.3. Produces</a></li>
-</ul>
-</li>
-<li><a href="#_user_getuser_get">2.22. GET /user/getUser</a>
-<ul class="sectlevel3">
-<li><a href="#_description_18">2.22.1. Description</a></li>
-<li><a href="#_responses_22">2.22.2. Responses</a></li>
-<li><a href="#_produces_22">2.22.3. Produces</a></li>
+<li><a href="#_responses_21">2.21.1. Responses</a></li>
+<li><a href="#_produces_21">2.21.2. Produces</a></li>
 </ul>
 </li>
 </ul>
@@ -605,14 +589,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_definitions">3. Definitions</a>
 <ul class="sectlevel2">
 <li><a href="#_cldsevent">3.1. CldsEvent</a></li>
-<li><a href="#_cldshealthcheck">3.2. CldsHealthCheck</a></li>
-<li><a href="#_cldsinfo">3.3. CldsInfo</a></li>
-<li><a href="#_cldsmodel">3.4. CldsModel</a></li>
-<li><a href="#_cldsmodelinstance">3.5. CldsModelInstance</a></li>
-<li><a href="#_cldsmonitoringdetails">3.6. CldsMonitoringDetails</a></li>
-<li><a href="#_cldstemplate">3.7. CldsTemplate</a></li>
-<li><a href="#_dcaeevent">3.8. DcaeEvent</a></li>
-<li><a href="#_valueitem">3.9. ValueItem</a></li>
+<li><a href="#_cldsinfo">3.2. CldsInfo</a></li>
+<li><a href="#_cldsmodel">3.3. CldsModel</a></li>
+<li><a href="#_cldsmodelinstance">3.4. CldsModelInstance</a></li>
+<li><a href="#_cldsmonitoringdetails">3.5. CldsMonitoringDetails</a></li>
+<li><a href="#_cldstemplate">3.6. CldsTemplate</a></li>
+<li><a href="#_dcaeevent">3.7. DcaeEvent</a></li>
+<li><a href="#_valueitem">3.8. ValueItem</a></li>
 </ul>
 </li>
 </ul>
@@ -620,41 +603,36 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_overview"><a class="anchor" href="#_overview"></a>1. Overview</h2>
+<h2 id="_overview"><a class="anchor" href="#_overview"></a><a class="link" href="#_overview">1. Overview</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_version_information"><a class="anchor" href="#_version_information"></a>1.1. Version information</h3>
+<h3 id="_version_information"><a class="anchor" href="#_version_information"></a><a class="link" href="#_version_information">1.1. Version information</a></h3>
 <div class="paragraph">
 <p><em>Version</em> : 3.0.0-SNAPSHOT</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_uri_scheme"><a class="anchor" href="#_uri_scheme"></a>1.2. URI scheme</h3>
+<h3 id="_uri_scheme"><a class="anchor" href="#_uri_scheme"></a><a class="link" href="#_uri_scheme">1.2. URI scheme</a></h3>
 <div class="paragraph">
-<p><em>BasePath</em> : /clamp/restservices/clds/v1<br>
+<p><em>Host</em> : 0.0.0.0<br>
+<em>BasePath</em> : /restservices/clds/v1/<br>
 <em>Schemes</em> : HTTP</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_paths"><a class="anchor" href="#_paths"></a>2. Paths</h2>
+<h2 id="_paths"><a class="anchor" href="#_paths"></a><a class="link" href="#_paths">2. Paths</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_clds_action_action_modelname_put"><a class="anchor" href="#_clds_action_action_modelname_put"></a>2.1. PUT /clds/action/{action}/{modelName}</h3>
+<h3 id="_route10"><a class="anchor" href="#_route10"></a><a class="link" href="#_route10">2.1. PUT /clds/action/{action}/{modelName}?test={test}</a></h3>
 <div class="sect3">
-<h4 id="_description"><a class="anchor" href="#_description"></a>2.1.1. Description</h4>
-<div class="paragraph">
-<p>REST service that saves and processes an action for a CLDS model by name.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters"><a class="anchor" href="#_parameters"></a>2.1.2. Parameters</h4>
+<h4 id="_parameters"><a class="anchor" href="#_parameters"></a><a class="link" href="#_parameters">2.1.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -672,13 +650,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>modelName</strong><br>
-<em>required</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Query</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>test</strong><br>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>modelName}?test={test</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
@@ -692,36 +664,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses"><a class="anchor" href="#_responses"></a>2.1.3. Responses</h4>
+<h4 id="_responses"><a class="anchor" href="#_responses"></a><a class="link" href="#_responses">2.1.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes"><a class="anchor" href="#_consumes"></a>2.1.4. Consumes</h4>
+<h4 id="_consumes"><a class="anchor" href="#_consumes"></a><a class="link" href="#_consumes">2.1.3. Consumes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -731,7 +695,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_produces"><a class="anchor" href="#_produces"></a>2.1.5. Produces</h4>
+<h4 id="_produces"><a class="anchor" href="#_produces"></a><a class="link" href="#_produces">2.1.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -742,9 +706,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_cldsdetails_get"><a class="anchor" href="#_clds_cldsdetails_get"></a>2.2. GET /clds/cldsDetails</h3>
+<h3 id="_route2"><a class="anchor" href="#_route2"></a><a class="link" href="#_route2">2.2. GET /clds/cldsDetails</a></h3>
 <div class="sect3">
-<h4 id="_responses_2"><a class="anchor" href="#_responses_2"></a>2.2.1. Responses</h4>
+<h4 id="_responses_2"><a class="anchor" href="#_responses_2"></a><a class="link" href="#_responses_2">2.2.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -761,14 +725,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_cldsmonitoringdetails">CldsMonitoringDetails</a> &gt; array</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmonitoringdetails">CldsMonitoringDetails</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_2"><a class="anchor" href="#_produces_2"></a>2.2.2. Produces</h4>
+<h4 id="_produces_2"><a class="anchor" href="#_produces_2"></a><a class="link" href="#_produces_2">2.2.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -779,9 +743,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_cldsinfo_get"><a class="anchor" href="#_clds_cldsinfo_get"></a>2.3. GET /clds/cldsInfo</h3>
+<h3 id="_route3"><a class="anchor" href="#_route3"></a><a class="link" href="#_route3">2.3. GET /clds/cldsInfo</a></h3>
 <div class="sect3">
-<h4 id="_responses_3"><a class="anchor" href="#_responses_3"></a>2.3.1. Responses</h4>
+<h4 id="_responses_3"><a class="anchor" href="#_responses_3"></a><a class="link" href="#_responses_3">2.3.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -798,14 +762,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsinfo">CldsInfo</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_3"><a class="anchor" href="#_produces_3"></a>2.3.2. Produces</h4>
+<h4 id="_produces_3"><a class="anchor" href="#_produces_3"></a><a class="link" href="#_produces_3">2.3.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -816,20 +780,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_dcae_event_post"><a class="anchor" href="#_clds_dcae_event_post"></a>2.4. POST /clds/dcae/event</h3>
+<h3 id="_route11"><a class="anchor" href="#_route11"></a><a class="link" href="#_route11">2.4. POST /clds/dcae/event?test={test}</a></h3>
 <div class="sect3">
-<h4 id="_description_2"><a class="anchor" href="#_description_2"></a>2.4.1. Description</h4>
-<div class="paragraph">
-<p>REST service that accepts events for a model.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_2"><a class="anchor" href="#_parameters_2"></a>2.4.2. Parameters</h4>
+<h4 id="_parameters_2"><a class="anchor" href="#_parameters_2"></a><a class="link" href="#_parameters_2">2.4.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -839,12 +797,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 </thead>
 <tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Query</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>test</strong><br>
-<em>required</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>body</strong><br>
@@ -855,31 +807,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_4"><a class="anchor" href="#_responses_4"></a>2.4.3. Responses</h4>
+<h4 id="_responses_4"><a class="anchor" href="#_responses_4"></a><a class="link" href="#_responses_4">2.4.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_2"><a class="anchor" href="#_consumes_2"></a>2.4.4. Consumes</h4>
+<h4 id="_consumes_2"><a class="anchor" href="#_consumes_2"></a><a class="link" href="#_consumes_2">2.4.3. Consumes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -889,7 +838,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_produces_4"><a class="anchor" href="#_produces_4"></a>2.4.5. Produces</h4>
+<h4 id="_produces_4"><a class="anchor" href="#_produces_4"></a><a class="link" href="#_produces_4">2.4.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -900,14 +849,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_deploy_modelname_put"><a class="anchor" href="#_clds_deploy_modelname_put"></a>2.5. PUT /clds/deploy/{modelName}</h3>
+<h3 id="_route15"><a class="anchor" href="#_route15"></a><a class="link" href="#_route15">2.5. PUT /clds/deploy/{modelName}</a></h3>
 <div class="sect3">
-<h4 id="_parameters_3"><a class="anchor" href="#_parameters_3"></a>2.5.1. Parameters</h4>
+<h4 id="_parameters_3"><a class="anchor" href="#_parameters_3"></a><a class="link" href="#_parameters_3">2.5.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -933,7 +882,51 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_5"><a class="anchor" href="#_responses_5"></a>2.5.2. Responses</h4>
+<h4 id="_responses_5"><a class="anchor" href="#_responses_5"></a><a class="link" href="#_responses_5">2.5.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_consumes_3"><a class="anchor" href="#_consumes_3"></a><a class="link" href="#_consumes_3">2.5.3. Consumes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_produces_5"><a class="anchor" href="#_produces_5"></a><a class="link" href="#_produces_5">2.5.4. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route9"><a class="anchor" href="#_route9"></a><a class="link" href="#_route9">2.6. GET /clds/model-names</a></h3>
+<div class="sect3">
+<h4 id="_responses_6"><a class="anchor" href="#_responses_6"></a><a class="link" href="#_responses_6">2.6.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -950,29 +943,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_valueitem">ValueItem</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_3"><a class="anchor" href="#_consumes_3"></a>2.5.3. Consumes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_produces_5"><a class="anchor" href="#_produces_5"></a>2.5.4. Produces</h4>
+<h4 id="_produces_6"><a class="anchor" href="#_produces_6"></a><a class="link" href="#_produces_6">2.6.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -983,113 +961,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_healthcheck_get"><a class="anchor" href="#_clds_healthcheck_get"></a>2.6. GET /clds/healthcheck</h3>
+<h3 id="_route5"><a class="anchor" href="#_route5"></a><a class="link" href="#_route5">2.7. GET /clds/model/bpmn/{modelName}</a></h3>
 <div class="sect3">
-<h4 id="_description_3"><a class="anchor" href="#_description_3"></a>2.6.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves clds healthcheck information.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_responses_6"><a class="anchor" href="#_responses_6"></a>2.6.2. Responses</h4>
+<h4 id="_parameters_4"><a class="anchor" href="#_parameters_4"></a><a class="link" href="#_parameters_4">2.7.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldshealthcheck">CldsHealthCheck</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldshealthcheck">CldsHealthCheck</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_produces_6"><a class="anchor" href="#_produces_6"></a>2.6.3. Produces</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_clds_model-names_get"><a class="anchor" href="#_clds_model-names_get"></a>2.7. GET /clds/model-names</h3>
-<div class="sect3">
-<h4 id="_description_4"><a class="anchor" href="#_description_4"></a>2.7.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves a list of CLDS model names.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_responses_7"><a class="anchor" href="#_responses_7"></a>2.7.2. Responses</h4>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_valueitem">ValueItem</a> &gt; array</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_produces_7"><a class="anchor" href="#_produces_7"></a>2.7.3. Produces</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_clds_model_bpmn_modelname_get"><a class="anchor" href="#_clds_model_bpmn_modelname_get"></a>2.8. GET /clds/model/bpmn/{modelName}</h3>
-<div class="sect3">
-<h4 id="_description_5"><a class="anchor" href="#_description_5"></a>2.8.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves BPMN for a CLDS model name from the database.<br>
- This is subset of the json getModel. This is only expected to be used for<br>
- testing purposes, not by the UI.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_4"><a class="anchor" href="#_parameters_4"></a>2.8.2. Parameters</h4>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1109,31 +988,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_8"><a class="anchor" href="#_responses_8"></a>2.8.3. Responses</h4>
+<h4 id="_responses_7"><a class="anchor" href="#_responses_7"></a><a class="link" href="#_responses_7">2.7.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_8"><a class="anchor" href="#_produces_8"></a>2.8.4. Produces</h4>
+<h4 id="_produces_7"><a class="anchor" href="#_produces_7"></a><a class="link" href="#_produces_7">2.7.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1144,22 +1020,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_model_image_modelname_get"><a class="anchor" href="#_clds_model_image_modelname_get"></a>2.9. GET /clds/model/image/{modelName}</h3>
+<h3 id="_route6"><a class="anchor" href="#_route6"></a><a class="link" href="#_route6">2.8. GET /clds/model/image/{modelName}</a></h3>
 <div class="sect3">
-<h4 id="_description_6"><a class="anchor" href="#_description_6"></a>2.9.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves image for a CLDS model name from the<br>
- database. This is subset of the json getModel. This is only expected to<br>
- be used for testing purposes, not by the UI.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_5"><a class="anchor" href="#_parameters_5"></a>2.9.2. Parameters</h4>
+<h4 id="_parameters_5"><a class="anchor" href="#_parameters_5"></a><a class="link" href="#_parameters_5">2.8.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1179,31 +1047,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_9"><a class="anchor" href="#_responses_9"></a>2.9.3. Responses</h4>
+<h4 id="_responses_8"><a class="anchor" href="#_responses_8"></a><a class="link" href="#_responses_8">2.8.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_9"><a class="anchor" href="#_produces_9"></a>2.9.4. Produces</h4>
+<h4 id="_produces_8"><a class="anchor" href="#_produces_8"></a><a class="link" href="#_produces_8">2.8.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1214,20 +1079,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_model_modelname_get"><a class="anchor" href="#_clds_model_modelname_get"></a>2.10. GET /clds/model/{modelName}</h3>
+<h3 id="_route7"><a class="anchor" href="#_route7"></a><a class="link" href="#_route7">2.9. GET /clds/model/{modelName}</a></h3>
 <div class="sect3">
-<h4 id="_description_7"><a class="anchor" href="#_description_7"></a>2.10.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves a CLDS model by name from the database.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_6"><a class="anchor" href="#_parameters_6"></a>2.10.2. Parameters</h4>
+<h4 id="_parameters_6"><a class="anchor" href="#_parameters_6"></a><a class="link" href="#_parameters_6">2.9.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1247,7 +1106,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_10"><a class="anchor" href="#_responses_10"></a>2.10.3. Responses</h4>
+<h4 id="_responses_9"><a class="anchor" href="#_responses_9"></a><a class="link" href="#_responses_9">2.9.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -1264,14 +1123,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_10"><a class="anchor" href="#_produces_10"></a>2.10.4. Produces</h4>
+<h4 id="_produces_9"><a class="anchor" href="#_produces_9"></a><a class="link" href="#_produces_9">2.9.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1282,20 +1141,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_model_modelname_put"><a class="anchor" href="#_clds_model_modelname_put"></a>2.11. PUT /clds/model/{modelName}</h3>
+<h3 id="_route8"><a class="anchor" href="#_route8"></a><a class="link" href="#_route8">2.10. PUT /clds/model/{modelName}</a></h3>
 <div class="sect3">
-<h4 id="_description_8"><a class="anchor" href="#_description_8"></a>2.11.1. Description</h4>
-<div class="paragraph">
-<p>REST service that saves a CLDS model by name in the database.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_7"><a class="anchor" href="#_parameters_7"></a>2.11.2. Parameters</h4>
+<h4 id="_parameters_7"><a class="anchor" href="#_parameters_7"></a><a class="link" href="#_parameters_7">2.10.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1321,7 +1174,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_11"><a class="anchor" href="#_responses_11"></a>2.11.3. Responses</h4>
+<h4 id="_responses_10"><a class="anchor" href="#_responses_10"></a><a class="link" href="#_responses_10">2.10.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -1338,14 +1191,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_4"><a class="anchor" href="#_consumes_4"></a>2.11.4. Consumes</h4>
+<h4 id="_consumes_4"><a class="anchor" href="#_consumes_4"></a><a class="link" href="#_consumes_4">2.10.3. Consumes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1355,7 +1208,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_produces_11"><a class="anchor" href="#_produces_11"></a>2.11.5. Produces</h4>
+<h4 id="_produces_10"><a class="anchor" href="#_produces_10"></a><a class="link" href="#_produces_10">2.10.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1366,39 +1219,30 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_properties_get"><a class="anchor" href="#_clds_properties_get"></a>2.12. GET /clds/properties</h3>
+<h3 id="_route13"><a class="anchor" href="#_route13"></a><a class="link" href="#_route13">2.11. GET /clds/properties</a></h3>
 <div class="sect3">
-<h4 id="_description_9"><a class="anchor" href="#_description_9"></a>2.12.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves total properties required by UI</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_responses_12"><a class="anchor" href="#_responses_12"></a>2.12.2. Responses</h4>
+<h4 id="_responses_11"><a class="anchor" href="#_responses_11"></a><a class="link" href="#_responses_11">2.11.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_12"><a class="anchor" href="#_produces_12"></a>2.12.3. Produces</h4>
+<h4 id="_produces_11"><a class="anchor" href="#_produces_11"></a><a class="link" href="#_produces_11">2.11.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1409,75 +1253,55 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_properties_serviceinvariantuuid_get"><a class="anchor" href="#_clds_properties_serviceinvariantuuid_get"></a>2.13. GET /clds/properties/{serviceInvariantUUID}</h3>
+<h3 id="_route14"><a class="anchor" href="#_route14"></a><a class="link" href="#_route14">2.12. GET /clds/properties/{serviceInvariantUUID}?refresh={refresh}</a></h3>
 <div class="sect3">
-<h4 id="_description_10"><a class="anchor" href="#_description_10"></a>2.13.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves total properties by using invariantUUID based<br>
- on refresh and non refresh</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_8"><a class="anchor" href="#_parameters_8"></a>2.13.2. Parameters</h4>
+<h4 id="_parameters_8"><a class="anchor" href="#_parameters_8"></a><a class="link" href="#_parameters_8">2.12.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 18%;">
-<col style="width: 27%;">
-<col style="width: 36%;">
-<col style="width: 18%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">Type</th>
 <th class="tableblock halign-left valign-middle">Name</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
-<th class="tableblock halign-left valign-middle">Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>serviceInvariantUUID</strong><br>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>serviceInvariantUUID}?refresh={refresh</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-<td class="tableblock halign-left valign-middle"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Query</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>refresh</strong><br>
-<em>optional</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><code>"false"</code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_13"><a class="anchor" href="#_responses_13"></a>2.13.3. Responses</h4>
+<h4 id="_responses_12"><a class="anchor" href="#_responses_12"></a><a class="link" href="#_responses_12">2.12.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_13"><a class="anchor" href="#_produces_13"></a>2.13.4. Produces</h4>
+<h4 id="_produces_12"><a class="anchor" href="#_produces_12"></a><a class="link" href="#_produces_12">2.12.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1488,39 +1312,30 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_sdc_services_get"><a class="anchor" href="#_clds_sdc_services_get"></a>2.14. GET /clds/sdc/services</h3>
+<h3 id="_route12"><a class="anchor" href="#_route12"></a><a class="link" href="#_route12">2.13. GET /clds/sdc/services</a></h3>
 <div class="sect3">
-<h4 id="_description_11"><a class="anchor" href="#_description_11"></a>2.14.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves sdc services</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_responses_14"><a class="anchor" href="#_responses_14"></a>2.14.2. Responses</h4>
+<h4 id="_responses_13"><a class="anchor" href="#_responses_13"></a><a class="link" href="#_responses_13">2.13.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_14"><a class="anchor" href="#_produces_14"></a>2.14.3. Produces</h4>
+<h4 id="_produces_13"><a class="anchor" href="#_produces_13"></a><a class="link" href="#_produces_13">2.13.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1531,14 +1346,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_clds_undeploy_modelname_put"><a class="anchor" href="#_clds_undeploy_modelname_put"></a>2.15. PUT /clds/undeploy/{modelName}</h3>
+<h3 id="_route16"><a class="anchor" href="#_route16"></a><a class="link" href="#_route16">2.14. PUT /clds/undeploy/{modelName}</a></h3>
 <div class="sect3">
-<h4 id="_parameters_9"><a class="anchor" href="#_parameters_9"></a>2.15.1. Parameters</h4>
+<h4 id="_parameters_9"><a class="anchor" href="#_parameters_9"></a><a class="link" href="#_parameters_9">2.14.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1564,7 +1379,51 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_15"><a class="anchor" href="#_responses_15"></a>2.15.2. Responses</h4>
+<h4 id="_responses_14"><a class="anchor" href="#_responses_14"></a><a class="link" href="#_responses_14">2.14.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_consumes_5"><a class="anchor" href="#_consumes_5"></a><a class="link" href="#_consumes_5">2.14.3. Consumes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_produces_14"><a class="anchor" href="#_produces_14"></a><a class="link" href="#_produces_14">2.14.4. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route21"><a class="anchor" href="#_route21"></a><a class="link" href="#_route21">2.15. GET /cldsTempate/template-names</a></h3>
+<div class="sect3">
+<h4 id="_responses_15"><a class="anchor" href="#_responses_15"></a><a class="link" href="#_responses_15">2.15.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -1581,29 +1440,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsmodel">CldsModel</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_valueitem">ValueItem</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_5"><a class="anchor" href="#_consumes_5"></a>2.15.3. Consumes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_produces_15"><a class="anchor" href="#_produces_15"></a>2.15.4. Produces</h4>
+<h4 id="_produces_15"><a class="anchor" href="#_produces_15"></a><a class="link" href="#_produces_15">2.15.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1614,65 +1458,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cldstempate_template-names_get"><a class="anchor" href="#_cldstempate_template-names_get"></a>2.16. GET /cldsTempate/template-names</h3>
+<h3 id="_route17"><a class="anchor" href="#_route17"></a><a class="link" href="#_route17">2.16. GET /cldsTempate/template/bpmn/{templateName}</a></h3>
 <div class="sect3">
-<h4 id="_description_12"><a class="anchor" href="#_description_12"></a>2.16.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves a list of CLDS template names.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_responses_16"><a class="anchor" href="#_responses_16"></a>2.16.2. Responses</h4>
+<h4 id="_parameters_10"><a class="anchor" href="#_parameters_10"></a><a class="link" href="#_parameters_10">2.16.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_valueitem">ValueItem</a> &gt; array</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_produces_16"><a class="anchor" href="#_produces_16"></a>2.16.3. Produces</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_cldstempate_template_bpmn_templatename_get"><a class="anchor" href="#_cldstempate_template_bpmn_templatename_get"></a>2.17. GET /cldsTempate/template/bpmn/{templateName}</h3>
-<div class="sect3">
-<h4 id="_description_13"><a class="anchor" href="#_description_13"></a>2.17.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves BPMN for a CLDS template name from the<br>
- database. This is subset of the json getModel. This is only expected to<br>
- be used for testing purposes, not by the UI.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_10"><a class="anchor" href="#_parameters_10"></a>2.17.2. Parameters</h4>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1692,31 +1485,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_17"><a class="anchor" href="#_responses_17"></a>2.17.3. Responses</h4>
+<h4 id="_responses_16"><a class="anchor" href="#_responses_16"></a><a class="link" href="#_responses_16">2.16.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_17"><a class="anchor" href="#_produces_17"></a>2.17.4. Produces</h4>
+<h4 id="_produces_16"><a class="anchor" href="#_produces_16"></a><a class="link" href="#_produces_16">2.16.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1727,22 +1517,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cldstempate_template_image_templatename_get"><a class="anchor" href="#_cldstempate_template_image_templatename_get"></a>2.18. GET /cldsTempate/template/image/{templateName}</h3>
+<h3 id="_route18"><a class="anchor" href="#_route18"></a><a class="link" href="#_route18">2.17. GET /cldsTempate/template/image/{templateName}</a></h3>
 <div class="sect3">
-<h4 id="_description_14"><a class="anchor" href="#_description_14"></a>2.18.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves image for a CLDS template name from the<br>
- database. This is subset of the json getModel. This is only expected to<br>
- be used for testing purposes, not by the UI.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_11"><a class="anchor" href="#_parameters_11"></a>2.18.2. Parameters</h4>
+<h4 id="_parameters_11"><a class="anchor" href="#_parameters_11"></a><a class="link" href="#_parameters_11">2.17.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1762,31 +1544,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_18"><a class="anchor" href="#_responses_18"></a>2.18.3. Responses</h4>
+<h4 id="_responses_17"><a class="anchor" href="#_responses_17"></a><a class="link" href="#_responses_17">2.17.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_18"><a class="anchor" href="#_produces_18"></a>2.18.4. Produces</h4>
+<h4 id="_produces_17"><a class="anchor" href="#_produces_17"></a><a class="link" href="#_produces_17">2.17.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1797,20 +1576,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cldstempate_template_templatename_get"><a class="anchor" href="#_cldstempate_template_templatename_get"></a>2.19. GET /cldsTempate/template/{templateName}</h3>
+<h3 id="_route19"><a class="anchor" href="#_route19"></a><a class="link" href="#_route19">2.18. GET /cldsTempate/template/{templateName}</a></h3>
 <div class="sect3">
-<h4 id="_description_15"><a class="anchor" href="#_description_15"></a>2.19.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves a CLDS template by name from the database.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_12"><a class="anchor" href="#_parameters_12"></a>2.19.2. Parameters</h4>
+<h4 id="_parameters_12"><a class="anchor" href="#_parameters_12"></a><a class="link" href="#_parameters_12">2.18.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1830,7 +1603,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_19"><a class="anchor" href="#_responses_19"></a>2.19.3. Responses</h4>
+<h4 id="_responses_18"><a class="anchor" href="#_responses_18"></a><a class="link" href="#_responses_18">2.18.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -1847,14 +1620,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldstemplate">CldsTemplate</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_19"><a class="anchor" href="#_produces_19"></a>2.19.4. Produces</h4>
+<h4 id="_produces_18"><a class="anchor" href="#_produces_18"></a><a class="link" href="#_produces_18">2.18.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1865,20 +1638,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cldstempate_template_templatename_put"><a class="anchor" href="#_cldstempate_template_templatename_put"></a>2.20. PUT /cldsTempate/template/{templateName}</h3>
+<h3 id="_route20"><a class="anchor" href="#_route20"></a><a class="link" href="#_route20">2.19. PUT /cldsTempate/template/{templateName}</a></h3>
 <div class="sect3">
-<h4 id="_description_16"><a class="anchor" href="#_description_16"></a>2.20.1. Description</h4>
-<div class="paragraph">
-<p>REST service that saves a CLDS template by name in the database.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_parameters_13"><a class="anchor" href="#_parameters_13"></a>2.20.2. Parameters</h4>
+<h4 id="_parameters_13"><a class="anchor" href="#_parameters_13"></a><a class="link" href="#_parameters_13">2.19.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 22%;">
-<col style="width: 33%;">
-<col style="width: 44%;">
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
 </colgroup>
 <thead>
 <tr>
@@ -1904,7 +1671,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_20"><a class="anchor" href="#_responses_20"></a>2.20.3. Responses</h4>
+<h4 id="_responses_19"><a class="anchor" href="#_responses_19"></a><a class="link" href="#_responses_19">2.19.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 10%;">
@@ -1921,14 +1688,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldstemplate">CldsTemplate</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_6"><a class="anchor" href="#_consumes_6"></a>2.20.4. Consumes</h4>
+<h4 id="_consumes_6"><a class="anchor" href="#_consumes_6"></a><a class="link" href="#_consumes_6">2.19.3. Consumes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1938,55 +1705,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_produces_20"><a class="anchor" href="#_produces_20"></a>2.20.5. Produces</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_healthcheck_get"><a class="anchor" href="#_healthcheck_get"></a>2.21. GET /healthcheck</h3>
-<div class="sect3">
-<h4 id="_description_17"><a class="anchor" href="#_description_17"></a>2.21.1. Description</h4>
-<div class="paragraph">
-<p>REST service that retrieves clds healthcheck information.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_responses_21"><a class="anchor" href="#_responses_21"></a>2.21.2. Responses</h4>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldshealthcheck">CldsHealthCheck</a></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>500</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Internal Server Error</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldshealthcheck">CldsHealthCheck</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_produces_21"><a class="anchor" href="#_produces_21"></a>2.21.3. Produces</h4>
+<h4 id="_produces_19"><a class="anchor" href="#_produces_19"></a><a class="link" href="#_produces_19">2.19.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1997,39 +1716,64 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_user_getuser_get"><a class="anchor" href="#_user_getuser_get"></a>2.22. GET /user/getUser</h3>
+<h3 id="_route4"><a class="anchor" href="#_route4"></a><a class="link" href="#_route4">2.20. GET /healthcheck</a></h3>
 <div class="sect3">
-<h4 id="_description_18"><a class="anchor" href="#_description_18"></a>2.22.1. Description</h4>
-<div class="paragraph">
-<p>REST service that returns the username.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_responses_22"><a class="anchor" href="#_responses_22"></a>2.22.2. Responses</h4>
+<h4 id="_responses_20"><a class="anchor" href="#_responses_20"></a><a class="link" href="#_responses_20">2.20.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">OK</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_22"><a class="anchor" href="#_produces_22"></a>2.22.3. Produces</h4>
+<h4 id="_produces_20"><a class="anchor" href="#_produces_20"></a><a class="link" href="#_produces_20">2.20.2. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route22"><a class="anchor" href="#_route22"></a><a class="link" href="#_route22">2.21. GET /user/getUser</a></h3>
+<div class="sect3">
+<h4 id="_responses_21"><a class="anchor" href="#_responses_21"></a><a class="link" href="#_responses_21">2.21.1. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_21"><a class="anchor" href="#_produces_21"></a><a class="link" href="#_produces_21">2.21.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2042,14 +1786,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_definitions"><a class="anchor" href="#_definitions"></a>3. Definitions</h2>
+<h2 id="_definitions"><a class="anchor" href="#_definitions"></a><a class="link" href="#_definitions">3. Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_cldsevent"><a class="anchor" href="#_cldsevent"></a>3.1. CldsEvent</h3>
+<h3 id="_cldsevent"><a class="anchor" href="#_cldsevent"></a><a class="link" href="#_cldsevent">3.1. CldsEvent</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>
@@ -2059,19 +1803,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>actionAndStateCd</strong><br>
-<em>optional</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>actionCd</strong><br>
 <em>optional</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>actionStateCd</strong><br>
 <em>optional</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>id</strong><br>
@@ -2092,43 +1831,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldshealthcheck"><a class="anchor" href="#_cldshealthcheck"></a>3.2. CldsHealthCheck</h3>
+<h3 id="_cldsinfo"><a class="anchor" href="#_cldsinfo"></a><a class="link" href="#_cldsinfo">3.2. CldsInfo</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">Name</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>description</strong><br>
-<em>optional</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>healthCheckComponent</strong><br>
-<em>optional</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>healthCheckStatus</strong><br>
-<em>optional</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_cldsinfo"><a class="anchor" href="#_cldsinfo"></a>3.3. CldsInfo</h3>
-<table class="tableblock frame-all grid-all spread">
-<colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>
@@ -2171,11 +1878,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldsmodel"><a class="anchor" href="#_cldsmodel"></a>3.4. CldsModel</h3>
+<h3 id="_cldsmodel"><a class="anchor" href="#_cldsmodel"></a><a class="link" href="#_cldsmodel">3.3. CldsModel</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>
@@ -2283,11 +1990,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldsmodelinstance"><a class="anchor" href="#_cldsmodelinstance"></a>3.5. CldsModelInstance</h3>
+<h3 id="_cldsmodelinstance"><a class="anchor" href="#_cldsmodelinstance"></a><a class="link" href="#_cldsmodelinstance">3.4. CldsModelInstance</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>
@@ -2315,11 +2022,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldsmonitoringdetails"><a class="anchor" href="#_cldsmonitoringdetails"></a>3.6. CldsMonitoringDetails</h3>
+<h3 id="_cldsmonitoringdetails"><a class="anchor" href="#_cldsmonitoringdetails"></a><a class="link" href="#_cldsmonitoringdetails">3.5. CldsMonitoringDetails</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>
@@ -2372,11 +2079,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldstemplate"><a class="anchor" href="#_cldstemplate"></a>3.7. CldsTemplate</h3>
+<h3 id="_cldstemplate"><a class="anchor" href="#_cldstemplate"></a><a class="link" href="#_cldstemplate">3.6. CldsTemplate</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>
@@ -2459,11 +2166,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_dcaeevent"><a class="anchor" href="#_dcaeevent"></a>3.8. DcaeEvent</h3>
+<h3 id="_dcaeevent"><a class="anchor" href="#_dcaeevent"></a><a class="link" href="#_dcaeevent">3.7. DcaeEvent</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>
@@ -2511,11 +2218,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_valueitem"><a class="anchor" href="#_valueitem"></a>3.9. ValueItem</h3>
+<h3 id="_valueitem"><a class="anchor" href="#_valueitem"></a><a class="link" href="#_valueitem">3.8. ValueItem</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 42%;">
-<col style="width: 57%;">
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
 </colgroup>
 <thead>
 <tr>

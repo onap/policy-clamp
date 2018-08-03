@@ -20,9 +20,10 @@
  * ===================================================================
  */
 package org.onap.clamp.clds.config;
+
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.onap.clamp.clds.model.CldsInfo;
+import org.onap.clamp.clds.util.ClampVersioning;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -30,11 +31,13 @@ public class CamelConfiguration extends RouteBuilder {
 
     @Override
     public void configure() {
-    restConfiguration().component("servlet")
-          .bindingMode(RestBindingMode.json);
-
-              rest("/clds")
-              .get("/test").description("Find user by id").outType(CldsInfo.class).produces("application/json")
-                  .to("bean:org.onap.clamp.clds.service.CldsService?method=getCldsInfo()") ;
+        restConfiguration().component("servlet").bindingMode(RestBindingMode.json)
+        .dataFormatProperty("prettyPrint", "true")//.enableCORS(true)
+        // turn on swagger api-doc
+        .apiContextPath("api-doc")
+        .apiVendorExtension(true)
+        .apiProperty("api.title", "Clamp Rest API").apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
+        .apiProperty("base.path", "/restservices/clds/v1/");
+        //.apiProperty("cors", "true");
     }
 }

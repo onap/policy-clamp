@@ -24,47 +24,27 @@
 
 package org.onap.clamp.clds.service;
 
-import static org.onap.clamp.clds.service.CldsService.RESOURCE_NAME;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import java.io.InputStream;
-import java.util.Properties;
 import org.onap.clamp.clds.model.CldsInfo;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ClampVersioning;
 
 class CldsInfoProvider {
 
-    private static final String CLDS_VERSION = "clds.version";
+
     private final CldsService cldsService;
-    private final EELFLogger logger = EELFManager.getInstance().getLogger(CldsInfoProvider.class);
 
-
-    CldsInfoProvider(CldsService cldsService) {
+    public CldsInfoProvider(CldsService cldsService) {
         this.cldsService = cldsService;
     }
 
-    CldsInfo getCldsInfo(){
+    public CldsInfo getCldsInfo() {
         CldsInfo cldsInfo = new CldsInfo();
         cldsInfo.setUserName(cldsService.getUserName());
-        cldsInfo.setCldsVersion(getCldsVersionFromProps());
+        cldsInfo.setCldsVersion(ClampVersioning.getCldsVersionFromProps());
 
         cldsInfo.setPermissionReadCl(cldsService.isAuthorizedNoException(cldsService.permissionReadCl));
         cldsInfo.setPermissionUpdateCl(cldsService.isAuthorizedNoException(cldsService.permissionUpdateCl));
         cldsInfo.setPermissionReadTemplate(cldsService.isAuthorizedNoException(cldsService.permissionReadTemplate));
         cldsInfo.setPermissionUpdateTemplate(cldsService.isAuthorizedNoException(cldsService.permissionUpdateTemplate));
         return cldsInfo;
-    }
-
-    private String getCldsVersionFromProps() {
-        String cldsVersion = "";
-        Properties props = new Properties();
-        try (InputStream resourceStream = ResourceFileUtil.getResourceAsStream(RESOURCE_NAME)) {
-            props.load(resourceStream);
-            cldsVersion = props.getProperty(CLDS_VERSION);
-        } catch (Exception ex) {
-            logger.error("Exception caught during the clds.version reading", ex);
-        }
-        return cldsVersion;
     }
 }

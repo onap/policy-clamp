@@ -36,9 +36,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import javax.ws.rs.BadRequestException;
-import javax.xml.transform.TransformerException;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotAuthorizedException;
+import javax.xml.transform.TransformerException;
 
 import org.apache.camel.Produce;
 import org.apache.commons.codec.DecoderException;
@@ -50,7 +51,6 @@ import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
-
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.exception.sdc.SdcCommunicationException;
@@ -89,7 +89,7 @@ public class CldsService extends SecureServiceBase {
     @Produce(uri = "direct:processSubmit")
     private CamelProxy camelProxy;
     protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
-    static final String RESOURCE_NAME = "clds-version.properties";
+
     public static final String GLOBAL_PROPERTIES_KEY = "files.globalProperties";
     private final String cldsPersmissionTypeCl;
     private final String cldsPermissionTypeClManage;
