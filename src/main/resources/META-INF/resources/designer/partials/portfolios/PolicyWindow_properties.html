@@ -554,7 +554,7 @@ label {
 			$("#formId" + count).append(form);
 			$(".formId").not($("#formId" + count)).css("display", "none")
 			addCustListen(count)
-			//addTabListen(count)
+
 			addSelectListen(count);
 			// This is for when the process is not loading from map but being created
 			if(!loadingId){
@@ -602,27 +602,7 @@ label {
 			
 			$("#add_one_more").click();
 		}
-		
-	
-		//listener will change the tab name to the recipe
- 		function addTabListen(count){
-			
-			// disable parentPolicyConditions when a parentPolicy is not selected
-			//don't think this is used..
-			/* $("#formId"+count+" #parentPolicy").on("change",function(){
-				if($("#formId"+count+" #parentPolicy").val().toString()==""){
-					// deselect all options
-					$("#formId"+count+" #parentPolicyConditions option:selected").prop("selected", false);
-					// disable the select box
-					$("#formId"+count+" #parentPolicyConditions").multiselect("disable");
-					
-				} else {
-					$("#formId"+count+" #parentPolicyConditions").multiselect("enable");
-					
-				}
-			}); */
-		}
-		
+
 		function addCustListen(count) {			
 			$('#go_properties_tab' + count).click(function(event) {
 				$("#nav_Tabs li").removeClass("active");
