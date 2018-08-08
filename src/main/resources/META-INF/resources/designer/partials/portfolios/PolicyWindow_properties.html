@@ -178,42 +178,55 @@ label {
 
 			<div class="leftPolicyPanel">
 				<div class="panel panel-default">
-				<i class="glyphicon glyphicon-search modelSearchBox"></i>
-				<input type="text" id="policySearch" onkeyup="searchPolicyList()"
+					<i class="glyphicon glyphicon-search modelSearchBox"></i> <input
+						type="text" id="policySearch" onkeyup="searchPolicyList()"
 						placeholder="Search ...">
 					<div id="policyTableHolder">
 						<table id="policyTable"></table>
 					</div>
 				</div>
 				<div style="float: left">
-				<button type="button" id="createNewPolicy" class="btn btn-sm">New Policy</button></span>
+					<button type="button" id="createNewPolicy" class="btn btn-sm">New
+						Policy</button>
+					</span>
 				</div>
 				<div style="float: right">
-				<button type="button" id="deletePolicy" class="btn btn-sm glyphicon glyphicon-trash" disabled></button></span>
+					<button type="button" id="deletePolicy"
+						class="btn btn-sm glyphicon glyphicon-trash" disabled></button>
+					</span>
 				</div>
-			<div id="repeatIdError" class="idError">Error: This Policy name is already taken.</div>
-			<div id="newIdError" class="idError">Error: Please rename your new Policy.</div>
-			<div id="spaceError" class="idError">Error: Spaces are not allowed in the ID.</div>
+				<div id="repeatIdError" class="idError">Error: This Policy
+					name is already taken.</div>
+				<div id="newIdError" class="idError">Error: Please rename your
+					new Policy.</div>
+				<div id="spaceError" class="idError">Error: Spaces are not
+					allowed in the ID.</div>
 			</div>
 
-		<div class="panel panel-default col-sm-9 policyPanel" style="display:none;">
+			<div class="panel panel-default col-sm-9 policyPanel"
+				style="display: none;">
 				<form id="Timeoutform" class="form-horizontal">
 					<div>
 						<div class="form-group clearfix row">
 							<label class="col-sm-2">Name</label>
 							<div class="col-sm-3" style="padding: 0px;">
-							<input type="text" id="pname" name="pname" maxlength="48" placeholder="Enter Unique Name" class="form-control">
+								<input type="text" id="pname" name="pname" maxlength="48"
+									placeholder="Enter Unique Name" class="form-control">
 							</div>
 
 							<label class="col-sm-1">ID</label>
 							<div class="col-sm-1" style="padding: 0px;">
-							<input onkeydown="return false;" type="text" id="pid" name="pid" class="form-control" readonly>
+								<input onkeydown="return false;" type="text" id="pid" name="pid"
+									class="form-control" readonly>
 							</div>
 
-						<label for="userID" class="col-sm-3" style="padding-left:5px;padding-right:10px;">Overall Time Limit</label>
+							<label for="userID" class="col-sm-3"
+								style="padding-left: 5px; padding-right: 10px;">Overall
+								Time Limit</label>
 							<div class="col-sm-2" style="padding-left: 0px;">
-							<input type="text" maxlength="10" onkeypress="return isNumberKey(event)"
-								class="form-control" id="timeout" name="timeout">
+								<input type="text" maxlength="10"
+									onkeypress="return isNumberKey(event)" class="form-control"
+									id="timeout" name="timeout">
 							</div>
 						</div>
 					</div>
@@ -237,15 +250,16 @@ label {
 						<div class="form-group clearfix">
 							<label class="col-sm-4 control-label" for="recipe">Recipe</label>
 							<div class="col-sm-8">
-							<select class="form-control" name="recipe" id="recipe" enableFilter="true"></select>
+								<select class="form-control" name="recipe" id="recipe"
+									enableFilter="true"></select>
 							</div>
 						</div>
 						<div class="form-group clearfix">
 							<label for="maxRetries" class="col-sm-4 control-label">
 								Max Retries</label>
 							<div class="col-sm-8">
-							<input type="text" maxlength="5" class="form-control" id="maxRetries"
-								onkeypress="return isNumberKey(event)"
+								<input type="text" maxlength="5" class="form-control"
+									id="maxRetries" onkeypress="return isNumberKey(event)"
 									name="maxRetries"> </input>
 							</div>
 						</div>
@@ -253,17 +267,16 @@ label {
 							<label for="retryTimeLimit" class="col-sm-4 control-label">
 								Retry Time Limit</label>
 							<div class="col-sm-8">
-							<input type="text" maxlength="5" class="form-control" id="retryTimeLimit"
-								onkeypress="return isNumberKey(event)"
+								<input type="text" maxlength="5" class="form-control"
+									id="retryTimeLimit" onkeypress="return isNumberKey(event)"
 									name="retryTimeLimit"></input>
 							</div>
 						</div>
 						<div style="display: none;" class="form-group clearfix">
-						<label for="_id" class="col-sm-4 control-label">
-							PolicyID</label>
+							<label for="_id" class="col-sm-4 control-label"> PolicyID</label>
 							<div class="col-sm-8">
-							<input type="text" onkeydown="return false;"  class="form-control" id="_id"
-								name="_id" value=""></input>
+								<input type="text" onkeydown="return false;"
+									class="form-control" id="_id" name="_id" value=""></input>
 							</div>
 						</div>
 						<div class="form-group clearfix">
@@ -271,28 +284,52 @@ label {
 								Parent Policy</label>
 							<div class="col-sm-8">
 								<select class="form-control" id="parentPolicy"
-								name="parentPolicy" enableFilter="true"><option value=""></option></select>
+									name="parentPolicy" enableFilter="true"><option
+										value=""></option></select>
 							</div>
 						</div>
 						<div class="form-group clearfix">
-						<label for="parentPolicyConditions" class="col-sm-4 control-label">
-							Parent Policy Conditions</label>
+							<label for="parentPolicyConditions"
+								class="col-sm-4 control-label"> Parent Policy Conditions</label>
 							<div class="col-sm-8">
 								<select class="form-control" id="parentPolicyConditions"
 									name="parentPolicyConditions" multiple></select>
 							</div>
 						</div>
 						<div class="form-group clearfix">
+
+							<label for="actor" class="col-sm-4 control-label"> Actor</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="actor" name="actor"></select>
+							</div>
+
+							<label for="payload" class="col-sm-4 control-label">
+								Payload</label>
+							<div class="col-sm-8">
+								<textarea class="form-control" id="recipeInput"
+									name=recipeInput></textarea >
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="targetType" class="col-sm-4 control-label">
+								Target Type</label>
+							<div class="col-sm-8">
+								<select class="form-control" name="recipeLevel" id="recipeLevel">
+								</select>
+							</div>
+
 							<label for="targetResourceId" class="col-sm-4 control-label">
 								Target ResourceId</label>
 							<div class="col-sm-8">
-								<select class="form-control" name="targetResourceId" id="targetResourceId" enableFilter="true" onchange="changeTargetResourceIdOther();" >
+								<select class="form-control" name="targetResourceId"
+									id="targetResourceId" enableFilter="true"
+									onchange="changeTargetResourceIdOther();">
 									<option value=""></option>
 									<option value="Other:">Other:</option>
 								</select>
 							</div>
-							<input type="text" style="display:none" class="form-control" id="targetResourceIdOther"
-								name="targetResourceIdOther" value=""></input>
+							<input type="text" style="display: none" class="form-control"
+								id="targetResourceIdOther" name="targetResourceIdOther" value=""></input>
 						</div>
 					</div>
 				</form>

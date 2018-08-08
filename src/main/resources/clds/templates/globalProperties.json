@@ -47,6 +47,11 @@
 	"policy": {
 		"pname": "0",
 		"timeout": 345,
+		"actor": {
+			"APPC":"APPC",
+			"MSO": "SO",
+			"VFC": "VFC"
+		},
 		"vnfRecipe": {
 			"": "",
 			"restart": "Restart",
@@ -54,20 +59,18 @@
 			"migrate": "Migrate",
 			"healthCheck": "Health Check",
 			"modifyConfig": "ModifyConfig",
-			"vfModuleCreate":"VF Module Create"
+			"vfModuleCreate":"VF Module Create",
+			"scaleOut":"Scale Out"
 		},
 		"maxRetries": "3",
-		"retryTimeLimit": 180,
-		"resource": {
-			"vCTS": "vCTS",
-			"v3CDB": "v3CDB",
-			"vUDR": "vUDR",
-			"vCOM": "vCOM",
-			"vRAR": "vRAR",
-			"vLCS": "vLCS",
-			"vUDR-BE": "vUDR-BE",
-			"vDBE": "vDBE"
+		"recipeLevel": {
+			"":"",
+			"VNF":"VNF",
+			"VM":"VM",
+			"VFC":"VFC",
+			"PNF":"PNF"
 		},
+		"retryTimeLimit": 180,
 		"parentPolicyConditions": {
 			"Failure_Retries": "Failure: Max Retries Exceeded",
 			"Failure_Timeout": "Failure: Time Limit Exceeded",

@@ -19,7 +19,7 @@
  * ============LICENSE_END============================================
  * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client.req.policy;
@@ -77,7 +77,7 @@ public class OperationalPolicyReq {
      * @throws UnsupportedEncodingException
      */
     public static Map<AttributeType, Map<String, String>> formatAttributes(ClampProperties refProp,
-            ModelProperties prop, String modelElementId, PolicyChain policyChain)
+        ModelProperties prop, String modelElementId, PolicyChain policyChain)
             throws BuilderException, UnsupportedEncodingException {
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
@@ -130,7 +130,7 @@ public class OperationalPolicyReq {
 
     /**
      * Format Operational OpenLoop Policy yaml.
-     * 
+     *
      * @param refProp
      * @param prop
      * @param modelElementId
@@ -140,7 +140,7 @@ public class OperationalPolicyReq {
      * @throws UnsupportedEncodingException
      */
     protected static String formatOpenLoopYaml(ClampProperties refProp, ModelProperties prop, String modelElementId,
-            PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+        PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
@@ -150,7 +150,7 @@ public class OperationalPolicyReq {
         Resource[] vfResources = convertToResource(global.getResourceVf(), ResourceType.VF);
         // create builder
         ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
-                policyChain.getTimeout(), service, vfResources);
+            policyChain.getTimeout(), service, vfResources);
         // builder.setTriggerPolicy(refProp.getStringValue("op.openloop.policy"));
         // Build the specification
         Results results = builder.buildSpecification();
@@ -170,7 +170,7 @@ public class OperationalPolicyReq {
      * @throws UnsupportedEncodingException
      */
     protected static String formatYaml(ClampProperties refProp, ModelProperties prop, String modelElementId,
-            PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+        PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
@@ -181,7 +181,7 @@ public class OperationalPolicyReq {
         Resource[] vfcResources = convertToResource(global.getResourceVfc(), ResourceType.VFC);
         // create builder
         ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
-                policyChain.getTimeout(), service, vfResources);
+            policyChain.getTimeout(), service, vfResources);
         builder.addResource(vfcResources);
         // process each policy
         Map<String, Policy> policyObjMap = new HashMap<>();
@@ -195,31 +195,21 @@ public class OperationalPolicyReq {
                 target.setType(TargetType.valueOf(policyItem.getRecipeLevel()));
             }
             target.setResourceID(policyItem.getTargetResourceId());
-            String actor = refProp.getStringValue("op.policy.appc");
-            Map<String, String> payloadMap = null;
-            if ("health-diagnostic".equalsIgnoreCase(policyItem.getRecipe())) {
-                actor = refProp.getStringValue("op.policy.sdno");
-                payloadMap = new HashMap<String, String>();
-                payloadMap.put("ttl", policyItem.getRecipePayload());
-            }
-            // For reboot recipe we have to send type as SOFT/HARD in pay load
-            if (policyItem.getRecipeInfo() != null && !policyItem.getRecipeInfo().isEmpty()) {
-                payloadMap = new HashMap<String, String>();
-                payloadMap.put("type", policyItem.getRecipeInfo());
-            }
+            String actor = policyItem.getActor();
+            Map<String, String> payloadMap = policyItem.getRecipePayload();
             Policy policyObj;
             if (policyItemList.indexOf(policyItem) == 0) {
                 String policyDescription = policyItem.getRecipe()
-                        + " Policy - the trigger (no parent) policy - created by CLDS";
+                    + " Policy - the trigger (no parent) policy - created by CLDS";
                 policyObj = builder.setTriggerPolicy(policyName, policyDescription, actor, target,
-                        policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
+                    policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
             } else {
                 Policy parentPolicyObj = policyObjMap.get(policyItem.getParentPolicy());
                 String policyDescription = policyItem.getRecipe() + " Policy - triggered conditionally by "
-                        + parentPolicyObj.getName() + " - created by CLDS";
+                    + parentPolicyObj.getName() + " - created by CLDS";
                 policyObj = builder.setPolicyForPolicyResult(policyName, policyDescription, actor, target,
-                        policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit(),
-                        parentPolicyObj.getId(), convertToPolicyResult(policyItem.getParentPolicyConditions()));
+                    policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit(),
+                    parentPolicyObj.getId(), convertToPolicyResult(policyItem.getParentPolicyConditions()));
                 logger.info("policyObj.id=" + policyObj.getId() + "; parentPolicyObj.id=" + parentPolicyObj.getId());
             }
             policyObjMap.put(policyItem.getId(), policyObj);
@@ -274,7 +264,7 @@ public class OperationalPolicyReq {
                 if (parent == null || parent.length() == 0) {
                     if (!outList.isEmpty()) {
                         throw new BadRequestException(
-                                "Operation Policy validation problem: more than one trigger policy");
+                            "Operation Policy validation problem: more than one trigger policy");
                     } else {
                         outList.add(inItem);
                         inListItr.remove();

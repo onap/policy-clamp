@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.properties;
@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -62,8 +63,9 @@ public class Policy extends AbstractModelElement {
      * @param modelProp
      * @param modelBpmn
      * @param modelJson
+     * @throws IOException
      */
-    public Policy(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
+    public Policy(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) throws IOException {
         super(TYPE_POLICY, modelProp, modelBpmn, modelJson);
 
         // process policies

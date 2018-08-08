@@ -18,16 +18,21 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import org.onap.clamp.clds.util.JacksonUtils;
 
 /**
  * Parse policyConfigurations from Policy json properties.
@@ -61,7 +66,7 @@ public class PolicyItem implements Cloneable {
     private String targetResourceId;
     private String recipeInfo;
     private String recipeLevel;
-    private String recipePayload;
+    private Map<String, String> recipePayload;
     private String oapRop;
     private String oapLimit;
 
@@ -69,8 +74,9 @@ public class PolicyItem implements Cloneable {
      * Parse Policy given json node.
      *
      * @param node
+     * @throws IOException
      */
-    public PolicyItem(JsonNode node) {
+    public PolicyItem(JsonNode node) throws  IOException {
         id = AbstractModelElement.getValueByName(node, "_id");
         recipe = AbstractModelElement.getValueByName(node, "recipe");
         maxRetries = AbstractModelElement.getIntValueByName(node, "maxRetries");
@@ -83,9 +89,16 @@ public class PolicyItem implements Cloneable {
         }
         recipeInfo = AbstractModelElement.getValueByName(node, "recipeInfo");
         recipeLevel = AbstractModelElement.getValueByName(node, "recipeLevel");
-        recipePayload = AbstractModelElement.getValueByName(node, "recipeInput");
+        String payload = AbstractModelElement.getValueByName(node, "recipeInput");
+
+
+        if (payload != null && !payload.isEmpty()) {
+            //recipePayload = JacksonUtils.getObjectMapperInstance().convertValue(payload, Map.class);
+            recipePayload = JacksonUtils.getObjectMapperInstance().readValue(payload, new TypeReference<Map<String, String>>(){});
+        }
         oapRop = AbstractModelElement.getValueByName(node, "oapRop");
         oapLimit = AbstractModelElement.getValueByName(node, "oapLimit");
+        actor = AbstractModelElement.getValueByName(node, "actor");
     }
 
     /**
@@ -202,7 +215,7 @@ public class PolicyItem implements Cloneable {
         return recipeLevel;
     }
 
-    public String getRecipePayload() {
+    public Map<String, String> getRecipePayload() {
         return recipePayload;
     }
 
@@ -218,10 +231,5 @@ public class PolicyItem implements Cloneable {
             oapLimit = "0";
         }
         return oapLimit;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 }

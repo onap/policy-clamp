@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.properties;
@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,23 +66,23 @@ public class PolicyChain {
     private List<PolicyItem>          policyItems;
     private String                    policyType;
 
-    public PolicyChain(JsonNode node) {
+    public PolicyChain(JsonNode node) throws IOException {
 
         policyId = AbstractModelElement.getValueByName(node, "pid");
         timeout = AbstractModelElement.getIntValueByName(node, "timeout");
         policyType = AbstractModelElement.getValueByName(node, "policyType");
-    
-        if(node != null && node.size() > 0) {    	   	
-	        JsonNode policyNode = node.get(node.size() - 1).get("policyConfigurations");
-	        if(policyNode != null) {
-		        Iterator<JsonNode> itr = policyNode.elements();
-		        policyItems = new ArrayList<>();
-		        while (itr.hasNext()) {
-		            policyItems.add(new PolicyItem(itr.next()));
-		        }
-	    
-	         } 
-	      }  
+
+        if(node != null && node.size() > 0) {
+            JsonNode policyNode = node.get(node.size() - 1).get("policyConfigurations");
+            if(policyNode != null) {
+                Iterator<JsonNode> itr = policyNode.elements();
+                policyItems = new ArrayList<>();
+                while (itr.hasNext()) {
+                    policyItems.add(new PolicyItem(itr.next()));
+                }
+
+            }
+        }
     }
     /**
      * @return the policyId
@@ -103,7 +104,7 @@ public class PolicyChain {
     public List<PolicyItem> getPolicyItems() {
         return policyItems;
     }
-    
+
     /**
      * @return the policyType
      */
