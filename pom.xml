@@ -225,6 +225,11 @@
 						<version>${eelf.core.version}</version>
 				</dependency>
 				<dependency>
+						<groupId>org.codehaus.janino</groupId>
+						<artifactId>janino</artifactId>
+						<version>3.0.8</version>
+				</dependency>
+				<dependency>
 						<groupId>org.apache.tomcat.embed</groupId>
 						<artifactId>tomcat-embed-core</artifactId>
 						<version>${tomcat.version}</version>

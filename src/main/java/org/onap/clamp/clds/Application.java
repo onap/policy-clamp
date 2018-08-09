@@ -26,10 +26,13 @@ package org.onap.clamp.clds;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.io.IOException;
+
 import org.apache.catalina.connector.Connector;
 import org.onap.clamp.clds.model.properties.Holmes;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.ClampVersioning;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -64,7 +67,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class Application extends SpringBootServletInitializer {
 
-    protected static final EELFLogger EELF_LOGGER = EELFManager.getInstance().getLogger(Application.class);
+    protected static final EELFLogger eelfLogger = EELFManager.getInstance().getLogger(Application.class);
     // This settings is an additional one to Spring config,
     // only if we want to have an additional port automatically redirected to
     // HTTPS
@@ -85,7 +88,6 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        EELF_LOGGER.info("Starting ::  CLAMP  ::     (v"+ ClampVersioning.getCldsVersionFromProps()+")");
         // This is to initialize some Onap Clamp components
         initializeComponents();
         // Start the Spring application
@@ -100,9 +102,11 @@ public class Application extends SpringBootServletInitializer {
      * This method is used to declare the camel servlet.
      *
      * @return A servlet bean
+     * @throws IOException
      */
     @Bean
-    public ServletRegistrationBean camelServletRegistrationBean() {
+    public ServletRegistrationBean camelServletRegistrationBean() throws IOException {
+        eelfLogger.info(ResourceFileUtil.getResourceAsString("boot-message.txt")+"(v"+ ClampVersioning.getCldsVersionFromProps()+")"+System.getProperty("line.separator"));
         ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(),
             "/restservices/clds/v1/*");
         registration.setName("CamelServlet");
@@ -130,7 +134,7 @@ public class Application extends SpringBootServletInitializer {
 
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
-            EELF_LOGGER.warn(
+            eelfLogger.warn(
                 "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1 (Connector disabled)");
             return null;
         }
