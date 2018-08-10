@@ -35,14 +35,18 @@ import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
 import org.onap.clamp.clds.service.CldsTemplateService;
+import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,6 +78,7 @@ public class CldsTemplateServiceItCase {
     private CldsTemplate cldsTemplate;
     private Authentication authentication;
     private List<GrantedAuthority> authList =  new LinkedList<GrantedAuthority>();
+    private LoggingUtils util;
 
     /**
      * Setup the variable before the tests execution.
@@ -89,11 +94,14 @@ public class CldsTemplateServiceItCase {
         authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
         authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
         authentication =  new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
-        
+
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        
-        
+
+        util = Mockito.mock(LoggingUtils.class);
+        Mockito.doNothing().when(util).entering(Matchers.any(HttpServletRequest.class), Matchers.any(String.class));
+        cldsTemplateService.setLoggingUtil(util);
+
         cldsTemplateService.setSecurityContext(securityContext);
         bpmnText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-template.xml");
         imageText = ResourceFileUtil.getResourceAsString("example/dao/image-template.xml");

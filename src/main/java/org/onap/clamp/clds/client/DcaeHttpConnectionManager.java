@@ -88,8 +88,10 @@ public class DcaeHttpConnectionManager {
 
     private static String doHttpQuery(URL url, String requestMethod, String payload, String contentType)
             throws IOException {
+        LoggingUtils utils = new LoggingUtils (logger);
         logger.info("Using HTTP URL to contact DCAE:" + url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection = utils.invoke(connection,"DCAE", requestMethod);
         connection.setRequestMethod(requestMethod);
         connection.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
         if (payload != null && contentType != null) {
@@ -106,6 +108,7 @@ public class DcaeHttpConnectionManager {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
                 String responseStr = IOUtils.toString(reader);
                 logger.info("Response Content: " + responseStr);
+                utils.invokeReturn();
                 return responseStr;
             }
         } else {
@@ -114,6 +117,7 @@ public class DcaeHttpConnectionManager {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()))) {
                 String responseStr = IOUtils.toString(reader);
                 logger.error(DCAE_REQUEST_FAILED_LOG + responseStr);
+                utils.invokeReturn();
                 throw new BadRequestException(responseStr);
             }
         }

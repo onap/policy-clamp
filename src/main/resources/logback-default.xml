@@ -1,67 +1,70 @@
 <included>
 	<jmxConfigurator />
 	<!-- Example evaluator filter applied against console appender -->
-	<appender name="STDOUT"
-		class="ch.qos.logback.core.ConsoleAppender">
-		<!-- filter class="ch.qos.logback.classic.filter.LevelFilter"> <level>ERROR</level> 
-			<onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter -->
-		<!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>INFO</level>
-		</filter>
-		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{1024} - %msg%n
-			</pattern>
-		</encoder>
-	</appender>
+<property name="p_tim" value="%d{&quot;yyyy-MM-dd'T'HH:mm:ss.SSSXXX&quot;, UTC}"/>
+		<property name="p_lvl" value="%level"/>
+		<property name="p_log" value="%logger"/>
+		<property name="p_mdc" value="%replace(%replace(%mdc){'\t','\\\\t'}){'\n', '\\\\n'}"/>
+		<property name="p_msg" value="%replace(%replace(%msg){'\t', '\\\\t'}){'\n','\\\\n'}"/>
+		<property name="p_exc" value="%replace(%replace(%rootException){'\t', '\\\\t'}){'\n','\\\\n'}"/>
+		<property name="p_mak" value="%replace(%replace(%marker){'\t', '\\\\t'}){'\n','\\\\n'}"/>
+		<property name="p_thr" value="%thread"/>
+		<property name="defaultPattern" value="%nopexception${p_tim}\t${p_thr}\t${p_lvl}\t${p_log}\t${p_mdc}\t${p_msg}\t${p_exc}\t${p_mak}\t%n"/>
 
-	<appender name="ERROR"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>INFO</level>
-		</filter>
-		<file>${logDirectory}/clamp/error.log</file>
-		<append>true</append>
-		<encoder>
-			<pattern>%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX",
-				UTC}|%X{RequestId}|%.20thread|%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}|%.-5level|%X{ErrorCode}|%X{ErrorDescription}|%msg%n
-			</pattern>
-		</encoder>
-		<rollingPolicy
-			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<maxIndex>10</maxIndex>
-			<FileNamePattern>${logDirectory}/clamp/error.%i.log.zip
-			</FileNamePattern>
-		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>10MB</maxFileSize>
-		</triggeringPolicy>
-	</appender>
+		<!-- Example evaluator filter applied against console appender -->
+		<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+				<!-- filter class="ch.qos.logback.classic.filter.LevelFilter"> <level>ERROR</level> 
+						<onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter -->
+				<!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
+				<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+						<level>INFO</level>
+				</filter>
+				<encoder>
+						<pattern>${defaultPattern}</pattern>
+				</encoder>
+		</appender>
 
-	<appender name="DEBUG"
-		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logDirectory}/clamp/debug.log</file>
-		<append>true</append>
-		<encoder>
-			<pattern>%date{"yyyy-MM-dd'T'HH:mm:ss,SSSXXX",UTC}|%X{RequestId}|%.20thread|%.-5level|%logger{36}|%msg%n
-			</pattern>
-		</encoder>
-		<rollingPolicy
-			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${logDirectory}/clamp/debug.%d{yyyy-MM-dd}.%i.log.zip
-			</fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize>10MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-			<maxHistory>5</maxHistory>
-		</rollingPolicy>
-	</appender>
+		<appender name="ERROR"
+				class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+						<level>INFO</level>
+				</filter>
+				<file>${logDirectory}/error.log</file>
+				<append>true</append>
+				<encoder>
+						<pattern>${defaultPattern}</pattern>
+				</encoder>
+				<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+					<fileNamePattern>${outputDirectory}/clamp/error.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+					<maxFileSize>50MB</maxFileSize>
+					<maxHistory>30</maxHistory>
+					<totalSizeCap>10GB</totalSizeCap>
+				</rollingPolicy>
+				<triggeringPolicy
+						class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+						<maxFileSize>10MB</maxFileSize>
+				</triggeringPolicy>
+		</appender>
+
+		<appender name="DEBUG"
+				class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>${logDirectory}/debug.log</file>
+				<append>true</append>
+				<encoder>
+						<pattern>${defaultPattern}</pattern>
+				</encoder>
+				<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+					<fileNamePattern>${outputDirectory}/clamp/debug.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+					<maxFileSize>50MB</maxFileSize>
+					<maxHistory>30</maxHistory>
+					<totalSizeCap>10GB</totalSizeCap>
+				</rollingPolicy>
+		</appender>
+
 
 	<appender name="AUDIT"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logDirectory}/clamp/audit.log</file>
+		<file>${logDirectory}/audit.log</file>
 		<append>true</append>
 		<encoder>
 			<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
@@ -70,7 +73,7 @@
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>10</maxIndex>
-			<FileNamePattern>${logDirectory}/clamp/audit.%i.log.zip
+			<FileNamePattern>${logDirectory}/audit.%i.log.zip
 			</FileNamePattern>
 		</rollingPolicy>
 		<triggeringPolicy
@@ -86,7 +89,7 @@
 
 	<appender name="METRIC"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logDirectory}/clamp/metric.log</file>
+		<file>${logDirectory}/metric.log</file>
 		<append>true</append>
 		<encoder>
 			<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{TargetVirtualEntity}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|
@@ -95,7 +98,7 @@
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>10</maxIndex>
-			<FileNamePattern>${logDirectory}/clamp/metric.%i.log.zip
+			<FileNamePattern>${logDirectory}/metric.%i.log.zip
 			</FileNamePattern>
 		</rollingPolicy>
 		<triggeringPolicy
@@ -112,7 +115,7 @@
 	<!-- SECURITY related loggers -->
 	<appender name="SECURITY"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${logDirectory}/clamp/security.log</file>
+		<file>${logDirectory}/security.log</file>
 		<append>true</append>
 		<encoder>
 			<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
@@ -121,7 +124,7 @@
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
 			<maxIndex>10</maxIndex>
-			<FileNamePattern>${logDirectory}/clamp/security.%i.log.zip
+			<FileNamePattern>${logDirectory}/security.%i.log.zip
 			</FileNamePattern>
 		</rollingPolicy>
 		<triggeringPolicy

@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.xml.transform.TransformerException;
@@ -73,6 +74,8 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.JacksonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
+import org.onap.logging.ref.slf4j.ONAPLogConstants;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -89,6 +92,7 @@ public class CldsService extends SecureServiceBase {
     @Produce(uri = "direct:processSubmit")
     private CamelProxy camelProxy;
     protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsService.class);
 
     public static final String GLOBAL_PROPERTIES_KEY = "files.globalProperties";
     private final String cldsPersmissionTypeCl;
@@ -108,7 +112,10 @@ public class CldsService extends SecureServiceBase {
     private final SdcCatalogServices sdcCatalogServices;
     private final DcaeDispatcherServices dcaeDispatcherServices;
     private final DcaeInventoryServices dcaeInventoryServices;
+    private LoggingUtils util = new LoggingUtils(logger);
 
+    @Autowired
+    private HttpServletRequest request;
     @Autowired
     public CldsService(CldsDao cldsDao, XslTransformer cldsBpmnTransformer, ClampProperties refProp,
         SdcCatalogServices sdcCatalogServices, DcaeDispatcherServices dcaeDispatcherServices,
@@ -150,13 +157,13 @@ public class CldsService extends SecureServiceBase {
      * ClosedLoop in CLDS application.
      */
     public List<CldsMonitoringDetails> getCLDSDetails() {
+        util.entering(request, "CldsService: GET model details");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET model details", getPrincipalName());
         List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get cldsDetails success", this.getClass().getName());
         auditLogger.info("GET cldsDetails completed");
+        util.exiting("200", "Get cldsDetails success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return cldsMonitoringDetailsList;
     }
 
@@ -165,8 +172,8 @@ public class CldsService extends SecureServiceBase {
      * is currently installed from pom.xml file 3. User permissions
      */
     public CldsInfo getCldsInfo() {
+        util.entering(request, "CldsService: GET cldsInfo");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET cldsInfo", getPrincipalName());
         LoggingUtils.setTimeContext(startTime, new Date());
 
         CldsInfoProvider cldsInfoProvider = new CldsInfoProvider(this);
@@ -174,8 +181,8 @@ public class CldsService extends SecureServiceBase {
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get cldsInfo success", this.getClass().getName());
         securityLogger.info("GET cldsInfo completed");
+        util.exiting("200", "Get cldsInfo success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return cldsInfo;
     }
 
@@ -188,15 +195,15 @@ public class CldsService extends SecureServiceBase {
      * @return bpmn xml text - content of bpmn given name
      */
     public String getBpmnXml(String modelName) {
+        util.entering(request, "CldsService: GET model bpmn");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET model bpmn", getPrincipalName());
         isAuthorized(permissionReadCl);
         logger.info("GET bpmnText for modelName={}", modelName);
         CldsModel model = CldsModel.retrieve(cldsDao, modelName, false);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get model bpmn success", this.getClass().getName());
         auditLogger.info("GET model bpmn completed");
+        util.exiting("200", "Get model bpmn success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return model.getBpmnText();
     }
 
@@ -209,15 +216,15 @@ public class CldsService extends SecureServiceBase {
      * @return image xml text - content of image given name
      */
     public String getImageXml(String modelName) {
+    	util.entering(request, "CldsService: GET model image");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET model image", getPrincipalName());
         isAuthorized(permissionReadCl);
         logger.info("GET imageText for modelName={}", modelName);
         CldsModel model = CldsModel.retrieve(cldsDao, modelName, false);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get model image success", this.getClass().getName());
         auditLogger.info("GET model image completed");
+        util.exiting("200", "Get model image success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return model.getImageText();
     }
 
@@ -228,8 +235,8 @@ public class CldsService extends SecureServiceBase {
      * @return clds model - clds model for the given model name
      */
     public CldsModel getModel(String modelName) {
+    	util.entering(request, "CldsService: GET model");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET model", getPrincipalName());
         isAuthorized(permissionReadCl);
         logger.debug("GET model for  modelName={}", modelName);
         CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
@@ -246,8 +253,8 @@ public class CldsService extends SecureServiceBase {
         }
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get model success", this.getClass().getName());
         auditLogger.info("GET model completed");
+        util.exiting("200", "Get model success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return cldsModel;
     }
 
@@ -257,8 +264,8 @@ public class CldsService extends SecureServiceBase {
      * @param modelName
      */
     public CldsModel putModel(String modelName, CldsModel cldsModel) {
+    	util.entering(request, "CldsService: PUT model");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: PUT model", getPrincipalName());
         isAuthorized(permissionUpdateCl);
         isAuthorizedForVf(cldsModel);
         logger.info("PUT model for  modelName={}", modelName);
@@ -272,8 +279,8 @@ public class CldsService extends SecureServiceBase {
         cldsModel.save(cldsDao, getUserId());
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Put model success", this.getClass().getName());
         auditLogger.info("PUT model completed");
+        util.exiting("200", "Put model success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return cldsModel;
     }
 
@@ -283,15 +290,15 @@ public class CldsService extends SecureServiceBase {
      * @return model names in JSON
      */
     public List<ValueItem> getModelNames() {
+        util.entering(request, "CldsService: GET model names");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET model names", getPrincipalName());
         isAuthorized(permissionReadCl);
         logger.info("GET list of model names");
         List<ValueItem> names = cldsDao.getBpmnNames();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get model names success", this.getClass().getName());
         auditLogger.info("GET model names completed");
+        util.exiting("200", "Get model names success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return names;
     }
 
@@ -329,11 +336,11 @@ public class CldsService extends SecureServiceBase {
     public ResponseEntity<?> putModelAndProcessAction(String action,
         String modelName,String test, CldsModel model)
             throws TransformerException, ParseException {
+        util.entering(request, "CldsService: Process model action");
         Date startTime = new Date();
         CldsModel retrievedModel = null;
         Boolean errorCase = false;
         try {
-            LoggingUtils.setRequestContext("CldsService: Process model action", getPrincipalName());
             String actionCd = action.toUpperCase();
             SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
                 cldsPermissionInstance, actionCd);
@@ -416,10 +423,10 @@ public class CldsService extends SecureServiceBase {
                 }
                 // audit log
                 LoggingUtils.setTimeContext(startTime, new Date());
-                LoggingUtils.setResponseContext("0", "Process model action success", this.getClass().getName());
                 auditLogger.info("Process model action completed");
             } else {
                 logger.error("CldsModel not found in database with modelName: " + modelName);
+                util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "CldsModel not found in database with modelName " + "modelName", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
                 return new ResponseEntity<String>("CldsModel not found in database with modelName: \" + modelName", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
@@ -427,8 +434,10 @@ public class CldsService extends SecureServiceBase {
             logger.error("Exception occured during putModelAndProcessAction", e);
         }
         if (errorCase) {
+            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "putModelAndProcessAction failed", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(retrievedModel, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return new ResponseEntity<>(retrievedModel, HttpStatus.OK);
     }
 
@@ -439,8 +448,8 @@ public class CldsService extends SecureServiceBase {
      * @param dcaeEvent
      */
     public String postDcaeEvent(String test, DcaeEvent dcaeEvent) {
+        util.entering(request, "CldsService: Post dcae event");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: Post dcae event", getPrincipalName());
         String userid = null;
         // TODO: allow auth checking to be turned off by removing the permission
         // type property
@@ -473,8 +482,8 @@ public class CldsService extends SecureServiceBase {
         }
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Post dcae event success", this.getClass().getName());
         auditLogger.info("Post dcae event completed");
+        util.exiting("200", "Post dcae event success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return msgInfo;
     }
 
@@ -487,8 +496,8 @@ public class CldsService extends SecureServiceBase {
      *         In case of issues with the decoding of the Hex String
      */
     public String getSdcServices() throws GeneralSecurityException, DecoderException {
+        util.entering(request, "CldsService: GET sdc services");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET sdc services", getPrincipalName());
         String retStr;
         try {
             retStr = createUiServiceFormatJson(sdcCatalogServices.getSdcServicesInformation(null));
@@ -499,8 +508,8 @@ public class CldsService extends SecureServiceBase {
         logger.info("value of sdcServices : {}", retStr);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get sdc services success", this.getClass().getName());
         auditLogger.info("GET sdc services completed");
+        util.exiting("200", "Get sdc services success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return retStr;
     }
 
@@ -528,8 +537,8 @@ public class CldsService extends SecureServiceBase {
     public String getSdcPropertiesByServiceUUIDForRefresh(
         String serviceInvariantUUID, Boolean refresh)
             throws GeneralSecurityException, DecoderException, IOException {
+        util.entering(request, "CldsService: GET sdc properties by uuid");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: GET sdc properties by uuid", getPrincipalName());
         CldsServiceData cldsServiceData = new CldsServiceData();
         cldsServiceData.setServiceInvariantUUID(serviceInvariantUUID);
         if (!Optional.ofNullable(refresh).orElse(false)) {
@@ -545,8 +554,8 @@ public class CldsService extends SecureServiceBase {
         String sdcProperties = sdcCatalogServices.createPropertiesObjectByUUID(cldsServiceData);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "Get sdc properties by uuid success", this.getClass().getName());
         auditLogger.info("GET sdc properties by uuid completed");
+        util.exiting("200", "Get sdc properties by uuid success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return sdcProperties;
     }
 
@@ -720,8 +729,8 @@ public class CldsService extends SecureServiceBase {
     }
 
     public ResponseEntity<CldsModel> deployModel(String modelName, CldsModel model) {
+        util.entering(request, "CldsService: Deploy model");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: Deploy model", getPrincipalName());
         Boolean errorCase = false;
         try {
             fillInCldsModel(model);
@@ -759,27 +768,29 @@ public class CldsService extends SecureServiceBase {
                 model.save(cldsDao, getUserId());
             } else {
                 logger.info("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+                util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "DeployModel failed", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
                 throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
             }
             logger.info("Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
-            LoggingUtils.setResponseContext("0", "Deploy model success", this.getClass().getName());
             auditLogger.info("Deploy model completed");
         } catch (Exception e) {
             errorCase = true;
             logger.error("Exception occured during deployModel", e);
         }
         if (errorCase) {
+        	util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "DeployModel failed", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     public ResponseEntity<CldsModel> unDeployModel(String modelName, CldsModel model) {
+        util.entering(request, "CldsService: Undeploy model");
         Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsService: Undeploy model", getPrincipalName());
         Boolean errorCase = false;
         try {
             SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
@@ -804,21 +815,23 @@ public class CldsService extends SecureServiceBase {
                 model.save(cldsDao, getUserId());
             } else {
                 logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
+                util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "UndeployModel failed", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
                 throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
             }
             logger.info("Undeploy model (" + modelName + ") succeeded.");
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
-            LoggingUtils.setResponseContext("0", "Undeploy model success", this.getClass().getName());
             auditLogger.info("Undeploy model completed");
         } catch (Exception e) {
             errorCase = true;
             logger.error("Exception occured during unDeployModel", e);
         }
         if (errorCase) {
+            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "UndeployModel failed", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -857,5 +870,10 @@ public class CldsService extends SecureServiceBase {
             newEvent.setActionStateCd(CldsEvent.ACTION_STATE_COMPLETED);
             cldsDao.insEvent(cldsModelName, cldsControlNamePrfx, null, newEvent);
         }
+    }
+
+    // Created for the integration test
+    public void setLoggingUtil (LoggingUtils utilP) {
+        util =  utilP;
     }
 }

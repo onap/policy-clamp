@@ -97,6 +97,7 @@ public class SdcCatalogServices {
     private static final String SDC_SERVICE_URL_PROPERTY_NAME = "sdc.serviceUrl";
     private static final String SDC_INSTANCE_ID_CLAMP = "CLAMP-Tool";
     private static final String RESOURCE_URL_PREFIX = "resources";
+    private static final LoggingUtils utils = new LoggingUtils (logger);
     @Autowired
     private ClampProperties refProp;
 
@@ -134,7 +135,6 @@ public class SdcCatalogServices {
         Date startTime = new Date();
         String baseUrl = refProp.getStringValue(SDC_SERVICE_URL_PROPERTY_NAME);
         String basicAuth = getSdcBasicAuth();
-        LoggingUtils.setTargetContext("SDC", "getSdcServicesInformation");
         try {
             String url = baseUrl;
             if (uuid != null && !uuid.isEmpty()) {
@@ -142,6 +142,7 @@ public class SdcCatalogServices {
             }
             URL urlObj = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+            conn = utils.invoke(conn,"SDC", "getSdcServicesInformation");
             conn.setRequestProperty(refProp.getStringValue(SDC_INSTANCE_ID_PROPERTY_NAME), SDC_INSTANCE_ID_CLAMP);
             conn.setRequestProperty(HttpHeaders.AUTHORIZATION, basicAuth);
             conn.setRequestProperty(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
@@ -149,8 +150,7 @@ public class SdcCatalogServices {
             conn.setRequestMethod("GET");
             String resp = getResponse(conn);
             logger.debug("Services list received from SDC:" + resp);
-            // metrics log
-            LoggingUtils.setResponseContext("0", "Get sdc services success", this.getClass().getName());
+            utils.invokeReturn();
             return resp;
         } catch (IOException e) {
             LoggingUtils.setResponseContext("900", "Get sdc services failed", this.getClass().getName());
@@ -160,6 +160,7 @@ public class SdcCatalogServices {
             LoggingUtils.setTimeContext(startTime, new Date());
             metricsLogger.info("getSdcServicesInformation complete");
         }
+        utils.invokeReturn();
         return "";
     }
 
@@ -346,6 +347,7 @@ public class SdcCatalogServices {
             byte[] postData = formattedSdcReq.getBytes(StandardCharsets.UTF_8);
             int postDataLength = postData.length;
             HttpURLConnection conn = getSdcHttpUrlConnection(userid, postDataLength, url, formattedSdcReq);
+            conn = utils.invoke(conn,"SDC", "uploadArtifact");
             try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
                 wr.write(postData);
             }
@@ -358,11 +360,14 @@ public class SdcCatalogServices {
             String responseStr = getResponse(conn);
             if (responseStr != null && requestFailed) {
                 logger.error("requestFailed - responseStr=" + responseStr);
+                utils.invokeReturn();
                 throw new BadRequestException(responseStr);
             }
+            utils.invokeReturn();
             return responseStr;
         } catch (IOException e) {
             logger.error("Exception when attempting to communicate with SDC", e);
+            utils.invokeReturn();
             throw new SdcCommunicationException("Exception when attempting to communicate with SDC", e);
         }
     }
@@ -797,6 +802,7 @@ public class SdcCatalogServices {
             String urlReworked = removeUnwantedBracesFromString(url);
             URL urlObj = new URL(urlReworked);
             HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+            conn = utils.invoke(conn,"SDC", "getSdcResources");
             String basicAuth = getSdcBasicAuth();
             conn.setRequestProperty(refProp.getStringValue(SDC_INSTANCE_ID_PROPERTY_NAME), SDC_INSTANCE_ID_CLAMP);
             conn.setRequestProperty(HttpHeaders.AUTHORIZATION, basicAuth);
@@ -807,27 +813,24 @@ public class SdcCatalogServices {
             logger.info("Sdc resource url - " + urlReworked + " , responseCode=" + responseCode);
             try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
                 String response = IOUtils.toString(in);
-                LoggingUtils.setResponseContext("0", "Get sdc resources success", this.getClass().getName());
                 return response;
             }
         } catch (IOException e) {
-            LoggingUtils.setResponseContext("900", "Get sdc resources failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get sdc resources error");
             logger.error("Exception occurred during query to SDC", e);
             return "";
         } catch (DecoderException e) {
-            LoggingUtils.setResponseContext("900", "Get sdc resources failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get sdc resources error");
             logger.error("Exception when attempting to decode the Hex string", e);
             throw new SdcCommunicationException("Exception when attempting to decode the Hex string", e);
         } catch (GeneralSecurityException e) {
-            LoggingUtils.setResponseContext("900", "Get sdc resources failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Get sdc resources error");
             logger.error("Exception when attempting to decrypt the encrypted password", e);
             throw new SdcCommunicationException("Exception when attempting to decrypt the encrypted password", e);
         } finally {
             LoggingUtils.setTimeContext(startTime, new Date());
             metricsLogger.info("getCldsServicesOrResourcesBasedOnURL completed");
+            utils.invokeReturn();
         }
     }
 
@@ -1275,6 +1278,7 @@ public class SdcCatalogServices {
                 url = url + "/" + uploadedArtifactUuid;
                 URL urlObj = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) urlObj.openConnection();
+                conn = utils.invoke(conn,"SDC", "deleteArtifact");
                 conn.setDoOutput(true);
                 conn.setRequestProperty(refProp.getStringValue(SDC_INSTANCE_ID_PROPERTY_NAME), sdcXonapInstanceId);
                 conn.setRequestProperty(HttpHeaders.AUTHORIZATION, basicAuth);
@@ -1293,12 +1297,15 @@ public class SdcCatalogServices {
                 responseStr = getResponse(conn);
                 if (responseStr != null && requestFailed) {
                     logger.error("requestFailed - responseStr=" + responseStr);
+                    utils.invokeReturn();
                     throw new BadRequestException(responseStr);
                 }
             }
+            utils.invokeReturn();
             return responseStr;
         } catch (IOException | DecoderException | GeneralSecurityException e) {
             logger.error("Exception when attempting to communicate with SDC", e);
+            utils.invokeReturn();
             throw new SdcCommunicationException("Exception when attempting to communicate with SDC", e);
         }
     }

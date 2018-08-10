@@ -39,11 +39,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.codec.DecoderException;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsHealthCheck;
@@ -52,6 +55,7 @@ import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.service.CldsService;
+import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +66,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -83,7 +86,7 @@ public class CldsServiceItCase {
     private CldsDao cldsDao;
     private Authentication authentication;
     private List<GrantedAuthority> authList =  new LinkedList<GrantedAuthority>();
-
+    private LoggingUtils util;
     /**
      * Setup the variable before the tests execution.
      * 
@@ -102,6 +105,10 @@ public class CldsServiceItCase {
         authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
         authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
         authentication =  new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
+
+        util = Mockito.mock(LoggingUtils.class);
+        Mockito.doNothing().when(util).entering(Matchers.any(HttpServletRequest.class), Matchers.any(String.class));
+        cldsService.setLoggingUtil(util);
     }
 
     @Test
@@ -144,6 +151,7 @@ public class CldsServiceItCase {
     public void testPutModel() {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+
         cldsService.setSecurityContext(securityContext);
         // Add the template first
         CldsTemplate newTemplate = new CldsTemplate();
