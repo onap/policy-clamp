@@ -23,52 +23,10 @@
 
 
 <style>
-.fileUpload {
-	position: relative;
-	overflow: hidden;
-	margin: 10px;
-}
-
-.fileUpload input.upload {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	font-size: 20px;
-	cursor: pointer;
-	opacity: 0;
-	filter: alpha(opacity = 0);
-	float: left;
-}
-
-.fileDisplay {
-	display: inline-block;
-	overflow: hidden;
-	float: right;
-	margin-left: 0px;
-	z-index: initial;
-	text-align: center;
-	margin-top: 17px;
-}
-
 #paramsWarn {
 	display: none;
 }
 </style>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script type="text/javascript">
-	function disablefile() {
-	    document.getElementById("fileUpload").disabled = true;
-    }
-    function disableSVN() {
-	    document.getElementById("schemaLocation").disabled = true;
-	    document.getElementById("userID").disabled = true;
-	    document.getElementById("password").disabled = true;
-    }
-</script>
-
 
 <div id="configure-widgets">
 	<div class="modal-header">
@@ -135,7 +93,17 @@
 
 					</div>
 				</div>
+				<div class="form-group clearfix">
+					<label for="deployParameters" class="col-sm-4 control-label">
+						Deploy Parameters</label>
 
+					<div class="col-sm-8">
+						<textarea class="form-control" id="deployParameters"
+							name="deployParameters" rows="3">
+						</textarea>
+
+					</div>
+				</div>
 
 
 			</div>
@@ -148,8 +116,7 @@
 
 	</div>
 	<div class="modal-footer">
-		<!--<button ng-click="reset()" class="btn btn-primary" style="float:left">Reset</button>-->
-		<button id="savePropsBtn" class="btn btn-primary">Save</button>
+		<button id="savePropsBtn" class="btn btn-primary" ng-click="submitForm()">Save</button>
 		<button ng-click="close(true)" id="close_button"
 			class="btn btn-primary">Cancel</button>
 
@@ -204,26 +171,6 @@
 		        $("#paramsWarn").hide();
 	        });
         })();
-        function noRepeats(form) {
-	        var select = {};
-	        for (var i = 0; i < form.length; i++) {
-		        if (form[i].hasOwnProperty("name")) {
-			        if (select[form[i].name] === undefined)
-				        select[form[i].name] = []
-			        select[form[i].name].push(form[i].value);
-		        }
-	        }
-	        var arr = []
-	        for (s in select) {
-		        var f = {}
-		        f.name = s
-		        f.value = select[s]
-		        if (!(s == "service" && f.value == "")) {
-			        arr.push(f)
-		        }
-	        }
-	        return arr
-        }
         $(function() {
 	        if (elementMap["global"]) {
 		        for (var i = 0; i < elementMap["global"].length; i++) {
@@ -270,26 +217,5 @@
 		        }
 	        }
         }
-        $("#saveProps").on('submit', function(event) {
-	        saveGlobalProperties(noRepeats($(this).serializeArray()))
-	        event.preventDefault();
-	        //module reset, based on property updates
-	        if (elementMap["global"]) {
-		        $.each(Object.keys(elementMap), function(i, v) {
-			        if ((v.match(/^Policy/)) && asDiff) {
-				        elementMap[v] = {};
-			        }
-			        if ((v.match(/^TCA/)) && (vfDiff || serDiff)) {
-				        elementMap[v] = {};
-			        }
-		        });
-	        }
-	        ;
-	        $("#close_button").click();
-        })
-        $("#savePropsBtn").click(function(event) {
-	        //alert($("#CProp_Target").val())
-	        $("#saveProps").submit();
-        })
 	</script>
 </div>

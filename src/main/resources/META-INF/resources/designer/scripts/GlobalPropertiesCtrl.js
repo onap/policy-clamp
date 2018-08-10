@@ -43,7 +43,13 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
 		var el = elementMap["global"];
 		if (el !== undefined) {
 			for (var i = 0; i < el.length; i++) {
-				$("#" + el[i].name).val(el[i].value);
+				if (el[i].name === 'deployParameters')
+				{
+					// This is a special case, that value is not a string but a JSON
+					$("#" + el[i].name).val(JSON.stringify(el[i].value));
+				} else {
+					$("#" + el[i].name).val(el[i].value);
+				}
 			}
 		}
 		setMultiSelect();
@@ -66,4 +72,56 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
 		console.log("close");
 		$uibModalInstance.close("closed");
 	};
+    $scope.convertDeployParametersJsonToString = function() {
+        var index = elementMap["global"].findIndex(function(e) {
+	        return (typeof e == "object" && !(e instanceof Array))
+	        && "deployParameters" == e["name"];
+        });
+        if (index != -1) {
+	        $('#deployParameters').val(JSON.stringify(elementMap["global"][index].value));
+        }
+    }
+    
+    function noRepeats(form) {
+        var select = {};
+        for (var i = 0; i < form.length; i++) {
+	        if (form[i].hasOwnProperty("name")) {
+		        if (form[i].name === 'deployParameters') {
+					// This is a special case, that value MUST not be a string but a JSON
+		        	select[form[i].name]=JSON.parse(form[i].value);
+		        } else {
+		        	if (select[form[i].name] === undefined)
+				        select[form[i].name] = []
+		        	select[form[i].name].push(form[i].value);
+		        }
+	        }
+        }
+        var arr = []
+        for (s in select) {
+	        var f = {}
+	        f.name = s
+	        f.value = select[s]
+	        if (!(s == "service" && f.value == "")) {
+		        arr.push(f)
+	        }
+        }
+        return arr
+    }
+    
+    $scope.submitForm = function() {
+        saveGlobalProperties(noRepeats($("#saveProps").serializeArray()))
+        //module reset, based on property updates
+        if (elementMap["global"]) {
+	        $.each(Object.keys(elementMap), function(i, v) {
+		        if ((v.match(/^Policy/)) && asDiff) {
+			        elementMap[v] = {};
+		        }
+		        if ((v.match(/^TCA/)) && (vfDiff || serDiff)) {
+			        elementMap[v] = {};
+		        }
+	        });
+        }
+        $uibModalInstance.close();
+    }
+  
 } ]);
