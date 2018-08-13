@@ -10,6 +10,7 @@
 		<property name="p_mak" value="%replace(%replace(%marker){'\t', '\\\\t'}){'\n','\\\\n'}"/>
 		<property name="p_thr" value="%thread"/>
 		<property name="defaultPattern" value="%nopexception${p_tim}\t${p_thr}\t${p_lvl}\t${p_log}\t${p_mdc}\t${p_msg}\t${p_exc}\t${p_mak}\t%n"/>
+		<property name="debugPattern" value="%nopexception${p_tim}|${p_lvl}|${p_mdc}|{p_exc}|%msg%n"/>
 
 		<!-- Example evaluator filter applied against console appender -->
 		<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -20,7 +21,7 @@
 						<level>INFO</level>
 				</filter>
 				<encoder>
-						<pattern>${defaultPattern}</pattern>
+						<pattern>${debugPattern}</pattern>
 				</encoder>
 		</appender>
 
@@ -51,7 +52,7 @@
 				<file>${logDirectory}/debug.log</file>
 				<append>true</append>
 				<encoder>
-						<pattern>${defaultPattern}</pattern>
+						<pattern>${debugPattern}</pattern>
 				</encoder>
 				<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
 					<fileNamePattern>${outputDirectory}/clamp/debug.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>

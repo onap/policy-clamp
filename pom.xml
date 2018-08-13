@@ -68,7 +68,6 @@
 				<java.version>1.8</java.version>
 
 				<eelf.core.version>1.0.0</eelf.core.version>
-				<logging.analytics.version>1.2.2-SNAPSHOT</logging.analytics.version>
 				<camel.version>2.22.0</camel.version>
 				<springboot.version>2.0.2.RELEASE</springboot.version>
 
@@ -224,11 +223,6 @@
 						<groupId>com.att.eelf</groupId>
 						<artifactId>eelf-core</artifactId>
 						<version>${eelf.core.version}</version>
-				</dependency>
-				<dependency>
-						<groupId>org.onap.logging-analytics</groupId>
-						<artifactId>logging-library</artifactId>
-						<version>${logging.analytics.version}</version>
 				</dependency>
 				<dependency>
 						<groupId>org.codehaus.janino</groupId>
