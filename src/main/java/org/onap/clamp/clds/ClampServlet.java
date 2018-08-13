@@ -47,53 +47,62 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-
 public class ClampServlet extends CamelHttpTransportServlet {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -7052719614021825641L;
-    protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(ClampServlet.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(ClampServlet.class);
     public static final String PERM_INSTANCE = "clamp.config.security.permission.instance";
-    public static final String PERM_CL= "clamp.config.security.permission.type.cl";
+    public static final String PERM_CL = "clamp.config.security.permission.type.cl";
     public static final String PERM_TEMPLATE = "clamp.config.security.permission.type.template";
+    public static final String PERM_VF = "clamp.config.security.permission.type.filter.vf";
+    public static final String PERM_MANAGE = "clamp.config.security.permission.type.cl.manage";
 
     @Override
-    protected void doService(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doService(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<SecureServicePermission> permissionList = new ArrayList<>();
 
-        // Get Principal info and translate it into Spring Authentication
-        // If authenticataion is null: a) the authentication info was set manually in the previous thread
-        //                             b) handled by Spring automatically
-        // for the 2 cases above, no need for the translation, just skip the following step
+        // Get Principal info and translate it into Spring Authentication If
+        // authenticataion is null: a) the authentication info was set manually
+        // in the previous thread b) handled by Spring automatically for the 2
+        // cases above, no need for the translation, just skip the following
+        // step
         if (null == authentication) {
-            logger.debug ("Populate Spring Authenticataion info manually.");
-            ApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(this.getServletContext());
-            // Start a timer to clear the authentication after 5 mins, so that the authentication will be reinitialized with AAF DB
+            logger.debug("Populate Spring Authenticataion info manually.");
+            ApplicationContext applicationContext = WebApplicationContextUtils
+                    .getWebApplicationContext(this.getServletContext());
+            // Start a timer to clear the authentication after 5 mins, so that
+            // the authentication will be reinitialized with AAF DB
             new ClampTimer(300);
             String cldsPersmissionTypeCl = applicationContext.getEnvironment().getProperty(PERM_CL);
             String cldsPermissionTypeTemplate = applicationContext.getEnvironment().getProperty(PERM_TEMPLATE);
             String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
+            String cldsPermissionTypeFilterVf = applicationContext.getEnvironment().getProperty(PERM_VF);
+            String cldsPermissionTypeClManage = applicationContext.getEnvironment().getProperty(PERM_MANAGE);
 
-            // set the stragety to Mode_Global, so that all thread is able to see the authentication
+            // set the stragety to Mode_Global, so that all thread is able to
+            // see the authentication
             SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
             Principal p = request.getUserPrincipal();
 
             permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "read"));
             permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "update"));
-            permissionList.add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "read"));
-            permissionList.add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "update"));
+            permissionList
+                    .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "read"));
+            permissionList
+                    .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "update"));
+            permissionList.add(SecureServicePermission.create(cldsPermissionTypeFilterVf, cldsPermissionInstance, "*"));
+            permissionList.add(SecureServicePermission.create(cldsPermissionTypeClManage, cldsPermissionInstance, "*"));
 
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            for (SecureServicePermission perm:permissionList) {
+            for (SecureServicePermission perm : permissionList) {
                 String permString = perm.toString();
                 if (request.isUserInRole(permString)) {
                     grantedAuths.add(new SimpleGrantedAuthority(permString));
                 }
             }
-            Authentication auth =  new UsernamePasswordAuthenticationToken(new User(p.getName(), "", grantedAuths), "", grantedAuths);
+            Authentication auth = new UsernamePasswordAuthenticationToken(new User(p.getName(), "", grantedAuths), "",
+                    grantedAuths);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         super.doService(request, response);
