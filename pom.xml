@@ -70,7 +70,7 @@
 				<eelf.core.version>1.0.0</eelf.core.version>
 				<logging.analytics.version>1.2.2-SNAPSHOT</logging.analytics.version>
 				<camel.version>2.22.0</camel.version>
-				<springboot.version>2.0.2.RELEASE</springboot.version>
+				<springboot.version>2.0.3.RELEASE</springboot.version>
 
 				<sonar.language>java</sonar.language>
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
