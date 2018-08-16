@@ -33,7 +33,7 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.ValueItem;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.logging.ref.slf4j.ONAPLogConstants;
+import org.onap.clamp.clds.util.ONAPLogConstants;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

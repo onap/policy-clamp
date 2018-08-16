@@ -45,7 +45,6 @@ import org.slf4j.event.Level;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.onap.clamp.clds.service.DefaultUserNameHandler;
-import org.onap.logging.ref.slf4j.ONAPLogConstants;
 
 /**
  * This class handles the special info that appear in the log, like RequestID,
@@ -58,8 +57,6 @@ public class LoggingUtils {
 
     /** String constant for messages <tt>ENTERING</tt>, <tt>EXITING</tt>, etc. */
     private static final String EMPTY_MESSAGE = "";
-    private static final String INVOCATIONID_OUT = "InvocationIDOut";
-    private static final String TARGET_ENTITY = "TargetEngity";
 
     /** Logger delegate. */
     private EELFLogger mLogger;
@@ -209,8 +206,8 @@ public class LoggingUtils {
         		serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(ONAPLogConstants.MDCs.SERVICE_NAME, request.getRequestURI());
         }
-        
-        this.mLogger.info("ENTRY");
+
+        this.mLogger.info(ONAPLogConstants.Markers.ENTRY);
     }
 
     /**
@@ -224,7 +221,7 @@ public class LoggingUtils {
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_DESCRIPTION, defaultToEmpty(descrption));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_SEVERITY, defaultToEmpty(severity));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_STATUS_CODE, defaultToEmpty(status));
-            this.mLogger.info("EXIT");
+            this.mLogger.info(ONAPLogConstants.Markers.EXIT);
         }
         finally {
             MDC.clear();
@@ -255,13 +252,13 @@ public class LoggingUtils {
         // Log INVOKE*, with the invocationID as the message body.
         // (We didn't really want this kind of behavior in the standard,
         // but is it worse than new, single-message MDC?)
-        this.mLogger.info("INVOKE");
-        this.mLogger.info("INVOKE-" + ONAPLogConstants.InvocationMode.SYNCHRONOUS.toString() + "{"+ invocationID +"}");
+        this.mLogger.info(ONAPLogConstants.Markers.INVOKE);
+        this.mLogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{"+ invocationID +"}");
         return con;
     }
     public void invokeReturn() {
         // Add the Invoke-return marker and clear the needed MDC
-        this.mLogger.info("INVOKE-RETURN");
+        this.mLogger.info(ONAPLogConstants.Markers.INVOKE_RETURN);
         invokeReturnContext();
     }
 
@@ -313,9 +310,9 @@ public class LoggingUtils {
      * @param invocationId The invocation ID
      */
     private void invokeContext (String targetEntity, String targetServiceName, String invocationID) {
-        MDC.put(TARGET_ENTITY, defaultToEmpty(targetEntity));
+        MDC.put(ONAPLogConstants.MDCs.TARGET_ENTITY, defaultToEmpty(targetEntity));
         MDC.put(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME, defaultToEmpty(targetServiceName));
-        MDC.put(INVOCATIONID_OUT, invocationID);
+        MDC.put(ONAPLogConstants.MDCs.INVOCATIONID_OUT, invocationID);
         MDC.put(ONAPLogConstants.MDCs.INVOKE_TIMESTAMP,
                 ZonedDateTime.now(ZoneOffset.UTC)
                         .format(DateTimeFormatter.ISO_INSTANT));
@@ -326,8 +323,8 @@ public class LoggingUtils {
      *
      */
     private void invokeReturnContext () {
-        MDC.remove(TARGET_ENTITY);
+        MDC.remove(ONAPLogConstants.MDCs.TARGET_ENTITY);
         MDC.remove(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME);
-        MDC.remove(INVOCATIONID_OUT);
+        MDC.remove(ONAPLogConstants.MDCs.INVOCATIONID_OUT);
     }
 }
