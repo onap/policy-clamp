@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  *
  */
@@ -39,7 +40,7 @@ public class ClampTimer {
 
     public ClampTimer(int seconds) {
         timer = new Timer();
-        timer.schedule(new CleanupTask(), seconds*1000);
+        timer.schedule(new CleanupTask(), seconds*1000L);
     }
 
     class CleanupTask extends TimerTask {

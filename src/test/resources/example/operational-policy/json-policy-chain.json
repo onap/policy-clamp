@@ -1,0 +1,63 @@
+[
+  {
+    "name": "pname",
+    "value": "healthCheck Policy"
+  },
+  {
+    "name": "pid",
+    "value": "1"
+  },
+  {
+    "name": "timeout",
+    "value": "180"
+  },
+  {
+    "policyConfigurations": [
+      [
+        {
+          "name": "recipe",
+          "value": [
+            "healthCheck"
+          ]
+        },
+        {
+          "name": "maxRetries",
+          "value": [
+            "3"
+          ]
+        },
+        {
+          "name": "retryTimeLimit",
+          "value": [
+            "180"
+          ]
+        },
+        {
+          "name": "_id",
+          "value": [
+            "789875c1-e788-432f-9a76-eac8ed889734"
+          ]
+        },
+        {
+          "name": "parentPolicy",
+          "value": [
+            ""
+          ]
+        },
+        {
+          "name": "actor",
+          "value": [
+            "APPC"
+          ]
+        },
+        {
+          "name": "targetResourceId",
+          "value": [
+            "cdb69724-57d5-4a22-b96c-4c345150fd0e"
+          ]
+        }
+
+      ]
+    ]
+  }
+]

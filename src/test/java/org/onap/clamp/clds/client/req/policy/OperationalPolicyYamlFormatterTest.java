@@ -17,53 +17,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client.req.policy;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
+
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.onap.policy.controlloop.policy.PolicyResult;
 import org.onap.policy.sdc.Resource;
 import org.onap.policy.sdc.ResourceType;
 
-public class OperationalPolicyReqTest {
+public class OperationalPolicyYamlFormatterTest {
+
+    private OperationalPolicyYamlFormatter policyYamlFormatter = new OperationalPolicyYamlFormatter();
 
     @Test
     public void shouldConvertGivenStringsToResourceObjects()
-        throws NoSuchMethodException, SecurityException, IllegalAccessException,
-        IllegalArgumentException, InvocationTargetException {
+            throws SecurityException,
+            IllegalArgumentException {
 
         //given
         List<String> stringList = Arrays.asList("test1", "test2", "test3", "test4");
 
         //when
-        Resource[] resources = OperationalPolicyReq.convertToResource(stringList, ResourceType.VF);
+        Resource[] resources = policyYamlFormatter.convertToResources(stringList, ResourceType.VF);
 
         //then
-        assertThat(resources).extracting(Resource::getResourceName)
-            .containsExactly("test1", "test2", "test3", "test4");
+        Assertions.assertThat(resources).extracting(Resource::getResourceName)
+                .containsExactly("test1", "test2", "test3", "test4");
     }
 
     @Test
     public void shouldConvertGivenStringsToPolicyResults()
-        throws NoSuchMethodException, SecurityException, IllegalAccessException,
-        IllegalArgumentException, InvocationTargetException {
+            throws SecurityException,
+            IllegalArgumentException {
         //given
         List<String> stringList = Arrays.asList("FAILURE", "SUCCESS", "FAILURE_GUARD", "FAILURE_TIMEOUT");
 
         //when
-        PolicyResult[] policyResults = OperationalPolicyReq.convertToPolicyResult(stringList);
+        PolicyResult[] policyResults = policyYamlFormatter.convertToPolicyResults(stringList);
 
         //then
-        assertThat(policyResults)
-            .containsExactly(PolicyResult.FAILURE, PolicyResult.SUCCESS,
-                PolicyResult.FAILURE_GUARD, PolicyResult.FAILURE_TIMEOUT);
+        Assertions.assertThat(policyResults)
+                .containsExactly(PolicyResult.FAILURE, PolicyResult.SUCCESS,
+                        PolicyResult.FAILURE_GUARD, PolicyResult.FAILURE_TIMEOUT);
     }
 }
