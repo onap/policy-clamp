@@ -627,9 +627,22 @@
 						</testResource>
 				</testResources>
 				<resources>
+						<!--  For AAF folder maven should not try to filter Keystores/Truststores ... 
+							  Otherwise they will be broken and unreadable
+						-->
 						<resource>
 								<directory>src/main/resources</directory>
 								<filtering>true</filtering>
+								<excludes>
+									<exclude>clds/aaf/**</exclude>
+								</excludes>
+						</resource>
+						<resource>
+								<directory>src/main/resources</directory>
+								<filtering>false</filtering>
+								<includes>
+									<include>clds/aaf/**</include>
+								</includes>
 						</resource>
 						<resource>
 								<directory>src/main/docker</directory>

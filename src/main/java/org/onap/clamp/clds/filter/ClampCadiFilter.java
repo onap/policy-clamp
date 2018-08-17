@@ -22,59 +22,122 @@
  */
 package org.onap.clamp.clds.filter;
 
-import java.util.Properties;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.StandardCopyOption;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 
+import org.onap.aaf.cadi.config.Config;
 import org.onap.aaf.cadi.filter.CadiFilter;
-import org.onap.clamp.clds.config.AAFConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 
 public class ClampCadiFilter extends CadiFilter {
-    private static final String CADI_TRUST_STORE = "cadi_truststore";
-    private static final String CADI_TRUST_STORE_PW = "cadi_truststore_password";
-    private static final String CADI_KEY_STORE = "cadi_keystore";
-    private static final String CADI_KEY_STORE_PW = "cadi_keystore_password";
-    private static final String ALIAS = "cadi_alias";
-
-    @Value("${server.ssl.key-store:none}")
-    private String              keyStore;
-
-    @Value("${clamp.config.cadi.cadiKeystorePassword:none}")
-    private String              keyStorePass;
-
-    @Value("${server.ssl.trust:none}")
-    private String              trustStore;
-
-    @Value("${clamp.config.cadi.cadiTruststorePassword:none}")
-    private String              trustStorePass;
-
-    @Value("${server.ssl.key-alias:clamp@clamp.onap.org}")
-    private String              alias;
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(ClampCadiFilter.class);
 
     @Autowired
-    private AAFConfiguration aafConfiguration;
+    private ApplicationContext appContext;
+
+    @Value("${server.ssl.key-store:#{null}}")
+    private String keyStore;
+
+    @Value("${clamp.config.cadi.cadiKeystorePassword:#{null}}")
+    private String keyStorePass;
+
+    @Value("${server.ssl.trust-store:#{null}}")
+    private String trustStore;
+
+    @Value("${clamp.config.cadi.cadiTruststorePassword:#{null}}")
+    private String trustStorePass;
+
+    @Value("${server.ssl.key-alias:clamp@clamp.onap.org}")
+    private String alias;
+
+    @Value("${clamp.config.cadi.keyFile:#{null}}")
+    private String keyFile;
+
+    @Value("${clamp.config.cadi.cadiLoglevel:#{null}}")
+    private String cadiLoglevel;
+
+    @Value("${clamp.config.cadi.cadiLatitude:#{null}}")
+    private String cadiLatitude;
+
+    @Value("${clamp.config.cadi.cadiLongitude:#{null}}")
+    private String cadiLongitude;
+
+    @Value("${clamp.config.cadi.aafLocateUrl:#{null}}")
+    private String aafLocateUrl;
+
+    @Value("${clamp.config.cadi.oauthTokenUrl:#{null}}")
+    private String oauthTokenUrl;
+
+    @Value("${clamp.config.cadi.oauthIntrospectUrl:#{null}}")
+    private String oauthIntrospectUrl;
+
+    @Value("${clamp.config.cadi.aafEnv:#{null}}")
+    private String aafEnv;
+
+    @Value("${clamp.config.cadi.aafUrl:#{null}}")
+    private String aafUrl;
+
+    @Value("${clamp.config.cadi.cadiX509Issuers:#{null}}")
+    private String cadiX509Issuers;
+
+    private void checkIfNullProperty(String key, String value) {
+        /* When value is null, so not defined in application.properties
+           set nothing in System properties */
+        if (value != null) {
+            /* Ensure that any properties already defined in System.prop by JVM params
+                won't be overwritten by Spring application.properties values */
+            System.setProperty(key, System.getProperty(key, value));
+        }
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        Properties props = aafConfiguration.getProperties();
-        props.setProperty(CADI_KEY_STORE, trimFileName(keyStore));
-        props.setProperty(CADI_TRUST_STORE, trimFileName(trustStore));
-        props.setProperty(ALIAS, alias);
-        props.setProperty(CADI_KEY_STORE_PW,  keyStorePass);
-        props.setProperty(CADI_TRUST_STORE_PW, trustStorePass);
+        // set some properties in System so that Cadi filter will find its config
+        // The JVM values set will always overwrite the Spring ones.
+        checkIfNullProperty(Config.CADI_KEYFILE, convertSpringToPath(keyFile));
+        checkIfNullProperty(Config.CADI_LOGLEVEL, cadiLoglevel);
+        checkIfNullProperty(Config.CADI_LATITUDE, cadiLatitude);
+        checkIfNullProperty(Config.CADI_LONGITUDE, cadiLongitude);
+
+        checkIfNullProperty(Config.AAF_LOCATE_URL, aafLocateUrl);
+        checkIfNullProperty(Config.AAF_OAUTH2_TOKEN_URL, oauthTokenUrl);
+        checkIfNullProperty(Config.AAF_OAUTH2_INTROSPECT_URL, oauthIntrospectUrl);
+
+        checkIfNullProperty(Config.AAF_ENV, aafEnv);
+        checkIfNullProperty(Config.AAF_URL, aafUrl);
+        checkIfNullProperty(Config.CADI_X509_ISSUERS, cadiX509Issuers);
+        checkIfNullProperty(Config.CADI_KEYSTORE, convertSpringToPath(keyStore));
+        checkIfNullProperty(Config.CADI_TRUSTSTORE, convertSpringToPath(trustStore));
+        checkIfNullProperty(Config.CADI_ALIAS, alias);
+        checkIfNullProperty(Config.CADI_KEYSTORE_PASSWORD, keyStorePass);
+        checkIfNullProperty(Config.CADI_TRUSTSTORE_PASSWORD, trustStorePass);
 
         super.init(filterConfig);
     }
 
-    private String trimFileName (String fileName) {
-        int index= fileName.indexOf("file:");
-        if (index == -1) {
-            return fileName;
-        } else {
-            return fileName.substring(index+5);
+    private String convertSpringToPath(String fileName) {
+        try (InputStream ioFile = appContext.getResource(fileName).getInputStream()) {
+            if (!fileName.contains("file:")) {
+                File targetFile = new File(appContext.getResource(fileName).getFilename());
+                java.nio.file.Files.copy(ioFile, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                return targetFile.getPath();
+            } else {
+                return appContext.getResource(fileName).getFile().getPath();
+            }
+        } catch (IOException e) {
+            logger.error("Unable to open and copy the file: " + fileName, e);
+            return null;
         }
+
     }
 }
