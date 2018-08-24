@@ -20,9 +20,7 @@
   ============LICENSE_END============================================
   ===================================================================
 -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 		<modelVersion>4.0.0</modelVersion>
 		<groupId>org.onap.clamp</groupId>
 		<artifactId>clds</artifactId>
@@ -32,7 +30,7 @@
 		<parent>
 				<groupId>org.onap.oparent</groupId>
 				<artifactId>oparent</artifactId>
-				<version>1.1.0</version>
+				<version>1.2.0</version>
 		</parent>
 
 		<description>
@@ -85,7 +83,7 @@
 				<docker.skip.push>true</docker.skip.push>
 				<docker.skip.tag>true</docker.skip.tag>
 				<skip.staging.artifacts>false</skip.staging.artifacts>
-				<python.http.proxy.param></python.http.proxy.param>
+				<python.http.proxy.param/>
 				<tomcat.version>8.5.32</tomcat.version>
 		</properties>
 
@@ -545,7 +543,7 @@
 				<dependency>
 						<groupId>com.google.guava</groupId>
 						<artifactId>guava</artifactId>
-						<version>25.1-jre</version>
+
 				</dependency>
 				<!-- Remove the MYSQL connector and replace it by Mariadb -->
 				<dependency>
@@ -711,10 +709,10 @@
 												<doctype>book</doctype>
 												<toc>left</toc>
 												<toclevels>3</toclevels>
-												<numbered></numbered>
-												<hardbreaks></hardbreaks>
-												<sectlinks></sectlinks>
-												<sectanchors></sectanchors>
+												<numbered/>
+												<hardbreaks/>
+												<sectlinks/>
+												<sectanchors/>
 												<generated>${project.build.directory}/asciidoc/generated</generated>
 										</attributes>
 								</configuration>
