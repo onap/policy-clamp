@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -31,7 +32,7 @@ import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
-import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
+import org.onap.clamp.clds.client.req.policy.OperationalPolicyAttributesConstructor;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.properties.ModelProperties;
@@ -52,16 +53,17 @@ public class OperationalPolicyDelegate {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    /**
-     * Automatically injected by Spring, define in CldsConfiguration as a bean.
-     */
+    private final PolicyClient policyClient;
+    private final ClampProperties refProp;
+    private final OperationalPolicyAttributesConstructor attributesConstructor;
+
     @Autowired
-    private PolicyClient policyClient;
-    /**
-     * Automatically injected by Spring, define in CldsConfiguration as a bean.
-     */
-    @Autowired
-    private ClampProperties refProp;
+    public OperationalPolicyDelegate(PolicyClient policyClient, ClampProperties refProp,
+                                     OperationalPolicyAttributesConstructor attributesConstructor) {
+        this.policyClient = policyClient;
+        this.refProp = refProp;
+        this.attributesConstructor = attributesConstructor;
+    }
 
     /**
      * Perform activity. Send Operational Policy info to policy api.
@@ -69,7 +71,7 @@ public class OperationalPolicyDelegate {
      * @param camelExchange
      *            The Camel Exchange object containing the properties
      * @throws BuilderException
-     *             In case of issues with OperationalPolicyReq
+     *             In case of issues with OperationalPolicyRequestAttributesConstructor
      * @throws UnsupportedEncodingException
      *             In case of issues with the Charset encoding
      */
@@ -80,7 +82,7 @@ public class OperationalPolicyDelegate {
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                Map<AttributeType, Map<String, String>> attributes = OperationalPolicyReq.formatAttributes(refProp,
+                Map<AttributeType, Map<String, String>> attributes = attributesConstructor.formatAttributes(refProp,
                         prop, prop.getType(Policy.class).getId(), policyChain);
                 responseMessage = policyClient.sendBrmsPolicy(attributes, prop, LoggingUtils.getRequestId());
             }

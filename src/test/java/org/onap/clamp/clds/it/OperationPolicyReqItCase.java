@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -35,7 +36,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.client.req.policy.OperationalPolicyReq;
+import org.onap.clamp.clds.client.req.policy.OperationalPolicyAttributesConstructor;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
@@ -55,6 +56,9 @@ public class OperationPolicyReqItCase {
     @Autowired
     private ClampProperties refProp;
 
+    @Autowired
+    private OperationalPolicyAttributesConstructor operationalPolicyAttributesConstructor;
+
     @Test
     public void formatAttributesTest() throws IOException, BuilderException {
         String modelBpmnProp = ResourceFileUtil
@@ -65,7 +69,7 @@ public class OperationPolicyReqItCase {
         List<Map<AttributeType, Map<String, String>>> attributes = new ArrayList<>();
         if (modelProperties.getType(Policy.class).isFound()) {
             for (PolicyChain policyChain : modelProperties.getType(Policy.class).getPolicyChains()) {
-                attributes.add(OperationalPolicyReq.formatAttributes(refProp, modelProperties,
+                attributes.add(operationalPolicyAttributesConstructor.formatAttributes(refProp, modelProperties,
                         modelProperties.getType(Policy.class).getId(), policyChain));
             }
         }
