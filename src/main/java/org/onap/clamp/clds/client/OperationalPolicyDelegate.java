@@ -19,7 +19,7 @@
  * ============LICENSE_END============================================
  * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client;
@@ -55,14 +55,11 @@ public class OperationalPolicyDelegate {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private final PolicyClient policyClient;
     private final ClampProperties refProp;
-    private final OperationalPolicyAttributesConstructor attributesConstructor;
 
     @Autowired
-    public OperationalPolicyDelegate(PolicyClient policyClient, ClampProperties refProp,
-                                     OperationalPolicyAttributesConstructor attributesConstructor) {
+    public OperationalPolicyDelegate(PolicyClient policyClient, ClampProperties refProp) {
         this.policyClient = policyClient;
         this.refProp = refProp;
-        this.attributesConstructor = attributesConstructor;
     }
 
     /**
@@ -82,8 +79,8 @@ public class OperationalPolicyDelegate {
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                Map<AttributeType, Map<String, String>> attributes = attributesConstructor.formatAttributes(refProp,
-                        prop, prop.getType(Policy.class).getId(), policyChain);
+                Map<AttributeType, Map<String, String>> attributes = OperationalPolicyAttributesConstructor.formatAttributes(refProp,
+                    prop, prop.getType(Policy.class).getId(), policyChain);
                 responseMessage = policyClient.sendBrmsPolicy(attributes, prop, LoggingUtils.getRequestId());
             }
             if (responseMessage != null) {

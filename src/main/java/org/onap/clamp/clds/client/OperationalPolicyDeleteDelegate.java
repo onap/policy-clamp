@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client;
@@ -43,7 +43,7 @@ import org.springframework.stereotype.Component;
 public class OperationalPolicyDeleteDelegate {
 
     protected static final EELFLogger logger = EELFManager.getInstance()
-            .getLogger(OperationalPolicyDeleteDelegate.class);
+        .getLogger(OperationalPolicyDeleteDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     @Autowired
     private PolicyClient policyClient;

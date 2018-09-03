@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.prop;
@@ -52,10 +52,10 @@ public class ModelPropertiesTest {
     @Test
     public void testTcaModelDecoding() throws IOException {
         String modelBpmnProp = ResourceFileUtil
-                .getResourceAsString("example/model-properties/tca/modelBpmnProperties.json");
+            .getResourceAsString("example/model-properties/tca/modelBpmnProperties.json");
         String modelBpmn = ResourceFileUtil.getResourceAsString("example/model-properties/tca/modelBpmn.json");
         ModelProperties prop = new ModelProperties("example-model-name", "example-control-name", null, true, modelBpmn,
-                modelBpmnProp);
+            modelBpmnProp);
         Policy policy = prop.getType(Policy.class);
         assertTrue(policy.isFound());
         assertEquals(1, policy.getPolicyChains().size());
@@ -76,23 +76,21 @@ public class ModelPropertiesTest {
         assertEquals(2, tca.getTcaItem().getTcaThresholds().size());
         assertEquals("ABATED", tca.getTcaItem().getTcaThresholds().get(0).getClosedLoopEventStatus());
         assertEquals("$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
-                tca.getTcaItem().getTcaThresholds().get(0).getFieldPath());
+            tca.getTcaItem().getTcaThresholds().get(0).getFieldPath());
         assertEquals("LESS_OR_EQUAL", tca.getTcaItem().getTcaThresholds().get(0).getOperator());
         assertEquals(Integer.valueOf(123), tca.getTcaItem().getTcaThresholds().get(0).getThreshold());
         assertEquals("ONSET", tca.getTcaItem().getTcaThresholds().get(1).getClosedLoopEventStatus());
         assertEquals("$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
-                tca.getTcaItem().getTcaThresholds().get(1).getFieldPath());
+            tca.getTcaItem().getTcaThresholds().get(1).getFieldPath());
         assertEquals("GREATER_OR_EQUAL", tca.getTcaItem().getTcaThresholds().get(1).getOperator());
         assertEquals(Integer.valueOf(123), tca.getTcaItem().getTcaThresholds().get(1).getThreshold());
         // Test global prop
         assertEquals("vnfRecipe", prop.getGlobal().getActionSet());
         assertEquals("4cc5b45a-1f63-4194-8100-cd8e14248c92", prop.getGlobal().getService());
-        assertTrue(Arrays.equals(new String[] {
-                "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad"
-        }, prop.getGlobal().getResourceVf().toArray()));
-        assertTrue(Arrays.equals(new String[] {
-                "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1"
-        }, prop.getGlobal().getLocation().toArray()));
+        assertTrue(Arrays.equals(new String[] { "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad" },
+            prop.getGlobal().getResourceVf().toArray()));
+        assertTrue(Arrays.equals(new String[] { "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1" },
+            prop.getGlobal().getLocation().toArray()));
         assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").asText());
         assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").asText());
     }
@@ -100,10 +98,10 @@ public class ModelPropertiesTest {
     @Test
     public void testHolmesModelDecoding() throws IOException {
         String modelBpmnProp = ResourceFileUtil
-                .getResourceAsString("example/model-properties/holmes/modelBpmnProperties.json");
+            .getResourceAsString("example/model-properties/holmes/modelBpmnProperties.json");
         String modelBpmn = ResourceFileUtil.getResourceAsString("example/model-properties/holmes/modelBpmn.json");
         ModelProperties prop = new ModelProperties("example-model-name", "example-control-name", null, true, modelBpmn,
-                modelBpmnProp);
+            modelBpmnProp);
         Policy policy = prop.getType(Policy.class);
         assertTrue(policy.isFound());
         assertEquals(1, policy.getPolicyChains().size());
@@ -122,12 +120,10 @@ public class ModelPropertiesTest {
         // Test global prop
         assertEquals("vnfRecipe", prop.getGlobal().getActionSet());
         assertEquals("4cc5b45a-1f63-4194-8100-cd8e14248c92", prop.getGlobal().getService());
-        assertTrue(Arrays.equals(new String[] {
-                "f5213e3a-9191-4362-93b5-b67f8d770e44"
-        }, prop.getGlobal().getResourceVf().toArray()));
-        assertTrue(Arrays.equals(new String[] {
-                "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1"
-        }, prop.getGlobal().getLocation().toArray()));
+        assertTrue(Arrays.equals(new String[] { "f5213e3a-9191-4362-93b5-b67f8d770e44" },
+            prop.getGlobal().getResourceVf().toArray()));
+        assertTrue(Arrays.equals(new String[] { "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1" },
+            prop.getGlobal().getLocation().toArray()));
         assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").asText());
         assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").asText());
     }
@@ -135,8 +131,8 @@ public class ModelPropertiesTest {
     @Test
     public void testGetVf() throws IOException {
         CldsModel cldsModel = new CldsModel();
-        cldsModel.setPropText(
-                ResourceFileUtil.getResourceAsString("example/model-properties/tca/modelBpmnProperties.json"));
+        cldsModel
+        .setPropText(ResourceFileUtil.getResourceAsString("example/model-properties/tca/modelBpmnProperties.json"));
         assertEquals("023a3f0d-1161-45ff-b4cf-8918a8ccf3ad", ModelProperties.getVf(cldsModel));
     }
 }

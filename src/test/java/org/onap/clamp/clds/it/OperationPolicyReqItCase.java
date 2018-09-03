@@ -19,7 +19,7 @@
  * ============LICENSE_END============================================
  * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.it;
@@ -56,21 +56,18 @@ public class OperationPolicyReqItCase {
     @Autowired
     private ClampProperties refProp;
 
-    @Autowired
-    private OperationalPolicyAttributesConstructor operationalPolicyAttributesConstructor;
-
     @Test
     public void formatAttributesTest() throws IOException, BuilderException {
         String modelBpmnProp = ResourceFileUtil
-                .getResourceAsString("example/model-properties/policy/modelBpmnProperties.json");
+            .getResourceAsString("example/model-properties/policy/modelBpmnProperties.json");
         String modelBpmn = ResourceFileUtil.getResourceAsString("example/model-properties/policy/modelBpmn.json");
         ModelProperties modelProperties = new ModelProperties("testModel", "controlNameTest", CldsEvent.ACTION_SUBMIT,
-                true, modelBpmn, modelBpmnProp);
+            true, modelBpmn, modelBpmnProp);
         List<Map<AttributeType, Map<String, String>>> attributes = new ArrayList<>();
         if (modelProperties.getType(Policy.class).isFound()) {
             for (PolicyChain policyChain : modelProperties.getType(Policy.class).getPolicyChains()) {
-                attributes.add(operationalPolicyAttributesConstructor.formatAttributes(refProp, modelProperties,
-                        modelProperties.getType(Policy.class).getId(), policyChain));
+                attributes.add(OperationalPolicyAttributesConstructor.formatAttributes(refProp, modelProperties,
+                    modelProperties.getType(Policy.class).getId(), policyChain));
             }
         }
         assertFalse(attributes.isEmpty());

@@ -25,6 +25,17 @@ package org.onap.clamp.clds.client.req.policy;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.BadRequestException;
+
 import org.onap.clamp.clds.model.properties.Global;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.PolicyChain;
@@ -40,24 +51,43 @@ import org.onap.policy.controlloop.policy.builder.Results;
 import org.onap.policy.sdc.Resource;
 import org.onap.policy.sdc.ResourceType;
 import org.onap.policy.sdc.Service;
-import org.springframework.stereotype.Component;
 
-import javax.ws.rs.BadRequestException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-@Component
-class OperationalPolicyYamlFormatter {
+public class OperationalPolicyYamlFormatter {
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicyYamlFormatter.class);
 
+    protected OperationalPolicyYamlFormatter() {
+    }
+    /**
+     * Format Operational OpenLoop Policy yaml.
+     *
+     * @param prop
+     * @param modelElementId
+     * @param policyChain
+     * @return
+     * @throws BuilderException
+     * @throws UnsupportedEncodingException
+     */
+    public static String formatOpenLoopYaml(ModelProperties prop, String modelElementId,
+        PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+        // get property objects
+        Global global = prop.getGlobal();
+        prop.setCurrentModelElementId(modelElementId);
+        prop.setPolicyUniqueId(policyChain.getPolicyId());
+        // convert values to SDC objects
+        Service service = new Service(global.getService());
+        Resource[] vfResources = convertToResources(global.getResourceVf(), ResourceType.VF);
+        // create builder
+        ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
+            policyChain.getTimeout(), service, vfResources);
+        // builder.setTriggerPolicy(refProp.getStringValue("op.openloop.policy"));
+        // Build the specification
+        Results results = builder.buildSpecification();
+        validate(results);
+        return URLEncoder.encode(results.getSpecification(), "UTF-8");
+    }
 
-    String formatYaml(ModelProperties prop, String modelElementId,
-                             PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+    public static String formatYaml(ModelProperties prop, String modelElementId,
+        PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
@@ -68,10 +98,10 @@ class OperationalPolicyYamlFormatter {
         Resource[] vfcResources = convertToResources(global.getResourceVfc(), ResourceType.VFC);
         // create builder
         ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
-                policyChain.getTimeout(), service, vfResources);
+            policyChain.getTimeout(), service, vfResources);
         builder.addResource(vfcResources);
         // process each policy
-        Map<String, Policy> policyObjMap = new HashMap<String, Policy>();
+        Map<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = orderParentFirst(policyChain.getPolicyItems());
         for (PolicyItem policyItem : policyItemList) {
             String policyName = policyItem.getRecipe() + " Policy";
@@ -87,16 +117,16 @@ class OperationalPolicyYamlFormatter {
             Policy policyObj;
             if (policyItemList.indexOf(policyItem) == 0) {
                 String policyDescription = policyItem.getRecipe()
-                        + " Policy - the trigger (no parent) policy - created by CLDS";
+                    + " Policy - the trigger (no parent) policy - created by CLDS";
                 policyObj = builder.setTriggerPolicy(policyName, policyDescription, actor, target,
-                        policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
+                    policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit());
             } else {
                 Policy parentPolicyObj = policyObjMap.get(policyItem.getParentPolicy());
                 String policyDescription = policyItem.getRecipe() + " Policy - triggered conditionally by "
-                        + parentPolicyObj.getName() + " - created by CLDS";
+                    + parentPolicyObj.getName() + " - created by CLDS";
                 policyObj = builder.setPolicyForPolicyResult(policyName, policyDescription, actor, target,
-                        policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit(),
-                        parentPolicyObj.getId(), convertToPolicyResults(policyItem.getParentPolicyConditions()));
+                    policyItem.getRecipe(), payloadMap, policyItem.getMaxRetries(), policyItem.getRetryTimeLimit(),
+                    parentPolicyObj.getId(), convertToPolicyResults(policyItem.getParentPolicyConditions()));
                 logger.info("policyObj.id=" + policyObj.getId() + "; parentPolicyObj.id=" + parentPolicyObj.getId());
             }
             policyObjMap.put(policyItem.getId(), policyObj);
@@ -107,7 +137,7 @@ class OperationalPolicyYamlFormatter {
         return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
-    private List<PolicyItem> orderParentFirst(List<PolicyItem> inOrigList) {
+    protected static List<PolicyItem> orderParentFirst(List<PolicyItem> inOrigList) {
         List<PolicyItem> inList = new ArrayList<>();
         inList.addAll(inOrigList);
         List<PolicyItem> outList = new ArrayList<>();
@@ -129,7 +159,7 @@ class OperationalPolicyYamlFormatter {
                 if (parent == null || parent.length() == 0) {
                     if (!outList.isEmpty()) {
                         throw new BadRequestException(
-                                "Operation Policy validation problem: more than one trigger policy");
+                            "Operation Policy validation problem: more than one trigger policy");
                     } else {
                         outList.add(inItem);
                         inListItr.remove();
@@ -151,7 +181,7 @@ class OperationalPolicyYamlFormatter {
         return outList;
     }
 
-    private void validate(Results results) {
+    protected static void validate(Results results) {
         if (results.isValid()) {
             logger.info("results.getSpecification()=" + results.getSpecification());
         } else {
@@ -167,14 +197,14 @@ class OperationalPolicyYamlFormatter {
     }
 
 
-    Resource[] convertToResources(List<String> stringList, ResourceType resourceType) {
+    protected static Resource[] convertToResources(List<String> stringList, ResourceType resourceType) {
         if (stringList == null || stringList.isEmpty()) {
             return new Resource[0];
         }
         return stringList.stream().map(stringElem -> new Resource(stringElem, resourceType)).toArray(Resource[]::new);
     }
 
-    PolicyResult[] convertToPolicyResults(List<String> prList) {
+    protected static PolicyResult[] convertToPolicyResults(List<String> prList) {
         if (prList == null || prList.isEmpty()) {
             return new PolicyResult[0];
         }

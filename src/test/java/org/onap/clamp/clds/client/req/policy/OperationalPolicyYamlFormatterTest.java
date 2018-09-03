@@ -35,37 +35,30 @@ import org.onap.policy.sdc.ResourceType;
 
 public class OperationalPolicyYamlFormatterTest {
 
-    private OperationalPolicyYamlFormatter policyYamlFormatter = new OperationalPolicyYamlFormatter();
-
     @Test
-    public void shouldConvertGivenStringsToResourceObjects()
-            throws SecurityException,
-            IllegalArgumentException {
+    public void shouldConvertGivenStringsToResourceObjects() throws SecurityException, IllegalArgumentException {
 
-        //given
+        // given
         List<String> stringList = Arrays.asList("test1", "test2", "test3", "test4");
 
-        //when
-        Resource[] resources = policyYamlFormatter.convertToResources(stringList, ResourceType.VF);
+        // when
+        Resource[] resources = OperationalPolicyYamlFormatter.convertToResources(stringList, ResourceType.VF);
 
-        //then
-        Assertions.assertThat(resources).extracting(Resource::getResourceName)
-                .containsExactly("test1", "test2", "test3", "test4");
+        // then
+        Assertions.assertThat(resources).extracting(Resource::getResourceName).containsExactly("test1", "test2",
+            "test3", "test4");
     }
 
     @Test
-    public void shouldConvertGivenStringsToPolicyResults()
-            throws SecurityException,
-            IllegalArgumentException {
-        //given
+    public void shouldConvertGivenStringsToPolicyResults() throws SecurityException, IllegalArgumentException {
+        // given
         List<String> stringList = Arrays.asList("FAILURE", "SUCCESS", "FAILURE_GUARD", "FAILURE_TIMEOUT");
 
-        //when
-        PolicyResult[] policyResults = policyYamlFormatter.convertToPolicyResults(stringList);
+        // when
+        PolicyResult[] policyResults = OperationalPolicyYamlFormatter.convertToPolicyResults(stringList);
 
-        //then
-        Assertions.assertThat(policyResults)
-                .containsExactly(PolicyResult.FAILURE, PolicyResult.SUCCESS,
-                        PolicyResult.FAILURE_GUARD, PolicyResult.FAILURE_TIMEOUT);
+        // then
+        Assertions.assertThat(policyResults).containsExactly(PolicyResult.FAILURE, PolicyResult.SUCCESS,
+            PolicyResult.FAILURE_GUARD, PolicyResult.FAILURE_TIMEOUT);
     }
 }

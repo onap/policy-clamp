@@ -19,7 +19,7 @@
  * ============LICENSE_END============================================
  * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.it;
@@ -66,8 +66,6 @@ public class PolicyClientItCase {
     private ClampProperties refProp;
     @Autowired
     private PolicyClient policyClient;
-    @Autowired
-    private OperationalPolicyAttributesConstructor operationalPolicyAttributesConstructor;
 
     String modelProp;
     String modelBpmnProp;
@@ -91,8 +89,8 @@ public class PolicyClientItCase {
         if (policy.isFound()) {
             for (PolicyChain policyChain : policy.getPolicyChains()) {
                 String operationalPolicyRequestUuid = UUID.randomUUID().toString();
-                Map<AttributeType, Map<String, String>> attributes = operationalPolicyAttributesConstructor
-                        .formatAttributes(refProp, prop, policy.getId(), policyChain);
+                Map<AttributeType, Map<String, String>> attributes = OperationalPolicyAttributesConstructor
+                    .formatAttributes(refProp, prop, policy.getId(), policyChain);
                 policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
             }
         }
@@ -166,14 +164,14 @@ public class PolicyClientItCase {
         assertNotNull(policyConfiguration.getNotificationUebServers());
         assertEquals(8, policyConfiguration.getProperties().size());
         assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PDP_URL1))
-                .contains("/pdp/ , testpdp, alpha123"));
+            .contains("/pdp/ , testpdp, alpha123"));
         assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PDP_URL2))
-                .contains("/pdp/ , testpdp, alpha123"));
+            .contains("/pdp/ , testpdp, alpha123"));
         assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PAP_URL))
-                .contains("/pap/ , testpap, alpha123"));
+            .contains("/pap/ , testpap, alpha123"));
         assertEquals("websocket", policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_TYPE));
         assertEquals("localhost",
-                policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_UEB_SERVERS));
+            policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_UEB_SERVERS));
         assertEquals("python", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_ID));
         assertEquals("dGVzdA==", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_KEY));
         assertEquals("DEVL", policyConfiguration.getProperties().get(PolicyConfiguration.ENVIRONMENT));

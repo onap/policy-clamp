@@ -66,6 +66,7 @@ public class PolicyItem implements Cloneable {
     private String targetResourceId;
     private String recipeInfo;
     private String recipeLevel;
+    private String recipeInput;
     private Map<String, String> recipePayload;
     private String oapRop;
     private String oapLimit;
@@ -76,7 +77,7 @@ public class PolicyItem implements Cloneable {
      * @param node
      * @throws IOException
      */
-    public PolicyItem(JsonNode node) throws  IOException {
+    public PolicyItem(JsonNode node) throws IOException {
         id = AbstractModelElement.getValueByName(node, "_id");
         recipe = AbstractModelElement.getValueByName(node, "recipe");
         maxRetries = AbstractModelElement.getIntValueByName(node, "maxRetries");
@@ -89,11 +90,10 @@ public class PolicyItem implements Cloneable {
         }
         recipeInfo = AbstractModelElement.getValueByName(node, "recipeInfo");
         recipeLevel = AbstractModelElement.getValueByName(node, "recipeLevel");
-        String payload = AbstractModelElement.getValueByName(node, "recipeInput");
-
+        recipeInput = AbstractModelElement.getValueByName(node, "recipeInput");
+        String payload = AbstractModelElement.getValueByName(node, "recipePayload");
 
         if (payload != null && !payload.isEmpty()) {
-            //recipePayload = JacksonUtils.getObjectMapperInstance().convertValue(payload, Map.class);
             recipePayload = JacksonUtils.getObjectMapperInstance().readValue(payload, new TypeReference<Map<String, String>>(){});
         }
         oapRop = AbstractModelElement.getValueByName(node, "oapRop");
@@ -213,6 +213,10 @@ public class PolicyItem implements Cloneable {
 
     public String getRecipeLevel() {
         return recipeLevel;
+    }
+
+    public String getRecipeInput() {
+        return recipeInput;
     }
 
     public Map<String, String> getRecipePayload() {

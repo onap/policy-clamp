@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client.req.policy;
@@ -26,11 +26,8 @@ package org.onap.clamp.clds.client.req.policy;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -46,7 +43,6 @@ import org.onap.policy.api.ConfigRequestParameters;
 import org.onap.policy.api.DeletePolicyCondition;
 import org.onap.policy.api.DeletePolicyParameters;
 import org.onap.policy.api.PolicyChangeResponse;
-import org.onap.policy.api.PolicyConfig;
 import org.onap.policy.api.PolicyConfigException;
 import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyEngine;
@@ -95,7 +91,7 @@ public class PolicyClient {
      * @return The response message of policy
      */
     public String sendBrmsPolicy(Map<AttributeType, Map<String, String>> attributes, ModelProperties prop,
-            String policyRequestUuid) {
+        String policyRequestUuid) {
         PolicyParameters policyParameters = new PolicyParameters();
         // Set Policy Type(Mandatory)
         policyParameters.setPolicyConfigType(PolicyConfigType.BRMS_PARAM);
@@ -160,7 +156,7 @@ public class PolicyClient {
      * @return The answer from policy call
      */
     public String sendBasePolicyInOther(String configBody, String configPolicyName, ModelProperties prop,
-            String policyRequestUuid) {
+        String policyRequestUuid) {
         PolicyParameters policyParameters = new PolicyParameters();
         // Set Policy Type
         policyParameters.setPolicyConfigType(PolicyConfigType.Base);
@@ -181,7 +177,7 @@ public class PolicyClient {
 
     /**
      * Perform send of Microservice policy in OTHER type.
-     * 
+     *
      * @param configBody
      *            The config policy string body
      * @param prop
@@ -224,8 +220,7 @@ public class PolicyClient {
         String responseMessage = "";
         Date startTime = new Date();
         try {
-            List<Integer> versions = getVersions(policyNamePrefix, prop);
-            if (versions.isEmpty()) {
+            if (!checkPolicyExists(policyNamePrefix, prop)) {
                 LoggingUtils.setTargetContext("Policy", "createPolicy");
                 logger.info("Attempting to create policy for action=" + prop.getActionCd());
                 response = getPolicyEngine().createPolicy(policyParameters);
@@ -313,8 +308,8 @@ public class PolicyClient {
     }
 
     /**
-     * Use Get Config Policy API to retrieve the versions for a policy. Return
-     * versions in sorted order. Return empty list if none found.
+     * Use list Policy API to retrieve the policy. Return true if policy exists
+     * otherwise return false.
      *
      * @param policyNamePrefix
      *            The Policy Name Prefix
@@ -324,8 +319,8 @@ public class PolicyClient {
      * @throws PolicyConfigException
      *             In case of issues with policy engine
      */
-    protected List<Integer> getVersions(String policyNamePrefix, ModelProperties prop) throws PolicyConfigException {
-        ArrayList<Integer> versions = new ArrayList<>();
+    protected boolean checkPolicyExists(String policyNamePrefix, ModelProperties prop) throws PolicyConfigException {
+        boolean policyexists = false;
         ConfigRequestParameters configRequestParameters = new ConfigRequestParameters();
         String policyName = "";
         if (prop.getPolicyUniqueId() != null && !prop.getPolicyUniqueId().isEmpty()) {
@@ -336,27 +331,20 @@ public class PolicyClient {
         logger.info("Search in Policy Engine for policyName=" + policyName);
         configRequestParameters.setPolicyName(policyName);
         try {
-            Collection<PolicyConfig> response = getPolicyEngine().getConfig(configRequestParameters);
-            for (PolicyConfig policyConfig : response) {
-                if (policyConfig.getPolicyVersion() != null) {
-                    Integer version = Integer.valueOf(policyConfig.getPolicyVersion());
-                    versions.add(version);
-                } else {
-                    logger.warn("Policy version was null, unable to convert it to Integer");
-                }
+            Collection<String> response = getPolicyEngine().listConfig(configRequestParameters);
+            if (response != null && !response.isEmpty()) {
+                policyexists = true;
             }
-            Collections.sort(versions);
-            logger.info("Policy versions.size()=" + versions.size());
         } catch (PolicyConfigException e) {
             // just print warning - if no policy version found
             logger.warn("policy not found...policy name - " + policyName, e);
         }
-        return versions;
+        return policyexists;
     }
 
     /**
      * This method create a new policy engine.
-     * 
+     *
      * @return A new policy engine
      */
     private synchronized PolicyEngine getPolicyEngine() {
@@ -381,8 +369,7 @@ public class PolicyClient {
         String deletePolicyResponse = "";
         try {
             String policyNamePrefix = refProp.getStringValue(POLICY_MS_NAME_PREFIX_PROPERTY_NAME);
-            List<Integer> versions = getVersions(policyNamePrefix, prop);
-            if (!versions.isEmpty()) {
+            if (checkPolicyExists(policyNamePrefix, prop)) {
                 String policyType = refProp.getStringValue(POLICY_MSTYPE_PROPERTY_NAME);
                 deletePolicyResponse = deletePolicy(prop, policyType);
             }
@@ -415,8 +402,7 @@ public class PolicyClient {
         String deletePolicyResponse = "";
         try {
             String policyNamePrefix = refProp.getStringValue(POLICY_OP_NAME_PREFIX_PROPERTY_NAME);
-            List<Integer> versions = getVersions(policyNamePrefix, prop);
-            if (!versions.isEmpty()) {
+            if (checkPolicyExists(policyNamePrefix, prop)) {
                 String policyType = refProp.getStringValue(POLICY_OP_TYPE_PROPERTY_NAME);
                 deletePolicyResponse = deletePolicy(prop, policyType);
             }
