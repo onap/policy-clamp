@@ -37,8 +37,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.onap.clamp.clds.service.SecureServicePermission;
-import org.onap.clamp.clds.util.ClampTimer;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,50 +49,54 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class ClampServlet extends CamelHttpTransportServlet {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4198841134910211542L;
+
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(ClampServlet.class);
     public static final String PERM_INSTANCE = "clamp.config.security.permission.instance";
     public static final String PERM_CL = "clamp.config.security.permission.type.cl";
     public static final String PERM_TEMPLATE = "clamp.config.security.permission.type.template";
     public static final String PERM_VF = "clamp.config.security.permission.type.filter.vf";
     public static final String PERM_MANAGE = "clamp.config.security.permission.type.cl.manage";
+    public static final String PERM_TOSCA = "clamp.config.security.permission.type.tosca";
 
+    /**
+     * When AAF is enabled, request object will contain a cadi Wrapper, so queries
+     * to isUserInRole will invoke a http call to AAF server.
+     */
     @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        throws ServletException, IOException {
         List<SecureServicePermission> permissionList = new ArrayList<>();
 
-        // Get Principal info and translate it into Spring Authentication If
-        // authenticataion is null: a) the authentication info was set manually
-        // in the previous thread b) handled by Spring automatically for the 2
-        // cases above, no need for the translation, just skip the following
-        // step
-        if (null == authentication) {
-            logger.debug("Populate Spring Authenticataion info manually.");
-            ApplicationContext applicationContext = WebApplicationContextUtils
-                    .getWebApplicationContext(this.getServletContext());
-            // Start a timer to clear the authentication after 5 mins, so that
-            // the authentication will be reinitialized with AAF DB
-            new ClampTimer(300);
-            String cldsPersmissionTypeCl = applicationContext.getEnvironment().getProperty(PERM_CL);
-            String cldsPermissionTypeTemplate = applicationContext.getEnvironment().getProperty(PERM_TEMPLATE);
-            String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
-            String cldsPermissionTypeFilterVf = applicationContext.getEnvironment().getProperty(PERM_VF);
-            String cldsPermissionTypeClManage = applicationContext.getEnvironment().getProperty(PERM_MANAGE);
+        ApplicationContext applicationContext = WebApplicationContextUtils
+            .getWebApplicationContext(this.getServletContext());
 
-            // set the stragety to Mode_Global, so that all thread is able to
-            // see the authentication
-            SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
-            Principal p = request.getUserPrincipal();
+        String cldsPersmissionTypeCl = applicationContext.getEnvironment().getProperty(PERM_CL);
+        String cldsPermissionTypeTemplate = applicationContext.getEnvironment().getProperty(PERM_TEMPLATE);
+        String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
+        String cldsPermissionTypeFilterVf = applicationContext.getEnvironment().getProperty(PERM_VF);
+        String cldsPermissionTypeClManage = applicationContext.getEnvironment().getProperty(PERM_MANAGE);
+        String cldsPermissionTypeTosca = applicationContext.getEnvironment().getProperty(PERM_TOSCA);
 
+        // set the stragety to Mode_Global, so that all thread is able to
+        // see the authentication
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
+        Principal p = request.getUserPrincipal();
+        if (null != p) {
             permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "read"));
             permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "update"));
             permissionList
-                    .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "read"));
+            .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "read"));
             permissionList
-                    .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "update"));
+            .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "update"));
             permissionList.add(SecureServicePermission.create(cldsPermissionTypeFilterVf, cldsPermissionInstance, "*"));
             permissionList.add(SecureServicePermission.create(cldsPermissionTypeClManage, cldsPermissionInstance, "*"));
+            permissionList.add(SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance, "read"));
+            permissionList
+            .add(SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance, "update"));
 
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             for (SecureServicePermission perm : permissionList) {
@@ -101,10 +105,21 @@ public class ClampServlet extends CamelHttpTransportServlet {
                     grantedAuths.add(new SimpleGrantedAuthority(permString));
                 }
             }
+
             Authentication auth = new UsernamePasswordAuthenticationToken(new User(p.getName(), "", grantedAuths), "",
-                    grantedAuths);
+                grantedAuths);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        super.doService(request, response);
+        try {
+            super.doService(request, response);
+        } catch (ServletException | IOException ioe) {
+            logger.error("Exception caught when executing doService in servlet", ioe);
+            try {
+                response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            } catch (IOException e) {
+                logger.error("Exception caught when executing HTTP sendError in servlet", e);
+            }
+        }
+
     }
 }
