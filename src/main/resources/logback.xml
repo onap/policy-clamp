@@ -1,9 +1,9 @@
 <configuration scan="true" scanPeriod="60 seconds"
 	debug="true">
 	<springProperty name="logbackFilePath"
-		source="com.att.eelf.logging.path" />
+		source="clamp.config.logback.path" />
 	<springProperty name="logbackFileName"
-		source="com.att.eelf.logging.file" />
+		source="clamp.config.logback.filename" />
 	<springProperty name="logDirectory"
 		source="clamp.config.log.path" />
 		
