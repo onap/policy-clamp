@@ -64,7 +64,7 @@
 				
 				
 				
-				<get uri="/cldsTempate/template/bpmn/{templateName}" produces="text/xml">
+				<get uri="/cldsTempate/template/bpmn/{templateName}" produces="text/xml" >
 						<to
 								uri="bean:org.onap.clamp.clds.service.CldsTemplateService?method=getBpmnTemplate(${header.templateName})" />
 				</get>
@@ -86,6 +86,43 @@
 				</get>
 				
 				
+				<put uri="/tosca/models/{toscaModelName}" type="org.onap.clamp.clds.model.CldsToscaModel" consumes="application/json" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=parseToscaModelAndSave(${header.toscaModelName},${body})" />
+				</put>
+				<get uri="/tosca/models/policyType/{policyType}" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=getToscaModelsByPolicyType(${header.policyType})" />
+				</get>
+				<get uri="/tosca/models" outType="org.onap.clamp.clds.model.CldsToscaModel" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=getAllToscaModels()" />
+				</get>	
+				<get uri="/tosca/models/{toscaModelName}" outType="org.onap.clamp.clds.model.CldsToscaModel" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=getToscaModel(${header.toscaModelName})" />
+				</get>
+				
+				
+				<put uri="/dictionary/{dictionaryName}" type="org.onap.clamp.clds.model.CldsDictionary" outType="org.onap.clamp.clds.model.CldsDictionary" consumes="application/json" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=createOrUpdateDictionary(${header.dictionaryName},${body})" />
+				</put>
+				
+				<get uri="/dictionary" outType="org.onap.clamp.clds.model.CldsDictionary" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=getAllDictionaryNames()" />
+				</get>
+				
+				<put uri="/dictionary/{dictionaryName}/items" type="org.onap.clamp.clds.model.CldsDictionaryItem" outType="org.onap.clamp.clds.model.CldsDictionaryItem" consumes="application/json" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=createOrUpdateDictionaryElements(${header.dictionaryName},${body})" />
+				</put>
+				
+				<get uri="/dictionary/{dictionaryName}/items" outType="org.onap.clamp.clds.model.CldsDictionary" produces="application/json">
+						<to
+								uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=getDictionaryElementsByName(${header.dictionaryName})" />
+				</get>
 				
 				<get uri="/user/getUser" produces="text/plain">
 						<to

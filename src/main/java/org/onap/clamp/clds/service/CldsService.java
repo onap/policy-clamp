@@ -105,6 +105,8 @@ public class CldsService extends SecureServiceBase {
     final SecureServicePermission permissionUpdateCl;
     final SecureServicePermission permissionReadTemplate;
     final SecureServicePermission permissionUpdateTemplate;
+    final SecureServicePermission permissionReadTosca;
+    final SecureServicePermission permissionUpdateTosca;
 
     private final CldsDao cldsDao;
     private final XslTransformer cldsBpmnTransformer;
@@ -125,6 +127,7 @@ public class CldsService extends SecureServiceBase {
         @Value("${clamp.config.security.permission.type.cl.event:permission-type-cl-event}") String cldsPermissionTypeClEvent,
         @Value("${clamp.config.security.permission.type.filter.vf:permission-type-filter-vf}") String cldsPermissionTypeFilterVf,
         @Value("${clamp.config.security.permission.type.template:permission-type-template}") String cldsPermissionTypeTemplate,
+            @Value("${clamp.config.security.permission.type.tosca:permission-type-tosca}") String cldsPermissionTypeTosca,
         @Value("${clamp.config.security.permission.instance:dev}") String cldsPermissionInstance) {
         this.cldsDao = cldsDao;
         this.cldsBpmnTransformer = cldsBpmnTransformer;
@@ -144,6 +147,9 @@ public class CldsService extends SecureServiceBase {
             "read");
         permissionUpdateTemplate = SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance,
             "update");
+        permissionReadTosca = SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance, "read");
+        permissionUpdateTosca = SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance,
+                "update");
     }
 
     /*
@@ -401,7 +407,7 @@ public class CldsService extends SecureServiceBase {
                 retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
             }
             if (retrievedModel != null) {
-                if (!isTest && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
+                if (!isTest && !errorCase && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
                     if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {

@@ -139,7 +139,8 @@ public class CldsModel {
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_RECEIVED)
                 || event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_ANY)
                 || event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_ANY)) {
+                || event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_ANY)
+                || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITPOLICY, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_ACTIVE;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_STOP, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_STOPPED;
@@ -185,14 +186,15 @@ public class CldsModel {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST,
                         CldsEvent.ACTION_DELETE);
                 if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_TEST,
-                            CldsEvent.ACTION_DELETE);
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
+                            CldsEvent.ACTION_TEST, CldsEvent.ACTION_DELETE);
                 }
                 break;
             case CldsEvent.ACTION_MODIFY:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
                 if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
+                            CldsEvent.ACTION_DELETE);
                 }
                 break;
             case CldsEvent.ACTION_SUBMIT:
@@ -201,6 +203,9 @@ public class CldsModel {
                 break;
             case CldsEvent.ACTION_SUBMITDCAE:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
+                break;
+            case CldsEvent.ACTION_SUBMITPOLICY:
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
                 break;
             case CldsEvent.ACTION_DISTRIBUTE:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT,
@@ -226,10 +231,17 @@ public class CldsModel {
             case CldsEvent.ACTION_UPDATE:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE,
                         CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
+                if (isPolicyOnly()) {
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
+                }
                 break;
             case CldsEvent.ACTION_STOP:
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
                         CldsEvent.ACTION_UNDEPLOY);
+                if (isPolicyOnly()) {
+                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
+                            CldsEvent.ACTION_DELETE);
+                }
                 break;
             default:
                 logger.warn("Invalid current actionCd: " + actionCd);
@@ -243,6 +255,22 @@ public class CldsModel {
                 JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(propText);
                 JsonNode simpleModelJson = modelJson.get("simpleModel");
                 if (simpleModelJson != null && simpleModelJson.asBoolean()) {
+                    result = true;
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Error while parsing propText json", e);
+        }
+        return result;
+    }
+
+    private boolean isPolicyOnly() {
+        boolean result = false;
+        try {
+            if (propText != null) {
+                JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(propText);
+                JsonNode policyOnlyJson = modelJson.get("policyOnly");
+                if (policyOnlyJson != null && policyOnlyJson.asBoolean()) {
                     result = true;
                 }
             }

@@ -25,12 +25,14 @@ package org.onap.clamp.clds.model;
 
 public class CldsInfo {
 
-    private String  userName;
-    private String  cldsVersion;
+    private String userName;
+    private String cldsVersion;
     private boolean permissionReadCl;
     private boolean permissionUpdateCl;
     private boolean permissionReadTemplate;
     private boolean permissionUpdateTemplate;
+    private boolean permissionReadTosca;
+    private boolean permissionUpdateTosca;
 
     public String getUserName() {
         return userName;
@@ -78,6 +80,22 @@ public class CldsInfo {
 
     public void setPermissionUpdateTemplate(boolean permissionUpdateTemplate) {
         this.permissionUpdateTemplate = permissionUpdateTemplate;
+    }
+
+    public boolean isPermissionReadTosca() {
+        return permissionReadTosca;
+    }
+
+    public void setPermissionReadTosca(boolean permissionReadTosca) {
+        this.permissionReadTosca = permissionReadTosca;
+    }
+
+    public boolean isPermissionUpdateTosca() {
+        return permissionUpdateTosca;
+    }
+
+    public void setPermissionUpdateTosca(boolean permissionUpdateTosca) {
+        this.permissionUpdateTosca = permissionUpdateTosca;
     }
 
 }

@@ -29,37 +29,38 @@ import org.onap.clamp.clds.dao.CldsDao;
  * Represent a CLDS Event.
  */
 public class CldsEvent {
-    public static final String ACTION_TEST            = "TEST";
-    public static final String ACTION_CREATE          = "CREATE";
-    public static final String ACTION_MODIFY          = "MODIFY";
-    public static final String ACTION_SUBMIT          = "SUBMIT";
+    public static final String ACTION_TEST = "TEST";
+    public static final String ACTION_CREATE = "CREATE";
+    public static final String ACTION_MODIFY = "MODIFY";
+    public static final String ACTION_SUBMIT = "SUBMIT";
     // an update before model is active
-    public static final String ACTION_RESUBMIT        = "RESUBMIT";
+    public static final String ACTION_RESUBMIT = "RESUBMIT";
     // For simplified models
-    public static final String ACTION_SUBMITDCAE      = "SUBMITDCAE";
+    public static final String ACTION_SUBMITDCAE = "SUBMITDCAE";
+    public static final String ACTION_SUBMITPOLICY = "SUBMITPOLICY";
     // only from dcae
-    public static final String ACTION_DISTRIBUTE      = "DISTRIBUTE";
+    public static final String ACTION_DISTRIBUTE = "DISTRIBUTE";
     // only from dcae
-    public static final String ACTION_DEPLOY          = "DEPLOY";
+    public static final String ACTION_DEPLOY = "DEPLOY";
     // only from dcae
-    public static final String ACTION_UNDEPLOY        = "UNDEPLOY";
-    public static final String ACTION_UPDATE          = "UPDATE";
-    public static final String ACTION_DELETE          = "DELETE";
-    public static final String ACTION_STOP            = "STOP";
-    public static final String ACTION_RESTART         = "RESTART";
+    public static final String ACTION_UNDEPLOY = "UNDEPLOY";
+    public static final String ACTION_UPDATE = "UPDATE";
+    public static final String ACTION_DELETE = "DELETE";
+    public static final String ACTION_STOP = "STOP";
+    public static final String ACTION_RESTART = "RESTART";
 
     public static final String ACTION_STATE_INITIATED = "INITIATED";
-    public static final String ACTION_STATE_SENT      = "SENT";
+    public static final String ACTION_STATE_SENT = "SENT";
     public static final String ACTION_STATE_COMPLETED = "COMPLETED";
-    public static final String ACTION_STATE_RECEIVED  = "RECEIVED";
-    public static final String ACTION_STATE_ERROR     = "ERROR";
-    public static final String ACTION_STATE_ANY       = null;
+    public static final String ACTION_STATE_RECEIVED = "RECEIVED";
+    public static final String ACTION_STATE_ERROR = "ERROR";
+    public static final String ACTION_STATE_ANY = null;
 
-    private String             id;
-    private String             actionCd;
-    private String             actionStateCd;
-    private String             processInstanceId;
-    private String             userid;
+    private String id;
+    private String actionCd;
+    private String actionStateCd;
+    private String processInstanceId;
+    private String userid;
 
     public String getId() {
         return id;

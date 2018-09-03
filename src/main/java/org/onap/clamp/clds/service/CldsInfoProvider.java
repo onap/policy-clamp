@@ -45,6 +45,8 @@ class CldsInfoProvider {
         cldsInfo.setPermissionUpdateCl(cldsService.isAuthorizedNoException(cldsService.permissionUpdateCl));
         cldsInfo.setPermissionReadTemplate(cldsService.isAuthorizedNoException(cldsService.permissionReadTemplate));
         cldsInfo.setPermissionUpdateTemplate(cldsService.isAuthorizedNoException(cldsService.permissionUpdateTemplate));
+        cldsInfo.setPermissionReadTosca(cldsService.isAuthorizedNoException(cldsService.permissionReadTosca));
+        cldsInfo.setPermissionUpdateTosca(cldsService.isAuthorizedNoException(cldsService.permissionUpdateTosca));
         return cldsInfo;
     }
 }
