@@ -9,7 +9,7 @@
         "subCategory": "Router",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -22,7 +22,7 @@
         "subCategory": "Load Balancer",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ss8214"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -35,7 +35,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "sw594b"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -48,7 +48,7 @@
         "subCategory": "Database",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "ss8214"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -61,7 +61,7 @@
         "subCategory": "Contrail Route",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "el489u"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -74,7 +74,7 @@
         "subCategory": "Network Elements",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -87,7 +87,7 @@
         "subCategory": "Application Server",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -100,7 +100,7 @@
         "subCategory": "LAN Connectors",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -113,7 +113,7 @@
         "subCategory": "Allotted Resource",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -126,7 +126,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "af3193"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -139,7 +139,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -152,7 +152,7 @@
         "subCategory": "Media Servers",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -165,7 +165,7 @@
         "subCategory": "Allotted Resource",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m08740"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -178,7 +178,7 @@
         "subCategory": "WAN Connectors",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ed852m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -191,7 +191,7 @@
         "subCategory": "IP Mux Demux",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ys278k"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -204,7 +204,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "af3193"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -217,7 +217,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -230,7 +230,7 @@
         "subCategory": "Allotted Resource",
         "resourceType": "VF",
         "lifecycleState": "CERTIFICATION_IN_PROGRESS",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -243,7 +243,7 @@
         "subCategory": "IP Mux Demux",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "le056g"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -256,7 +256,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ss8214"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -269,7 +269,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "lr0306"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -282,7 +282,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -295,7 +295,7 @@
         "subCategory": "Router",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -308,7 +308,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "pa0916"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -321,7 +321,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -334,7 +334,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -347,7 +347,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -360,7 +360,7 @@
         "subCategory": "Infrastructure",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "pa0916"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -373,7 +373,7 @@
         "subCategory": "Abstract",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "sj2381"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -386,7 +386,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -399,7 +399,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -412,7 +412,7 @@
         "subCategory": "Allotted Resource",
         "resourceType": "VF",
         "lifecycleState": "CERTIFICATION_IN_PROGRESS",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -425,7 +425,7 @@
         "subCategory": "Tunnel XConnect",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rb844h"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -438,7 +438,7 @@
         "subCategory": "Virtual Links",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ed852m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -451,7 +451,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -464,7 +464,7 @@
         "subCategory": "Infrastructure",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "sw594b"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -477,7 +477,7 @@
         "subCategory": "Database",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -490,7 +490,7 @@
         "subCategory": "Media Servers",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -503,7 +503,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -516,7 +516,7 @@
         "subCategory": "IP Mux Demux",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "yy815m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -529,7 +529,7 @@
         "subCategory": "Router",
         "resourceType": "VF",
         "lifecycleState": "CERTIFICATION_IN_PROGRESS",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -542,7 +542,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "READY_FOR_CERTIFICATION",
-        "lastUpdaterUserId": "ed852m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -555,7 +555,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -568,7 +568,7 @@
         "subCategory": "Security Zone",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "nk909r"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -581,7 +581,7 @@
         "subCategory": "Load Balancer",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -594,7 +594,7 @@
         "subCategory": "Utility",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -607,7 +607,7 @@
         "subCategory": "Utility",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -620,7 +620,7 @@
         "subCategory": "Application Server",
         "resourceType": "VF",
         "lifecycleState": "READY_FOR_CERTIFICATION",
-        "lastUpdaterUserId": "rx827p"
+        "lastUpdaterUserId": "user"
     },
     
     {
@@ -633,7 +633,7 @@
         "subCategory": "Tunnel XConnect",
         "resourceType": "VF",
         "lifecycleState": "READY_FOR_CERTIFICATION",
-        "lastUpdaterUserId": "rb844h"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -646,7 +646,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -659,7 +659,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "mh677g"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -672,7 +672,7 @@
         "subCategory": "Web Server",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -685,7 +685,7 @@
         "subCategory": "Gateway",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -698,7 +698,7 @@
         "subCategory": "Application Server",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -711,7 +711,7 @@
         "subCategory": "Source",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -724,7 +724,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "nk909r"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -737,7 +737,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ym903w"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -750,7 +750,7 @@
         "subCategory": "Database",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -763,7 +763,7 @@
         "subCategory": "Media Servers",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "yy815m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -776,7 +776,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "af3193"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -789,7 +789,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "af3193"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -802,7 +802,7 @@
         "subCategory": "Service Admin",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ol664w"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -815,7 +815,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ed852m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -828,7 +828,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ed852m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -841,7 +841,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -854,7 +854,7 @@
         "subCategory": "Media Servers",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -867,7 +867,7 @@
         "subCategory": "Application Server",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m08740"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -880,7 +880,7 @@
         "subCategory": "Allotted Resource",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ol664w"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -893,7 +893,7 @@
         "subCategory": "Infrastructure",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "af3193"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -906,7 +906,7 @@
         "subCategory": "Allotted Resource",
         "resourceType": "VF",
         "lifecycleState": "CERTIFICATION_IN_PROGRESS",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -919,7 +919,7 @@
         "subCategory": "Tunnel XConnect",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ed852m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -932,7 +932,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "pa0916"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -945,7 +945,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "az2497"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -958,7 +958,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "nk909r"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -971,7 +971,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "READY_FOR_CERTIFICATION",
-        "lastUpdaterUserId": "nk909r"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -984,7 +984,7 @@
         "subCategory": "Border Element",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -997,7 +997,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "nk909r"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1010,7 +1010,7 @@
         "subCategory": "Database",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m99124"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1023,7 +1023,7 @@
         "subCategory": "Load Balancer",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m99124"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1036,7 +1036,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "lm906x"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1049,7 +1049,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1062,7 +1062,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1075,7 +1075,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1088,7 +1088,7 @@
         "subCategory": "Database",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1101,7 +1101,7 @@
         "subCategory": "Border Element",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m99124"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1114,7 +1114,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1127,7 +1127,7 @@
         "subCategory": "Web Server",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m99124"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1140,7 +1140,7 @@
         "subCategory": "Web Server",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1153,7 +1153,7 @@
         "subCategory": "Media Servers",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1166,7 +1166,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "nk909r"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1179,7 +1179,7 @@
         "subCategory": "Border Element",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1192,7 +1192,7 @@
         "subCategory": "Contrail Route",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1205,7 +1205,7 @@
         "subCategory": "Common Network Resources",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1218,7 +1218,7 @@
         "subCategory": "Security Zone",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1231,7 +1231,7 @@
         "subCategory": "IP Mux Demux",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m99124"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1244,7 +1244,7 @@
         "subCategory": "WAN Connectors",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m99124"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1257,7 +1257,7 @@
         "subCategory": "Gateway",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1270,7 +1270,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "af3193"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1283,7 +1283,7 @@
         "subCategory": "Load Balancer",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1296,7 +1296,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ed852m"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1309,7 +1309,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "sw594b"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1322,7 +1322,7 @@
         "subCategory": "Database",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1335,7 +1335,7 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1348,7 +1348,7 @@
         "subCategory": "Gateway",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1361,7 +1361,7 @@
         "subCategory": "Source",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1374,7 +1374,7 @@
         "subCategory": "Load Balancer",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1387,7 +1387,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "lm906x"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1400,7 +1400,7 @@
         "subCategory": "Common Network Resources",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1413,7 +1413,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "nk909r"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1426,7 +1426,7 @@
         "subCategory": "Call Control",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "m99121"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1439,7 +1439,7 @@
         "subCategory": "Service Admin",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "rb844h"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1452,7 +1452,7 @@
         "subCategory": "Collector",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "af3193"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1465,7 +1465,7 @@
         "subCategory": "Database",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1478,7 +1478,7 @@
         "subCategory": "Router",
         "resourceType": "VF",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "m08743"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1491,7 +1491,7 @@
         "subCategory": "Router",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1504,7 +1504,7 @@
         "subCategory": "Load Balancer",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "ss8214"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1517,7 +1517,7 @@
         "subCategory": "Firewall",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKIN",
-        "lastUpdaterUserId": "sa997j"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1530,7 +1530,7 @@
         "subCategory": "Infrastructure",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "rh176a"
+        "lastUpdaterUserId": "user"
     },
 
     {
@@ -1543,6 +1543,6 @@
         "subCategory": "Microservice",
         "resourceType": "VF",
         "lifecycleState": "NOT_CERTIFIED_CHECKOUT",
-        "lastUpdaterUserId": "ss7286"
+        "lastUpdaterUserId": "user"
     }
 ]

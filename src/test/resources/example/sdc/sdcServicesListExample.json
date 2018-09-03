@@ -7,7 +7,7 @@
         "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8e/toscaModel",
         "category": "Application L4+",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535",
+        "lastUpdaterUserId": "user",
         "distributionStatus":"DISTRIBUTED"
     },
     {
@@ -18,7 +18,7 @@
         "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8e/toscaModel",
         "category": "Application L4+",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535",
+        "lastUpdaterUserId": "user",
         "distributionStatus":"DISTRIBUTED"
     },
         {
@@ -29,7 +29,7 @@
         "toscaModelURL": "/sdc/v1/catalog/resources/29018914-966c-442d-9d08-251b9dc45b8e/toscaModel",
         "category": "Application L4+",
         "lifecycleState": "CERTIFIED",
-        "lastUpdaterUserId": "ml4535",
+        "lastUpdaterUserId": "user",
         "distributionStatus":"DISTRIBUTED"
     }
 ]

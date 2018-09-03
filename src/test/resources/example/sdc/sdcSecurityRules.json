@@ -8,7 +8,7 @@
     "subCategory": "Rules",
     "resourceType": "VFC",
     "lifecycleState": "CERTIFIED",
-    "lastUpdaterUserId": "jh0003",
+    "lastUpdaterUserId": "user",
     "lastUpdaterFullName": "Jimmy Hendrix",
     "toscaResourceName": "org.openecomp.resource.vfc.rules.nodes.heat.network.neutron.SecurityRules",
     "description": "Configuration of policy rules to be applied on ports."

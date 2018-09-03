@@ -8,7 +8,7 @@
     "subCategory": "Abstract",
     "resourceType": "CVFC",
     "lifecycleState": "CERTIFIED",
-    "lastUpdaterUserId": "m08740",
+    "lastUpdaterUserId": "user",
     "lastUpdaterFullName": "Zero ASDCMech",
     "toscaResourceName": "org.openecomp.resource.vfc.ClampDev.abstract.nodes.virc_fe_be_1",
     "resources": 

@@ -8,7 +8,7 @@
     "subCategory": "Application Server",
     "resourceType": "VF",
     "lifecycleState": "CERTIFIED",
-    "lastUpdaterUserId": "ml4535",
+    "lastUpdaterUserId": "user",
     "lastUpdaterFullName": "MONICA LAZER",
     "toscaResourceName": "org.openecomp.resource.vf.Vcts3",
     "resources": 

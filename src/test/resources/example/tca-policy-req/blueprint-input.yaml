@@ -40,8 +40,8 @@ node_templates:
         publisherPollingInterval: '20000'
         publisherProtocol: https
         publisherTopicName: org.onap.dcae.dmaap.mtnje2.DcaeTestVESPub
-        publisherUserName: m00502@tca.af.dcae.onap.org
-        publisherUserPassword: Te5021abc
+        publisherUserName: test@tca.af.dcae.onap.org
+        publisherUserPassword: password
         subscriberConsumerGroup: OpenDCAE-c12
         subscriberConsumerId: c12
         subscriberContentType: application/json
@@ -52,8 +52,8 @@ node_templates:
         subscriberProtocol: https
         subscriberTimeoutMS: '-1'
         subscriberTopicName: org.onap.dcae.dmaap.mtnje2.DcaeTestVESSub
-        subscriberUserName: m00502@tca.af.dcae.onap.org
-        subscriberUserPassword: Te5021abc
+        subscriberUserName: test@tca.af.dcae.onap.org
+        subscriberUserPassword: password
         tca_policy: null
       artifact_name: dcae-analytics-tca
       artifact_version: 1.0.0

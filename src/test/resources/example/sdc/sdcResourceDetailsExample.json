@@ -8,7 +8,7 @@
     "subCategory": "Router",
     "resourceType": "VF",
     "lifecycleState": "CERTIFIED",
-    "lastUpdaterUserId": "m08743",
+    "lastUpdaterUserId": "user",
     "lastUpdaterFullName": "Three ASDCMech",
     "toscaResourceName": "org.openecomp.resource.vf.ClampDev",
     "resources": 
