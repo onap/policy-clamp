@@ -14,6 +14,7 @@ services:
     image: logstash
     volumes:
       - ./logstash-conf:/config-dir
+      - ./logstash-input:/log-input
     command: logstash -f /config-dir/logstash.conf
     depends_on:
       - elasticsearch
