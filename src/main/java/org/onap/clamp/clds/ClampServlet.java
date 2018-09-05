@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.onap.aaf.cadi.principal.X509Principal;
 import org.onap.clamp.clds.service.SecureServicePermission;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -61,6 +62,33 @@ public class ClampServlet extends CamelHttpTransportServlet {
     public static final String PERM_VF = "clamp.config.security.permission.type.filter.vf";
     public static final String PERM_MANAGE = "clamp.config.security.permission.type.cl.manage";
     public static final String PERM_TOSCA = "clamp.config.security.permission.type.tosca";
+    private static List<SecureServicePermission> permissionList;
+
+    private synchronized List<SecureServicePermission> getPermissionList() {
+        if (permissionList == null) {
+            permissionList=new ArrayList<>();
+            ApplicationContext applicationContext = WebApplicationContextUtils
+                .getWebApplicationContext(getServletContext());
+            String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
+            permissionList.add(SecureServicePermission.create(applicationContext.getEnvironment().getProperty(PERM_CL),
+                cldsPermissionInstance, "read"));
+            permissionList.add(SecureServicePermission.create(applicationContext.getEnvironment().getProperty(PERM_CL),
+                cldsPermissionInstance, "update"));
+            permissionList.add(SecureServicePermission.create(
+                applicationContext.getEnvironment().getProperty(PERM_TEMPLATE), cldsPermissionInstance, "read"));
+            permissionList.add(SecureServicePermission.create(
+                applicationContext.getEnvironment().getProperty(PERM_TEMPLATE), cldsPermissionInstance, "update"));
+            permissionList.add(SecureServicePermission.create(applicationContext.getEnvironment().getProperty(PERM_VF),
+                cldsPermissionInstance, "*"));
+            permissionList.add(SecureServicePermission
+                .create(applicationContext.getEnvironment().getProperty(PERM_MANAGE), cldsPermissionInstance, "*"));
+            permissionList.add(SecureServicePermission
+                .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA), cldsPermissionInstance, "read"));
+            permissionList.add(SecureServicePermission
+                .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA), cldsPermissionInstance, "update"));
+        }
+        return permissionList;
+    }
 
     /**
      * When AAF is enabled, request object will contain a cadi Wrapper, so queries
@@ -69,43 +97,18 @@ public class ClampServlet extends CamelHttpTransportServlet {
     @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        List<SecureServicePermission> permissionList = new ArrayList<>();
 
-        ApplicationContext applicationContext = WebApplicationContextUtils
-            .getWebApplicationContext(this.getServletContext());
-
-        String cldsPersmissionTypeCl = applicationContext.getEnvironment().getProperty(PERM_CL);
-        String cldsPermissionTypeTemplate = applicationContext.getEnvironment().getProperty(PERM_TEMPLATE);
-        String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
-        String cldsPermissionTypeFilterVf = applicationContext.getEnvironment().getProperty(PERM_VF);
-        String cldsPermissionTypeClManage = applicationContext.getEnvironment().getProperty(PERM_MANAGE);
-        String cldsPermissionTypeTosca = applicationContext.getEnvironment().getProperty(PERM_TOSCA);
-
-        // set the stragety to Mode_Global, so that all thread is able to
-        // see the authentication
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_GLOBAL);
         Principal p = request.getUserPrincipal();
-        if (null != p) {
-            permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "read"));
-            permissionList.add(SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "update"));
-            permissionList
-            .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "read"));
-            permissionList
-            .add(SecureServicePermission.create(cldsPermissionTypeTemplate, cldsPermissionInstance, "update"));
-            permissionList.add(SecureServicePermission.create(cldsPermissionTypeFilterVf, cldsPermissionInstance, "*"));
-            permissionList.add(SecureServicePermission.create(cldsPermissionTypeClManage, cldsPermissionInstance, "*"));
-            permissionList.add(SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance, "read"));
-            permissionList
-            .add(SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance, "update"));
-
+        if (p instanceof X509Principal) {
+            // When AAF is enabled, there is a need to provision the permissions to Spring
+            // system
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
-            for (SecureServicePermission perm : permissionList) {
+            for (SecureServicePermission perm : getPermissionList()) {
                 String permString = perm.toString();
                 if (request.isUserInRole(permString)) {
                     grantedAuths.add(new SimpleGrantedAuthority(permString));
                 }
             }
-
             Authentication auth = new UsernamePasswordAuthenticationToken(new User(p.getName(), "", grantedAuths), "",
                 grantedAuths);
             SecurityContextHolder.getContext().setAuthentication(auth);

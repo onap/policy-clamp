@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.util;
@@ -31,20 +31,20 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.UUID;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import javax.validation.constraints.NotNull;
-import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
+
+import org.onap.clamp.clds.service.DefaultUserNameHandler;
 import org.slf4j.MDC;
 import org.slf4j.event.Level;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import org.onap.clamp.clds.service.DefaultUserNameHandler;
 
 /**
  * This class handles the special info that appear in the log, like RequestID,
@@ -66,7 +66,7 @@ public class LoggingUtils {
      * Constructor
      */
     public LoggingUtils(final EELFLogger loggerP) {
-    	this.mLogger = checkNotNull(loggerP);
+        this.mLogger = checkNotNull(loggerP);
     }
 
     /**
@@ -86,7 +86,7 @@ public class LoggingUtils {
             MDC.put("ServerIPAddress", InetAddress.getLocalHost().getHostAddress());
         } catch (UnknownHostException e) {
             logger.error("Failed to initiate setRequestContext", e);
-		}
+        }
     }
 
     /**
@@ -149,7 +149,7 @@ public class LoggingUtils {
      * @return A string with the request ID
      */
     public static String getRequestId() {
-        String requestId = (String) MDC.get(ONAPLogConstants.MDCs.REQUEST_ID);
+        String requestId = MDC.get(ONAPLogConstants.MDCs.REQUEST_ID);
         if (requestId == null || requestId.isEmpty()) {
             requestId = UUID.randomUUID().toString();
             MDC.put(ONAPLogConstants.MDCs.REQUEST_ID, requestId);
@@ -162,9 +162,9 @@ public class LoggingUtils {
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateFormat;
     }
-    
-    
-    
+
+
+
     /*********************************************************************************************
      * Method for ONAP Application Logging Specification v1.2
      ********************************************************************************************/
@@ -181,7 +181,7 @@ public class LoggingUtils {
         final String requestID = defaultToUUID(request.getHeader(ONAPLogConstants.Headers.REQUEST_ID));
         final String invocationID = defaultToUUID(request.getHeader(ONAPLogConstants.Headers.INVOCATION_ID));
         final String partnerName = defaultToEmpty(request.getHeader(ONAPLogConstants.Headers.PARTNER_NAME));
-        
+
         // Default the partner name to the user name used to login to clamp
         if (partnerName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(ONAPLogConstants.MDCs.PARTNER_NAME, new DefaultUserNameHandler().retrieveUserName(SecurityContextHolder.getContext()));
@@ -192,8 +192,8 @@ public class LoggingUtils {
         // depending on where you need them to appear, OR extend the
         // ServiceDescriptor to add them.
         MDC.put(ONAPLogConstants.MDCs.ENTRY_TIMESTAMP,
-                ZonedDateTime.now(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ISO_INSTANT));
+            ZonedDateTime.now(ZoneOffset.UTC)
+            .format(DateTimeFormatter.ISO_INSTANT));
         MDC.put(ONAPLogConstants.MDCs.REQUEST_ID, requestID);
         MDC.put(ONAPLogConstants.MDCs.INVOCATION_ID, invocationID);
         MDC.put(ONAPLogConstants.MDCs.CLIENT_IP_ADDRESS, defaultToEmpty(request.getRemoteAddr()));
@@ -203,7 +203,7 @@ public class LoggingUtils {
         // Default the service name to the requestURI, in the event that
         // no value has been provided.
         if (serviceName == null ||
-        		serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
+            serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(ONAPLogConstants.MDCs.SERVICE_NAME, request.getRequestURI());
         }
 
@@ -217,7 +217,7 @@ public class LoggingUtils {
      */
     public void exiting(String code, String descrption, Level severity, ONAPLogConstants.ResponseStatus status) {
         try {
-        	MDC.put(ONAPLogConstants.MDCs.RESPONSE_CODE, defaultToEmpty(code));
+            MDC.put(ONAPLogConstants.MDCs.RESPONSE_CODE, defaultToEmpty(code));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_DESCRIPTION, defaultToEmpty(descrption));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_SEVERITY, defaultToEmpty(severity));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_STATUS_CODE, defaultToEmpty(status));
@@ -241,11 +241,11 @@ public class LoggingUtils {
 
         // Set standard HTTP headers on (southbound request) builder.
         con.setRequestProperty(ONAPLogConstants.Headers.REQUEST_ID,
-                defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
+            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
         con.setRequestProperty(ONAPLogConstants.Headers.INVOCATION_ID,
-        		invocationID);
+            invocationID);
         con.setRequestProperty(ONAPLogConstants.Headers.PARTNER_NAME,
-                defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
+            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
 
         invokeContext(targetEntity, targetServiceName, invocationID);
 
@@ -314,8 +314,8 @@ public class LoggingUtils {
         MDC.put(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME, defaultToEmpty(targetServiceName));
         MDC.put(ONAPLogConstants.MDCs.INVOCATIONID_OUT, invocationID);
         MDC.put(ONAPLogConstants.MDCs.INVOKE_TIMESTAMP,
-                ZonedDateTime.now(ZoneOffset.UTC)
-                        .format(DateTimeFormatter.ISO_INSTANT));
+            ZonedDateTime.now(ZoneOffset.UTC)
+            .format(DateTimeFormatter.ISO_INSTANT));
     }
 
     /**

@@ -38,7 +38,10 @@
         	<b style="font-size:14px;">User Permissions:</b>
         	<div ng-if="userInfo['permissionReadTemplate']">Read Template</div>
 	        <div ng-if="userInfo['permissionReadCl']">Read Model</div>
+	        <div ng-if="userInfo['permissionReadTosca']">Read Tosca</div>
 	        <div ng-if="userInfo['permissionUpdateCl']">Edit Model</div>
+	        <div ng-if="userInfo['permissionUpdateTemplate']">Edit Template</div>
+	        <div ng-if="userInfo['permissionUpdateTosca']">Edit Tosca</div>
         </div>
     </div>
     <div attribute-test="extrauserinfof" class="modal-footer">

@@ -29,7 +29,6 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
 @Configuration
 @Profile("clamp-aaf-authentication")
@@ -54,7 +53,11 @@ public class AAFConfiguration {
     public FilterRegistrationBean cadiFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(cadiFilter());
-        registration.addUrlPatterns("/restservices/*");
+        registration.addUrlPatterns("/restservices/clds/v1/clds/*");
+        registration.addUrlPatterns("/restservices/clds/v1/cldsTempate/*");
+        registration.addUrlPatterns("/restservices/clds/v1/tosca/*");
+        registration.addUrlPatterns("/restservices/clds/v1/dictionary/*");
+        registration.addUrlPatterns("/restservices/clds/v1/user/*");
         //registration.addUrlPatterns("*");
         registration.setName("cadiFilter");
         registration.setOrder(0);
