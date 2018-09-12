@@ -33,35 +33,6 @@
 	background-color:#dddd;
 }
 
-.fileUpload {
-	position: relative;
-	overflow: hidden;
-	margin: 10px;
-}
-
-.fileUpload input.upload {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	font-size: 20px;
-	cursor: pointer;
-	opacity: 0;
-	filter: alpha(opacity = 0);
-	float: left;
-}
-
-.fileDisplay {
-	display: inline-block;
-	overflow: hidden;
-	float: right;
-	margin-left: 0px;
-	z-index: initial;
-	text-align: center;
-	margin-top: 17px;
-}
-
 .form-group {
 	margin-bottom:15px;
 	display:-webkit-flex; 
@@ -126,29 +97,6 @@
 }
 
 </style>
-
-<script type="text/javascript">
-	function disablefile() {
-
-		document.getElementById("fileUpload").disabled = true;
-
-	}
-
-	function disableSVN() {
-		var selectLength =  document.querySelectorAll(".disabled-block-container .tab-close-popup");
-		if(selectLength && selectLength.length>0){
-			for(var i = 0; i< selectLength.length ; i++){
-				selectLength[i].disabled = true;
-			}	
-		}
-	
-		document.getElementById("schemaLocation").disabled = true;
-		document.getElementById("userID").disabled = true;
-		document.getElementById("password").disabled = true;
-
-	}
-</script>
-
 
 <div id="configure-widgets" class="disabled-block-container">
 	<div class="modal-header">
