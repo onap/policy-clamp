@@ -43,6 +43,7 @@ import org.onap.policy.api.ConfigRequestParameters;
 import org.onap.policy.api.DeletePolicyCondition;
 import org.onap.policy.api.DeletePolicyParameters;
 import org.onap.policy.api.PolicyChangeResponse;
+import org.onap.policy.api.PolicyClass;
 import org.onap.policy.api.PolicyConfigException;
 import org.onap.policy.api.PolicyConfigType;
 import org.onap.policy.api.PolicyEngine;
@@ -50,6 +51,7 @@ import org.onap.policy.api.PolicyEngineException;
 import org.onap.policy.api.PolicyParameters;
 import org.onap.policy.api.PolicyType;
 import org.onap.policy.api.PushPolicyParameters;
+import org.onap.policy.api.RuleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
@@ -78,6 +80,40 @@ public class PolicyClient {
     protected ClampProperties refProp;
     @Autowired
     private PolicyConfiguration policyConfiguration;
+
+    /**
+     * Perform Guard policy type.
+     *
+     * @param attributes
+     *            A map of attributes
+     * @param prop
+     *            The ModelProperties
+     * @param policyRequestUuid
+     *            PolicyRequest UUID
+     * @return The response message of policy
+     */
+    public String sendGuardPolicy(Map<AttributeType, Map<String, String>> attributes, ModelProperties prop,
+        String policyRequestUuid) {
+        PolicyParameters policyParameters = new PolicyParameters();
+        // Set Policy Type(Mandatory)
+        policyParameters.setPolicyClass(PolicyClass.Decision);
+        // Set Policy Name(Mandatory)
+        policyParameters.setPolicyName(prop.getPolicyScopeAndNameWithUniqueId()+"Guard");
+        // documentation says this is options, but when tested, got the
+        // following failure: java.lang.Exception: Policy send failed: PE300 -
+        // Data Issue: No policyDescription given.
+        policyParameters.setPolicyDescription(refProp.getStringValue("op.policyDescription"));
+        policyParameters.setOnapName("PDPD");
+        policyParameters.setRuleProvider(RuleProvider.GUARD_YAML);
+        policyParameters.setAttributes(attributes);
+        // Set a random UUID(Mandatory)
+        policyParameters.setRequestID(UUID.fromString(policyRequestUuid));
+        String policyNamePrefix = refProp.getStringValue(POLICY_OP_NAME_PREFIX_PROPERTY_NAME);
+        String rtnMsg = send(policyParameters, prop, policyNamePrefix);
+        String policyType = "Decision";
+        push(policyType, prop);
+        return rtnMsg;
+    }
 
     /**
      * Perform BRMS policy type.
@@ -332,7 +368,7 @@ public class PolicyClient {
         configRequestParameters.setPolicyName(policyName);
         try {
             Collection<String> response = getPolicyEngine().listConfig(configRequestParameters);
-            if (response != null && !response.isEmpty()) {
+            if (response != null && !response.isEmpty() && !response.contains("Policy Name: null")) {
                 policyexists = true;
             }
         } catch (PolicyConfigException e) {
@@ -389,6 +425,27 @@ public class PolicyClient {
      */
     public String deleteBasePolicy(ModelProperties prop) {
         return deletePolicy(prop, PolicyConfigType.Base.toString());
+    }
+
+    /**
+     * Format and send delete Guard requests to Policy.
+     *
+     * @param prop
+     *            The ModelProperties
+     * @return The response message from policy
+     */
+    public String deleteGuard(ModelProperties prop) {
+        String deletePolicyResponse = "";
+        try {
+            String policyNamePrefix = refProp.getStringValue(POLICY_OP_NAME_PREFIX_PROPERTY_NAME);
+            if (checkPolicyExists(policyNamePrefix, prop)) {
+                deletePolicyResponse = deletePolicy(prop, "Decision");
+            }
+        } catch (Exception e) {
+            logger.error("Exception occurred during policy communication", e);
+            throw new PolicyClientException("Exception while communicating with Policy", e);
+        }
+        return deletePolicyResponse;
     }
 
     /**

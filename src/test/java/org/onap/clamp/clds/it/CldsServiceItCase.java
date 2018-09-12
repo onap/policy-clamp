@@ -5,20 +5,20 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.it;
@@ -34,22 +34,22 @@ import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.transform.TransformerException;
 
 import org.apache.commons.codec.DecoderException;
 import org.json.JSONException;
+import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.dao.CldsDao;
-import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsServiceData;
@@ -62,9 +62,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -89,7 +89,7 @@ public class CldsServiceItCase {
     private LoggingUtils util;
     /**
      * Setup the variable before the tests execution.
-     * 
+     *
      * @throws IOException
      *             In case of issues when opening the files
      */
@@ -99,6 +99,7 @@ public class CldsServiceItCase {
         imageText = ResourceFileUtil.getResourceAsString("example/dao/image-template.xml");
         bpmnPropText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-prop.json");
 
+        authList.add(new SimpleGrantedAuthority("permission-type-cl-manage|dev|*"));
         authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|read"));
         authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|update"));
         authList.add(new SimpleGrantedAuthority("permission-type-template|dev|read"));
@@ -148,7 +149,7 @@ public class CldsServiceItCase {
     }
 
     @Test
-    public void testPutModel() {
+    public void testCompleteFlow() throws TransformerException, ParseException {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 
@@ -166,43 +167,50 @@ public class CldsServiceItCase {
         assertEquals(bpmnText, newTemplateRead.getBpmnText());
         assertEquals(imageText, newTemplateRead.getImageText());
         // Save the model
+        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
         CldsModel newModel = new CldsModel();
-        newModel.setName(randomNameTemplate);
+        newModel.setName(randomNameModel);
         newModel.setBpmnText(bpmnText);
         newModel.setImageText(imageText);
         newModel.setPropText(bpmnPropText);
         newModel.setControlNamePrefix("ClosedLoop-");
-        newModel.setTemplateName("test-template");
+        newModel.setTemplateName(randomNameTemplate);
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
         // Test the PutModel method
-        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
+
         cldsService.putModel(randomNameModel, newModel);
         // Verify whether it has been added properly or not
         assertNotNull(cldsDao.getModel(randomNameModel));
+
+        // Verify with GetModel
+        assertEquals(cldsService.getModel(randomNameModel).getTemplateName(),randomNameTemplate);
+        assertEquals(cldsService.getModel(randomNameModel).getName(),randomNameModel);
+
+        assertTrue(cldsService.getModelNames().size() >= 1);
     }
 
     @Test
     public void testGetSdcServices() throws GeneralSecurityException, DecoderException, JSONException, IOException {
         String result = cldsService.getSdcServices();
         JSONAssert.assertEquals(
-                ResourceFileUtil.getResourceAsString("example/sdc/expected-result/all-sdc-services.json"), result,
-                true);
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/all-sdc-services.json"), result,
+            true);
     }
 
     @Test
     public void testGetSdcPropertiesByServiceUuidForRefresh()
-            throws GeneralSecurityException, DecoderException, JSONException, IOException {
+        throws GeneralSecurityException, DecoderException, JSONException, IOException {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 
         cldsService.setSecurityContext(securityContext);
         // Test basic functionalities
         String result = cldsService.getSdcPropertiesByServiceUUIDForRefresh("4cc5b45a-1f63-4194-8100-cd8e14248c92",
-                false);
+            false);
         JSONAssert.assertEquals(
-                ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-4cc5b45a.json"),
-                result, true);
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-4cc5b45a.json"),
+            result, true);
         // Now test the Cache effect
         CldsServiceData cldsServiceDataCache = cldsDao.getCldsServiceCache("c95b0e7c-c1f0-4287-9928-7964c5377a46");
         // Should not be there, so should be null

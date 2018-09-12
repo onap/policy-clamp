@@ -300,7 +300,7 @@ public class CldsService extends SecureServiceBase {
         Date startTime = new Date();
         isAuthorized(permissionReadCl);
         logger.info("GET list of model names");
-        List<ValueItem> names = cldsDao.getBpmnNames();
+        List<ValueItem> names = cldsDao.getModelNames();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("GET model names completed");

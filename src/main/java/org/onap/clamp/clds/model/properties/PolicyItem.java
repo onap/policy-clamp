@@ -71,6 +71,17 @@ public class PolicyItem implements Cloneable {
     private String oapRop;
     private String oapLimit;
 
+    private String enableGuardPolicy;
+    private String guardPolicyType;
+    private String guardTargets;
+    private String minGuard;
+    private String maxGuard;
+    private String limitGuard;
+    private String timeUnitsGuard;
+    private String timeWindowGuard;
+    private String guardActiveStart;
+    private String guardActiveEnd;
+
     /**
      * Parse Policy given json node.
      *
@@ -99,6 +110,17 @@ public class PolicyItem implements Cloneable {
         oapRop = AbstractModelElement.getValueByName(node, "oapRop");
         oapLimit = AbstractModelElement.getValueByName(node, "oapLimit");
         actor = AbstractModelElement.getValueByName(node, "actor");
+
+        enableGuardPolicy = AbstractModelElement.getValueByName(node, "enableGuardPolicy");
+        guardPolicyType = AbstractModelElement.getValueByName(node, "guardPolicyType");
+        guardTargets = AbstractModelElement.getValueByName(node, "guardTargets");
+        minGuard = AbstractModelElement.getValueByName(node, "minGuard");
+        maxGuard = AbstractModelElement.getValueByName(node, "maxGuard");
+        limitGuard = AbstractModelElement.getValueByName(node, "limitGuard");
+        timeUnitsGuard = AbstractModelElement.getValueByName(node, "timeUnitsGuard");
+        timeWindowGuard = AbstractModelElement.getValueByName(node, "timeWindowGuard");
+        guardActiveStart = AbstractModelElement.getValueByName(node, "guardActiveStart");
+        guardActiveEnd = AbstractModelElement.getValueByName(node, "guardActiveEnd");
     }
 
     /**
@@ -236,4 +258,45 @@ public class PolicyItem implements Cloneable {
         }
         return oapLimit;
     }
+
+    public String getEnableGuardPolicy() {
+        return enableGuardPolicy;
+    }
+
+    public String getGuardPolicyType() {
+        return guardPolicyType;
+    }
+
+    public String getGuardTargets() {
+        return guardTargets;
+    }
+
+    public String getMinGuard() {
+        return minGuard;
+    }
+
+    public String getMaxGuard() {
+        return maxGuard;
+    }
+
+    public String getLimitGuard() {
+        return limitGuard;
+    }
+
+    public String getTimeUnitsGuard() {
+        return timeUnitsGuard;
+    }
+
+    public String getTimeWindowGuard() {
+        return timeWindowGuard;
+    }
+
+    public String getGuardActiveStart() {
+        return guardActiveStart;
+    }
+
+    public String getGuardActiveEnd() {
+        return guardActiveEnd;
+    }
+
 }
