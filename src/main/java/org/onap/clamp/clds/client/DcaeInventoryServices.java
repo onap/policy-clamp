@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -60,15 +61,22 @@ public class DcaeInventoryServices {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    public static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
-    public static final String DCAE_INVENTORY_RETRY_INTERVAL = "dcae.intentory.retry.interval";
-    public static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
+    private static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
+    private static final String DCAE_INVENTORY_RETRY_INTERVAL = "dcae.intentory.retry.interval";
+    private static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
     public static final String DCAE_TYPE_NAME = "typeName";
     public static final String DCAE_TYPE_ID = "typeId";
+    private final ClampProperties refProp;
+    private final CldsDao cldsDao;
+    private final DcaeHttpConnectionManager dcaeHttpConnectionManager;
+
     @Autowired
-    private ClampProperties refProp;
-    @Autowired
-    private CldsDao cldsDao;
+    public DcaeInventoryServices(ClampProperties refProp, CldsDao cldsDao, DcaeHttpConnectionManager dcaeHttpConnectionManager) {
+        this.refProp = refProp;
+        this.cldsDao = cldsDao;
+        this.dcaeHttpConnectionManager = dcaeHttpConnectionManager;
+    }
+
 
     /**
      * Set the event inventory.
@@ -203,7 +211,7 @@ public class DcaeInventoryServices {
         }
         for (int i = 0; i < retryLimit; i++) {
             metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
-            String response = DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
+            String response = dcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
             int totalCount = getTotalCountFromDcaeInventoryResponse(response);
             metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
             if (totalCount > 0) {
@@ -254,7 +262,7 @@ public class DcaeInventoryServices {
             String apiBodyString = dcaeServiceTypeRequest.toString();
             logger.info("Dcae api Body String - " + apiBodyString);
             String url = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types";
-            String responseStr = DcaeHttpConnectionManager.doDcaeHttpQuery(url, "POST", apiBodyString,
+            String responseStr = dcaeHttpConnectionManager.doDcaeHttpQuery(url, "POST", apiBodyString,
                     "application/json");
             // If the DCAEServiceTypeRequest is created successfully it will
             // return a json object responce containing a node for newly created
@@ -305,7 +313,7 @@ public class DcaeInventoryServices {
             if (inventoryResponse != null && inventoryResponse.getTypeId() != null) {
                 String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types/"
                         + inventoryResponse.getTypeId();
-                DcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "DELETE", null, null);
+                dcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "DELETE", null, null);
             }
             result = true;
         } catch (IOException | ParseException e) {

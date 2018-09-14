@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -38,22 +39,22 @@ import javax.ws.rs.BadRequestException;
 
 import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * 
  * This class manages the HTTP and HTTPS connections to DCAE.
  *
  */
+@Component
 public class DcaeHttpConnectionManager {
     protected static final EELFLogger logger                  = EELFManager.getInstance()
             .getLogger(DcaeHttpConnectionManager.class);
     protected static final EELFLogger metricsLogger           = EELFManager.getInstance().getMetricsLogger();
     private static final String       DCAE_REQUEST_FAILED_LOG = "Request Failed - response payload=";
 
-    private DcaeHttpConnectionManager() {
-    }
 
-    private static String doHttpsQuery(URL url, String requestMethod, String payload, String contentType)
+    private String doHttpsQuery(URL url, String requestMethod, String payload, String contentType)
             throws IOException {
         logger.info("Using HTTPS URL to contact DCAE:" + url.toString());
         HttpsURLConnection secureConnection = (HttpsURLConnection) url.openConnection();
@@ -86,7 +87,7 @@ public class DcaeHttpConnectionManager {
         }
     }
 
-    private static String doHttpQuery(URL url, String requestMethod, String payload, String contentType)
+    private String doHttpQuery(URL url, String requestMethod, String payload, String contentType)
             throws IOException {
         LoggingUtils utils = new LoggingUtils (logger);
         logger.info("Using HTTP URL to contact DCAE:" + url);
@@ -138,7 +139,7 @@ public class DcaeHttpConnectionManager {
      * @throws IOException
      *             In case of issue with the streams
      */
-    public static String doDcaeHttpQuery(String url, String requestMethod, String payload, String contentType)
+    public String doDcaeHttpQuery(String url, String requestMethod, String payload, String contentType)
             throws IOException {
         URL urlObj = new URL(url);
         if (url.contains("https://")) { // Support for HTTPS

@@ -89,9 +89,11 @@ public class SdcReqItCase {
 
     @Test
     public void formatSdcReqTest() throws JSONException {
-        String jsonResult = sdcReq.formatSdcReq("payload", "artifactName", "artifactLabel", "artifactType");
+        String jsonResult = sdcReq.formatSdcReq("payload", "artifactName",
+                "artifactLabel", "artifactType");
         JSONAssert.assertEquals(
-                "{\"payloadData\" : \"cGF5bG9hZA==\",\"artifactLabel\" : \"artifactLabel\",\"artifactName\" :\"artifactName\",\"artifactType\" : \"artifactType\","
+                "{\"payloadData\" : \"cGF5bG9hZA==\",\"artifactLabel\" : \"artifactLabel\"," +
+                        "\"artifactName\" :\"artifactName\",\"artifactType\" : \"artifactType\","
                         + "\"artifactGroupType\" : \"DEPLOYMENT\",\"description\" : \"from CLAMP Cockpit\"}",
                 jsonResult, true);
     }
@@ -102,6 +104,6 @@ public class SdcReqItCase {
         assertNotNull(listUrls);
         assertTrue(listUrls.size() == 1);
         assertTrue(listUrls.get(0).contains(
-                "/sdc/v1/catalog/services/56441b4b-0467-41dc-9a0e-e68613838219/resourceInstances/vpacketgen0/artifacts"));
+              "/sdc/v1/catalog/services/56441b4b-0467-41dc-9a0e-e68613838219/resourceInstances/vpacketgen0/artifacts"));
     }
 }

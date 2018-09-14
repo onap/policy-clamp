@@ -133,7 +133,8 @@ public class HttpsItCase {
             .getForEntity("https://localhost:" + this.httpsPort + "/restservices/clds/v1/api-doc", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpsEntity.getBody()).contains("swagger");
-        FileUtils.writeStringToFile(new File("docs/swagger/swagger.json"), httpsEntity.getBody(),Charset.defaultCharset());
+        FileUtils.writeStringToFile(
+                new File("docs/swagger/swagger.json"), httpsEntity.getBody(), Charset.defaultCharset());
     }
 
     /**
