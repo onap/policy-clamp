@@ -32,35 +32,6 @@
 	background-color: #dddd;
 }
 
-.fileUpload {
-	position: relative;
-	overflow: hidden;
-	margin: 10px;
-}
-
-.fileUpload input.upload {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	font-size: 20px;
-	cursor: pointer;
-	opacity: 0;
-	filter: alpha(opacity = 0);
-	float: left;
-}
-
-.fileDisplay {
-	display: inline-block;
-	overflow: hidden;
-	float: right;
-	margin-left: 0px;
-	z-index: initial;
-	text-align: center;
-	margin-top: 17px;
-}
-
 .modelSearchBox {
 	position: absolute;
 	padding: 25px 12px;
@@ -140,28 +111,6 @@ label {
 	overflow: auto;
 }
 </style>
-
-<script type="text/javascript">
-	function disablefile() {
-
-		document.getElementById("fileUpload").disabled = true;
-
-	}
-
-	function disableSVN() {
-		var selectLength = document.querySelectorAll(".disabled-block-container .tab-close-popup");
-		if(selectLength && selectLength.length>0){
-			for(var i = 0; i< selectLength.length ; i++){
-				selectLength[i].disabled = true;
-			}	
-		}
-
-		document.getElementById("schemaLocation").disabled = true;
-		document.getElementById("userID").disabled = true;
-		document.getElementById("password").disabled = true;
-
-	}
-</script>
 
 
 <div attribute-test="policywindowproperties" id="configure-widgets"
@@ -306,8 +255,7 @@ label {
 							<label for="payload" class="col-sm-4 control-label">
 								Payload</label>
 							<div class="col-sm-8">
-								<textarea class="form-control" id="recipeInput"
-									name=recipeInput></textarea >
+								<textarea class="form-control" id="recipeInput" name=recipeInput></textarea>
 							</div>
 						</div>
 						<div class="form-group clearfix">
@@ -330,6 +278,75 @@ label {
 							</div>
 							<input type="text" style="display: none" class="form-control"
 								id="targetResourceIdOther" name="targetResourceIdOther" value=""></input>
+						</div>
+						<div style="border: 2px dotted gray;">
+							<div class="form-group clearfix">
+								<label for="enableGuardPolicy" class="col-sm-4 control-label">
+									Enable Guard Policy</label>
+								<div class="col-sm-8">
+									<input type="checkbox" class="form-control"
+										name="enableGuardPolicy" id="enableGuardPolicy">
+								</div>
+								<div class="col-sm-8">
+									<label for="guardPolicyType" class="col-sm-4 control-label">
+										Guard Policy Type</label> 
+										<select class="form-control"
+										name="guardPolicyType" id="guardPolicyType"
+										onchange="changeGuardPolicyType();">
+										<option value="MinMax">MinMax</option>
+										<option value="FrequencyLimiter">FrequencyLimiter</option>
+									</select>
+								</div>
+								<label for="guardTargets" class="col-sm-4 control-label">Guard
+									targets</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="guardTargets"
+										id="guardTargets" />
+								</div>
+							</div>
+
+							<div class="form-group clearfix" id="minMaxGuardPolicyDiv">
+								<label for="minGuard" class="col-sm-4 control-label">
+									Min Guard</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="minGuard" id="minGuard" />
+								</div>
+								<label for="maxGuard" class="col-sm-4 control-label">
+									Max Guard</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="maxGuard" id="maxGuard" />
+								</div>
+							</div>
+							<div class="form-group clearfix"
+								id="frequencyLimiterGuardPolicyDiv" style="display: none">
+								<label for="limitGuard" class="col-sm-4 control-label">Limit</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="limitGuard" id="limitGuard" />
+								</div>
+								<div class="col-sm-8">
+									<select class="form-control" name="timeUnitsGuard"
+										id="timeUnitsGuard" /> <label for="timeWindowGuard"
+										class="col-sm-4 control-label">Time Window</label>
+								</div>
+								<div class="col-sm-8">
+									<input class="form-control" name="timeWindowGuard"
+										id="timeWindowGuard" />
+								</div>
+							</div>
+							<div class="form-group clearfix">
+								<label for="guardActiveStart" class="col-sm-4 control-label">
+									Guard Active Start</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="guardActiveStart"
+										id="guardActiveStart" />
+								</div>
+								<label for="guardActiveEnd" class="col-sm-4 control-label">
+									Guard Active End</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="guardActiveEnd"
+										id="guardActiveEnd" />
+								</div>
+							</div>
 						</div>
 					</div>
 				</form>
@@ -359,6 +376,20 @@ label {
 		} else {
 			$("#targetResourceIdOther").hide();
 			$("#targetResourceIdOther").val("");
+		}
+	}
+	
+	function changeGuardPolicyType() {
+		console.log("executing GuardPolicyType")
+		console.log("GuardPolicyType value:"+$("#guardPolicyType").val())
+		if ($("#guardPolicyType").val()==="MinMax") {
+			console.log("executing GuardPolicyType")
+			$("#minMaxGuardPolicyDiv").show();
+			$("#frequencyLimiterGuardPolicyDiv").hide();
+		} else if ($("#guardPolicyType").val()==="FrequencyLimiter") {
+			console.log("executing GuardPolicyType")
+			$("#minMaxGuardPolicyDiv").hide();
+			$("#frequencyLimiterGuardPolicyDiv").show();
 		}
 	}
 		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
@@ -466,7 +497,7 @@ label {
 		        });
 				$('input[value="multiselect-all"]').prop('disabled', true).parent('li').addClass('disabled');
 			}
-			
+			changeGuardPolicyType();
 		}
 
 			function addSelectListen(count) {
@@ -871,6 +902,7 @@ label {
 		
 		setASDCFields();
 		initTargetResourceId();
+		
 		//load metrics dropdown
 		if (elementMap["global"]){
 			for (var i = 0; i < (elementMap["global"].length); i++){
@@ -889,7 +921,6 @@ label {
 				};
 			};
 		};
-		
 		//Show table panel only
 		function expandTable() {
 			$(".policyPanel").css("display", "none");
