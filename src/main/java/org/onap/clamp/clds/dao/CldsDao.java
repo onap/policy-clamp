@@ -277,7 +277,7 @@ public class CldsDao {
      *
      * @return model names
      */
-    public List<ValueItem> getBpmnNames() {
+    public List<ValueItem> getModelNames() {
         String sql = "SELECT model_name FROM model ORDER BY 1;";
         return jdbcTemplateObject.query(sql, new ValueItemMapper());
     }

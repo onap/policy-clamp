@@ -78,7 +78,22 @@
 			"Failure_Exception": "Failure: Exception",
 			"Failure": "Failure: Other",
 			"Success": "Success"
-		}
+		},
+		"guardTargets": ".*",
+		"minGuard":1,
+		"maxGuard":1,
+		"limitGuard":1,
+		"timeUnitsGuard":{
+			"minute":"minute",
+			"hour":"hour",
+			"day":"day",
+			"week":"week",
+			"month":"month",
+			"year":"year"
+		},
+		"timeWindowGuard":10,
+		"guardActiveStart":"00:00:01-05:00",
+		"guardActiveEnd":"00:00:00-05:00"
 	},
 	"shared": {
 		"byService": {

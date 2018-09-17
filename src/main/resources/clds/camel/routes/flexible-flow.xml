@@ -10,6 +10,7 @@
 										<constant>30000</constant>
 								</delay>
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 						<when>
@@ -22,6 +23,7 @@
 								</delay>
 								<to
 										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDeleteDelegate" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'UPDATE'</simple>
@@ -31,16 +33,19 @@
 										<constant>30000</constant>
 								</delay>
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'STOP'</simple>
 								<to
 										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'RESTART'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
