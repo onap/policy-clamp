@@ -22,56 +22,12 @@
   -->
 
 <style>
-.fileUpload {
-	position: relative;
-	overflow: hidden;
-	margin: 10px;
-}
 #paramsWarnrefresh {
     display: none;
 }
 
-.fileUpload input.upload {
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	font-size: 20px;
-	cursor: pointer;
-	opacity: 0;
-	filter: alpha(opacity = 0);
-	float: left;
-}
-
-.fileDisplay {
-	display: inline-block;
-	overflow: hidden;
-	float: right;
-	margin-left: 0px;
-	z-index: initial;
-	text-align: center;
-	margin-top: 17px;
-}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script type="text/javascript">
-	function disablefile() {
-
-		document.getElementById("fileUpload").disabled = true;
-
-	}
-
-	function disableSVN() {
-
-		document.getElementById("schemaLocation").disabled = true;
-		document.getElementById("userID").disabled = true;
-		document.getElementById("password").disabled = true;
-
-	}
-</script>
-
-
 <div attribute-test="refreshasdc" id="configure-widgets">
 	<div attribute-test="refreshasdch" class="modal-header">
 		<button type="button" class="close" ng-click="close(false)"
