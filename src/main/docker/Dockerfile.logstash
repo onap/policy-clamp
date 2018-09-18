@@ -1,4 +1,4 @@
-FROM  docker.elastic.co/logstash/logstash:6.1.3
+FROM  docker.elastic.co/logstash/logstash-oss:6.1.3
 
 MAINTAINER "The Onap Team"
 LABEL Description="Logstash image with some plugins needed for the clamp dashboard"
