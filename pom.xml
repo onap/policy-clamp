@@ -945,6 +945,22 @@
 																</assembly>
 														</build>
 												</image>
+												<image>
+														<name>onap/clamp-dashboard-logstash</name>
+														<alias>onap-clamp-dashboard-logstash</alias>
+														<run>
+															<skip>true</skip>
+														</run>
+														<build>
+																<cleanup>true</cleanup>
+																<tags>
+																		<tag>latest</tag>
+																		<tag>${project.docker.latesttagtimestamp.version}</tag>
+																		<tag>${project.docker.latesttag.version}</tag>
+																</tags>
+																<dockerFile>Dockerfile.logstash</dockerFile>
+														</build>
+												</image>
 										</images>
 								</configuration>
 
