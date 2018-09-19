@@ -50,6 +50,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsServiceData;
@@ -61,6 +62,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -183,11 +186,37 @@ public class CldsServiceItCase {
         // Verify whether it has been added properly or not
         assertNotNull(cldsDao.getModel(randomNameModel));
 
+        CldsModel model= cldsService.getModel(randomNameModel);
         // Verify with GetModel
-        assertEquals(cldsService.getModel(randomNameModel).getTemplateName(),randomNameTemplate);
-        assertEquals(cldsService.getModel(randomNameModel).getName(),randomNameModel);
+        assertEquals(model.getTemplateName(),randomNameTemplate);
+        assertEquals(model.getName(),randomNameModel);
 
         assertTrue(cldsService.getModelNames().size() >= 1);
+
+        // Should fail
+        ResponseEntity<?> responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_SUBMIT, randomNameModel, "true", model);
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
+        model=(CldsModel)responseEntity.getBody();
+        assertNull(model);
+
+        responseEntity=cldsService.deployModel(randomNameModel, cldsService.getModel(randomNameModel));
+        assertNotNull(responseEntity);
+        assertNotNull(responseEntity.getStatusCode());
+        model=(CldsModel)responseEntity.getBody();
+        assertNotNull(model);
+
+        responseEntity=cldsService.unDeployModel(randomNameModel, cldsService.getModel(randomNameModel));
+        assertNotNull(responseEntity);
+        assertNotNull(responseEntity.getStatusCode());
+        model=(CldsModel)responseEntity.getBody();
+        assertNotNull(model);
+    }
+
+    @Test
+    public void testGetSdcProperties() throws IOException {
+        JSONAssert.assertEquals(
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-global.json"), cldsService.getSdcProperties(),
+            true);
     }
 
     @Test
