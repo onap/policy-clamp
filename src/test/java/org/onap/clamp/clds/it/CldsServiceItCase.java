@@ -55,6 +55,7 @@ import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
+import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
@@ -85,22 +86,26 @@ public class CldsServiceItCase {
     private String bpmnText;
     private String imageText;
     private String bpmnPropText;
+    private String docText;
+
     @Autowired
     private CldsDao cldsDao;
     private Authentication authentication;
-    private List<GrantedAuthority> authList =  new LinkedList<GrantedAuthority>();
+    private List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
     private LoggingUtils util;
+
     /**
      * Setup the variable before the tests execution.
      *
      * @throws IOException
-     *             In case of issues when opening the files
+     *         In case of issues when opening the files
      */
     @Before
     public void setupBefore() throws IOException {
-        bpmnText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-template.xml");
-        imageText = ResourceFileUtil.getResourceAsString("example/dao/image-template.xml");
-        bpmnPropText = ResourceFileUtil.getResourceAsString("example/dao/bpmn-prop.json");
+        bpmnText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/tca-template.xml");
+        imageText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/tca-img.xml");
+        bpmnPropText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/model-properties.json");
+        docText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/doc-text.yaml");
 
         authList.add(new SimpleGrantedAuthority("permission-type-cl-manage|dev|*"));
         authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|read"));
@@ -108,7 +113,8 @@ public class CldsServiceItCase {
         authList.add(new SimpleGrantedAuthority("permission-type-template|dev|read"));
         authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
         authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
-        authentication =  new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
+        authList.add(new SimpleGrantedAuthority("permission-type-cl-event|dev|*"));
+        authentication = new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
 
         util = Mockito.mock(LoggingUtils.class);
         Mockito.doNothing().when(util).entering(Matchers.any(HttpServletRequest.class), Matchers.any(String.class));
@@ -179,52 +185,63 @@ public class CldsServiceItCase {
         newModel.setControlNamePrefix("ClosedLoop-");
         newModel.setTemplateName(randomNameTemplate);
         newModel.setTemplateId(newTemplate.getId());
-        newModel.setDocText(newTemplate.getPropText());
+        newModel.setDocText(docText);
         // Test the PutModel method
 
         cldsService.putModel(randomNameModel, newModel);
         // Verify whether it has been added properly or not
         assertNotNull(cldsDao.getModel(randomNameModel));
 
-        CldsModel model= cldsService.getModel(randomNameModel);
+        CldsModel model = cldsService.getModel(randomNameModel);
         // Verify with GetModel
-        assertEquals(model.getTemplateName(),randomNameTemplate);
-        assertEquals(model.getName(),randomNameModel);
+        assertEquals(model.getTemplateName(), randomNameTemplate);
+        assertEquals(model.getName(), randomNameModel);
 
         assertTrue(cldsService.getModelNames().size() >= 1);
 
         // Should fail
-        ResponseEntity<?> responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_SUBMIT, randomNameModel, "true", model);
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR));
-        model=(CldsModel)responseEntity.getBody();
-        assertNull(model);
+        ResponseEntity<?> responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_SUBMIT,
+            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(responseEntity.getBody());
+        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
+        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(cldsService.getModel(randomNameModel).getStatus()));
 
-        responseEntity=cldsService.deployModel(randomNameModel, cldsService.getModel(randomNameModel));
+        responseEntity = cldsService.deployModel(randomNameModel, cldsService.getModel(randomNameModel));
         assertNotNull(responseEntity);
-        assertNotNull(responseEntity.getStatusCode());
-        model=(CldsModel)responseEntity.getBody();
-        assertNotNull(model);
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(responseEntity.getBody());
+        assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
+        assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
 
-        responseEntity=cldsService.unDeployModel(randomNameModel, cldsService.getModel(randomNameModel));
+        responseEntity = cldsService.unDeployModel(randomNameModel, cldsService.getModel(randomNameModel));
         assertNotNull(responseEntity);
-        assertNotNull(responseEntity.getStatusCode());
-        model=(CldsModel)responseEntity.getBody();
-        assertNotNull(model);
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(responseEntity.getBody());
+        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
+        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(cldsService.getModel(randomNameModel).getStatus()));
+
+        DcaeEvent dcaeEvent = new DcaeEvent();
+        dcaeEvent.setArtifactName("ClosedLoop_with-enough-characters_TestArtifact.yml");
+        dcaeEvent.setEvent(DcaeEvent.EVENT_CREATED);
+        dcaeEvent.setResourceUUID("1");
+        dcaeEvent.setServiceUUID("2");
+        assertEquals(cldsService.postDcaeEvent("false", dcaeEvent),
+            "event=created serviceUUID=2 resourceUUID=1 artifactName=ClosedLoop_with-enough-characters_TestArtifact.yml instance count=0 isTest=false");
     }
 
     @Test
     public void testGetSdcProperties() throws IOException {
         JSONAssert.assertEquals(
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-global.json"), cldsService.getSdcProperties(),
-            true);
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-global.json"),
+            cldsService.getSdcProperties(), true);
     }
 
     @Test
     public void testGetSdcServices() throws GeneralSecurityException, DecoderException, JSONException, IOException {
         String result = cldsService.getSdcServices();
         JSONAssert.assertEquals(
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/all-sdc-services.json"), result,
-            true);
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/all-sdc-services.json"), result, true);
     }
 
     @Test
@@ -238,8 +255,8 @@ public class CldsServiceItCase {
         String result = cldsService.getSdcPropertiesByServiceUUIDForRefresh("4cc5b45a-1f63-4194-8100-cd8e14248c92",
             false);
         JSONAssert.assertEquals(
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-4cc5b45a.json"),
-            result, true);
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-4cc5b45a.json"), result,
+            true);
         // Now test the Cache effect
         CldsServiceData cldsServiceDataCache = cldsDao.getCldsServiceCache("c95b0e7c-c1f0-4287-9928-7964c5377a46");
         // Should not be there, so should be null

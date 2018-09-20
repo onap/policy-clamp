@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model;
@@ -45,13 +45,13 @@ public class CldsModel {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsModel.class);
     private static final int UUID_LENGTH = 36;
-    private static final String STATUS_DESIGN = "DESIGN";
-    private static final String STATUS_DISTRIBUTED = "DISTRIBUTED";
-    private static final String STATUS_ACTIVE = "ACTIVE";
-    private static final String STATUS_STOPPED = "STOPPED";
-    private static final String STATUS_DELETING = "DELETING";
-    private static final String STATUS_ERROR = "ERROR";
-    private static final String STATUS_UNKNOWN = "UNKNOWN";
+    public static final String STATUS_DESIGN = "DESIGN";
+    public static final String STATUS_DISTRIBUTED = "DISTRIBUTED";
+    public static final String STATUS_ACTIVE = "ACTIVE";
+    public static final String STATUS_STOPPED = "STOPPED";
+    public static final String STATUS_DELETING = "DELETING";
+    public static final String STATUS_ERROR = "ERROR";
+    public static final String STATUS_UNKNOWN = "UNKNOWN";
     private String id;
     private String templateId;
     private String templateName;
@@ -99,7 +99,7 @@ public class CldsModel {
         boolean canCall = false;
         /* Below checks the clds event is submit/resubmit/distribute */
         if (event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT)
-                || event.isActionCd(CldsEvent.ACTION_DISTRIBUTE) || event.isActionCd(CldsEvent.ACTION_SUBMITDCAE)) {
+            || event.isActionCd(CldsEvent.ACTION_DISTRIBUTE) || event.isActionCd(CldsEvent.ACTION_SUBMITDCAE)) {
             canCall = true;
         }
         return canCall;
@@ -125,22 +125,22 @@ public class CldsModel {
         } else if (event.isActionStateCd(CldsEvent.ACTION_STATE_ERROR)) {
             status = STATUS_ERROR;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_CREATE, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)
-                || event.isActionAndStateCd(CldsEvent.ACTION_MODIFY, CldsEvent.ACTION_STATE_ANY)) {
+            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_ANY)
+            || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_ANY)
+            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_STATE_ANY)
+            || event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)
+            || event.isActionAndStateCd(CldsEvent.ACTION_MODIFY, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_DESIGN;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DISTRIBUTE, CldsEvent.ACTION_STATE_RECEIVED)
-                || event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_RECEIVED)) {
+            || event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_RECEIVED)) {
             status = STATUS_DISTRIBUTED;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_SENT)) {
             status = STATUS_DELETING;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_RECEIVED)
-                || event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_ANY)
-                || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITPOLICY, CldsEvent.ACTION_STATE_ANY)) {
+            || event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_ANY)
+            || event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_ANY)
+            || event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_ANY)
+            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITPOLICY, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_ACTIVE;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_STOP, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_STOPPED;
@@ -182,69 +182,69 @@ public class CldsModel {
     private void determinePermittedActionCd() {
         String actionCd = getCurrentActionCd();
         switch (actionCd) {
-            case CldsEvent.ACTION_CREATE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST,
-                        CldsEvent.ACTION_DELETE);
-                if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
-                            CldsEvent.ACTION_TEST, CldsEvent.ACTION_DELETE);
-                }
-                break;
-            case CldsEvent.ACTION_MODIFY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
-                if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
-                            CldsEvent.ACTION_DELETE);
-                }
-                break;
-            case CldsEvent.ACTION_SUBMIT:
-            case CldsEvent.ACTION_RESUBMIT:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
-                break;
-            case CldsEvent.ACTION_SUBMITDCAE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
-                break;
-            case CldsEvent.ACTION_SUBMITPOLICY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
-                break;
-            case CldsEvent.ACTION_DISTRIBUTE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT,
-                        CldsEvent.ACTION_DELETE);
-                if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_SUBMITDCAE,
-                            CldsEvent.ACTION_DELETE);
-                }
-                break;
-            case CldsEvent.ACTION_UNDEPLOY:
+        case CldsEvent.ACTION_CREATE:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST,
+                CldsEvent.ACTION_DELETE);
+            if (isSimplifiedModel()) {
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
+                    CldsEvent.ACTION_TEST, CldsEvent.ACTION_DELETE);
+            }
+            break;
+        case CldsEvent.ACTION_MODIFY:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
+            if (isSimplifiedModel()) {
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
+                    CldsEvent.ACTION_DELETE);
+            }
+            break;
+        case CldsEvent.ACTION_SUBMIT:
+        case CldsEvent.ACTION_RESUBMIT:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
+            break;
+        case CldsEvent.ACTION_SUBMITDCAE:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
+            break;
+        case CldsEvent.ACTION_SUBMITPOLICY:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
+            break;
+        case CldsEvent.ACTION_DISTRIBUTE:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT,
+                CldsEvent.ACTION_DELETE);
+            if (isSimplifiedModel()) {
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_SUBMITDCAE,
+                    CldsEvent.ACTION_DELETE);
+            }
+            break;
+        case CldsEvent.ACTION_UNDEPLOY:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
+                CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
+            if (isSimplifiedModel()) {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
-                        CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
-                if (isSimplifiedModel()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
-                            CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
-                }
-                break;
-            case CldsEvent.ACTION_DEPLOY:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UNDEPLOY,
-                        CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
-                break;
-            case CldsEvent.ACTION_RESTART:
-            case CldsEvent.ACTION_UPDATE:
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE,
-                        CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
-                if (isPolicyOnly()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
-                }
-                break;
-            case CldsEvent.ACTION_STOP:
+                    CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
+            }
+            break;
+        case CldsEvent.ACTION_DEPLOY:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UNDEPLOY,
+                CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
+            break;
+        case CldsEvent.ACTION_RESTART:
+        case CldsEvent.ACTION_UPDATE:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE,
+                CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
+            if (isPolicyOnly()) {
+                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
+            }
+            break;
+        case CldsEvent.ACTION_STOP:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
+                CldsEvent.ACTION_UNDEPLOY);
+            if (isPolicyOnly()) {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
-                        CldsEvent.ACTION_UNDEPLOY);
-                if (isPolicyOnly()) {
-                    permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
-                            CldsEvent.ACTION_DELETE);
-                }
-                break;
-            default:
-                logger.warn("Invalid current actionCd: " + actionCd);
+                    CldsEvent.ACTION_DELETE);
+            }
+            break;
+        default:
+            logger.warn("Invalid current actionCd: " + actionCd);
         }
     }
 
@@ -289,8 +289,8 @@ public class CldsModel {
         determinePermittedActionCd();
         if (!permittedActionCd.contains(requestedActionCd)) {
             throw new IllegalArgumentException(
-                    "Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: "
-                            + getCurrentActionCd() + ", the permittedActionCd: " + permittedActionCd);
+                "Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: "
+                    + getCurrentActionCd() + ", the permittedActionCd: " + permittedActionCd);
         }
     }
 
@@ -303,8 +303,8 @@ public class CldsModel {
     public static CldsModel createUsingControlName(String fullControlName) {
         if (fullControlName == null || fullControlName.length() < UUID_LENGTH) {
             throw new BadRequestException(
-                    "closed loop id / control name length, " + (fullControlName != null ? fullControlName.length() : 0)
-                            + ", less than the minimum of: " + UUID_LENGTH);
+                "closed loop id / control name length, " + (fullControlName != null ? fullControlName.length() : 0)
+                + ", less than the minimum of: " + UUID_LENGTH);
         }
         CldsModel model = new CldsModel();
         model.setControlNamePrefix(fullControlName.substring(0, fullControlName.length() - UUID_LENGTH));
@@ -328,10 +328,10 @@ public class CldsModel {
         cldsModel = cldsDao.getModelByUuid(cldsModel.getControlNameUuid());
         cldsModel.determineStatus();
         if (dcaeEvent.getCldsActionCd().equals(CldsEvent.ACTION_UNDEPLOY) || (dcaeEvent.getCldsActionCd()
-                .equals(CldsEvent.ACTION_DEPLOY)
-                && (cldsModel.getStatus().equals(STATUS_DISTRIBUTED) || cldsModel.getStatus().equals(STATUS_DESIGN)))) {
+            .equals(CldsEvent.ACTION_DEPLOY)
+            && (cldsModel.getStatus().equals(STATUS_DISTRIBUTED) || cldsModel.getStatus().equals(STATUS_DESIGN)))) {
             CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userid, dcaeEvent.getCldsActionCd(),
-                    CldsEvent.ACTION_STATE_RECEIVED, null);
+                CldsEvent.ACTION_STATE_RECEIVED, null);
         }
         cldsDao.insModelInstance(cldsModel, dcaeEvent.getInstances());
         return cldsModel;
