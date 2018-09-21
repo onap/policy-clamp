@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client;
@@ -48,22 +48,24 @@ public class CldsEventDelegate {
      * Insert event using process variables.
      *
      * @param camelExchange
-     *            The Camel Exchange object containing the properties
+     *        The Camel Exchange object containing the properties
      */
     @Handler
     public void execute(Exchange camelExchange) {
         String controlName = (String) camelExchange.getProperty("controlName");
         String actionCd = (String) camelExchange.getProperty("actionCd");
-        String actionStateCd = (String) camelExchange.getProperty("actionStateCd");
-        // Flag indicate whether it is triggered by Validation Test button from
-        // UI
-        boolean isTest = (boolean) camelExchange.getProperty("isTest");
-        boolean isInsertTestEvent = (boolean) camelExchange.getProperty("isInsertTestEvent");
-        String userid = (String) camelExchange.getProperty("userid");
-        // do not insert events for test actions unless flag set to insert them
-        if (!isTest || isInsertTestEvent) {
-            // won't really have userid here...
-            CldsEvent.insEvent(cldsDao, controlName, userid, actionCd, actionStateCd, camelExchange.getExchangeId());
-        }
+        String actionStateCd = ((String) camelExchange.getProperty("actionStateCd")) != null
+            ? ((String) camelExchange.getProperty("actionStateCd"))
+                : CldsEvent.ACTION_STATE_COMPLETED;
+            // Flag indicate whether it is triggered by Validation Test button from
+            // UI
+            boolean isTest = (boolean) camelExchange.getProperty("isTest");
+            boolean isInsertTestEvent = (boolean) camelExchange.getProperty("isInsertTestEvent");
+            String userid = (String) camelExchange.getProperty("userid");
+            // do not insert events for test actions unless flag set to insert them
+            if (!isTest || isInsertTestEvent) {
+                // won't really have userid here...
+                CldsEvent.insEvent(cldsDao, controlName, userid, actionCd, actionStateCd, camelExchange.getExchangeId());
+            }
     }
 }

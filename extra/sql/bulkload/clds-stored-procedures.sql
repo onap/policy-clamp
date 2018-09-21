@@ -450,7 +450,8 @@ BEGIN
 	SET process_instance_id = v_process_instance_id
 	WHERE event_id = v_event_id;
 END;
-CREATE PROCEDURE del_model (IN v_model_name VARCHAR(80))
+CREATE PROCEDURE del_model
+(IN v_model_name VARCHAR(80))
 BEGIN
     DECLARE v_model_id VARCHAR(36);
     SELECT model_id INTO v_model_id from model where model_name = v_model_name;
@@ -459,7 +460,7 @@ BEGIN
 	DELETE from model_blueprint where model_id = v_model_id;
 	DELETE from model_properties where model_id = v_model_id;
     DELETE from model where model_id = v_model_id;
-END
+END;
 
 CREATE PROCEDURE set_new_tosca_model_version
   (IN v_tosca_model_id VARCHAR(36),

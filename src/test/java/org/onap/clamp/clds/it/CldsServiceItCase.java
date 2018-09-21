@@ -28,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
 
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.NotFoundException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.codec.DecoderException;
@@ -214,6 +216,27 @@ public class CldsServiceItCase {
         assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
         assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
 
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_STOP,
+            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(responseEntity.getBody());
+        assertTrue(CldsModel.STATUS_STOPPED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
+        assertTrue(CldsModel.STATUS_STOPPED.equals(cldsService.getModel(randomNameModel).getStatus()));
+
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_RESTART,
+            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(responseEntity.getBody());
+        assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
+        assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
+
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_UPDATE,
+            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(responseEntity.getBody());
+        assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
+        assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
+
         responseEntity = cldsService.unDeployModel(randomNameModel, cldsService.getModel(randomNameModel));
         assertNotNull(responseEntity);
         assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
@@ -221,6 +244,22 @@ public class CldsServiceItCase {
         assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
         assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(cldsService.getModel(randomNameModel).getStatus()));
 
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_DELETE,
+            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        assertNotNull(responseEntity);
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertNotNull(responseEntity.getBody());
+        try {
+            cldsService.getModel(randomNameModel);
+            fail("Should have raised an NotFoundException exception");
+        } catch(NotFoundException ne) {
+
+        }
+
+    }
+
+    @Test
+    public void testDcaePost() {
         DcaeEvent dcaeEvent = new DcaeEvent();
         dcaeEvent.setArtifactName("ClosedLoop_with-enough-characters_TestArtifact.yml");
         dcaeEvent.setEvent(DcaeEvent.EVENT_CREATED);

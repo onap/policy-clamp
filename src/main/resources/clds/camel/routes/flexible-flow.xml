@@ -17,13 +17,14 @@
 								<simple> ${exchangeProperty.actionCd} == 'DELETE'</simple>
 								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDeleteDelegate" />
-								<to uri="bean:org.onap.clamp.clds.client.ModelDeleteDelegate" />
 								<delay>
 										<constant>30000</constant>
 								</delay>
 								<to
 										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.ModelDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'UPDATE'</simple>

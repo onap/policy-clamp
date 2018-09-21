@@ -259,8 +259,8 @@ function($scope, $rootScope, $timeout, dialogs, $location, MenuService,
 				$scope.cldsConfirmPerformAction("RESUBMIT");
 			} else if (name == "Update") {
 				$scope.cldsConfirmPerformAction("UPDATE");
-			} else if (name.toLowerCase() == "delete") {
-				$scope.manageConfirmPerformAction("DELETE");
+			} else if (name == "Delete") {
+				$scope.cldsConfirmPerformAction("DELETE");
 			} else if (name == "Stop") {
 				$scope.cldsConfirmPerformAction("STOP");
 			} else if (name == "Restart") {
@@ -670,23 +670,7 @@ function($scope, $rootScope, $timeout, dialogs, $location, MenuService,
 		}, function(data) {
 		});
 	}
-	$scope.managePerformAction = function(action) {
-		if (action.toLowerCase() === "delete") {
-			cldsModelService.manageAction(selected_model,
-			"805b9f83-261f-48d9-98c7-8011fc2cc8e8", "ClosedLoop-ABCD-0000.yml")
-			.then(function(pars) {
-			}, function(data) {
-			});
-		}
-	};
-	$scope.manageConfirmPerformAction = function(uiAction) {
-		var dlg = dialogs.confirm('Message', 'Do you want to '
-		+ uiAction.toLowerCase() + ' the closed loop?');
-		dlg.result.then(function(btn) {
-			$scope.managePerformAction(uiAction);
-		}, function(btn) {
-		});
-	};
+
 	$scope.VesCollectorWindow = function(vesCollector) {
 		var dlg = dialogs.create(
 		'partials/portfolios/vesCollector_properties.html', 'ImportSchemaCtrl',

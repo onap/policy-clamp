@@ -363,8 +363,7 @@ public class CldsService extends SecureServiceBase {
             logger.info("PUT deploymentId={}", model.getDeploymentId());
             this.fillInCldsModel(model);
             // save model to db
-            model.setName(modelName);
-            updateAndInsertNewEvent(modelName, model.getControlNamePrefix(), model.getEvent(), CldsEvent.ACTION_SUBMIT);
+            updateAndInsertNewEvent(modelName, model.getControlNamePrefix(), model.getEvent(), CldsEvent.ACTION_MODIFY);
             model.save(cldsDao, getUserId());
             // get vars and format if necessary
             String prop = model.getPropText();
@@ -373,73 +372,56 @@ public class CldsService extends SecureServiceBase {
             String controlName = model.getControlName();
             String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
             logger.info("PUT bpmnJson={}", bpmnJson);
-            // Flag indicates whether it is triggered by Validation Test button
-            // from
-            // UI
-            boolean isTest = Boolean.parseBoolean(test);
-            if (!isTest) {
-                String actionTestOverride = refProp.getStringValue("action.test.override");
-                if (Boolean.parseBoolean(actionTestOverride)) {
-                    logger.info("PUT actionTestOverride={}", actionTestOverride);
-                    logger.info("PUT override test indicator and setting it to true");
-                    isTest = true;
-                }
-            }
+            // Test flag coming from UI or from Clamp config
+            boolean isTest = Boolean.parseBoolean(test)
+                || Boolean.parseBoolean(refProp.getStringValue("action.test.override"));
             logger.info("PUT isTest={}", isTest);
-            String insertTestEvent = refProp.getStringValue("action.insert.test.event");
-            boolean isInsertTestEvent = Boolean.parseBoolean(insertTestEvent);
-
+            boolean isInsertTestEvent = Boolean.parseBoolean(refProp.getStringValue("action.insert.test.event"));
             logger.info("PUT isInsertTestEvent={}", isInsertTestEvent);
             // determine if requested action is permitted
             model.validateAction(actionCd);
             logger.info("modelProp - " + prop);
             logger.info("docText - " + docText);
             try {
-                String result = camelProxy.submit(actionCd, prop, bpmnJson, modelName, controlName, docText, isTest,
-                    userId, isInsertTestEvent, model.getEvent().getActionCd());
+                String result = camelProxy.executeAction(actionCd, prop, bpmnJson, modelName, controlName, docText,
+                    isTest, userId, isInsertTestEvent, model.getEvent().getActionCd());
                 logger.info("Starting Camel flow on request, result is: ", result);
             } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
                 errorCase = true;
                 logger.error("Exception occured during invoking Camel process", e);
             }
-            if (!actionCd.equalsIgnoreCase(CldsEvent.ACTION_DELETE)) {
-                // refresh model info from db (get fresh event info)
+            if (actionCd.equalsIgnoreCase(CldsEvent.ACTION_DELETE)) {
+                util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO,
+                    ONAPLogConstants.ResponseStatus.COMPLETED);
+                return new ResponseEntity<>("", HttpStatus.OK);
+            } else {
                 retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
             }
-            if (retrievedModel != null) {
-                if (!isTest && !errorCase
-                    && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
-                        || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
-                        || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-                    if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
-                        // SDC artifact case
-                        logger
-                        .info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
-                        DcaeEvent dcaeEvent = new DcaeEvent();
-                        dcaeEvent.setArtifactName(retrievedModel.getControlName() + ".yml");
-                        dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
-                        CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
-                            CldsEvent.ACTION_STATE_RECEIVED, null);
-                    } else {
-                        // This should be done only when the call to DCAE
-                        // has not yet been done. When CL comes from SDC
-                        // this is not required as the DCAE inventory call is done
-                        // during the CL deployment.
-                        dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
-                    }
-                    retrievedModel.save(cldsDao, getUserId());
+            if (!isTest && !errorCase
+                && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
+                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
+                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
+                if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
+                    // SDC artifact case
+                    logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
+                    DcaeEvent dcaeEvent = new DcaeEvent();
+                    dcaeEvent.setArtifactName(retrievedModel.getControlName() + ".yml");
+                    dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
+                    CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
+                        CldsEvent.ACTION_STATE_RECEIVED, null);
+                } else {
+                    // This should be done only when the call to DCAE
+                    // has not yet been done. When CL comes from SDC
+                    // this is not required as the DCAE inventory call is done
+                    // during the CL deployment.
+                    dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
                 }
-                // audit log
-                LoggingUtils.setTimeContext(startTime, new Date());
-                auditLogger.info("Process model action completed");
-            } else {
-                logger.error("CldsModel not found in database with modelName: " + modelName);
-                util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-                    "CldsModel not found in database with modelName " + "modelName", Level.INFO,
-                    ONAPLogConstants.ResponseStatus.ERROR);
-                return new ResponseEntity<String>("CldsModel not found in database with modelName: \" + modelName",
-                    HttpStatus.INTERNAL_SERVER_ERROR);
+                retrievedModel.save(cldsDao, getUserId());
             }
+            // audit log
+            LoggingUtils.setTimeContext(startTime, new Date());
+            auditLogger.info("Process model action completed");
+
         } catch (Exception e) {
             errorCase = true;
             logger.error("Exception occured during putModelAndProcessAction", e);

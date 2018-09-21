@@ -59,7 +59,7 @@ public interface CamelProxy {
      *            The latest event action in database (like CREATE, SUBMIT, ...)
      * @return A string containing the result of the Camel flow execution
      */
-    String submit(@ExchangeProperty("actionCd") String actionCommand,
+    String executeAction(@ExchangeProperty("actionCd") String actionCommand,
             @ExchangeProperty("modelProp") String modelProperties,
             @ExchangeProperty("modelBpmnProp") String modelBpmnProperties,
             @ExchangeProperty("modelName") String modelName, @ExchangeProperty("controlName") String controlName,
