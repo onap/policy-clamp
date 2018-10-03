@@ -28,11 +28,14 @@ import com.att.eelf.configuration.EELFManager;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
+import org.onap.clamp.clds.client.req.policy.GuardPolicyAttributesConstructor;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
 import org.onap.clamp.clds.model.properties.PolicyChain;
+import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,9 +48,14 @@ public class GuardPolicyDeleteDelegate {
     protected static final EELFLogger logger = EELFManager.getInstance()
         .getLogger(GuardPolicyDeleteDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    @Autowired
-    private PolicyClient policyClient;
+    private final PolicyClient policyClient;
+    private final ClampProperties refProp;
 
+    @Autowired
+    public GuardPolicyDeleteDelegate(PolicyClient policyClient, ClampProperties refProp) {
+        this.policyClient = policyClient;
+        this.refProp = refProp;
+    }
     /**
      * Perform activity. Delete Operational Policy via policy api.
      *
@@ -58,17 +66,18 @@ public class GuardPolicyDeleteDelegate {
     public void execute(Exchange camelExchange) {
         ModelProperties prop = ModelProperties.create(camelExchange);
         Policy policy = prop.getType(Policy.class);
-        prop.setCurrentModelElementId(policy.getId());
+
         String eventAction = (String) camelExchange.getProperty("eventAction");
-        String responseMessage = "";
         if (!eventAction.equalsIgnoreCase(CldsEvent.ACTION_CREATE) && policy.isFound()) {
-            for (PolicyChain policyChain : policy.getPolicyChains()) {
-                prop.setPolicyUniqueId(policyChain.getPolicyId());
-                responseMessage = policyClient.deleteBrms(prop);
-            }
-            if (responseMessage != null) {
-                camelExchange.setProperty("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
+            for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
+                for(PolicyItem policyItem:GuardPolicyAttributesConstructor.getAllPolicyGuardsFromPolicyChain(policyChain)) {
+                    prop.setCurrentModelElementId(policy.getId());
+                    prop.setPolicyUniqueId(policyChain.getPolicyId());
+                    prop.setGuardUniqueId(policyItem.getId());
+                    policyClient.deleteGuard(prop);
+                }
             }
         }
     }
+
 }

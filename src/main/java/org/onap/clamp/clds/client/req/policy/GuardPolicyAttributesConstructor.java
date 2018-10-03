@@ -26,13 +26,16 @@ package org.onap.clamp.clds.client.req.policy;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.model.properties.PolicyChain;
 import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.policy.api.AttributeType;
+import org.onap.policy.api.RuleProvider;
 
 public class GuardPolicyAttributesConstructor {
     private static final EELFLogger logger = EELFManager.getInstance()
@@ -41,24 +44,32 @@ public class GuardPolicyAttributesConstructor {
     private GuardPolicyAttributesConstructor() {
     }
 
-    public static Map<AttributeType, Map<String, String>> formatAttributes(ClampProperties refProp,
-        ModelProperties modelProperties, String modelElementId, PolicyItem policyItem) {
-        Map<String, String> matchingAttributes = prepareMatchingAttributes(refProp, policyItem, modelProperties);
+    public static Map<AttributeType, Map<String, String>> formatAttributes(ModelProperties modelProperties, PolicyItem policyItem) {
+        Map<String, String> matchingAttributes = prepareMatchingAttributes(policyItem, modelProperties);
         return createAttributesMap(matchingAttributes);
     }
 
-    private static Map<String, String> prepareMatchingAttributes(ClampProperties refProp,
-        PolicyItem policyItem, ModelProperties modelProp) {
+    public static List<PolicyItem> getAllPolicyGuardsFromPolicyChain(PolicyChain policyChain) {
+        List<PolicyItem> listItem = new ArrayList<>();
+        for (PolicyItem policyItem : policyChain.getPolicyItems()) {
+            if ("on".equals(policyItem.getEnableGuardPolicy())) {
+                listItem.add(policyItem);
+            }
+        }
+        return listItem;
+    }
+
+    private static Map<String, String> prepareMatchingAttributes(PolicyItem policyItem, ModelProperties modelProp) {
         logger.info("Preparing matching attributes for guard...");
         Map<String, String> matchingAttributes = new HashMap<>();
         matchingAttributes.put("actor",policyItem.getActor());
         matchingAttributes.put("recipe",policyItem.getRecipe());
         matchingAttributes.put("targets",policyItem.getGuardTargets());
         matchingAttributes.put("clname",modelProp.getControlNameAndPolicyUniqueId());
-        if ("MinMax".equals(policyItem.getGuardPolicyType())) {
+        if (RuleProvider.GUARD_MIN_MAX.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
             matchingAttributes.put("min",policyItem.getMinGuard());
             matchingAttributes.put("max",policyItem.getMaxGuard());
-        } else if ("FrequencyLimiter".equals(policyItem.getGuardPolicyType())) {
+        } else if (RuleProvider.GUARD_YAML.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
             matchingAttributes.put("limit",policyItem.getLimitGuard());
             matchingAttributes.put("timeWindow",policyItem.getTimeWindowGuard());
             matchingAttributes.put("timeUnits",policyItem.getTimeUnitsGuard());

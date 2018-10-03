@@ -27,7 +27,6 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
@@ -39,14 +38,13 @@ import org.onap.clamp.clds.model.properties.Policy;
 import org.onap.clamp.clds.model.properties.PolicyChain;
 import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.policy.api.AttributeType;
 import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Send Guard Policy info to policy API. It uses the policy code to define
- * the model and communicate with it. See also the PolicyClient class.
+ * Send Guard Policy info to policy API. It uses the policy code to define the
+ * model and communicate with it. See also the PolicyClient class.
  */
 @Component
 public class GuardPolicyDelegate {
@@ -74,25 +72,20 @@ public class GuardPolicyDelegate {
      */
     @Handler
     public void execute(Exchange camelExchange) throws BuilderException, UnsupportedEncodingException {
-        String responseMessageGuard = null;
         ModelProperties prop = ModelProperties.create(camelExchange);
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                for(PolicyItem policyItem:policyChain.getPolicyItems()) {
-                    if ("on".equals(policyItem.getEnableGuardPolicy()))
-                        responseMessageGuard = createGuardPolicy(prop, policyItem);
+                for(PolicyItem policyItem:GuardPolicyAttributesConstructor.getAllPolicyGuardsFromPolicyChain(policyChain)) {
+                    prop.setCurrentModelElementId(policy.getId());
+                    prop.setPolicyUniqueId(policyChain.getPolicyId());
+                    prop.setGuardUniqueId(policyItem.getId());
+                    policyClient.sendGuardPolicy(GuardPolicyAttributesConstructor
+                        .formatAttributes(prop, policyItem), prop, LoggingUtils.getRequestId(), policyItem);
                 }
-            }
-            if (responseMessageGuard != null) {
-                camelExchange.setProperty("guardPolicyResponseMessage", responseMessageGuard.getBytes());
             }
         }
     }
 
-    private String createGuardPolicy(ModelProperties prop, PolicyItem policyItem) {
-        Map<AttributeType, Map<String, String>> attributes = GuardPolicyAttributesConstructor
-            .formatAttributes(refProp, prop, prop.getType(Policy.class).getId(), policyItem);
-        return policyClient.sendGuardPolicy(attributes, prop, LoggingUtils.getRequestId());
-    }
+
 }

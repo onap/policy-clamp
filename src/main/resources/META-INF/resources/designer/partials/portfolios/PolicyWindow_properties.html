@@ -293,8 +293,8 @@ label {
 										<select class="form-control"
 										name="guardPolicyType" id="guardPolicyType"
 										onchange="changeGuardPolicyType();">
-										<option value="MinMax">MinMax</option>
-										<option value="FrequencyLimiter">FrequencyLimiter</option>
+										<option value="GUARD_MIN_MAX">MinMax</option>
+										<option value="GUARD_YAML">FrequencyLimiter</option>
 									</select>
 								</div>
 								<label for="guardTargets" class="col-sm-4 control-label">Guard
@@ -378,16 +378,14 @@ label {
 			$("#targetResourceIdOther").val("");
 		}
 	}
-	
+
 	function changeGuardPolicyType() {
 		console.log("executing GuardPolicyType")
 		console.log("GuardPolicyType value:"+$("#guardPolicyType").val())
-		if ($("#guardPolicyType").val()==="MinMax") {
-			console.log("executing GuardPolicyType")
+		if ($("#guardPolicyType").val()==="GUARD_MIN_MAX") {
 			$("#minMaxGuardPolicyDiv").show();
 			$("#frequencyLimiterGuardPolicyDiv").hide();
-		} else if ($("#guardPolicyType").val()==="FrequencyLimiter") {
-			console.log("executing GuardPolicyType")
+		} else if ($("#guardPolicyType").val()==="GUARD_YAML") {
 			$("#minMaxGuardPolicyDiv").hide();
 			$("#frequencyLimiterGuardPolicyDiv").show();
 		}

@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.properties;
@@ -62,6 +62,8 @@ public class ModelProperties {
     private final Map<String, AbstractModelElement> modelElements = new ConcurrentHashMap<>();
     private String currentModelElementId;
     private String policyUniqueId;
+    private String guardUniqueId;
+    public static final String POLICY_GUARD_SUFFIX = "_Guard_";
     private static final Object lock = new Object();
     private static Map<Class<? extends AbstractModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
     static {
@@ -91,7 +93,7 @@ public class ModelProperties {
      *            The BPMN parameters for all boxes defined in modelBpmnTest
      */
     public ModelProperties(String modelName, String controlName, String actionCd, boolean isATest, String modelBpmnText,
-            String modelPropText) {
+        String modelPropText) {
         try {
             this.modelName = modelName;
             this.controlName = controlName;
@@ -118,19 +120,19 @@ public class ModelProperties {
             // Parse the list of base Model Elements and build up the
             // ModelElements
             modelElementClasses.entrySet().stream().parallel()
-                    .filter(entry -> (AbstractModelElement.class.isAssignableFrom(entry.getKey())
-                            && missingTypes.contains(entry.getValue())))
-                    .forEach(entry -> {
-                        try {
-                            modelElements.put(entry.getValue(),
-                                    (entry.getKey()
-                                            .getConstructor(ModelProperties.class, ModelBpmn.class, JsonNode.class)
-                                            .newInstance(this, modelBpmn, modelJson)));
-                        } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
-                                | InvocationTargetException e) {
-                            logger.warn("Unable to instantiate a ModelElement, exception follows: ", e);
-                        }
-                    });
+            .filter(entry -> (AbstractModelElement.class.isAssignableFrom(entry.getKey())
+                && missingTypes.contains(entry.getValue())))
+            .forEach(entry -> {
+                try {
+                    modelElements.put(entry.getValue(),
+                        (entry.getKey()
+                            .getConstructor(ModelProperties.class, ModelBpmn.class, JsonNode.class)
+                            .newInstance(this, modelBpmn, modelJson)));
+                } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
+                    | InvocationTargetException e) {
+                    logger.warn("Unable to instantiate a ModelElement, exception follows: ", e);
+                }
+            });
         }
     }
 
@@ -234,7 +236,7 @@ public class ModelProperties {
      */
     public String getPolicyNameForDcaeDeploy(ClampProperties refProp) {
         return normalizePolicyScopeName(modelName + createScopeSeparator(modelName)
-                + refProp.getStringValue(PolicyClient.POLICY_MS_NAME_PREFIX_PROPERTY_NAME) + getCurrentPolicyName());
+        + refProp.getStringValue(PolicyClient.POLICY_MS_NAME_PREFIX_PROPERTY_NAME) + getCurrentPolicyName());
     }
 
     /**
@@ -242,7 +244,15 @@ public class ModelProperties {
      */
     public String getPolicyScopeAndNameWithUniqueId() {
         return normalizePolicyScopeName(
-                modelName + createScopeSeparator(modelName) + getCurrentPolicyName() + "_" + policyUniqueId);
+            modelName + createScopeSeparator(modelName) + getCurrentPolicyName() + "_" + policyUniqueId);
+    }
+
+    /**
+     * @return the policyScopeAndNameWithUniqueId
+     */
+    public String getPolicyScopeAndNameWithUniqueGuardId() {
+        return normalizePolicyScopeName(
+            modelName + createScopeSeparator(modelName) + getCurrentPolicyName() + "_" + policyUniqueId+POLICY_GUARD_SUFFIX+guardUniqueId);
     }
 
     /**
@@ -250,7 +260,7 @@ public class ModelProperties {
      */
     public String getCurrentPolicyScopeAndFullPolicyName(String policyNamePrefix) {
         return normalizePolicyScopeName(
-                modelName + createScopeSeparator(modelName) + policyNamePrefix + getCurrentPolicyName());
+            modelName + createScopeSeparator(modelName) + policyNamePrefix + getCurrentPolicyName());
     }
 
     /**
@@ -288,6 +298,14 @@ public class ModelProperties {
         return policyUniqueId;
     }
 
+    public String getGuardUniqueId() {
+        return guardUniqueId;
+    }
+
+    public void setGuardUniqueId(String guardUniqueId) {
+        this.guardUniqueId = guardUniqueId;
+    }
+
     /**
      * When generating a policy request for a model element, must set the unique
      * id of that policy using this method. Used to generate the policy name.
@@ -318,17 +336,17 @@ public class ModelProperties {
      */
     public boolean isCreateRequest() {
         switch (actionCd) {
-            case CldsEvent.ACTION_SUBMIT:
-            case CldsEvent.ACTION_RESTART:
-                return true;
+        case CldsEvent.ACTION_SUBMIT:
+        case CldsEvent.ACTION_RESTART:
+            return true;
         }
         return false;
     }
 
     public boolean isStopRequest() {
         switch (actionCd) {
-            case CldsEvent.ACTION_STOP:
-                return true;
+        case CldsEvent.ACTION_STOP:
+            return true;
         }
         return false;
     }
@@ -344,7 +362,7 @@ public class ModelProperties {
     }
 
     public static final synchronized void registerModelElement(Class<? extends AbstractModelElement> modelElementClass,
-            String type) {
+        String type) {
         if (!modelElementClasses.containsKey(modelElementClass.getClass())) {
             modelElementClasses.put(modelElementClass, type);
         }
