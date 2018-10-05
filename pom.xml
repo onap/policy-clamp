@@ -961,6 +961,22 @@
 																<dockerFile>Dockerfile.logstash</dockerFile>
 														</build>
 												</image>
+												<image>
+														<name>onap/clamp-dashboard-kibana</name>
+														<alias>onap-clamp-dashboard-kibana</alias>
+														<run>
+															<skip>true</skip>
+														</run>
+														<build>
+																<cleanup>true</cleanup>
+																<tags>
+																		<tag>latest</tag>
+																		<tag>${project.docker.latesttagtimestamp.version}</tag>
+																		<tag>${project.docker.latesttag.version}</tag>
+																</tags>
+																<dockerFile>kibana/Dockerfile.kibana</dockerFile>
+														</build>
+												</image>
 										</images>
 								</configuration>
 
