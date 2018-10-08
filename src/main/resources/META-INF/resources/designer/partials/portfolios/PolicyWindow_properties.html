@@ -289,8 +289,7 @@ label {
 								</div>
 								<div class="col-sm-8">
 									<label for="guardPolicyType" class="col-sm-4 control-label">
-										Guard Policy Type</label> 
-										<select class="form-control"
+										Guard Policy Type</label> <select class="form-control"
 										name="guardPolicyType" id="guardPolicyType"
 										onchange="changeGuardPolicyType();">
 										<option value="GUARD_MIN_MAX">MinMax</option>
@@ -362,34 +361,47 @@ label {
 	</div>
 
 	<script>
-	
-	function initTargetResourceId() {
-		// Set all the Resource Invariant UUID in the target resource ID list (+Empty and other) 
-		Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key){
-			$('#targetResourceId').append($('<option></option>').val(key).html(key));
-		});
-	}
-	
-	function changeTargetResourceIdOther() {
-		if ($("#targetResourceId").val()==="Other:") {
-			$("#targetResourceIdOther").show();
-		} else {
-			$("#targetResourceIdOther").hide();
-			$("#targetResourceIdOther").val("");
+		function searchActiveFormId() {
+			var formArray = Array.from(document.getElementsByClassName("formId"));
+			for (var i=0, max=formArray.length; i < max; i++) {
+				
+				console.log("Search active FormId, current element "+formArray[i].id);
+				if (formArray[i].style.display !== "none") {
+					console.log("Active form is:"+formArray[i].id);
+					return formArray[i];
+				}
+			}
+			console.log("No active formId found !");
 		}
-	}
+		
+		function initTargetResourceId() {
+			var formItemActive = searchActiveFormId();
+			// Set all the Resource Invariant UUID in the target resource ID list (+Empty and other) 
+			Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key){
+				$("#"+formItemActive.id+" #targetResourceId").append($('<option></option>').val(key).html(key));
+			});
+		}
+		
+		function changeTargetResourceIdOther() {
+			var formItemActive = searchActiveFormId();
+			if ($("#"+formItemActive.id+" #targetResourceId").val()==="Other:") {
+				$("#"+formItemActive.id+" #targetResourceIdOther").show();
+			} else {
+				$("#"+formItemActive.id+" #targetResourceIdOther").hide();
+				$("#"+formItemActive.id+" #targetResourceIdOther").val("");
+			}
+		}
 
-	function changeGuardPolicyType() {
-		console.log("executing GuardPolicyType")
-		console.log("GuardPolicyType value:"+$("#guardPolicyType").val())
-		if ($("#guardPolicyType").val()==="GUARD_MIN_MAX") {
-			$("#minMaxGuardPolicyDiv").show();
-			$("#frequencyLimiterGuardPolicyDiv").hide();
-		} else if ($("#guardPolicyType").val()==="GUARD_YAML") {
-			$("#minMaxGuardPolicyDiv").hide();
-			$("#frequencyLimiterGuardPolicyDiv").show();
+		function changeGuardPolicyType() {
+			var formItemActive = searchActiveFormId();
+			if ($("#"+formItemActive.id+" #guardPolicyType").val()==="GUARD_MIN_MAX") {
+				$("#"+formItemActive.id+" #minMaxGuardPolicyDiv").show();
+				$("#"+formItemActive.id+" #frequencyLimiterGuardPolicyDiv").hide();
+			} else if ($("#"+formItemActive.id+" #guardPolicyType").val()==="GUARD_YAML") {
+				$("#"+formItemActive.id+" #minMaxGuardPolicyDiv").hide();
+				$("#"+formItemActive.id+" #frequencyLimiterGuardPolicyDiv").show();
+			}
 		}
-	}
 		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
 		// css attribute display:none
 		$("#add_one_more").click(function(event) {
@@ -449,10 +461,10 @@ label {
 							}
 							if(el[i][j].name==="targetResourceIdOther" && el[i][j].value.toString()!=='') {
 								// Add the entry and set it
-								$('#targetResourceId').append($('<option></option>').val($('#targetResourceIdOther').val()).html($('#targetResourceIdOther').val()));
-								$('#targetResourceId').val($('#targetResourceIdOther').val());
+								$("#formId" + num + " #targetResourceId").append($('<option></option>').val($("#formId" + num + " #targetResourceIdOther").val()).html($("#formId" + num + " #targetResourceIdOther").val()));
+								$("#formId" + num + " #targetResourceId").val($("#formId" + num + " #targetResourceIdOther").val());
 							}
-							
+							changeGuardPolicyType();
 						}
 					}
 				}
@@ -495,7 +507,7 @@ label {
 		        });
 				$('input[value="multiselect-all"]').prop('disabled', true).parent('li').addClass('disabled');
 			}
-			changeGuardPolicyType();
+			
 		}
 
 			function addSelectListen(count) {
