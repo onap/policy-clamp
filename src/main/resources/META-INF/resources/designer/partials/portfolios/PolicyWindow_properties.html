@@ -361,8 +361,12 @@ label {
 	</div>
 
 	<script>
+		function getAllFormId() {
+			return Array.from(document.getElementsByClassName("formId"));
+		}
+
 		function searchActiveFormId() {
-			var formArray = Array.from(document.getElementsByClassName("formId"));
+			var formArray = getAllFormId();
 			for (var i=0, max=formArray.length; i < max; i++) {
 				
 				console.log("Search active FormId, current element "+formArray[i].id);
@@ -373,13 +377,13 @@ label {
 			}
 			console.log("No active formId found !");
 		}
-		
+
 		function initTargetResourceId() {
-			var formItemActive = searchActiveFormId();
 			// Set all the Resource Invariant UUID in the target resource ID list (+Empty and other) 
-			Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key){
-				$("#"+formItemActive.id+" #targetResourceId").append($('<option></option>').val(key).html(key));
+			Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key) {
+					$("#targetResourceId").append($('<option></option>').val(key).html(key));
 			});
+			
 		}
 		
 		function changeTargetResourceIdOther() {
@@ -914,7 +918,7 @@ label {
 		initTargetResourceId();
 		
 		//load metrics dropdown
-		if (elementMap["global"]){
+		if (elementMap["global"]) {
 			for (var i = 0; i < (elementMap["global"].length); i++){
 				if ((elementMap["global"][i]["name"]) == "actionSet"){
 					var asSel = elementMap["global"][i]["value"];
