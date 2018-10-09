@@ -90,7 +90,10 @@ def main():
 
             obj_id = obj['id']
             for key in ('id', 'version', 'type', 'updated_at'):
-                del obj[key]
+                try:
+                    del obj[key]
+                except KeyError:
+                    logger.info("Could not find key %s in %s[%s]", key, obj_type, obj_id)
 
             logger.info('Restoring %s id:%s (overwrite:%s)', obj_type, obj_id, args.force)
             url = "%s/api/saved_objects/%s/%s" % (args.kibana_host.rstrip("/"), obj_type, obj_id)
