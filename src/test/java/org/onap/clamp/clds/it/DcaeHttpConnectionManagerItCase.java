@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and 
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2018 Nokia
  * ===================================================================
  * 
  */
@@ -45,6 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.client.DcaeHttpConnectionManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -63,6 +65,10 @@ public class DcaeHttpConnectionManagerItCase {
     private String httpsPort;
     @Value("${server.http-to-https-redirection.port}")
     private String httpPort;
+
+    @Autowired
+    DcaeHttpConnectionManager dcaeHttpConnectionManager;
+
     private static TrustManager[] trustAllCerts = new TrustManager[] {
             new X509TrustManager() {
 
@@ -103,7 +109,7 @@ public class DcaeHttpConnectionManagerItCase {
 
     @Test
     public void testHttpGet() throws Exception {
-        String response = DcaeHttpConnectionManager
+        String response = dcaeHttpConnectionManager
                 .doDcaeHttpQuery("http://localhost:" + this.httpPort + "/designer/index.html", "GET", null, null);
         assertNotNull(response);
         // Should be a redirection so 302, so empty
@@ -112,7 +118,7 @@ public class DcaeHttpConnectionManagerItCase {
 
     @Test
     public void testHttpsGet() throws Exception {
-        String response = DcaeHttpConnectionManager
+        String response = dcaeHttpConnectionManager
                 .doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index.html", "GET", null, null);
         assertNotNull(response);
         // Should contain something
@@ -121,21 +127,21 @@ public class DcaeHttpConnectionManagerItCase {
 
     @Test(expected = BadRequestException.class)
     public void testHttpsGet404() throws IOException {
-        DcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
+        dcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
                 "GET", null, null);
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpsPost404() throws IOException {
-        DcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
+        dcaeHttpConnectionManager.doDcaeHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
                 "POST", "", "application/json");
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpException() throws IOException {
-        DcaeHttpConnectionManager.doDcaeHttpQuery("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
+        dcaeHttpConnectionManager.doDcaeHttpQuery("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
                 null, null);
         fail("Should have raised an BadRequestException");
     }
