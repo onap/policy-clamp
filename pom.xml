@@ -958,7 +958,7 @@
 																		<tag>${project.docker.latesttagtimestamp.version}</tag>
 																		<tag>${project.docker.latesttag.version}</tag>
 																</tags>
-																<dockerFile>Dockerfile.logstash</dockerFile>
+																<dockerFile>logstash/Dockerfile.logstash</dockerFile>
 														</build>
 												</image>
 												<image>
