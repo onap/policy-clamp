@@ -67,6 +67,8 @@ public class CldsModel {
     private String status;
     private List<String> permittedActionCd;
     private List<CldsModelInstance> cldsModelInstanceList;
+    // This is a transient value used to return the failure message to UI
+    private String errorMessageForUi;
     /**
      * The service type Id received from DCAE by querying it
      */
@@ -519,5 +521,13 @@ public class CldsModel {
 
     public List<String> getPermittedActionCd() {
         return permittedActionCd;
+    }
+
+    public String getErrorMessageForUi() {
+        return errorMessageForUi;
+    }
+
+    public void setErrorMessageForUi(String errorMessageForUi) {
+        this.errorMessageForUi = errorMessageForUi;
     }
 }
