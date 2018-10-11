@@ -345,7 +345,7 @@ public class CldsService extends SecureServiceBase {
         util.entering(request, "CldsService: Process model action");
         Date startTime = new Date();
         CldsModel retrievedModel = null;
-        Boolean errorCase = false;
+        String errorMessage = "";
         try {
             String actionCd = action.toUpperCase();
             SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
@@ -387,8 +387,8 @@ public class CldsService extends SecureServiceBase {
                     isTest, userId, isInsertTestEvent, model.getEvent().getActionCd());
                 logger.info("Starting Camel flow on request, result is: ", result);
             } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
-                errorCase = true;
                 logger.error("Exception occured during invoking Camel process", e);
+                errorMessage=e.getMessage();
             }
             if (actionCd.equalsIgnoreCase(CldsEvent.ACTION_DELETE)) {
                 util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO,
@@ -397,7 +397,7 @@ public class CldsService extends SecureServiceBase {
             } else {
                 retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
             }
-            if (!isTest && !errorCase
+            if (!isTest && errorMessage.isEmpty()
                 && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
                     || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
@@ -423,10 +423,13 @@ public class CldsService extends SecureServiceBase {
             auditLogger.info("Process model action completed");
 
         } catch (Exception e) {
-            errorCase = true;
             logger.error("Exception occured during putModelAndProcessAction", e);
+            errorMessage=e.getMessage();
         }
-        if (errorCase) {
+        if (!errorMessage.isEmpty()) {
+            if (retrievedModel != null) {
+                retrievedModel.setErrorMessageForUi(errorMessage);
+            }
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "putModelAndProcessAction failed", Level.INFO,
                 ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(retrievedModel, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -725,7 +728,7 @@ public class CldsService extends SecureServiceBase {
     public ResponseEntity<CldsModel> deployModel(String modelName, CldsModel model) {
         util.entering(request, "CldsService: Deploy model");
         Date startTime = new Date();
-        Boolean errorCase = false;
+        String errorMessage="";
         try {
             fillInCldsModel(model);
             String bpmnJson = cldsBpmnTransformer.doXslTransformToString(model.getBpmnText());
@@ -772,10 +775,11 @@ public class CldsService extends SecureServiceBase {
             LoggingUtils.setTimeContext(startTime, new Date());
             auditLogger.info("Deploy model completed");
         } catch (Exception e) {
-            errorCase = true;
+            errorMessage=e.getMessage();
             logger.error("Exception occured during deployModel", e);
         }
-        if (errorCase) {
+        if (!errorMessage.isEmpty()) {
+            model.setErrorMessageForUi(errorMessage);
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "DeployModel failed", Level.INFO,
                 ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -787,7 +791,7 @@ public class CldsService extends SecureServiceBase {
     public ResponseEntity<CldsModel> unDeployModel(String modelName, CldsModel model) {
         util.entering(request, "CldsService: Undeploy model");
         Date startTime = new Date();
-        Boolean errorCase = false;
+        String errorMessage = "";
         try {
             SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
                 cldsPermissionInstance, CldsEvent.ACTION_UNDEPLOY);
@@ -821,10 +825,11 @@ public class CldsService extends SecureServiceBase {
             LoggingUtils.setTimeContext(startTime, new Date());
             auditLogger.info("Undeploy model completed");
         } catch (Exception e) {
-            errorCase = true;
+            errorMessage = e.getMessage();
             logger.error("Exception occured during unDeployModel", e);
         }
-        if (errorCase) {
+        if (!errorMessage.isEmpty()) {
+            model.setErrorMessageForUi(errorMessage);
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "UndeployModel failed", Level.INFO,
                 ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
