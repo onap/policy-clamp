@@ -47,7 +47,7 @@ RUN yum install -y python-requests && yum clean all
 #         ├── visualization-cb896270-c190-11e8-a550-27f2e3138fee.json
 #         └── visualization-d837b120-c190-11e8-a550-27f2e3138fee.json
 
-RUN mkdir /saved-objects/
+RUN mkdir /saved-objects/ && chown kibana:kibana /saved-objects/
 
 USER kibana
 

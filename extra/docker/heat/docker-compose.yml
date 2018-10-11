@@ -1,0 +1,84 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:10.1.11
+    volumes:
+      - "/var/lib/mysql"
+      - "../mariadb/conf1:/etc/mysql/conf.d:ro"
+      - "../../sql/:/docker-entrypoint-initdb.d:ro"
+    environment:
+      - MYSQL_ROOT_PASSWORD=strong_pitchou
+    ports:
+      - "3306:3306"
+    networks:
+      clamp_net:
+
+  clamp:
+    image: onap/clamp:latest
+    volumes:
+      - "./config/:/opt/clamp/config:rw"
+    depends_on:
+      - db
+    env_file:
+      - clamp.env
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    networks:
+      clamp_net:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.1.3
+    ports:
+      - 9200:9200
+    networks:
+      cldash_net:
+        aliases:
+          - elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+
+  logstash:
+    image: onap/clamp-dashboard-logstash:latest
+    build:
+      context: ../../../src/main/docker/logstash
+      dockerfile: Dockerfile.logstash
+    # volumes:
+    #   - ../../../src/main/docker/logstash/pipeline:/usr/share/logstash/pipeline
+    #   - ./logstash-input:/log-input
+    depends_on:
+      - elasticsearch
+    networks:
+      cldash_net:
+    environment:
+      - elasticsearch_host=https://elasticsearch:9200/
+      - dmaap_base_url=https://ueb.api.simpledemo.onap.org:3905/
+      # - dmaap_user=user
+      # - dmaap_password=password
+      - dmaap_consumer_group=clampdashboard
+      - dmaap_consumer_id=clampdashboard
+      - event_topic=DCAE-CL-EVENT
+      - notification_topic=POLICY-CL-MGT
+      - request_topic=APPC-CL
+      - elasticsearch_base_url=elasticsearch
+
+  kibana:
+    image: onap/clamp-dashboard-kibana:latest
+    build:
+      context: ../../../src/main/docker/kibana
+      dockerfile: Dockerfile.kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    # volumes:
+    #   - ../../../src/main/docker/kibana/saved-objects/:/saved-objects/
+    networks:
+      cldash_net:
+
+networks:
+  cldash_net:
+  clamp_net:
