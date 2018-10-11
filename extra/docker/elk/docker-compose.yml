@@ -15,11 +15,13 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
 
   logstash:
-    image: docker.elastic.co/logstash/logstash-oss:6.1.3
+    image: onap/clamp-dashboard-logstash:latest
+    build:
+      context: ../../../src/main/docker/logstash
+      dockerfile: Dockerfile.logstash
     volumes:
-      - ./logstash-conf:/config-dir
+      - ../../../src/main/docker/logstash/pipeline:/usr/share/logstash/pipeline
       - ./logstash-input:/log-input
-    command: logstash -f /config-dir/logstash.conf
     depends_on:
       - elasticsearch
     networks:
@@ -28,12 +30,12 @@ services:
       - dmaap_base_url=http://dmaapmocker:3904/
       - dmaap_user=user
       - dmaap_password=password
-      - dmaap_consumer_group=CG42
-      - dmaap_consumer_id=C42
-      - event_topic=EVENT_TOPIC
-      - notification_topic=NOTIFICATION_TOPIC
-      - request_topic=REQUEST_TOPIC
-      - elasticsearch_hosts=elasticsearch
+      - dmaap_consumer_group=clampdashboard
+      - dmaap_consumer_id=clampdashboard
+      - event_topic=DCAE-CL-EVENT
+      - notification_topic=POLICY-CL-MGT
+      - request_topic=APPC-CL
+      - elasticsearch_base_url=elasticsearch
 
   kibana:
     image: onap/clamp-dashboard-kibana:latest
