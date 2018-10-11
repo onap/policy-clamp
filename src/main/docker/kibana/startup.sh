@@ -30,9 +30,25 @@ LOG_FILE="/tmp/load.kibana.log"
 KIBANA_LOAD_CMD="/usr/local/bin/kibana-docker -H 127.0.0.1 -l $LOG_FILE"
 TIMEOUT=60
 WAIT_TIME=2
+LOADED_FLAG=$SAVED_OBJECTS_ROOT/.loaded
 
-if [ -n "$(ls -A ${SAVED_OBJECTS_PATH})" ];
+if [ -f $LOADED_FLAG ];
 then
+    echo "---- Kibana saved objects already restored. Remove $LOADED_FLAG if you want to restore them again."
+elif [ -n "$(ls -A ${SAVED_OBJECTS_PATH})" ];
+then
+    echo "---- Waiting for elasticsearch to be up..."
+    RES=-1
+    PING_TIMEOUT=60
+    elastic_url=$(grep elasticsearch.url /usr/share/kibana/config/kibana.yml | cut -d\  -f2)
+    while [ ! "$RES" -eq "0" ] && [ "$PING_TIMEOUT" -gt "0" ];
+    do
+        curl $elastic_url
+        RES=$?
+        sleep $WAIT_TIME
+        let PING_TIMEOUT=$PING_TIMEOUT-$WAIT_TIME
+    done
+
     echo "---- Saved objects found, restoring files."
 
     $KIBANA_LOAD_CMD &
@@ -62,10 +78,19 @@ then
     # restore files
     for saved_objects_path in $SAVED_OBJECTS_ROOT/*
     do
+        # skip files as we only need directories
+        [ -f $saved_objects_path ] && continue
+
         echo "Restoring content of $saved_objects_path"
         $RESTORE_CMD -C $saved_objects_path
         sleep 1
     done
+    
+    touch $LOADED_FLAG
+    if [ "$?" != "0" ];
+    then
+        echo "WARNING: Could not save $LOADED_FLAG, saved objects will be restored on next startup." >&2
+    fi
 
     # cleanup
     kill $KIB_PID
