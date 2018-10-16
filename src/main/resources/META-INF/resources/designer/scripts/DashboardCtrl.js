@@ -21,94 +21,98 @@
  * 
  */
 'use strict';
-angular
-.module('clds-app')
-.controller(
+angular.module('clds-app').controller(
 'DashboardCtrl',
 [
-'$scope',
-'$rootScope',
-'$resource',
-'$http',
-'$timeout',
-'$location',
-'$interval',
-function($scope, $rootScope, $resource, $http, $timeout, $location, $interval) {
-	console.log("//////////////DashboardCtrl");
-	$scope.autosaveInterval = 1800000;
-	$rootScope.isModel = false;
-	$rootScope.isPalette = false;
-	$rootScope.isTestSet = false;
-	$rootScope.isRequirementCoverage = false;
-	$rootScope.ispropertyExplorer = false;
-	$rootScope.parameters;
-	$scope.orientation = "horizontal";
-	$rootScope.ispropertyExplorer = false;
-	$rootScope.isActive = true;
-	$rootScope.models = [];
-	$scope.selectedParent = {};
-	$rootScope.utmModels = {};
-	$rootScope.selectedModelName;
-	$rootScope.dialogName = "";
-	$interval(function() {
-		console.log("interval");
-	}, $scope.autosaveInterval);
-	$rootScope.onSelectActivityModel = function(obj) {
-		console.log("onSelectActivityModel");
-		$rootScope.isPalette = true;
-		$rootScope.isTestSet = false;
-		$rootScope.isRequirementCoverage = false;
-		$rootScope.ispropertyExplorer = false;
-		$("#activity_modeler").prev().css("display", "block");
-		$('div').find('.k-expand-next').click();
-		if (obj == undefined) {
-			document.getElementById("modeler_name").textContent = "Activity Modeler";
-		} else {
-			selected_model = obj;
-			document.getElementById("modeler_name").textContent = "Activity Modeler"
-			+ "  - " + selected_model;
-		}
-		$rootScope.modelName = selected_model;
-		$rootScope.modeltestset = list_model_test_sets[selected_model];
-		if (list_model_schema_extensions[selected_model] == null) {
-			if (list_model_schema_extensions[$rootScope.utmModels.name] != null) {
-				list_model_schema_extensions[selected_model] = jQuery.extend(
-				true, {},
-				list_model_schema_extensions[$rootScope.utmModels.name]);
-			} else {
-				list_model_schema_extensions[selected_model] = {};
-			}
-		}
-		$rootScope.initProjectExplorer();
-		changecolor(selected_model);
-	};
-	$scope.selectActivityTestSet = function() {
-		console.log("selectActivityTestSet");
-		$rootScope.isPalette = false;
-		$rootScope.isRequirementCoverage = false;
-		$rootScope.isTestset = true;
-		document.getElementById("modeler_name").textContent = "UTM Test Set";
-		$('div').find('.k-collapse-next').click();
-		$rootScope.modeltestset = list_model_test_sets[selected_model];
-		$rootScope.$apply();
-	};
-	$scope.showPalette = function() {
-		console.log("showPalette");
-		$rootScope.isModel = true;
-	};
-	$rootScope.filterRouter = 'partials/DashboardFilters.html';
-	$scope.isActivePROD = true;
-	$scope.isActiveQC = false;
-	$rootScope.reload = function(env) {
-		console.log("reload");
-	};
-	$scope.showTDSSView = true;
-} ]);
+    '$scope',
+    '$rootScope',
+    '$resource',
+    '$http',
+    '$timeout',
+    '$location',
+    '$interval',
+    function($scope, $rootScope, $resource, $http, $timeout, $location, $interval) {
+
+	    console.log("//////////////DashboardCtrl");
+	    $scope.autosaveInterval = 1800000;
+	    $rootScope.isModel = false;
+	    $rootScope.isPalette = false;
+	    $rootScope.isTestSet = false;
+	    $rootScope.isRequirementCoverage = false;
+	    $rootScope.ispropertyExplorer = false;
+	    $rootScope.parameters;
+	    $scope.orientation = "horizontal";
+	    $rootScope.ispropertyExplorer = false;
+	    $rootScope.isActive = true;
+	    $rootScope.models = [];
+	    $scope.selectedParent = {};
+	    $rootScope.utmModels = {};
+	    $rootScope.selectedModelName;
+	    $rootScope.dialogName = "";
+	    $interval(function() {
+
+		    console.log("interval");
+	    }, $scope.autosaveInterval);
+	    $rootScope.onSelectActivityModel = function(obj) {
+
+		    console.log("onSelectActivityModel");
+		    $rootScope.isPalette = true;
+		    $rootScope.isTestSet = false;
+		    $rootScope.isRequirementCoverage = false;
+		    $rootScope.ispropertyExplorer = false;
+		    $("#activity_modeler").prev().css("display", "block");
+		    $('div').find('.k-expand-next').click();
+		    if (obj == undefined) {
+			    document.getElementById("modeler_name").textContent = "Activity Modeler";
+		    } else {
+			    selected_model = obj;
+			    document.getElementById("modeler_name").textContent = "Activity Modeler" + "  - " + selected_model;
+		    }
+		    $rootScope.modelName = selected_model;
+		    $rootScope.modeltestset = list_model_test_sets[selected_model];
+		    if (list_model_schema_extensions[selected_model] == null) {
+			    if (list_model_schema_extensions[$rootScope.utmModels.name] != null) {
+				    list_model_schema_extensions[selected_model] = jQuery.extend(true, {},
+				    list_model_schema_extensions[$rootScope.utmModels.name]);
+			    } else {
+				    list_model_schema_extensions[selected_model] = {};
+			    }
+		    }
+		    $rootScope.initProjectExplorer();
+		    changecolor(selected_model);
+	    };
+	    $scope.selectActivityTestSet = function() {
+
+		    console.log("selectActivityTestSet");
+		    $rootScope.isPalette = false;
+		    $rootScope.isRequirementCoverage = false;
+		    $rootScope.isTestset = true;
+		    document.getElementById("modeler_name").textContent = "UTM Test Set";
+		    $('div').find('.k-collapse-next').click();
+		    $rootScope.modeltestset = list_model_test_sets[selected_model];
+		    $rootScope.$apply();
+	    };
+	    $scope.showPalette = function() {
+
+		    console.log("showPalette");
+		    $rootScope.isModel = true;
+	    };
+	    $rootScope.filterRouter = 'partials/DashboardFilters.html';
+	    $scope.isActivePROD = true;
+	    $scope.isActiveQC = false;
+	    $rootScope.reload = function(env) {
+
+		    console.log("reload");
+	    };
+	    $scope.showTDSSView = true;
+    } ]);
 function changecolor(selected_model) {
+
 	console.log("changecolor");
 	var i = 0;
 	// var modelNames =[];
 	$(".models").each(function(i) {
+
 		console.log("each");
 		var model_value = $(this).text().trim();
 		// modelName.push(model_value);
