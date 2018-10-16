@@ -69,13 +69,15 @@
 				<camel.version>2.22.0</camel.version>
 				<springboot.version>2.0.3.RELEASE</springboot.version>
 
-				<sonar.language>java</sonar.language>
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 				<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
 				<sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
 				<sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath>
 				<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
+				<sonar.javascript.lcov.reportPaths>${project.build.directory}/clamp-ui/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
 				<sonar.projectVersion>${project.version}</sonar.projectVersion>
+				<sonar.sources>src/main,${project.build.directory}/clamp-ui/designer</sonar.sources>
+				<sonar.exclusions>src/main/resources/**,**/clamp-ui/designer/lib/*</sonar.exclusions>
 
 				<docker.push.registry>localhost:5000</docker.push.registry>
 				<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
@@ -619,6 +621,21 @@
 								<filtering>false</filtering>
 								<targetPath>example/sdc</targetPath>
 						</testResource>
+
+						<!-- Copy the NPM package.json for CLAMP UI javascript testing framework -->
+						<testResource>
+								<directory>src/test/javascript</directory>
+								<includes>
+										<include>**/**.json</include>
+								</includes>
+								<filtering>true</filtering>
+								<targetPath>${project.build.directory}/clamp-ui</targetPath>
+						</testResource>
+						<testResource>
+								<directory>src/main/resources/META-INF/resources/designer</directory>
+								<filtering>false</filtering>
+								<targetPath>${project.build.directory}/clamp-ui/designer</targetPath>
+						</testResource>
 				</testResources>
 				<resources>
 						<!--  For AAF folder maven should not try to filter Keystores/Truststores ... 
@@ -1070,6 +1087,52 @@
 								<artifactId>versions-maven-plugin</artifactId>
 								<version>1.3.1</version>
 						</plugin>
+
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>1.6</version>
+						<configuration>
+							<installDirectory>${project.build.directory}/clamp-ui</installDirectory>
+							<workingDirectory>${project.build.directory}/clamp-ui</workingDirectory>
+							<skip>${maven.test.skip}</skip>
+						</configuration>
+
+						<executions>
+							<execution>
+								<id>install_node_and_npm</id>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+								<phase>test</phase>
+								<configuration>
+									<nodeVersion>v8.11.1</nodeVersion>
+									<npmVersion>5.6.0</npmVersion>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm_install</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>test</phase>
+								<configuration>
+									<arguments>install</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm_test</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<phase>test</phase>
+								<configuration>
+									<arguments>run-script test:coverage</arguments>
+								</configuration>
+							</execution>
+
+						</executions>
+					</plugin>
 				</plugins>
 		</build>
 </project>
