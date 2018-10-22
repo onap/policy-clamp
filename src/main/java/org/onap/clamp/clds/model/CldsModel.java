@@ -226,7 +226,7 @@ public class CldsModel {
             }
             break;
         case CldsEvent.ACTION_DEPLOY:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UNDEPLOY,
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UNDEPLOY,
                 CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
             break;
         case CldsEvent.ACTION_RESTART:
