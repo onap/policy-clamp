@@ -67,7 +67,7 @@
 
 				<eelf.core.version>1.0.0</eelf.core.version>
 				<camel.version>2.22.0</camel.version>
-				<springboot.version>2.0.3.RELEASE</springboot.version>
+				<springboot.version>2.0.6.RELEASE</springboot.version>
 
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 				<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -443,6 +443,10 @@
 										<groupId>javax.jms</groupId>
 										<artifactId>jms</artifactId>
 								</exclusion>
+								<exclusion>
+										<groupId>commons-fileupload</groupId>
+										<artifactId>commons-fileupload</artifactId>
+								</exclusion>
 						</exclusions>
 				</dependency>
 				<dependency>
@@ -531,11 +535,6 @@
 						<groupId>org.codehaus.plexus</groupId>
 						<artifactId>plexus-utils</artifactId>
 						<version>3.0.24</version>
-				</dependency>
-				<dependency>
-						<groupId>commons-fileupload</groupId>
-						<artifactId>commons-fileupload</artifactId>
-						<version>1.3.3</version>
 				</dependency>
 				<dependency>
 						<groupId>org.jboss.spec.javax.ws.rs</groupId>
