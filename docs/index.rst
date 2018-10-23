@@ -41,7 +41,7 @@ CLAMP uses the API's exposed by the following ONAP components:
 
 Delivery
 --------
-CLAMP component is composed of a UI layer and a BackEnd layer and packaged into a single container.
+CLAMP component is composed of a UI layer and a backend layer and packaged into a single container (single jar).
 CLAMP also requires a database instance with 1 DB, it uses MariaDB.
 CLAMP also uses an ELK stack (Elastic Search, Logstash and Kibana) for the Dashboard.
 
@@ -94,7 +94,7 @@ Installation
 ------------
 A [docker-compose example file](extra/docker/clamp/docker-compose.yml) can be found under the [extra/docker/clamp/ folder](extra/docker/).
 
-Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a prepopullated database and a CLAMP instance available on [http://localhost:8080/designer/index.html](http://localhost:8080/designer/index.html).
+Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a pre-populated database and a CLAMP instance available on [http://localhost:8080/designer/index.html](http://localhost:8080/designer/index.html).
 
 Configuration
 -------------
@@ -107,7 +107,7 @@ Currently, the CLAMP docker image can be deployed with small configuration needs
 .. TODO detail config parameters and the usage
 
 
-There are two needed datasource for Clamp. By default, both will try to connect to the localhost server using the credentials available in the example SQL files. If you need to change the default database host and/or credentials, you can do it by using the following json as SPRING_APPLICATION_JSON environment variable :
+There are one datasource for Clamp. By default, it will try to connect to the localhost server using the credentials available in the example SQL files. If you need to change the default database host and/or credentials, you can do it by using the following json as SPRING_APPLICATION_JSON environment variable :
 
 .. code-block:: json
 
@@ -122,12 +122,15 @@ There are two needed datasource for Clamp. By default, both will try to connect 
         "clamp.config.sdc.serviceUsername": "clamp",
         "clamp.config.sdc.servicePassword": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
         "clamp.config.dcae.inventory.url": "http://dcaegen2.host:8080",
-        "clamp.config.dcae.dispatcher.url": "http://dcaegen2.host:8080",
+        "clamp.config.dcae.dispatcher.url": "http://dcaegen2.host:8188",
         "clamp.config.policy.pdpUrl1": "https://policy-pdp.host:9091/pdp/ , testpdp, alpha123",
         "clamp.config.policy.pdpUrl2": "https://policy-pdp.host:9091/pdp/ , testpdp, alpha123",
         "clamp.config.policy.papUrl": "https://policy-pap.host:8443/pap/ , testpap, alpha123",
-        "clamp.config.policy.clientKey": "5CE79532B3A2CB4D132FC0C04BF916A7"
-        "clamp.config.files.sdcController":"file:/opt/clamp/config/sdc-controllers-config.json"
+        "clamp.config.policy.clientKey": "5CE79532B3A2CB4D132FC0C04BF916A7",
+        "clamp.config.files.sdcController":"file:/opt/clamp/config/sdc-controllers-config.json",
+        "clamp.config.cadi.aafLocateUrl": "https://aaf-locate.onap:8095",
+        "com.att.eelf.logging.path": "/opt/clamp",
+        "com.att.eelf.logging.file": "logback.xml"
     }
 
 SDC-Controllers config
@@ -176,13 +179,17 @@ If the sdcAddress is not specified or not available (connection failure) the mes
 Administration
 --------------
 
-A user can access CLAMP UI at the following URL : http://localhost:8080/designer/index.html.
+A user can access CLAMP UI at the following URL : https://localhost:8443/designer/index.html.
 (in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
+For OOM, the URL is https://<host-ip>:30258/designer/index.html
 
 .. code-block:: html
+   - Without AAF, the credentials are
+     Default username : admin
+     Default password : password
 
-    Default username : admin
-    Default password : password
+   - With AAF enabled, the certificate p12 must be added to the browser
+     ca path: src/main/resources/clds/aaf/org.onap.clamp.p12, password "China in the Spring"
 
 Human Interfaces
 ----------------
@@ -204,7 +211,7 @@ The following actions are done using the UI:
 * Configure the operational policy(the actual operation resulting from
   the control loop)
 
-* Generate the “TOSCA” blueprint that will be used by DCAE to start the
+* Send the “TOSCA” blueprint parameters that will be used by DCAE to start the
   control loop (The blueprint will be sent first to SDC and SDC will
   publish it to DCAE)
 
@@ -215,3 +222,5 @@ The following actions are done using the UI:
 
 
 HealthCheck API - serve to verify CLAMP status (see offered API's section)
+* https://<host-ip>:8443/restservices/clds/v1/healthcheck
+This one does not require the certificate

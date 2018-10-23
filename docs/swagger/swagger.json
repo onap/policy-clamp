@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "3.0.0-SNAPSHOT",
+    "version" : "3.0.1-SNAPSHOT",
     "title" : "Clamp Rest API"
   },
   "host" : "0.0.0.0",
@@ -403,6 +403,114 @@
         "x-routeId" : "route18"
       }
     },
+    "/dictionary" : {
+      "get" : {
+        "operationId" : "route27",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsDictionary"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsDictionary"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route27"
+      }
+    },
+    "/dictionary/{dictionaryName}" : {
+      "put" : {
+        "operationId" : "route26",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "dictionaryName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsDictionary"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsDictionary"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsDictionary"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route26"
+      }
+    },
+    "/dictionary/{dictionaryName}/items" : {
+      "get" : {
+        "operationId" : "route29",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "dictionaryName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsDictionary"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsDictionary"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route29"
+      },
+      "put" : {
+        "operationId" : "route28",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "dictionaryName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsDictionaryItem"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsDictionaryItem"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsDictionaryItem"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route28"
+      }
+    },
     "/healthcheck" : {
       "get" : {
         "operationId" : "route4",
@@ -414,15 +522,99 @@
         "x-routeId" : "route4"
       }
     },
-    "/user/getUser" : {
+    "/tosca/models" : {
       "get" : {
+        "operationId" : "route24",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsToscaModel"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsToscaModel"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route24"
+      }
+    },
+    "/tosca/models/{toscaModelName}" : {
+      "get" : {
+        "operationId" : "route25",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "toscaModelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "responseSchema" : {
+              "$ref" : "#/definitions/CldsToscaModel"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CldsToscaModel"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route25"
+      },
+      "put" : {
         "operationId" : "route22",
-        "produces" : [ "text/plain" ],
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "toscaModelName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CldsToscaModel"
+          }
+        } ],
         "responses" : {
           "200" : { }
         },
         "x-camelContextId" : "camel-1",
         "x-routeId" : "route22"
+      }
+    },
+    "/tosca/models/policyType/{policyType}" : {
+      "get" : {
+        "operationId" : "route23",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "policyType",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route23"
+      }
+    },
+    "/user/getUser" : {
+      "get" : {
+        "operationId" : "route30",
+        "produces" : [ "text/plain" ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route30"
       }
     }
   },
@@ -494,6 +686,9 @@
           "items" : {
             "$ref" : "#/definitions/CldsModelInstance"
           }
+        },
+        "errorMessageForUi" : {
+          "type" : "string"
         },
         "typeId" : {
           "type" : "string"
@@ -585,6 +780,12 @@
           "type" : "boolean"
         },
         "permissionUpdateTemplate" : {
+          "type" : "boolean"
+        },
+        "permissionReadTosca" : {
+          "type" : "boolean"
+        },
+        "permissionUpdateTosca" : {
           "type" : "boolean"
         }
       },
@@ -687,6 +888,112 @@
       "x-className" : {
         "type" : "string",
         "format" : "org.onap.clamp.clds.model.CldsTemplate"
+      }
+    },
+    "CldsDictionary" : {
+      "type" : "object",
+      "properties" : {
+        "dictionaryId" : {
+          "type" : "string"
+        },
+        "dictionaryName" : {
+          "type" : "string"
+        },
+        "createdBy" : {
+          "type" : "string"
+        },
+        "updatedBy" : {
+          "type" : "string"
+        },
+        "lastUpdatedDate" : {
+          "type" : "string"
+        },
+        "cldsDictionaryItems" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CldsDictionaryItem"
+          }
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.CldsDictionary"
+      }
+    },
+    "CldsDictionaryItem" : {
+      "type" : "object",
+      "properties" : {
+        "dictElementId" : {
+          "type" : "string"
+        },
+        "dictionaryId" : {
+          "type" : "string"
+        },
+        "dictElementName" : {
+          "type" : "string"
+        },
+        "dictElementShortName" : {
+          "type" : "string"
+        },
+        "dictElementDesc" : {
+          "type" : "string"
+        },
+        "dictElementType" : {
+          "type" : "string"
+        },
+        "createdBy" : {
+          "type" : "string"
+        },
+        "updatedBy" : {
+          "type" : "string"
+        },
+        "lastUpdatedDate" : {
+          "type" : "string"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.CldsDictionaryItem"
+      }
+    },
+    "CldsToscaModel" : {
+      "type" : "object",
+      "properties" : {
+        "revisionId" : {
+          "type" : "string"
+        },
+        "toscaModelYaml" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "toscaModelJson" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string"
+        },
+        "lastUpdatedDate" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "policyType" : {
+          "type" : "string"
+        },
+        "toscaModelName" : {
+          "type" : "string"
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.clds.model.CldsToscaModel"
       }
     }
   }

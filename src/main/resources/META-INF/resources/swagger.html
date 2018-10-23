@@ -572,30 +572,90 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_produces_19">2.19.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route4">2.20. GET /healthcheck</a>
+<li><a href="#_route27">2.20. GET /dictionary</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_20">2.20.1. Responses</a></li>
 <li><a href="#_produces_20">2.20.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route22">2.21. GET /user/getUser</a>
+<li><a href="#_route26">2.21. PUT /dictionary/{dictionaryName}</a>
 <ul class="sectlevel3">
-<li><a href="#_responses_21">2.21.1. Responses</a></li>
-<li><a href="#_produces_21">2.21.2. Produces</a></li>
+<li><a href="#_parameters_14">2.21.1. Parameters</a></li>
+<li><a href="#_responses_21">2.21.2. Responses</a></li>
+<li><a href="#_consumes_7">2.21.3. Consumes</a></li>
+<li><a href="#_produces_21">2.21.4. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route29">2.22. GET /dictionary/{dictionaryName}/items</a>
+<ul class="sectlevel3">
+<li><a href="#_parameters_15">2.22.1. Parameters</a></li>
+<li><a href="#_responses_22">2.22.2. Responses</a></li>
+<li><a href="#_produces_22">2.22.3. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route28">2.23. PUT /dictionary/{dictionaryName}/items</a>
+<ul class="sectlevel3">
+<li><a href="#_parameters_16">2.23.1. Parameters</a></li>
+<li><a href="#_responses_23">2.23.2. Responses</a></li>
+<li><a href="#_consumes_8">2.23.3. Consumes</a></li>
+<li><a href="#_produces_23">2.23.4. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route4">2.24. GET /healthcheck</a>
+<ul class="sectlevel3">
+<li><a href="#_responses_24">2.24.1. Responses</a></li>
+<li><a href="#_produces_24">2.24.2. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route24">2.25. GET /tosca/models</a>
+<ul class="sectlevel3">
+<li><a href="#_responses_25">2.25.1. Responses</a></li>
+<li><a href="#_produces_25">2.25.2. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route23">2.26. GET /tosca/models/policyType/{policyType}</a>
+<ul class="sectlevel3">
+<li><a href="#_parameters_17">2.26.1. Parameters</a></li>
+<li><a href="#_responses_26">2.26.2. Responses</a></li>
+<li><a href="#_produces_26">2.26.3. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route25">2.27. GET /tosca/models/{toscaModelName}</a>
+<ul class="sectlevel3">
+<li><a href="#_parameters_18">2.27.1. Parameters</a></li>
+<li><a href="#_responses_27">2.27.2. Responses</a></li>
+<li><a href="#_produces_27">2.27.3. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route22">2.28. PUT /tosca/models/{toscaModelName}</a>
+<ul class="sectlevel3">
+<li><a href="#_parameters_19">2.28.1. Parameters</a></li>
+<li><a href="#_responses_28">2.28.2. Responses</a></li>
+<li><a href="#_consumes_9">2.28.3. Consumes</a></li>
+<li><a href="#_produces_28">2.28.4. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_route30">2.29. GET /user/getUser</a>
+<ul class="sectlevel3">
+<li><a href="#_responses_29">2.29.1. Responses</a></li>
+<li><a href="#_produces_29">2.29.2. Produces</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a href="#_definitions">3. Definitions</a>
 <ul class="sectlevel2">
-<li><a href="#_cldsevent">3.1. CldsEvent</a></li>
-<li><a href="#_cldsinfo">3.2. CldsInfo</a></li>
-<li><a href="#_cldsmodel">3.3. CldsModel</a></li>
-<li><a href="#_cldsmodelinstance">3.4. CldsModelInstance</a></li>
-<li><a href="#_cldsmonitoringdetails">3.5. CldsMonitoringDetails</a></li>
-<li><a href="#_cldstemplate">3.6. CldsTemplate</a></li>
-<li><a href="#_dcaeevent">3.7. DcaeEvent</a></li>
-<li><a href="#_valueitem">3.8. ValueItem</a></li>
+<li><a href="#_cldsdictionary">3.1. CldsDictionary</a></li>
+<li><a href="#_cldsdictionaryitem">3.2. CldsDictionaryItem</a></li>
+<li><a href="#_cldsevent">3.3. CldsEvent</a></li>
+<li><a href="#_cldsinfo">3.4. CldsInfo</a></li>
+<li><a href="#_cldsmodel">3.5. CldsModel</a></li>
+<li><a href="#_cldsmodelinstance">3.6. CldsModelInstance</a></li>
+<li><a href="#_cldsmonitoringdetails">3.7. CldsMonitoringDetails</a></li>
+<li><a href="#_cldstemplate">3.8. CldsTemplate</a></li>
+<li><a href="#_cldstoscamodel">3.9. CldsToscaModel</a></li>
+<li><a href="#_dcaeevent">3.10. DcaeEvent</a></li>
+<li><a href="#_valueitem">3.11. ValueItem</a></li>
 </ul>
 </li>
 </ul>
@@ -608,7 +668,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="_version_information"><a class="anchor" href="#_version_information"></a><a class="link" href="#_version_information">1.1. Version information</a></h3>
 <div class="paragraph">
-<p><em>Version</em> : 3.0.0-SNAPSHOT</p>
+<p><em>Version</em> : 3.0.1-SNAPSHOT</p>
 </div>
 </div>
 <div class="sect2">
@@ -1716,24 +1776,27 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route4"><a class="anchor" href="#_route4"></a><a class="link" href="#_route4">2.20. GET /healthcheck</a></h3>
+<h3 id="_route27"><a class="anchor" href="#_route27"></a><a class="link" href="#_route27">2.20. GET /dictionary</a></h3>
 <div class="sect3">
 <h4 id="_responses_20"><a class="anchor" href="#_responses_20"></a><a class="link" href="#_responses_20">2.20.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 66.6667%;">
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
 <th class="tableblock halign-left valign-middle">Schema</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsdictionary">CldsDictionary</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1750,9 +1813,227 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route22"><a class="anchor" href="#_route22"></a><a class="link" href="#_route22">2.21. GET /user/getUser</a></h3>
+<h3 id="_route26"><a class="anchor" href="#_route26"></a><a class="link" href="#_route26">2.21. PUT /dictionary/{dictionaryName}</a></h3>
 <div class="sect3">
-<h4 id="_responses_21"><a class="anchor" href="#_responses_21"></a><a class="link" href="#_responses_21">2.21.1. Responses</a></h4>
+<h4 id="_parameters_14"><a class="anchor" href="#_parameters_14"></a><a class="link" href="#_parameters_14">2.21.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictionaryName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>body</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsdictionary">CldsDictionary</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_21"><a class="anchor" href="#_responses_21"></a><a class="link" href="#_responses_21">2.21.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsdictionary">CldsDictionary</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_consumes_7"><a class="anchor" href="#_consumes_7"></a><a class="link" href="#_consumes_7">2.21.3. Consumes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_produces_21"><a class="anchor" href="#_produces_21"></a><a class="link" href="#_produces_21">2.21.4. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route29"><a class="anchor" href="#_route29"></a><a class="link" href="#_route29">2.22. GET /dictionary/{dictionaryName}/items</a></h3>
+<div class="sect3">
+<h4 id="_parameters_15"><a class="anchor" href="#_parameters_15"></a><a class="link" href="#_parameters_15">2.22.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictionaryName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_22"><a class="anchor" href="#_responses_22"></a><a class="link" href="#_responses_22">2.22.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsdictionary">CldsDictionary</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_22"><a class="anchor" href="#_produces_22"></a><a class="link" href="#_produces_22">2.22.3. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route28"><a class="anchor" href="#_route28"></a><a class="link" href="#_route28">2.23. PUT /dictionary/{dictionaryName}/items</a></h3>
+<div class="sect3">
+<h4 id="_parameters_16"><a class="anchor" href="#_parameters_16"></a><a class="link" href="#_parameters_16">2.23.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictionaryName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>body</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsdictionaryitem">CldsDictionaryItem</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_23"><a class="anchor" href="#_responses_23"></a><a class="link" href="#_responses_23">2.23.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldsdictionaryitem">CldsDictionaryItem</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_consumes_8"><a class="anchor" href="#_consumes_8"></a><a class="link" href="#_consumes_8">2.23.3. Consumes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_produces_23"><a class="anchor" href="#_produces_23"></a><a class="link" href="#_produces_23">2.23.4. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route4"><a class="anchor" href="#_route4"></a><a class="link" href="#_route4">2.24. GET /healthcheck</a></h3>
+<div class="sect3">
+<h4 id="_responses_24"><a class="anchor" href="#_responses_24"></a><a class="link" href="#_responses_24">2.24.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1773,7 +2054,274 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_21"><a class="anchor" href="#_produces_21"></a><a class="link" href="#_produces_21">2.21.2. Produces</a></h4>
+<h4 id="_produces_24"><a class="anchor" href="#_produces_24"></a><a class="link" href="#_produces_24">2.24.2. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route24"><a class="anchor" href="#_route24"></a><a class="link" href="#_route24">2.25. GET /tosca/models</a></h3>
+<div class="sect3">
+<h4 id="_responses_25"><a class="anchor" href="#_responses_25"></a><a class="link" href="#_responses_25">2.25.1. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldstoscamodel">CldsToscaModel</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_25"><a class="anchor" href="#_produces_25"></a><a class="link" href="#_produces_25">2.25.2. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route23"><a class="anchor" href="#_route23"></a><a class="link" href="#_route23">2.26. GET /tosca/models/policyType/{policyType}</a></h3>
+<div class="sect3">
+<h4 id="_parameters_17"><a class="anchor" href="#_parameters_17"></a><a class="link" href="#_parameters_17">2.26.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyType</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_26"><a class="anchor" href="#_responses_26"></a><a class="link" href="#_responses_26">2.26.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_26"><a class="anchor" href="#_produces_26"></a><a class="link" href="#_produces_26">2.26.3. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route25"><a class="anchor" href="#_route25"></a><a class="link" href="#_route25">2.27. GET /tosca/models/{toscaModelName}</a></h3>
+<div class="sect3">
+<h4 id="_parameters_18"><a class="anchor" href="#_parameters_18"></a><a class="link" href="#_parameters_18">2.27.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>toscaModelName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_27"><a class="anchor" href="#_responses_27"></a><a class="link" href="#_responses_27">2.27.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldstoscamodel">CldsToscaModel</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_27"><a class="anchor" href="#_produces_27"></a><a class="link" href="#_produces_27">2.27.3. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route22"><a class="anchor" href="#_route22"></a><a class="link" href="#_route22">2.28. PUT /tosca/models/{toscaModelName}</a></h3>
+<div class="sect3">
+<h4 id="_parameters_19"><a class="anchor" href="#_parameters_19"></a><a class="link" href="#_parameters_19">2.28.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>toscaModelName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>body</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_cldstoscamodel">CldsToscaModel</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_28"><a class="anchor" href="#_responses_28"></a><a class="link" href="#_responses_28">2.28.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_consumes_9"><a class="anchor" href="#_consumes_9"></a><a class="link" href="#_consumes_9">2.28.3. Consumes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_produces_28"><a class="anchor" href="#_produces_28"></a><a class="link" href="#_produces_28">2.28.4. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route30"><a class="anchor" href="#_route30"></a><a class="link" href="#_route30">2.29. GET /user/getUser</a></h3>
+<div class="sect3">
+<h4 id="_responses_29"><a class="anchor" href="#_responses_29"></a><a class="link" href="#_responses_29">2.29.1. Responses</a></h4>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">No Content</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_29"><a class="anchor" href="#_produces_29"></a><a class="link" href="#_produces_29">2.29.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1789,7 +2337,116 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_definitions"><a class="anchor" href="#_definitions"></a><a class="link" href="#_definitions">3. Definitions</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_cldsevent"><a class="anchor" href="#_cldsevent"></a><a class="link" href="#_cldsevent">3.1. CldsEvent</a></h3>
+<h3 id="_cldsdictionary"><a class="anchor" href="#_cldsdictionary"></a><a class="link" href="#_cldsdictionary">3.1. CldsDictionary</a></h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>cldsDictionaryItems</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">&lt; <a href="#_cldsdictionaryitem">CldsDictionaryItem</a> &gt; array</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>createdBy</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictionaryId</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictionaryName</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>lastUpdatedDate</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>updatedBy</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_cldsdictionaryitem"><a class="anchor" href="#_cldsdictionaryitem"></a><a class="link" href="#_cldsdictionaryitem">3.2. CldsDictionaryItem</a></h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>createdBy</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictElementDesc</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictElementId</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictElementName</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictElementShortName</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictElementType</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>dictionaryId</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>lastUpdatedDate</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>updatedBy</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_cldsevent"><a class="anchor" href="#_cldsevent"></a><a class="link" href="#_cldsevent">3.3. CldsEvent</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -1831,7 +2488,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldsinfo"><a class="anchor" href="#_cldsinfo"></a><a class="link" href="#_cldsinfo">3.2. CldsInfo</a></h3>
+<h3 id="_cldsinfo"><a class="anchor" href="#_cldsinfo"></a><a class="link" href="#_cldsinfo">3.4. CldsInfo</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -1860,12 +2517,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>permissionReadTosca</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>permissionUpdateCl</strong><br>
 <em>optional</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>permissionUpdateTemplate</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>permissionUpdateTosca</strong><br>
 <em>optional</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">boolean</p></td>
 </tr>
@@ -1878,7 +2545,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldsmodel"><a class="anchor" href="#_cldsmodel"></a><a class="link" href="#_cldsmodel">3.3. CldsModel</a></h3>
+<h3 id="_cldsmodel"><a class="anchor" href="#_cldsmodel"></a><a class="link" href="#_cldsmodel">3.5. CldsModel</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -1928,6 +2595,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>docText</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>errorMessageForUi</strong><br>
 <em>optional</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
@@ -1990,7 +2662,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldsmodelinstance"><a class="anchor" href="#_cldsmodelinstance"></a><a class="link" href="#_cldsmodelinstance">3.4. CldsModelInstance</a></h3>
+<h3 id="_cldsmodelinstance"><a class="anchor" href="#_cldsmodelinstance"></a><a class="link" href="#_cldsmodelinstance">3.6. CldsModelInstance</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -2022,7 +2694,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldsmonitoringdetails"><a class="anchor" href="#_cldsmonitoringdetails"></a><a class="link" href="#_cldsmonitoringdetails">3.5. CldsMonitoringDetails</a></h3>
+<h3 id="_cldsmonitoringdetails"><a class="anchor" href="#_cldsmonitoringdetails"></a><a class="link" href="#_cldsmonitoringdetails">3.7. CldsMonitoringDetails</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -2079,7 +2751,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_cldstemplate"><a class="anchor" href="#_cldstemplate"></a><a class="link" href="#_cldstemplate">3.6. CldsTemplate</a></h3>
+<h3 id="_cldstemplate"><a class="anchor" href="#_cldstemplate"></a><a class="link" href="#_cldstemplate">3.8. CldsTemplate</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -2166,7 +2838,74 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_dcaeevent"><a class="anchor" href="#_dcaeevent"></a><a class="link" href="#_dcaeevent">3.7. DcaeEvent</a></h3>
+<h3 id="_cldstoscamodel"><a class="anchor" href="#_cldstoscamodel"></a><a class="link" href="#_cldstoscamodel">3.9. CldsToscaModel</a></h3>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 57.1429%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>createdDate</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>id</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>lastUpdatedDate</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyType</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>revisionId</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>toscaModelJson</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>toscaModelName</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>toscaModelYaml</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>userId</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>version</strong><br>
+<em>optional</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">number (double)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_dcaeevent"><a class="anchor" href="#_dcaeevent"></a><a class="link" href="#_dcaeevent">3.10. DcaeEvent</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -2218,7 +2957,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect2">
-<h3 id="_valueitem"><a class="anchor" href="#_valueitem"></a><a class="link" href="#_valueitem">3.8. ValueItem</a></h3>
+<h3 id="_valueitem"><a class="anchor" href="#_valueitem"></a><a class="link" href="#_valueitem">3.11. ValueItem</a></h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 42.8571%;">
@@ -2244,7 +2983,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-06-05 12:10:11 +02:00
+Last updated 2018-09-17 16:36:07 +02:00
 </div>
 </div>
 </body>
