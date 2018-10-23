@@ -68,15 +68,19 @@
 				<eelf.core.version>1.0.0</eelf.core.version>
 				<camel.version>2.22.0</camel.version>
 				<springboot.version>2.0.6.RELEASE</springboot.version>
-
+				
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 				<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
 				<sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
 				<sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath>
 				<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
-				<sonar.javascript.lcov.reportPaths>${project.build.directory}/clamp-ui/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
 				<sonar.projectVersion>${project.version}</sonar.projectVersion>
-				<sonar.sources>src/main,${project.build.directory}/clamp-ui/designer</sonar.sources>
+				<!-- Enable language to disable javascript analysis -->
+				<sonar.language>java</sonar.language>
+				<!-- Parameters for Javascript coverage 
+					<sonar.sources>src/main,${project.build.directory}/clamp-ui/designer</sonar.sources>
+					<sonar.javascript.lcov.reportPaths>${project.build.directory}/clamp-ui/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
+				 -->
 				<sonar.exclusions>src/main/resources/**,**/clamp-ui/designer/lib/*</sonar.exclusions>
 
 				<docker.push.registry>localhost:5000</docker.push.registry>
