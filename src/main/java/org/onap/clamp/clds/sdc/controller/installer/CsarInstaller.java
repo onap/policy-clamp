@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.sdc.controller.installer;
@@ -29,5 +29,5 @@ public interface CsarInstaller {
 
     boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException;
 
-    public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException;
+    public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException, InterruptedException;
 }

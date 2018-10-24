@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.it.sdc.controller.installer;
@@ -78,28 +78,28 @@ public class CsarInstallerItCase {
     private CldsDao cldsDao;
 
     @Test(expected = SdcArtifactInstallerException.class)
-    public void testInstallTheCsarFail()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+    public void testInstallTheCsarFail() throws SdcArtifactInstallerException, SdcToscaParserException,
+        CsarHandlerException, IOException, InterruptedException {
         CsarHandler csarHandler = Mockito.mock(CsarHandler.class);
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
         Mockito.when(blueprintArtifact.getResourceAttached()).thenReturn(Mockito.mock(IResourceInstance.class));
         Map<String, BlueprintArtifact> blueprintMap = new HashMap<>();
         blueprintMap.put("resourceid", blueprintArtifact);
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
-        Mockito.when(blueprintArtifact.getDcaeBlueprint()).thenReturn(IOUtils
-                .toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/not-recognized.yaml")));
+        Mockito.when(blueprintArtifact.getDcaeBlueprint()).thenReturn(
+            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/not-recognized.yaml")));
         csarInstaller.installTheCsar(csarHandler);
         fail("Should have raised an SdcArtifactInstallerException");
     }
 
     private BlueprintArtifact buildFakeBuildprintArtifact(String instanceName, String invariantResourceUuid,
-            String blueprintFilePath, String csarArtifactName, String invariantServiceUuid) throws IOException {
+        String blueprintFilePath, String csarArtifactName, String invariantServiceUuid) throws IOException {
         IResourceInstance resource = Mockito.mock(IResourceInstance.class);
         Mockito.when(resource.getResourceInstanceName()).thenReturn(instanceName);
         Mockito.when(resource.getResourceInvariantUUID()).thenReturn(invariantResourceUuid);
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
         Mockito.when(blueprintArtifact.getDcaeBlueprint())
-                .thenReturn(ResourceFileUtil.getResourceAsString(blueprintFilePath));
+            .thenReturn(ResourceFileUtil.getResourceAsString(blueprintFilePath));
         Mockito.when(blueprintArtifact.getBlueprintArtifactName()).thenReturn(csarArtifactName);
         Mockito.when(blueprintArtifact.getBlueprintInvariantServiceUuid()).thenReturn(invariantServiceUuid);
         Mockito.when(blueprintArtifact.getResourceAttached()).thenReturn(resource);
@@ -118,13 +118,13 @@ public class CsarInstallerItCase {
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
         // Create fake blueprint artifact 1
         BlueprintArtifact blueprintArtifact = buildFakeBuildprintArtifact(INSTANCE_NAME_RESOURCE1,
-                INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca.yaml", CSAR_ARTIFACT_NAME,
-                INVARIANT_SERVICE_UUID);
+            INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca.yaml", CSAR_ARTIFACT_NAME,
+            INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
         blueprintMap.put(blueprintArtifact.getResourceAttached().getResourceInstanceName(), blueprintArtifact);
         // Create fake blueprint artifact 2
         blueprintArtifact = buildFakeBuildprintArtifact(INSTANCE_NAME_RESOURCE2, INVARIANT_RESOURCE2_UUID,
-                "example/sdc/blueprint-dcae/tca_2.yaml", CSAR_ARTIFACT_NAME, INVARIANT_SERVICE_UUID);
+            "example/sdc/blueprint-dcae/tca_2.yaml", CSAR_ARTIFACT_NAME, INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
         blueprintMap.put(blueprintArtifact.getResourceAttached().getResourceInstanceName(), blueprintArtifact);
         // Build fake csarhandler
@@ -139,8 +139,8 @@ public class CsarInstallerItCase {
     }
 
     @Test
-    public void testIsCsarAlreadyDeployedTca()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+    public void testIsCsarAlreadyDeployedTca() throws SdcArtifactInstallerException, SdcToscaParserException,
+        CsarHandlerException, IOException, InterruptedException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
         assertFalse(csarInstaller.isCsarAlreadyDeployed(csarHandler));
@@ -149,40 +149,39 @@ public class CsarInstallerItCase {
     }
 
     @Test
-    public void testInstallTheCsarTca()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException, JSONException {
+    public void testInstallTheCsarTca() throws SdcArtifactInstallerException, SdcToscaParserException,
+        CsarHandlerException, IOException, JSONException, InterruptedException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
         CldsModel cldsModel1 = verifyClosedLoopModelLoadedInDb(csar, generatedName, INSTANCE_NAME_RESOURCE1);
         JSONAssert.assertEquals(
-                IOUtils.toString(
-                        ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json")),
-                cldsModel1.getPropText(), true);
+            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json")),
+            cldsModel1.getPropText(), true);
         CldsModel cldsModel2 = verifyClosedLoopModelLoadedInDb(csar, generatedName, INSTANCE_NAME_RESOURCE2);
         JSONAssert.assertEquals(
-                IOUtils.toString(
-                        ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca-2.json")),
-                cldsModel2.getPropText(), true);
+            IOUtils
+                .toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca-2.json")),
+            cldsModel2.getPropText(), true);
     }
 
     private CldsModel verifyClosedLoopModelLoadedInDb(CsarHandler csar, String generatedName,
-            String instanceNameResource) throws SdcArtifactInstallerException {
+        String instanceNameResource) throws SdcArtifactInstallerException {
         // Get the template back from DB
         CldsTemplate templateFromDb = CldsTemplate.retrieve(cldsDao,
-                CsarInstallerImpl.TEMPLATE_NAME_PREFIX + CsarInstallerImpl.buildModelName(csar, instanceNameResource),
-                false);
+            CsarInstallerImpl.TEMPLATE_NAME_PREFIX + CsarInstallerImpl.buildModelName(csar, instanceNameResource),
+            false);
         assertNotNull(templateFromDb);
         assertNotNull(templateFromDb.getBpmnText());
         assertNotNull(templateFromDb.getImageText());
         assertNotNull(templateFromDb.getPropText());
         assertTrue(templateFromDb.getPropText().contains("global")
-                && templateFromDb.getPropText().contains("node_templates:"));
+            && templateFromDb.getPropText().contains("node_templates:"));
         assertEquals(templateFromDb.getName(),
-                CsarInstallerImpl.TEMPLATE_NAME_PREFIX + CsarInstallerImpl.buildModelName(csar, instanceNameResource));
+            CsarInstallerImpl.TEMPLATE_NAME_PREFIX + CsarInstallerImpl.buildModelName(csar, instanceNameResource));
         // Get the Model back from DB
         CldsModel modelFromDb = CldsModel.retrieve(cldsDao,
-                CsarInstallerImpl.buildModelName(csar, instanceNameResource), true);
+            CsarInstallerImpl.buildModelName(csar, instanceNameResource), true);
         assertNotNull(modelFromDb);
         assertNotNull(modelFromDb.getBpmnText());
         assertNotNull(modelFromDb.getImageText());
