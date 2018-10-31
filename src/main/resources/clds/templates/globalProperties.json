@@ -49,7 +49,7 @@
 		"timeout": 345,
 		"actor": {
 			"APPC":"APPC",
-			"MSO": "SO",
+			"SO": "SO",
 			"VFC": "VFC"
 		},
 		"vnfRecipe": {
