@@ -19,10 +19,12 @@ Backup/restore
 --------------
 
 backup.py and restore.py scripts are available inside the kibana docker image for saving and restoring the configuration.
+the default configuration is located in the kibana docker image under the directory "/saved-objects/default/"
 
 ### backup.py 
 ```
-docker-compose exec kibana backup.py -C /saved-objects/
+firts create the directory "/saved-objects/mybackup" if it doesn't exist
+docker-compose exec kibana backup.py -C /saved-objects/mybackup
 ```
 ```
 usage: backup.py [-h] [-v] [-C CONFIGURATION_PATH] [-f] [-H KIBANA_HOST]
@@ -45,7 +47,10 @@ optional arguments:
 
 ### restore.py
 ```
-docker-compose exec kibana restore.py -C /saved-objects/ -f
+to restore the configuration, you previously backed up, use the command below:
+docker-compose exec kibana restore.py -C /saved-objects/mybackup -f
+to restore the default confgiuration use the command below:
+docker-compose exec kibana restore.py -C /saved-objects/default -f
 ```
 ```
 usage: restore.py [-h] [-v] [-C CONFIGURATION_PATH] [-H KIBANA_HOST] [-f]
