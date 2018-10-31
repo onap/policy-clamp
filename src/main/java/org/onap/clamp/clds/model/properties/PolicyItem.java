@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.onap.clamp.clds.util.JacksonUtils;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * Parse policyConfigurations from Policy json properties.
@@ -105,7 +106,16 @@ public class PolicyItem implements Cloneable {
         String payload = AbstractModelElement.getValueByName(node, "recipePayload");
 
         if (payload != null && !payload.isEmpty()) {
-            recipePayload = JacksonUtils.getObjectMapperInstance().readValue(payload, new TypeReference<Map<String, String>>(){});
+            if (payload.trim().startsWith("{") && payload.trim().endsWith("}")) {
+                // Seems to be a JSON
+                recipePayload = JacksonUtils.getObjectMapperInstance().readValue(payload,
+                    new TypeReference<Map<String, String>>() {
+                    });
+            } else {
+                // SHould be a YAML then
+                Yaml yaml = new Yaml();
+                recipePayload = (Map<String, String>) yaml.load(payload);
+            }
         }
         oapRop = AbstractModelElement.getValueByName(node, "oapRop");
         oapLimit = AbstractModelElement.getValueByName(node, "oapLimit");
