@@ -1,17 +1,8 @@
 controlLoop:
   abatement: false
   controlLoopName: controlNameTest
-  resources:
-  - resourceInvariantUUID: null
-    resourceName: 6c7aaec2-59eb-41d9-8681-b7f976ab668d
-    resourceType: VF
-    resourceUUID: null
-    resourceVersion: null
-  services:
-  - serviceInvariantUUID: null
-    serviceName: 0f983e18-4603-4bb4-a98c-e29691fb16a1
-    serviceUUID: null
-    serviceVersion: null
+  resources: null
+  services: null
   timeout: 500
   trigger_policy: <generatedId>
   version: 2.0.0

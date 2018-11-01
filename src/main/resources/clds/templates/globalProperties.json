@@ -50,17 +50,20 @@
 		"actor": {
 			"APPC":"APPC",
 			"SO": "SO",
-			"VFC": "VFC"
+			"VFC": "VFC",
+			"SDNC":"SDNC",
+			"SDNR":"SDNR"
 		},
 		"vnfRecipe": {
 			"": "",
-			"restart": "Restart",
-			"rebuild": "Rebuild",
-			"migrate": "Migrate",
-			"healthCheck": "Health Check",
-			"modifyConfig": "ModifyConfig",
-			"vfModuleCreate":"VF Module Create",
-			"scaleOut":"Scale Out"
+			"Restart": "Restart",
+			"Rebuild": "Rebuild",
+			"Migrate": "Migrate",
+			"HealthCheck": "Health Check",
+			"ModifyConfig": "Modify Config",
+			"VF Module Create":"VF Module Create",
+			"VF Module Delete":"VF Module Delete",
+			"Reroute":"Reroute"
 		},
 		"maxRetries": "3",
 		"recipeLevel": {

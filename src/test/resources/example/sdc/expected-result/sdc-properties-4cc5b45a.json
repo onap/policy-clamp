@@ -9,8 +9,8 @@
 			"Measurement_vGMUX":"Measurement_vGMUX"
 		},
 		"fieldPathM": {
-			"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value": "Packet-loss-rate",
-			"$.event.measurementsForVfScalingFields.vNicUsageArray[*].receivedTotalPacketsDelta":"receivedTotalPacketsDelta"
+			"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value": "packetLossRate",
+			"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta":"receivedTotalPacketsDelta"
 		},
 		"operator": {
 			">": "GREATER",
@@ -49,12 +49,14 @@
 		"timeout": 345,
 		"vnfRecipe": {
 			"": "",
-			"restart": "Restart",
-			"rebuild": "Rebuild",
-			"migrate": "Migrate",
-			"healthCheck": "Health Check",
-			"modifyConfig": "ModifyConfig",
-			"vfModuleCreate":"VF Module Create"
+			"Restart": "Restart",
+			"Rebuild": "Rebuild",
+			"Migrate": "Migrate",
+			"HealthCheck": "Health Check",
+			"ModifyConfig": "Modify Config",
+			"VF Module Create":"VF Module Create",
+			"VF Module Delete":"VF Module Delete",
+			"Reroute":"Reroute"
 		},
 		"maxRetries": "3",
 		"retryTimeLimit": 180,

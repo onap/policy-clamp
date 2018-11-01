@@ -57,6 +57,7 @@ public class OperationalPolicyYamlFormatter {
 
     protected OperationalPolicyYamlFormatter() {
     }
+
     /**
      * Format Operational OpenLoop Policy yaml.
      *
@@ -67,8 +68,8 @@ public class OperationalPolicyYamlFormatter {
      * @throws BuilderException
      * @throws UnsupportedEncodingException
      */
-    public static String formatOpenLoopYaml(ModelProperties prop, String modelElementId,
-        PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+    public static String formatOpenLoopYaml(ModelProperties prop, String modelElementId, PolicyChain policyChain)
+        throws BuilderException, UnsupportedEncodingException {
         // get property objects
         Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
@@ -86,20 +87,15 @@ public class OperationalPolicyYamlFormatter {
         return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
-    public static String formatYaml(ModelProperties prop, String modelElementId,
-        PolicyChain policyChain) throws BuilderException, UnsupportedEncodingException {
+    public static String formatYaml(ModelProperties prop, String modelElementId, PolicyChain policyChain)
+        throws BuilderException, UnsupportedEncodingException {
         // get property objects
-        Global global = prop.getGlobal();
         prop.setCurrentModelElementId(modelElementId);
         prop.setPolicyUniqueId(policyChain.getPolicyId());
-        // convert values to SDC objects
-        Service service = new Service(global.getService());
-        Resource[] vfResources = convertToResources(global.getResourceVf(), ResourceType.VF);
-        Resource[] vfcResources = convertToResources(global.getResourceVfc(), ResourceType.VFC);
+
         // create builder
         ControlLoopPolicyBuilder builder = ControlLoopPolicyBuilder.Factory.buildControlLoop(prop.getControlName(),
-            policyChain.getTimeout(), service, vfResources);
-        builder.addResource(vfcResources);
+            policyChain.getTimeout());
         // process each policy
         Map<String, Policy> policyObjMap = new HashMap<>();
         List<PolicyItem> policyItemList = orderParentFirst(policyChain.getPolicyItems());
@@ -195,7 +191,6 @@ public class OperationalPolicyYamlFormatter {
             throw new BadRequestException(sb.toString());
         }
     }
-
 
     protected static Resource[] convertToResources(List<String> stringList, ResourceType resourceType) {
         if (stringList == null || stringList.isEmpty()) {
