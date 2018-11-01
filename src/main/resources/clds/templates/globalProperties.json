@@ -9,8 +9,8 @@
 			"Measurement_vGMUX":"Measurement_vGMUX"
 		},
 		"fieldPathM": {
-			"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value": "Packet-loss-rate",
-			"$.event.measurementsForVfScalingFields.vNicUsageArray[*].receivedTotalPacketsDelta":"receivedTotalPacketsDelta"
+			"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value": "packetLossRate",
+			"$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta":"receivedTotalPacketsDelta"
 		},
 		"operator": {
 			">": "GREATER",
