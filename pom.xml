@@ -451,6 +451,10 @@
 										<groupId>commons-fileupload</groupId>
 										<artifactId>commons-fileupload</artifactId>
 								</exclusion>
+								<exclusion>
+										<groupId>com.att.research.xacml</groupId>
+										<artifactId>xacml</artifactId>
+								</exclusion>
 						</exclusions>
 				</dependency>
 				<dependency>
