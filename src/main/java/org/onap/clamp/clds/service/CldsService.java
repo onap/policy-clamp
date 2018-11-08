@@ -248,15 +248,25 @@ public class CldsService extends SecureServiceBase {
         logger.debug("GET model for  modelName={}", modelName);
         CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
         isAuthorizedForVf(cldsModel);
+        // Try an update for DCAE status
         // Checking condition whether our CLDS model can call Inventory Method
-        if (cldsModel.canInventoryCall()) {
-            try {
-                // Method to call dcae inventory and invoke insert event method
+        try {
+            // Method to call dcae inventory and invoke insert event method
+            if (cldsModel.canDcaeInventoryCall()
+                && !cldsModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
                 dcaeInventoryServices.setEventInventory(cldsModel, getUserId());
-            } catch (Exception e) {
-                LoggingUtils.setErrorContext("900", "Set event inventory error");
-                logger.error("getModel set event Inventory error:" + e);
             }
+            // This is a blocking call
+            if (cldsModel.getEvent().isActionCd(CldsEvent.ACTION_DEPLOY)
+                && !CldsModel.STATUS_ACTIVE.equals(cldsModel.getStatus()) && cldsModel.getDeploymentId() != null
+                && cldsModel.getDeploymentStatusUrl() != null) {
+                checkDcaeDeploymentStatus(cldsModel, CldsEvent.ACTION_DEPLOY, false);
+                // refresh because new event may have been added
+                cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
+            }
+        } catch (Exception e) {
+            LoggingUtils.setErrorContext("900", "Set event inventory error");
+            logger.error("getModel set event Inventory error:" + e);
         }
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
@@ -279,11 +289,9 @@ public class CldsService extends SecureServiceBase {
         logger.info("PUT bpmnText={}", cldsModel.getBpmnText());
         logger.info("PUT propText={}", cldsModel.getPropText());
         logger.info("PUT imageText={}", cldsModel.getImageText());
-        cldsModel.setName(modelName);
         fillInCldsModel(cldsModel);
-        updateAndInsertNewEvent(cldsModel.getName(), cldsModel.getControlNamePrefix(), cldsModel.getEvent(),
-            CldsEvent.ACTION_MODIFY);
         cldsModel.save(cldsDao, getUserId());
+
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("PUT model completed");
@@ -344,10 +352,10 @@ public class CldsService extends SecureServiceBase {
         throws TransformerException, ParseException {
         util.entering(request, "CldsService: Process model action");
         Date startTime = new Date();
-        CldsModel retrievedModel = null;
         String errorMessage = "";
+        String actionCd = "";
         try {
-            String actionCd = action.toUpperCase();
+            actionCd = action.toUpperCase();
             SecureServicePermission permisionManage = SecureServicePermission.create(cldsPermissionTypeClManage,
                 cldsPermissionInstance, actionCd);
             isAuthorized(permisionManage);
@@ -362,9 +370,9 @@ public class CldsService extends SecureServiceBase {
             logger.info("PUT getTypeId={}", model.getTypeId());
             logger.info("PUT deploymentId={}", model.getDeploymentId());
             this.fillInCldsModel(model);
-            // save model to db
-            updateAndInsertNewEvent(modelName, model.getControlNamePrefix(), model.getEvent(), CldsEvent.ACTION_MODIFY);
+            // save model to db just in case
             model.save(cldsDao, getUserId());
+
             // get vars and format if necessary
             String prop = model.getPropText();
             String bpmn = model.getBpmnText();
@@ -388,54 +396,32 @@ public class CldsService extends SecureServiceBase {
                 logger.info("Starting Camel flow on request, result is: ", result);
             } catch (SdcCommunicationException | PolicyClientException | BadRequestException e) {
                 logger.error("Exception occured during invoking Camel process", e);
-                errorMessage=e.getMessage();
-            }
-            if (actionCd.equalsIgnoreCase(CldsEvent.ACTION_DELETE)) {
-                util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO,
-                    ONAPLogConstants.ResponseStatus.COMPLETED);
-                return new ResponseEntity<>("", HttpStatus.OK);
-            } else {
-                retrievedModel = CldsModel.retrieve(cldsDao, modelName, false);
-            }
-            if (!isTest && errorMessage.isEmpty()
-                && (actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMIT)
-                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_RESUBMIT)
-                    || actionCd.equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE))) {
-                if (retrievedModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
-                    // SDC artifact case
-                    logger.info("Skipping DCAE inventory call as closed loop has been created from SDC notification");
-                    DcaeEvent dcaeEvent = new DcaeEvent();
-                    dcaeEvent.setArtifactName(retrievedModel.getControlName() + ".yml");
-                    dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
-                    CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
-                        CldsEvent.ACTION_STATE_RECEIVED, null);
-                } else {
-                    // This should be done only when the call to DCAE
-                    // has not yet been done. When CL comes from SDC
-                    // this is not required as the DCAE inventory call is done
-                    // during the CL deployment.
-                    dcaeInventoryServices.setEventInventory(retrievedModel, getUserId());
-                }
-                retrievedModel.save(cldsDao, getUserId());
+                errorMessage = e.getMessage();
             }
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
             auditLogger.info("Process model action completed");
-
         } catch (Exception e) {
             logger.error("Exception occured during putModelAndProcessAction", e);
-            errorMessage=e.getMessage();
+            errorMessage = e.getMessage();
         }
+
         if (!errorMessage.isEmpty()) {
-            if (retrievedModel != null) {
-                retrievedModel.setErrorMessageForUi(errorMessage);
-            }
+            CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), actionCd, CldsEvent.ACTION_STATE_ERROR,
+                null);
+            // Need a refresh as new events have been inserted
+            model = CldsModel.retrieve(cldsDao, modelName, false);
+            model.setErrorMessageForUi(errorMessage);
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "putModelAndProcessAction failed", Level.INFO,
                 ONAPLogConstants.ResponseStatus.ERROR);
-            return new ResponseEntity<>(retrievedModel, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            // Need a refresh as new events have been inserted, could have been deleted so
+            // not blocking call
+            model = CldsModel.retrieve(cldsDao, modelName, true);
+            util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+            return new ResponseEntity<>(model, HttpStatus.OK);
         }
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return new ResponseEntity<>(retrievedModel, HttpStatus.OK);
     }
 
     /**
@@ -464,8 +450,8 @@ public class CldsService extends SecureServiceBase {
             instanceCount = dcaeEvent.getInstances().size();
         }
         String msgInfo = "event=" + dcaeEvent.getEvent() + " serviceUUID=" + dcaeEvent.getServiceUUID()
-        + " resourceUUID=" + dcaeEvent.getResourceUUID() + " artifactName=" + dcaeEvent.getArtifactName()
-        + " instance count=" + instanceCount + " isTest=" + isTest;
+            + " resourceUUID=" + dcaeEvent.getResourceUUID() + " artifactName=" + dcaeEvent.getArtifactName()
+            + " instance count=" + instanceCount + " isTest=" + isTest;
         logger.info("POST dcae event {}", msgInfo);
         if (isTest) {
             logger.warn("Ignorning test event from DCAE");
@@ -728,7 +714,7 @@ public class CldsService extends SecureServiceBase {
     public ResponseEntity<CldsModel> deployModel(String modelName, CldsModel model) {
         util.entering(request, "CldsService: Deploy model");
         Date startTime = new Date();
-        String errorMessage="";
+        String errorMessage = "";
         try {
             fillInCldsModel(model);
             String bpmnJson = cldsBpmnTransformer.doXslTransformToString(model.getBpmnText());
@@ -745,37 +731,21 @@ public class CldsService extends SecureServiceBase {
             if (model.getDeploymentId() != null && !model.getDeploymentId().isEmpty()) {
                 deploymentId = model.getDeploymentId();
             } else {
-                deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId";
+                model.setDeploymentId(deploymentId = "closedLoop_" + UUID.randomUUID() + "_deploymentId");
             }
-            String createNewDeploymentStatusUrl = dcaeDispatcherServices.createNewDeployment(deploymentId,
-                model.getTypeId(), modelProp.getGlobal().getDeployParameters());
-            String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(createNewDeploymentStatusUrl);
-            if ("succeeded".equalsIgnoreCase(operationStatus)) {
-                String artifactName = model.getControlName();
-                if (artifactName != null) {
-                    artifactName = artifactName + ".yml";
-                }
-                DcaeEvent dcaeEvent = new DcaeEvent();
-                /* set dcae events */
-                dcaeEvent.setArtifactName(artifactName);
-                dcaeEvent.setEvent(DcaeEvent.EVENT_DEPLOYMENT);
-                CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
-                    CldsEvent.ACTION_STATE_RECEIVED, null);
-                model.setDeploymentId(deploymentId);
-                model.save(cldsDao, getUserId());
-            } else {
-                logger.info("Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-                util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "DeployModel failed", Level.INFO,
-                    ONAPLogConstants.ResponseStatus.ERROR);
-                throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Deploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-            }
-            logger.info("Deploy model (" + modelName + ") succeeded...Deployment Id is - " + deploymentId);
+            model.setDeploymentStatusUrl(dcaeDispatcherServices.createNewDeployment(deploymentId, model.getTypeId(),
+                modelProp.getGlobal().getDeployParameters()));
+            CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), CldsEvent.ACTION_DEPLOY,
+                CldsEvent.ACTION_STATE_INITIATED, null);
+            // This is a blocking call
+            checkDcaeDeploymentStatus(model, CldsEvent.ACTION_DEPLOY, true);
+
+            model.save(cldsDao, getUserId());
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
             auditLogger.info("Deploy model completed");
         } catch (Exception e) {
-            errorMessage=e.getMessage();
+            errorMessage = e.getMessage();
             logger.error("Exception occured during deployModel", e);
         }
         if (!errorMessage.isEmpty()) {
@@ -783,9 +753,10 @@ public class CldsService extends SecureServiceBase {
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "DeployModel failed", Level.INFO,
                 ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+            return new ResponseEntity<>(model, HttpStatus.OK);
         }
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     public ResponseEntity<CldsModel> unDeployModel(String modelName, CldsModel model) {
@@ -797,30 +768,15 @@ public class CldsService extends SecureServiceBase {
                 cldsPermissionInstance, CldsEvent.ACTION_UNDEPLOY);
             isAuthorized(permisionManage);
             isAuthorizedForVf(model);
-            String operationStatusUndeployUrl = dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(),
-                model.getTypeId());
-            String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(operationStatusUndeployUrl);
-            if ("succeeded".equalsIgnoreCase(operationStatus)) {
-                String artifactName = model.getControlName();
-                if (artifactName != null) {
-                    artifactName = artifactName + ".yml";
-                }
-                DcaeEvent dcaeEvent = new DcaeEvent();
-                // set dcae events
-                dcaeEvent.setArtifactName(artifactName);
-                dcaeEvent.setEvent(DcaeEvent.EVENT_UNDEPLOYMENT);
-                CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), dcaeEvent.getCldsActionCd(),
-                    CldsEvent.ACTION_STATE_RECEIVED, null);
-                model.setDeploymentId(null);
-                model.save(cldsDao, getUserId());
-            } else {
-                logger.info("Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-                util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "UndeployModel failed", Level.INFO,
-                    ONAPLogConstants.ResponseStatus.ERROR);
-                throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Undeploy model (" + modelName + ") failed...Operation Status is - " + operationStatus);
-            }
-            logger.info("Undeploy model (" + modelName + ") succeeded.");
+            model.setDeploymentStatusUrl(
+                dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(), model.getTypeId()));
+            CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), CldsEvent.ACTION_UNDEPLOY,
+                CldsEvent.ACTION_STATE_INITIATED, null);
+            // This is a blocking call
+            checkDcaeDeploymentStatus(model, CldsEvent.ACTION_UNDEPLOY, true);
+            // clean the deployment ID
+            model.setDeploymentId(null);
+            model.save(cldsDao, getUserId());
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
             auditLogger.info("Undeploy model completed");
@@ -833,9 +789,32 @@ public class CldsService extends SecureServiceBase {
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "UndeployModel failed", Level.INFO,
                 ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(model, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+            return new ResponseEntity<>(model, HttpStatus.OK);
         }
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return new ResponseEntity<>(model, HttpStatus.OK);
+    }
+
+    private void checkDcaeDeploymentStatus(CldsModel model, String cldsEvent, boolean withRetry)
+        throws InterruptedException {
+        String operationStatus = withRetry
+            ? dcaeDispatcherServices.getOperationStatusWithRetry(model.getDeploymentStatusUrl())
+            : dcaeDispatcherServices.getOperationStatus(model.getDeploymentStatusUrl());
+        if ("succeeded".equalsIgnoreCase(operationStatus)) {
+            logger.info(cldsEvent + " model (" + model.getName() + ") succeeded...Deployment Id is - "
+                + model.getDeploymentId());
+            CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), cldsEvent,
+                CldsEvent.ACTION_STATE_COMPLETED, null);
+        } else {
+            String info = "DCAE " + cldsEvent + " (" + model.getName() + ") failed...Operation Status is - "
+                + operationStatus;
+            logger.info(info);
+            CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), cldsEvent, CldsEvent.ACTION_STATE_ERROR,
+                null);
+            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "DCAE operation(" + cldsEvent + ") failed",
+                Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, info);
+        }
     }
 
     private void checkForDuplicateServiceVf(String modelName, String modelPropText) throws IOException {
@@ -853,25 +832,10 @@ public class CldsService extends SecureServiceBase {
                     if (!modelName.equalsIgnoreCase(cldsModelProp.getName()) && service.equalsIgnoreCase(currentService)
                         && resourceVf.get(0).equalsIgnoreCase(currentVf.get(0))) {
                         throw new BadRequestException("Same Service/VF already exists in " + cldsModelProp.getName()
-                        + " model, please select different Service/VF.");
+                            + " model, please select different Service/VF.");
                     }
                 }
             }
-        }
-    }
-
-    private void updateAndInsertNewEvent(String cldsModelName, String cldsControlNamePrfx, CldsEvent event,
-        String newAction) {
-        // If model action is in submit/resubmit/distributed and user try
-        // to save then we are changing action back to create.
-        if (event != null && (CldsEvent.ACTION_SUBMIT.equalsIgnoreCase(event.getActionCd())
-            || CldsEvent.ACTION_RESUBMIT.equalsIgnoreCase(event.getActionCd())
-            || CldsEvent.ACTION_DISTRIBUTE.equalsIgnoreCase(event.getActionCd()))) {
-            CldsEvent newEvent = new CldsEvent();
-            newEvent.setUserid(getUserId());
-            newEvent.setActionCd(newAction);
-            newEvent.setActionStateCd(CldsEvent.ACTION_STATE_COMPLETED);
-            cldsDao.insEvent(cldsModelName, cldsControlNamePrfx, null, newEvent);
         }
     }
 

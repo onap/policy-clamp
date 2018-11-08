@@ -86,6 +86,7 @@ public class CldsDao {
     private SimpleJdbcCall procInsertDictionaryElement;
 
     private static final String DATE_FORMAT = "MM-dd-yyyy HH:mm:ss";
+
     /**
      * Log message when instantiating
      */
@@ -184,6 +185,7 @@ public class CldsDao {
             .addValue("v_model_prop_text", model.getPropText())
             .addValue("v_model_blueprint_text", model.getBlueprintText())
             .addValue("v_service_type_id", model.getTypeId()).addValue("v_deployment_id", model.getDeploymentId())
+            .addValue("v_deployment_status_url", model.getDeploymentStatusUrl())
             .addValue("v_control_name_prefix", model.getControlNamePrefix())
             .addValue(V_CONTROL_NAME_UUID, model.getControlNameUuid());
         Map<String, Object> out = logSqlExecution(procSetModel, in);
@@ -475,6 +477,7 @@ public class CldsDao {
         model.getEvent().setUserid((String) out.get("v_event_user_id"));
         model.setTypeId((String) out.get("v_service_type_id"));
         model.setDeploymentId((String) out.get("v_deployment_id"));
+        model.setDeploymentStatusUrl((String) out.get("v_deployment_status_url"));
     }
 
     /**
@@ -525,18 +528,19 @@ public class CldsDao {
         }
         toscaModelSql += " AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id=st.tosca_model_id)";
 
-        Optional.ofNullable(jdbcTemplateObject.queryForList(toscaModelSql, params)).orElse(Collections.emptyList()).forEach(row -> {
-            CldsToscaModel cldsToscaModel = new CldsToscaModel();
-            cldsToscaModel.setId((String) row.get("tosca_model_id"));
-            cldsToscaModel.setPolicyType((String) row.get("policy_type"));
-            cldsToscaModel.setToscaModelName((String) row.get("tosca_model_name"));
-            cldsToscaModel.setUserId((String) row.get("user_id"));
-            cldsToscaModel.setRevisionId((String) row.get("tosca_model_revision_id"));
-            cldsToscaModel.setVersion(((Double) row.get("version")));
-            cldsToscaModel.setCreatedDate(sdf.format(row.get("createdTimestamp")));
-            cldsToscaModel.setToscaModelYaml((String) row.get("tosca_model_yaml"));
-            cldsToscaModels.add(cldsToscaModel);
-        });
+        Optional.ofNullable(jdbcTemplateObject.queryForList(toscaModelSql, params)).orElse(Collections.emptyList())
+            .forEach(row -> {
+                CldsToscaModel cldsToscaModel = new CldsToscaModel();
+                cldsToscaModel.setId((String) row.get("tosca_model_id"));
+                cldsToscaModel.setPolicyType((String) row.get("policy_type"));
+                cldsToscaModel.setToscaModelName((String) row.get("tosca_model_name"));
+                cldsToscaModel.setUserId((String) row.get("user_id"));
+                cldsToscaModel.setRevisionId((String) row.get("tosca_model_revision_id"));
+                cldsToscaModel.setVersion(((Double) row.get("version")));
+                cldsToscaModel.setCreatedDate(sdf.format(row.get("createdTimestamp")));
+                cldsToscaModel.setToscaModelYaml((String) row.get("tosca_model_yaml"));
+                cldsToscaModels.add(cldsToscaModel);
+            });
         return cldsToscaModels;
     }
 
@@ -626,15 +630,16 @@ public class CldsDao {
             .map(Arrays::stream).map(s -> s.map(param -> param + " = :" + param).collect(Collectors.joining(" AND ")))
             .orElse("1");
 
-        Optional.ofNullable(jdbcTemplateObject.queryForList(dictionarySql, namedParameters)).orElse(Collections.emptyList()).forEach(row -> {
-            CldsDictionary cldsDictionary = new CldsDictionary();
-            cldsDictionary.setDictionaryId((String) row.get("dictionary_id"));
-            cldsDictionary.setDictionaryName((String) row.get("dictionary_name"));
-            cldsDictionary.setCreatedBy((String) row.get("created_by"));
-            cldsDictionary.setUpdatedBy((String) row.get("modified_by"));
-            cldsDictionary.setLastUpdatedDate(sdf.format(row.get("timestamp")));
-            dictionaries.add(cldsDictionary);
-        });
+        Optional.ofNullable(jdbcTemplateObject.queryForList(dictionarySql, namedParameters))
+            .orElse(Collections.emptyList()).forEach(row -> {
+                CldsDictionary cldsDictionary = new CldsDictionary();
+                cldsDictionary.setDictionaryId((String) row.get("dictionary_id"));
+                cldsDictionary.setDictionaryName((String) row.get("dictionary_name"));
+                cldsDictionary.setCreatedBy((String) row.get("created_by"));
+                cldsDictionary.setUpdatedBy((String) row.get("modified_by"));
+                cldsDictionary.setLastUpdatedDate(sdf.format(row.get("timestamp")));
+                dictionaries.add(cldsDictionary);
+            });
         return dictionaries;
     }
 
@@ -671,8 +676,7 @@ public class CldsDao {
             .addValue("dict_element_name", cldsDictionaryItem.getDictElementName())
             .addValue("dict_element_short_name", cldsDictionaryItem.getDictElementShortName())
             .addValue("dict_element_description", cldsDictionaryItem.getDictElementDesc())
-            .addValue("dict_element_type", cldsDictionaryItem.getDictElementType())
-            .addValue("modified_by", userId)
+            .addValue("dict_element_type", cldsDictionaryItem.getDictElementType()).addValue("modified_by", userId)
             .addValue("dict_element_id", dictionaryElementId);
         jdbcTemplateObject.update(dictionarySql, namedParameters);
         cldsDictionaryItem.setUpdatedBy(userId);
@@ -695,31 +699,32 @@ public class CldsDao {
         String dictionarySql = "SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, de.modified_by, de.timestamp  "
             + "FROM dictionary_elements de, dictionary d WHERE de.dictionary_id = d.dictionary_id ";
         if (dictionaryId != null) {
-            dictionarySql+=" AND d.dictionary_id = :dictionaryId";
+            dictionarySql += " AND d.dictionary_id = :dictionaryId";
             namedParameters.addValue("dictionaryId", dictionaryId);
         }
-        if (dictElementShortName!=null) {
-            dictionarySql+=" AND de.dict_element_short_name = :dictElementShortName";
+        if (dictElementShortName != null) {
+            dictionarySql += " AND de.dict_element_short_name = :dictElementShortName";
             namedParameters.addValue("dictElementShortName", dictElementShortName);
         }
-        if (dictionaryName!=null) {
-            dictionarySql+=" AND dictionary_name = :dictionaryName";
+        if (dictionaryName != null) {
+            dictionarySql += " AND dictionary_name = :dictionaryName";
             namedParameters.addValue("dictionaryName", dictionaryName);
         }
 
-        Optional.ofNullable(jdbcTemplateObject.queryForList(dictionarySql,namedParameters)).orElse(Collections.emptyList()).forEach(row -> {
-            CldsDictionaryItem dictionaryItem = new CldsDictionaryItem();
-            dictionaryItem.setDictElementId((String) row.get("dict_element_id"));
-            dictionaryItem.setDictionaryId((String) row.get("dictionary_id"));
-            dictionaryItem.setDictElementName((String) row.get("dict_element_name"));
-            dictionaryItem.setDictElementShortName((String) row.get("dict_element_short_name"));
-            dictionaryItem.setDictElementDesc((String) row.get("dict_element_description"));
-            dictionaryItem.setDictElementType((String) row.get("dict_element_type"));
-            dictionaryItem.setCreatedBy((String) row.get("created_by"));
-            dictionaryItem.setUpdatedBy((String) row.get("modified_by"));
-            dictionaryItem.setLastUpdatedDate(sdf.format(row.get("timestamp")));
-            dictionaryItems.add(dictionaryItem);
-        });
+        Optional.ofNullable(jdbcTemplateObject.queryForList(dictionarySql, namedParameters))
+            .orElse(Collections.emptyList()).forEach(row -> {
+                CldsDictionaryItem dictionaryItem = new CldsDictionaryItem();
+                dictionaryItem.setDictElementId((String) row.get("dict_element_id"));
+                dictionaryItem.setDictionaryId((String) row.get("dictionary_id"));
+                dictionaryItem.setDictElementName((String) row.get("dict_element_name"));
+                dictionaryItem.setDictElementShortName((String) row.get("dict_element_short_name"));
+                dictionaryItem.setDictElementDesc((String) row.get("dict_element_description"));
+                dictionaryItem.setDictElementType((String) row.get("dict_element_type"));
+                dictionaryItem.setCreatedBy((String) row.get("created_by"));
+                dictionaryItem.setUpdatedBy((String) row.get("modified_by"));
+                dictionaryItem.setLastUpdatedDate(sdf.format(row.get("timestamp")));
+                dictionaryItems.add(dictionaryItem);
+            });
         return dictionaryItems;
     }
 }

@@ -4,6 +4,7 @@
 				<choice>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'SUBMIT' || ${exchangeProperty.actionCd} == 'RESUBMIT'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'INITIATED')" />
 								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDelegate" />
 								<delay>
@@ -11,10 +12,11 @@
 								</delay>
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDelegate" />
-								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'COMPLETED')" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'DELETE'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'INITIATED')" />
 								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDeleteDelegate" />
 								<delay>
@@ -24,10 +26,11 @@
 										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.ModelDeleteDelegate" />
-								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'COMPLETED')" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'UPDATE'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'INITIATED')" />
 								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDelegate" />
 								<delay>
@@ -35,20 +38,22 @@
 								</delay>
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDelegate" />
-								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'COMPLETED')" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'STOP'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'INITIATED')" />
 								<to
 										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDeleteDelegate" />
-								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'COMPLETED')" />
 						</when>
 						<when>
 								<simple> ${exchangeProperty.actionCd} == 'RESTART'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'INITIATED')" />
 								<to uri="bean:org.onap.clamp.clds.client.GuardPolicyDelegate" />
 								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
-								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate?method=addEvent(*,'COMPLETED')" />
 						</when>
 				</choice>
 		</route>

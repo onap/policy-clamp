@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model;
@@ -78,14 +78,14 @@ public class CldsModelTest {
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_SUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
         try {
-            cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+            cldsModel.validateAction(CldsEvent.ACTION_RESTART);
             fail("Exception should have been sent");
         } catch (IllegalArgumentException e) {
             logger.error("Exception caught IllegalArgumentException as expected", e);
         }
         cldsModel.getEvent().setActionCd(CldsEvent.ACTION_RESUBMIT);
         cldsModel.validateAction(CldsEvent.ACTION_RESUBMIT);
-        cldsModel.validateAction(CldsEvent.ACTION_DEPLOY);
+        cldsModel.validateAction(CldsEvent.ACTION_RESTART);
         fail("Exception should have been sent");
     }
 

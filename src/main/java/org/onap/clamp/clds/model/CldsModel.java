@@ -75,6 +75,7 @@ public class CldsModel {
     private String typeId;
     private String typeName;
     private String deploymentId;
+    private String deploymentStatusUrl;
 
     /**
      * Construct empty model.
@@ -97,7 +98,7 @@ public class CldsModel {
         return model;
     }
 
-    public boolean canInventoryCall() {
+    public boolean canDcaeInventoryCall() {
         boolean canCall = false;
         /* Below checks the clds event is submit/resubmit/distribute */
         if (event.isActionCd(CldsEvent.ACTION_SUBMIT) || event.isActionCd(CldsEvent.ACTION_RESUBMIT)
@@ -120,31 +121,27 @@ public class CldsModel {
     /**
      * set the status in the model
      */
-    private void determineStatus() {
+    public void determineStatus() {
         status = STATUS_UNKNOWN;
         if (event == null || event.getActionCd() == null) {
             status = STATUS_DESIGN;
         } else if (event.isActionStateCd(CldsEvent.ACTION_STATE_ERROR)) {
             status = STATUS_ERROR;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_CREATE, CldsEvent.ACTION_STATE_ANY)
-            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_ANY)
-            || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_ANY)
-            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_STATE_ANY)
-            || event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_RECEIVED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_MODIFY, CldsEvent.ACTION_STATE_ANY)) {
+        } else if (event.isActionAndStateCd(CldsEvent.ACTION_CREATE, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_DESIGN;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DISTRIBUTE, CldsEvent.ACTION_STATE_RECEIVED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_RECEIVED)) {
+            || event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_COMPLETED)
+            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_COMPLETED)
+            || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_COMPLETED)) {
             status = STATUS_DISTRIBUTED;
         } else if (event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_SENT)) {
             status = STATUS_DELETING;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_RECEIVED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_ANY)
-            || event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_ANY)
-            || event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_ANY)
+        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_COMPLETED)
+            || event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_COMPLETED)
+            || event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_COMPLETED)
             || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITPOLICY, CldsEvent.ACTION_STATE_ANY)) {
             status = STATUS_ACTIVE;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_STOP, CldsEvent.ACTION_STATE_ANY)) {
+        } else if (event.isActionAndStateCd(CldsEvent.ACTION_STOP, CldsEvent.ACTION_STATE_COMPLETED)) {
             status = STATUS_STOPPED;
         }
     }
@@ -176,39 +173,23 @@ public class CldsModel {
     }
 
     /**
-     * Determine permittedActionCd list using the actionCd from the current
-     * event. It's a states graph, given the next action that can be executed
-     * from the one that has been executed (described in the event object).
-     * ACTION_CREATE being the first one.
+     * Determine permittedActionCd list using the actionCd from the current event.
+     * It's a states graph, given the next action that can be executed from the one
+     * that has been executed (described in the event object). ACTION_CREATE being
+     * the first one.
      */
-    private void determinePermittedActionCd() {
+    public void determinePermittedActionCd() {
         String actionCd = getCurrentActionCd();
         switch (actionCd) {
         case CldsEvent.ACTION_CREATE:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST,
-                CldsEvent.ACTION_DELETE);
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST, CldsEvent.ACTION_DELETE);
             if (isSimplifiedModel()) {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
                     CldsEvent.ACTION_TEST, CldsEvent.ACTION_DELETE);
             }
             break;
-        case CldsEvent.ACTION_MODIFY:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
-            if (isSimplifiedModel()) {
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
-                    CldsEvent.ACTION_DELETE);
-            }
-            break;
         case CldsEvent.ACTION_SUBMIT:
         case CldsEvent.ACTION_RESUBMIT:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
-            break;
-        case CldsEvent.ACTION_SUBMITDCAE:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
-            break;
-        case CldsEvent.ACTION_SUBMITPOLICY:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
-            break;
         case CldsEvent.ACTION_DISTRIBUTE:
             permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT,
                 CldsEvent.ACTION_DELETE);
@@ -216,6 +197,12 @@ public class CldsModel {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_SUBMITDCAE,
                     CldsEvent.ACTION_DELETE);
             }
+            break;
+        case CldsEvent.ACTION_SUBMITDCAE:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
+            break;
+        case CldsEvent.ACTION_SUBMITPOLICY:
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
             break;
         case CldsEvent.ACTION_UNDEPLOY:
             permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
@@ -226,13 +213,13 @@ public class CldsModel {
             }
             break;
         case CldsEvent.ACTION_DEPLOY:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UNDEPLOY,
-                CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_UPDATE,
+                CldsEvent.ACTION_STOP);
             break;
         case CldsEvent.ACTION_RESTART:
         case CldsEvent.ACTION_UPDATE:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE,
-                CldsEvent.ACTION_STOP, CldsEvent.ACTION_UNDEPLOY);
+            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP,
+                CldsEvent.ACTION_UNDEPLOY);
             if (isPolicyOnly()) {
                 permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
             }
@@ -283,30 +270,30 @@ public class CldsModel {
     }
 
     /**
-     * Validate requestedActionCd - determine permittedActionCd and then check
-     * if contained in permittedActionCd Throw IllegalArgumentException if
-     * requested actionCd is not permitted.
+     * Validate requestedActionCd - determine permittedActionCd and then check if
+     * contained in permittedActionCd Throw IllegalArgumentException if requested
+     * actionCd is not permitted.
      */
     public void validateAction(String requestedActionCd) {
         determinePermittedActionCd();
         if (!permittedActionCd.contains(requestedActionCd)) {
             throw new IllegalArgumentException(
-                "Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: "
-                    + getCurrentActionCd() + ", the permittedActionCd: " + permittedActionCd);
+                "Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: " + getCurrentActionCd()
+                    + ", the permittedActionCd: " + permittedActionCd);
         }
     }
 
     /**
-     * Extract the UUID portion of a given full control name (controlNamePrefix
-     * + controlNameUuid). No fields are populated other than controlNamePrefix
-     * and controlNameUuid. Throws BadRequestException if length of given
-     * control name is less than UUID_LENGTH.
+     * Extract the UUID portion of a given full control name (controlNamePrefix +
+     * controlNameUuid). No fields are populated other than controlNamePrefix and
+     * controlNameUuid. Throws BadRequestException if length of given control name
+     * is less than UUID_LENGTH.
      */
     public static CldsModel createUsingControlName(String fullControlName) {
         if (fullControlName == null || fullControlName.length() < UUID_LENGTH) {
             throw new BadRequestException(
                 "closed loop id / control name length, " + (fullControlName != null ? fullControlName.length() : 0)
-                + ", less than the minimum of: " + UUID_LENGTH);
+                    + ", less than the minimum of: " + UUID_LENGTH);
         }
         CldsModel model = new CldsModel();
         model.setControlNamePrefix(fullControlName.substring(0, fullControlName.length() - UUID_LENGTH));
@@ -329,9 +316,9 @@ public class CldsModel {
         CldsModel cldsModel = createUsingControlName(controlName);
         cldsModel = cldsDao.getModelByUuid(cldsModel.getControlNameUuid());
         cldsModel.determineStatus();
-        if (dcaeEvent.getCldsActionCd().equals(CldsEvent.ACTION_UNDEPLOY) || (dcaeEvent.getCldsActionCd()
-            .equals(CldsEvent.ACTION_DEPLOY)
-            && (cldsModel.getStatus().equals(STATUS_DISTRIBUTED) || cldsModel.getStatus().equals(STATUS_DESIGN)))) {
+        if (dcaeEvent.getCldsActionCd().equals(CldsEvent.ACTION_UNDEPLOY)
+            || (dcaeEvent.getCldsActionCd().equals(CldsEvent.ACTION_DEPLOY)
+                && (cldsModel.getStatus().equals(STATUS_DISTRIBUTED) || cldsModel.getStatus().equals(STATUS_DESIGN)))) {
             CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userid, dcaeEvent.getCldsActionCd(),
                 CldsEvent.ACTION_STATE_RECEIVED, null);
         }
@@ -348,7 +335,7 @@ public class CldsModel {
 
     /**
      * @param name
-     *            the name to set
+     *        the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -382,7 +369,7 @@ public class CldsModel {
 
     /**
      * @param controlNamePrefix
-     *            the controlNamePrefix to set
+     *        the controlNamePrefix to set
      */
     public void setControlNamePrefix(String controlNamePrefix) {
         this.controlNamePrefix = controlNamePrefix;
@@ -397,7 +384,7 @@ public class CldsModel {
 
     /**
      * @param controlNameUuid
-     *            the controlNameUuid to set
+     *        the controlNameUuid to set
      */
     public void setControlNameUuid(String controlNameUuid) {
         this.controlNameUuid = controlNameUuid;
@@ -412,7 +399,7 @@ public class CldsModel {
 
     /**
      * @param propText
-     *            the propText to set
+     *        the propText to set
      */
     public void setPropText(String propText) {
         this.propText = propText;
@@ -443,7 +430,7 @@ public class CldsModel {
 
     /**
      * @param event
-     *            the event to set
+     *        the event to set
      */
     public void setEvent(CldsEvent event) {
         this.event = event;
@@ -458,7 +445,7 @@ public class CldsModel {
 
     /**
      * @param status
-     *            the status to set
+     *        the status to set
      */
     public void setStatus(String status) {
         this.status = status;
@@ -529,5 +516,13 @@ public class CldsModel {
 
     public void setErrorMessageForUi(String errorMessageForUi) {
         this.errorMessageForUi = errorMessageForUi;
+    }
+
+    public String getDeploymentStatusUrl() {
+        return deploymentStatusUrl;
+    }
+
+    public void setDeploymentStatusUrl(String deploymentStatusUrl) {
+        this.deploymentStatusUrl = deploymentStatusUrl;
     }
 }

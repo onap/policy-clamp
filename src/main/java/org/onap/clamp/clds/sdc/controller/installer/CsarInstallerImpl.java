@@ -93,8 +93,8 @@ public class CsarInstallerImpl implements CsarInstaller {
     @PostConstruct
     public void loadConfiguration() throws IOException {
         BlueprintParserMappingConfiguration
-        .createFromJson(appContext.getResource(blueprintMappingFile).getInputStream()).stream()
-        .forEach(e -> bpmnMapping.put(e.getBlueprintKey(), e.getFiles()));
+            .createFromJson(appContext.getResource(blueprintMappingFile).getInputStream()).stream()
+            .forEach(e -> bpmnMapping.put(e.getBlueprintKey(), e.getFiles()));
     }
 
     @Override
@@ -102,8 +102,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         boolean alreadyInstalled = true;
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
             alreadyInstalled = alreadyInstalled
-                && (CldsModel.retrieve(cldsDao, buildModelName(csar, blueprint.getKey()), true).getId() != null)
-                ? true
+                && (CldsModel.retrieve(cldsDao, buildModelName(csar, blueprint.getKey()), true).getId() != null) ? true
                     : false;
         }
         return alreadyInstalled;
@@ -120,8 +119,8 @@ public class CsarInstallerImpl implements CsarInstaller {
             policyScopePrefix = MODEL_NAME_PREFIX;
         }
         return policyScopePrefix + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
-        + csar.getSdcNotification().getServiceVersion().replace('.', '_') + "_"
-        + resourceInstanceName.replaceAll(" ", "");
+            + csar.getSdcNotification().getServiceVersion().replace('.', '_') + "_"
+            + resourceInstanceName.replaceAll(" ", "");
     }
 
     @Override
@@ -218,9 +217,8 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     /**
-     * This call must be done when deploying the SDC notification as this call
-     * get the latest version of the artifact (version can be specified to DCAE
-     * call)
+     * This call must be done when deploying the SDC notification as this call get
+     * the latest version of the artifact (version can be specified to DCAE call)
      *
      * @param blueprintArtifact
      * @return The DcaeInventoryResponse object containing the dcae values
@@ -239,23 +237,22 @@ public class CsarInstallerImpl implements CsarInstaller {
         BlueprintParserFilesConfiguration configFiles) throws IOException, SdcArtifactInstallerException {
         CldsTemplate template = new CldsTemplate();
         template.setBpmnId("Sdc-Generated");
-        template.setBpmnText(
-            IOUtils.toString(appContext.getResource(configFiles.getBpmnXmlFilePath()).getInputStream()));
+        template
+            .setBpmnText(IOUtils.toString(appContext.getResource(configFiles.getBpmnXmlFilePath()).getInputStream()));
         template.setPropText(
             "{\"global\":[{\"name\":\"service\",\"value\":[\"" + blueprintArtifact.getDcaeBlueprint() + "\"]}]}");
-        template.setImageText(
-            IOUtils.toString(appContext.getResource(configFiles.getSvgXmlFilePath()).getInputStream()));
+        template
+            .setImageText(IOUtils.toString(appContext.getResource(configFiles.getSvgXmlFilePath()).getInputStream()));
         template.setName(TEMPLATE_NAME_PREFIX
             + buildModelName(csar, blueprintArtifact.getResourceAttached().getResourceInstanceName()));
         template.save(cldsDao, null);
         logger.info("Fake Clds Template created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
-        + " with name " + template.getName());
+            + " with name " + template.getName());
         return template;
     }
 
     private CldsModel createFakeCldsModel(CsarHandler csar, BlueprintArtifact blueprintArtifact,
-        CldsTemplate cldsTemplate, DcaeInventoryResponse dcaeInventoryResponse)
-            throws SdcArtifactInstallerException {
+        CldsTemplate cldsTemplate, DcaeInventoryResponse dcaeInventoryResponse) throws SdcArtifactInstallerException {
         try {
             CldsModel cldsModel = new CldsModel();
             cldsModel.setName(buildModelName(csar, blueprintArtifact.getResourceAttached().getResourceInstanceName()));
@@ -274,7 +271,7 @@ public class CsarInstallerImpl implements CsarInstaller {
             cldsModel = cldsModel.save(cldsDao, null);
             cldsModel = setModelPropText(cldsModel, blueprintArtifact, cldsTemplate);
             logger.info("Fake Clds Model created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
-            + " with name " + cldsModel.getName());
+                + " with name " + cldsModel.getName());
             return cldsModel;
         } catch (TransformerException e) {
             throw new SdcArtifactInstallerException("TransformerException when decoding the BpmnText", e);

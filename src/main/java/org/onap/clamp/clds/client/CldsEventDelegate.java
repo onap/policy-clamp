@@ -27,7 +27,6 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.Handler;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,23 +48,26 @@ public class CldsEventDelegate {
      *
      * @param camelExchange
      *        The Camel Exchange object containing the properties
+     * @param actionState
+     *        The action state that is used instead of the one in exchange property
      */
-    @Handler
-    public void execute(Exchange camelExchange) {
+
+    public void addEvent(Exchange camelExchange, String actionState) {
         String controlName = (String) camelExchange.getProperty("controlName");
         String actionCd = (String) camelExchange.getProperty("actionCd");
-        String actionStateCd = ((String) camelExchange.getProperty("actionStateCd")) != null
+        String actionStateCd = (actionState != null) ? actionState : CldsEvent.ACTION_STATE_COMPLETED;
+        actionStateCd = ((String) camelExchange.getProperty("actionStateCd")) != null
             ? ((String) camelExchange.getProperty("actionStateCd"))
-                : CldsEvent.ACTION_STATE_COMPLETED;
-            // Flag indicate whether it is triggered by Validation Test button from
-            // UI
-            boolean isTest = (boolean) camelExchange.getProperty("isTest");
-            boolean isInsertTestEvent = (boolean) camelExchange.getProperty("isInsertTestEvent");
-            String userid = (String) camelExchange.getProperty("userid");
-            // do not insert events for test actions unless flag set to insert them
-            if (!isTest || isInsertTestEvent) {
-                // won't really have userid here...
-                CldsEvent.insEvent(cldsDao, controlName, userid, actionCd, actionStateCd, camelExchange.getExchangeId());
-            }
+            : actionStateCd;
+        // Flag indicate whether it is triggered by Validation Test button from
+        // UI
+        boolean isTest = (boolean) camelExchange.getProperty("isTest");
+        boolean isInsertTestEvent = (boolean) camelExchange.getProperty("isInsertTestEvent");
+        String userid = (String) camelExchange.getProperty("userid");
+        // do not insert events for test actions unless flag set to insert them
+        if (!isTest || isInsertTestEvent) {
+            // won't really have userid here...
+            CldsEvent.insEvent(cldsDao, controlName, userid, actionCd, actionStateCd, camelExchange.getExchangeId());
+        }
     }
 }

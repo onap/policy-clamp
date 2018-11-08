@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model;
@@ -31,7 +31,6 @@ import org.onap.clamp.clds.dao.CldsDao;
 public class CldsEvent {
     public static final String ACTION_TEST = "TEST";
     public static final String ACTION_CREATE = "CREATE";
-    public static final String ACTION_MODIFY = "MODIFY";
     public static final String ACTION_SUBMIT = "SUBMIT";
     // an update before model is active
     public static final String ACTION_RESUBMIT = "RESUBMIT";
@@ -80,15 +79,15 @@ public class CldsEvent {
      * @return
      */
     public static CldsEvent insEvent(CldsDao cldsDao, String controlName, String userid, String actionCd,
-            String actionStateCd, String processInstanceId) {
+        String actionStateCd, String processInstanceId) {
         CldsModel model = CldsModel.createUsingControlName(controlName);
         return insEvent(cldsDao, model, userid, actionCd, actionStateCd, processInstanceId);
     }
 
     /**
-     * Insert event using controlNameUuid to find the model. This method meant
-     * for processing events from dcae.
-     * 
+     * Insert event using controlNameUuid to find the model. This method meant for
+     * processing events from dcae.
+     *
      * @param cldsDao
      * @param model
      * @param userId
@@ -98,7 +97,7 @@ public class CldsEvent {
      * @return
      */
     public static CldsEvent insEvent(CldsDao cldsDao, CldsModel model, String userId, String actionCd,
-            String actionStateCd, String processInstanceId) {
+        String actionStateCd, String processInstanceId) {
         CldsEvent event = new CldsEvent();
         event.setUserid(userId);
         event.setActionCd(actionCd);
@@ -109,9 +108,9 @@ public class CldsEvent {
     }
 
     /**
-     * Check if actionCd is equal to the supplied checkActionCd checkActionCd
-     * should not be null.
-     * 
+     * Check if actionCd is equal to the supplied checkActionCd checkActionCd should
+     * not be null.
+     *
      * @param checkActionCd
      * @return
      */
@@ -123,9 +122,9 @@ public class CldsEvent {
     }
 
     /**
-     * Check if actionCd and actionStateCd are equal to the supplied
-     * checkActionCd and checkActionStateCd. Treat checkActionStateCd == null as
-     * a wildcard checkActionCd should not be null.
+     * Check if actionCd and actionStateCd are equal to the supplied checkActionCd
+     * and checkActionStateCd. Treat checkActionStateCd == null as a wildcard
+     * checkActionCd should not be null.
      *
      * @param checkActionCd
      * @param checkActionStateCd
@@ -163,7 +162,7 @@ public class CldsEvent {
 
     /**
      * @param actionCd
-     *            the actionCd to set
+     *        the actionCd to set
      */
     public void setActionCd(String actionCd) {
         this.actionCd = actionCd;
@@ -178,7 +177,7 @@ public class CldsEvent {
 
     /**
      * @param actionStateCd
-     *            the actionStateCd to set
+     *        the actionStateCd to set
      */
     public void setActionStateCd(String actionStateCd) {
         this.actionStateCd = actionStateCd;
@@ -193,7 +192,7 @@ public class CldsEvent {
 
     /**
      * @param processInstanceId
-     *            the processInstanceId to set
+     *        the processInstanceId to set
      */
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
@@ -208,7 +207,7 @@ public class CldsEvent {
 
     /**
      * @param userid
-     *            the userid to set
+     *        the userid to set
      */
     public void setUserid(String userid) {
         this.userid = userid;

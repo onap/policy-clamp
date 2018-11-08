@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model;
@@ -32,16 +32,16 @@ import javax.ws.rs.BadRequestException;
  */
 public class DcaeEvent {
     // this is an event we (clds) sends to dcae
-    public static final String      EVENT_CREATED        = "created";
-    public static final String      EVENT_DISTRIBUTION   = "distribute";
-    public static final String      EVENT_DEPLOYMENT     = "deployment";
-    public static final String      EVENT_UNDEPLOYMENT   = "undeployment";
-    public static final String      ARTIFACT_NAME_SUFFIX = ".yml";
+    public static final String EVENT_CREATED = "created";
+    public static final String EVENT_DISTRIBUTION = "distribute";
+    public static final String EVENT_DEPLOYMENT = "deployment";
+    public static final String EVENT_UNDEPLOYMENT = "undeployment";
+    public static final String ARTIFACT_NAME_SUFFIX = ".yml";
 
-    private String                  event;
-    private String                  serviceUUID;
-    private String                  resourceUUID;
-    private String                  artifactName;                         // controlName.yml
+    private String event;
+    private String serviceUUID;
+    private String resourceUUID;
+    private String artifactName; // controlName.yml
     private List<CldsModelInstance> instances;
 
     /**
@@ -56,7 +56,7 @@ public class DcaeEvent {
             return CldsEvent.ACTION_CREATE;
         } else if (event.equalsIgnoreCase(EVENT_DISTRIBUTION)) {
             return CldsEvent.ACTION_DISTRIBUTE;
-        } else if (event.equalsIgnoreCase(EVENT_DEPLOYMENT) && (instances == null || instances.size() == 0)) {
+        } else if (event.equalsIgnoreCase(EVENT_DEPLOYMENT) && (instances == null || instances.isEmpty())) {
             return CldsEvent.ACTION_DEPLOY;
         } else if (event.equalsIgnoreCase(EVENT_DEPLOYMENT)) {
             return CldsEvent.ACTION_DEPLOY;
@@ -83,7 +83,7 @@ public class DcaeEvent {
             return artifactName.substring(0, artifactName.length() - ARTIFACT_NAME_SUFFIX.length());
         } else {
             throw new BadRequestException("artifactName value not valid (expecting it to end with "
-                    + ARTIFACT_NAME_SUFFIX + "): " + artifactName);
+                + ARTIFACT_NAME_SUFFIX + "): " + artifactName);
         }
     }
 
@@ -96,7 +96,7 @@ public class DcaeEvent {
 
     /**
      * @param event
-     *            the event to set
+     *        the event to set
      */
     public void setEvent(String event) {
         this.event = event;
@@ -111,7 +111,7 @@ public class DcaeEvent {
 
     /**
      * @param serviceUUID
-     *            the serviceUUID to set
+     *        the serviceUUID to set
      */
     public void setServiceUUID(String serviceUUID) {
         this.serviceUUID = serviceUUID;
@@ -126,7 +126,7 @@ public class DcaeEvent {
 
     /**
      * @param resourceUUID
-     *            the resourceUUID to set
+     *        the resourceUUID to set
      */
     public void setResourceUUID(String resourceUUID) {
         this.resourceUUID = resourceUUID;
@@ -141,7 +141,7 @@ public class DcaeEvent {
 
     /**
      * @param artifactName
-     *            the artifactName to set
+     *        the artifactName to set
      */
     public void setArtifactName(String artifactName) {
         this.artifactName = artifactName;
@@ -154,5 +154,4 @@ public class DcaeEvent {
     public void setInstances(List<CldsModelInstance> instances) {
         this.instances = instances;
     }
-
 }
