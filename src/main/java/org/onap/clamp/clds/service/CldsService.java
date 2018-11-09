@@ -261,8 +261,8 @@ public class CldsService extends SecureServiceBase {
                 && !CldsModel.STATUS_ACTIVE.equals(cldsModel.getStatus()) && cldsModel.getDeploymentId() != null
                 && cldsModel.getDeploymentStatusUrl() != null) {
                 checkDcaeDeploymentStatus(cldsModel, CldsEvent.ACTION_DEPLOY, false);
-                // refresh because new event may have been added
-                cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
+                // Refresh the model object in any cases for new event
+                cldsModel = CldsModel.retrieve(cldsDao, cldsModel.getName(), false);
             }
         } catch (Exception e) {
             LoggingUtils.setErrorContext("900", "Set event inventory error");
@@ -737,10 +737,11 @@ public class CldsService extends SecureServiceBase {
                 modelProp.getGlobal().getDeployParameters()));
             CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), CldsEvent.ACTION_DEPLOY,
                 CldsEvent.ACTION_STATE_INITIATED, null);
+            model.save(cldsDao, getUserId());
             // This is a blocking call
             checkDcaeDeploymentStatus(model, CldsEvent.ACTION_DEPLOY, true);
-
-            model.save(cldsDao, getUserId());
+            // Refresh the model object in any cases for new event
+            model = CldsModel.retrieve(cldsDao, model.getName(), false);
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
             auditLogger.info("Deploy model completed");
@@ -772,11 +773,13 @@ public class CldsService extends SecureServiceBase {
                 dcaeDispatcherServices.deleteExistingDeployment(model.getDeploymentId(), model.getTypeId()));
             CldsEvent.insEvent(cldsDao, model.getControlName(), getUserId(), CldsEvent.ACTION_UNDEPLOY,
                 CldsEvent.ACTION_STATE_INITIATED, null);
-            // This is a blocking call
-            checkDcaeDeploymentStatus(model, CldsEvent.ACTION_UNDEPLOY, true);
             // clean the deployment ID
             model.setDeploymentId(null);
             model.save(cldsDao, getUserId());
+            // This is a blocking call
+            checkDcaeDeploymentStatus(model, CldsEvent.ACTION_UNDEPLOY, true);
+            // Refresh the model object in any cases for new event
+            model = CldsModel.retrieve(cldsDao, model.getName(), false);
             // audit log
             LoggingUtils.setTimeContext(startTime, new Date());
             auditLogger.info("Undeploy model completed");
