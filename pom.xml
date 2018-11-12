@@ -858,8 +858,9 @@
 								<artifactId>maven-surefire-plugin</artifactId>
 								<version>2.22.1</version>
 								<configuration>
-										<forkCount>0</forkCount>
-										<reuseForks>false</reuseForks>
+										<forkCount>1</forkCount>
+										<reuseForks>true</reuseForks>
+										<useSystemClassLoader>false</useSystemClassLoader>
 								</configuration>
 						</plugin>
 
@@ -881,8 +882,9 @@
 														<includes>
 																<include>**/*ItCase.java</include>
 														</includes>
-														<forkCount>0</forkCount>
+														<forkCount>1</forkCount>
 														<reuseForks>false</reuseForks>
+														<useSystemClassLoader>false</useSystemClassLoader>
 												</configuration>
 										</execution>
 								</executions>
@@ -1040,12 +1042,13 @@
 						<plugin>
 								<groupId>org.jacoco</groupId>
 								<artifactId>jacoco-maven-plugin</artifactId>
-								<version>0.7.7.201606060606</version>
+								<version>0.8.2</version>
 								<configuration>
 										<dumpOnExit>true</dumpOnExit>
 										<includes>
 												<include>org.onap.clamp.*</include>
 										</includes>
+										<propertyName>surefireArgLine</propertyName>
 								</configuration>
 								<executions>
 										<execution>
