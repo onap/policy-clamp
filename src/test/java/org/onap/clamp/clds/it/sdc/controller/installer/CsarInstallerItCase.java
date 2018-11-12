@@ -29,15 +29,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
-import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;

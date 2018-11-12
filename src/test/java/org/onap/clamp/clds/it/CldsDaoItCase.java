@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.it;
@@ -27,7 +27,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -39,6 +38,7 @@ import java.util.List;
 import javax.ws.rs.NotFoundException;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,9 +74,9 @@ public class CldsDaoItCase {
 
     /**
      * Setup the variable before the tests execution.
-     * 
+     *
      * @throws IOException
-     *             In case of issues when opening the files
+     *         In case of issues when opening the files
      */
     @Before
     public void setupBefore() throws IOException {
@@ -152,7 +152,7 @@ public class CldsDaoItCase {
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
         CldsEvent.insEvent(cldsDao, newModel, "user", CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_COMPLETED,
-                "process-instance-id");
+            "process-instance-id");
     }
 
     @Test
@@ -168,7 +168,7 @@ public class CldsDaoItCase {
     @Test
     public void testCldsServiceCache() throws GeneralSecurityException, DecoderException, IOException {
         CldsServiceData cldsServiceData = sdcCatalogServices
-                .getCldsServiceDataWithAlarmConditions("4cc5b45a-1f63-4194-8100-cd8e14248c92");
+            .getCldsServiceDataWithAlarmConditions("4cc5b45a-1f63-4194-8100-cd8e14248c92");
         // Test not in cache so should be null
         CldsServiceData cldsServiceDataCache = cldsDao.getCldsServiceCache("4cc5b45a-1f63-4194-8100-cd8e14248c92");
         assertNull(cldsServiceDataCache);
@@ -181,7 +181,7 @@ public class CldsDaoItCase {
         assertNotNull(cldsServiceDataCache.getAgeOfRecord());
         assertEquals(4, cldsServiceDataCache.getCldsVfs().get(0).getCldsVfcs().size());
         assertEquals("07e266fc-49ab-4cd7-8378-ca4676f1b9ec",
-                cldsServiceDataCache.getCldsVfs().get(0).getVfInvariantResourceUUID());
+            cldsServiceDataCache.getCldsVfs().get(0).getVfInvariantResourceUUID());
         assertEquals(0, cldsServiceDataCache.getCldsVfs().get(0).getCldsKPIList().size());
         // Second update
         cldsServiceData.setCldsVfs(null);

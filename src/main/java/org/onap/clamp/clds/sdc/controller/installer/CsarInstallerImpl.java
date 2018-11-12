@@ -23,7 +23,6 @@
 
 package org.onap.clamp.clds.sdc.controller.installer;
 
-import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,6 +37,7 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.io.IOUtils;
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.config.sdc.BlueprintParserFilesConfiguration;

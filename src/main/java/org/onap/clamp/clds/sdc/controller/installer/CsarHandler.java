@@ -18,12 +18,11 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.sdc.controller.installer;
 
-import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -40,6 +39,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.sdc.api.notification.IArtifactInfo;
@@ -91,7 +91,7 @@ public class CsarHandler {
     }
 
     public synchronized void save(IDistributionClientDownloadResult resultArtifact)
-            throws SdcArtifactInstallerException, SdcToscaParserException {
+        throws SdcArtifactInstallerException, SdcToscaParserException {
         try {
             logger.info("Writing CSAR file to: " + csarFilePath + " UUID " + artifactElement.getArtifactUUID() + ")");
             Path path = Paths.get(csarFilePath);
@@ -104,12 +104,12 @@ public class CsarHandler {
             this.loadDcaeBlueprint();
         } catch (IOException e) {
             throw new SdcArtifactInstallerException(
-                    "Exception caught when trying to write the CSAR on the file system to " + csarFilePath, e);
+                "Exception caught when trying to write the CSAR on the file system to " + csarFilePath, e);
         }
     }
 
     private IResourceInstance searchForResourceByInstanceName(String blueprintResourceInstanceName)
-            throws SdcArtifactInstallerException {
+        throws SdcArtifactInstallerException {
         for (IResourceInstance resource : this.sdcNotification.getResources()) {
             String filteredString = resource.getResourceInstanceName().replaceAll("-", "");
             filteredString = filteredString.replaceAll(" ", "");
@@ -118,7 +118,7 @@ public class CsarHandler {
             }
         }
         throw new SdcArtifactInstallerException("Error when searching for " + blueprintResourceInstanceName
-                + " as ResourceInstanceName in Sdc notification and did not find it");
+            + " as ResourceInstanceName in Sdc notification and did not find it");
     }
 
     private void loadDcaeBlueprint() throws IOException, SdcArtifactInstallerException {
@@ -129,21 +129,20 @@ public class CsarHandler {
                 if (entry.getName().contains(BLUEPRINT_TYPE)) {
                     BlueprintArtifact blueprintArtifact = new BlueprintArtifact();
                     blueprintArtifact.setBlueprintArtifactName(
-                            entry.getName().substring(entry.getName().lastIndexOf('/') + 1, entry.getName().length()));
+                        entry.getName().substring(entry.getName().lastIndexOf('/') + 1, entry.getName().length()));
                     blueprintArtifact
-                            .setBlueprintInvariantServiceUuid(this.getSdcNotification().getServiceInvariantUUID());
+                        .setBlueprintInvariantServiceUuid(this.getSdcNotification().getServiceInvariantUUID());
                     try (InputStream stream = zipFile.getInputStream(entry)) {
                         blueprintArtifact.setDcaeBlueprint(IOUtils.toString(stream));
                     }
                     blueprintArtifact.setResourceAttached(searchForResourceByInstanceName(entry.getName().substring(
-                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX)
-                                    + RESOURCE_INSTANCE_NAME_PREFIX.length(),
-                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX))));
+                        entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX) + RESOURCE_INSTANCE_NAME_PREFIX.length(),
+                        entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX))));
                     this.mapOfBlueprints.put(blueprintArtifact.getResourceAttached().getResourceInstanceName(),
-                            blueprintArtifact);
+                        blueprintArtifact);
                     logger.info("Found a blueprint entry in the CSAR " + blueprintArtifact.getBlueprintArtifactName()
-                            + " for resource instance Name "
-                            + blueprintArtifact.getResourceAttached().getResourceInstanceName());
+                        + " for resource instance Name "
+                        + blueprintArtifact.getResourceAttached().getResourceInstanceName());
                 }
             }
             logger.info(this.mapOfBlueprints.size() + " blueprint(s) will be converted to closed loop");

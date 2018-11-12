@@ -30,19 +30,19 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.att.aft.dme2.internal.apache.commons.lang.RandomStringUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.NotFoundException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
@@ -68,10 +68,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -216,22 +215,22 @@ public class CldsServiceItCase {
         assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
         assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
 
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_STOP,
-            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_STOP, randomNameModel, "false",
+            cldsService.getModel(randomNameModel));
         assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
         assertNotNull(responseEntity.getBody());
         assertTrue(CldsModel.STATUS_STOPPED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
         assertTrue(CldsModel.STATUS_STOPPED.equals(cldsService.getModel(randomNameModel).getStatus()));
 
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_RESTART,
-            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_RESTART, randomNameModel, "false",
+            cldsService.getModel(randomNameModel));
         assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
         assertNotNull(responseEntity.getBody());
         assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
         assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
 
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_UPDATE,
-            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_UPDATE, randomNameModel, "false",
+            cldsService.getModel(randomNameModel));
         assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
         assertNotNull(responseEntity.getBody());
         assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
@@ -244,15 +243,15 @@ public class CldsServiceItCase {
         assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
         assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(cldsService.getModel(randomNameModel).getStatus()));
 
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_DELETE,
-            randomNameModel, "false", cldsService.getModel(randomNameModel));
+        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_DELETE, randomNameModel, "false",
+            cldsService.getModel(randomNameModel));
         assertNotNull(responseEntity);
         assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
         assertNotNull(responseEntity.getBody());
         try {
             cldsService.getModel(randomNameModel);
             fail("Should have raised an NotFoundException exception");
-        } catch(NotFoundException ne) {
+        } catch (NotFoundException ne) {
 
         }
 

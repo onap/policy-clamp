@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.sdc.controller.installer;
@@ -28,8 +28,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.att.aft.dme2.internal.apache.commons.io.IOUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,6 +36,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
@@ -111,13 +110,13 @@ public class CsarHandlerTest {
     private IDistributionClientDownloadResult buildFakeSdcResut() throws IOException {
         IDistributionClientDownloadResult resultArtifact = Mockito.mock(IDistributionClientDownloadResult.class);
         Mockito.when(resultArtifact.getArtifactPayload()).thenReturn(
-                IOUtils.toByteArray(ResourceFileUtil.getResourceAsStream("example/sdc/service-Simsfoimap0112.csar")));
+            IOUtils.toByteArray(ResourceFileUtil.getResourceAsStream("example/sdc/service-Simsfoimap0112.csar")));
         return resultArtifact;
     }
 
     @Test
     public void testSave()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+        throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
         CsarHandler csar = new CsarHandler(buildFakeSdcNotification(), "test-controller", "/tmp/csar-handler-tests");
         // Test the save
         csar.save(buildFakeSdcResut());
@@ -131,11 +130,11 @@ public class CsarHandlerTest {
         assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
         // Test additional properties from Sdc notif
         assertEquals(BLUEPRINT1_NAME,
-                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
-        assertEquals(RESOURCE1_UUID, csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached()
-                .getResourceInvariantUUID());
+            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
+        assertEquals(RESOURCE1_UUID,
+            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached().getResourceInvariantUUID());
         assertEquals(SERVICE_UUID,
-                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
+            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
         // Do some cleanup
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         Files.deleteIfExists(path);
@@ -143,7 +142,7 @@ public class CsarHandlerTest {
 
     @Test
     public void testDoubleSave()
-            throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
+        throws SdcArtifactInstallerException, SdcToscaParserException, CsarHandlerException, IOException {
         CsarHandler csar = new CsarHandler(buildFakeSdcNotification(), "test-controller", "/tmp/csar-handler-tests");
         // Test the save
         csar.save(buildFakeSdcResut());
@@ -157,11 +156,11 @@ public class CsarHandlerTest {
         assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
         // Test additional properties from Sdc notif
         assertEquals(BLUEPRINT1_NAME,
-                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
-        assertEquals(RESOURCE1_UUID, csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached()
-                .getResourceInvariantUUID());
+            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
+        assertEquals(RESOURCE1_UUID,
+            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached().getResourceInvariantUUID());
         assertEquals(SERVICE_UUID,
-                csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
+            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         // A double save should simply overwrite the existing
         csar.save(buildFakeSdcResut());
