@@ -5,10 +5,10 @@
 Release Notes
 =============
 
-Version: 3.0.1
+Version: 3.0.3
 --------------
 
-:Release Date: 2018-10-25
+:Release Date: 2018-11-13
 
 **New Features**
 
@@ -36,14 +36,14 @@ The main goal of the Casablanca release was to:
 **Security Notes**
 
 CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release. 
-The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/display/DW/CLAMP+R3+-+Vulnerability+Threat>`_.
+The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=42598587>`_.
 
 Quick Links:
  	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
 
  	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
 
- 	- `Project Vulnerability Review Table for CLAMP <https://wiki.onap.org/display/DW/CLAMP+R3+-+Vulnerability+Threat>`_
+ 	- `Project Vulnerability Review Table for CLAMP <https://wiki.onap.org/pages/viewpage.action?pageId=42598587>`_
 
 **Upgrade Notes**
 
