@@ -122,7 +122,48 @@ You can see the swagger definition for the jaxrs apis at `/restservices/clds/v1/
 
 ## Clamp Credentials
 
-Credentials should be specified in `src/main/resources/clds/clds-users.json`. You might specify you own credential file by redefining the `clamp.config.files.cldsUsers` in `application.properties`.
+There are two mechanisms that can enabled for the authentication, one or the other never both at the same time. 
+They can be enabled in the application.properties.
+
+1. AAF CA
+There is a section for SSL enablement and cadi configuration (for AAF) + one spring profile to enable
+
+server.port=8443
+server.ssl.key-store=classpath:/clds/aaf/org.onap.clamp.p12
+server.ssl.key-store-password=China in the Spring
+server.ssl.key-password=China in the Spring
+server.ssl.key-store-type=PKCS12
+server.ssl.key-alias=clamp@clamp.onap.org
+server.ssl.client-auth=want
+server.ssl.trust-store=classpath:/clds/aaf/truststoreONAPall.jks
+server.ssl.trust-store-password=changeit
+
+server.http-to-https-redirection.port=8080
+....
+spring.profiles.active=clamp-default,clamp-aaf-authentication,clamp-sdc-controller
+....
+clamp.config.cadi.keyFile=classpath:/clds/aaf/org.onap.clamp.keyfile
+clamp.config.cadi.cadiLoglevel=DEBUG
+clamp.config.cadi.cadiLatitude=37.78187
+clamp.config.cadi.cadiLongitude=-122.26147
+clamp.config.cadi.aafLocateUrl=https://aaf.api.simpledemo.onap.org:8095
+clamp.config.cadi.cadiKeystorePassword=enc:V_kq_EwDNb4itWp_lYfDGXIWJzemHGkhkZOxAQI9IHs
+clamp.config.cadi.cadiTruststorePassword=enc:Mj0YQqNCUKbKq2lPp1kTFQWeqLxaBXKNwd5F1yB1ukf
+clamp.config.cadi.aafEnv=DEV
+clamp.config.cadi.aafUrl=https://AAF_LOCATE_URL/AAF_NS.service:2.0
+clamp.config.cadi.cadiX509Issuers=CN=intermediateCA_1, OU=OSAAF, O=ONAP, C=US
+
+In that case a certificate must be added in the browser and is required to login properly
+Please check that section to get the certificate
+https://wiki.onap.org/display/DW/Control+Loop+Flows+and+Models+for+Casablanca#ControlLoopFlowsandModelsforCasablanca-Configure
+
+Or it can be found in the Clamp source code folder src/main/resources/clds/aaf
+(Default Password: "China in the Spring")
+
+2. Spring authentication
+It's possible to enable the spring authentication by disabling the "clamp-aaf-authentication" profile and enabling only the "clamp-default-user"
+spring.profiles.active=clamp-default,clamp-default-user,clamp-sdc-controller
+In that case, the credentials should be specified in `src/main/resources/clds/clds-users.json`. You might specify you own credential file by redefining the `clamp.config.files.cldsUsers` in `application.properties`.
 
 Passwords should be hashed using Bcrypt :
 ```
