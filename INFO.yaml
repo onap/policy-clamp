@@ -53,9 +53,18 @@ committers:
         company: 'ATT'
         id: 'xuegao'
         timezone: 'Europe/Brussels'
+    - name: 'Adam Krysiak'
+        email: 'adam.krysiak@nokia.com'
+        company: 'Nokia'
+        id: 'akrysiak'
+        timezone: 'Europe/Warsaw'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
     changes:
         - type: 'Addition'
           name: 'Gervais-Martial Ngueko'
           link: 'https://lists.onap.org/g/ONAP-TSC/message/3311'
+        - type: 'Addition'
+          name: 'Adam Krysiak'
+          link: 'https://lists.onap.org/g/ONAP-TSC/message/3311'
+
