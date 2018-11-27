@@ -893,10 +893,10 @@
 						<plugin>
 								<groupId>io.fabric8</groupId>
 								<artifactId>docker-maven-plugin</artifactId>
-								<version>0.26.0</version>
+								<version>0.27.2</version>
 								<configuration>
 										<verbose>true</verbose>
-										<apiVersion>1.23</apiVersion>
+										<apiVersion>1.35</apiVersion>
 										<images>
 												<image>
 														<name>library/mariadb:10.1.11</name>
