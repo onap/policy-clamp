@@ -8,7 +8,7 @@ Release Notes
 Version: 3.0.3
 --------------
 
-:Release Date: 2018-11-13
+:Release Date: 2018-11-30
 
 **New Features**
 
