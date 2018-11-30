@@ -10,7 +10,7 @@
     "lifecycleState": "CERTIFIED",
     "lastUpdaterUserId": "user",
     "lastUpdaterFullName": "MONICA LAZER",
-    "toscaResourceName": "org.openecomp.resource.vf.Vcts3",
+    "toscaResourceName": "org.onap.resource.vf.Vcts3",
     "resources": 
     [
         {
@@ -79,11 +79,11 @@
 
                 {
                     "artifactChecksum": "CheckSum",
-                    "artifactDescription": "Nimbus Heat OAM",
-                    "artifactName": "hot-nimbus-oam_v1.0.yaml",
+                    "artifactDescription": "Test desc",
+                    "artifactName": "vnf_v1.0.yaml",
                     "artifactTimeout": 100,
                     "artifactType": "HEAT",
-                    "artifactURL": "hot-nimbus-oam_v1.0.yaml",
+                    "artifactURL": "vnf_v1.0.yaml",
                     "artifactUUID": "Artifact-UUID1",
                     "artifactVersion": "1.0",
                     "generatedArtifact": "EnvArtifact-UUID2",
@@ -96,10 +96,10 @@
 
                 {
                     "artifactChecksum": "CheckSum",
-                    "artifactDescription": "Nimbus Heat ENV OAM",
-                    "artifactName": "hot-nimbus-oam_v1.0.env",
+                    "artifactDescription": "Vnf desc",
+                    "artifactName": "vnf_v1.0.env",
                     "artifactType": "HEAT_ENV",
-                    "artifactURL": "hot-nimbus-oam_v1.0.env",
+                    "artifactURL": "vnf_v1.0.env",
                     "artifactUUID": "EnvArtifact-UUID2",
                     "artifactVersion": "1.0"
                 },
@@ -128,11 +128,11 @@
 
                 {
                     "artifactChecksum": "CheckSum",
-                    "artifactDescription": "Script for Nimbus",
-                    "artifactName": "cloud-nimbus.sh",
+                    "artifactDescription": "Script for Vnf",
+                    "artifactName": "cloud-Vnf.sh",
                     "artifactType": "HEAT_ARTIFACT",
-                    "artifactURL": "cloud-nimbus.sh",
-                    "artifactUUID": "ScriptNimbusArtifact-UUID1",
+                    "artifactURL": "cloud-Vnf.sh",
+                    "artifactUUID": "ScriptVnfArtifact-UUID1",
                     "artifactVersion": "1.0"
                 },
 
@@ -149,10 +149,10 @@
                 {
                     "artifactChecksum": "CheckSum",
                     "artifactDescription": "Heat Vol for OAM",
-                    "artifactName": "hot-nimbus-oam-volumes_v1.0.yaml",
+                    "artifactName": "vnf-volumes_v1.0.yaml",
                     "artifactTimeout": 10,
                     "artifactType": "HEAT_VOL",
-                    "artifactURL": "hot-nimbus-oam-volumes_v1.0.yaml",
+                    "artifactURL": "vnf-volumes_v1.0.yaml",
                     "artifactUUID": "VolumeArtifact-UUID1",
                     "artifactVersion": "1.0",
                     "generatedArtifact": "VolumeEnvArtifact-UUID1",
@@ -165,9 +165,9 @@
                 {
                     "artifactChecksum": "CheckSum",
                     "artifactDescription": "Heat Env Vol for OAM",
-                    "artifactName": "hot-nimbus-oam-volumes_v1.0.env",
+                    "artifactName": "vnf-volumes_v1.0.env",
                     "artifactType": "HEAT_ENV",
-                    "artifactURL": "hot-nimbus-oam-volumes_v1.0.env",
+                    "artifactURL": "vnf-volumes_v1.0.env",
                     "artifactUUID": "VolumeEnvArtifact-UUID1",
                     "artifactVersion": "1.0"
                 },
@@ -175,10 +175,10 @@
                 {
                     "artifactChecksum": "CheckSum",
                     "artifactDescription": "Meta data for VFModule",
-                    "artifactName": "att_nimbus_vsaegw_ht_base_v13_0728v1.yaml",
+                    "artifactName": "vnf_1.yaml",
                     "artifactTimeout": 100,
                     "artifactType": "HEAT",
-                    "artifactURL": "att_nimbus_vsaegw_ht_base_v13_0728v1.yaml",
+                    "artifactURL": "vnf_1.yaml",
                     "artifactUUID": "HeatArtifactE2E-UUIDTest",
                     "artifactVersion": "1.0"
                 }

@@ -10,6 +10,6 @@
     "lifecycleState": "CERTIFIED",
     "lastUpdaterUserId": "user",
     "lastUpdaterFullName": "Jimmy Hendrix",
-    "toscaResourceName": "org.openecomp.resource.vfc.rules.nodes.heat.network.neutron.SecurityRules",
+    "toscaResourceName": "org.onap.resource.vfc.rules.nodes.heat.network.neutron.SecurityRules",
     "description": "Configuration of policy rules to be applied on ports."
 }

@@ -10,7 +10,7 @@
   "lifecycleState": "CERTIFIED",
   "lastUpdaterUserId": "user",
   "lastUpdaterFullName": "Zero ASDCMech",
-  "toscaResourceName": "org.openecomp.resource.vfc.ClampDev.abstract.nodes.virc_fe_be_0",
+  "toscaResourceName": "org.onap.resource.vfc.ClampDev.abstract.nodes.virc_fe_be_0",
   "resources": [
     {
       "resourceInstanceName": "virc_fe_be_virc_fe_be_management_0_port",

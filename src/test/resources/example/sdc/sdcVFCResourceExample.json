@@ -10,7 +10,7 @@
   "lifecycleState": "CERTIFIED",
   "lastUpdaterUserId": "user",
   "lastUpdaterFullName": "Zero ASDCMech",
-  "toscaResourceName": "org.openecomp.resource.vfc.Clampdev.abstract.nodes.heat.virc_fe_be",
+  "toscaResourceName": "org.onap.resource.vfc.Clampdev.abstract.nodes.heat.virc_fe_be",
   "artifacts": [
     {
       "artifactName": "Fault-alarms-ASDC-vprobes-vLB.csv",

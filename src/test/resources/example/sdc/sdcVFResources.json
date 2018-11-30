@@ -483,7 +483,7 @@
     {
         "uuid": "6b934b9d-0785-4b46-8321-943a12b8031b",
         "invariantUUID": "785012c2-fdd8-450d-8fa2-81ff60e25f1e",
-        "name": "vMMSC_AIC3.0__multi_members_multi_groups_volume.cs",
+        "name": "VNFNAME__multi_members_multi_groups_volume.cs",
         "version": "0.2",
         "toscaModelURL": "/sdc/v1/catalog/resources/6b934b9d-0785-4b46-8321-943a12b8031b/toscaModel",
         "category": "Application L4+",
@@ -574,7 +574,7 @@
     {
         "uuid": "c8663b6e-bbe2-401d-9500-ec5425463655",
         "invariantUUID": "925243cf-e342-4d86-8558-63899fbe88da",
-        "name": "VF Module LDSA",
+        "name": "VF Module VNF",
         "version": "1.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/c8663b6e-bbe2-401d-9500-ec5425463655/toscaModel",
         "category": "Application L4+",
@@ -665,7 +665,7 @@
     {
         "uuid": "c1c02cff-855f-438e-85f8-40c362874896",
         "invariantUUID": "64cb5201-90d4-4cab-a6a9-f7416eeb307f",
-        "name": "PXTC",
+        "name": "VNFName",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/c1c02cff-855f-438e-85f8-40c362874896/toscaModel",
         "category": "Application L4+",
@@ -678,7 +678,7 @@
     {
         "uuid": "837c2fee-c2b2-4e95-ad48-dd69772d99bd",
         "invariantUUID": "e48b3ea8-39bc-41eb-84bf-f5ef267d31e4",
-        "name": "vMOG VNF 1",
+        "name": "VNF 1",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/837c2fee-c2b2-4e95-ad48-dd69772d99bd/toscaModel",
         "category": "Network L2-3",
@@ -756,7 +756,7 @@
     {
         "uuid": "1e7f07c7-ff4c-40a6-95f6-a9b05f138027",
         "invariantUUID": "cfff70d2-f942-4b25-b2ca-e64f64af511d",
-        "name": "vMMSC_AIC3.0__multi_members_multi_groups_volume",
+        "name": "VNFNAME__multi_members_multi_groups_volume",
         "version": "2.0",
         "toscaModelURL": "/sdc/v1/catalog/resources/1e7f07c7-ff4c-40a6-95f6-a9b05f138027/toscaModel",
         "category": "Application L4+",
@@ -938,7 +938,7 @@
     {
         "uuid": "c9ea2798-f3ba-4826-ae93-0786820cb890",
         "invariantUUID": "5882c528-76fe-4884-90c7-71301ca52cf8",
-        "name": "vMMSC_ECA",
+        "name": "VNFNAME1",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/c9ea2798-f3ba-4826-ae93-0786820cb890/toscaModel",
         "category": "Application L4+",
@@ -1016,7 +1016,7 @@
     {
         "uuid": "3951e021-7595-43b1-a6fd-de077c01af54",
         "invariantUUID": "925243cf-e342-4d86-8558-63899fbe88da",
-        "name": "VF Module LDSA",
+        "name": "VF Module VNF",
         "version": "1.0",
         "toscaModelURL": "/sdc/v1/catalog/resources/3951e021-7595-43b1-a6fd-de077c01af54/toscaModel",
         "category": "Application L4+",
@@ -1068,7 +1068,7 @@
     {
         "uuid": "70974b30-6b89-41d2-8b5d-779279db3b96",
         "invariantUUID": "725e5fd1-2520-4669-a5f2-23f9ad2fbec4",
-        "name": "vSCP0502",
+        "name": "VnfName2",
         "version": "1.0",
         "toscaModelURL": "/sdc/v1/catalog/resources/70974b30-6b89-41d2-8b5d-779279db3b96/toscaModel",
         "category": "Application L4+",
@@ -1081,7 +1081,7 @@
     {
         "uuid": "c9e436c3-539f-45e2-90b4-b046af907877",
         "invariantUUID": "bc7fe896-e286-41cb-a11f-7081fc92876b",
-        "name": "vMMSC",
+        "name": "VNFNAME",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/c9e436c3-539f-45e2-90b4-b046af907877/toscaModel",
         "category": "Application L4+",
@@ -1120,7 +1120,7 @@
     {
         "uuid": "82460d6a-1cd7-4c57-bc89-625600555f80",
         "invariantUUID": "c67108d4-a0b0-4eee-8fbc-c881d7bb21d3",
-        "name": "VF modules vMMSC",
+        "name": "VF modules VNFNAME",
         "version": "1.0",
         "toscaModelURL": "/sdc/v1/catalog/resources/82460d6a-1cd7-4c57-bc89-625600555f80/toscaModel",
         "category": "Application L4+",
@@ -1172,7 +1172,7 @@
     {
         "uuid": "ac603264-cdf7-49ab-a9ae-92d341023218",
         "invariantUUID": "379ab526-dc81-4b31-b60d-31c1805ddf5a",
-        "name": "FDNT1",
+        "name": "VnfName1",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/ac603264-cdf7-49ab-a9ae-92d341023218/toscaModel",
         "category": "Application L4+",
@@ -1237,7 +1237,7 @@
     {
         "uuid": "44ff8000-e703-4538-b26a-f2bc8205d7d4",
         "invariantUUID": "26badc5a-d29e-4583-b773-0d42366a8bb1",
-        "name": "FDNT1234",
+        "name": "VnfName1234",
         "version": "1.0",
         "toscaModelURL": "/sdc/v1/catalog/resources/44ff8000-e703-4538-b26a-f2bc8205d7d4/toscaModel",
         "category": "Network L2-3",
@@ -1315,7 +1315,7 @@
     {
         "uuid": "8dec3b8a-a0fa-4634-bbb4-d7bad5a912ab",
         "invariantUUID": "eda652e4-6740-46bf-8d0f-92c4752070f6",
-        "name": "FCGI_OS",
+        "name": "VNFNAME",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/8dec3b8a-a0fa-4634-bbb4-d7bad5a912ab/toscaModel",
         "category": "Application L4+",
@@ -1419,7 +1419,7 @@
     {
         "uuid": "da3619c1-9b19-4edc-9853-a714c5034371",
         "invariantUUID": "b90f7990-667a-4f63-9e7f-ee02f64766f1",
-        "name": "FDNT",
+        "name": "VnfName2",
         "version": "0.1",
         "toscaModelURL": "/sdc/v1/catalog/resources/da3619c1-9b19-4edc-9853-a714c5034371/toscaModel",
         "category": "Application L4+",

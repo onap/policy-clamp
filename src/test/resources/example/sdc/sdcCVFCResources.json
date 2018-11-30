@@ -266,7 +266,7 @@
     {
         "uuid": "cba89050-752c-4aac-8cec-6f0463eb8a23",
         "invariantUUID": "ac6fab25-abc6-4e0e-ba25-cc2ddd7a51ef",
-        "name": "LDSA-nodes.ltm",
+        "name": "VNF-nodes.ltm",
         "version": "1.0",
         "toscaModelURL": "/sdc/v1/catalog/resources/cba89050-752c-4aac-8cec-6f0463eb8a23/toscaModel",
         "category": "Generic",

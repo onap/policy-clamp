@@ -10,7 +10,7 @@
     "lifecycleState": "CERTIFIED",
     "lastUpdaterUserId": "user",
     "lastUpdaterFullName": "Three ASDCMech",
-    "toscaResourceName": "org.openecomp.resource.vf.ClampDev",
+    "toscaResourceName": "org.onap.resource.vf.ClampDev",
     "resources": 
     [
         {
