@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.it.config;
@@ -26,10 +26,12 @@ package org.onap.clamp.clds.it.config;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +66,7 @@ public class CldsReferencePropertiesItCase {
      * Test getting prop value as a JSON Node / template.
      *
      * @throws IOException
-     *             when JSON parsing fails
+     *         when JSON parsing fails
      */
     @Test
     public void testGetJsonTemplate() throws IOException {
@@ -85,7 +87,7 @@ public class CldsReferencePropertiesItCase {
      * Test getting prop value as a JSON Node / template.
      *
      * @throws IOException
-     *             when JSON parsing fails
+     *         when JSON parsing fails
      */
     @Test
     public void testGetFileContent() throws IOException {
@@ -94,5 +96,14 @@ public class CldsReferencePropertiesItCase {
         // Test composite key
         content = refProp.getFileContent("sdc.decode", "service_ids");
         assertEquals("{}", content);
+    }
+
+    @Test
+    public void testGetStringList() {
+        List<String> profileList = refProp.getStringList("policy.pdpUrl1", ",");
+        assertTrue(profileList.size() == 3);
+        assertTrue(profileList.get(0).trim().equals("http://localhost:8085/pdp/"));
+        assertTrue(profileList.get(1).trim().equals("testpdp"));
+        assertTrue(profileList.get(2).trim().equals("alpha123"));
     }
 }

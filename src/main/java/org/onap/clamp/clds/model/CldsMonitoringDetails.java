@@ -29,6 +29,7 @@ package org.onap.clamp.clds.model;
 public class CldsMonitoringDetails {
 
     private String closeloopName;
+    private String modelId;
     private String modelName;
     private String serviceTypeId;
     private String deploymentId;
@@ -43,6 +44,14 @@ public class CldsMonitoringDetails {
 
     public void setCloseloopName(String closeloopName) {
         this.closeloopName = closeloopName;
+    }
+
+    public String getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(String modelId) {
+        this.modelId = modelId;
     }
 
     public String getModelName() {
@@ -84,7 +93,7 @@ public class CldsMonitoringDetails {
     public void setAction(String action) {
         this.action = action;
     }
-    
+
     public String getUserid() {
         return userid;
     }
@@ -92,9 +101,9 @@ public class CldsMonitoringDetails {
     public void setUserid(String userid) {
         this.userid = userid;
     }
-    
+
     public String getTimestamp() {
-        return timestamp;  
+        return timestamp;
     }
 
     public void setTimestamp(String time) {

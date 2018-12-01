@@ -54,6 +54,7 @@ import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
+import org.onap.clamp.clds.model.CldsMonitoringDetails;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.DcaeEvent;
@@ -120,6 +121,7 @@ public class CldsServiceItCase {
         util = Mockito.mock(LoggingUtils.class);
         Mockito.doNothing().when(util).entering(Matchers.any(HttpServletRequest.class), Matchers.any(String.class));
         cldsService.setLoggingUtil(util);
+
     }
 
     @Test
@@ -159,6 +161,12 @@ public class CldsServiceItCase {
     }
 
     @Test
+    public void testGetCLDSDetails() throws IOException {
+        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsService.getCLDSDetails();
+        assertNotNull(cldsMonitoringDetailsList);
+    }
+
+    @Test
     public void testCompleteFlow() throws TransformerException, ParseException {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -190,6 +198,10 @@ public class CldsServiceItCase {
         // Test the PutModel method
 
         cldsService.putModel(randomNameModel, newModel);
+
+        assertEquals(bpmnText, cldsService.getBpmnXml(randomNameModel));
+        assertEquals(imageText, cldsService.getImageXml(randomNameModel));
+
         // Verify whether it has been added properly or not
         assertNotNull(cldsDao.getModel(randomNameModel));
 

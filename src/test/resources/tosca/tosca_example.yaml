@@ -1,0 +1,80 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+node_types:
+  policy.nodes.cdap.tca.hi.lo.app:
+    derived_from: policy.nodes.Root
+    properties:
+      domain:
+        type: string
+        description: Domain
+        constraints:
+        - equal: measurementsForVfScaling
+      functionalRole:
+        type: string
+        description: Function of the event source e.g., vnf1, vnf2, vnf3
+      thresholds:
+        type: list
+        description: Thresholds
+        entry_schema:
+          type: policy.data.thresholds
+data_types:
+  policy.data.thresholds:
+    properties:
+      closedLoopControlName:
+        type: string
+        description: A UNIQUE string identifying the Closed Loop ID this event is for.
+      direction:
+        type: string
+        constraints:
+        - valid_values: [ LESS, LESS_OR_EQUAL, GREATER, GREATER_OR_EQUAL]
+      fieldPath:
+        description: Field Path
+        type: string
+      severity:
+        type: string
+        description: event severity or priority
+        constraints:
+        - valid_values: [CRITICAL, MAJOR, MINOR, WARNING, NORMAL]
+      thresholdValue:
+        type: integer
+        description: ThresholdValue
+        default: 0
+        constraints:
+          - in_range: [ 0, 65535 ]
+      version:
+        type: string
+        description: Version for the closed loop message
+        constraints:
+          - min_length: 1
+      dummySignatures:
+        type: list
+        description: dummy Signatures
+        required: true
+        entry_schema:
+          type: policy.data.dummySignatureTraversal
+  policy.data.dummySignatureTraversal:
+    derived_from: tosca.nodes.Root
+    properties:
+      signature:
+        type: policy.data.DUMMY_Signature_FM
+        required: true
+      traversal:
+        type: policy.data.traverse
+        required: true
+  policy.data.traverse:
+    derived_from: tosca.nodes.Root
+    properties:
+      traversal:
+        type: string
+        description: Dummy Traverse
+        required: true
+        constraints:
+          - valid_values: [ ONE, TWO, THREE ]
+  policy.data.DUMMY_Signature_FM:
+    derived_from: tosca.nodes.Root
+    properties:
+      filter_clause:
+        type: string
+        description: Filter Clause
+        required: true
+        constraints:
+          - valid_values: [ OR, AND, NOT ]

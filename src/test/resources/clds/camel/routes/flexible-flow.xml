@@ -1,0 +1,50 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+		<route id="submit">
+				<from uri="direct:processSubmit" />
+				<choice>
+						<when>
+								<simple> ${exchangeProperty.actionCd} == 'SUBMIT' || ${exchangeProperty.actionCd} == 'RESUBMIT'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDelegate" />
+								<delay>
+										<constant>30000</constant>
+								</delay>
+								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+						</when>
+						<when>
+								<simple> ${exchangeProperty.actionCd} == 'DELETE'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.ModelDeleteDelegate" />
+								<delay>
+										<constant>30000</constant>
+								</delay>
+								<to
+										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
+						</when>
+						<when>
+								<simple> ${exchangeProperty.actionCd} == 'UPDATE'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.TcaPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.HolmesPolicyDelegate" />
+								<delay>
+										<constant>30000</constant>
+								</delay>
+								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+						</when>
+						<when>
+								<simple> ${exchangeProperty.actionCd} == 'STOP'</simple>
+								<to
+										uri="bean:org.onap.clamp.clds.client.OperationalPolicyDeleteDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+						</when>
+						<when>
+								<simple> ${exchangeProperty.actionCd} == 'RESTART'</simple>
+								<to uri="bean:org.onap.clamp.clds.client.OperationalPolicyDelegate" />
+								<to uri="bean:org.onap.clamp.clds.client.CldsEventDelegate" />
+						</when>
+				</choice>
+		</route>
+
+</routes>

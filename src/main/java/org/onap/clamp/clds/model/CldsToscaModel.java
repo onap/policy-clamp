@@ -25,7 +25,11 @@ package org.onap.clamp.clds.model;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.onap.clamp.clds.client.req.policy.PolicyClient;
+import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 
 public class CldsToscaModel extends CldsToscaModelRevision {
 
@@ -40,22 +44,31 @@ public class CldsToscaModel extends CldsToscaModelRevision {
      * @param cldsDao
      * @param userId
      */
-    public CldsToscaModel save(CldsDao cldsDao, String userId) {
+    public CldsToscaModel save(CldsDao cldsDao, ClampProperties refProp, PolicyClient policyClient, String userId) {
         CldsToscaModel cldsToscaModel = null;
-        // TODO tosca parsing logic
-        this.setToscaModelJson("{}");
-        this.setPolicyType("Aging");// TODO update with subString or node_type from the model name
+        refProp.getStringList("tosca.policyTypes", ",").stream().forEach(policyType -> {
+            if (StringUtils.containsIgnoreCase(this.getToscaModelName(), policyType)) {
+                this.setPolicyType(policyType);
+            }
+        });
+
+        ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor(cldsDao);
+        this.setToscaModelJson(convertor.parseToscaYaml(this.getToscaModelYaml()));
         List<CldsToscaModel> toscaModels = cldsDao.getToscaModelByName(this.getToscaModelName());
         if (toscaModels != null && !toscaModels.isEmpty()) {
             CldsToscaModel toscaModel = toscaModels.stream().findFirst().get();
-            // CldsToscaModelRevision modelRevision =
-            // revisions.stream().max(Comparator.comparingDouble(CldsToscaModelRevision::getVersion)).get();
             this.setVersion(incrementVersion(toscaModel.getVersion()));
             this.setId(toscaModel.getId());
             this.setUserId(userId);
+            if (refProp.getStringValue("import.tosca.model").equalsIgnoreCase("true")) {
+                policyClient.importToscaModel(this);
+            }
             cldsToscaModel = cldsDao.updateToscaModelWithNewVersion(this, userId);
         } else {
             this.setVersion(1);
+            if (refProp.getStringValue("import.tosca.model").equalsIgnoreCase("true")) {
+                policyClient.importToscaModel(this);
+            }
             cldsToscaModel = cldsDao.insToscaModel(this, userId);
         }
         return cldsToscaModel;

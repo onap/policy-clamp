@@ -26,6 +26,11 @@ package org.onap.clamp.clds.client.req.policy;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -36,6 +41,7 @@ import javax.ws.rs.BadRequestException;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.PolicyConfiguration;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
+import org.onap.clamp.clds.model.CldsToscaModel;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -44,6 +50,8 @@ import org.onap.policy.api.ConfigRequestParameters;
 import org.onap.policy.api.DeletePolicyCondition;
 import org.onap.policy.api.DeletePolicyParameters;
 import org.onap.policy.api.DictionaryType;
+import org.onap.policy.api.ImportParameters;
+import org.onap.policy.api.ImportParameters.IMPORT_TYPE;
 import org.onap.policy.api.PolicyChangeResponse;
 import org.onap.policy.api.PolicyClass;
 import org.onap.policy.api.PolicyConfigException;
@@ -77,6 +85,7 @@ public class PolicyClient {
     public static final String POLICY_MS_NAME_PREFIX_PROPERTY_NAME = "policy.ms.policyNamePrefix";
     public static final String POLICY_OP_TYPE_PROPERTY_NAME = "policy.op.type";
     public static final String POLICY_GUARD_SUFFIX = "_Guard";
+    public static final String TOSCA_FILE_TEMP_PATH = "tosca.filePath";
 
     @Autowired
     protected ApplicationContext appContext;
@@ -571,5 +580,82 @@ public class PolicyClient {
             throw new BadRequestException("Policy delete failed: " + responseMessage);
         }
         return responseMessage;
+    }
+
+    /**
+     * Create a temp Tosca model file and perform import model to Policy Engine
+     *
+     * @param cldsToscaModel
+     *        Policy model details
+     * @return The response message from policy
+     */
+    public String importToscaModel(CldsToscaModel cldsToscaModel) {
+        String filePath = "";
+        try {
+            String clampToscaPath = refProp.getStringValue(TOSCA_FILE_TEMP_PATH);
+            filePath = buildFilePathForToscaFile(clampToscaPath, cldsToscaModel.getToscaModelName());
+            logger.info("Writing Tosca model : " + filePath);
+            Path path = Paths.get(filePath);
+            Files.createDirectories(path.getParent());
+            // Create or Ovewrite an existing the file
+            try (OutputStream out = Files.newOutputStream(path)) {
+                out.write(cldsToscaModel.getToscaModelYaml().getBytes(), 0,
+                    cldsToscaModel.getToscaModelYaml().getBytes().length);
+            }
+        } catch (IOException e) {
+            logger.error("Exception caught when attempting to write Tosca files to disk", e);
+            throw new PolicyClientException("Exception caught when attempting to write Tosca files to disk", e);
+        }
+
+        ImportParameters importParameters = new ImportParameters();
+        importParameters.setImportParameters(cldsToscaModel.getToscaModelName(), cldsToscaModel.getToscaModelName(),
+            null, filePath, IMPORT_TYPE.MICROSERVICE, String.valueOf(cldsToscaModel.getVersion()));
+        return importModel(importParameters);
+    }
+
+    /**
+     * @param importParameters
+     *        The ImportParameters
+     * @return The response message from policy
+     */
+    protected String importModel(ImportParameters importParameters) {
+        PolicyChangeResponse response = null;
+        String responseMessage = "";
+
+        try {
+            logger.info("Attempting to import tosca policy model for action=" + importParameters.getFilePath());
+            response = getPolicyEngine().policyEngineImport(importParameters);
+            if (response != null) {
+                responseMessage = response.getResponseMessage();
+            }
+        } catch (Exception e) {
+            LoggingUtils.setResponseContext("900", "Policy Model import failed", this.getClass().getName());
+            LoggingUtils.setErrorContext("900", "Policy Model import error");
+            logger.error("Exception occurred during policy communication", e);
+            throw new PolicyClientException("Exception while communicating with Policy", e);
+        }
+        logger.info(LOG_POLICY_PREFIX + responseMessage);
+        if (response != null && (response.getResponseCode() == 200 || response.getResponseCode() == 204)) {
+            LoggingUtils.setResponseContext("0", "Policy Model import success", this.getClass().getName());
+            logger.info("Policy import model successful");
+            metricsLogger.info("Policy import model success");
+        } else {
+            LoggingUtils.setResponseContext("900", "Policy import model failed", this.getClass().getName());
+            logger.warn("Policy import model failed: " + responseMessage);
+            metricsLogger.info("Policy import model failure");
+            throw new BadRequestException("Policy import model failed: " + responseMessage);
+        }
+        return responseMessage;
+    }
+
+    /**
+     * @param clampToscaPath
+     *        Temp directory path for writing tosca files
+     * @param toscaModelName
+     *        Tosca Model Name
+     * @return File Path on the system
+     */
+    private String buildFilePathForToscaFile(String clampToscaPath, String toscaModelName) {
+        return clampToscaPath + "/" + toscaModelName + ".yml";
     }
 }

@@ -29,13 +29,9 @@ import com.att.eelf.configuration.EELFManager;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -515,32 +511,34 @@ public class CldsDao {
     private List<CldsToscaModel> getToscaModel(String toscaModelName, String policyType) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsToscaModel> cldsToscaModels = new ArrayList<>();
-        MapSqlParameterSource params = new MapSqlParameterSource();
 
-        String toscaModelSql = "SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, tmr.tosca_model_revision_id, tmr.version, tmr.user_id, tmr.createdTimestamp, tmr.lastUpdatedTimestamp, tmr.tosca_model_yaml FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id ";
-        if (toscaModelName != null) {
-            toscaModelSql += " AND tm.tosca_model_name = :toscaModelName";
-            params.addValue("toscaModelName", toscaModelName);
-        }
-        if (policyType != null) {
-            toscaModelSql += " AND tm.policy_type = :policyType";
-            params.addValue("policyType", policyType);
-        }
-        toscaModelSql += " AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id=st.tosca_model_id)";
+        String toscaModelSql = "SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp, tmr.lastUpdatedTimestamp "
+            + ((toscaModelName != null) ? (", tmr.tosca_model_yaml ") : " ")
+            + "FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id "
+            + ((toscaModelName != null) ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : " ")
+            + ((policyType != null) ? (" AND tm.policy_type = '" + policyType + "'") : " ")
+            + "AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id=st.tosca_model_id)";
 
-        Optional.ofNullable(jdbcTemplateObject.queryForList(toscaModelSql, params)).orElse(Collections.emptyList())
-            .forEach(row -> {
+        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(toscaModelSql);
+
+        if (rows != null) {
+            rows.forEach(row -> {
                 CldsToscaModel cldsToscaModel = new CldsToscaModel();
                 cldsToscaModel.setId((String) row.get("tosca_model_id"));
                 cldsToscaModel.setPolicyType((String) row.get("policy_type"));
                 cldsToscaModel.setToscaModelName((String) row.get("tosca_model_name"));
                 cldsToscaModel.setUserId((String) row.get("user_id"));
                 cldsToscaModel.setRevisionId((String) row.get("tosca_model_revision_id"));
+                cldsToscaModel.setToscaModelJson((String) row.get("tosca_model_json"));
                 cldsToscaModel.setVersion(((Double) row.get("version")));
                 cldsToscaModel.setCreatedDate(sdf.format(row.get("createdTimestamp")));
-                cldsToscaModel.setToscaModelYaml((String) row.get("tosca_model_yaml"));
+                cldsToscaModel.setLastUpdatedDate(sdf.format(row.get("lastUpdatedTimestamp")));
+                if (toscaModelName != null) {
+                    cldsToscaModel.setToscaModelYaml((String) row.get("tosca_model_yaml"));
+                }
                 cldsToscaModels.add(cldsToscaModel);
             });
+        }
         return cldsToscaModels;
     }
 
@@ -604,11 +602,10 @@ public class CldsDao {
      * @param userId
      */
     public void updateDictionary(String dictionaryId, CldsDictionary cldsDictionary, String userId) {
-        String dictionarySql = "UPDATE dictionary SET dictionary_name = :dictionary_name, modified_by = :modified_by WHERE dictionary_id = :dictionary_id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("dictionary_name", cldsDictionary.getDictionaryName()).addValue("modified_by", userId)
-            .addValue("dictionary_id", dictionaryId);
-        jdbcTemplateObject.update(dictionarySql, namedParameters);
+
+        String dictionarySql = "UPDATE dictionary " + "SET dictionary_name = '" + cldsDictionary.getDictionaryName()
+            + "', modified_by = '" + userId + "'" + "WHERE dictionary_id = '" + dictionaryId + "'";
+        jdbcTemplateObject.update(dictionarySql);
         cldsDictionary.setUpdatedBy(userId);
     }
 
@@ -622,16 +619,17 @@ public class CldsDao {
     public List<CldsDictionary> getDictionary(String dictionaryId, String dictionaryName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionary> dictionaries = new ArrayList<>();
-        String dictionarySql = "SELECT dictionary_id, dictionary_name, created_by, modified_by, timestamp FROM dictionary WHERE ";
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        Optional.ofNullable(dictionaryName).ifPresent(dn -> namedParameters.addValue("dictionary_name", dn));
-        Optional.ofNullable(dictionaryId).ifPresent(dn -> namedParameters.addValue("dictionary_id", dn));
-        dictionarySql += Optional.ofNullable(namedParameters.getParameterNames()).filter(a -> a.length > 0)
-            .map(Arrays::stream).map(s -> s.map(param -> param + " = :" + param).collect(Collectors.joining(" AND ")))
-            .orElse("1");
+        String dictionarySql = "SELECT dictionary_id, dictionary_name, created_by, modified_by, timestamp FROM dictionary"
+            + ((dictionaryId != null || dictionaryName != null)
+                ? (" WHERE " + ((dictionaryName != null) ? ("dictionary_name = '" + dictionaryName + "'") : "")
+                    + ((dictionaryId != null && dictionaryName != null) ? (" AND ") : "")
+                    + ((dictionaryId != null) ? ("dictionary_id = '" + dictionaryId + "'") : ""))
+                : "");
 
-        Optional.ofNullable(jdbcTemplateObject.queryForList(dictionarySql, namedParameters))
-            .orElse(Collections.emptyList()).forEach(row -> {
+        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
+
+        if (rows != null) {
+            rows.forEach(row -> {
                 CldsDictionary cldsDictionary = new CldsDictionary();
                 cldsDictionary.setDictionaryId((String) row.get("dictionary_id"));
                 cldsDictionary.setDictionaryName((String) row.get("dictionary_name"));
@@ -640,6 +638,7 @@ public class CldsDao {
                 cldsDictionary.setLastUpdatedDate(sdf.format(row.get("timestamp")));
                 dictionaries.add(cldsDictionary);
             });
+        }
         return dictionaries;
     }
 
@@ -671,14 +670,13 @@ public class CldsDao {
     public void updateDictionaryElements(String dictionaryElementId, CldsDictionaryItem cldsDictionaryItem,
         String userId) {
 
-        String dictionarySql = "UPDATE dictionary_elements SET dict_element_name = :dict_element_name, dict_element_short_name = :dict_element_short_name, dict_element_description = :dict_element_description,dict_element_type=:dict_element_type, modified_by = :modified_by WHERE dict_element_id = :dict_element_id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("dict_element_name", cldsDictionaryItem.getDictElementName())
-            .addValue("dict_element_short_name", cldsDictionaryItem.getDictElementShortName())
-            .addValue("dict_element_description", cldsDictionaryItem.getDictElementDesc())
-            .addValue("dict_element_type", cldsDictionaryItem.getDictElementType()).addValue("modified_by", userId)
-            .addValue("dict_element_id", dictionaryElementId);
-        jdbcTemplateObject.update(dictionarySql, namedParameters);
+        String dictionarySql = "UPDATE dictionary_elements SET dict_element_name = '"
+            + cldsDictionaryItem.getDictElementName() + "', dict_element_short_name = '"
+            + cldsDictionaryItem.getDictElementShortName() + "', dict_element_description= '"
+            + cldsDictionaryItem.getDictElementDesc() + "', dict_element_type = '"
+            + cldsDictionaryItem.getDictElementType() + "', modified_by = '" + userId + "' "
+            + "WHERE dict_element_id = '" + dictionaryElementId + "'";
+        jdbcTemplateObject.update(dictionarySql);
         cldsDictionaryItem.setUpdatedBy(userId);
     }
 
@@ -695,24 +693,17 @@ public class CldsDao {
         String dictElementShortName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionaryItem> dictionaryItems = new ArrayList<>();
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         String dictionarySql = "SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, de.modified_by, de.timestamp  "
-            + "FROM dictionary_elements de, dictionary d WHERE de.dictionary_id = d.dictionary_id ";
-        if (dictionaryId != null) {
-            dictionarySql += " AND d.dictionary_id = :dictionaryId";
-            namedParameters.addValue("dictionaryId", dictionaryId);
-        }
-        if (dictElementShortName != null) {
-            dictionarySql += " AND de.dict_element_short_name = :dictElementShortName";
-            namedParameters.addValue("dictElementShortName", dictElementShortName);
-        }
-        if (dictionaryName != null) {
-            dictionarySql += " AND dictionary_name = :dictionaryName";
-            namedParameters.addValue("dictionaryName", dictionaryName);
-        }
+            + "FROM dictionary_elements de, dictionary d WHERE de.dictionary_id = d.dictionary_id "
+            + ((dictionaryId != null) ? (" AND d.dictionary_id = '" + dictionaryId + "'") : "")
+            + ((dictElementShortName != null) ? (" AND de.dict_element_short_name = '" + dictElementShortName + "'")
+                : "")
+            + ((dictionaryName != null) ? (" AND dictionary_name = '" + dictionaryName + "'") : "");
 
-        Optional.ofNullable(jdbcTemplateObject.queryForList(dictionarySql, namedParameters))
-            .orElse(Collections.emptyList()).forEach(row -> {
+        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
+
+        if (rows != null) {
+            rows.forEach(row -> {
                 CldsDictionaryItem dictionaryItem = new CldsDictionaryItem();
                 dictionaryItem.setDictElementId((String) row.get("dict_element_id"));
                 dictionaryItem.setDictionaryId((String) row.get("dictionary_id"));
@@ -725,6 +716,30 @@ public class CldsDao {
                 dictionaryItem.setLastUpdatedDate(sdf.format(row.get("timestamp")));
                 dictionaryItems.add(dictionaryItem);
             });
+        }
+        return dictionaryItems;
+    }
+
+    /**
+     * Method to get Map of all dictionary elements with key as dictionary short
+     * name and value as the full name
+     *
+     * @param dictionaryElementType
+     * @return Map of dictionary elements as key value pair
+     */
+    public Map<String, String> getDictionaryElementsByType(String dictionaryElementType) {
+        Map<String, String> dictionaryItems = new HashMap<>();
+        String dictionarySql = "SELECT dict_element_name, dict_element_short_name " + "FROM dictionary_elements "
+            + "WHERE dict_element_type = '" + dictionaryElementType + "'";
+
+        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
+
+        if (rows != null) {
+            rows.forEach(row -> {
+                dictionaryItems.put(((String) row.get("dict_element_short_name")),
+                    ((String) row.get("dict_element_name")));
+            });
+        }
         return dictionaryItems;
     }
 }

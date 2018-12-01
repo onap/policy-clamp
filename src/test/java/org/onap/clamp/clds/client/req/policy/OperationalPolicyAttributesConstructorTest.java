@@ -77,7 +77,7 @@ public class OperationalPolicyAttributesConstructorTest {
         // then
         Assertions.assertThat(requestAttributes).containsKeys(AttributeType.MATCHING, AttributeType.RULE);
         Assertions.assertThat(requestAttributes.get(AttributeType.MATCHING))
-        .contains(Assertions.entry(OperationalPolicyAttributesConstructor.CONTROLLER, "amsterdam"));
+            .contains(Assertions.entry(OperationalPolicyAttributesConstructor.CONTROLLER, "amsterdam"));
 
         Map<String, String> ruleParameters = requestAttributes.get(AttributeType.RULE);
         Assertions.assertThat(ruleParameters).containsExactly(
@@ -97,8 +97,8 @@ public class OperationalPolicyAttributesConstructorTest {
         // given
         ClampProperties mockClampProperties = createMockClampProperties(
             ImmutableMap.<String, String>builder().put("op.templateName", "ClosedLoopControlName")
-            .put("op.operationTopic", "APPP-CL").put("op.notificationTopic", "POLICY-CL-MGT")
-            .put("op.controller", "amsterdam").put("op.recipeTopic", "APPC").build());
+                .put("op.operationTopic", "APPP-CL").put("op.notificationTopic", "POLICY-CL-MGT")
+                .put("op.controller", "amsterdam").put("op.recipeTopic", "APPC").build());
 
         Policy expectedPolicy = new Policy("6f76ad0b-ea9d-4a92-8d7d-6a6367ce2c77", "healthCheck Policy",
             "healthCheck Policy - the trigger (no parent) policy - created by CLDS", "APPC", null,
@@ -112,7 +112,7 @@ public class OperationalPolicyAttributesConstructorTest {
         // then
         Assertions.assertThat(requestAttributes).containsKeys(AttributeType.MATCHING, AttributeType.RULE);
         Assertions.assertThat(requestAttributes.get(AttributeType.MATCHING))
-        .contains(Assertions.entry("controller", "amsterdam"));
+            .contains(Assertions.entry("controller", "amsterdam"));
 
         Map<String, String> ruleParameters = requestAttributes.get(AttributeType.RULE);
         Assertions.assertThat(ruleParameters).contains(
@@ -127,7 +127,7 @@ public class OperationalPolicyAttributesConstructorTest {
 
         Assertions.assertThat(controlLoopPolicy.getControlLoop().getControlLoopName()).isEqualTo(CONTROL_NAME);
         Assertions.assertThat(controlLoopPolicy.getPolicies()).usingElementComparatorIgnoringFields("id")
-        .containsExactly(expectedPolicy);
+            .containsExactly(expectedPolicy);
     }
 
     private ClampProperties createMockClampProperties(ImmutableMap<String, String> propertiesMap) {

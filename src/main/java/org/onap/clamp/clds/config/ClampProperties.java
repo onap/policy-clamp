@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.config;
@@ -49,14 +49,12 @@ public class ClampProperties {
     @Autowired
     private Environment env;
     public static final String CONFIG_PREFIX = "clamp.config.";
-    public static final String TOSCA_POLICY_TYPES_CONFIG= "tosca.policyTypes";
-    public static final String IMPORT_TOSCA_POLICY= "import.tosca.model";
 
     /**
      * get property value.
      *
      * @param key
-     *            The first key
+     *        The first key
      * @return The string with the value
      */
     public String getStringValue(String key) {
@@ -64,13 +62,13 @@ public class ClampProperties {
     }
 
     /**
-     * get property value for a combo key (key1 + "." + key2). If not found just
-     * use key1.
+     * get property value for a combo key (key1 + "." + key2). If not found just use
+     * key1.
      *
      * @param key1
-     *            The first key
+     *        The first key
      * @param key2
-     *            The second key after a dot
+     *        The second key after a dot
      * @return The string with the value
      */
     public String getStringValue(String key1, String key2) {
@@ -86,49 +84,47 @@ public class ClampProperties {
      * clds-reference file will be used as a filename.
      *
      * @param key
-     *            The key that will be used to access the clds-reference file
+     *        The key that will be used to access the clds-reference file
      * @return A jsonNode
      * @throws IOException
-     *             In case of issues with the JSON parser
+     *         In case of issues with the JSON parser
      */
     public JsonNode getJsonTemplate(String key) throws IOException {
         String fileReference = getStringValue(key);
         return (fileReference != null)
-                ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference),
-                        JsonNode.class)
-                : null;
+            ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference), JsonNode.class)
+            : null;
     }
 
     /**
-     * Return json as objects that can be updated. First try with combo key
-     * (key1 + "." + key2), otherwise default to just key1. The value obtained
-     * from the clds-reference file will be used as a filename.
+     * Return json as objects that can be updated. First try with combo key (key1 +
+     * "." + key2), otherwise default to just key1. The value obtained from the
+     * clds-reference file will be used as a filename.
      *
      * @param key1
-     *            The first key
+     *        The first key
      * @param key2
-     *            The second key after a dot
+     *        The second key after a dot
      * @return A JsonNode
      * @throws IOException
-     *             In case of issues with the JSON parser
+     *         In case of issues with the JSON parser
      */
     public JsonNode getJsonTemplate(String key1, String key2) throws IOException {
         String fileReference = getStringValue(key1, key2);
         return (fileReference != null)
-                ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference),
-                        JsonNode.class)
-                : null;
+            ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference), JsonNode.class)
+            : null;
     }
 
     /**
-     * Return the file content. The value obtained from the clds-reference file
-     * will be used as a filename.
+     * Return the file content. The value obtained from the clds-reference file will
+     * be used as a filename.
      *
      * @param key
-     *            The key that will be used to access the clds-reference file
+     *        The key that will be used to access the clds-reference file
      * @return File content in String
      * @throws IOException
-     *             In case of issues with the JSON parser
+     *         In case of issues with the JSON parser
      */
     public String getFileContent(String key) throws IOException {
         String fileReference = getStringValue(key);
@@ -137,16 +133,16 @@ public class ClampProperties {
 
     /**
      * Return the file content. First try with combo key (key1 + "." + key2),
-     * otherwise default to just key1. The value obtained from the
-     * clds-reference file will be used as a filename.
+     * otherwise default to just key1. The value obtained from the clds-reference
+     * file will be used as a filename.
      *
      * @param key1
-     *            The first key
+     *        The first key
      * @param key2
-     *            The second key after a dot
+     *        The second key after a dot
      * @return File content in String
      * @throws IOException
-     *             In case of issues with the JSON parser
+     *         In case of issues with the JSON parser
      */
     public String getFileContent(String key1, String key2) throws IOException {
         String fileReference = getStringValue(key1, key2);
@@ -157,19 +153,18 @@ public class ClampProperties {
         URL url = appContext.getResource(filepath).getURL();
         return IOUtils.toString(url, StandardCharsets.UTF_8);
     }
-    
-	/**
-	 * 
-	 * 
-	 * @param key
-	 *       property key
-	 * @param separator
-	 *       property value separator
-	 * @return
-	 *       List of Strings split with a separator
-	 */
-	public List<String> getStringList(String key, String separator) {
-		return Splitter.on(separator).trimResults().omitEmptyStrings()
-				.splitToList(env.getProperty(CONFIG_PREFIX + key));
-	}
+
+    /**
+     * 
+     * 
+     * @param key
+     *        property key
+     * @param separator
+     *        property value separator
+     * @return List of Strings split with a separator
+     */
+    public List<String> getStringList(String key, String separator) {
+        return Splitter.on(separator).trimResults().omitEmptyStrings()
+            .splitToList(env.getProperty(CONFIG_PREFIX + key));
+    }
 }

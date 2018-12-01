@@ -1,0 +1,115 @@
+{
+	"schema": {
+		"uniqueItems": "true",
+		"format": "tabs-top",
+		"type": "array",
+		"title": "Thresholds",
+		"items": {
+			"type": "object",
+			"title": "Thresholds",
+			"required": [
+				"dummySignatures"
+			],
+			"properties": {
+				"severity": {
+					"propertyOrder": 1004,
+					"title": "event severity or priority",
+					"type": "string",
+					"enum": [
+						"CRITICAL",
+						"MAJOR",
+						"MINOR",
+						"WARNING",
+						"NORMAL"
+					]
+				},
+				"fieldPath": {
+					"propertyOrder": 1003,
+					"title": "Field Path",
+					"type": "string"
+				},
+				"thresholdValue": {
+					"propertyOrder": 1005,
+					"default": 0,
+					"maximum": 65535,
+					"title": "ThresholdValue",
+					"type": "integer",
+					"minimum": 0
+				},
+				"dummySignatures": {
+					"propertyOrder": 1007,
+					"uniqueItems": "true",
+					"format": "tabs-top",
+					"title": "dummy Signatures",
+					"type": "array",
+					"items": {
+						"type": "object",
+						"required": [
+							"signature",
+							"traversal"
+						],
+						"properties": {
+							"signature": {
+								"propertyOrder": 1008,
+								"required": [
+									"filter_clause"
+								],
+								"properties": {
+									"filter_clause": {
+										"propertyOrder": 20002,
+										"title": "Filter Clause",
+										"type": "string",
+										"enum": [
+											"OR",
+											"AND",
+											"NOT"
+										]
+									}
+								}
+							},
+							"traversal": {
+								"propertyOrder": 1009,
+								"required": [
+									"traversal"
+								],
+								"properties": {
+									"traversal": {
+										"propertyOrder": 20003,
+										"title": "Dummy Traverse",
+										"type": "string",
+										"enum": [
+											"ONE",
+											"TWO",
+											"THREE"
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"closedLoopControlName": {
+					"propertyOrder": 1001,
+					"title": "A UNIQUE string identifying the Closed Loop ID this event is for.",
+					"type": "string"
+				},
+				"version": {
+					"propertyOrder": 1006,
+					"minLength": 1,
+					"title": "Version for the closed loop message",
+					"type": "string"
+				},
+				"direction": {
+					"propertyOrder": 1002,
+					"type": "string",
+					"enum": [
+						"LESS",
+						"LESS_OR_EQUAL",
+						"GREATER",
+						"GREATER_OR_EQUAL"
+					]
+				}
+			}
+		}
+	}
+}

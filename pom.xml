@@ -397,7 +397,7 @@
 				<dependency>
 						<groupId>org.onap.policy.engine</groupId>
 						<artifactId>PolicyEngineAPI</artifactId>
-						<version>1.3.1</version>
+						<version>1.3.3</version>
 						<exclusions>
 								<exclusion>
 										<groupId>com.google.guava</groupId>
@@ -858,7 +858,7 @@
 								<artifactId>maven-surefire-plugin</artifactId>
 								<version>2.22.1</version>
 								<configuration>
-										<forkCount>1</forkCount>
+										<forkCount>1C</forkCount>
 										<reuseForks>true</reuseForks>
 										<useSystemClassLoader>false</useSystemClassLoader>
 								</configuration>
@@ -883,7 +883,7 @@
 																<include>**/*ItCase.java</include>
 														</includes>
 														<forkCount>1</forkCount>
-														<reuseForks>false</reuseForks>
+														<reuseForks>true</reuseForks>
 														<useSystemClassLoader>false</useSystemClassLoader>
 												</configuration>
 										</execution>
@@ -894,6 +894,13 @@
 								<groupId>io.fabric8</groupId>
 								<artifactId>docker-maven-plugin</artifactId>
 								<version>0.27.2</version>
+								<dependencies>
+									<dependency>
+										<groupId>org.apache.httpcomponents</groupId>
+										<artifactId>httpclient</artifactId>
+										<version>4.5.5</version>
+									</dependency>
+								</dependencies>
 								<configuration>
 										<verbose>true</verbose>
 										<apiVersion>1.35</apiVersion>
@@ -940,6 +947,7 @@
 																				<mode>direct</mode>
 																		</tcp>
 																		<time>120000</time>
+																		<kill>5000</kill>
 																</wait>
 																<ports>
 																		<port>${docker.http-cache.port.host}:8080</port>
