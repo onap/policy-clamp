@@ -24,10 +24,12 @@
 package org.onap.clamp.clds.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Splitter;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.util.JacksonUtils;
@@ -47,6 +49,8 @@ public class ClampProperties {
     @Autowired
     private Environment env;
     public static final String CONFIG_PREFIX = "clamp.config.";
+    public static final String TOSCA_POLICY_TYPES_CONFIG= "tosca.policyTypes";
+    public static final String IMPORT_TOSCA_POLICY= "import.tosca.model";
 
     /**
      * get property value.
@@ -153,4 +157,19 @@ public class ClampProperties {
         URL url = appContext.getResource(filepath).getURL();
         return IOUtils.toString(url, StandardCharsets.UTF_8);
     }
+    
+	/**
+	 * 
+	 * 
+	 * @param key
+	 *       property key
+	 * @param separator
+	 *       property value separator
+	 * @return
+	 *       List of Strings split with a separator
+	 */
+	public List<String> getStringList(String key, String separator) {
+		return Splitter.on(separator).trimResults().omitEmptyStrings()
+				.splitToList(env.getProperty(CONFIG_PREFIX + key));
+	}
 }

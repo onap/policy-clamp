@@ -60,15 +60,19 @@ public class OperationalPolicyDeleteDelegate {
         Policy policy = prop.getType(Policy.class);
         prop.setCurrentModelElementId(policy.getId());
         String eventAction = (String) camelExchange.getProperty("eventAction");
-        String responseMessage = "";
-        if (!eventAction.equalsIgnoreCase(CldsEvent.ACTION_CREATE) && policy.isFound()) {
-            for (PolicyChain policyChain : policy.getPolicyChains()) {
-                prop.setPolicyUniqueId(policyChain.getPolicyId());
-                responseMessage = policyClient.deleteBrms(prop);
-            }
-            if (responseMessage != null) {
-                camelExchange.setProperty("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
+        if(policy.getPolicyChains() != null && policy.getPolicyChains().size() > 0) {
+        	String responseMessage = "";
+            
+            if (!eventAction.equalsIgnoreCase(CldsEvent.ACTION_CREATE) && policy.isFound()) {
+                for (PolicyChain policyChain : policy.getPolicyChains()) {
+                    prop.setPolicyUniqueId(policyChain.getPolicyId());
+                    responseMessage = policyClient.deleteBrms(prop);
+                }
+                if (responseMessage != null) {
+                    camelExchange.setProperty("operationalPolicyDeleteResponseMessage", responseMessage.getBytes());
+                }
             }
         }
+        
     }
 }

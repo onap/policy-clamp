@@ -5,6 +5,80 @@
       "value": "uktukk"
     }
   ],
+  "TCA_11n5nl9": {
+		"group1": [
+			{
+				"name": "tname",
+				"value": "group1"
+			},
+			{
+				"name": "tuuid",
+				"value": "f734f031-10aa-t8fb-330f-04dde2886325"
+			},
+			{
+				"name": "tcaPolId",
+				"value": "policy1"
+			},
+			{
+				"name": "eventName",
+				"value": "vFirewallBroadcastPackets"
+			},
+			{
+				"name": "controlLoopSchemaType",
+				"value": "VNF"
+			},
+			{
+				"serviceConfigurations": [
+					[
+						"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
+						"LESS_OR_EQUAL",
+						"123",
+						"ABATED"
+					],
+					[
+						"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value",
+						"GREATER_OR_EQUAL",
+						"123",
+						"ONSET"
+					]
+				]
+			}
+		]
+	},
+	"global":
+    [
+        {
+            "name": "service",
+            "value":
+            [
+                "0f983e18-4603-4bb4-a98c-e29691fb16a1"
+            ]
+        },
+
+        {
+            "name": "vf",
+            "value":
+            [
+                "6c7aaec2-59eb-41d9-8681-b7f976ab668d"
+            ]
+        },
+
+        {
+            "name": "actionSet",
+            "value":
+            [
+                "vnfRecipe"
+            ]
+        },
+
+        {
+            "name": "location",
+            "value":
+            [
+                "SNDGCA64"
+            ]
+        }
+    ],
   "Policy_19c1hms": {
     "policy1": [
       {

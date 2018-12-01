@@ -47,6 +47,7 @@ public class Global {
     private List<String> resourceVfc;
     private JsonNode deployParameters;
     private List<String> location;
+    private String vnfScope;
 
     /**
      * Parse global given json node.
@@ -61,6 +62,7 @@ public class Global {
         resourceVfc = AbstractModelElement.getValuesByName(globalNode, "vfc");
         deployParameters = AbstractModelElement.getJsonNodeByName(globalNode, "deployParameters");
         location = AbstractModelElement.getValuesByName(globalNode, "location");
+        vnfScope = AbstractModelElement.getValueByName(globalNode, "vnf");
     }
 
     /**
@@ -141,4 +143,9 @@ public class Global {
     public void setDeployParameters(JsonNode deployParameters) {
         this.deployParameters = deployParameters;
     }
+
+    public String getVnfScope() {
+        return vnfScope;
+    }
+
 }

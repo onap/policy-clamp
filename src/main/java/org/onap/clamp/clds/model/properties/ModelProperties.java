@@ -264,6 +264,23 @@ public class ModelProperties {
     }
 
     /**
+     * @return the PolicyNameWithScopeContext
+     */
+    public String getPolicyNameWithScopeContext(String policyScope, String policyType, String vnfScope, String context, String userDefinedName) {
+        return normalizePolicyScopeName(
+                policyScope + createScopeSeparator(policyScope) + policyType + "_" + vnfScope + "_" + context + "_" + modelName + "_" + userDefinedName);
+    }
+
+    /**
+     * @return the PolicyNameWithPrefixScopeContext
+     */
+    public String getPolicyNameWithPrefixScopeContext(String policyScope, String policyType, String vnfScope,  String context,
+    		String userDefinedName, String policyPrefix) {
+        return normalizePolicyScopeName(policyScope + createScopeSeparator(policyScope) + policyPrefix + policyType + "_" + vnfScope + "_"
+                + context + "_" + modelName + "_" + userDefinedName);
+    }
+
+    /**
      * Replace all '-' with '_' within policy scope and name.
      *
      * @param inName

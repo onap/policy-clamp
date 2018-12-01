@@ -44,7 +44,8 @@ public class GuardPolicyAttributesConstructor {
     private GuardPolicyAttributesConstructor() {
     }
 
-    public static Map<AttributeType, Map<String, String>> formatAttributes(ModelProperties modelProperties, PolicyItem policyItem) {
+    public static Map<AttributeType, Map<String, String>> formatAttributes(ModelProperties modelProperties,
+        PolicyItem policyItem) {
         Map<String, String> matchingAttributes = prepareMatchingAttributes(policyItem, modelProperties);
         return createAttributesMap(matchingAttributes);
     }
@@ -62,20 +63,20 @@ public class GuardPolicyAttributesConstructor {
     private static Map<String, String> prepareMatchingAttributes(PolicyItem policyItem, ModelProperties modelProp) {
         logger.info("Preparing matching attributes for guard...");
         Map<String, String> matchingAttributes = new HashMap<>();
-        matchingAttributes.put("actor",policyItem.getActor());
-        matchingAttributes.put("recipe",policyItem.getRecipe());
-        matchingAttributes.put("targets",policyItem.getGuardTargets());
-        matchingAttributes.put("clname",modelProp.getControlNameAndPolicyUniqueId());
+        matchingAttributes.put("actor", policyItem.getActor());
+        matchingAttributes.put("recipe", policyItem.getRecipe());
+        matchingAttributes.put("targets", policyItem.getGuardTargets());
+        matchingAttributes.put("clname", modelProp.getControlNameAndPolicyUniqueId());
         if (RuleProvider.GUARD_MIN_MAX.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
-            matchingAttributes.put("min",policyItem.getMinGuard());
-            matchingAttributes.put("max",policyItem.getMaxGuard());
+            matchingAttributes.put("min", policyItem.getMinGuard());
+            matchingAttributes.put("max", policyItem.getMaxGuard());
         } else if (RuleProvider.GUARD_YAML.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
-            matchingAttributes.put("limit",policyItem.getLimitGuard());
-            matchingAttributes.put("timeWindow",policyItem.getTimeWindowGuard());
-            matchingAttributes.put("timeUnits",policyItem.getTimeUnitsGuard());
+            matchingAttributes.put("limit", policyItem.getLimitGuard());
+            matchingAttributes.put("timeWindow", policyItem.getTimeWindowGuard());
+            matchingAttributes.put("timeUnits", policyItem.getTimeUnitsGuard());
         }
-        matchingAttributes.put("guardActiveStart",policyItem.getGuardActiveStart());
-        matchingAttributes.put("guardActiveEnd",policyItem.getGuardActiveEnd());
+        matchingAttributes.put("guardActiveStart", policyItem.getGuardActiveStart());
+        matchingAttributes.put("guardActiveEnd", policyItem.getGuardActiveEnd());
 
         logger.info("Prepared: " + matchingAttributes);
         return matchingAttributes;
