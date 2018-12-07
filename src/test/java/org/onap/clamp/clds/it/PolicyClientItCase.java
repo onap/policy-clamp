@@ -24,156 +24,242 @@
 
 package org.onap.clamp.clds.it;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
+import javax.xml.transform.TransformerException;
+
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.onap.clamp.clds.client.req.policy.GuardPolicyAttributesConstructor;
 import org.onap.clamp.clds.client.req.policy.OperationalPolicyAttributesConstructor;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.config.ClampProperties;
-import org.onap.clamp.clds.config.PolicyConfiguration;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
-import org.onap.clamp.clds.model.properties.PolicyChain;
+import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.clamp.clds.model.properties.Tca;
+import org.onap.clamp.clds.transform.XslTransformer;
+import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
+import org.onap.policy.api.PolicyConfigType;
+import org.onap.policy.api.PolicyType;
+import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Test Policy API in org.onap.clamp.ClampDesigner.client package - replicate
- * Policy Delegates in tests.
+ * Test Policy API, this uses the emulator written in python that is started
+ * during the tests, It returns the payload sent in the policy queries so that
+ * it can be validated here.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PolicyClientItCase {
 
     @Autowired
-    private PolicyConfiguration policyConfiguration;
-    @Autowired
     private ClampProperties refProp;
     @Autowired
     private PolicyClient policyClient;
+    @Autowired
+    XslTransformer cldsBpmnTransformer;
 
     String modelProp;
-    String modelBpmnProp;
     String modelName;
     String controlName;
+    String modelBpmnPropJson;
+    ModelProperties prop;
 
     /**
      * Initialize Test.
+     *
+     * @throws TransformerException
      */
     @Before
-    public void setUp() throws IOException {
-        modelProp = ResourceFileUtil.getResourceAsString("example/model-properties/policy/modelBpmnProperties.json");
-        modelBpmnProp = ResourceFileUtil.getResourceAsString("example/model-properties/policy/modelBpmn.json");
+    public void setUp() throws IOException, TransformerException {
+        modelProp = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/model-properties.json");
         modelName = "example-model06";
         controlName = "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf";
-    }
-
-    private void createUpdateOperationalPolicy(String actionCd) throws Exception {
-        ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-        Policy policy = prop.getType(Policy.class);
-        if (policy.isFound()) {
-            for (PolicyChain policyChain : policy.getPolicyChains()) {
-                String operationalPolicyRequestUuid = UUID.randomUUID().toString();
-                Map<AttributeType, Map<String, String>> attributes = OperationalPolicyAttributesConstructor
-                    .formatAttributes(refProp, prop, policy.getId(), policyChain);
-                policyClient.sendBrmsPolicy(attributes, prop, operationalPolicyRequestUuid);
-            }
-        }
-    }
-
-    private void createUpdateTcaPolicy(String actionCd) throws Exception {
-        ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-        Tca tca = prop.getType(Tca.class);
-        if (tca.isFound()) {
-            String tcaPolicyRequestUuid = UUID.randomUUID().toString();
-            String policyJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
-            try {
-                policyClient.sendMicroServiceInJson(policyJson, prop, tcaPolicyRequestUuid);
-            } catch (Exception e) {
-                assertTrue(e.getMessage().contains("Policy send failed: PE500 "));
-            }
-        }
-    }
-
-    private void deleteOperationalPolicy(String actionCd) throws Exception {
-        ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-        Policy policy = prop.getType(Policy.class);
-        if (policy.isFound()) {
-            prop.setCurrentModelElementId(policy.getId());
-            for (PolicyChain policyChain : policy.getPolicyChains()) {
-                prop.setPolicyUniqueId(policyChain.getPolicyId());
-                policyClient.deleteBrms(prop);
-            }
-        }
-    }
-
-    private void deleteTcaPolicy(String actionCd) throws Exception {
-        ModelProperties prop = new ModelProperties(modelName, controlName, actionCd, false, modelBpmnProp, modelProp);
-        Tca tca = prop.getType(Tca.class);
-        if (tca.isFound()) {
-            prop.setCurrentModelElementId(tca.getId());
-            try {
-                policyClient.deleteMicrosService(prop);
-            } catch (Exception e) {
-                assertTrue(e.getMessage().contains("Policy delete failed: PE500 "));
-            }
-        }
-    }
-
-    // @Test
-    /**
-     * Temporarily disabled Test.
-     */
-    public void testCreateUpdateDeleteOperationalPolicy() throws Exception {
-        createUpdateOperationalPolicy(CldsEvent.ACTION_SUBMIT);
-        TimeUnit.SECONDS.sleep(20);
-        deleteOperationalPolicy(CldsEvent.ACTION_DELETE);
+        modelBpmnPropJson = cldsBpmnTransformer.doXslTransformToString(
+            ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/tca-template.xml"));
+        prop = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmnPropJson,
+            modelProp);
     }
 
     @Test
-    public void testCreateUpdateDeleteTcaPolicy() throws Exception {
-        createUpdateTcaPolicy(CldsEvent.ACTION_SUBMIT);
-        TimeUnit.SECONDS.sleep(20);
-        deleteTcaPolicy(CldsEvent.ACTION_DELETE);
+    public void testSendGuardPolicy() throws TransformerException, IOException {
+        // Normally there is only one Guard
+        List<PolicyItem> policyItems = GuardPolicyAttributesConstructor
+            .getAllPolicyGuardsFromPolicyChain(prop.getType(Policy.class).getPolicyChains().get(0));
+        PolicyItem policyItem = policyItems.get(0);
+        prop.setCurrentModelElementId(prop.getType(Policy.class).getId());
+        prop.setPolicyUniqueId(prop.getType(Policy.class).getPolicyChains().get(0).getPolicyId());
+        prop.setGuardUniqueId(policyItem.getId());
+        String response = policyClient.sendGuardPolicy(
+            GuardPolicyAttributesConstructor.formatAttributes(prop, policyItem), prop, LoggingUtils.getRequestId(),
+            policyItem);
+        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Decision"),
+            Assertions.entry("policyName",
+                modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0_Guard_6TtHGPq"),
+            Assertions.entry("policyDescription", "from clds"), Assertions.entry("onapName", "PDPD"),
+            Assertions.entry("requestID", LoggingUtils.getRequestId()), Assertions.entry("ruleProvider", "GUARD_YAML"));
+
+        // Check Guard attributes
+        Assertions.assertThat((Map<String, Object>) mapNodes.get("attributes"))
+            .containsKey(AttributeType.MATCHING.name());
+        Assertions.assertThat(
+            (Map<String, Object>) ((Map<String, Object>) mapNodes.get("attributes")).get(AttributeType.MATCHING.name()))
+            .contains(Assertions.entry(GuardPolicyAttributesConstructor.ACTOR, "APPC"),
+                Assertions.entry(GuardPolicyAttributesConstructor.CLNAME, controlName + "_0"),
+                Assertions.entry(GuardPolicyAttributesConstructor.TIME_WINDOW, "10"));
     }
 
     @Test
-    public void testPolicyConfiguration() {
-        assertNotNull(policyConfiguration.getPdpUrl1());
-        assertNotNull(policyConfiguration.getPdpUrl2());
-        assertNotNull(policyConfiguration.getPapUrl());
-        assertNotNull(policyConfiguration.getPolicyEnvironment());
-        assertNotNull(policyConfiguration.getClientId());
-        assertNotNull(policyConfiguration.getClientKey());
-        assertNotNull(policyConfiguration.getNotificationType());
-        assertNotNull(policyConfiguration.getNotificationUebServers());
-        assertEquals(8, policyConfiguration.getProperties().size());
-        assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PDP_URL1))
-            .contains("/pdp/ , testpdp, alpha123"));
-        assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PDP_URL2))
-            .contains("/pdp/ , testpdp, alpha123"));
-        assertTrue(((String) policyConfiguration.getProperties().get(PolicyConfiguration.PAP_URL))
-            .contains("/pap/ , testpap, alpha123"));
-        assertEquals("websocket", policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_TYPE));
-        assertEquals("localhost",
-            policyConfiguration.getProperties().get(PolicyConfiguration.NOTIFICATION_UEB_SERVERS));
-        assertEquals("python", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_ID));
-        assertEquals("dGVzdA==", policyConfiguration.getProperties().get(PolicyConfiguration.CLIENT_KEY));
-        assertEquals("DEVL", policyConfiguration.getProperties().get(PolicyConfiguration.ENVIRONMENT));
+    public void testSendBrmsPolicy()
+        throws TransformerException, BuilderException, IllegalArgumentException, IOException {
+        Map<AttributeType, Map<String, String>> attributes = OperationalPolicyAttributesConstructor.formatAttributes(
+            refProp, prop, prop.getType(Policy.class).getId(), prop.getType(Policy.class).getPolicyChains().get(0));
+        String response = policyClient.sendBrmsPolicy(attributes, prop, LoggingUtils.getRequestId());
+
+        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
+            Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0"),
+            Assertions.entry("policyConfigType", PolicyConfigType.BRMS_PARAM.name()),
+            Assertions.entry("requestID", LoggingUtils.getRequestId()));
+
+        // Check BRMS attributes present
+        Assertions.assertThat((Map<String, Object>) mapNodes.get("attributes"))
+            .containsKeys(AttributeType.MATCHING.name(), AttributeType.RULE.name());
+
+    }
+
+    @Test
+    public void testSendMicroServiceInJson()
+        throws TransformerException, BuilderException, IllegalArgumentException, IOException {
+        prop.setCurrentModelElementId(prop.getType(Policy.class).getId());
+        String jsonToSend = "{\"test\":\"test\"}";
+        String response = policyClient.sendMicroServiceInJson(jsonToSend, prop, LoggingUtils.getRequestId());
+
+        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
+            Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h"),
+            Assertions.entry("policyConfigType", PolicyConfigType.MicroService.name()),
+            Assertions.entry("requestID", LoggingUtils.getRequestId()),
+            Assertions.entry("configBodyType", PolicyType.JSON.name()), Assertions.entry("onapName", "DCAE"),
+            Assertions.entry("configBody", jsonToSend));
+
+    }
+
+    @Test
+    public void testSendBasePolicyInOther() throws IllegalArgumentException, IOException {
+        String body = "test";
+        String response = policyClient.sendBasePolicyInOther(body, "myPolicy", prop, LoggingUtils.getRequestId());
+        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
+            Assertions.entry("policyName", "myPolicy"),
+            Assertions.entry("policyConfigType", PolicyConfigType.Base.name()),
+            Assertions.entry("requestID", LoggingUtils.getRequestId()),
+            Assertions.entry("configBodyType", PolicyType.OTHER.name()), Assertions.entry("onapName", "DCAE"),
+            Assertions.entry("configBody", body));
+    }
+
+    @Test
+    public void testSendMicroServiceInOther() throws IllegalArgumentException, IOException {
+        Tca tca = prop.getType(Tca.class);
+        String tcaJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
+        String response = policyClient.sendMicroServiceInOther(tcaJson, prop);
+
+        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
+            Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_TCA_1d13unw"),
+            Assertions.entry("policyConfigType", PolicyConfigType.MicroService.name()),
+            Assertions.entry("configBody", tcaJson), Assertions.entry("onapName", "DCAE"));
+    }
+
+    @Test
+    public void testDeleteMicrosService() throws IllegalArgumentException, IOException {
+        Tca tca = prop.getType(Tca.class);
+        prop.setCurrentModelElementId(tca.getId());
+        String[] responses = policyClient.deleteMicrosService(prop).split("\\}\\{");
+
+        // There are 2 responses appended to the result, one for PDP one for PAP !
+        Map<String, Object> mapNodesPdp = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(responses[0] + "}"), Map.class);
+        Map<String, Object> mapNodesPap = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree("{" + responses[1]), Map.class);
+
+        Assertions.assertThat(mapNodesPdp).contains(
+            Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_TCA_1d13unw"),
+            Assertions.entry("policyType", PolicyConfigType.MicroService.name()),
+            Assertions.entry("policyComponent", "PDP"), Assertions.entry("deleteCondition", "ALL"));
+
+        Assertions.assertThat(mapNodesPap).contains(
+            Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_TCA_1d13unw"),
+            Assertions.entry("policyType", PolicyConfigType.MicroService.name()),
+            Assertions.entry("policyComponent", "PAP"), Assertions.entry("deleteCondition", "ALL"));
+    }
+
+    @Test
+    public void testDeleteGuard() throws IllegalArgumentException, IOException {
+        List<PolicyItem> policyItems = GuardPolicyAttributesConstructor
+            .getAllPolicyGuardsFromPolicyChain(prop.getType(Policy.class).getPolicyChains().get(0));
+        prop.setCurrentModelElementId(prop.getType(Policy.class).getId());
+        prop.setPolicyUniqueId(prop.getType(Policy.class).getPolicyChains().get(0).getPolicyId());
+        prop.setGuardUniqueId(policyItems.get(0).getId());
+        String[] responses = policyClient.deleteGuard(prop).split("\\}\\{");
+
+        // There are 2 responses appended to the result, one for PDP one for PAP !
+        Map<String, Object> mapNodesPdp = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(responses[0] + "}"), Map.class);
+        Map<String, Object> mapNodesPap = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree("{" + responses[1]), Map.class);
+
+        Assertions.assertThat(mapNodesPdp).contains(
+            Assertions.entry("policyName",
+                modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0_Guard_6TtHGPq"),
+            Assertions.entry("policyType", "Decision"), Assertions.entry("policyComponent", "PDP"),
+            Assertions.entry("deleteCondition", "ALL"));
+        Assertions.assertThat(mapNodesPap).contains(
+            Assertions.entry("policyName",
+                modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0_Guard_6TtHGPq"),
+            Assertions.entry("policyType", "Decision"), Assertions.entry("policyComponent", "PAP"),
+            Assertions.entry("deleteCondition", "ALL"));
+    }
+
+    @Test
+    public void testDeleteBrms() throws IllegalArgumentException, IOException {
+        prop.setPolicyUniqueId(prop.getType(Policy.class).getPolicyChains().get(0).getPolicyId());
+        prop.setCurrentModelElementId(prop.getType(Policy.class).getId());
+        String[] responses = policyClient.deleteBrms(prop).split("\\}\\{");
+
+        // There are 2 responses appended to the result, one for PDP one for PAP !
+        Map<String, Object> mapNodesPdp = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(responses[0] + "}"), Map.class);
+        Map<String, Object> mapNodesPap = JacksonUtils.getObjectMapperInstance()
+            .convertValue(JacksonUtils.getObjectMapperInstance().readTree("{" + responses[1]), Map.class);
+
+        Assertions.assertThat(mapNodesPdp).contains(
+            Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0"),
+            Assertions.entry("policyType", "BRMS_Param"), Assertions.entry("policyComponent", "PDP"),
+            Assertions.entry("deleteCondition", "ALL"));
+        Assertions.assertThat(mapNodesPap).contains(
+            Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0"),
+            Assertions.entry("policyType", "BRMS_Param"), Assertions.entry("policyComponent", "PAP"),
+            Assertions.entry("deleteCondition", "ALL"));
+
     }
 }

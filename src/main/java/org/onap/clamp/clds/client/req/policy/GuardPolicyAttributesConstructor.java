@@ -38,6 +38,18 @@ import org.onap.policy.api.AttributeType;
 import org.onap.policy.api.RuleProvider;
 
 public class GuardPolicyAttributesConstructor {
+    public static final String ACTOR = "actor";
+    public static final String RECIPE = "recipe";
+    public static final String TARGETS = "targets";
+    public static final String CLNAME = "clname";
+    public static final String MIN = "min";
+    public static final String MAX = "max";
+    public static final String LIMIT = "limit";
+    public static final String TIME_WINDOW = "timeWindow";
+    public static final String TIME_UNITS = "timeUnits";
+    public static final String GUARD_ACTIVE_START = "guardActiveStart";
+    public static final String GUARD_ACTIVE_END = "guardActiveEnd";
+
     private static final EELFLogger logger = EELFManager.getInstance()
         .getLogger(GuardPolicyAttributesConstructor.class);
 
@@ -63,20 +75,20 @@ public class GuardPolicyAttributesConstructor {
     private static Map<String, String> prepareMatchingAttributes(PolicyItem policyItem, ModelProperties modelProp) {
         logger.info("Preparing matching attributes for guard...");
         Map<String, String> matchingAttributes = new HashMap<>();
-        matchingAttributes.put("actor", policyItem.getActor());
-        matchingAttributes.put("recipe", policyItem.getRecipe());
-        matchingAttributes.put("targets", policyItem.getGuardTargets());
-        matchingAttributes.put("clname", modelProp.getControlNameAndPolicyUniqueId());
+        matchingAttributes.put(ACTOR, policyItem.getActor());
+        matchingAttributes.put(RECIPE, policyItem.getRecipe());
+        matchingAttributes.put(TARGETS, policyItem.getGuardTargets());
+        matchingAttributes.put(CLNAME, modelProp.getControlNameAndPolicyUniqueId());
         if (RuleProvider.GUARD_MIN_MAX.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
-            matchingAttributes.put("min", policyItem.getMinGuard());
-            matchingAttributes.put("max", policyItem.getMaxGuard());
+            matchingAttributes.put(MIN, policyItem.getMinGuard());
+            matchingAttributes.put(MAX, policyItem.getMaxGuard());
         } else if (RuleProvider.GUARD_YAML.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
-            matchingAttributes.put("limit", policyItem.getLimitGuard());
-            matchingAttributes.put("timeWindow", policyItem.getTimeWindowGuard());
-            matchingAttributes.put("timeUnits", policyItem.getTimeUnitsGuard());
+            matchingAttributes.put(LIMIT, policyItem.getLimitGuard());
+            matchingAttributes.put(TIME_WINDOW, policyItem.getTimeWindowGuard());
+            matchingAttributes.put(TIME_UNITS, policyItem.getTimeUnitsGuard());
         }
-        matchingAttributes.put("guardActiveStart", policyItem.getGuardActiveStart());
-        matchingAttributes.put("guardActiveEnd", policyItem.getGuardActiveEnd());
+        matchingAttributes.put(GUARD_ACTIVE_START, policyItem.getGuardActiveStart());
+        matchingAttributes.put(GUARD_ACTIVE_END, policyItem.getGuardActiveEnd());
 
         logger.info("Prepared: " + matchingAttributes);
         return matchingAttributes;

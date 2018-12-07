@@ -534,6 +534,7 @@ public class PolicyClient {
             deletePolicyParameters.setPolicyName(prop.getCurrentPolicyScopeAndPolicyName());
         }
         logger.info("Policy Name in delete policy method - " + deletePolicyParameters.getPolicyName());
+        logger.info("Deleting policy from PDP...");
         deletePolicyParameters.setPolicyComponent("PDP");
         deletePolicyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
         deletePolicyParameters.setPdpGroup(refProp.getStringValue("policy.pdp.group"));

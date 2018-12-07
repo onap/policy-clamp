@@ -171,6 +171,15 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             with open(cached_file_content, 'w') as f:
                 f.write(jsonGenerated)
         return True
+     elif self.path.startswith("/pdp/api/") and http_type == "PUT" or http_type == "DELETE":
+        print "self.path start with /pdp/api/, copying body to response ..."
+        if not os.path.exists(cached_file_folder):
+            os.makedirs(cached_file_folder, 0777)
+        with open(cached_file_header, 'w+') as f:
+            f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
+        with open(cached_file_content, 'w+') as f:
+            f.write(self.data_string)
+        return True
      else:
         return False
 
@@ -328,6 +337,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         cached_file_header=""
         print("\n\n\nGot a DELETE for %s " % self.path)
         self.check_credentials()
+        self.data_string = self.rfile.read(int(self.headers['Content-Length']))
         print("self.headers:\n %s" % self.headers)
 
         is_special = self._execute_content_generated_cases("DELETE")
