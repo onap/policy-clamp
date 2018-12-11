@@ -35,7 +35,6 @@ import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.PolicyChain;
 import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.policy.api.AttributeType;
-import org.onap.policy.api.RuleProvider;
 
 public class GuardPolicyAttributesConstructor {
     public static final String ACTOR = "actor";
@@ -79,10 +78,10 @@ public class GuardPolicyAttributesConstructor {
         matchingAttributes.put(RECIPE, policyItem.getRecipe());
         matchingAttributes.put(TARGETS, policyItem.getGuardTargets());
         matchingAttributes.put(CLNAME, modelProp.getControlNameAndPolicyUniqueId());
-        if (RuleProvider.GUARD_MIN_MAX.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
+        if ("GUARD_MIN_MAX".equals(policyItem.getGuardPolicyType())) {
             matchingAttributes.put(MIN, policyItem.getMinGuard());
             matchingAttributes.put(MAX, policyItem.getMaxGuard());
-        } else if (RuleProvider.GUARD_YAML.equals(RuleProvider.valueOf(policyItem.getGuardPolicyType()))) {
+        } else if ("GUARD_YAML".equals(policyItem.getGuardPolicyType())) {
             matchingAttributes.put(LIMIT, policyItem.getLimitGuard());
             matchingAttributes.put(TIME_WINDOW, policyItem.getTimeWindowGuard());
             matchingAttributes.put(TIME_UNITS, policyItem.getTimeUnitsGuard());

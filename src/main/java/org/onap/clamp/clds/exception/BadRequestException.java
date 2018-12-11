@@ -47,9 +47,9 @@ public class BadRequestException extends RuntimeException {
     }
 
     /**
-     * This constructor can be used to create a new CldsConfigException. Use
-     * this constructor only if you are creating a new exception stack, not if
-     * an exception was already raised by another code.
+     * This constructor can be used to create a new CldsConfigException. Use this
+     * constructor only if you are creating a new exception stack, not if an
+     * exception was already raised by another code.
      *
      * @param message
      *            A string message detailing the problem

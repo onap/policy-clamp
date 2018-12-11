@@ -102,7 +102,7 @@ public class CldsReferencePropertiesItCase {
     public void testGetStringList() {
         List<String> profileList = refProp.getStringList("policy.pdpUrl1", ",");
         assertTrue(profileList.size() == 3);
-        assertTrue(profileList.get(0).trim().equals("http://localhost:8085/pdp/"));
+        assertTrue(profileList.get(0).trim().startsWith("http://localhost:"));
         assertTrue(profileList.get(1).trim().equals("testpdp"));
         assertTrue(profileList.get(2).trim().equals("alpha123"));
     }
