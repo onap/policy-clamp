@@ -60,13 +60,11 @@
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 				<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-				<docker.mariadb.port.host>3306</docker.mariadb.port.host>
-				<docker.http-cache.port.host>8085</docker.http-cache.port.host>
 				<project.scm.id>git-server</project.scm.id>
 				<java.version>1.8</java.version>
 
 				<eelf.core.version>1.0.0</eelf.core.version>
-				<camel.version>2.22.0</camel.version>
+				<camel.version>2.22.1</camel.version>
 				<springboot.version>2.0.6.RELEASE</springboot.version>
 				
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -671,6 +669,35 @@
 				</resources>
 
 				<plugins>
+						<plugin>
+							<groupId>org.sonatype.plugins</groupId>
+							<artifactId>port-allocator-maven-plugin</artifactId>
+							<version>1.2</version>
+							<executions>
+								<execution>
+									<phase>validate</phase>
+									<goals>
+										<goal>allocate-ports</goal>
+									</goals>
+									<configuration>
+										<ports>
+											<port>
+												<name>docker.mariadb.port.host</name>
+											</port>
+											<port>
+												<name>docker.http-cache.port.host</name>
+											</port>
+											<port>
+												<name>clamp.it.tests.https</name>
+											</port>
+											<port>
+												<name>clamp.it.tests.http</name>
+											</port>
+										</ports>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
 						<!-- Read the swagger.json file and the definition from SwaggerConfig.java; 
 							generate a list of .adoc files containing the APIs info in more structured 
 							way -->
