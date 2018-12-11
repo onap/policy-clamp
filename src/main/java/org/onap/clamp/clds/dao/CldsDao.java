@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -46,6 +47,8 @@ import org.onap.clamp.clds.model.CldsMonitoringDetails;
 import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.CldsToscaModel;
+import org.onap.clamp.clds.model.CldsToscaModelDetails;
+import org.onap.clamp.clds.model.CldsToscaModelRevision;
 import org.onap.clamp.clds.model.ValueItem;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -540,6 +543,58 @@ public class CldsDao {
             });
         }
         return cldsToscaModels;
+    }
+
+    // Retrieve Tosca Models & its revisions by policy Type.
+    private List<CldsToscaModelDetails> getAllToscaModelVersion(String toscaModelName, String policyType,
+        String version) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        List<CldsToscaModelDetails> cldsToscaModelDetailsList = new ArrayList<>();
+        String toscaModelSql = "SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, tmr.tosca_model_revision_id, tmr.version, tmr.user_id, tmr.createdTimestamp, tmr.lastUpdatedTimestamp "
+            + "FROM tosca_model tm, tosca_model_revision tmr " + "WHERE tmr.tosca_model_id = tm.tosca_model_id "
+            + ((policyType != null) ? (" AND tm.policy_type = '" + policyType + "'") : " ")
+            + ((toscaModelName != null) ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : " ")
+            + ((version != null) ? (" AND tmr.version = '" + version + "'") : "");
+
+        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(toscaModelSql);
+
+        if (rows != null && !rows.isEmpty()) {
+            // Get list of all available modelIds
+            List<String> listofModelIds = new ArrayList<>();
+            for (Map<String, Object> r : rows) {
+                if (r != null) {
+                    listofModelIds.add((String) r.get("tosca_model_id"));
+                }
+            }
+            // Filter Distinct elements using streams
+            listofModelIds = listofModelIds.stream().distinct().collect(Collectors.toList());
+
+            // TODO change logic using java8
+            for (String modelId : listofModelIds) {
+                CldsToscaModelDetails cldsToscaModelDetails = new CldsToscaModelDetails();
+                List<CldsToscaModelRevision> revisions = new ArrayList<>();
+                for (Map<String, Object> row : rows) {
+                    String id = (String) row.get("tosca_model_id");
+                    if (modelId.equalsIgnoreCase(id)) {
+                        cldsToscaModelDetails.setId(id);
+                        cldsToscaModelDetails.setPolicyType((String) row.get("policy_type"));
+                        cldsToscaModelDetails.setToscaModelName((String) row.get("tosca_model_name"));
+                        cldsToscaModelDetails.setUserId((String) row.get("user_id"));
+
+                        CldsToscaModelRevision modelRevision = new CldsToscaModelRevision();
+                        modelRevision.setRevisionId((String) row.get("tosca_model_revision_id"));
+                        modelRevision.setVersion(((Double) row.get("version")));
+                        modelRevision.setUserId((String) row.get("user_id"));
+                        modelRevision.setCreatedDate(sdf.format(row.get("createdTimestamp")));
+                        modelRevision.setLastUpdatedDate(sdf.format(row.get("lastUpdatedTimestamp")));
+                        revisions.add(modelRevision);
+                    }
+                }
+                cldsToscaModelDetails.setToscaModelRevisions(revisions);
+                cldsToscaModelDetailsList.add(cldsToscaModelDetails);
+            }
+        }
+        return cldsToscaModelDetailsList;
     }
 
     /**

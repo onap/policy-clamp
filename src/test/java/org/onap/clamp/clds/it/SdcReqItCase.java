@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.it;
@@ -68,7 +68,7 @@ public class SdcReqItCase {
         modelName = "example-model01";
         controlName = "ClosedLoop_FRWL_SIG_fad4dcae_e498_11e6_852e_0050568c4ccf";
         modelProperties = new ModelProperties(modelName, controlName, CldsEvent.ACTION_SUBMIT, false, modelBpmn,
-                modelBpmnProp);
+            modelBpmnProp);
         jsonWithYamlInside = ResourceFileUtil.getResourceAsString("example/tca-policy-req/prop-text.json");
     }
 
@@ -76,26 +76,23 @@ public class SdcReqItCase {
     public void formatBlueprintTest() throws IOException {
         String blueprintFormatted = sdcReq.formatBlueprint(modelProperties, jsonWithYamlInside);
         assertEquals(ResourceFileUtil.getResourceAsString("example/tca-policy-req/blueprint-expected.yaml"),
-                blueprintFormatted);
+            blueprintFormatted);
     }
 
     @Test
     public void formatSdcLocationsReqTest() {
         String blueprintFormatted = sdcReq.formatSdcLocationsReq(modelProperties, "testos");
         assertEquals(
-                "{\"artifactName\":\"testos\",\"locations\":[\"SNDGCA64\",\"ALPRGAED\",\"LSLEILAA\",\"MDTWNJC1\"]}",
-                blueprintFormatted);
+            "{\"artifactName\":\"testos\",\"locations\":[\"SNDGCA64\",\"ALPRGAED\",\"LSLEILAA\",\"MDTWNJC1\"]}",
+            blueprintFormatted);
     }
 
     @Test
     public void formatSdcReqTest() throws JSONException {
-        String jsonResult = sdcReq.formatSdcReq("payload", "artifactName",
-                "artifactLabel", "artifactType");
-        JSONAssert.assertEquals(
-                "{\"payloadData\" : \"cGF5bG9hZA==\",\"artifactLabel\" : \"artifactLabel\"," +
-                        "\"artifactName\" :\"artifactName\",\"artifactType\" : \"artifactType\","
-                        + "\"artifactGroupType\" : \"DEPLOYMENT\",\"description\" : \"from CLAMP Cockpit\"}",
-                jsonResult, true);
+        String jsonResult = sdcReq.formatSdcReq("payload", "artifactName", "artifactLabel", "artifactType");
+        JSONAssert.assertEquals("{\"payloadData\" : \"cGF5bG9hZA==\",\"artifactLabel\" : \"artifactLabel\","
+            + "\"artifactName\" :\"artifactName\",\"artifactType\" : \"artifactType\","
+            + "\"artifactGroupType\" : \"DEPLOYMENT\",\"description\" : \"from CLAMP Cockpit\"}", jsonResult, true);
     }
 
     @Test
@@ -104,6 +101,6 @@ public class SdcReqItCase {
         assertNotNull(listUrls);
         assertTrue(listUrls.size() == 1);
         assertTrue(listUrls.get(0).contains(
-              "/sdc/v1/catalog/services/56441b4b-0467-41dc-9a0e-e68613838219/resourceInstances/vpacketgen0/artifacts"));
+            "/sdc/v1/catalog/services/56441b4b-0467-41dc-9a0e-e68613838219/resourceInstances/vpacketgen0/artifacts"));
     }
 }

@@ -78,11 +78,6 @@ public class PolicyClientItCase {
     String modelBpmnPropJson;
     ModelProperties prop;
 
-    /**
-     * Initialize Test.
-     *
-     * @throws TransformerException
-     */
     @Before
     public void setUp() throws IOException, TransformerException {
         modelProp = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/model-properties.json");

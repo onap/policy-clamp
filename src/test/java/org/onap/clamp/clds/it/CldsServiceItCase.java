@@ -28,7 +28,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -162,11 +161,11 @@ public class CldsServiceItCase {
 
     @Test
     public void testGetCLDSDetails() throws IOException {
-        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsService.getCLDSDetails();
+        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsService.getCldsDetails();
         assertNotNull(cldsMonitoringDetailsList);
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void testCompleteFlow() throws TransformerException, ParseException {
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -260,13 +259,8 @@ public class CldsServiceItCase {
         assertNotNull(responseEntity);
         assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
         assertNotNull(responseEntity.getBody());
-        try {
-            cldsService.getModel(randomNameModel);
-            fail("Should have raised an NotFoundException exception");
-        } catch (NotFoundException ne) {
-
-        }
-
+        // This will raise an exception
+        cldsService.getModel(randomNameModel);
     }
 
     @Test
@@ -277,7 +271,8 @@ public class CldsServiceItCase {
         dcaeEvent.setResourceUUID("1");
         dcaeEvent.setServiceUUID("2");
         assertEquals(cldsService.postDcaeEvent("false", dcaeEvent),
-            "event=created serviceUUID=2 resourceUUID=1 artifactName=ClosedLoop_with-enough-characters_TestArtifact.yml instance count=0 isTest=false");
+            "event=created serviceUUID=2 resourceUUID=1 artifactName="
+                + "ClosedLoop_with-enough-characters_TestArtifact.yml instance count=0 isTest=false");
     }
 
     @Test

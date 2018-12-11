@@ -4,7 +4,7 @@
 			outType="org.onap.clamp.clds.model.CldsMonitoringDetails"
 			produces="application/json">
 			<to
-				uri="bean:org.onap.clamp.clds.service.CldsService?method=getCLDSDetails()" />
+				uri="bean:org.onap.clamp.clds.service.CldsService?method=getCldsDetails()" />
 		</get>
 		<get uri="/clds/cldsInfo"
 			outType="org.onap.clamp.clds.model.CldsInfo"

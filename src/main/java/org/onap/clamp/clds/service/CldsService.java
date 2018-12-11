@@ -163,7 +163,7 @@ public class CldsService extends SecureServiceBase {
      * used to generate the ClosedLoop model. ACTION_CD | Current state of the
      * ClosedLoop in CLDS application.
      */
-    public List<CldsMonitoringDetails> getCLDSDetails() {
+    public List<CldsMonitoringDetails> getCldsDetails() {
         util.entering(request, "CldsService: GET model details");
         Date startTime = new Date();
         List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();

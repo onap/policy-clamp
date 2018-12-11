@@ -26,6 +26,9 @@ package org.onap.clamp.clds.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,16 +57,13 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 /**
  * Test CLDS Tosca Service APIs.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CldsToscaServiceItCase {
-    
+
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsToscaServiceItCase.class);
     @Autowired
     private CldsToscaService cldsToscaService;
@@ -72,14 +72,14 @@ public class CldsToscaServiceItCase {
     private String toscaModelYaml;
     private Authentication authentication;
     private CldsToscaModel cldsToscaModel;
-    private List<GrantedAuthority> authList =  new LinkedList<GrantedAuthority>();
+    private List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
     private LoggingUtils util;
-    
+
     /**
      * Setup the variable before the tests execution.
-     * 
+     *
      * @throws IOException
-     *             In case of issues when opening the files
+     *         In case of issues when opening the files
      */
     @Before
     public void setupBefore() throws IOException {
@@ -90,7 +90,7 @@ public class CldsToscaServiceItCase {
         authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
         authList.add(new SimpleGrantedAuthority("permission-type-tosca|dev|read"));
         authList.add(new SimpleGrantedAuthority("permission-type-tosca|dev|update"));
-        authentication =  new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
+        authentication = new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -100,9 +100,9 @@ public class CldsToscaServiceItCase {
         cldsToscaService.setLoggingUtil(util);
 
         cldsToscaService.setSecurityContext(securityContext);
-        
+
         toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tca-policy-test.yaml");
-        
+
         cldsToscaModel = new CldsToscaModel();
         cldsToscaModel.setToscaModelName("tca-policy-test");
         cldsToscaModel.setToscaModelYaml(toscaModelYaml);
@@ -111,7 +111,7 @@ public class CldsToscaServiceItCase {
         cldsToscaService.parseToscaModelAndSave("tca-policy-test", cldsToscaModel);
         logger.info("Initial Tosca Model uploaded in DB:" + cldsToscaModel);
     }
-    
+
     @Test
     public void testParseToscaModelAndSave() throws Exception {
         ResponseEntity responseEntity = cldsToscaService.parseToscaModelAndSave("tca-policy-test", cldsToscaModel);
@@ -128,7 +128,7 @@ public class CldsToscaServiceItCase {
         assertNotNull(savedModel);
         assertEquals("tca-policy-test", savedModel.getToscaModelName());
     }
-    
+
     @Test
     public void testGetToscaModelsByPolicyType() throws Exception {
         ResponseEntity<CldsToscaModel> responseEntity = cldsToscaService.getToscaModelsByPolicyType("tca");
@@ -137,5 +137,5 @@ public class CldsToscaServiceItCase {
         assertEquals("tca-policy-test", savedModel.getToscaModelName());
         assertEquals("tca", savedModel.getPolicyType());
     }
-    
+
 }
