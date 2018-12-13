@@ -888,6 +888,7 @@
 										<forkCount>1C</forkCount>
 										<reuseForks>true</reuseForks>
 										<useSystemClassLoader>false</useSystemClassLoader>
+										<argLine>${surefireArgLine}</argLine>
 								</configuration>
 						</plugin>
 
@@ -912,6 +913,7 @@
 														<forkCount>1</forkCount>
 														<reuseForks>true</reuseForks>
 														<useSystemClassLoader>false</useSystemClassLoader>
+														<argLine>${failsafeArgLine}</argLine>
 												</configuration>
 										</execution>
 								</executions>
@@ -974,7 +976,6 @@
 																				<mode>direct</mode>
 																		</tcp>
 																		<time>120000</time>
-																		<kill>5000</kill>
 																</wait>
 																<ports>
 																		<port>${docker.http-cache.port.host}:8080</port>
@@ -1080,10 +1081,10 @@
 								<version>0.8.2</version>
 								<configuration>
 										<dumpOnExit>true</dumpOnExit>
+										<append>true</append>
 										<includes>
 												<include>org.onap.clamp.*</include>
 										</includes>
-										<propertyName>surefireArgLine</propertyName>
 								</configuration>
 								<executions>
 										<execution>
@@ -1093,6 +1094,7 @@
 												</goals>
 												<configuration>
 														<destFile>${project.build.directory}/coverage-reports/jacoco.exec</destFile>
+														<propertyName>surefireArgLine</propertyName>
 														<!-- <append>true</append> -->
 												</configuration>
 										</execution>
@@ -1104,6 +1106,7 @@
 												</goals>
 												<configuration>
 														<destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+														<propertyName>failsafeArgLine</propertyName>
 														<!-- <append>true</append> -->
 												</configuration>
 										</execution>
