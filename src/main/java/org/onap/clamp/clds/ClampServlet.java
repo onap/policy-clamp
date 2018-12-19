@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
-import org.onap.aaf.cadi.principal.X509Principal;
 import org.onap.clamp.clds.service.SecureServicePermission;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -62,11 +61,24 @@ public class ClampServlet extends CamelHttpTransportServlet {
     public static final String PERM_VF = "clamp.config.security.permission.type.filter.vf";
     public static final String PERM_MANAGE = "clamp.config.security.permission.type.cl.manage";
     public static final String PERM_TOSCA = "clamp.config.security.permission.type.tosca";
+    public static final String AUTHENTICATION_CLASS = "clamp.config.security.authentication.class";
     private static List<SecureServicePermission> permissionList;
+
+    private synchronized Class loadDynamicAuthenticationClass() {
+        try {
+            String authenticationObject = WebApplicationContextUtils.getWebApplicationContext(getServletContext())
+                .getEnvironment().getProperty(AUTHENTICATION_CLASS);
+            return Class.forName(authenticationObject);
+        } catch (ClassNotFoundException e) {
+            logger.error(
+                "Exception caught when attempting to create associated class of config:" + AUTHENTICATION_CLASS, e);
+            return Object.class;
+        }
+    }
 
     private synchronized List<SecureServicePermission> getPermissionList() {
         if (permissionList == null) {
-            permissionList=new ArrayList<>();
+            permissionList = new ArrayList<>();
             ApplicationContext applicationContext = WebApplicationContextUtils
                 .getWebApplicationContext(getServletContext());
             String cldsPermissionInstance = applicationContext.getEnvironment().getProperty(PERM_INSTANCE);
@@ -97,9 +109,8 @@ public class ClampServlet extends CamelHttpTransportServlet {
     @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-
         Principal p = request.getUserPrincipal();
-        if (p instanceof X509Principal) {
+        if (loadDynamicAuthenticationClass().isInstance(p)) {
             // When AAF is enabled, there is a need to provision the permissions to Spring
             // system
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
