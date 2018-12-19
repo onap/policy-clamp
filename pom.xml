@@ -688,6 +688,9 @@
 												<name>docker.http-cache.port.host</name>
 											</port>
 											<port>
+												<name>clamp.it.tests.http-redirected</name>
+											</port>
+											<port>
 												<name>clamp.it.tests.https</name>
 											</port>
 											<port>
