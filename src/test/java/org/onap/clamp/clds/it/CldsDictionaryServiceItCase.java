@@ -62,21 +62,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CldsDictionaryServiceItCase {
-    
+
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDictionaryServiceItCase.class);
     @Autowired
     private CldsDictionaryService cldsDictionaryService;
     private Authentication authentication;
     private CldsDictionary cldsDictionary;
     private CldsDictionaryItem cldsDictionaryItem;
-    private List<GrantedAuthority> authList =  new LinkedList<GrantedAuthority>();
+    private List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
     private LoggingUtils util;
-    
+
     /**
      * Setup the variable before the tests execution.
-     * 
+     *
      * @throws IOException
-     *             In case of issues when opening the files
+     *         In case of issues when opening the files
      */
     @Before
     public void setupBefore() throws IOException {
@@ -87,7 +87,7 @@ public class CldsDictionaryServiceItCase {
         authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
         authList.add(new SimpleGrantedAuthority("permission-type-tosca|dev|read"));
         authList.add(new SimpleGrantedAuthority("permission-type-tosca|dev|update"));
-        authentication =  new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
+        authentication = new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -97,13 +97,13 @@ public class CldsDictionaryServiceItCase {
         cldsDictionaryService.setLoggingUtil(util);
 
         cldsDictionaryService.setSecurityContext(securityContext);
-        
+
         cldsDictionary = new CldsDictionary();
-        
+
         cldsDictionary.setDictionaryName("TestDictionary");
         ResponseEntity entity = cldsDictionaryService.createOrUpdateDictionary("TestDictionary", cldsDictionary);
         cldsDictionary = (CldsDictionary) entity.getBody();
-        
+
         cldsDictionaryItem = new CldsDictionaryItem();
         cldsDictionaryItem.setDictElementShortName("TestDictionaryItemShortName");
         cldsDictionaryItem.setDictElementName("TestDictionaryItemName");
@@ -111,19 +111,20 @@ public class CldsDictionaryServiceItCase {
         cldsDictionaryItem.setDictionaryId(cldsDictionary.getDictionaryId());
         cldsDictionaryItem.setDictElementDesc("TestDictionaryItemDesc");
         cldsDictionaryService.createOrUpdateDictionaryElements("TestDictionary", cldsDictionaryItem);
-        
+
         logger.info("Initial Clds Dictionary uploaded in DB:" + cldsDictionaryItem);
     }
-    
+
     @Test
     public void testCreateOrUpdateDictionary() throws Exception {
-        ResponseEntity<CldsDictionary> responseEntity = cldsDictionaryService.createOrUpdateDictionary("TestDictionary", cldsDictionary);
-        CldsDictionary dictionary = responseEntity.getBody(); 
+        ResponseEntity<CldsDictionary> responseEntity = cldsDictionaryService.createOrUpdateDictionary("TestDictionary",
+            cldsDictionary);
+        CldsDictionary dictionary = responseEntity.getBody();
         assertNotNull(dictionary);
         logger.info("CLDS Dictionary is:" + dictionary);
         assertEquals("TestDictionary", dictionary.getDictionaryName());
     }
-    
+
     @Test
     public void testCreateOrUpdateDictionaryElements() throws Exception {
         cldsDictionaryItem = new CldsDictionaryItem();
@@ -132,26 +133,28 @@ public class CldsDictionaryServiceItCase {
         cldsDictionaryItem.setDictElementType("string");
         cldsDictionaryItem.setDictionaryId(cldsDictionary.getDictionaryId());
         cldsDictionaryItem.setDictElementDesc("TestDictionaryItemDesc1");
-        
-        ResponseEntity<CldsDictionaryItem> responseEntity = cldsDictionaryService.createOrUpdateDictionaryElements("TestDictionary", cldsDictionaryItem);
-        CldsDictionaryItem dictionaryItem = responseEntity.getBody(); 
+
+        ResponseEntity<CldsDictionaryItem> responseEntity = cldsDictionaryService
+            .createOrUpdateDictionaryElements("TestDictionary", cldsDictionaryItem);
+        CldsDictionaryItem dictionaryItem = responseEntity.getBody();
         assertNotNull(dictionaryItem);
         logger.info("CLDS Dictionary Item is:" + dictionaryItem);
         assertEquals("TestDictionaryItemName1", dictionaryItem.getDictElementName());
     }
-    
+
     @Test
     public void testGetAllDictionaryNames() throws Exception {
         ResponseEntity<List<CldsDictionary>> responseEntity = cldsDictionaryService.getAllDictionaryNames();
-        List<CldsDictionary> dictionaries = responseEntity.getBody(); 
+        List<CldsDictionary> dictionaries = responseEntity.getBody();
         assertNotNull(dictionaries);
         logger.info("CLDS Dictionary List is:" + dictionaries);
     }
-    
+
     @Test
     public void testGetDictionaryElementsByName() throws Exception {
-        ResponseEntity<List<CldsDictionaryItem>> responseEntity = cldsDictionaryService.getDictionaryElementsByName("TestDictionary");
-        List<CldsDictionaryItem> dictionaryItems = responseEntity.getBody(); 
+        ResponseEntity<List<CldsDictionaryItem>> responseEntity = cldsDictionaryService
+            .getDictionaryElementsByName("TestDictionary");
+        List<CldsDictionaryItem> dictionaryItems = responseEntity.getBody();
         assertNotNull(dictionaryItems);
         logger.info("CLDS Dictionary Item LIst is:" + dictionaryItems);
     }
