@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.properties;
@@ -50,8 +50,8 @@ public abstract class AbstractModelElement {
     private static final String LOG_ELEMENT_NOT_FOUND_IN_JSON = "Value '{}' for key 'name' not found in JSON {}";
 
     /**
-     * Perform base parsing of properties for a ModelElement (such as,
-     * VesCollector, Policy and Tca)
+     * Perform base parsing of properties for a ModelElement (such as, VesCollector,
+     * Policy and Tca)
      */
     protected AbstractModelElement(String type, ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
         this.type = type;
@@ -63,23 +63,6 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * topicSubscribes is the topicPublishes of the from Model Element (the
-     * previous one in the chain).
-     *
-     * @return the topicSubscribes
-     */
-    public String getTopicSubscribes() {
-        // get fromId for this type
-        String fromId = modelBpmn.getFromId(type);
-        // find the type of the from model element
-        String fromType = modelBpmn.getType(fromId);
-        // get the model element for the type
-        AbstractModelElement me = modelProp.getModelElementByType(fromType);
-        // get the topic publishes for the model element
-        return me.topicPublishes;
-    }
-
-    /**
      * @return the topicPublishes
      */
     public String getTopicPublishes() {
@@ -87,8 +70,8 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * Return the value field of the json node element that has a name field
-     * equals to the given name.
+     * Return the value field of the json node element that has a name field equals
+     * to the given name.
      */
     public static String getValueByName(JsonNode nodeIn, String name) {
         String value = null;
@@ -115,8 +98,8 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * Return the Json value field of the json node element that has a name
-     * field equals to the given name.
+     * Return the Json value field of the json node element that has a name field
+     * equals to the given name.
      */
     public static JsonNode getJsonNodeByName(JsonNode nodeIn, String name) {
         JsonNode vnode = null;
@@ -136,8 +119,8 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * Return the value field of the json node element that has a name field
-     * that equals the given name.
+     * Return the value field of the json node element that has a name field that
+     * equals the given name.
      */
     public static String getNodeValueByName(JsonNode nodeIn, String name) {
         String value = null;
@@ -153,8 +136,8 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * Return the value field of the json node element that has a name field
-     * that equals the given name.
+     * Return the value field of the json node element that has a name field that
+     * equals the given name.
      */
     public static List<String> getNodeValuesByName(JsonNode nodeIn, String name) {
         List<String> values = new ArrayList<>();
@@ -185,8 +168,8 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * Return an array of values for the field of the json node element that has
-     * a name field equals to the given name.
+     * Return an array of values for the field of the json node element that has a
+     * name field equals to the given name.
      */
     public static List<String> getValuesByName(JsonNode nodeIn, String name) {
         List<String> values = null;
@@ -221,8 +204,8 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * Return the value field of the json node element that has a name field
-     * equals to the given name.
+     * Return the value field of the json node element that has a name field equals
+     * to the given name.
      */
     public String getValueByName(String name) {
         return getValueByName(modelElementJsonNode, name);
@@ -237,8 +220,8 @@ public abstract class AbstractModelElement {
     }
 
     /**
-     * Return an array of values for the field of the json node element that has
-     * a name field equals to the given name.
+     * Return an array of values for the field of the json node element that has a
+     * name field equals to the given name.
      */
     public List<String> getValuesByName(String name) {
         return getValuesByName(modelElementJsonNode, name);

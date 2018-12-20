@@ -1,15 +1,15 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP - SO
+ * ONAP CLAMP
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,14 +24,11 @@
 package org.onap.clamp.clds.config.sdc;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -46,19 +43,19 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
  */
 public class SdcSingleControllerConfigurationTest {
 
-    private SdcSingleControllerConfiguration loadControllerConfiguration(String fileName, String sdcControllerName)
-            throws IOException {
+    public static SdcSingleControllerConfiguration loadControllerConfiguration(String fileName,
+        String sdcControllerName) throws IOException {
         JsonNode jsonNode = new ObjectMapper().readValue(ResourceFileUtil.getResourceAsStream(fileName),
-                JsonNode.class);
+            JsonNode.class);
         SdcSingleControllerConfiguration sdcSingleControllerConfiguration = new SdcSingleControllerConfiguration(
-                jsonNode, sdcControllerName);
+            jsonNode, sdcControllerName);
         return sdcSingleControllerConfiguration;
     }
 
     @Test
     public final void testTheInit() throws SdcParametersException, IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-TLS.json",
-                "sdc-controller1");
+            "sdc-controller1");
         assertEquals("User", sdcConfig.getUser());
         assertEquals("ThePassword", sdcConfig.getPassword());
         assertEquals("consumerGroup", sdcConfig.getConsumerGroup());
@@ -78,7 +75,7 @@ public class SdcSingleControllerConfigurationTest {
     @Test(expected = SdcParametersException.class)
     public final void testAllRequiredParameters() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-TLS.json",
-                "sdc-controller1");
+            "sdc-controller1");
         // No exception should be raised
         sdcConfig.testAllRequiredParameters();
         sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-bad.json", "sdc-controller1");
@@ -86,10 +83,9 @@ public class SdcSingleControllerConfigurationTest {
     }
 
     @Test
-    public final void testAllRequiredParametersEmptyEncrypted()
-            throws IOException {
+    public final void testAllRequiredParametersEmptyEncrypted() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration(
-                "clds/sdc-controller-config-empty-encrypted.json", "sdc-controller1");
+            "clds/sdc-controller-config-empty-encrypted.json", "sdc-controller1");
         sdcConfig.testAllRequiredParameters();
         assertNull(sdcConfig.getKeyStorePassword());
     }
@@ -97,7 +93,7 @@ public class SdcSingleControllerConfigurationTest {
     @Test
     public final void testConsumerGroupWithNull() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-NULL.json",
-                "sdc-controller1");
+            "sdc-controller1");
         assertTrue(sdcConfig.getConsumerGroup() == null);
     }
 }

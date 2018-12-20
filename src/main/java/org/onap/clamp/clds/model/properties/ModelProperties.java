@@ -39,7 +39,6 @@ import org.apache.camel.Exchange;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.ModelBpmnException;
-import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.JacksonUtils;
@@ -75,22 +74,22 @@ public class ModelProperties {
     }
 
     /**
-     * Retain data required to parse the ModelElement objects. (Rather than
-     * parse them all - parse them on demand if requested.)
+     * Retain data required to parse the ModelElement objects. (Rather than parse
+     * them all - parse them on demand if requested.)
      *
      * @param modelName
-     *            The model name coming form the UI
+     *        The model name coming form the UI
      * @param controlName
-     *            The closed loop name coming from the UI
+     *        The closed loop name coming from the UI
      * @param actionCd
-     *            Type of operation PUT,UPDATE,DELETE
+     *        Type of operation PUT,UPDATE,DELETE
      * @param isATest
-     *            The test flag coming from the UI (for validation only, no
-     *            query are physically executed)
+     *        The test flag coming from the UI (for validation only, no query are
+     *        physically executed)
      * @param modelBpmnText
-     *            The BPMN flow in JSON from the UI
+     *        The BPMN flow in JSON from the UI
      * @param modelPropText
-     *            The BPMN parameters for all boxes defined in modelBpmnTest
+     *        The BPMN parameters for all boxes defined in modelBpmnTest
      */
     public ModelProperties(String modelName, String controlName, String actionCd, boolean isATest, String modelBpmnText,
         String modelPropText) {
@@ -108,10 +107,10 @@ public class ModelProperties {
     }
 
     /**
-     * This method is meant to ensure that one ModelElement instance exists for
-     * each ModelElement class. As new ModelElement classes could have been
-     * registered after instantiation of this ModelProperties, we need to build
-     * the missing ModelElement instances.
+     * This method is meant to ensure that one ModelElement instance exists for each
+     * ModelElement class. As new ModelElement classes could have been registered
+     * after instantiation of this ModelProperties, we need to build the missing
+     * ModelElement instances.
      */
     private final void instantiateMissingModelElements() {
         if (modelElementClasses.size() != modelElements.size()) {
@@ -120,19 +119,18 @@ public class ModelProperties {
             // Parse the list of base Model Elements and build up the
             // ModelElements
             modelElementClasses.entrySet().stream().parallel()
-            .filter(entry -> (AbstractModelElement.class.isAssignableFrom(entry.getKey())
-                && missingTypes.contains(entry.getValue())))
-            .forEach(entry -> {
-                try {
-                    modelElements.put(entry.getValue(),
-                        (entry.getKey()
-                            .getConstructor(ModelProperties.class, ModelBpmn.class, JsonNode.class)
-                            .newInstance(this, modelBpmn, modelJson)));
-                } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
-                    | InvocationTargetException e) {
-                    logger.warn("Unable to instantiate a ModelElement, exception follows: ", e);
-                }
-            });
+                .filter(entry -> (AbstractModelElement.class.isAssignableFrom(entry.getKey())
+                    && missingTypes.contains(entry.getValue())))
+                .forEach(entry -> {
+                    try {
+                        modelElements.put(entry.getValue(),
+                            (entry.getKey().getConstructor(ModelProperties.class, ModelBpmn.class, JsonNode.class)
+                                .newInstance(this, modelBpmn, modelJson)));
+                    } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
+                        | InvocationTargetException e) {
+                        logger.warn("Unable to instantiate a ModelElement, exception follows: ", e);
+                    }
+                });
         }
     }
 
@@ -162,10 +160,9 @@ public class ModelProperties {
      * Create ModelProperties extracted from a CamelExchange.
      *
      * @param camelExchange
-     *            The camel Exchange object that contains all info provided to
-     *            the flow
-     * @return A model Properties created from the parameters found in
-     *         camelExchange object
+     *        The camel Exchange object that contains all info provided to the flow
+     * @return A model Properties created from the parameters found in camelExchange
+     *         object
      */
     public static ModelProperties create(Exchange camelExchange) {
         String modelProp = (String) camelExchange.getProperty("modelProp");
@@ -175,20 +172,6 @@ public class ModelProperties {
         String actionCd = (String) camelExchange.getProperty("actionCd");
         boolean isTest = (boolean) camelExchange.getProperty("isTest");
         return new ModelProperties(modelName, controlName, actionCd, isTest, modelBpmnProp, modelProp);
-    }
-
-    /**
-     * return appropriate model element given the type
-     *
-     * @param type
-     * @return
-     */
-    public AbstractModelElement getModelElementByType(String type) {
-        AbstractModelElement modelElement = modelElements.get(type);
-        if (modelElement == null) {
-            throw new IllegalArgumentException("Invalid or not found ModelElement type: " + type);
-        }
-        return modelElement;
     }
 
     /**
@@ -231,12 +214,11 @@ public class ModelProperties {
     }
 
     /**
-     * @return The policyName that wil be used in input parameters of DCAE
-     *         deploy
+     * @return The policyName that wil be used in input parameters of DCAE deploy
      */
     public String getPolicyNameForDcaeDeploy(ClampProperties refProp) {
         return normalizePolicyScopeName(modelName + createScopeSeparator(modelName)
-        + refProp.getStringValue(PolicyClient.POLICY_MS_NAME_PREFIX_PROPERTY_NAME) + getCurrentPolicyName());
+            + refProp.getStringValue(PolicyClient.POLICY_MS_NAME_PREFIX_PROPERTY_NAME) + getCurrentPolicyName());
     }
 
     /**
@@ -251,8 +233,8 @@ public class ModelProperties {
      * @return the policyScopeAndNameWithUniqueId
      */
     public String getPolicyScopeAndNameWithUniqueGuardId() {
-        return normalizePolicyScopeName(
-            modelName + createScopeSeparator(modelName) + getCurrentPolicyName() + "_" + policyUniqueId+POLICY_GUARD_SUFFIX+guardUniqueId);
+        return normalizePolicyScopeName(modelName + createScopeSeparator(modelName) + getCurrentPolicyName() + "_"
+            + policyUniqueId + POLICY_GUARD_SUFFIX + guardUniqueId);
     }
 
     /**
@@ -266,18 +248,19 @@ public class ModelProperties {
     /**
      * @return the PolicyNameWithScopeContext
      */
-    public String getPolicyNameWithScopeContext(String policyScope, String policyType, String vnfScope, String context, String userDefinedName) {
-        return normalizePolicyScopeName(
-                policyScope + createScopeSeparator(policyScope) + policyType + "_" + vnfScope + "_" + context + "_" + modelName + "_" + userDefinedName);
+    public String getPolicyNameWithScopeContext(String policyScope, String policyType, String vnfScope, String context,
+        String userDefinedName) {
+        return normalizePolicyScopeName(policyScope + createScopeSeparator(policyScope) + policyType + "_" + vnfScope
+            + "_" + context + "_" + modelName + "_" + userDefinedName);
     }
 
     /**
      * @return the PolicyNameWithPrefixScopeContext
      */
-    public String getPolicyNameWithPrefixScopeContext(String policyScope, String policyType, String vnfScope,  String context,
-    		String userDefinedName, String policyPrefix) {
-        return normalizePolicyScopeName(policyScope + createScopeSeparator(policyScope) + policyPrefix + policyType + "_" + vnfScope + "_"
-                + context + "_" + modelName + "_" + userDefinedName);
+    public String getPolicyNameWithPrefixScopeContext(String policyScope, String policyType, String vnfScope,
+        String context, String userDefinedName, String policyPrefix) {
+        return normalizePolicyScopeName(policyScope + createScopeSeparator(policyScope) + policyPrefix + policyType
+            + "_" + vnfScope + "_" + context + "_" + modelName + "_" + userDefinedName);
     }
 
     /**
@@ -298,11 +281,11 @@ public class ModelProperties {
     }
 
     /**
-     * When generating a policy request for a model element, must set the id of
-     * that model element using this method. Used to generate the policy name.
+     * When generating a policy request for a model element, must set the id of that
+     * model element using this method. Used to generate the policy name.
      *
      * @param currentModelElementId
-     *            the currentModelElementId to set
+     *        the currentModelElementId to set
      */
     public void setCurrentModelElementId(String currentModelElementId) {
         this.currentModelElementId = currentModelElementId;
@@ -324,11 +307,11 @@ public class ModelProperties {
     }
 
     /**
-     * When generating a policy request for a model element, must set the unique
-     * id of that policy using this method. Used to generate the policy name.
+     * When generating a policy request for a model element, must set the unique id
+     * of that policy using this method. Used to generate the policy name.
      *
      * @param policyUniqueId
-     *            the policyUniqueId to set
+     *        the policyUniqueId to set
      */
     public void setPolicyUniqueId(String policyUniqueId) {
         this.policyUniqueId = policyUniqueId;
@@ -346,26 +329,6 @@ public class ModelProperties {
      */
     public boolean isTestOnly() {
         return testOnly;
-    }
-
-    /**
-     * @return the isCreateRequest
-     */
-    public boolean isCreateRequest() {
-        switch (actionCd) {
-        case CldsEvent.ACTION_SUBMIT:
-        case CldsEvent.ACTION_RESTART:
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isStopRequest() {
-        switch (actionCd) {
-        case CldsEvent.ACTION_STOP:
-            return true;
-        }
-        return false;
     }
 
     /**

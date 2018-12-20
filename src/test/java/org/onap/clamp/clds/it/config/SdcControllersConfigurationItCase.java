@@ -1,15 +1,15 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP - SO
+ * ONAP CLAMP
  * ================================================================================
  * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -56,7 +56,7 @@ public class SdcControllersConfigurationItCase {
     public void testGetAllDefinedControllers() throws IOException {
         loadFile("classpath:/clds/sdc-controllers-config.json");
         Map<String, SdcSingleControllerConfiguration> mapResult = sdcControllersConfiguration
-                .getAllDefinedControllers();
+            .getAllDefinedControllers();
         assertTrue(mapResult.size() == 2);
         assertEquals("sdc-controller1", mapResult.get("sdc-controller1").getSdcControllerName());
         assertEquals("sdc-controller2", mapResult.get("sdc-controller2").getSdcControllerName());
@@ -65,10 +65,10 @@ public class SdcControllersConfigurationItCase {
     @Test
     public void testGetSdcSingleControllerConfiguration() throws IOException {
         loadFile("classpath:/clds/sdc-controllers-config.json");
-        assertEquals("sdc-controller1", sdcControllersConfiguration
-                .getSdcSingleControllerConfiguration("sdc-controller1").getSdcControllerName());
-        assertEquals("sdc-controller2", sdcControllersConfiguration
-                .getSdcSingleControllerConfiguration("sdc-controller2").getSdcControllerName());
+        assertEquals("sdc-controller1",
+            sdcControllersConfiguration.getSdcSingleControllerConfiguration("sdc-controller1").getSdcControllerName());
+        assertEquals("sdc-controller2",
+            sdcControllersConfiguration.getSdcSingleControllerConfiguration("sdc-controller2").getSdcControllerName());
     }
 
     @Test(expected = IOException.class)
