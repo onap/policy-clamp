@@ -520,7 +520,7 @@ public class PolicyClient {
 
     /**
      * Method to return correct policy name with prefix
-     * 
+     *
      * @param prop
      *        The ModelProperties
      * @param policyPrefix
@@ -625,7 +625,7 @@ public class PolicyClient {
                     cldsToscaModel.getToscaModelYaml().getBytes().length);
             }
         } catch (IOException e) {
-			logger.error("Exception caught when attempting to write Tosca files to disk", e);
+            logger.error("Exception caught when attempting to write Tosca files to disk", e);
             throw new PolicyClientException("Exception caught when attempting to write Tosca files to disk", e);
         }
 
@@ -640,7 +640,7 @@ public class PolicyClient {
      *        The ImportParameters
      * @return The response message from policy
      */
-    protected String importModel(ImportParameters importParameters) {
+    private String importModel(ImportParameters importParameters) {
         PolicyChangeResponse response = null;
         String responseMessage = "";
 

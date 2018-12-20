@@ -19,7 +19,7 @@
  * ============LICENSE_END============================================
  * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client;
@@ -27,13 +27,10 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-
-import javax.ws.rs.BadRequestException;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -61,32 +58,30 @@ public class DcaeInventoryServices {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    private static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
-    private static final String DCAE_INVENTORY_RETRY_INTERVAL = "dcae.intentory.retry.interval";
-    private static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
-    public static final String DCAE_TYPE_NAME = "typeName";
-    public static final String DCAE_TYPE_ID = "typeId";
+    public static final String DCAE_INVENTORY_URL = "dcae.inventory.url";
+    public static final String DCAE_INVENTORY_RETRY_INTERVAL = "dcae.intentory.retry.interval";
+    public static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
     private final ClampProperties refProp;
     private final CldsDao cldsDao;
     private final DcaeHttpConnectionManager dcaeHttpConnectionManager;
 
     @Autowired
-    public DcaeInventoryServices(ClampProperties refProp, CldsDao cldsDao, DcaeHttpConnectionManager dcaeHttpConnectionManager) {
+    public DcaeInventoryServices(ClampProperties refProp, CldsDao cldsDao,
+        DcaeHttpConnectionManager dcaeHttpConnectionManager) {
         this.refProp = refProp;
         this.cldsDao = cldsDao;
         this.dcaeHttpConnectionManager = dcaeHttpConnectionManager;
     }
 
-
     /**
      * Set the event inventory.
-     * 
+     *
      * @param cldsModel
-     *            The CldsModel
+     *        The CldsModel
      * @param userId
-     *            The user ID
+     *        The user ID
      * @throws ParseException
-     *             In case of DCAE Json parse exception
+     *         In case of DCAE Json parse exception
      */
     public void setEventInventory(CldsModel cldsModel, String userId) throws ParseException, InterruptedException {
         String artifactName = cldsModel.getControlName();
@@ -100,7 +95,7 @@ public class DcaeInventoryServices {
         try {
             // Below are the properties required for calling the dcae inventory
             ModelProperties prop = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), null, false,
-                    "{}", cldsModel.getPropText());
+                "{}", cldsModel.getPropText());
             Global global = prop.getGlobal();
             String invariantServiceUuid = global.getService();
             List<String> resourceUuidList = global.getResourceVf();
@@ -130,7 +125,7 @@ public class DcaeInventoryServices {
     }
 
     private void analyzeAndSaveDcaeResponse(DcaeInventoryResponse dcaeResponse, CldsModel cldsModel,
-            DcaeEvent dcaeEvent, String userId) {
+        DcaeEvent dcaeEvent, String userId) {
         if (dcaeResponse != null) {
             logger.info("Dcae Response for query on inventory: " + dcaeResponse);
             String oldTypeId = cldsModel.getTypeId();
@@ -141,9 +136,9 @@ public class DcaeInventoryServices {
                 cldsModel.setTypeName(dcaeResponse.getTypeName());
             }
             if (oldTypeId == null || !cldsModel.getEvent().getActionCd().equalsIgnoreCase(CldsEvent.ACTION_DISTRIBUTE)
-                    || cldsModel.getEvent().getActionCd().equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE)) {
+                || cldsModel.getEvent().getActionCd().equalsIgnoreCase(CldsEvent.ACTION_SUBMITDCAE)) {
                 CldsEvent.insEvent(cldsDao, dcaeEvent.getControlName(), userId, dcaeEvent.getCldsActionCd(),
-                        CldsEvent.ACTION_STATE_RECEIVED, null);
+                    CldsEvent.ACTION_STATE_RECEIVED, null);
             }
             cldsModel.save(cldsDao, userId);
         } else {
@@ -160,37 +155,37 @@ public class DcaeInventoryServices {
     }
 
     private DcaeInventoryResponse getItemsFromDcaeInventoryResponse(String responseStr)
-            throws ParseException, IOException {
+        throws ParseException, IOException {
         JSONParser parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
         JSONArray itemsArray = (JSONArray) jsonObj.get("items");
         JSONObject dcaeServiceType0 = (JSONObject) itemsArray.get(0);
         return JacksonUtils.getObjectMapperInstance().readValue(dcaeServiceType0.toString(),
-                DcaeInventoryResponse.class);
+            DcaeInventoryResponse.class);
     }
 
     /**
      * DO a query to DCAE to get some Information.
-     * 
+     *
      * @param artifactName
-     *            The artifact Name
+     *        The artifact Name
      * @param serviceUuid
-     *            The service UUID
+     *        The service UUID
      * @param resourceUuid
-     *            The resource UUID
+     *        The resource UUID
      * @return The DCAE inventory for the artifact in DcaeInventoryResponse
      * @throws IOException
-     *             In case of issues with the stream
+     *         In case of issues with the stream
      * @throws ParseException
-     *             In case of issues with the Json parsing
+     *         In case of issues with the Json parsing
      */
     public DcaeInventoryResponse getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
-            throws IOException, ParseException, InterruptedException {
+        throws IOException, ParseException, InterruptedException {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
         String queryString = "?asdcResourceId=" + resourceUuid + "&asdcServiceId=" + serviceUuid + "&typeName="
-                + artifactName;
+            + artifactName;
         String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types" + queryString;
         logger.info("Dcae Inventory Service full url - " + fullUrl);
         DcaeInventoryResponse response = queryDcaeInventory(fullUrl);
@@ -200,7 +195,7 @@ public class DcaeInventoryServices {
     }
 
     private DcaeInventoryResponse queryDcaeInventory(String fullUrl)
-            throws IOException, InterruptedException, ParseException {
+        throws IOException, InterruptedException, ParseException {
         int retryInterval = 0;
         int retryLimit = 1;
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT) != null) {
@@ -219,115 +214,11 @@ public class DcaeInventoryServices {
                 return getItemsFromDcaeInventoryResponse(response);
             }
             logger.info(
-                    "Dcae inventory totalCount returned is 0, so waiting " + retryInterval + "ms before retrying ...");
+                "Dcae inventory totalCount returned is 0, so waiting " + retryInterval + "ms before retrying ...");
             // wait for a while and try to connect to DCAE again
             Thread.sleep(retryInterval);
         }
         logger.warn("Dcae inventory totalCount returned is still 0, after " + retryLimit + " attempts, returning NULL");
         return null;
-    }
-
-    /**
-     * Inserts a new DCAEServiceType or updates an existing instance. If the
-     * typeName is same second time(already exists) then the
-     * DCAEServiceTypeRequest is updated
-     * 
-     * @param blueprintTemplate
-     *            blueprint content
-     * @param owner
-     *            owner of the data
-     * @param typeName
-     *            The type/artifact Name
-     * @param typeVersion
-     *            type version
-     * @param asdcServiceId
-     *            The service UUID
-     * @param asdcResourceId
-     *            The vf UUID
-     * @return The DCAE inventory type id
-     */
-    public String createupdateDCAEServiceType(String blueprintTemplate, String owner, String typeName, int typeVersion,
-            String asdcServiceId, String asdcResourceId) {
-        Date startTime = new Date();
-        LoggingUtils.setTargetContext("DCAE", "createDCAEServiceType");
-        String typeId = null;
-        try {
-            ObjectNode dcaeServiceTypeRequest = JacksonUtils.getObjectMapperInstance().createObjectNode();
-            dcaeServiceTypeRequest.put("blueprintTemplate", blueprintTemplate);
-            dcaeServiceTypeRequest.put("owner", owner);
-            dcaeServiceTypeRequest.put("typeName", typeName);
-            dcaeServiceTypeRequest.put("typeVersion", typeVersion);
-            dcaeServiceTypeRequest.put("asdcServiceId", asdcServiceId);
-            dcaeServiceTypeRequest.put("asdcResourceId", asdcResourceId);
-            String apiBodyString = dcaeServiceTypeRequest.toString();
-            logger.info("Dcae api Body String - " + apiBodyString);
-            String url = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types";
-            String responseStr = dcaeHttpConnectionManager.doDcaeHttpQuery(url, "POST", apiBodyString,
-                    "application/json");
-            // If the DCAEServiceTypeRequest is created successfully it will
-            // return a json object responce containing a node for newly created
-            // "typeId"
-            // The newly generated DCAEServiceTypeRequest can then be accessed
-            // via URL: https://<DCAE_INVENTORY_URL>/dcae-service-types/<typeId>
-            JSONParser parser = new JSONParser();
-            Object obj0 = parser.parse(responseStr);
-            JSONObject jsonObj = (JSONObject) obj0;
-            typeId = (String) jsonObj.get("typeId"); // need to save this
-                                                     // as
-                                                     // service_type_id
-                                                     // in model table
-        } catch (IOException | ParseException e) {
-            logger.error("Exception occurred during createupdateDCAEServiceType Operation with DCAE", e);
-            throw new BadRequestException("Exception occurred during createupdateDCAEServiceType Operation with DCAE",
-                    e);
-        } finally {
-            if (typeId != null) {
-                LoggingUtils.setResponseContext("0", "Create update DCAE ServiceType success",
-                        this.getClass().getName());
-            } else {
-                LoggingUtils.setResponseContext("900", "Create update DCAE ServiceType failed",
-                        this.getClass().getName());
-                LoggingUtils.setErrorContext("900", "Create update DCAE ServiceType error");
-            }
-            LoggingUtils.setTimeContext(startTime, new Date());
-            metricsLogger.info("createupdateDCAEServiceType complete");
-        }
-        return typeId;
-    }
-
-    /**
-     * Method to delete blueprint from dcae inventory if it's exists.
-     * 
-     * @param typeName
-     * @param serviceUuid
-     * @param resourceUuid
-     * @throws InterruptedException
-     */
-    public void deleteDCAEServiceType(String typeName, String serviceUuid, String resourceUuid)
-            throws InterruptedException {
-        Date startTime = new Date();
-        LoggingUtils.setTargetContext("DCAE", "deleteDCAEServiceType");
-        boolean result = false;
-        try {
-            DcaeInventoryResponse inventoryResponse = getDcaeInformation(typeName, serviceUuid, resourceUuid);
-            if (inventoryResponse != null && inventoryResponse.getTypeId() != null) {
-                String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types/"
-                        + inventoryResponse.getTypeId();
-                dcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "DELETE", null, null);
-            }
-            result = true;
-        } catch (IOException | ParseException e) {
-            logger.error("Exception occurred during deleteDCAEServiceType Operation with DCAE", e);
-            throw new BadRequestException("Exception occurred during deleteDCAEServiceType Operation with DCAE", e);
-        } finally {
-            if (result) {
-                LoggingUtils.setResponseContext("0", "Delete DCAE ServiceType success", this.getClass().getName());
-            } else {
-                LoggingUtils.setResponseContext("900", "Delete DCAE ServiceType failed", this.getClass().getName());
-                LoggingUtils.setErrorContext("900", "Delete DCAE ServiceType error");
-            }
-            LoggingUtils.setTimeContext(startTime, new Date());
-            metricsLogger.info("deleteDCAEServiceType completed");
-        }
     }
 }
