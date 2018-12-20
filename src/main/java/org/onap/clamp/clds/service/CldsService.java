@@ -52,7 +52,6 @@ import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
-import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.exception.sdc.SdcCommunicationException;
 import org.onap.clamp.clds.model.CldsDbServiceCache;
@@ -67,8 +66,6 @@ import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.ValueItem;
 import org.onap.clamp.clds.model.properties.AbstractModelElement;
 import org.onap.clamp.clds.model.properties.ModelProperties;
-import org.onap.clamp.clds.model.sdc.SdcResource;
-import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
 import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
 import org.onap.clamp.clds.transform.XslTransformer;
@@ -503,7 +500,7 @@ public class CldsService extends SecureServiceBase {
      *         In case of issues
      */
     public String getSdcProperties() throws IOException {
-        return createPropertiesObjectByUUID("{}");
+        return ((ObjectNode) refProp.getJsonTemplate(GLOBAL_PROPERTIES_KEY)).toString();
     }
 
     /**
@@ -601,114 +598,6 @@ public class CldsService extends SecureServiceBase {
             serviceNode.putPOJO("service", invariantIdServiceNode);
         }
         return serviceNode.toString();
-    }
-
-    private String createPropertiesObjectByUUID(String cldsResponseStr) throws IOException {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        SdcServiceDetail cldsSdcServiceDetail = mapper.readValue(cldsResponseStr, SdcServiceDetail.class);
-        ObjectNode globalPropsJson = (ObjectNode) refProp.getJsonTemplate(GLOBAL_PROPERTIES_KEY);
-        if (cldsSdcServiceDetail != null && cldsSdcServiceDetail.getUuid() != null) {
-            /**
-             * to create json with vf, alarm and locations
-             */
-            ObjectNode serviceObjectNode = createEmptyVfAlarmObject();
-            ObjectNode vfObjectNode = mapper.createObjectNode();
-            /**
-             * to create json with vf and vfresourceId
-             */
-            createVfObjectNode(vfObjectNode, cldsSdcServiceDetail.getResources());
-            serviceObjectNode.putPOJO(cldsSdcServiceDetail.getInvariantUUID(), vfObjectNode);
-            ObjectNode byServiceBasicObjetNode = mapper.createObjectNode();
-            byServiceBasicObjetNode.putPOJO("byService", serviceObjectNode);
-            /**
-             * to create json with VFC Node
-             */
-            ObjectNode emptyvfcobjectNode = createByVFCObjectNode(cldsSdcServiceDetail.getResources());
-            byServiceBasicObjetNode.putPOJO("byVf", emptyvfcobjectNode);
-            globalPropsJson.putPOJO("shared", byServiceBasicObjetNode);
-            logger.info("valuie of objNode: {}", globalPropsJson);
-        }
-        return globalPropsJson.toString();
-    }
-
-    private ObjectNode createEmptyVfAlarmObject() {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode emptyObjectNode = mapper.createObjectNode();
-        emptyObjectNode.put("", "");
-        ObjectNode vfObjectNode = mapper.createObjectNode();
-        vfObjectNode.putPOJO("vf", emptyObjectNode);
-        vfObjectNode.putPOJO("location", emptyObjectNode);
-        vfObjectNode.putPOJO("alarmCondition", emptyObjectNode);
-        ObjectNode emptyServiceObjectNode = mapper.createObjectNode();
-        emptyServiceObjectNode.putPOJO("", vfObjectNode);
-        return emptyServiceObjectNode;
-    }
-
-    private void createVfObjectNode(ObjectNode vfObjectNode2, List<SdcResource> rawCldsSdcResourceList) {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode vfNode = mapper.createObjectNode();
-        vfNode.put("", "");
-        // To remove repeated resource instance name from
-        // resourceInstanceList
-        List<SdcResource> cldsSdcResourceList = sdcCatalogServices
-            .removeDuplicateSdcResourceInstances(rawCldsSdcResourceList);
-        /**
-         * Creating vf resource node using cldsSdcResource Object
-         */
-        if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
-            for (SdcResource cldsSdcResource : cldsSdcResourceList) {
-                if (cldsSdcResource != null && "VF".equalsIgnoreCase(cldsSdcResource.getResoucreType())) {
-                    vfNode.put(cldsSdcResource.getResourceUUID(), cldsSdcResource.getResourceName());
-                }
-            }
-        }
-        vfObjectNode2.putPOJO("vf", vfNode);
-        /**
-         * creating location json object using properties file value
-         */
-        ObjectNode locationJsonNode;
-        try {
-            locationJsonNode = (ObjectNode) mapper.readValue(refProp.getStringValue("ui.location.default"),
-                JsonNode.class);
-        } catch (IOException e) {
-            logger.error("Unable to load ui.location.default JSON in clds-references.properties properly", e);
-            throw new CldsConfigException(
-                "Unable to load ui.location.default JSON in clds-references.properties properly", e);
-        }
-        vfObjectNode2.putPOJO("location", locationJsonNode);
-        /**
-         * creating alarm json object using properties file value
-         */
-        String alarmStringValue = refProp.getStringValue("ui.alarm.default");
-        logger.info("value of alarm: {}", alarmStringValue);
-        ObjectNode alarmStringJsonNode;
-        try {
-            alarmStringJsonNode = (ObjectNode) mapper.readValue(alarmStringValue, JsonNode.class);
-        } catch (IOException e) {
-            logger.error("Unable to ui.alarm.default JSON in clds-references.properties properly", e);
-            throw new CldsConfigException("Unable to load ui.alarm.default JSON in clds-references.properties properly",
-                e);
-        }
-        vfObjectNode2.putPOJO("alarmCondition", alarmStringJsonNode);
-    }
-
-    private ObjectNode createByVFCObjectNode(List<SdcResource> cldsSdcResourceList) {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode emptyObjectNode = mapper.createObjectNode();
-        ObjectNode emptyvfcobjectNode = mapper.createObjectNode();
-        ObjectNode vfCObjectNode = mapper.createObjectNode();
-        vfCObjectNode.putPOJO("vfC", emptyObjectNode);
-        ObjectNode subVfCObjectNode = mapper.createObjectNode();
-        subVfCObjectNode.putPOJO("vfc", emptyObjectNode);
-        if (cldsSdcResourceList != null && !cldsSdcResourceList.isEmpty()) {
-            for (SdcResource cldsSdcResource : cldsSdcResourceList) {
-                if (cldsSdcResource != null && "VF".equalsIgnoreCase(cldsSdcResource.getResoucreType())) {
-                    vfCObjectNode.putPOJO(cldsSdcResource.getResourceUUID(), subVfCObjectNode);
-                }
-            }
-        }
-        emptyvfcobjectNode.putPOJO("", vfCObjectNode);
-        return emptyvfcobjectNode;
     }
 
     public ResponseEntity<CldsModel> deployModel(String modelName, CldsModel model) {
