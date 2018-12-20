@@ -40,7 +40,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsToscaModel;
 import org.onap.clamp.clds.service.CldsToscaService;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -67,8 +66,6 @@ public class CldsToscaServiceItCase {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsToscaServiceItCase.class);
     @Autowired
     private CldsToscaService cldsToscaService;
-    @Autowired
-    private CldsDao cldsDao;
     private String toscaModelYaml;
     private Authentication authentication;
     private CldsToscaModel cldsToscaModel;

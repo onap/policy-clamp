@@ -171,7 +171,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             with open(cached_file_content, 'w') as f:
                 f.write(jsonGenerated)
         return True
-     elif self.path.startswith("/pdp/api/") and http_type == "PUT" or http_type == "DELETE":
+     elif (self.path.startswith("/pdp/api/") and http_type == "PUT" or http_type == "DELETE") or (self.path.startswith("/pdp/api/policyEngineImport") and http_type == "POST"):
         print "self.path start with /pdp/api/, copying body to response ..."
         if not os.path.exists(cached_file_folder):
             os.makedirs(cached_file_folder, 0777)

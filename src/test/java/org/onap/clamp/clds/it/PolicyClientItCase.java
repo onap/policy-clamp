@@ -39,7 +39,9 @@ import org.onap.clamp.clds.client.req.policy.OperationalPolicyAttributesConstruc
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.client.req.tca.TcaRequestFormatter;
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
+import org.onap.clamp.clds.model.CldsToscaModel;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
 import org.onap.clamp.clds.model.properties.PolicyItem;
@@ -65,6 +67,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class PolicyClientItCase {
 
+    @Autowired
+    private CldsDao cldsDao;
     @Autowired
     private ClampProperties refProp;
     @Autowired
@@ -255,6 +259,21 @@ public class PolicyClientItCase {
             Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0"),
             Assertions.entry("policyType", "BRMS_Param"), Assertions.entry("policyComponent", "PAP"),
             Assertions.entry("deleteCondition", "ALL"));
+    }
 
+    @Test
+    public void testImportToscaModel() throws IOException {
+        String toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tca-policy-test.yaml");
+        CldsToscaModel cldsToscaModel = new CldsToscaModel();
+        cldsToscaModel.setToscaModelName("tca-policy-test");
+        cldsToscaModel.setToscaModelYaml(toscaModelYaml);
+        cldsToscaModel.setUserId("admin");
+        cldsToscaModel.setPolicyType("tca");
+        cldsToscaModel = cldsToscaModel.save(cldsDao, refProp, policyClient, "test");
+        String tosca = policyClient.importToscaModel(cldsToscaModel);
+
+        Assertions.assertThat(tosca).contains(
+            "{\"serviceName\":\"tca-policy-test\",\"description\":\"tca-policy-test\",\"requestID\":null,\"filePath\":\"/tmp/tosca-models/tca-policy-test.yml\",");
+        Assertions.assertThat(tosca).contains(toscaModelYaml);
     }
 }
