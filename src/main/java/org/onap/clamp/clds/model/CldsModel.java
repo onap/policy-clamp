@@ -25,18 +25,18 @@ package org.onap.clamp.clds.model;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import org.onap.clamp.clds.dao.CldsDao;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.model.actions.ActionsHandler;
+import org.onap.clamp.clds.model.actions.ActionsHandlerImpl;
+import org.onap.clamp.clds.model.status.StatusHandler;
+import org.onap.clamp.clds.model.status.StatusHandlerImpl;
 
 /**
  * Represent a CLDS Model.
@@ -76,6 +76,18 @@ public class CldsModel {
     private String typeName;
     private String deploymentId;
     private String deploymentStatusUrl;
+
+    // Set default handlers but this can be changed if needed.
+    private static StatusHandler statusHandler = new StatusHandlerImpl();
+    private static ActionsHandler actionsHandler = new ActionsHandlerImpl();
+
+    public static synchronized void setStatusHandler(StatusHandler statHandler) {
+        statusHandler = statHandler;
+    }
+
+    public static synchronized void setActionsHandler(ActionsHandler cdHandler) {
+        actionsHandler = cdHandler;
+    }
 
     /**
      * Construct empty model.
@@ -122,54 +134,7 @@ public class CldsModel {
      * set the status in the model
      */
     public void determineStatus() {
-        status = STATUS_UNKNOWN;
-        if (event == null || event.getActionCd() == null) {
-            status = STATUS_DESIGN;
-        } else if (event.isActionStateCd(CldsEvent.ACTION_STATE_ERROR)) {
-            status = STATUS_ERROR;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_CREATE, CldsEvent.ACTION_STATE_ANY)) {
-            status = STATUS_DESIGN;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DISTRIBUTE, CldsEvent.ACTION_STATE_RECEIVED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_STATE_COMPLETED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_STATE_COMPLETED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_STATE_COMPLETED)) {
-            status = STATUS_DISTRIBUTED;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DELETE, CldsEvent.ACTION_STATE_SENT)) {
-            status = STATUS_DELETING;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_STATE_COMPLETED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_COMPLETED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STATE_COMPLETED)
-            || event.isActionAndStateCd(CldsEvent.ACTION_SUBMITPOLICY, CldsEvent.ACTION_STATE_ANY)) {
-            status = STATUS_ACTIVE;
-        } else if (event.isActionAndStateCd(CldsEvent.ACTION_STOP, CldsEvent.ACTION_STATE_COMPLETED)) {
-            status = STATUS_STOPPED;
-        }
-    }
-
-    /**
-     * Get the actionCd from current event. If none, default value is
-     * CldsEvent.ACTION_CREATE
-     */
-    private String getCurrentActionCd() {
-        // current default actionCd is CREATE
-        String actionCd = CldsEvent.ACTION_CREATE;
-        if (event != null && event.getActionCd() != null) {
-            actionCd = event.getActionCd();
-        }
-        return actionCd;
-    }
-
-    /**
-     * Get the actionStateCd from current event. If none, default value is
-     * CldsEvent.ACTION_STATE_COMPLETED
-     */
-    private String getCurrentActionStateCd() {
-        // current default actionStateCd is CREATE
-        String actionStateCd = CldsEvent.ACTION_STATE_COMPLETED;
-        if (event != null && event.getActionStateCd() != null) {
-            actionStateCd = event.getActionStateCd();
-        }
-        return actionStateCd;
+        status = statusHandler.determineStatusOnLastEvent(event);
     }
 
     /**
@@ -179,94 +144,7 @@ public class CldsModel {
      * the first one.
      */
     public void determinePermittedActionCd() {
-        String actionCd = getCurrentActionCd();
-        switch (actionCd) {
-        case CldsEvent.ACTION_CREATE:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMIT, CldsEvent.ACTION_TEST, CldsEvent.ACTION_DELETE);
-            if (isSimplifiedModel()) {
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_SUBMITPOLICY,
-                    CldsEvent.ACTION_TEST, CldsEvent.ACTION_DELETE);
-            }
-            break;
-        case CldsEvent.ACTION_SUBMIT:
-        case CldsEvent.ACTION_RESUBMIT:
-        case CldsEvent.ACTION_DISTRIBUTE:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_RESUBMIT,
-                CldsEvent.ACTION_DELETE);
-            if (isSimplifiedModel()) {
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_SUBMITDCAE,
-                    CldsEvent.ACTION_DELETE);
-            }
-            break;
-        case CldsEvent.ACTION_SUBMITDCAE:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
-            break;
-        case CldsEvent.ACTION_SUBMITPOLICY:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
-            break;
-        case CldsEvent.ACTION_UNDEPLOY:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
-                CldsEvent.ACTION_RESUBMIT, CldsEvent.ACTION_DELETE);
-            if (isSimplifiedModel()) {
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_DEPLOY,
-                    CldsEvent.ACTION_SUBMITDCAE, CldsEvent.ACTION_DELETE);
-            }
-            break;
-        case CldsEvent.ACTION_DEPLOY:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UNDEPLOY, CldsEvent.ACTION_UPDATE,
-                CldsEvent.ACTION_STOP);
-            break;
-        case CldsEvent.ACTION_RESTART:
-        case CldsEvent.ACTION_UPDATE:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_DEPLOY, CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP,
-                CldsEvent.ACTION_UNDEPLOY);
-            if (isPolicyOnly()) {
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_STOP);
-            }
-            break;
-        case CldsEvent.ACTION_STOP:
-            permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
-                CldsEvent.ACTION_UNDEPLOY);
-            if (isPolicyOnly()) {
-                permittedActionCd = Arrays.asList(CldsEvent.ACTION_UPDATE, CldsEvent.ACTION_RESTART,
-                    CldsEvent.ACTION_DELETE);
-            }
-            break;
-        default:
-            logger.warn("Invalid current actionCd: " + actionCd);
-        }
-    }
-
-    private boolean isSimplifiedModel() {
-        boolean result = false;
-        try {
-            if (propText != null) {
-                JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(propText);
-                JsonNode simpleModelJson = modelJson.get("simpleModel");
-                if (simpleModelJson != null && simpleModelJson.asBoolean()) {
-                    result = true;
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Error while parsing propText json", e);
-        }
-        return result;
-    }
-
-    private boolean isPolicyOnly() {
-        boolean result = false;
-        try {
-            if (propText != null) {
-                JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(propText);
-                JsonNode policyOnlyJson = modelJson.get("policyOnly");
-                if (policyOnlyJson != null && policyOnlyJson.asBoolean()) {
-                    result = true;
-                }
-            }
-        } catch (IOException e) {
-            logger.error("Error while parsing propText json", e);
-        }
-        return result;
+        permittedActionCd = actionsHandler.determinePermittedActionsOnLastEvent(event, propText);
     }
 
     /**
@@ -278,8 +156,8 @@ public class CldsModel {
         determinePermittedActionCd();
         if (!permittedActionCd.contains(requestedActionCd)) {
             throw new IllegalArgumentException(
-                "Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: " + getCurrentActionCd()
-                    + ", the permittedActionCd: " + permittedActionCd);
+                "Invalid requestedActionCd: " + requestedActionCd + ".  Given current actionCd: "
+                    + actionsHandler.getCurrentActionCd(event) + ", the permittedActionCd: " + permittedActionCd);
         }
     }
 
