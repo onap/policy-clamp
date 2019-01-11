@@ -190,12 +190,15 @@ For OOM, the URL is https://<host-ip>:30258/designer/index.html
 
    - With AAF enabled, the certificate p12 must be added to the browser
      ca path: src/main/resources/clds/aaf/org.onap.clamp.p12, password "China in the Spring"
+     Or get it from this page : https://wiki.onap.org/display/DW/Control+Loop+Flows+and+Models+for+Casablanca
 
 Human Interfaces
 ----------------
 .. Basic info on the interface type, ports/protocols provided over, etc.
 
 User Interface (CLAMP Designer) - serve to configure control loop
+CLAMP UI is used to configure the Control Loop designed and distributed by SDC. From that UI it's possible to distribute the configuration policies and control the life-cycle of the DCAE Micro Services.
+ 
 The following actions are done using the UI:
 
 * Design a control loop flow by selecting a predefined template from a list
@@ -219,8 +222,14 @@ The following actions are done using the UI:
 
 * Control (start/stop) the operation of the control loop in DCAE
 
-
-
 HealthCheck API - serve to verify CLAMP status (see offered API's section)
 * https://<host-ip>:8443/restservices/clds/v1/healthcheck
 This one does not require the certificate
+
+Walk-through can be found here: https://wiki.onap.org/display/DW/CLAMP+videos
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   CLAMP User Guide <user-guide.rst>

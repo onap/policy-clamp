@@ -39,6 +39,6 @@ operational costs compared to traditional methods.
 
 |closed-loop|
 
-.. |clamp-flow| image:: images/distdepl.png
-.. |dashboard-flow| image:: images/monitoring.png
-.. |closed-loop| image:: images/ONAP-closedloop.png
+.. |clamp-flow| image:: images/architecture/distdepl.png
+.. |dashboard-flow| image:: images/architecture/monitoring.png
+.. |closed-loop| image:: images/architecture/ONAP-closedloop.png
