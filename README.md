@@ -173,4 +173,9 @@ Passwords should be hashed using Bcrypt :
 
 Default credentials are admin/password and cs0008/password.
 
+There is a spring file that disables the AAF and enable the Spring authentication by default. 
+To use it just add
 
+--spring.config.name=application-noaaf
+
+to the jvm parameters. This file is available by default in the java classpath resource folder. 
