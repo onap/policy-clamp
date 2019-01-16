@@ -29,6 +29,8 @@ import java.util.Date;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.util.LoggingUtils;
+import org.onap.clamp.clds.util.ONAPLogConstants;
+import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +56,7 @@ public class CldsHealthcheckService {
     public ResponseEntity<CldsHealthCheck> gethealthcheck() {
         CldsHealthCheck cldsHealthCheck = new CldsHealthCheck();
         Date startTime = new Date();
+        LoggingUtils util = new LoggingUtils(logger);
         LoggingUtils.setRequestContext("CldsService: GET healthcheck", "Clamp-Health-Check");
         LoggingUtils.setTimeContext(startTime, new Date());
         boolean healthcheckFailed = false;
@@ -74,8 +77,10 @@ public class CldsHealthcheckService {
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         if(healthcheckFailed) {
+            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Healthcheck failed", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(cldsHealthCheck, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
+            util.exiting("200", "Healthcheck failed", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
             return new ResponseEntity<>(cldsHealthCheck, HttpStatus.OK);
         }
     }
