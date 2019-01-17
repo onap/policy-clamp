@@ -176,6 +176,7 @@ public class LoggingUtils {
      * @return this.
      */
     public void entering(HttpServletRequest request, String serviceName) {
+        MDC.clear();
         checkNotNull(request);
         // Extract MDC values from standard HTTP headers.
         final String requestID = defaultToUUID(request.getHeader(ONAPLogConstants.Headers.REQUEST_ID));
@@ -205,6 +206,8 @@ public class LoggingUtils {
         if (serviceName == null ||
             serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(ONAPLogConstants.MDCs.SERVICE_NAME, request.getRequestURI());
+        } else {
+            MDC.put(ONAPLogConstants.MDCs.SERVICE_NAME, serviceName);
         }
 
         this.mLogger.info(ONAPLogConstants.Markers.ENTRY);
