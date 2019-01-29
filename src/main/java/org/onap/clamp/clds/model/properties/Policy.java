@@ -25,12 +25,14 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Parse Policy json properties.
@@ -65,15 +67,15 @@ public class Policy extends AbstractModelElement {
      * @param modelJson
      * @throws IOException
      */
-    public Policy(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) throws IOException {
+    public Policy(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) throws IOException {
         super(TYPE_POLICY, modelProp, modelBpmn, modelJson);
 
         // process policies
         if (modelElementJsonNode != null) {
-            Iterator<JsonNode> itr = modelElementJsonNode.elements();
+            Iterator<Entry<String, JsonElement>> itr = modelElementJsonNode.getAsJsonObject().entrySet().iterator();
             policyChains = new ArrayList<>();
             while (itr.hasNext()) {
-                policyChains.add(new PolicyChain(itr.next()));
+                policyChains.add(new PolicyChain(itr.next().getValue()));
             }
         }
     }

@@ -25,23 +25,21 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import java.io.IOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.camel.Exchange;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.ModelBpmnException;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.service.CldsService;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse model properties.
@@ -51,7 +49,7 @@ public class ModelProperties {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsService.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     private ModelBpmn modelBpmn;
-    private JsonNode modelJson;
+    private JsonObject modelJson;
     private final String modelName;
     private final String controlName;
     private final String actionCd;
@@ -65,6 +63,7 @@ public class ModelProperties {
     public static final String POLICY_GUARD_SUFFIX = "_Guard_";
     private static final Object lock = new Object();
     private static Map<Class<? extends AbstractModelElement>, String> modelElementClasses = new ConcurrentHashMap<>();
+
     static {
         synchronized (lock) {
             modelElementClasses.put(Policy.class, Policy.getType());
@@ -99,9 +98,9 @@ public class ModelProperties {
             this.actionCd = actionCd;
             this.testOnly = isATest;
             modelBpmn = ModelBpmn.create(modelBpmnText);
-            modelJson = JacksonUtils.getObjectMapperInstance().readTree(modelPropText);
+            modelJson = JsonUtils.GSON.fromJson(modelPropText, JsonObject.class);
             instantiateMissingModelElements();
-        } catch (IOException e) {
+        } catch (JsonParseException e) {
             throw new ModelBpmnException("Exception occurred when trying to decode the BPMN Properties JSON", e);
         }
     }
@@ -112,7 +111,7 @@ public class ModelProperties {
      * after instantiation of this ModelProperties, we need to build the missing
      * ModelElement instances.
      */
-    private final void instantiateMissingModelElements() {
+    private void instantiateMissingModelElements() {
         if (modelElementClasses.size() != modelElements.size()) {
             Set<String> missingTypes = new HashSet<>(modelElementClasses.values());
             missingTypes.removeAll(modelElements.keySet());
@@ -124,11 +123,11 @@ public class ModelProperties {
                 .forEach(entry -> {
                     try {
                         modelElements.put(entry.getValue(),
-                            (entry.getKey().getConstructor(ModelProperties.class, ModelBpmn.class, JsonNode.class)
+                            (entry.getKey().getConstructor(ModelProperties.class, ModelBpmn.class, JsonObject.class)
                                 .newInstance(this, modelBpmn, modelJson)));
                     } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
                         | InvocationTargetException e) {
-                        logger.warn("Unable to instantiate a ModelElement, exception follows: ", e);
+                        logger.warn("Unable to instantiate a ModelElement "+ entry.getValue()+", exception follows: ", e);
                     }
                 });
         }
@@ -143,10 +142,10 @@ public class ModelProperties {
     public static String getVf(CldsModel model) {
         List<String> vfs = null;
         try {
-            JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(model.getPropText());
+            JsonObject modelJson = JsonUtils.GSON.fromJson(model.getPropText(), JsonObject.class);
             Global global = new Global(modelJson);
             vfs = global.getResourceVf();
-        } catch (IOException e) {
+        } catch (JsonParseException e) {
             logger.warn("no VF found", e);
         }
         String vf = null;

@@ -25,7 +25,10 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Parse ONAP Tca json properties.
@@ -47,12 +50,14 @@ public class Tca extends AbstractModelElement {
      * @param modelBpmn
      * @param modelJson
      */
-    public Tca(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
+    public Tca(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
         super(TYPE_TCA, modelProp, modelBpmn, modelJson);
 
         // process Server_Configurations
         if (modelElementJsonNode != null) {
-            tcaItem = new TcaItem(modelElementJsonNode.elements().next());
+            //this is wrong assumption that there is only one property object
+            Set<Entry<String, JsonElement>> entries = modelElementJsonNode.getAsJsonObject().entrySet();
+            tcaItem = new TcaItem(entries.iterator().next().getValue());
         }
     }
 

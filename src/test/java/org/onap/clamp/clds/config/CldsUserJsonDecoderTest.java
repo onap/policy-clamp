@@ -25,10 +25,7 @@
 package org.onap.clamp.clds.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
-import java.util.Collections;
 import org.junit.Test;
 import org.onap.clamp.clds.service.CldsUser;
 

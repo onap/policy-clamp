@@ -25,11 +25,11 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import java.io.IOException;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,7 +39,7 @@ import java.util.Map.Entry;
 
 import org.onap.clamp.clds.exception.ModelBpmnException;
 import org.onap.clamp.clds.service.CldsService;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse Model BPMN properties.
@@ -66,22 +66,22 @@ public class ModelBpmn {
     public static ModelBpmn create(String modelBpmnPropText) {
         try {
             ModelBpmn modelBpmn = new ModelBpmn();
-            ObjectNode root = JacksonUtils.getObjectMapperInstance().readValue(modelBpmnPropText, ObjectNode.class);
+            JsonObject root = JsonUtils.GSON.fromJson(modelBpmnPropText, JsonObject.class);
             // iterate over each entry like:
             // "Policy":[{"id":"Policy","from":"StartEvent_1"}]
-            Iterator<Entry<String, JsonNode>> entryItr = root.fields();
+            Iterator<Entry<String, JsonElement>> entryItr = root.entrySet().iterator();
             List<String> bpmnElementIdList = new ArrayList<>();
             while (entryItr.hasNext()) {
                 // process the entry
-                Entry<String, JsonNode> entry = entryItr.next();
+                Entry<String, JsonElement> entry = entryItr.next();
                 String type = entry.getKey();
-                ArrayNode arrayNode = (ArrayNode) entry.getValue();
+                JsonArray arrayNode = entry.getValue().getAsJsonArray();
                 // process each id/from object, like:
                 // {"id":"Policy","from":"StartEvent_1"}
-                for (JsonNode anArrayNode : arrayNode) {
-                    ObjectNode node = (ObjectNode) anArrayNode;
-                    String id = node.get("id").asText();
-                    String fromId = node.get("from").asText();
+                for (JsonElement anArrayNode : arrayNode) {
+                    JsonObject node = anArrayNode.getAsJsonObject();
+                    String id = node.get("id").getAsString();
+                    String fromId = node.get("from").getAsString();
                     ModelBpmnEntry modelBpmnEntry = new ModelBpmnEntry(type, id, fromId);
                     modelBpmn.addEntry(modelBpmnEntry);
                     bpmnElementIdList.add(id);
@@ -89,7 +89,7 @@ public class ModelBpmn {
                 modelBpmn.setBpmnElementIds(bpmnElementIdList);
             }
             return modelBpmn;
-        } catch (IOException e) {
+        } catch (JsonParseException e) {
             throw new ModelBpmnException("Exception occurred during the decoding of the bpmn JSON", e);
         }
     }

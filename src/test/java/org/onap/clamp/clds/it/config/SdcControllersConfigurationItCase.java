@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class SdcControllersConfigurationItCase {
             sdcControllersConfiguration.getSdcSingleControllerConfiguration("sdc-controller2").getSdcControllerName());
     }
 
-    @Test(expected = IOException.class)
+    @Test(expected = JsonSyntaxException.class)
     public void testBadJsonLoading() throws IOException {
         loadFile("classpath:/clds/sdc-controllers-config-bad.json");
         fail("Should have raised an exception");

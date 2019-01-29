@@ -25,10 +25,9 @@ package org.onap.clamp.clds.client.req.tca;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Map;
 
@@ -38,6 +37,7 @@ import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.clamp.clds.model.properties.TcaItem;
 import org.onap.clamp.clds.model.properties.TcaThreshold;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -71,10 +71,10 @@ public class TcaRequestFormatter {
             modelProperties.setCurrentModelElementId(tca.getId());
             // Always one tcaItem so must be set to id 0
             modelProperties.setPolicyUniqueId("0");
-            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.policy.template", service);
+            JsonObject rootNode = refProp.getJsonTemplate("tca.policy.template", service ).getAsJsonObject();
             String policyName = modelProperties.getCurrentPolicyScopeAndPolicyName();
-            rootNode.put("policyName", policyName);
-            ((ObjectNode) rootNode.get("content")).replace("tca_policy",
+            rootNode.addProperty("policyName", policyName);
+            rootNode.get("content").getAsJsonObject().add("tca_policy",
                     createPolicyContent(refProp, modelProperties, service, policyName, tca));
             String tcaPolicyReq = rootNode.toString();
             logger.info("tcaPolicyReq=" + tcaPolicyReq);
@@ -104,7 +104,7 @@ public class TcaRequestFormatter {
      *            modelProperties.setCurrentModelElementId will be used
      * @return The Json node containing what should be sent to policy
      */
-    public static JsonNode createPolicyContent(ClampProperties refProp, ModelProperties modelProperties, String service,
+    public static JsonObject createPolicyContent(ClampProperties refProp, ModelProperties modelProperties, String service,
             String policyName, Tca tca) {
         try {
             String serviceToUse = service;
@@ -120,14 +120,12 @@ public class TcaRequestFormatter {
             if (policyNameToUse == null) {
                 policyNameToUse = modelProperties.getCurrentPolicyScopeAndPolicyName();
             }
-            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("tca.template", serviceToUse);
-            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("eventName",
-                    tcaToUse.getTcaItem().getEventName());
-            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("policyName", policyNameToUse);
-            ((ObjectNode) rootNode.get("metricsPerEventName").get(0)).put("controlLoopSchemaType",
-                    tcaToUse.getTcaItem().getControlLoopSchemaType());
-            ObjectNode thresholdsParent = ((ObjectNode) rootNode.get("metricsPerEventName").get(0));
-            addThresholds(refProp, serviceToUse, thresholdsParent, tcaToUse.getTcaItem(), modelProperties);
+            JsonObject rootNode = refProp.getJsonTemplate("tca.template", serviceToUse).getAsJsonObject();
+            JsonObject metricsPerEventName = rootNode.get("metricsPerEventName").getAsJsonArray().get(0).getAsJsonObject();
+            metricsPerEventName.addProperty("eventName", tcaToUse.getTcaItem().getEventName());
+            metricsPerEventName.addProperty("policyName", policyNameToUse);
+            metricsPerEventName.addProperty("controlLoopSchemaType",tcaToUse.getTcaItem().getControlLoopSchemaType());
+            addThresholds(refProp, serviceToUse, metricsPerEventName, tcaToUse.getTcaItem(), modelProperties);
             logger.info("tcaPolicyContent=" + rootNode.toString());
             return rootNode;
         } catch (IOException e) {
@@ -154,17 +152,17 @@ public class TcaRequestFormatter {
      *            The Model Properties created from BPMN JSON and BPMN
      *            properties JSON
      */
-    private static void addThresholds(ClampProperties refProp, String service, ObjectNode appendToNode, TcaItem tcaItem,
+    private static void addThresholds(ClampProperties refProp, String service, JsonObject appendToNode, TcaItem tcaItem,
             ModelProperties modelProperties) {
-        ArrayNode tcaNodes = appendToNode.withArray("thresholds");
+        JsonArray tcaNodes = appendToNode.get("thresholds").getAsJsonArray();
         try {
             for (TcaThreshold tcaThreshold : tcaItem.getTcaThresholds()) {
-                ObjectNode tcaNode = (ObjectNode) refProp.getJsonTemplate("tca.thresholds.template", service);
-                tcaNode.put("closedLoopControlName", modelProperties.getControlNameAndPolicyUniqueId());
-                tcaNode.put("fieldPath", tcaThreshold.getFieldPath());
-                tcaNode.put("thresholdValue", tcaThreshold.getThreshold());
-                tcaNode.put("direction", tcaThreshold.getOperator());
-                tcaNode.put("closedLoopEventStatus", tcaThreshold.getClosedLoopEventStatus());
+                JsonObject tcaNode = refProp.getJsonTemplate("tca.thresholds.template", service).getAsJsonObject();
+                tcaNode.addProperty("closedLoopControlName", modelProperties.getControlNameAndPolicyUniqueId());
+                tcaNode.addProperty("fieldPath", tcaThreshold.getFieldPath());
+                tcaNode.addProperty("thresholdValue", tcaThreshold.getThreshold());
+                tcaNode.addProperty("direction", tcaThreshold.getOperator());
+                tcaNode.addProperty("closedLoopEventStatus", tcaThreshold.getClosedLoopEventStatus());
                 tcaNodes.add(tcaNode);
             }
         } catch (IOException e) {
@@ -187,7 +185,7 @@ public class TcaRequestFormatter {
      */
     public static String updatedBlueprintWithConfiguration(ClampProperties refProp, ModelProperties modelProperties,
             String yamlValue) {
-        String jsonPolicy = ((ObjectNode) createPolicyContent(refProp, modelProperties, null, null, null)).toString();
+        String jsonPolicy = JsonUtils.GSON.toJson(createPolicyContent(refProp, modelProperties, null, null, null));
         logger.info("Yaml that will be updated:" + yamlValue);
         Yaml yaml = new Yaml();
         Map<String, Object> loadedYaml = (Map<String, Object>) yaml.load(yamlValue);

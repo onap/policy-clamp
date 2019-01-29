@@ -23,9 +23,8 @@
 
 package org.onap.clamp.clds.client;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -61,9 +60,13 @@ public class DcaeDispatcherServicesTest {
     @InjectMocks
     DcaeDispatcherServices dcaeDispatcherServices;
 
-    private final String STATUS_RESPONSE_PROCESSING = "{\"operationType\": \"deploy\",\"status\": \"processing\"}";
-    private final String STATUS_RESPONSE_ACTIVE = "{\"operationType\": \"deploy\",\"status\": \"succeeded\"}";
+    private static final String STATUS_RESPONSE_PROCESSING = "{\"operationType\": \"deploy\","
+        + "\"status\": \"processing\"}";
+    private static final String STATUS_RESPONSE_ACTIVE = "{\"operationType\": \"deploy\",\"status\": \"succeeded\"}";
 
+    /**
+     * Setup method.
+     */
     @Before
     public void setUp() {
         ImmutableMap.<String, String>builder()
@@ -126,10 +129,10 @@ public class DcaeDispatcherServicesTest {
     @Test
     public void shouldTriggerDeploymentCreation() throws IOException {
         //given
-        String deploymentID = "closedLoop_152367c8-b172-47b3-9e58-c53add75d869_deploymentId";
+        String deploymentId = "closedLoop_152367c8-b172-47b3-9e58-c53add75d869_deploymentId";
         String serviceTypeId = "e2ba40f7-bf42-41e7-acd7-48fd07586d90";
         Mockito.when(clampProperties.getJsonTemplate("dcae.deployment.template"))
-                .thenReturn(new ObjectMapper().readTree("{}"));
+                .thenReturn(new JsonObject());
 
         Mockito.when(dcaeHttpConnectionManager
                 .doDcaeHttpQuery(DCAE_URL
@@ -138,11 +141,11 @@ public class DcaeDispatcherServicesTest {
                         "{\"serviceTypeId\":\"e2ba40f7-bf42-41e7-acd7-48fd07586d90\",\"inputs\":{}}",
                         "application/json"))
                 .thenReturn(DEPLOY_RESPONSE_STRING);
-        JsonNode blueprintInputJson = new ObjectMapper().readTree("{}");
+        JsonObject blueprintInputJson = new JsonObject();
 
         //when
         String operationStatus = dcaeDispatcherServices
-                .createNewDeployment(deploymentID, serviceTypeId, blueprintInputJson);
+                .createNewDeployment(deploymentId, serviceTypeId, blueprintInputJson);
 
         //then
         Assertions.assertThat(operationStatus).isEqualTo("http://deployment-handler.onap:8443/"

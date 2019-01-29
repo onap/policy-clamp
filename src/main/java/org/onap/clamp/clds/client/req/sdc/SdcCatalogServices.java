@@ -26,18 +26,19 @@ package org.onap.clamp.clds.client.req.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -68,7 +69,7 @@ import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
 import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.CryptoUtils;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -80,17 +81,24 @@ public class SdcCatalogServices {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcCatalogServices.class);
     private static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    public static final String RESOURCE_VF_TYPE = "VF";
-    public static final String RESOURCE_VFC_TYPE = "VFC";
-    public static final String RESOURCE_CVFC_TYPE = "CVFC";
-    public static final String SDC_REQUESTID_PROPERTY_NAME = "sdc.header.requestId";
-    public static final String SDC_METADATA_URL_PREFIX = "/metadata";
-    public static final String SDC_INSTANCE_ID_PROPERTY_NAME = "sdc.InstanceID";
-    public static final String SDC_CATALOG_URL_PROPERTY_NAME = "sdc.catalog.url";
-    public static final String SDC_SERVICE_URL_PROPERTY_NAME = "sdc.serviceUrl";
-    public static final String SDC_INSTANCE_ID_CLAMP = "CLAMP-Tool";
-    public static final String RESOURCE_URL_PREFIX = "resources";
+    private static final String RESOURCE_VF_TYPE = "VF";
+    private static final String RESOURCE_VFC_TYPE = "VFC";
+    private static final String RESOURCE_CVFC_TYPE = "CVFC";
+    private static final String SDC_REQUESTID_PROPERTY_NAME = "sdc.header.requestId";
+    private static final String SDC_METADATA_URL_PREFIX = "/metadata";
+    private static final String SDC_INSTANCE_ID_PROPERTY_NAME = "sdc.InstanceID";
+    private static final String SDC_CATALOG_URL_PROPERTY_NAME = "sdc.catalog.url";
+    private static final String SDC_SERVICE_URL_PROPERTY_NAME = "sdc.serviceUrl";
+    private static final String SDC_INSTANCE_ID_CLAMP = "CLAMP-Tool";
+    private static final String RESOURCE_URL_PREFIX = "resources";
     private static final LoggingUtils utils = new LoggingUtils(logger);
+
+    private static final Type LIST_SDC_SERVICE_INFO_TYPE = new TypeToken<List<SdcServiceInfo>>() {
+    }.getType();
+
+    private static final Type LIST_SDC_RESOURCE_BASIC_INFO_TYPE = new TypeToken<List<SdcResourceBasicInfo>>() {
+    }.getType();
+
     @Autowired
     private ClampProperties refProp;
 
@@ -285,9 +293,8 @@ public class SdcCatalogServices {
             return new ArrayList<>();
         }
         try {
-            return JacksonUtils.getObjectMapperInstance().readValue(jsonStr, JacksonUtils.getObjectMapperInstance()
-                .getTypeFactory().constructCollectionType(List.class, SdcServiceInfo.class));
-        } catch (IOException e) {
+            return JsonUtils.GSON.fromJson(jsonStr, LIST_SDC_SERVICE_INFO_TYPE);
+        } catch (JsonParseException e) {
             logger.error("Error when attempting to decode the JSON containing CldsSdcServiceInfo", e);
             return new ArrayList<>();
         }
@@ -305,9 +312,8 @@ public class SdcCatalogServices {
             return new ArrayList<>();
         }
         try {
-            return JacksonUtils.getObjectMapperInstance().readValue(jsonStr, JacksonUtils.getObjectMapperInstance()
-                .getTypeFactory().constructCollectionType(List.class, SdcResourceBasicInfo.class));
-        } catch (IOException e) {
+            return JsonUtils.GSON.fromJson(jsonStr, LIST_SDC_RESOURCE_BASIC_INFO_TYPE);
+        } catch (JsonParseException e) {
             logger.error("Exception occurred when attempting to decode the list of CldsSdcResourceBasicInfo JSON", e);
             return new ArrayList<>();
         }
@@ -321,8 +327,8 @@ public class SdcCatalogServices {
      */
     public SdcServiceDetail decodeCldsSdcServiceDetailFromJson(String jsonStr) {
         try {
-            return JacksonUtils.getObjectMapperInstance().readValue(jsonStr, SdcServiceDetail.class);
-        } catch (IOException e) {
+            return JsonUtils.GSON.fromJson(jsonStr, SdcServiceDetail.class);
+        } catch (JsonParseException e) {
             logger.error("Exception when attempting to decode the CldsSdcServiceDetail JSON", e);
             return null;
         }
@@ -402,9 +408,8 @@ public class SdcCatalogServices {
         if (responseStr != null) {
             SdcServiceDetail cldsSdcServiceDetail;
             try {
-                cldsSdcServiceDetail = JacksonUtils.getObjectMapperInstance().readValue(responseStr,
-                    SdcServiceDetail.class);
-            } catch (IOException e) {
+                cldsSdcServiceDetail = JsonUtils.GSON.fromJson(responseStr, SdcServiceDetail.class);
+            } catch (JsonParseException e) {
                 logger.error("Exception when decoding the CldsServiceData JSON from SDC", e);
                 throw new SdcCommunicationException("Exception when decoding the CldsServiceData JSON from SDC", e);
             }
@@ -497,41 +502,43 @@ public class SdcCatalogServices {
     }
 
     private List<CldsVfcData> getVfcDataListFromVfResponse(String vfResponse) {
-        ObjectNode vfResponseNode;
+        JsonObject vfResponseNode;
         try {
-            vfResponseNode = (ObjectNode) JacksonUtils.getObjectMapperInstance().readTree(vfResponse);
-        } catch (IOException e) {
+            vfResponseNode = JsonUtils.GSON.fromJson(vfResponse, JsonObject.class);
+        } catch (JsonParseException e) {
             logger.error("Exception when decoding the JSON list of CldsVfcData", e);
             return new ArrayList<>();
         }
-        ArrayNode vfcArrayNode = (ArrayNode) vfResponseNode.get("resources");
+        JsonArray vfcArrayNode = vfResponseNode.get("resources").getAsJsonArray();
         List<CldsVfcData> cldsVfcDataList = new ArrayList<>();
         if (vfcArrayNode != null) {
-            for (JsonNode vfcjsonNode : vfcArrayNode) {
-                ObjectNode currVfcNode = (ObjectNode) vfcjsonNode;
-                TextNode resourceTypeNode = (TextNode) currVfcNode.get("resoucreType");
-                if (resourceTypeNode != null && "VFC".equalsIgnoreCase(resourceTypeNode.textValue())) {
-                    handleVFCtypeNode(currVfcNode, cldsVfcDataList);
-                } else if (resourceTypeNode != null && "CVFC".equalsIgnoreCase(resourceTypeNode.textValue())) {
-                    handleCVFCtypeNode(currVfcNode, cldsVfcDataList);
+            for (JsonElement vfcjsonNode : vfcArrayNode) {
+                JsonObject currVfcNode = vfcjsonNode.getAsJsonObject();
+                JsonElement resourceTypeNode = currVfcNode.get("resoucreType");
+                if (resourceTypeNode != null && resourceTypeNode.isJsonPrimitive()) {
+                    if ("VFC".equalsIgnoreCase(resourceTypeNode.getAsString())) {
+                        handleVFCtypeNode(currVfcNode, cldsVfcDataList);
+                    } else if ("CVFC".equalsIgnoreCase(resourceTypeNode.getAsString())) {
+                        handleCVFCtypeNode(currVfcNode, cldsVfcDataList);
+                    }
                 }
             }
         }
         return cldsVfcDataList;
     }
 
-    private void handleVFCtypeNode(ObjectNode currVfcNode, List<CldsVfcData> cldsVfcDataList) {
+    private void handleVFCtypeNode(JsonObject currVfcNode, List<CldsVfcData> cldsVfcDataList) {
         CldsVfcData currCldsVfcData = new CldsVfcData();
-        TextNode vfcResourceName = (TextNode) currVfcNode.get("resourceInstanceName");
-        TextNode vfcInvariantResourceUuid = (TextNode) currVfcNode.get("resourceInvariantUUID");
-        currCldsVfcData.setVfcName(vfcResourceName.textValue());
-        currCldsVfcData.setVfcInvariantResourceUUID(vfcInvariantResourceUuid.textValue());
+        String vfcResourceName = currVfcNode.get("resourceInstanceName").getAsString();
+        String vfcInvariantResourceUuid = currVfcNode.get("resourceInvariantUUID").getAsString();
+        currCldsVfcData.setVfcName(vfcResourceName);
+        currCldsVfcData.setVfcInvariantResourceUUID(vfcInvariantResourceUuid);
         cldsVfcDataList.add(currCldsVfcData);
     }
 
-    private void handleCVFCtypeNode(ObjectNode currVfcNode, List<CldsVfcData> cldsVfcDataList) {
+    private void handleCVFCtypeNode(JsonObject currVfcNode, List<CldsVfcData> cldsVfcDataList) {
         handleVFCtypeNode(currVfcNode, cldsVfcDataList);
-        cldsVfcDataList.addAll(getVFCfromCVFC(currVfcNode.get("resourceUUID").textValue()));
+        cldsVfcDataList.addAll(getVFCfromCVFC(currVfcNode.get("resourceUUID").getAsString()));
     }
 
     private List<CldsVfcData> getVFCfromCVFC(String resourceUUID) {
@@ -541,18 +548,18 @@ public class SdcCatalogServices {
             String vfcResourceUUIDUrl = catalogUrl + RESOURCE_URL_PREFIX + "/" + resourceUUID + SDC_METADATA_URL_PREFIX;
             try {
                 String vfcResponse = getCldsServicesOrResourcesBasedOnURL(vfcResourceUUIDUrl);
-                ObjectNode vfResponseNode = (ObjectNode) JacksonUtils.getObjectMapperInstance().readTree(vfcResponse);
-                ArrayNode vfcArrayNode = (ArrayNode) vfResponseNode.get("resources");
+                JsonObject vfResponseNode = JsonUtils.GSON.fromJson(vfcResponse, JsonObject.class);
+                JsonArray vfcArrayNode = vfResponseNode.get("resources").getAsJsonArray();
                 if (vfcArrayNode != null) {
-                    for (JsonNode vfcjsonNode : vfcArrayNode) {
-                        ObjectNode currVfcNode = (ObjectNode) vfcjsonNode;
-                        TextNode resourceTypeNode = (TextNode) currVfcNode.get("resoucreType");
-                        if (resourceTypeNode != null && "VFC".equalsIgnoreCase(resourceTypeNode.textValue())) {
+                    for (JsonElement vfcjsonNode : vfcArrayNode) {
+                        JsonObject currVfcNode = vfcjsonNode.getAsJsonObject();
+                        JsonElement resourceTypeNode = currVfcNode.get("resoucreType");
+                        if (resourceTypeNode != null && resourceTypeNode.isJsonPrimitive() && "VFC".equalsIgnoreCase(resourceTypeNode.getAsString())) {
                             handleVFCtypeNode(currVfcNode, cldsVfcDataList);
                         }
                     }
                 }
-            } catch (IOException e) {
+            } catch (JsonParseException e) {
                 logger.error("Exception during JSON analyzis", e);
             }
         }
@@ -565,20 +572,21 @@ public class SdcCatalogServices {
 
     private List<CldsAlarmCondition> getAlarmCondtionsFromVfc(String vfcResponse) throws GeneralSecurityException {
         List<CldsAlarmCondition> cldsAlarmConditionList = new ArrayList<>();
-        ObjectNode vfcResponseNode;
+        JsonObject vfcResponseNode;
         try {
-            vfcResponseNode = (ObjectNode) JacksonUtils.getObjectMapperInstance().readTree(vfcResponse);
-        } catch (IOException e) {
+            vfcResponseNode = JsonUtils.GSON.fromJson(vfcResponse, JsonObject.class);
+        } catch (JsonParseException e) {
             logger.error("Exception when decoding the JSON list of CldsAlarmCondition", e);
             return cldsAlarmConditionList;
         }
-        ArrayNode artifactsArrayNode = (ArrayNode) vfcResponseNode.get("artifacts");
-        if (artifactsArrayNode != null && artifactsArrayNode.size() > 0) {
-            for (int index = 0; index < artifactsArrayNode.size(); index++) {
-                ObjectNode currArtifactNode = (ObjectNode) artifactsArrayNode.get(index);
-                TextNode artifactUrlNode = (TextNode) currArtifactNode.get("artifactURL");
-                if (artifactUrlNode != null) {
-                    String responsesFromArtifactUrl = getResponsesFromArtifactUrl(artifactUrlNode.textValue());
+        JsonElement artifactsNode = vfcResponseNode.get("artifacts");
+        if (artifactsNode != null && artifactsNode.isJsonArray() && artifactsNode.getAsJsonArray().size() > 0) {
+            JsonArray artifactsList = artifactsNode.getAsJsonArray();
+            for (int index = 0; index < artifactsList.size(); index++) {
+                JsonObject currArtifactNode = artifactsList.get(index).getAsJsonObject();
+                JsonElement artifactUrlNode = currArtifactNode.get("artifactURL");
+                if (artifactUrlNode != null && artifactUrlNode.isJsonPrimitive()) {
+                    String responsesFromArtifactUrl = getResponsesFromArtifactUrl(artifactUrlNode.getAsString());
                     cldsAlarmConditionList.addAll(parseCsvToGetAlarmConditions(responsesFromArtifactUrl));
                     logger.info(responsesFromArtifactUrl);
                 }
@@ -609,26 +617,26 @@ public class SdcCatalogServices {
     // Method to get the artifact for any particular VF
     private List<CldsVfKPIData> getFieldPathFromVF(String vfResponse) throws GeneralSecurityException {
         List<CldsVfKPIData> cldsVfKPIDataList = new ArrayList<>();
-        ObjectNode vfResponseNode;
+        JsonObject vfResponseNode;
         try {
-            vfResponseNode = (ObjectNode) JacksonUtils.getObjectMapperInstance().readTree(vfResponse);
-        } catch (IOException e) {
+            vfResponseNode = JsonUtils.GSON.fromJson(vfResponse, JsonObject.class);
+        } catch (JsonParseException e) {
             logger.error("Exception when decoding the JSON list of CldsVfKPIData", e);
             return cldsVfKPIDataList;
         }
-        ArrayNode artifactsArrayNode = (ArrayNode) vfResponseNode.get("artifacts");
+        JsonArray artifactsArrayNode = vfResponseNode.get("artifacts").getAsJsonArray();
         if (artifactsArrayNode != null && artifactsArrayNode.size() > 0) {
             for (int index = 0; index < artifactsArrayNode.size(); index++) {
-                ObjectNode currArtifactNode = (ObjectNode) artifactsArrayNode.get(index);
-                TextNode artifactUrlNode = (TextNode) currArtifactNode.get("artifactURL");
-                TextNode artifactNameNode = (TextNode) currArtifactNode.get("artifactName");
+                JsonObject currArtifactNode = artifactsArrayNode.get(index).getAsJsonObject();
+                JsonElement artifactUrlNode = currArtifactNode.get("artifactURL");
+                JsonElement artifactNameNode = currArtifactNode.get("artifactName");
                 String artifactName = "";
                 if (artifactNameNode != null) {
-                    artifactName = artifactNameNode.textValue();
+                    artifactName = artifactNameNode.getAsString();
                     artifactName = artifactName.substring(artifactName.lastIndexOf('.') + 1);
                 }
                 if (artifactUrlNode != null && "csv".equalsIgnoreCase(artifactName)) {
-                    String responsesFromArtifactUrl = getResponsesFromArtifactUrl(artifactUrlNode.textValue());
+                    String responsesFromArtifactUrl = getResponsesFromArtifactUrl(artifactUrlNode.getAsString());
                     cldsVfKPIDataList.addAll(parseCsvToGetFieldPath(responsesFromArtifactUrl));
                     logger.info(responsesFromArtifactUrl);
                 }
@@ -760,37 +768,32 @@ public class SdcCatalogServices {
     /**
      * To create properties object by using cldsServicedata.
      *
-     * @param globalProps
-     * @param cldsServiceData
-     * @return
-     * @throws IOException
-     *         In case of issues during the parsing of the Global Properties
+     * @throws IOException In case of issues during the parsing of the Global Properties
      */
     public String createPropertiesObjectByUUID(CldsServiceData cldsServiceData) throws IOException {
         String totalPropsStr;
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode globalPropsJson = (ObjectNode) refProp.getJsonTemplate(CldsService.GLOBAL_PROPERTIES_KEY);
+        JsonObject globalPropsJson = refProp.getJsonTemplate(CldsService.GLOBAL_PROPERTIES_KEY).getAsJsonObject();
         if (cldsServiceData != null && cldsServiceData.getServiceUUID() != null) {
             // Objectnode to save all byservice, byvf , byvfc and byalarm nodes
-            ObjectNode byIdObjectNode = mapper.createObjectNode();
+            JsonObject byIdObjectNode = new JsonObject();
             // To create vf ResourceUUID node with serviceInvariantUUID
-            ObjectNode invariantUuidObjectNodeWithVf = createVfObjectNodeByServiceInvariantUuid(cldsServiceData);
-            byIdObjectNode.putPOJO("byService", invariantUuidObjectNodeWithVf);
+            JsonObject invariantUuidObjectNodeWithVf = createVfObjectNodeByServiceInvariantUuid(cldsServiceData);
+            byIdObjectNode.add("byService", invariantUuidObjectNodeWithVf);
             // To create byVf and vfcResourceNode with vfResourceUUID
-            ObjectNode vfcObjectNodeByVfUuid = createVfcObjectNodeByVfUuid(cldsServiceData.getCldsVfs());
-            byIdObjectNode.putPOJO("byVf", vfcObjectNodeByVfUuid);
+            JsonObject vfcObjectNodeByVfUuid = createVfcObjectNodeByVfUuid(cldsServiceData.getCldsVfs());
+            byIdObjectNode.add("byVf", vfcObjectNodeByVfUuid);
             // To create byKpi
-            ObjectNode kpiObjectNode = mapper.createObjectNode();
+            JsonObject kpiJsonObject = new JsonObject();
             if (cldsServiceData.getCldsVfs() != null && !cldsServiceData.getCldsVfs().isEmpty()) {
                 for (CldsVfData currCldsVfData : cldsServiceData.getCldsVfs()) {
                     if (currCldsVfData != null) {
-                        createKpiObjectNodeByVfUuid(kpiObjectNode, currCldsVfData.getCldsKPIList());
+                        createKpiObjectNodeByVfUuid(kpiJsonObject, currCldsVfData.getCldsKPIList());
                     }
                 }
             }
-            byIdObjectNode.putPOJO("byKpi", kpiObjectNode);
+            byIdObjectNode.add("byKpi", kpiJsonObject);
             // To create byVfc and alarmCondition with vfcResourceUUID
-            ObjectNode vfcResourceUuidObjectNode = mapper.createObjectNode();
+            JsonObject vfcResourceUuidObjectNode = new JsonObject();
             if (cldsServiceData.getCldsVfs() != null && !cldsServiceData.getCldsVfs().isEmpty()) {
                 for (CldsVfData currCldsVfData : cldsServiceData.getCldsVfs()) {
                     if (currCldsVfData != null) {
@@ -798,18 +801,18 @@ public class SdcCatalogServices {
                     }
                 }
             }
-            byIdObjectNode.putPOJO("byVfc", vfcResourceUuidObjectNode);
+            byIdObjectNode.add("byVfc", vfcResourceUuidObjectNode);
             // To create byAlarmCondition with alarmConditionKey
             List<CldsAlarmCondition> allAlarmConditions = getAllAlarmConditionsFromCldsServiceData(cldsServiceData,
                 "alarmCondition");
-            ObjectNode alarmCondObjectNodeByAlarmKey = createAlarmCondObjectNodeByAlarmKey(allAlarmConditions);
-            byIdObjectNode.putPOJO("byAlarmCondition", alarmCondObjectNodeByAlarmKey);
+            JsonObject alarmCondObjectNodeByAlarmKey = createAlarmCondObjectNodeByAlarmKey(allAlarmConditions);
+            byIdObjectNode.add("byAlarmCondition", alarmCondObjectNodeByAlarmKey);
             // To create byAlertDescription with AlertDescription
             List<CldsAlarmCondition> allAlertDescriptions = getAllAlarmConditionsFromCldsServiceData(cldsServiceData,
                 "alertDescription");
-            ObjectNode alertDescObjectNodeByAlert = createAlarmCondObjectNodeByAlarmKey(allAlertDescriptions);
-            byIdObjectNode.putPOJO("byAlertDescription", alertDescObjectNodeByAlert);
-            globalPropsJson.putPOJO("shared", byIdObjectNode);
+            JsonObject alertDescObjectNodeByAlert = createAlarmCondObjectNodeByAlarmKey(allAlertDescriptions);
+            byIdObjectNode.add("byAlertDescription", alertDescObjectNodeByAlert);
+            globalPropsJson.add("shared", byIdObjectNode);
             logger.info("Global properties JSON created with SDC info:" + globalPropsJson);
         }
         totalPropsStr = globalPropsJson.toString();
@@ -880,73 +883,69 @@ public class SdcCatalogServices {
         return alarmCondList;
     }
 
-    private ObjectNode createAlarmCondObjectNodeByAlarmKey(List<CldsAlarmCondition> cldsAlarmCondList) {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode alarmCondKeyNode = mapper.createObjectNode();
+    private JsonObject createAlarmCondObjectNodeByAlarmKey(List<CldsAlarmCondition> cldsAlarmCondList) {
+        JsonObject alarmCondKeyNode = new JsonObject();
         if (cldsAlarmCondList != null && !cldsAlarmCondList.isEmpty()) {
             for (CldsAlarmCondition currCldsAlarmCondition : cldsAlarmCondList) {
                 if (currCldsAlarmCondition != null) {
-                    ObjectNode alarmCondNode = mapper.createObjectNode();
-                    alarmCondNode.put("eventSourceType", currCldsAlarmCondition.getEventSourceType());
-                    alarmCondNode.put("eventSeverity", currCldsAlarmCondition.getSeverity());
-                    alarmCondKeyNode.putPOJO(currCldsAlarmCondition.getAlarmConditionKey(), alarmCondNode);
+                    JsonObject alarmCondNode = new JsonObject();
+                    alarmCondNode.addProperty("eventSourceType", currCldsAlarmCondition.getEventSourceType());
+                    alarmCondNode.addProperty("eventSeverity", currCldsAlarmCondition.getSeverity());
+                    alarmCondKeyNode.add(currCldsAlarmCondition.getAlarmConditionKey(), alarmCondNode);
                 }
             }
         } else {
-            ObjectNode alarmCondNode = mapper.createObjectNode();
-            alarmCondNode.put("eventSourceType", "");
-            alarmCondNode.put("eventSeverity", "");
-            alarmCondKeyNode.putPOJO("", alarmCondNode);
+            JsonObject alarmCondNode = new JsonObject();
+            alarmCondNode.addProperty("eventSourceType", "");
+            alarmCondNode.addProperty("eventSeverity", "");
+            alarmCondKeyNode.add("", alarmCondNode);
         }
         return alarmCondKeyNode;
     }
 
-    private ObjectNode createVfObjectNodeByServiceInvariantUuid(CldsServiceData cldsServiceData) {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode invariantUuidObjectNode = mapper.createObjectNode();
-        ObjectNode vfObjectNode = mapper.createObjectNode();
-        ObjectNode vfUuidNode = mapper.createObjectNode();
+    private JsonObject createVfObjectNodeByServiceInvariantUuid(CldsServiceData cldsServiceData) {
+        JsonObject invariantUuidObjectNode = new JsonObject();
+        JsonObject vfObjectNode = new JsonObject();
+        JsonObject vfUuidNode = new JsonObject();
         List<CldsVfData> cldsVfsList = cldsServiceData.getCldsVfs();
         if (cldsVfsList != null && !cldsVfsList.isEmpty()) {
             for (CldsVfData currCldsVfData : cldsVfsList) {
                 if (currCldsVfData != null) {
-                    vfUuidNode.put(currCldsVfData.getVfInvariantResourceUUID(), currCldsVfData.getVfName());
+                    vfUuidNode.addProperty(currCldsVfData.getVfInvariantResourceUUID(), currCldsVfData.getVfName());
                 }
             }
         } else {
-            vfUuidNode.put("", "");
+            vfUuidNode.addProperty("", "");
         }
-        vfObjectNode.putPOJO("vf", vfUuidNode);
-        invariantUuidObjectNode.putPOJO(cldsServiceData.getServiceInvariantUUID(), vfObjectNode);
+        vfObjectNode.add("vf", vfUuidNode);
+        invariantUuidObjectNode.add(cldsServiceData.getServiceInvariantUUID(), vfObjectNode);
         return invariantUuidObjectNode;
     }
 
-    private void createKpiObjectNodeByVfUuid(ObjectNode vfResourceUuidObjectNode,
+    private void createKpiObjectNodeByVfUuid(JsonObject vfResourceUuidObjectNode,
         List<CldsVfKPIData> cldsVfKpiDataList) {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
         if (cldsVfKpiDataList != null && !cldsVfKpiDataList.isEmpty()) {
             for (CldsVfKPIData currCldsVfKpiData : cldsVfKpiDataList) {
                 if (currCldsVfKpiData != null) {
-                    ObjectNode thresholdNameObjectNode = mapper.createObjectNode();
-                    ObjectNode fieldPathObjectNode = mapper.createObjectNode();
-                    ObjectNode nfNamingCodeNode = mapper.createObjectNode();
-                    fieldPathObjectNode.put(currCldsVfKpiData.getFieldPathValue(),
+                    JsonObject thresholdNameObjectNode = new JsonObject();
+                    JsonObject fieldPathObjectNode = new JsonObject();
+                    JsonObject nfNamingCodeNode = new JsonObject();
+                    fieldPathObjectNode.addProperty(currCldsVfKpiData.getFieldPathValue(),
                         currCldsVfKpiData.getFieldPathValue());
-                    nfNamingCodeNode.put(currCldsVfKpiData.getNfNamingValue(), currCldsVfKpiData.getNfNamingValue());
-                    thresholdNameObjectNode.putPOJO("fieldPath", fieldPathObjectNode);
-                    thresholdNameObjectNode.putPOJO("nfNamingCode", nfNamingCodeNode);
-                    vfResourceUuidObjectNode.putPOJO(currCldsVfKpiData.getThresholdValue(), thresholdNameObjectNode);
+                    nfNamingCodeNode.addProperty(currCldsVfKpiData.getNfNamingValue(), currCldsVfKpiData.getNfNamingValue());
+                    thresholdNameObjectNode.add("fieldPath", fieldPathObjectNode);
+                    thresholdNameObjectNode.add("nfNamingCode", nfNamingCodeNode);
+                    vfResourceUuidObjectNode.add(currCldsVfKpiData.getThresholdValue(), thresholdNameObjectNode);
                 }
             }
         }
     }
 
-    private void createAlarmCondObjectNodeByVfcUuid(ObjectNode vfcResourceUuidObjectNode,
+    private void createAlarmCondObjectNodeByVfcUuid(JsonObject vfcResourceUuidObjectNode,
         List<CldsVfcData> cldsVfcDataList) {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode vfcObjectNode = mapper.createObjectNode();
-        ObjectNode alarmCondNode = mapper.createObjectNode();
-        ObjectNode alertDescNode = mapper.createObjectNode();
+        JsonObject vfcObjectNode = new JsonObject();
+        JsonObject alarmCondNode = new JsonObject();
+        JsonObject alertDescNode = new JsonObject();
         if (cldsVfcDataList != null && !cldsVfcDataList.isEmpty()) {
             for (CldsVfcData currCldsVfcData : cldsVfcDataList) {
                 if (currCldsVfcData != null) {
@@ -954,25 +953,25 @@ public class SdcCatalogServices {
                         && !currCldsVfcData.getCldsAlarmConditions().isEmpty()) {
                         for (CldsAlarmCondition currCldsAlarmCondition : currCldsVfcData.getCldsAlarmConditions()) {
                             if ("alarmCondition".equalsIgnoreCase(currCldsAlarmCondition.getEventName())) {
-                                alarmCondNode.put(currCldsAlarmCondition.getAlarmConditionKey(),
+                                alarmCondNode.addProperty(currCldsAlarmCondition.getAlarmConditionKey(),
                                     currCldsAlarmCondition.getAlarmConditionKey());
                             } else {
-                                alertDescNode.put(currCldsAlarmCondition.getAlarmConditionKey(),
+                                alertDescNode.addProperty(currCldsAlarmCondition.getAlarmConditionKey(),
                                     currCldsAlarmCondition.getAlarmConditionKey());
                             }
                         }
                     }
-                    vfcObjectNode.putPOJO("alarmCondition", alarmCondNode);
-                    vfcObjectNode.putPOJO("alertDescription", alertDescNode);
-                    vfcResourceUuidObjectNode.putPOJO(currCldsVfcData.getVfcInvariantResourceUUID(), vfcObjectNode);
+                    vfcObjectNode.add("alarmCondition", alarmCondNode);
+                    vfcObjectNode.add("alertDescription", alertDescNode);
+                    vfcResourceUuidObjectNode.add(currCldsVfcData.getVfcInvariantResourceUUID(), vfcObjectNode);
                 }
             }
         } else {
-            alarmCondNode.put("", "");
-            vfcObjectNode.putPOJO("alarmCondition", alarmCondNode);
-            alertDescNode.put("", "");
-            vfcObjectNode.putPOJO("alertDescription", alarmCondNode);
-            vfcResourceUuidObjectNode.putPOJO("", vfcObjectNode);
+            alarmCondNode.addProperty("", "");
+            vfcObjectNode.add("alarmCondition", alarmCondNode);
+            alertDescNode.addProperty("", "");
+            vfcObjectNode.add("alertDescription", alarmCondNode);
+            vfcResourceUuidObjectNode.add("", vfcObjectNode);
         }
     }
 
@@ -983,45 +982,45 @@ public class SdcCatalogServices {
      * @param cldsVfDataList
      * @return
      */
-    private ObjectNode createVfcObjectNodeByVfUuid(List<CldsVfData> cldsVfDataList) {
-        ObjectMapper mapper = JacksonUtils.getObjectMapperInstance();
-        ObjectNode vfUuidObjectNode = mapper.createObjectNode();
+    private JsonObject createVfcObjectNodeByVfUuid(List<CldsVfData> cldsVfDataList) {
+        JsonObject vfUuidObjectNode = new JsonObject();
         if (cldsVfDataList != null && !cldsVfDataList.isEmpty()) {
             for (CldsVfData currCldsVfData : cldsVfDataList) {
                 if (currCldsVfData != null) {
-                    ObjectNode vfObjectNode = mapper.createObjectNode();
-                    ObjectNode vfcUuidNode = mapper.createObjectNode();
-                    ObjectNode kpiObjectNode = mapper.createObjectNode();
+                    JsonObject vfObjectNode = new JsonObject();
+                    JsonObject vfcUuidNode = new JsonObject();
+                    JsonObject kpiObjectNode = new JsonObject();
                     if (currCldsVfData.getCldsVfcs() != null && !currCldsVfData.getCldsVfcs().isEmpty()) {
                         for (CldsVfcData currCldsVfcData : currCldsVfData.getCldsVfcs()) {
                             if (currCldsVfcData.getCldsAlarmConditions() != null
                                 && !currCldsVfcData.getCldsAlarmConditions().isEmpty()) {
-                                vfcUuidNode.put(currCldsVfcData.getVfcInvariantResourceUUID(),
+                                vfcUuidNode.addProperty(currCldsVfcData.getVfcInvariantResourceUUID(),
                                     currCldsVfcData.getVfcName());
                             }
                         }
                     } else {
-                        vfcUuidNode.put("", "");
+                        vfcUuidNode.addProperty("", "");
                     }
                     if (currCldsVfData.getCldsKPIList() != null && !currCldsVfData.getCldsKPIList().isEmpty()) {
                         for (CldsVfKPIData currCldsVfKPIData : currCldsVfData.getCldsKPIList()) {
-                            kpiObjectNode.put(currCldsVfKPIData.getThresholdValue(),
+                            // ToDo: something wrong happened here
+                            kpiObjectNode.addProperty(currCldsVfKPIData.getThresholdValue(),
                                 currCldsVfKPIData.getThresholdValue());
                         }
                     } else {
-                        kpiObjectNode.put("", "");
+                        kpiObjectNode.addProperty("", "");
                     }
-                    vfObjectNode.putPOJO("vfc", vfcUuidNode);
-                    vfObjectNode.putPOJO("kpi", kpiObjectNode);
-                    vfUuidObjectNode.putPOJO(currCldsVfData.getVfInvariantResourceUUID(), vfObjectNode);
+                    vfObjectNode.add("vfc", vfcUuidNode);
+                    vfObjectNode.add("kpi", kpiObjectNode);
+                    vfUuidObjectNode.add(currCldsVfData.getVfInvariantResourceUUID(), vfObjectNode);
                 }
             }
         } else {
-            ObjectNode vfcUuidNode = mapper.createObjectNode();
-            vfcUuidNode.put("", "");
-            ObjectNode vfcObjectNode = mapper.createObjectNode();
-            vfcObjectNode.putPOJO("vfc", vfcUuidNode);
-            vfUuidObjectNode.putPOJO("", vfcObjectNode);
+            JsonObject vfcUuidNode = new JsonObject();
+            vfcUuidNode.addProperty("", "");
+            JsonObject vfcObjectNode = new JsonObject();
+            vfcObjectNode.add("vfc", vfcUuidNode);
+            vfUuidObjectNode.add("", vfcObjectNode);
         }
         return vfUuidObjectNode;
     }

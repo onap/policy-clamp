@@ -160,7 +160,7 @@ public class CldsServiceItCase {
     }
 
     @Test
-    public void testGetCLDSDetails() throws IOException {
+    public void testGetCldsDetails() throws IOException {
         List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsService.getCldsDetails();
         assertNotNull(cldsMonitoringDetailsList);
     }

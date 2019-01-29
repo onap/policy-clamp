@@ -44,7 +44,7 @@ import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.model.properties.Global;
 import org.onap.clamp.clds.model.properties.ModelProperties;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -155,14 +155,13 @@ public class DcaeInventoryServices {
     }
 
     private DcaeInventoryResponse getItemsFromDcaeInventoryResponse(String responseStr)
-        throws ParseException, IOException {
+        throws ParseException {
         JSONParser parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;
         JSONArray itemsArray = (JSONArray) jsonObj.get("items");
         JSONObject dcaeServiceType0 = (JSONObject) itemsArray.get(0);
-        return JacksonUtils.getObjectMapperInstance().readValue(dcaeServiceType0.toString(),
-            DcaeInventoryResponse.class);
+        return JsonUtils.GSON.fromJson(dcaeServiceType0.toString(), DcaeInventoryResponse.class);
     }
 
     /**

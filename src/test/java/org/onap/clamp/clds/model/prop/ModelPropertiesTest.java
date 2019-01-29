@@ -23,6 +23,7 @@
 
 package org.onap.clamp.clds.model.prop;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -36,6 +37,7 @@ import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.properties.Holmes;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
+import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
@@ -61,11 +63,12 @@ public class ModelPropertiesTest {
         assertEquals(1, policy.getPolicyChains().size());
         assertEquals("0", policy.getPolicyChains().get(0).getPolicyId());
         assertEquals(1, policy.getPolicyChains().get(0).getPolicyItems().size());
-        assertEquals("resourceid", policy.getPolicyChains().get(0).getPolicyItems().get(0).getTargetResourceId());
-        assertEquals(180, policy.getPolicyChains().get(0).getPolicyItems().get(0).getRetryTimeLimit());
-        assertEquals(3, policy.getPolicyChains().get(0).getPolicyItems().get(0).getMaxRetries());
-        assertEquals("", policy.getPolicyChains().get(0).getPolicyItems().get(0).getParentPolicy());
-        assertEquals(null, policy.getPolicyChains().get(0).getPolicyItems().get(0).getParentPolicyConditions());
+        PolicyItem firstPolicyItem = policy.getPolicyChains().get(0).getPolicyItems().get(0);
+        assertEquals("resourceid", firstPolicyItem.getTargetResourceId());
+        assertEquals(180, firstPolicyItem.getRetryTimeLimit());
+        assertEquals(3, firstPolicyItem.getMaxRetries());
+        assertEquals("", firstPolicyItem.getParentPolicy());
+        assertThat(firstPolicyItem.getParentPolicyConditions()).isEmpty();
         Tca tca = prop.getType(Tca.class);
         assertNotNull(tca);
         assertTrue(tca.isFound());
@@ -91,8 +94,8 @@ public class ModelPropertiesTest {
             prop.getGlobal().getResourceVf().toArray()));
         assertTrue(Arrays.equals(new String[] { "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1" },
             prop.getGlobal().getLocation().toArray()));
-        assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").asText());
-        assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").asText());
+        assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").getAsString());
+        assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").getAsString());
     }
 
     @Test
@@ -107,11 +110,12 @@ public class ModelPropertiesTest {
         assertEquals(1, policy.getPolicyChains().size());
         assertEquals("0", policy.getPolicyChains().get(0).getPolicyId());
         assertEquals(1, policy.getPolicyChains().get(0).getPolicyItems().size());
-        assertEquals("resourceid", policy.getPolicyChains().get(0).getPolicyItems().get(0).getTargetResourceId());
-        assertEquals(180, policy.getPolicyChains().get(0).getPolicyItems().get(0).getRetryTimeLimit());
-        assertEquals(3, policy.getPolicyChains().get(0).getPolicyItems().get(0).getMaxRetries());
-        assertEquals("", policy.getPolicyChains().get(0).getPolicyItems().get(0).getParentPolicy());
-        assertEquals(null, policy.getPolicyChains().get(0).getPolicyItems().get(0).getParentPolicyConditions());
+        PolicyItem firstPolicyItem = policy.getPolicyChains().get(0).getPolicyItems().get(0);
+        assertEquals("resourceid", firstPolicyItem.getTargetResourceId());
+        assertEquals(180, firstPolicyItem.getRetryTimeLimit());
+        assertEquals(3, firstPolicyItem.getMaxRetries());
+        assertEquals("", firstPolicyItem.getParentPolicy());
+        assertThat(firstPolicyItem.getParentPolicyConditions()).isEmpty();
         Holmes holmes = prop.getType(Holmes.class);
         assertNotNull(holmes);
         assertTrue(holmes.isFound());
@@ -124,8 +128,8 @@ public class ModelPropertiesTest {
             prop.getGlobal().getResourceVf().toArray()));
         assertTrue(Arrays.equals(new String[] { "SNDGCA64", "ALPRGAED", "LSLEILAA", "MDTWNJC1" },
             prop.getGlobal().getLocation().toArray()));
-        assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").asText());
-        assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").asText());
+        assertEquals("value1", prop.getGlobal().getDeployParameters().get("input1").getAsString());
+        assertEquals("value2", prop.getGlobal().getDeployParameters().get("input2").getAsString());
     }
 
     @Test

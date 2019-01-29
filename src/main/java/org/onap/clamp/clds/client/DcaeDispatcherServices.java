@@ -25,9 +25,8 @@ package org.onap.clamp.clds.client;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Date;
 
@@ -122,16 +121,16 @@ public class DcaeDispatcherServices {
      *        The value for each blueprint parameters in a flat JSON
      * @return The status URL
      */
-    public String createNewDeployment(String deploymentId, String serviceTypeId, JsonNode blueprintInputJson) {
+    public String createNewDeployment(String deploymentId, String serviceTypeId, JsonObject blueprintInputJson) {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "createNewDeployment");
         try {
-            ObjectNode rootNode = (ObjectNode) refProp.getJsonTemplate("dcae.deployment.template");
-            rootNode.put("serviceTypeId", serviceTypeId);
+            JsonObject rootObject = refProp.getJsonTemplate("dcae.deployment.template").getAsJsonObject();
+            rootObject.addProperty("serviceTypeId", serviceTypeId);
             if (blueprintInputJson != null) {
-                rootNode.set("inputs", blueprintInputJson);
+                rootObject.add("inputs", blueprintInputJson);
             }
-            String apiBodyString = rootNode.toString();
+            String apiBodyString = rootObject.toString();
             logger.info("Dcae api Body String - " + apiBodyString);
             String url = refProp.getStringValue(DCAE_URL_PROPERTY_NAME) + DCAE_URL_PREFIX + deploymentId;
             String statusUrl = getDcaeResponse(url, "PUT", apiBodyString, "application/json", DCAE_LINK_FIELD,

@@ -1,0 +1,273 @@
+{
+    "global":
+    [
+        {
+            "name": "service",
+            "value":
+            [
+                "0f983e18-4603-4bb4-a98c-e29691fb16a1"
+            ]
+        },
+
+        {
+            "name": "vf",
+            "value":
+            [
+                "6c7aaec2-59eb-41d9-8681-b7f976ab668d",
+                "8sadsad0-a98s-6a7s-fd12-sadji9sa8d12",
+                "8sfd71ad-a90d-asd9-as87-8a7sd81adsaa"
+            ]
+        },
+
+        {
+            "name": "actionSet",
+            "value":
+            [
+                "vnfRecipe"
+            ]
+        },
+
+        {
+            "name": "location",
+            "value":
+            [
+                "SNDGCA64"
+            ]
+        },
+        {
+            "name": "timeout",
+            "value": "500"
+        },
+        {
+            "name": "deployParameters",
+            "value": {
+                "aaiEnrichmentHost": "aai.onap.svc.cluster.local",
+                "aaiEnrichmentPort": "8443",
+                "enableAAIEnrichment": true,
+                "dmaap_host": "message-router",
+                "dmaap_port": "3904",
+                "enableRedisCaching": false,
+                "redisHosts": "dcae-redis:6379",
+                "tag_version": "nexus3.onap.org:10001/onap/org.onap.dcaegen2.deployments.tca-cdap-container:1.1.0",
+                "consul_host": "consul-server",
+                "consul_port": "8500",
+                "cbs_host": "config-binding-service",
+                "cbs_port": "10000",
+                "external_port": "32010",
+                "policy_id": "AUTO_GENERATED_POLICY_ID_AT_SUBMIT"
+            }
+        }
+    ],
+
+    "Policy_":
+    {
+        "Policy1":
+        [
+            {
+                "name": "pname",
+                "value": "Policy1"
+            },
+
+            {
+                "name": "pid",
+                "value": "1"
+            },
+
+            {
+                "name": "timeout",
+                "value": "500"
+            },
+
+            {
+                "policyConfigurations":
+                [
+                    [
+                        {
+                            "name": "recipe",
+                            "value":
+                            [
+                                "restart"
+                            ]
+                        },
+
+                        {
+                            "name": "maxRetries",
+                            "value":
+                            [
+                                "3"
+                            ]
+                        },
+
+                        {
+                            "name": "retryTimeLimit",
+                            "value":
+                            [
+                                "180"
+                            ]
+                        },
+
+                        {
+                            "name": "_id",
+                            "value":
+                            [
+                                "n9bQ4t6"
+                            ]
+                        },
+
+                        {
+                            "name": "parentPolicy",
+                            "value":
+                            [
+                                ""
+                            ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value":
+                            [
+                                "resource-id"
+                            ]
+                        }
+                    ],
+
+                    [
+                        {
+                            "name": "recipe",
+                            "value":
+                            [
+                                "rebuild"
+                            ]
+                        },
+
+                        {
+                            "name": "maxRetries",
+                            "value":
+                            [
+                                "3"
+                            ]
+                        },
+
+                        {
+                            "name": "retryTimeLimit",
+                            "value":
+                            [
+                                "180"
+                            ]
+                        },
+
+                        {
+                            "name": "_id",
+                            "value":
+                            [
+                                "ItE5xKT"
+                            ]
+                        },
+
+                        {
+                            "name": "parentPolicy",
+                            "value":
+                            [
+                                "n9bQ4t6"
+                            ]
+                        },
+
+                        {
+                            "name": "parentPolicyConditions",
+                            "value":
+                            [
+                                "Failure_Retries",
+                                "Failure_Timeout",
+                                "Failure_Exception",
+                                "Failure"
+                            ]
+                        },
+                        {
+                            "name": "targetResourceId",
+                            "value":
+                            [
+                                "resource-id"
+                            ]
+                        }
+                    ]
+                ]
+            }
+        ]
+    },
+
+    "TCA_":
+    {
+        "Narra":
+        [
+            {
+                "name": "tname",
+                "value": "Narra"
+            },
+
+            {
+                "name": "tuuid",
+                "value": "886be8da-14fe-tca1-d04b-d13b55d58df9"
+            },
+
+            {
+                "name": "tnfc",
+                "value": "ENBE"
+            },
+
+            {
+                "name": "tcaEnab",
+                "value": "on"
+            },
+
+            {
+                "name": "tcaPol",
+                "value": "Policy1"
+            },
+
+            {
+                "name": "tcaPolId",
+                "value": "1"
+            },
+
+            {
+                "name": "tcaInt",
+                "value": "2"
+            },
+
+            {
+                "name": "tcaSev",
+                "value": "Warning"
+            },
+
+            {
+                "name": "tcaVio",
+                "value": "3"
+            },
+
+            {
+                "serviceConfigurations":
+                [
+                    [
+                        "PMRRCCONNESTABFAILCELLLATENCY",
+                        "LESS",
+                        "4",
+                        "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRRCCONNESTABFAILCELLLATENCY')].Value"
+                    ],
+
+                    [
+                        "PMRAATTCBRA",
+                        "GREATER",
+                        "30",
+                        "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[?(@.Name == 'PMRAATTCBRA')].Value"
+                    ]
+                ]
+            }
+        ]
+    },
+    
+    "CustomType_": [
+      {
+         "name": "test",
+         "value": "This is a test"
+      }
+    ]
+}

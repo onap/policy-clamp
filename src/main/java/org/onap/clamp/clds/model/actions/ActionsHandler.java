@@ -24,14 +24,13 @@
 package org.onap.clamp.clds.model.actions;
 
 import com.att.eelf.configuration.EELFLogger;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import java.io.IOException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import java.util.Arrays;
 import java.util.List;
-
 import org.onap.clamp.clds.model.CldsEvent;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Interface for actions that the user can do according to the last event.
@@ -44,7 +43,7 @@ public interface ActionsHandler {
         SIMPLE_MODEL("simpleModel"), POLICY_MODEL("policyModel");
         private final String type;
 
-        private ModelType(String type) {
+        ModelType(String type) {
             this.type = type;
         }
 
@@ -53,7 +52,7 @@ public interface ActionsHandler {
         }
     }
 
-    public EELFLogger getLogger();
+    EELFLogger getLogger();
 
     /**
      * This method determines a list of actions that the user can do according to
@@ -155,13 +154,15 @@ public interface ActionsHandler {
         boolean result = false;
         try {
             if (propText != null) {
-                JsonNode modelJson = JacksonUtils.getObjectMapperInstance().readTree(propText);
-                JsonNode modelJsonOfType = modelJson.get(key.getType());
-                if (modelJsonOfType != null && modelJsonOfType.asBoolean()) {
+                JsonObject modelJson = JsonUtils.GSON.fromJson(propText, JsonObject.class);
+                JsonElement modelJsonOfType = modelJson.get(key.getType());
+                if (modelJsonOfType != null
+                    && modelJsonOfType.isJsonPrimitive()
+                    && modelJsonOfType.getAsJsonPrimitive().getAsBoolean()) {
                     result = true;
                 }
             }
-        } catch (IOException e) {
+        } catch (JsonParseException e) {
             getLogger().error("Error while parsing propText json", e);
         }
         return result;
