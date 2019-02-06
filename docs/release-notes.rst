@@ -5,6 +5,21 @@
 Release Notes
 =============
 
+Version: 3.0.3 - maintenance release
+------------------------------------
+
+:Release Date: 2019-02-06
+
+**New Features**
+none
+
+**Bug Fixes**
+none
+
+**Known Issues**
+one documentation issue was fixed, this issue does not require a new docker image: 
+    - `CLAMP-257 <https://jira.onap.org/browse/CLAMP-257>`_ User Manual for CLAMP : nothing on readthedocs.
+
 Version: 3.0.3
 --------------
 
