@@ -1,0 +1,80 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  ============LICENSE_END=========================================================
+-->
+
+<style>
+#paramsWarn {
+	display: none;
+}
+
+.modal-dialog {
+	width: 1100px;
+}
+
+</style>
+
+<div id="configure-widgets">
+	<div class="modal-header">
+		<button type="button" class="close" data-ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>{{ toscaModelName }}</h4>
+	</div>
+
+	<div class="modal-body" style="display:block; height:600px; overflow:auto;">
+		<i hidden id="ridinSpinners" class="fa fa-spinner fa-spin"
+			style="display: none; margin-bottom: 10px; width: 100%; text-align: center; font-size: 24px; color: black;"></i>
+		<form id="saveProps">
+			<!-- <div ng-if="(simpleModel!==true)">	 -->
+			<div class="alert alert-danger" role="alert" id='paramsWarn'>
+				<strong>Ooops!</strong> Unable to load properties for <span
+					id='servName'>. Would you like to</span> <a
+					href="javascript:void(0)" class="btn-link" id='paramsRetry'>Retry
+				</a> / <a href="javascript:void(0)" class="btn-link" id='paramsCancel'>Cancel</a>
+			</div>
+			<div class="form-group clearfix" data-ng-if="policytypes">
+				<label for="policytypes" class="col-sm-4 control-label">
+					Policy Types<span id="locationErr"
+					style="display: none; color: red;">&nbsp;*Required*</span>
+				</label>
+
+				<div class="col-sm-8">
+					 <select class="form-control" id="policytype" data-ng-change = "jsonByPolicyType(selectedHPPolicy, '{{selectedHPPolicy}}', '')" data-ng-model ="$parent.selectedHPPolicy">
+					 	<option data-ng-repeat="pt in policytypes" value="{{pt}}">{{pt}}</option>
+					 </select>
+				</div>
+			</div>
+		</form>
+		<div class="alert alert-warning propChangeWarn" style="display: none;">
+			<strong>Warning!</strong> Property changes will reset all associated
+			GUI fields.
+		</div>
+		<div class="modal-body" id="form1" style="display: none">
+			<div class="container-fluid">
+				<div class="row">
+					<div id="editor"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button data-ng-click="saveToscaProps()" id="savePropsBtn" class="btn btn-primary">Done</button>
+	<button data-ng-click="close(true)" id="close_button" class="btn btn-primary">Cancel</button>
+</div>
