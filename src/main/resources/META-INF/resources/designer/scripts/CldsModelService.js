@@ -27,24 +27,36 @@ app
     'alertService',
     '$http',
     '$q',
-    function(alertService, $http, $q) {
+    '$rootScope',
+    function(alertService, $http, $q, $rootScope) {
 
-	    function checkIfElementType(name) {
+	    function checkIfElementType(name, isSimple) {
 
-		    // This will open the methods located in the app.js
-		    if (undefined == name) {
-			    return;
-		    }
-		    mapping = {
-		        'tca' : TCAWindow,
-		        'policy' : PolicyWindow,
-		        'vescollector' : VesCollectorWindow,
-		        'holmes' : HolmesWindow,
-		    };
-		    key = name.split('_')[0].toLowerCase()
-		    if (key in mapping) {
-			    mapping[key]();
-		    }
+        //This will open the methods located in the app.js
+	  	  if (isSimple){
+	  		  if (undefined == name) {
+	  			  return;
+	  		  }else if (name.toLowerCase().indexOf("policy") >= 0){
+	  				  PolicyWindow();
+	  		  } else {
+	  			  $rootScope.selectedBoxName = name.toLowerCase();
+	  			  ToscaModelWindow();
+	  		  }
+	  	  } else {
+	  		  if (undefined == name) {
+	  			  return;
+	  		  }
+	  		mapping = {
+			        'tca' : TCAWindow,
+			        'policy' : PolicyWindow,
+			        'vescollector' : VesCollectorWindow,
+			        'holmes' : HolmesWindow,
+			    };
+			    key = name.split('_')[0].toLowerCase()
+			    if (key in mapping) {
+				    mapping[key]();
+			    }
+	  	  };
 	    }
 	    function handleQueryToBackend(def, svcAction, svcUrl, svcPayload) {
 
@@ -242,7 +254,7 @@ app
 			    document.getElementById(menuText).classList.add('ThisLink');
 		    }
 	    };
-	    this.processActionResponse = function(modelName, pars) {
+	    this.processActionResponse = function(modelName, pars, simple) {
 
 		    // populate control name (prefix and uuid here)
 		    var controlNamePrefix = pars.controlNamePrefix;
@@ -260,7 +272,7 @@ app
 		    document.getElementById("modeler_name").textContent = headerText;
 		    document.getElementById("templa_name").textContent = ("Template Used - " + selected_template);
 		    setStatus(pars)
-		    addSVG(pars);
+		    disableBPMNAddSVG(pars, simple);
 		    this.enableDisableMenuOptions(pars);
 	    };
 	    this.processRefresh = function(pars) {
@@ -309,7 +321,7 @@ app
 		    '<span id="status_clds" style="position: absolute;  left: 61%;top: 151px; font-size:20px;">Status: '
 		    + statusMsg + '</span>');
 	    }
-	    function addSVG(pars) {
+	    function disableBPMNAddSVG(pars, simple) {
 
 		    var svg = pars.imageText.substring(pars.imageText.indexOf("<svg"))
 		    if ($("#svgContainer").length > 0)
@@ -330,7 +342,7 @@ app
 			    var name = $($(event.target).parent()).attr("data-element-id")
 			    lastElementSelected = $($(event.target).parent()).attr(
 			    "data-element-id")
-			    checkIfElementType(name)
+			    checkIfElementType(name, simple)
 		    });
 	    }
 	    this.enableDisableMenuOptions = function(pars) {
@@ -345,14 +357,11 @@ app
 			    document.getElementById('Close Model').classList
 			    .remove('ThisLink');
 			    // disable models options
-			    document.getElementById('Create CL').classList.add('ThisLink');
 			    document.getElementById('Save CL').classList.add('ThisLink');
 			    document.getElementById('Revert Model Changes').classList
 			    .add('ThisLink');
 		    } else {
 			    // enable menu options
-			    document.getElementById('Create CL').classList
-			    .remove('ThisLink');
 			    document.getElementById('Save CL').classList.remove('ThisLink');
 			    document.getElementById('Properties CL').classList
 			    .remove('ThisLink');

@@ -266,9 +266,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 				    $scope.cldsClose();
 			    } else if (name == "Refresh ASDC") {
 				    $scope.cldsRefreshASDC();
-			    } else if (name == "Create CL") {
-				    $rootScope.isNewClosed = true;
-				    $scope.cldsCreateModel();
 			    } else if (name == "Open CL") {
 				    $scope.cldsOpenModel();
 			    } else if (name == "Save CL") {
@@ -308,9 +305,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 	    };
 	    $scope.tabs = {
 	        "Closed Loop" : [ {
-	            link : "/cldsCreateModel",
-	            name : "Create CL"
-	        }, {
 	            link : "/cldsOpenModel",
 	            name : "Open CL"
 	        }, {
@@ -597,25 +591,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    });
 	    };
-	    $scope.cldsCreateModel = function() {
-
-		    var dlg = dialogs.create(
-		    'partials/portfolios/clds_create_model_off_Template.html',
-		    'CldsOpenModelCtrl', {
-		        closable : true,
-		        draggable : true
-		    }, {
-		        size : 'lg',
-		        keyboard : true,
-		        backdrop : 'static',
-		        windowClass : 'my-class'
-		    });
-		    dlg.result.then(function(name) {
-
-		    }, function() {
-
-		    });
-	    };
 	    $scope.extraUserInfo = function() {
 
 		    var dlg = dialogs.create(
@@ -807,6 +782,13 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    });
 	    };
+	    $scope.ToscaModelWindow = function (tosca_model) {
+
+	    	var dlg = dialogs.create('partials/portfolios/tosca_model_properties.html','ToscaModelCtrl',{closable:true,draggable:true},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
+	    	dlg.result.then(function(name){
+	    	},function(){
+	    	});
+	    };
 	    $scope.PolicyWindow = function(policy) {
 
 		    var dlg = dialogs.create(
@@ -935,6 +917,9 @@ function GOCWindow() {
 
 	angular.element(document.getElementById('navbar')).scope().GOCWindow();
 }
+function ToscaModelWindow() {
+    angular.element(document.getElementById('navbar')).scope().ToscaModelWindow();
+};
 function PolicyWindow(PolicyWin) {
 
 	angular.element(document.getElementById('navbar')).scope().PolicyWindow(
