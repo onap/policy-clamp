@@ -25,9 +25,11 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.util.List;
+import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse global json properties.
@@ -45,7 +47,7 @@ public class Global {
     private String actionSet;
     private List<String> resourceVf;
     private List<String> resourceVfc;
-    private JsonNode deployParameters;
+    private JsonObject deployParameters;
     private List<String> location;
     private String vnfScope;
 
@@ -54,15 +56,15 @@ public class Global {
      *
      * @param modelJson
      */
-    public Global(JsonNode modelJson) {
-        JsonNode globalNode = modelJson.get("global");
-        service = AbstractModelElement.getValueByName(globalNode, "service");
-        actionSet = AbstractModelElement.getValueByName(globalNode, "actionSet");
-        resourceVf = AbstractModelElement.getValuesByName(globalNode, "vf");
-        resourceVfc = AbstractModelElement.getValuesByName(globalNode, "vfc");
-        deployParameters = AbstractModelElement.getJsonNodeByName(globalNode, "deployParameters");
-        location = AbstractModelElement.getValuesByName(globalNode, "location");
-        vnfScope = AbstractModelElement.getValueByName(globalNode, "vnf");
+    public Global(JsonObject modelJson) {
+        JsonElement globalNode = modelJson.get("global");
+        service = JsonUtils.getStringValueByName(globalNode, "service");
+        actionSet = JsonUtils.getStringValueByName(globalNode, "actionSet");
+        resourceVf = JsonUtils.getStringValuesByName(globalNode, "vf");
+        resourceVfc = JsonUtils.getStringValuesByName(globalNode, "vfc");
+        deployParameters = JsonUtils.getJsonObjectByName(globalNode, "deployParameters");
+        location = JsonUtils.getStringValuesByName(globalNode, "location");
+        vnfScope = JsonUtils.getStringValueByName(globalNode, "vnf");
     }
 
     /**
@@ -136,11 +138,11 @@ public class Global {
         this.location = location;
     }
 
-    public JsonNode getDeployParameters() {
+    public JsonObject getDeployParameters() {
         return deployParameters;
     }
 
-    public void setDeployParameters(JsonNode deployParameters) {
+    public void setDeployParameters(JsonObject deployParameters) {
         this.deployParameters = deployParameters;
     }
 

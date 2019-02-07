@@ -25,7 +25,7 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonArray;
 
 /**
  * Parse ONAP Tca Threshold json properties.
@@ -44,21 +44,21 @@ public class TcaThreshold {
     /**
      * Parse Tca Threshhold given json node
      *
-     * @param node
+     * @param tcaTresholdConfiguration
      */
-    public TcaThreshold(JsonNode node) {
+    public TcaThreshold(JsonArray tcaTresholdConfiguration) {
 
-        if (node.get(0) != null) {
-            fieldPath = node.get(0).asText();
+        if (tcaTresholdConfiguration.get(0) != null) {
+            fieldPath = tcaTresholdConfiguration.get(0).getAsString();
         }
-        if (node.get(1) != null) {
-            operator = node.get(1).asText();
+        if (tcaTresholdConfiguration.get(1) != null) {
+            operator = tcaTresholdConfiguration.get(1).getAsString();
         }
-        if (node.get(2) != null) {
-            threshold = Integer.valueOf(node.get(2).asText());
+        if (tcaTresholdConfiguration.get(2) != null) {
+            threshold = Integer.valueOf(tcaTresholdConfiguration.get(2).getAsString());
         }
-        if (node.get(3) != null) {
-            closedLoopEventStatus = node.get(3).asText();
+        if (tcaTresholdConfiguration.get(3) != null) {
+            closedLoopEventStatus = tcaTresholdConfiguration.get(3).getAsString();
         }
     }
 

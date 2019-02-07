@@ -87,7 +87,7 @@ public class CldsUser {
 
     /**
      * Sets the permissions.
-     * 
+     *
      * @param permissionsArray
      *            the permissions to set
      */

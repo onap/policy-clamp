@@ -25,16 +25,18 @@ package org.onap.clamp.clds.config.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
 
+import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -59,13 +61,13 @@ public class SdcControllersConfiguration {
     /**
      * The root of the JSON.
      */
-    private JsonNode jsonRootNode;
+    private JsonObject jsonRootNode;
 
     @PostConstruct
     public void loadConfiguration() throws IOException {
         Resource resource = appContext.getResource(sdcControllerFile);
         // Try to load json tree
-        jsonRootNode = JacksonUtils.getObjectMapperInstance().readValue(resource.getInputStream(), JsonNode.class);
+        jsonRootNode = JsonUtils.GSON.fromJson(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8), JsonObject.class);
     }
 
     public SdcSingleControllerConfiguration getSdcSingleControllerConfiguration(String controllerName) {
@@ -80,8 +82,9 @@ public class SdcControllersConfiguration {
     public Map<String, SdcSingleControllerConfiguration> getAllDefinedControllers() {
         Map<String, SdcSingleControllerConfiguration> result = new HashMap<>();
         if (jsonRootNode.get(CONTROLLER_SUBTREE_KEY) != null) {
-            jsonRootNode.get(CONTROLLER_SUBTREE_KEY).fields().forEachRemaining(entry -> result.put(entry.getKey(),
-                    new SdcSingleControllerConfiguration(entry.getValue(), entry.getKey())));
+            jsonRootNode.get(CONTROLLER_SUBTREE_KEY).getAsJsonObject().entrySet().forEach(
+                entry -> result.put(entry.getKey(),
+                    new SdcSingleControllerConfiguration(entry.getValue().getAsJsonObject(), entry.getKey())));
         } else {
             throw new SdcParametersException(
                     CONTROLLER_SUBTREE_KEY + " key not found in the file: " + sdcControllerFile);

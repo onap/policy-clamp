@@ -25,8 +25,8 @@ package org.onap.clamp.clds.config.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
 
+import com.google.gson.JsonObject;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     /**
      * The root of the JSON.
      */
-    private JsonNode jsonRootNode;
+    private JsonObject jsonRootNode;
     // All keys that can be present in the JSON
     public static final String CONSUMER_GROUP_ATTRIBUTE_NAME = "consumerGroup";
     public static final String CONSUMER_ID_ATTRIBUTE_NAME = "consumerId";
@@ -90,12 +90,12 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
      * This constructor builds a SdcSingleControllerConfiguration from the
      * corresponding json.
      * 
-     * @param jsonRootNode
+     * @param jsonNode
      *            The JSON node
      * @param controllerName
      *            The controller name that must appear in the JSON
      */
-    public SdcSingleControllerConfiguration(JsonNode jsonNode, String controllerName) {
+    public SdcSingleControllerConfiguration(JsonObject jsonNode, String controllerName) {
         jsonRootNode = jsonNode;
         setSdcControllerName(controllerName);
         testAllRequiredParameters();
@@ -113,7 +113,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     private String getStringConfig(String key) {
         if (jsonRootNode != null && jsonRootNode.get(key) != null) {
-            String config = jsonRootNode.get(key).asText();
+            String config = jsonRootNode.get(key).getAsString();
             return config.isEmpty() ? null : config;
         }
         return null;
@@ -121,7 +121,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     private Integer getIntConfig(String key) {
         if (jsonRootNode != null && jsonRootNode.get(key) != null) {
-            return jsonRootNode.get(key).asInt();
+            return jsonRootNode.get(key).getAsInt();
         } else {
             return 0;
         }
@@ -129,8 +129,8 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     private String getEncryptedStringConfig(String key) throws GeneralSecurityException, DecoderException {
         if (jsonRootNode != null && jsonRootNode.get(key) != null) {
-            return jsonRootNode.get(key).asText().isEmpty() ? null
-                    : CryptoUtils.decrypt(jsonRootNode.get(key).asText());
+            return jsonRootNode.get(key).getAsString().isEmpty() ? null
+                    : CryptoUtils.decrypt(jsonRootNode.get(key).getAsString());
         }
         return null;
     }
@@ -143,7 +143,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     @Override
     public String getConsumerGroup() {
         if (jsonRootNode != null && jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME) != null) {
-            String config = jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME).asText();
+            String config = jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME).getAsString();
             return "NULL".equals(config) || config.isEmpty() ? null : config;
         }
         return null;
@@ -198,8 +198,8 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     @Override
     public boolean activateServerTLSAuth() {
-        if (jsonRootNode != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH) != null) {
-            return jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).asBoolean(false);
+        if (jsonRootNode != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH) != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).isJsonPrimitive()) {
+            return jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).getAsBoolean();
         } else {
             return false;
         }
@@ -231,7 +231,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
             throw new SdcParametersException("Json is null for controller " + this.getSdcControllerName());
         }
         if (this.getConsumerGroup() == null && (jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME) == null
-                || !"NULL".equals(jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME).asText()))) {
+                || !"NULL".equals(jsonRootNode.get(CONSUMER_GROUP_ATTRIBUTE_NAME).getAsString()))) {
             throw new SdcParametersException(CONSUMER_GROUP_ATTRIBUTE_NAME + errorMessageKeyNotFound);
         }
         if (this.getConsumerID() == null || this.getConsumerID().isEmpty()) {
@@ -277,7 +277,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     public List<String> getMsgBusAddress() {
         List<String> addressesList = new ArrayList<>();
         if (jsonRootNode != null && jsonRootNode.get(MESSAGE_BUS_ADDRESSES) != null) {
-            jsonRootNode.get(MESSAGE_BUS_ADDRESSES).forEach(k -> addressesList.add(k.asText()));
+            jsonRootNode.get(MESSAGE_BUS_ADDRESSES).getAsJsonArray().forEach(k -> addressesList.add(k.getAsString()));
             return addressesList;
         } else {
             return addressesList;

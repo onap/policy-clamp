@@ -23,9 +23,6 @@
 
 package org.onap.clamp.clds.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CldsModelInstance {
 
     private String modelInstanceId;

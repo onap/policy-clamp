@@ -18,16 +18,16 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.prop;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
+import com.google.gson.JsonObject;
 import org.onap.clamp.clds.model.properties.AbstractModelElement;
 import org.onap.clamp.clds.model.properties.ModelBpmn;
 import org.onap.clamp.clds.model.properties.ModelProperties;
+import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * A CustomModelElement to test the capability to add new elements on the fly.
@@ -40,10 +40,10 @@ public class CustomModelElement extends AbstractModelElement {
     /**
      * Main Constructor.
      */
-    public CustomModelElement(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
+    public CustomModelElement(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
         super(CUSTOM_TYPE, modelProp, modelBpmn, modelJson);
-        topicPublishes = getValueByName("topicPublishes");
-        test = this.getValueByName("test");
+        topicPublishes = JsonUtils.getStringValueByName(modelElementJsonNode, "topicPublishes");
+        test = JsonUtils.getStringValueByName(modelElementJsonNode, "test");
     }
 
     public static final String getType() {

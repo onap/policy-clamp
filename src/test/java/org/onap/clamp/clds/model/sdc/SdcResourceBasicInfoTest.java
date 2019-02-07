@@ -31,14 +31,16 @@ public class SdcResourceBasicInfoTest {
     @Test
     public void testHashCode() {
         SdcResourceBasicInfo sdc1a = new SdcResourceBasicInfo();
-        SdcResourceBasicInfo sdc1b = new SdcResourceBasicInfo();
-        SdcResourceBasicInfo sdc2 = new SdcResourceBasicInfo();
         sdc1a.setName("test1");
         sdc1a.setVersion("1.0");
-        sdc1b.setName("test1");
-        sdc1b.setVersion("2.0");
+
+        SdcResourceBasicInfo sdc2 = new SdcResourceBasicInfo();
         sdc2.setName("test2");
         sdc2.setVersion("2.0");
+
+        SdcResourceBasicInfo sdc1b = new SdcResourceBasicInfo();
+        sdc1b.setName("test1");
+        sdc1b.setVersion("2.0");
 
         Assertions.assertThat(sdc1a.hashCode()).isNotEqualTo(sdc1b.hashCode());
         Assertions.assertThat(sdc1b.hashCode()).isNotEqualTo(sdc2.hashCode());
@@ -50,12 +52,14 @@ public class SdcResourceBasicInfoTest {
     @Test
     public void testCompareTo() {
         SdcResourceBasicInfo sdc1a = new SdcResourceBasicInfo();
-        SdcResourceBasicInfo sdc1b = new SdcResourceBasicInfo();
-        SdcResourceBasicInfo sdc2 = new SdcResourceBasicInfo();
         sdc1a.setName("test1");
         sdc1a.setVersion("1.0");
+
+        SdcResourceBasicInfo sdc1b = new SdcResourceBasicInfo();
         sdc1b.setName("test1");
         sdc1b.setVersion("2.0");
+
+        SdcResourceBasicInfo sdc2 = new SdcResourceBasicInfo();
         sdc2.setName("test2");
         sdc2.setVersion("2.0");
 
@@ -68,12 +72,14 @@ public class SdcResourceBasicInfoTest {
     @Test
     public void testEquals() {
         SdcResourceBasicInfo sdc1a = new SdcResourceBasicInfo();
-        SdcResourceBasicInfo sdc1b = new SdcResourceBasicInfo();
-        SdcResourceBasicInfo sdc2 = new SdcResourceBasicInfo();
         sdc1a.setName("test1");
         sdc1a.setVersion("1.0");
+
+        SdcResourceBasicInfo sdc1b = new SdcResourceBasicInfo();
         sdc1b.setName("test1");
         sdc1b.setVersion("2.0");
+
+        SdcResourceBasicInfo sdc2 = new SdcResourceBasicInfo();
         sdc2.setName("test2");
         sdc2.setVersion("2.0");
 

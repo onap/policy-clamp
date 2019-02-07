@@ -28,8 +28,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import com.google.gson.JsonElement;
 import java.io.IOException;
 import java.util.List;
 
@@ -62,24 +62,34 @@ public class CldsReferencePropertiesItCase {
         assertNull(refProp.getStringValue("does.not.exist"));
     }
 
-    /**
-     * Test getting prop value as a JSON Node / template.
-     *
-     * @throws IOException
-     *         when JSON parsing fails
-     */
     @Test
-    public void testGetJsonTemplate() throws IOException {
-        // ui.location.default={"DC1":"Data Center 1","DC2":"Data Center
-        // 2","DC3":"Data Center 3"}
-        ObjectNode root = (ObjectNode) refProp.getJsonTemplate("ui.location.default");
+    public void shouldReturnJsonFromTemplate() throws IOException {
+        //when
+        JsonElement root = refProp.getJsonTemplate("ui.location.default");
+
+        //then
         assertNotNull(root);
-        assertEquals(root.get("DC1").asText(), "Data Center 1");
-        // Test composite key
-        root = (ObjectNode) refProp.getJsonTemplate("ui.location", "default");
+        assertTrue(root.isJsonObject());
+        assertEquals(root.getAsJsonObject().get("DC1").getAsString(), "Data Center 1");
+    }
+
+    @Test
+    public void shouldReturnJsonFromTemplate_2() throws IOException {
+        //when
+        JsonElement root = refProp.getJsonTemplate("ui.location", "default");
+
+        //then
         assertNotNull(root);
-        assertEquals(root.get("DC1").asText(), "Data Center 1");
-        root = (ObjectNode) refProp.getJsonTemplate("ui.location", "");
+        assertTrue(root.isJsonObject());
+        assertEquals(root.getAsJsonObject().get("DC1").getAsString(), "Data Center 1");
+    }
+
+    @Test
+    public void shouldReturnNullIfPropertyNotFound() throws IOException {
+        //when
+        JsonElement root = refProp.getJsonTemplate("ui.location", "");
+
+        //then
         assertNull(root);
     }
 

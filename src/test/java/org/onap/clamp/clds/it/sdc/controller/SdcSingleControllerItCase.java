@@ -23,7 +23,6 @@
 
 package org.onap.clamp.clds.it.sdc.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,8 +88,11 @@ public class SdcSingleControllerItCase {
         return notifData;
     }
 
+    /**
+     * Initialization method.
+     */
     @Before
-    public void init() throws IOException {
+    public void init() {
         sdcSingleController = new SdcSingleController(clampProp, Mockito.mock(CsarInstaller.class),
             SdcSingleControllerConfigurationTest.loadControllerConfiguration("clds/sdc-controller-config-TLS.json",
                 "sdc-controller1"),

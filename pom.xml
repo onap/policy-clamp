@@ -66,7 +66,7 @@
 				<eelf.core.version>1.0.0</eelf.core.version>
 				<camel.version>2.22.1</camel.version>
 				<springboot.version>2.0.6.RELEASE</springboot.version>
-				
+
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 				<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
 				<sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
@@ -75,7 +75,7 @@
 				<sonar.projectVersion>${project.version}</sonar.projectVersion>
 				<!-- Enable language to disable javascript analysis -->
 				<sonar.language>java</sonar.language>
-				<!-- Parameters for Javascript coverage 
+				<!-- Parameters for Javascript coverage
 					<sonar.sources>src/main,${project.build.directory}/clamp-ui/designer</sonar.sources>
 					<sonar.javascript.lcov.reportPaths>${project.build.directory}/clamp-ui/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
 				 -->
@@ -265,7 +265,7 @@
 						<artifactId>camel-servlet-starter</artifactId>
 				</dependency>
 				<dependency>
-					<groupId>org.apache.camel</groupId> 
+					<groupId>org.apache.camel</groupId>
 					<artifactId>camel-jackson-starter</artifactId>
 				</dependency>
 				<dependency>
@@ -296,6 +296,12 @@
 				<dependency>
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-starter-web</artifactId>
+						<exclusions>
+							<exclusion>
+								<groupId>org.springframework.boot</groupId>
+								<artifactId>spring-boot-starter-json</artifactId>
+								</exclusion>
+						</exclusions>
 				</dependency>
 				<dependency>
 						<groupId>org.springframework.boot</groupId>
@@ -438,6 +444,10 @@
 										<artifactId>integrity-audit</artifactId>
 								</exclusion>
 								<exclusion>
+									<groupId>com.fasterxml.jackson.core</groupId>
+									<artifactId>jackson-databind</artifactId>
+								</exclusion>
+								<exclusion>
 										<groupId>org.onap.aaf.cadi</groupId>
 										<artifactId>cadi-aaf</artifactId>
 								</exclusion>
@@ -567,6 +577,12 @@
 						<groupId>org.onap.sdc.sdc-tosca</groupId>
 						<artifactId>sdc-tosca</artifactId>
 						<version>1.4.1</version>
+						<exclusions>
+							<exclusion>
+								<groupId>com.fasterxml.jackson.core</groupId>
+								<artifactId>jackson-databind</artifactId>
+							</exclusion>
+						</exclusions>
 				</dependency>
 				<!-- TESTING -->
 				<dependency>
@@ -642,7 +658,7 @@
 						</testResource>
 				</testResources>
 				<resources>
-						<!--  For AAF folder maven should not try to filter Keystores/Truststores ... 
+						<!--  For AAF folder maven should not try to filter Keystores/Truststores ...
 							  Otherwise they will be broken and unreadable
 						-->
 						<resource>
@@ -701,8 +717,8 @@
 								</execution>
 							</executions>
 						</plugin>
-						<!-- Read the swagger.json file and the definition from SwaggerConfig.java; 
-							generate a list of .adoc files containing the APIs info in more structured 
+						<!-- Read the swagger.json file and the definition from SwaggerConfig.java;
+							generate a list of .adoc files containing the APIs info in more structured
 							way -->
 						<plugin>
 								<groupId>io.github.swagger2markup</groupId>
@@ -737,7 +753,7 @@
 								</executions>
 						</plugin>
 
-						<!-- Run the generated asciidoc through Asciidoctor to generate other 
+						<!-- Run the generated asciidoc through Asciidoctor to generate other
 								documentation types, such as PDFs or HTML5 -->
 						<plugin>
 								<groupId>org.asciidoctor</groupId>
@@ -1002,7 +1018,7 @@
 																		<tag>${project.docker.latesttagtimestamp.version}</tag>
 																		<tag>${project.docker.latesttag.version}</tag>
 																</tags>
-																<!-- A relative path is looked up in ${project.basedir}/src/main/docker 
+																<!-- A relative path is looked up in ${project.basedir}/src/main/docker
 																		by default -->
 																<dockerFile>Dockerfile</dockerFile>
 																<assembly>

@@ -44,6 +44,9 @@ public class GuardPolicyAttributesConstructorTest {
     private ModelProperties modelProperties;
     private List<PolicyChain> policyChains;
 
+    /**
+     * @throws Exception thrown if resources not found.
+     */
     @Before
     public void setUp() throws Exception {
         String modelProp = ResourceFileUtil

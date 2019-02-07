@@ -25,11 +25,10 @@ package org.onap.clamp.clds.client.req.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
@@ -47,7 +46,7 @@ import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.clamp.clds.model.sdc.SdcResource;
 import org.onap.clamp.clds.model.sdc.SdcServiceDetail;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -98,16 +97,15 @@ public class SdcRequests {
      * @return SDC Locations request in the JSON Format
      */
     public String formatSdcLocationsReq(ModelProperties prop, String artifactName) {
-        ObjectMapper objectMapper = JacksonUtils.getObjectMapperInstance();
         Global global = prop.getGlobal();
         List<String> locationsList = global.getLocation();
-        ArrayNode locationsArrayNode = objectMapper.createArrayNode();
-        ObjectNode locationObject = objectMapper.createObjectNode();
+        JsonArray locationsArrayNode = new JsonArray();
+        JsonObject locationObject = new JsonObject();
         for (String currLocation : locationsList) {
             locationsArrayNode.add(currLocation);
         }
-        locationObject.put("artifactName", artifactName);
-        locationObject.putPOJO("locations", locationsArrayNode);
+        locationObject.addProperty("artifactName", artifactName);
+        locationObject.add("locations", locationsArrayNode);
         String locationJsonFormat = locationObject.toString();
         logger.info("Value of location Json Artifact:" + locationsArrayNode);
         return locationJsonFormat;
@@ -207,18 +205,18 @@ public class SdcRequests {
      */
     protected String getYamlvalue(String jsonGlobal) throws IOException {
         String yamlFileValue = "";
-        ObjectNode root = JacksonUtils.getObjectMapperInstance().readValue(jsonGlobal, ObjectNode.class);
-        Iterator<Entry<String, JsonNode>> entryItr = root.fields();
+        JsonObject root = JsonUtils.GSON.fromJson(jsonGlobal, JsonObject.class);
+        Iterator<Entry<String, JsonElement>> entryItr = root.entrySet().iterator();
         while (entryItr.hasNext()) {
-            Entry<String, JsonNode> entry = entryItr.next();
+            Entry<String, JsonElement> entry = entryItr.next();
             String key = entry.getKey();
             if (key != null && key.equalsIgnoreCase("global")) {
-                ArrayNode arrayNode = (ArrayNode) entry.getValue();
-                for (JsonNode anArrayNode : arrayNode) {
-                    ObjectNode node = (ObjectNode) anArrayNode;
-                    ArrayNode arrayValueNode = (ArrayNode) node.get("value");
-                    JsonNode jsonNode = arrayValueNode.get(0);
-                    yamlFileValue = jsonNode.asText();
+                JsonArray arrayNode = entry.getValue().getAsJsonArray();
+                for (JsonElement anArrayNode : arrayNode) {
+                    JsonObject node = anArrayNode.getAsJsonObject();
+                    JsonArray arrayValueNode = node.get("value").getAsJsonArray();
+                    JsonElement jsonNode = arrayValueNode.get(0);
+                    yamlFileValue = jsonNode.getAsString();
                     logger.info("value:" + yamlFileValue);
                 }
                 break;

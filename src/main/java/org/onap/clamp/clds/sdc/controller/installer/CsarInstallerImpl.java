@@ -25,8 +25,8 @@ package org.onap.clamp.clds.sdc.controller.installer;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +51,7 @@ import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
 import org.onap.clamp.clds.transform.XslTransformer;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -59,9 +59,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- * This class will be instantiated by spring config, and used by Sdc Controller.
- * There is no state kept by the bean. It's used to deploy the csar/notification
- * received from SDC in DB.
+ * This class will be instantiated by spring config, and used by Sdc Controller. There is no state kept by the bean.
+ * It's used to deploy the csar/notification received from SDC in DB.
  */
 public class CsarInstallerImpl implements CsarInstaller {
 
@@ -103,7 +102,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
             alreadyInstalled = alreadyInstalled
                 && (CldsModel.retrieve(cldsDao, buildModelName(csar, blueprint.getKey()), true).getId() != null) ? true
-                    : false;
+                : false;
         }
         return alreadyInstalled;
     }
@@ -165,22 +164,20 @@ public class CsarInstallerImpl implements CsarInstaller {
         return listConfig.get(0);
     }
 
-    private static String getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact) {
-        ObjectNode node = JacksonUtils.getObjectMapperInstance().createObjectNode();
+    String getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact) {
+        JsonObject node = new JsonObject();
         Yaml yaml = new Yaml();
         Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
             .load(blueprintArtifact.getDcaeBlueprint())).get("inputs"));
         inputsNodes.entrySet().stream().filter(e -> !e.getKey().contains("policy_id")).forEach(elem -> {
-            Object defaultNode = ((Map<String, Object>) elem.getValue()).get("default");
-            if (defaultNode != null && defaultNode instanceof String) {
-                node.put(elem.getKey(), (String) defaultNode);
-            } else if (defaultNode != null) {
-                node.putPOJO(elem.getKey(), defaultNode);
+            Object defaultValue = ((Map<String, Object>) elem.getValue()).get("default");
+            if (defaultValue != null) {
+                addPropertyToNode(node, elem.getKey(), defaultValue);
             } else {
-                node.put(elem.getKey(), "");
+                node.addProperty(elem.getKey(), "");
             }
         });
-        node.put("policy_id", "AUTO_GENERATED_POLICY_ID_AT_SUBMIT");
+        node.addProperty("policy_id", "AUTO_GENERATED_POLICY_ID_AT_SUBMIT");
         return node.toString();
     }
 
@@ -217,14 +214,10 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     /**
-     * This call must be done when deploying the SDC notification as this call get
-     * the latest version of the artifact (version can be specified to DCAE call)
+     * This call must be done when deploying the SDC notification as this call get the latest version of the artifact
+     * (version can be specified to DCAE call)
      *
-     * @param blueprintArtifact
      * @return The DcaeInventoryResponse object containing the dcae values
-     * @throws IOException
-     * @throws ParseException
-     * @throws InterruptedException
      */
     private DcaeInventoryResponse queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact)
         throws IOException, ParseException, InterruptedException {
@@ -291,5 +284,19 @@ public class CsarInstallerImpl implements CsarInstaller {
             + "\"]},{\"name\":\"actionSet\",\"value\":[\"vnfRecipe\"]},{\"name\":\"location\",\"value\":[\"DC1\"]},"
             + inputParams + "]}");
         return cldsModel.save(cldsDao, null);
+    }
+
+    private void addPropertyToNode(JsonObject node, String key, Object value) {
+        if (value instanceof String) {
+            node.addProperty(key, (String) value);
+        } else if (value instanceof Number) {
+            node.addProperty(key, (Number) value);
+        } else if (value instanceof Boolean) {
+            node.addProperty(key, (Boolean) value);
+        } else if (value instanceof Character) {
+            node.addProperty(key, (Character) value);
+        } else {
+            node.addProperty(key, JsonUtils.GSON.toJson(value));
+        }
     }
 }

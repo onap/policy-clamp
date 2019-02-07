@@ -23,13 +23,16 @@
 
 package org.onap.clamp.clds.config.sdc;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.io.IOException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * This class is used to decode the configuration found in
@@ -39,6 +42,8 @@ import org.onap.clamp.clds.util.JacksonUtils;
  */
 public class BlueprintParserMappingConfiguration {
 
+    private static final Type BLUEPRINT_MAP_CONF_TYPE = new TypeToken<List<BlueprintParserMappingConfiguration>>() {
+    }.getType();
     private String blueprintKey;
     private boolean dcaeDeployable;
     private BlueprintParserFilesConfiguration files;
@@ -63,9 +68,7 @@ public class BlueprintParserMappingConfiguration {
         return dcaeDeployable;
     }
 
-    public static List<BlueprintParserMappingConfiguration> createFromJson(InputStream json) throws IOException {
-        TypeReference<List<BlueprintParserMappingConfiguration>> mapType = new TypeReference<List<BlueprintParserMappingConfiguration>>() {
-        };
-        return JacksonUtils.getObjectMapperInstance().readValue(json, mapType);
+    public static List<BlueprintParserMappingConfiguration> createFromJson(InputStream json) {
+        return JsonUtils.GSON.fromJson(new InputStreamReader(json, StandardCharsets.UTF_8), BLUEPRINT_MAP_CONF_TYPE);
     }
 }

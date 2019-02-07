@@ -23,16 +23,16 @@
 
 package org.onap.clamp.clds.config;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Splitter;
 
+import com.google.gson.JsonElement;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -89,10 +89,10 @@ public class ClampProperties {
      * @throws IOException
      *         In case of issues with the JSON parser
      */
-    public JsonNode getJsonTemplate(String key) throws IOException {
+    public JsonElement getJsonTemplate(String key) throws IOException {
         String fileReference = getStringValue(key);
         return (fileReference != null)
-            ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference), JsonNode.class)
+            ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
             : null;
     }
 
@@ -109,10 +109,10 @@ public class ClampProperties {
      * @throws IOException
      *         In case of issues with the JSON parser
      */
-    public JsonNode getJsonTemplate(String key1, String key2) throws IOException {
+    public JsonElement getJsonTemplate(String key1, String key2) throws IOException {
         String fileReference = getStringValue(key1, key2);
         return (fileReference != null)
-            ? JacksonUtils.getObjectMapperInstance().readValue(getFileContentFromPath(fileReference), JsonNode.class)
+            ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
             : null;
     }
 

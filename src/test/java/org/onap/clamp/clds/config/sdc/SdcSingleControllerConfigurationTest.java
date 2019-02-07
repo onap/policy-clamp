@@ -29,13 +29,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.google.gson.JsonObject;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
 /**
@@ -43,13 +43,19 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
  */
 public class SdcSingleControllerConfigurationTest {
 
+    /**
+     * @param fileName file for sdc controller configuration.
+     * @param sdcControllerName sdc controller name.
+     * @return instance of SdcSingleControllerConfiguration.
+     */
     public static SdcSingleControllerConfiguration loadControllerConfiguration(String fileName,
-        String sdcControllerName) throws IOException {
-        JsonNode jsonNode = new ObjectMapper().readValue(ResourceFileUtil.getResourceAsStream(fileName),
-            JsonNode.class);
-        SdcSingleControllerConfiguration sdcSingleControllerConfiguration = new SdcSingleControllerConfiguration(
-            jsonNode, sdcControllerName);
-        return sdcSingleControllerConfiguration;
+        String sdcControllerName) {
+
+        InputStreamReader streamReader = new InputStreamReader(ResourceFileUtil.getResourceAsStream(fileName),
+            StandardCharsets.UTF_8);
+        JsonObject jsonNode = JsonUtils.GSON.fromJson(streamReader, JsonObject.class);
+
+        return new SdcSingleControllerConfiguration(jsonNode, sdcControllerName);
     }
 
     @Test

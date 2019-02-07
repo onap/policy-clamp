@@ -23,14 +23,18 @@
 
 package org.onap.clamp.clds.config;
 
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
+import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 
 public class CldsUserJsonDecoder {
 
@@ -55,8 +59,8 @@ public class CldsUserJsonDecoder {
         try {
             // the ObjectMapper readValue method closes the stream no need to do
             // it
-            return JacksonUtils.getObjectMapperInstance().readValue(cldsUsersString, CldsUser[].class);
-        } catch (IOException e) {
+            return JsonUtils.GSON.fromJson(cldsUsersString, CldsUser[].class);
+        } catch (JsonParseException e) {
             throw new CldsUsersException("Exception occurred during the decoding of the clds-users.json", e);
         }
     }

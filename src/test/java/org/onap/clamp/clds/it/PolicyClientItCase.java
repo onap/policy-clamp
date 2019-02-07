@@ -24,7 +24,9 @@
 
 package org.onap.clamp.clds.it;
 
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +49,7 @@ import org.onap.clamp.clds.model.properties.Policy;
 import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.clamp.clds.model.properties.Tca;
 import org.onap.clamp.clds.transform.XslTransformer;
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
@@ -67,6 +69,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class PolicyClientItCase {
 
+    private static final Type MAP_OF_STRING_TO_OBJECT_TYPE = new TypeToken<Map<String, Object>>() {}.getType();
+
     @Autowired
     private CldsDao cldsDao;
     @Autowired
@@ -82,6 +86,11 @@ public class PolicyClientItCase {
     String modelBpmnPropJson;
     ModelProperties prop;
 
+    /**
+     * Setup method.
+     * @throws IOException thrown if resources not found
+     * @throws TransformerException thrown if invalid xml given to transformation
+     */
     @Before
     public void setUp() throws IOException, TransformerException {
         modelProp = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/model-properties.json");
@@ -94,7 +103,7 @@ public class PolicyClientItCase {
     }
 
     @Test
-    public void testSendGuardPolicy() throws TransformerException, IOException {
+    public void testSendGuardPolicy() {
         // Normally there is only one Guard
         List<PolicyItem> policyItems = GuardPolicyAttributesConstructor
             .getAllPolicyGuardsFromPolicyChain(prop.getType(Policy.class).getPolicyChains().get(0));
@@ -105,8 +114,7 @@ public class PolicyClientItCase {
         String response = policyClient.sendGuardPolicy(
             GuardPolicyAttributesConstructor.formatAttributes(prop, policyItem), prop, LoggingUtils.getRequestId(),
             policyItem);
-        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Map<String, Object> mapNodes = JsonUtils.GSON.fromJson(response, MAP_OF_STRING_TO_OBJECT_TYPE);
         Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Decision"),
             Assertions.entry("policyName",
                 modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0_Guard_6TtHGPq"),
@@ -124,14 +132,13 @@ public class PolicyClientItCase {
     }
 
     @Test
-    public void testSendBrmsPolicy()
-        throws TransformerException, BuilderException, IllegalArgumentException, IOException {
+    public void testSendBrmsPolicy() throws BuilderException, IllegalArgumentException, IOException {
         Map<AttributeType, Map<String, String>> attributes = OperationalPolicyAttributesConstructor.formatAttributes(
             refProp, prop, prop.getType(Policy.class).getId(), prop.getType(Policy.class).getPolicyChains().get(0));
         String response = policyClient.sendBrmsPolicy(attributes, prop, LoggingUtils.getRequestId());
 
-        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Map<String, Object> mapNodes = JsonUtils.GSON.fromJson(response, MAP_OF_STRING_TO_OBJECT_TYPE);
+
         Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
             Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0"),
             Assertions.entry("policyConfigType", PolicyConfigType.BRMS_PARAM.name()),
@@ -144,14 +151,13 @@ public class PolicyClientItCase {
     }
 
     @Test
-    public void testSendMicroServiceInJson()
-        throws TransformerException, BuilderException, IllegalArgumentException, IOException {
+    public void testSendMicroServiceInJson() throws IllegalArgumentException {
         prop.setCurrentModelElementId(prop.getType(Policy.class).getId());
         String jsonToSend = "{\"test\":\"test\"}";
         String response = policyClient.sendMicroServiceInJson(jsonToSend, prop, LoggingUtils.getRequestId());
 
-        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Map<String, Object> mapNodes = JsonUtils.GSON.fromJson(response, MAP_OF_STRING_TO_OBJECT_TYPE);
+
         Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
             Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h"),
             Assertions.entry("policyConfigType", PolicyConfigType.MicroService.name()),
@@ -165,8 +171,8 @@ public class PolicyClientItCase {
     public void testSendBasePolicyInOther() throws IllegalArgumentException, IOException {
         String body = "test";
         String response = policyClient.sendBasePolicyInOther(body, "myPolicy", prop, LoggingUtils.getRequestId());
-        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Map<String, Object> mapNodes = JsonUtils.GSON.fromJson(response, MAP_OF_STRING_TO_OBJECT_TYPE);
+
         Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
             Assertions.entry("policyName", "myPolicy"),
             Assertions.entry("policyConfigType", PolicyConfigType.Base.name()),
@@ -181,8 +187,8 @@ public class PolicyClientItCase {
         String tcaJson = TcaRequestFormatter.createPolicyJson(refProp, prop);
         String response = policyClient.sendMicroServiceInOther(tcaJson, prop);
 
-        Map<String, Object> mapNodes = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(response), Map.class);
+        Map<String, Object> mapNodes = JsonUtils.GSON.fromJson(response, MAP_OF_STRING_TO_OBJECT_TYPE);
+
         Assertions.assertThat(mapNodes).contains(Assertions.entry("policyClass", "Config"),
             Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_TCA_1d13unw"),
             Assertions.entry("policyConfigType", PolicyConfigType.MicroService.name()),
@@ -196,10 +202,10 @@ public class PolicyClientItCase {
         String[] responses = policyClient.deleteMicrosService(prop).split("\\}\\{");
 
         // There are 2 responses appended to the result, one for PDP one for PAP !
-        Map<String, Object> mapNodesPdp = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(responses[0] + "}"), Map.class);
-        Map<String, Object> mapNodesPap = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree("{" + responses[1]), Map.class);
+        Map<String, Object> mapNodesPdp = JsonUtils.GSON.fromJson(responses[0] + "}",
+            MAP_OF_STRING_TO_OBJECT_TYPE);
+        Map<String, Object> mapNodesPap = JsonUtils.GSON.fromJson("{" + responses[1],
+            MAP_OF_STRING_TO_OBJECT_TYPE);
 
         Assertions.assertThat(mapNodesPdp).contains(
             Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_TCA_1d13unw"),
@@ -221,11 +227,10 @@ public class PolicyClientItCase {
         prop.setGuardUniqueId(policyItems.get(0).getId());
         String[] responses = policyClient.deleteGuard(prop).split("\\}\\{");
 
-        // There are 2 responses appended to the result, one for PDP one for PAP !
-        Map<String, Object> mapNodesPdp = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(responses[0] + "}"), Map.class);
-        Map<String, Object> mapNodesPap = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree("{" + responses[1]), Map.class);
+        Map<String, Object> mapNodesPdp = JsonUtils.GSON.fromJson(responses[0] + "}",
+            MAP_OF_STRING_TO_OBJECT_TYPE);
+        Map<String, Object> mapNodesPap = JsonUtils.GSON.fromJson("{" + responses[1],
+            MAP_OF_STRING_TO_OBJECT_TYPE);
 
         Assertions.assertThat(mapNodesPdp).contains(
             Assertions.entry("policyName",
@@ -245,11 +250,10 @@ public class PolicyClientItCase {
         prop.setCurrentModelElementId(prop.getType(Policy.class).getId());
         String[] responses = policyClient.deleteBrms(prop).split("\\}\\{");
 
-        // There are 2 responses appended to the result, one for PDP one for PAP !
-        Map<String, Object> mapNodesPdp = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree(responses[0] + "}"), Map.class);
-        Map<String, Object> mapNodesPap = JacksonUtils.getObjectMapperInstance()
-            .convertValue(JacksonUtils.getObjectMapperInstance().readTree("{" + responses[1]), Map.class);
+        Map<String, Object> mapNodesPdp = JsonUtils.GSON.fromJson(responses[0] + "}",
+            MAP_OF_STRING_TO_OBJECT_TYPE);
+        Map<String, Object> mapNodesPap = JsonUtils.GSON.fromJson("{" + responses[1],
+            MAP_OF_STRING_TO_OBJECT_TYPE);
 
         Assertions.assertThat(mapNodesPdp).contains(
             Assertions.entry("policyName", modelName.replace("-", "_") + "." + controlName + "_Policy_12lup3h_0"),
@@ -273,7 +277,8 @@ public class PolicyClientItCase {
         String tosca = policyClient.importToscaModel(cldsToscaModel);
 
         Assertions.assertThat(tosca).contains(
-            "{\"serviceName\":\"tca-policy-test\",\"description\":\"tca-policy-test\",\"requestID\":null,\"filePath\":\"/tmp/tosca-models/tca-policy-test.yml\",");
+            "{\"serviceName\":\"tca-policy-test\",\"description\":\"tca-policy-test\","
+                + "\"requestID\":null,\"filePath\":\"/tmp/tosca-models/tca-policy-test.yml\",");
         Assertions.assertThat(tosca).contains(toscaModelYaml);
     }
 }

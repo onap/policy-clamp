@@ -23,7 +23,8 @@
 
 package org.onap.clamp.clds.model.properties;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonObject;
+import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse Holmes bpmn parameters json properties.
@@ -49,11 +50,11 @@ public class Holmes extends AbstractModelElement {
      * @param modelBpmn
      * @param modelJson
      */
-    public Holmes(ModelProperties modelProp, ModelBpmn modelBpmn, JsonNode modelJson) {
+    public Holmes(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
         super(TYPE_HOLMES, modelProp, modelBpmn, modelJson);
 
-        correlationLogic = this.getValueByName("correlationalLogic");
-        configPolicyName = this.getValueByName("configPolicyName");
+        correlationLogic = JsonUtils.getStringValueByName(modelElementJsonNode, "correlationalLogic");
+        configPolicyName = JsonUtils.getStringValueByName(modelElementJsonNode, "configPolicyName");
     }
 
     public static final String getType() {

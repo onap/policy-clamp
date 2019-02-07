@@ -23,14 +23,11 @@
 
 package org.onap.clamp.clds.client.req.policy;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-
+import com.google.gson.JsonElement;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Map;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +36,7 @@ import org.mockito.Mockito;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.PolicyChain;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.policy.api.AttributeType;
 import org.onap.policy.controlloop.policy.ControlLoopPolicy;
@@ -54,6 +52,9 @@ public class OperationalPolicyAttributesConstructorTest {
     private ModelProperties modelProperties;
     private PolicyChain policyChain;
 
+    /**
+     * @throws Exception thrown if resource not found.
+     */
     @Before
     public void setUp() throws Exception {
         String modelProp = ResourceFileUtil
@@ -140,7 +141,7 @@ public class OperationalPolicyAttributesConstructorTest {
     private PolicyChain readPolicyChainFromResources() throws IOException {
         String policyChainText = ResourceFileUtil
             .getResourceAsString("example/operational-policy/json-policy-chain.json");
-        JsonNode policyChainNode = new ObjectMapper().readTree(policyChainText);
+        JsonElement policyChainNode = JsonUtils.GSON.fromJson(policyChainText, JsonElement.class);
         return new PolicyChain(policyChainNode);
     }
 }

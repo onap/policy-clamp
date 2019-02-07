@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,34 +18,28 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import java.lang.reflect.Type;
 
-import javax.ws.rs.ext.ContextResolver;
-
-import org.onap.clamp.clds.util.JacksonUtils;
-
-/**
- * This class is to restrcit the class type that can be de-serialized.
- */
-public class JacksonObjectMapperProvider implements ContextResolver<ObjectMapper> {
-
-    private final ObjectMapper defaultObjectMapper;
-
-    public JacksonObjectMapperProvider() {
-        defaultObjectMapper = createDefaultMapper();
-    }
+public class SecureServicePermissionDeserializer implements JsonDeserializer<SecureServicePermission> {
 
     @Override
-    public ObjectMapper getContext(Class<?> type) {
-        return defaultObjectMapper;
-    }
-
-    private static ObjectMapper createDefaultMapper() {
-        return JacksonUtils.getObjectMapperInstance();
+    public SecureServicePermission deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        throws JsonParseException {
+        if (json.isJsonPrimitive()) {
+            return new SecureServicePermission(json.getAsString());
+        } else {
+            // if not string try default deserialization
+            return new Gson().fromJson(json, SecureServicePermission.class);
+        }
     }
 }

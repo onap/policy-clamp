@@ -25,14 +25,14 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.onap.clamp.clds.util.JacksonUtils;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -86,51 +86,48 @@ public class PolicyItem implements Cloneable {
     /**
      * Parse Policy given json node.
      *
-     * @param node
+     * @param item
      * @throws IOException
      */
-    public PolicyItem(JsonNode node) throws IOException {
-        id = AbstractModelElement.getValueByName(node, "_id");
-        recipe = AbstractModelElement.getValueByName(node, "recipe");
-        maxRetries = AbstractModelElement.getIntValueByName(node, "maxRetries");
-        retryTimeLimit = AbstractModelElement.getIntValueByName(node, "retryTimeLimit");
-        parentPolicy = AbstractModelElement.getValueByName(node, "parentPolicy");
-        parentPolicyConditions = AbstractModelElement.getValuesByName(node, "parentPolicyConditions");
-        targetResourceId = AbstractModelElement.getValueByName(node, "targetResourceId");
+    public PolicyItem(JsonElement item) throws IOException {
+        id = JsonUtils.getStringValueByName(item, "_id");
+        recipe = JsonUtils.getStringValueByName(item, "recipe");
+        maxRetries = JsonUtils.getIntValueByName(item, "maxRetries");
+        retryTimeLimit = JsonUtils.getIntValueByName(item, "retryTimeLimit");
+        parentPolicy = JsonUtils.getStringValueByName(item, "parentPolicy");
+        parentPolicyConditions = JsonUtils.getStringValuesByName(item, "parentPolicyConditions");
+        targetResourceId = JsonUtils.getStringValueByName(item, "targetResourceId");
         if (targetResourceId != null && targetResourceId.isEmpty()) {
             this.setTargetResourceId(null);
         }
-        recipeInfo = AbstractModelElement.getValueByName(node, "recipeInfo");
-        recipeLevel = AbstractModelElement.getValueByName(node, "recipeLevel");
-        recipeInput = AbstractModelElement.getValueByName(node, "recipeInput");
-        String payload = AbstractModelElement.getValueByName(node, "recipePayload");
+        recipeInfo = JsonUtils.getStringValueByName(item, "recipeInfo");
+        recipeLevel = JsonUtils.getStringValueByName(item, "recipeLevel");
+        recipeInput = JsonUtils.getStringValueByName(item, "recipeInput");
+        String payload = JsonUtils.getStringValueByName(item, "recipePayload");
 
         if (payload != null && !payload.isEmpty()) {
             if (payload.trim().startsWith("{") && payload.trim().endsWith("}")) {
                 // Seems to be a JSON
-                recipePayload = JacksonUtils.getObjectMapperInstance().readValue(payload,
-                    new TypeReference<Map<String, String>>() {
-                    });
+                recipePayload = JsonUtils.GSON.fromJson(payload, new TypeToken<Map<String, String>>() {}.getType());
             } else {
                 // SHould be a YAML then
-                Yaml yaml = new Yaml();
-                recipePayload = (Map<String, String>) yaml.load(payload);
+                recipePayload = new Yaml().load(payload);
             }
         }
-        oapRop = AbstractModelElement.getValueByName(node, "oapRop");
-        oapLimit = AbstractModelElement.getValueByName(node, "oapLimit");
-        actor = AbstractModelElement.getValueByName(node, "actor");
+        oapRop = JsonUtils.getStringValueByName(item, "oapRop");
+        oapLimit = JsonUtils.getStringValueByName(item, "oapLimit");
+        actor = JsonUtils.getStringValueByName(item, "actor");
 
-        enableGuardPolicy = AbstractModelElement.getValueByName(node, "enableGuardPolicy");
-        guardPolicyType = AbstractModelElement.getValueByName(node, "guardPolicyType");
-        guardTargets = AbstractModelElement.getValueByName(node, "guardTargets");
-        minGuard = AbstractModelElement.getValueByName(node, "minGuard");
-        maxGuard = AbstractModelElement.getValueByName(node, "maxGuard");
-        limitGuard = AbstractModelElement.getValueByName(node, "limitGuard");
-        timeUnitsGuard = AbstractModelElement.getValueByName(node, "timeUnitsGuard");
-        timeWindowGuard = AbstractModelElement.getValueByName(node, "timeWindowGuard");
-        guardActiveStart = AbstractModelElement.getValueByName(node, "guardActiveStart");
-        guardActiveEnd = AbstractModelElement.getValueByName(node, "guardActiveEnd");
+        enableGuardPolicy = JsonUtils.getStringValueByName(item, "enableGuardPolicy");
+        guardPolicyType = JsonUtils.getStringValueByName(item, "guardPolicyType");
+        guardTargets = JsonUtils.getStringValueByName(item, "guardTargets");
+        minGuard = JsonUtils.getStringValueByName(item, "minGuard");
+        maxGuard = JsonUtils.getStringValueByName(item, "maxGuard");
+        limitGuard = JsonUtils.getStringValueByName(item, "limitGuard");
+        timeUnitsGuard = JsonUtils.getStringValueByName(item, "timeUnitsGuard");
+        timeWindowGuard = JsonUtils.getStringValueByName(item, "timeWindowGuard");
+        guardActiveStart = JsonUtils.getStringValueByName(item, "guardActiveStart");
+        guardActiveEnd = JsonUtils.getStringValueByName(item, "guardActiveEnd");
     }
 
     /**
