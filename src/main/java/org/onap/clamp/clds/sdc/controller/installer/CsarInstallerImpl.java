@@ -246,6 +246,11 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     private CldsModel createFakeCldsModel(CsarHandler csar, BlueprintArtifact blueprintArtifact,
         CldsTemplate cldsTemplate, DcaeInventoryResponse dcaeInventoryResponse) throws SdcArtifactInstallerException {
+        
+        if (dcaeInventoryResponse == null) {
+            throw new SdcArtifactInstallerException(
+                "DCAE inventory response is NULL, query to DCAE fail to be answered properly, this is required to deploy CSAR properly !!!");
+        }
         try {
             CldsModel cldsModel = new CldsModel();
             cldsModel.setName(buildModelName(csar, blueprintArtifact.getResourceAttached().getResourceInstanceName()));
