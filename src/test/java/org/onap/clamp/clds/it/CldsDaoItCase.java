@@ -25,30 +25,24 @@ package org.onap.clamp.clds.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.NotFoundException;
 
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.dao.CldsDao;
-import org.onap.clamp.clds.model.CldsDbServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsMonitoringDetails;
-import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,8 +63,6 @@ public class CldsDaoItCase {
     private String bpmnText;
     private String imageText;
     private String bpmnPropText;
-    @Autowired
-    private SdcCatalogServices sdcCatalogServices;
 
     /**
      * Setup the variable before the tests execution.
@@ -165,30 +157,4 @@ public class CldsDaoItCase {
         });
     }
 
-    @Test
-    public void testCldsServiceCache() throws GeneralSecurityException, DecoderException, IOException {
-        CldsServiceData cldsServiceData = sdcCatalogServices
-            .getCldsServiceDataWithAlarmConditions("4cc5b45a-1f63-4194-8100-cd8e14248c92");
-        // Test not in cache so should be null
-        CldsServiceData cldsServiceDataCache = cldsDao.getCldsServiceCache("4cc5b45a-1f63-4194-8100-cd8e14248c92");
-        assertNull(cldsServiceDataCache);
-        cldsDao.setCldsServiceCache(new CldsDbServiceCache(cldsServiceData));
-        cldsServiceDataCache = cldsDao.getCldsServiceCache("4cc5b45a-1f63-4194-8100-cd8e14248c92");
-        assertNotNull(cldsServiceDataCache);
-        assertEquals("56441b4b-0467-41dc-9a0e-e68613838219", cldsServiceDataCache.getServiceUUID());
-        assertEquals("4cc5b45a-1f63-4194-8100-cd8e14248c92", cldsServiceDataCache.getServiceInvariantUUID());
-        assertEquals(2, cldsServiceDataCache.getCldsVfs().size());
-        assertNotNull(cldsServiceDataCache.getAgeOfRecord());
-        assertEquals(4, cldsServiceDataCache.getCldsVfs().get(0).getCldsVfcs().size());
-        assertEquals("07e266fc-49ab-4cd7-8378-ca4676f1b9ec",
-            cldsServiceDataCache.getCldsVfs().get(0).getVfInvariantResourceUUID());
-        assertEquals(0, cldsServiceDataCache.getCldsVfs().get(0).getCldsKPIList().size());
-        // Second update
-        cldsServiceData.setCldsVfs(null);
-        cldsDao.setCldsServiceCache(new CldsDbServiceCache(cldsServiceData));
-        cldsServiceDataCache = cldsDao.getCldsServiceCache("4cc5b45a-1f63-4194-8100-cd8e14248c92");
-        assertNotNull(cldsServiceDataCache);
-        assertNull(cldsServiceDataCache.getCldsVfs());
-        cldsDao.clearServiceCache();
-    }
 }

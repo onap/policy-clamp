@@ -117,34 +117,6 @@ app
 		    handleQueryToBackend(def, action, deployUrl, requestData);
 		    return def.promise;
 	    };
-	    this.getASDCServices = function() {
-
-		    var def = $q.defer();
-		    var sets = [];
-		    var svcUrl = "/restservices/clds/v1/clds/sdc/services/";
-		    $http.get(svcUrl).success(function(data) {
-
-			    def.resolve(data);
-		    }).error(function(data) {
-
-			    def.reject("sdc Services not found");
-		    });
-		    return def.promise;
-	    };
-	    this.getASDCService = function(uuid) {
-
-		    var def = $q.defer();
-		    var sets = [];
-		    var svcUrl = "/restservices/clds/v1/clds/sdc/services/" + uuid;
-		    $http.get(svcUrl).success(function(data) {
-
-			    def.resolve(data);
-		    }).error(function(data) {
-
-			    def.reject("SDC service not found");
-		    });
-		    return def.promise;
-	    };
 	    this.getModel = function(modelName) {
 
 		    var def = $q.defer();
@@ -373,8 +345,6 @@ app
 			    .remove('ThisLink');
 			    document.getElementById('Refresh Status').classList
 			    .remove('ThisLink');
-			    document.getElementById('Refresh ASDC').classList
-			    .remove('ThisLink');
 		    }
 		    // enable/disable menu options based on permittedActionCd
 		    // list
@@ -392,10 +362,4 @@ app
 		    this.checkPermittedActionCd(permittedActionCd, 'UnDeploy',
 		    'UNDEPLOY');
 	    }
-	    this.getASDCServices().then(function(pars) {
-
-		    var obj = JSON.parse(pars);
-		    var services = obj.service;
-		    asdc_Services = services
-	    });
     } ]);

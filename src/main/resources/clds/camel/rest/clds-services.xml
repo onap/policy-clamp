@@ -56,19 +56,9 @@
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=postDcaeEvent(${header.test},${body})" />
 		</post>
-		<get uri="/clds/sdc/services" produces="application/json">
-			<to
-				uri="bean:org.onap.clamp.clds.service.CldsService?method=getSdcServices()" />
-		</get>
 		<get uri="/clds/properties" produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getSdcProperties()" />
-		</get>
-		<get
-			uri="/clds/properties/{serviceInvariantUUID}?refresh={refresh}"
-			produces="application/json">
-			<to
-				uri="bean:org.onap.clamp.clds.service.CldsService?method=getSdcPropertiesByServiceUUIDForRefresh(${header.serviceInvariantUUID},${header.refresh})" />
 		</get>
 		<put uri="/clds/deploy/{modelName}"
 			type="org.onap.clamp.clds.model.CldsModel"

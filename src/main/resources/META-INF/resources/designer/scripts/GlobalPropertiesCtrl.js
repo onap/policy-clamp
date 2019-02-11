@@ -31,15 +31,9 @@ app.controller('GlobalPropertiesCtrl', [
 function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
          dialogs, cldsTemplateService) {
 	$scope.$watch('name', function(newValue, oldValue) {
-		var services = asdc_Services
+
 		setASDCFields()
-		// add blank service item as the default service, to force user chose
-		// the correct service by themselves
-		$("#service").append("<option></option>")
-		for (k in services) {
-			$("#service").append(
-			"<option value=" + k + ">" + services[k] + "</option>")
-		}
+
 		var el = elementMap["global"];
 		if (el !== undefined) {
 			for (var i = 0; i < el.length; i++) {

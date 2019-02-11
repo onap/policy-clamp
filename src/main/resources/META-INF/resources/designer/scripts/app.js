@@ -264,8 +264,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 				    $scope.cldsRevertModel();
 			    } else if (name == "Close Model") {
 				    $scope.cldsClose();
-			    } else if (name == "Refresh ASDC") {
-				    $scope.cldsRefreshASDC();
 			    } else if (name == "Open CL") {
 				    $scope.cldsOpenModel();
 			    } else if (name == "Save CL") {
@@ -351,9 +349,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 	        "View" : [ {
 	            link : "/refreshStatus",
 	            name : "Refresh Status"
-	        }, {
-	            link : "/cldsRefreshASDC",
-	            name : "Refresh ASDC"
 	        } ],
 	        "Help" : [ {
 	            link : "http://wiki.onap.org",
@@ -520,24 +515,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 			    callBack(null);
 		    });
 	    };
-	    $scope.cldsRefreshASDC = function() {
-
-		    var dlg = dialogs.create('partials/portfolios/refresh_asdc.html',
-		    'CldsOpenModelCtrl', {
-		        closable : true,
-		        draggable : true
-		    }, {
-		        size : 'lg',
-		        keyboard : true,
-		        backdrop : 'static',
-		        windowClass : 'my-class'
-		    });
-		    dlg.result.then(function(name) {
-
-		    }, function() {
-
-		    });
-	    }
 	    $scope.cldsRevertModel = function() {
 
 		    var dlg = dialogs.create(
