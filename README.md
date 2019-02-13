@@ -45,11 +45,6 @@ Note that all others configurations can be configured in the JSON as well,
     "spring.datasource.cldsdb.username": "admin",
     "spring.datasource.cldsdb.password": "password"
     
-    "clamp.config.sdc.catalog.url": "https://sdchost:8443/sdc/v1/catalog/",
-    "clamp.config.sdc.hostUrl": "https://sdchost:8443/",
-    "clamp.config.sdc.serviceUrl": "https://sdchost:8443/sdc/v1/catalog/services",
-    "clamp.config.sdc.serviceUsername": "clamp",
-    "clamp.config.sdc.servicePassword": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
     "clamp.config.dcae.inventory.url": "http://dcaegen2.host:8080",
     "clamp.config.dcae.dispatcher.url": "http://dcaegen2.host:8080",
     "clamp.config.policy.pdpUrl1": "https://policy-pdp.host:9091/pdp/ , testpdp, alpha123",

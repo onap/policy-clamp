@@ -48,28 +48,6 @@
 			<div>
 
 				<div class="form-group clearfix">
-					<label for="services" class="col-sm-4 control-label">Services</label>
-
-					<div class="col-sm-8">
-						<select class="form-control" name="service" id="service"
-							onchange="propChangeAlert(this);">
-							<!-- 								 <option ng-repeat="(key, value) in services" value="{{key}}">{{value}}</option>  -->
-						</select>
-					</div>
-				</div>
-				<div class="form-group clearfix">
-					<label for="vf" class="col-sm-4 control-label"> Resource-VF</label>
-
-					<div class="col-sm-8">
-						<select class="form-control" id="vf" name="vf"
-							onchange="propChangeAlert(this);">
-
-						</select>
-
-					</div>
-				</div>
-
-				<div class="form-group clearfix">
 					<label for="actionSet" class="col-sm-4 control-label">
 						Action Set</label>
 
@@ -125,63 +103,8 @@
 
 	<script>
 		//display message only if global was previously saved
-        serDiff = false;
-        vfDiff = false;
         asDiff = false;
-        (function() {
-	        $("#paramsWarn").hide();
-	        /*Below service method is called for checking the service is being loaded or not*/
-	        var intialize = intializeService;
-	        function intializeService() {
-		        $("#service").off('focus').off('change');
-		        $("#service").on('change', function() {
-			        var chosen = $(this).val();
-			        (function(spinner) {
-				        $("#ridinSpinners").show();
-				        setTimeout(spinner, 1);
-			        })(function() {
-				        loadSharedPropertyByService(chosen, null, intialize);
-				        if (elementMap["global"]) {
-					        if ($("#vf").val() == oldVf) {
-						        vfDiff = false;
-						        if ((!vfDiff) && (!asDiff) && (!serDiff)) {
-							        $(".propChangeWarn").hide();
-						        }
-						        ;
-					        } else {
-						        vfDiff = true;
-						        $(".propChangeWarn").show();
-					        }
-				        }
-				        $("#ridinSpinners").hide();
-			        });
-		        });
-	        }
-	        loadSharedPropertyByService(undefined, null, intialize);
-	        intializeService();
-	        $("#paramsRetry").on('click', function() {
-		        //$("#paramsWarn").hide();
-		        var currentValue = $("#service").val();
-		        $("#ridinSpinners").css("display", "")
-		        var bool = loadSharedPropertyByService(currentValue);
-		        $("#ridinSpinners").css("display", "none")
-	        });
-	        $("#paramsCancel").on('click', function() {
-		        loadSharedPropertyByServiceProperties();
-		        $("#paramsWarn").hide();
-	        });
-        })();
-        $(function() {
-	        if (elementMap["global"]) {
-		        for (var i = 0; i < elementMap["global"].length; i++) {
-			        if (elementMap["global"][i]["name"] == "vf") {
-				        oldVf = elementMap["global"][i]["value"];
-			        }
-		        }
-	        } else {
-		        oldVf = "";
-	        }
-        });
+
         function propChangeAlert(actionset) {
 	        //throw warnings only if options were previously chosen
 	        if (elementMap["global"]) {
@@ -191,12 +114,8 @@
 				        if (elementMap["global"][i]["value"][0] == actionset.value) {
 					        if (elementMap["global"][i]["name"] == "actionSet") {
 						        asDiff = false;
-					        } else if (elementMap["global"][i]["name"] == "service") {
-						        serDiff = false;
-					        } else if (elementMap["global"][i]["name"] == "vf") {
-						        vfDiff = false;
 					        }
-					        if ((!vfDiff) && (!asDiff) && (!serDiff)) {
+					        if (!asDiff) {
 						        $(".propChangeWarn").hide();
 					        }
 					        ;
@@ -204,12 +123,7 @@
 				        } else {
 					        if (elementMap["global"][i]["name"] == "actionSet") {
 						        asDiff = true;
-					        } else if (elementMap["global"][i]["name"] == "service") {
-						        serDiff = true;
-					        } else if (elementMap["global"][i]["name"] == "vf") {
-						        vfDiff = true;
-					        }
-					        ;
+					        };
 					        $(".propChangeWarn").show();
 				        }
 				        break loop1;

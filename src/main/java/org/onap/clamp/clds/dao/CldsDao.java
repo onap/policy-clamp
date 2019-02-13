@@ -336,45 +336,6 @@ public class CldsDao {
         return template;
     }
 
-    public void clearServiceCache() {
-        String clearCldsServiceCacheSql = "TRUNCATE clds_service_cache";
-        jdbcTemplateObject.execute(clearCldsServiceCacheSql);
-    }
-
-    public CldsServiceData getCldsServiceCache(String invariantUUID) {
-        CldsServiceData cldsServiceData = null;
-        try {
-            String getCldsServiceSQL = "SELECT * , TIMESTAMPDIFF(SECOND, timestamp, CURRENT_TIMESTAMP()) FROM clds_service_cache where invariant_service_id  = ? ";
-            cldsServiceData = jdbcTemplateObject.queryForObject(getCldsServiceSQL, new Object[] { invariantUUID },
-                new CldsServiceDataMapper());
-            if (cldsServiceData != null) {
-                logger.info("CldsServiceData found in cache for Service Invariant ID:"
-                    + cldsServiceData.getServiceInvariantUUID());
-                return cldsServiceData;
-            } else {
-                logger.warn("CldsServiceData not found in cache for Service Invariant ID:" + invariantUUID);
-                return null;
-            }
-        } catch (EmptyResultDataAccessException e) {
-            logger.info("CldsServiceData not found in cache for Service Invariant ID: " + invariantUUID);
-            logger.debug("CldsServiceData not found in cache for Service Invariant ID: " + invariantUUID, e);
-            return null;
-        }
-    }
-
-    public void setCldsServiceCache(CldsDbServiceCache cldsDBServiceCache) {
-        if (cldsDBServiceCache != null && cldsDBServiceCache.getInvariantId() != null
-            && cldsDBServiceCache.getServiceId() != null) {
-            String invariantUuid = cldsDBServiceCache.getInvariantId();
-            String serviceUuid = cldsDBServiceCache.getServiceId();
-            InputStream is = cldsDBServiceCache.getCldsDataInstream();
-            String insertCldsServiceCacheSql = "INSERT INTO clds_service_cache"
-                + "(invariant_service_id,service_id,timestamp,object_data) VALUES"
-                + "(?,?,CURRENT_TIMESTAMP,?) ON DUPLICATE KEY UPDATE invariant_service_id = VALUES(invariant_service_id) , timestamp = CURRENT_TIMESTAMP , object_data = VALUES(object_data) ";
-            jdbcTemplateObject.update(insertCldsServiceCacheSql, invariantUuid, serviceUuid, is);
-        }
-    }
-
     private static Map<String, Object> logSqlExecution(SimpleJdbcCall call, SqlParameterSource source) {
         try {
             return call.execute(source);

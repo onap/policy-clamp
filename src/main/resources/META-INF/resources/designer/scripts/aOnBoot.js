@@ -142,56 +142,7 @@ function setMultiSelect() {
 }
 
 function loadSharedPropertyByService(onChangeUUID, refresh, callBack) {
-  var uuid = onChangeUUID;
-  if (uuid === undefined) {
-    uuid = elementMap["global"] && elementMap["global"].length > 0 ?
-      elementMap["global"][0].value : "";
-  }
-  var share = null,
-    serviceUrl = '/restservices/clds/v1/clds/properties/' + uuid;
-  if (refresh) {
-    serviceUrl = '/restservices/clds/v1/clds/properties/' + uuid + '?refresh=true';
-  }
-
-  $.ajax({
-    async: false,
-    dataType: "json",
-    url: serviceUrl,
-    success: function(data) {
-      vf_Services = JSON.parse(data);
       setASDCFields()
-      if (refresh) {
-        $("#paramsWarnrefresh").hide();
-      }
-      if ($("#paramsWarn")) {
-        $("#paramsWarn").hide();
-      }
-      if (callBack && _.isFunction(callBack)) {
-        callBack(true);
-      }
-    },
-    error: function(s, a, err) {
-      if (refresh) {
-        $("#paramsWarnrefresh").show();
-      }
-      if ($("#paramsWarn")) {
-        $("#paramsWarn").show();
-      }
-
-      $('#servName').text($("#service option:selected").text());
-      if (callBack && _.isFunction(callBack)) {
-        callBack(false);
-      }
-      console.log(err)
-      console.log(s)
-      console.log(a)
-    },
-    timeout: 100000
-
-  });
-
-  //vf_Services=share['shared']['byService'][uuid];
-  //location_values = share['global']['location'];
 }
 
 function loadSharedPropertyByServiceProperties(callBack) {
@@ -218,45 +169,8 @@ function loadSharedPropertyByServiceProperties(callBack) {
 }
 
 function setASDCFields() {
-  if (vf_Services === null || vf_Services === undefined) {
-    loadSharedPropertyByService()
-  } else {
     try {
-      $("#vf").empty().multiselect("refresh");
-      $("#location").empty().multiselect("refresh");
-      $("#actionSet").empty().multiselect("refresh");
-      $("#vfc").empty().multiselect("refresh");
-      $("#paramsWarn").hide();
-      var uuid = Object.keys(vf_Services['shared']['byService'])[0];
-
-      var vf_values = vf_Services['shared']['byService'][uuid] &&
-        vf_Services['shared']['byService'][uuid]['vf'] &&
-        _.keys(vf_Services['shared']['byService'][uuid]['vf']).length > 0 ?
-        vf_Services['shared']['byService'][uuid]['vf'] : null;
-
-      var selectedVF = {}
-      for (let e in elementMap["global"]) {
-        if (elementMap['global'][e].name === "vf") {
-          selectedVF = elementMap['global'][e].value[0]
-        }
-      }
-
-      var vfc_values2 = selectedVF &&
-        vf_Services['shared']['byVf'][selectedVF] &&
-        vf_Services['shared']['byVf'][selectedVF]['vfc'] &&
-        _.keys(vf_Services['shared']['byVf'][selectedVF]['vfc']).length > 0 ?
-        vf_Services['shared']['byVf'][selectedVF]['vfc'] : null;
-
-      if (vf_values) {
-        for (key in vf_values) {
-          if ($("#vf").length > 0) {
-            $("#vf").append("<option value=\"" + key + "\">" + vf_values[key] + "</opton>")
-          }
-        }
-        $("#vf").multiselect("rebuild");
-      }
-
-      var location_values = vf_Services['global']['location'];
+      var location_values = defaults_props['global']['location'];
       if (location_values) {
         for (key in location_values) {
           if ($("#location").length > 0) {
@@ -266,7 +180,7 @@ function setASDCFields() {
         $("#location").multiselect("rebuild");
       }
 
-      var actionSet_values = vf_Services['global']['actionSet'];
+      var actionSet_values = defaults_props['global']['actionSet'];
       if (actionSet_values) {
         for (key in actionSet_values) {
           if ($("#actionSet").length > 0) {
@@ -274,22 +188,6 @@ function setASDCFields() {
           }
         }
         $("#actionSet").multiselect("rebuild");
-      }
-
-      if (vfc_values2) {
-        $("#vfc").append("<option value=\"\"></opton>");
-        for (key in vfc_values2) {
-          if ($("#vfc").length > 0) {
-            $("#vfc").append("<option value=\"" + key.split("\"").join("") + "\">" + vfc_values2[key] + "</opton>")
-          }
-        }
-        $("#vfc").multiselect("rebuild");
-      }
-      if ($("#vfc").length > 0 && !vfc_values2) {
-        showWarn();
-      }
-      if ($("#vf").length > 0 && !vf_values) {
-        showWarn();
       }
       if ($("#location").length > 0 && !location_values) {
         showWarn();
@@ -302,7 +200,7 @@ function setASDCFields() {
     } catch (e) {
       console.log(e)
     }
-  }
+ 
 }
 
 //Typically used when opening a new model/template

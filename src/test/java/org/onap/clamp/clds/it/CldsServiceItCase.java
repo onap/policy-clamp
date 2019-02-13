@@ -26,12 +26,10 @@ package org.onap.clamp.clds.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.GeneralSecurityException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -40,9 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.NotFoundException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.json.JSONException;
 import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +50,6 @@ import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsMonitoringDetails;
-import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.service.CldsService;
@@ -280,36 +275,5 @@ public class CldsServiceItCase {
         JSONAssert.assertEquals(
             ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-global.json"),
             cldsService.getSdcProperties(), true);
-    }
-
-    @Test
-    public void testGetSdcServices() throws GeneralSecurityException, DecoderException, JSONException, IOException {
-        String result = cldsService.getSdcServices();
-        JSONAssert.assertEquals(
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/all-sdc-services.json"), result, true);
-    }
-
-    @Test
-    public void testGetSdcPropertiesByServiceUuidForRefresh()
-        throws GeneralSecurityException, DecoderException, JSONException, IOException {
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        cldsService.setSecurityContext(securityContext);
-        // Test basic functionalities
-        String result = cldsService.getSdcPropertiesByServiceUUIDForRefresh("4cc5b45a-1f63-4194-8100-cd8e14248c92",
-            false);
-        JSONAssert.assertEquals(
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-4cc5b45a.json"), result,
-            true);
-        // Now test the Cache effect
-        CldsServiceData cldsServiceDataCache = cldsDao.getCldsServiceCache("c95b0e7c-c1f0-4287-9928-7964c5377a46");
-        // Should not be there, so should be null
-        assertNull(cldsServiceDataCache);
-        cldsService.getSdcPropertiesByServiceUUIDForRefresh("c95b0e7c-c1f0-4287-9928-7964c5377a46", true);
-        // Should be there now, so should NOT be null
-        cldsServiceDataCache = cldsDao.getCldsServiceCache("c95b0e7c-c1f0-4287-9928-7964c5377a46");
-        assertNotNull(cldsServiceDataCache);
-        cldsDao.clearServiceCache();
     }
 }

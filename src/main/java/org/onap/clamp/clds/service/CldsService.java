@@ -35,7 +35,6 @@ import java.lang.reflect.Type;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,23 +44,19 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.camel.Produce;
 import org.apache.commons.codec.DecoderException;
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.camel.CamelProxy;
 import org.onap.clamp.clds.client.DcaeDispatcherServices;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
-import org.onap.clamp.clds.client.req.sdc.SdcCatalogServices;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.policy.PolicyClientException;
 import org.onap.clamp.clds.exception.sdc.SdcCommunicationException;
-import org.onap.clamp.clds.model.CldsDbServiceCache;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelProp;
 import org.onap.clamp.clds.model.CldsMonitoringDetails;
-import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.ValueItem;
@@ -94,11 +89,9 @@ public class CldsService extends SecureServiceBase {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsService.class);
 
     public static final String GLOBAL_PROPERTIES_KEY = "files.globalProperties";
-    private final String cldsPersmissionTypeCl;
     private final String cldsPermissionTypeClManage;
     private final String cldsPermissionTypeClEvent;
     private final String cldsPermissionTypeFilterVf;
-    private final String cldsPermissionTypeTemplate;
     private final String cldsPermissionInstance;
     final SecureServicePermission permissionReadCl;
     final SecureServicePermission permissionUpdateCl;
@@ -110,7 +103,6 @@ public class CldsService extends SecureServiceBase {
     private final CldsDao cldsDao;
     private final XslTransformer cldsBpmnTransformer;
     private final ClampProperties refProp;
-    private final SdcCatalogServices sdcCatalogServices;
     private final DcaeDispatcherServices dcaeDispatcherServices;
     private final DcaeInventoryServices dcaeInventoryServices;
     private LoggingUtils util = new LoggingUtils(logger);
@@ -120,7 +112,7 @@ public class CldsService extends SecureServiceBase {
 
     @Autowired
     public CldsService(CldsDao cldsDao, XslTransformer cldsBpmnTransformer, ClampProperties refProp,
-        SdcCatalogServices sdcCatalogServices, DcaeDispatcherServices dcaeDispatcherServices,
+        DcaeDispatcherServices dcaeDispatcherServices,
         DcaeInventoryServices dcaeInventoryServices,
         @Value("${clamp.config.security.permission.type.cl:permission-type-cl}") String cldsPersmissionTypeCl,
         @Value("${clamp.config.security.permission.type.cl.manage:permission-type-cl-manage}") String cldsPermissionTypeClManage,
@@ -132,14 +124,11 @@ public class CldsService extends SecureServiceBase {
         this.cldsDao = cldsDao;
         this.cldsBpmnTransformer = cldsBpmnTransformer;
         this.refProp = refProp;
-        this.sdcCatalogServices = sdcCatalogServices;
         this.dcaeDispatcherServices = dcaeDispatcherServices;
         this.dcaeInventoryServices = dcaeInventoryServices;
-        this.cldsPersmissionTypeCl = cldsPersmissionTypeCl;
         this.cldsPermissionTypeClManage = cldsPermissionTypeClManage;
         this.cldsPermissionTypeClEvent = cldsPermissionTypeClEvent;
         this.cldsPermissionTypeFilterVf = cldsPermissionTypeFilterVf;
-        this.cldsPermissionTypeTemplate = cldsPermissionTypeTemplate;
         this.cldsPermissionInstance = cldsPermissionInstance;
         permissionReadCl = SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "read");
         permissionUpdateCl = SecureServicePermission.create(cldsPersmissionTypeCl, cldsPermissionInstance, "update");
@@ -470,32 +459,6 @@ public class CldsService extends SecureServiceBase {
     }
 
     /**
-     * REST service that retrieves sdc services
-     *
-     * @throws GeneralSecurityException
-     *         In case of issue when decryting the SDC password
-     * @throws DecoderException
-     *         In case of issues with the decoding of the Hex String
-     */
-    public String getSdcServices() throws GeneralSecurityException, DecoderException {
-        util.entering(request, "CldsService: GET sdc services");
-        Date startTime = new Date();
-        String retStr;
-        try {
-            retStr = createUiServiceFormatJson(sdcCatalogServices.getSdcServicesInformation(null));
-        } catch (IOException e) {
-            logger.error("IOException during SDC communication", e);
-            throw new SdcCommunicationException("IOException during SDC communication", e);
-        }
-        logger.info("value of sdcServices : {}", retStr);
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        auditLogger.info("GET sdc services completed");
-        util.exiting("200", "Get sdc services success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return retStr;
-    }
-
-    /**
      * REST service that retrieves total properties required by UI
      *
      * @throws IOException
@@ -505,41 +468,6 @@ public class CldsService extends SecureServiceBase {
         return refProp.getJsonTemplate(GLOBAL_PROPERTIES_KEY).toString();
     }
 
-    /**
-     * REST service that retrieves total properties by using invariantUUID based on
-     * refresh and non refresh
-     *
-     * @throws GeneralSecurityException
-     *         In case of issues with the decryting the encrypted password
-     * @throws DecoderException
-     *         In case of issues with the decoding of the Hex String
-     * @throws IOException
-     *         In case of issue to convert CldsServiceCache to InputStream
-     */
-    public String getSdcPropertiesByServiceUUIDForRefresh(String serviceInvariantUUID, Boolean refresh)
-        throws GeneralSecurityException, DecoderException, IOException {
-        util.entering(request, "CldsService: GET sdc properties by uuid");
-        Date startTime = new Date();
-        CldsServiceData cldsServiceData = new CldsServiceData();
-        cldsServiceData.setServiceInvariantUUID(serviceInvariantUUID);
-        if (!Optional.ofNullable(refresh).orElse(false)) {
-            cldsServiceData = cldsDao.getCldsServiceCache(serviceInvariantUUID);
-        }
-        if (sdcCatalogServices.isCldsSdcCacheDataExpired(cldsServiceData)) {
-            cldsServiceData = sdcCatalogServices.getCldsServiceDataWithAlarmConditions(serviceInvariantUUID);
-            cldsDao.setCldsServiceCache(new CldsDbServiceCache(cldsServiceData));
-        }
-        // filter out VFs the user is not authorized for
-        cldsServiceData.filterVfs(this);
-        // format retrieved data into properties json
-        String sdcProperties = sdcCatalogServices.createPropertiesObjectByUUID(cldsServiceData);
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        auditLogger.info("GET sdc properties by uuid completed");
-        util.exiting("200", "Get sdc properties by uuid success", Level.INFO,
-            ONAPLogConstants.ResponseStatus.COMPLETED);
-        return sdcProperties;
-    }
 
     /**
      * Determine if the user is authorized for a particular VF by its invariant
@@ -577,27 +505,6 @@ public class CldsService extends SecureServiceBase {
         } else {
             return isAuthorizedForVf(vf);
         }
-    }
-
-    private String createUiServiceFormatJson(String responseStr) throws IOException {
-        if (StringUtils.isBlank(responseStr)) {
-            return "";
-        }
-        List<SdcServiceInfo> rawList = JsonUtils.GSON.fromJson(responseStr, LIST_OF_SDC_SERVICE_INFO_TYPE);
-        JsonObject invariantIdServiceNode = new JsonObject();
-        JsonObject serviceNode = new JsonObject();
-        logger.info("value of cldsserviceiNfolist: {}", rawList);
-        if (rawList != null && !rawList.isEmpty()) {
-            List<SdcServiceInfo> cldsSdcServiceInfoList = sdcCatalogServices.removeDuplicateServices(rawList);
-            for (SdcServiceInfo currCldsSdcServiceInfo : cldsSdcServiceInfoList) {
-                if (currCldsSdcServiceInfo != null) {
-                    invariantIdServiceNode.addProperty(currCldsSdcServiceInfo.getInvariantUUID(),
-                        currCldsSdcServiceInfo.getName());
-                }
-            }
-            serviceNode.add("service", invariantIdServiceNode);
-        }
-        return serviceNode.toString();
     }
 
     public ResponseEntity<CldsModel> deployModel(String modelName, CldsModel model) {

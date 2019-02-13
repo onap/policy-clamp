@@ -107,14 +107,6 @@ CREATE TABLE event (
   PRIMARY KEY (event_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;
 
-CREATE TABLE clds_service_cache (
-  invariant_service_id VARCHAR(36) NOT NULL,
-  service_id VARCHAR(36) NULL,
-  timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  object_data MEDIUMBLOB NULL,
-  PRIMARY KEY (invariant_service_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin;
-
 CREATE TABLE IF NOT EXISTS tosca_model (
   tosca_model_id VARCHAR(36) NOT NULL,
   tosca_model_name VARCHAR(80) NOT NULL,

@@ -51,8 +51,6 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 	});
 	$scope.paramsRetry = function() {
 		// $("#paramsWarn").hide();
-		var currentValue = $("#service").val() == null ? previous : $(
-		"#service").val();
 		$("#ridinSpinners").css("display", "")
 		loadSharedPropertyByService(currentValue, true, callBack);
 		$("#ridinSpinners").css("display", "none")
@@ -70,11 +68,6 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 		if (flag) {
 			$scope.close();
 		}
-	}
-	$scope.refreshASDC = function() {
-		$("#ridinSpinners").css("display", "")
-		var bool = loadSharedPropertyByService(undefined, true, callBack);
-		$("#ridinSpinners").css("display", "none");
 	}
 	cldsTemplateService.getSavedTemplate().then(function(pars) {
 		$scope.templateNamel = []
