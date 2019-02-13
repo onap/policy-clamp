@@ -138,8 +138,7 @@ public class CsarHandler {
                     blueprintArtifact.setResourceAttached(searchForResourceByInstanceName(entry.getName().substring(
                         entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX) + RESOURCE_INSTANCE_NAME_PREFIX.length(),
                         entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX))));
-                    this.mapOfBlueprints.put(blueprintArtifact.getResourceAttached().getResourceInstanceName(),
-                        blueprintArtifact);
+                    this.mapOfBlueprints.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
                     logger.info("Found a blueprint entry in the CSAR " + blueprintArtifact.getBlueprintArtifactName()
                         + " for resource instance Name "
                         + blueprintArtifact.getResourceAttached().getResourceInstanceName());

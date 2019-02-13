@@ -57,6 +57,7 @@ public class CsarHandlerTest {
     private static final String RESOURCE1_INSTANCE_NAME = "sim-1802 0";
     private static final String RESOURCE1_INSTANCE_NAME_IN_CSAR = "sim18020";
     private static final String BLUEPRINT1_NAME = "FOI.Simfoimap223S0112.event_proc_bp.yaml";
+    private static final String BLUEPRINT2_NAME = "FOI.Simfoimap223S0112.event_proc_bp2.yaml";
 
     @Test
     public void testConstructor() throws CsarHandlerException {
@@ -124,20 +125,26 @@ public class CsarHandlerTest {
         assertEquals(CSAR_ARTIFACT_NAME, csar.getArtifactElement().getArtifactName());
         assertNotNull(csar.getSdcCsarHelper());
         // Test dcaeBlueprint
-        String blueprint = csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getDcaeBlueprint();
+        String blueprint = csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getDcaeBlueprint();
         assertNotNull(blueprint);
         assertTrue(!blueprint.isEmpty());
         assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
         // Test additional properties from Sdc notif
-        assertEquals(BLUEPRINT1_NAME,
-            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
+        assertEquals(BLUEPRINT1_NAME, csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getBlueprintArtifactName());
         assertEquals(RESOURCE1_UUID,
-            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached().getResourceInvariantUUID());
-        assertEquals(SERVICE_UUID,
-            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
+            csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getResourceAttached().getResourceInvariantUUID());
+        assertEquals(SERVICE_UUID, csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getBlueprintInvariantServiceUuid());
+
+        // Just check the second one is there as well
+        assertEquals(BLUEPRINT2_NAME, csar.getMapOfBlueprints().get(BLUEPRINT2_NAME).getBlueprintArtifactName());
+        blueprint = csar.getMapOfBlueprints().get(BLUEPRINT2_NAME).getDcaeBlueprint();
+        assertNotNull(blueprint);
+        assertTrue(!blueprint.isEmpty());
+        assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
         // Do some cleanup
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         Files.deleteIfExists(path);
+
     }
 
     @Test
@@ -150,17 +157,15 @@ public class CsarHandlerTest {
         assertEquals(CSAR_ARTIFACT_NAME, csar.getArtifactElement().getArtifactName());
         assertNotNull(csar.getSdcCsarHelper());
         // Test dcaeBlueprint
-        String blueprint = csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getDcaeBlueprint();
+        String blueprint = csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getDcaeBlueprint();
         assertNotNull(blueprint);
         assertTrue(!blueprint.isEmpty());
         assertTrue(blueprint.contains("DCAE-VES-PM-EVENT-v1"));
         // Test additional properties from Sdc notif
-        assertEquals(BLUEPRINT1_NAME,
-            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintArtifactName());
+        assertEquals(BLUEPRINT1_NAME, csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getBlueprintArtifactName());
         assertEquals(RESOURCE1_UUID,
-            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getResourceAttached().getResourceInvariantUUID());
-        assertEquals(SERVICE_UUID,
-            csar.getMapOfBlueprints().get(RESOURCE1_INSTANCE_NAME).getBlueprintInvariantServiceUuid());
+            csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getResourceAttached().getResourceInvariantUUID());
+        assertEquals(SERVICE_UUID, csar.getMapOfBlueprints().get(BLUEPRINT1_NAME).getBlueprintInvariantServiceUuid());
         Path path = Paths.get(SDC_FOLDER + "/test-controller/" + CSAR_ARTIFACT_NAME);
         // A double save should simply overwrite the existing
         csar.save(buildFakeSdcResut());
