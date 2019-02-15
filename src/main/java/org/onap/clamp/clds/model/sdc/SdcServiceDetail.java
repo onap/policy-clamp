@@ -18,28 +18,25 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.sdc;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SdcServiceDetail {
 
-    private String                uuid;
-    private String                invariantUUID;
-    private String                name;
-    private String                version;
-    private String                toscaModelURL;
-    private String                category;
-    private String                lifecycleState;
-    private String                lastUpdaterUserId;
-    private String                distributionStatus;
-    private String                lastUpdaterFullName;
+    private String uuid;
+    private String invariantUUID;
+    private String name;
+    private String version;
+    private String toscaModelURL;
+    private String category;
+    private String lifecycleState;
+    private String lastUpdaterUserId;
+    private String distributionStatus;
+    private String lastUpdaterFullName;
     private List<SdcResource> resources;
     private List<SdcArtifact> artifacts;
 

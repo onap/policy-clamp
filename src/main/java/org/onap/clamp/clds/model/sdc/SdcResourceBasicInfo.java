@@ -18,34 +18,31 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SdcResourceBasicInfo implements Comparable<SdcResourceBasicInfo> {
 
-    protected static final EELFLogger logger        = EELFManager.getInstance()
-            .getLogger(SdcResourceBasicInfo.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcResourceBasicInfo.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
-    private String                    uuid;
-    private String                    invariantUUID;
-    private String                    name;
-    private String                    version;
-    private String                    toscaModelURL;
-    private String                    category;
-    private String                    subCategory;
-    private String                    resourceType;
-    private String                    lifecycleState;
-    private String                    lastUpdaterUserId;
+    private String uuid;
+    private String invariantUUID;
+    private String name;
+    private String version;
+    private String toscaModelURL;
+    private String category;
+    private String subCategory;
+    private String resourceType;
+    private String lifecycleState;
+    private String lastUpdaterUserId;
 
     @Override
     public int compareTo(SdcResourceBasicInfo in) {
