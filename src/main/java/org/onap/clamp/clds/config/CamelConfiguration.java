@@ -31,13 +31,12 @@ public class CamelConfiguration extends RouteBuilder {
 
     @Override
     public void configure() {
-        restConfiguration().component("servlet").bindingMode(RestBindingMode.json)
-        .dataFormatProperty("prettyPrint", "true")//.enableCORS(true)
-        // turn on swagger api-doc
-        .apiContextPath("api-doc")
-        .apiVendorExtension(true)
-        .apiProperty("api.title", "Clamp Rest API").apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
-        .apiProperty("base.path", "/restservices/clds/v1/");
-        //.apiProperty("cors", "true");
+        restConfiguration().component("servlet").bindingMode(RestBindingMode.json).jsonDataFormat("json-gson")
+            .dataFormatProperty("prettyPrint", "true")// .enableCORS(true)
+            // turn on swagger api-doc
+            .apiContextPath("api-doc").apiVendorExtension(true).apiProperty("api.title", "Clamp Rest API")
+            .apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
+            .apiProperty("base.path", "/restservices/clds/v1/");
+        // .apiProperty("cors", "true");
     }
 }
