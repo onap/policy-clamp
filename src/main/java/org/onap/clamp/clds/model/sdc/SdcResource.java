@@ -18,31 +18,29 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SdcResource implements Comparable<SdcResource> {
 
-    protected static final EELFLogger logger        = EELFManager.getInstance().getLogger(SdcResource.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcResource.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
 
-    private String                    resourceInstanceName;
-    private String                    resourceName;
-    private String                    resourceInvariantUUID;
-    private String                    resourceVersion;
-    private String                    resoucreType;
-    private String                    resourceUuid;
-    private List<SdcArtifact>     artifacts;
+    private String resourceInstanceName;
+    private String resourceName;
+    private String resourceInvariantUUID;
+    private String resourceVersion;
+    private String resoucreType;
+    private String resourceUuid;
+    private List<SdcArtifact> artifacts;
 
     public String getResourceInstanceName() {
         return resourceInstanceName;
