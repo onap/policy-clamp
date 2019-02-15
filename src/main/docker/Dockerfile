@@ -15,10 +15,19 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     apt-get -y dist-upgrade &&  \
     apt-get install -y openjdk-8-jre-headless
 
+RUN groupadd -r onap && useradd --no-log-init -r -g onap clamp
+VOLUME /opt/clamp/config
+RUN mkdir /var/log/onap
+RUN chmod a+rwx /var/log/onap
+
 COPY onap-clamp/clamp.jar /opt/clamp/app.jar
-VOLUME /etc
+RUN chmod 700 /opt/clamp/app.jar
+
 COPY onap-clamp/startService.sh /opt/clamp/startService.sh
 RUN chmod 700 /opt/clamp/startService.sh
 
+RUN chown -R clamp:onap /opt/clamp
+
+USER clamp
 WORKDIR /opt/clamp/
 ENTRYPOINT ./startService.sh 
