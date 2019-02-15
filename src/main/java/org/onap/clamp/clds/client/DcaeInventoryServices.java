@@ -26,7 +26,6 @@ package org.onap.clamp.clds.client;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
 import java.util.Date;
@@ -83,7 +82,7 @@ public class DcaeInventoryServices {
      * @throws ParseException
      *         In case of DCAE Json parse exception
      */
-    public void setEventInventory(CldsModel cldsModel, String userId) throws ParseException, InterruptedException {
+    public void setEventInventory(CldsModel cldsModel, String userId) throws InterruptedException {
         String artifactName = cldsModel.getControlName();
         DcaeEvent dcaeEvent = new DcaeEvent();
         DcaeInventoryResponse dcaeResponse = null;
@@ -109,7 +108,7 @@ public class DcaeInventoryServices {
             dcaeEvent.setArtifactName(artifactName);
             dcaeEvent.setEvent(DcaeEvent.EVENT_DISTRIBUTION);
             LoggingUtils.setResponseContext("0", "Set inventory success", this.getClass().getName());
-        } catch (JsonProcessingException e) {
+        } catch (ParseException e) {
             LoggingUtils.setResponseContext("900", "Set inventory failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Set inventory error");
             logger.error("Error during JSON decoding", e);
@@ -154,8 +153,7 @@ public class DcaeInventoryServices {
         return totalCount.intValue();
     }
 
-    private DcaeInventoryResponse getItemsFromDcaeInventoryResponse(String responseStr)
-        throws ParseException {
+    private DcaeInventoryResponse getItemsFromDcaeInventoryResponse(String responseStr) throws ParseException {
         JSONParser parser = new JSONParser();
         Object obj0 = parser.parse(responseStr);
         JSONObject jsonObj = (JSONObject) obj0;

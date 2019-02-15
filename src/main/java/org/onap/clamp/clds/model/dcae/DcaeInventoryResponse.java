@@ -19,17 +19,14 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.dcae;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 /**
  * This class maps the DCAE inventory answer to a nice pojo.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DcaeInventoryResponse {
 
     private String typeName;

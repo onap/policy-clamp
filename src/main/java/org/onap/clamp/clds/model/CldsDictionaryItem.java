@@ -23,9 +23,6 @@
 
 package org.onap.clamp.clds.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import java.util.List;
 
 import org.onap.clamp.clds.dao.CldsDao;
@@ -33,7 +30,6 @@ import org.onap.clamp.clds.dao.CldsDao;
 /**
  * Represents a CLDS Dictionary Item.
  */
-@JsonInclude(Include.NON_NULL)
 public class CldsDictionaryItem {
 
     private String dictElementId;
