@@ -24,15 +24,17 @@
 
 package org.onap.clamp.clds.util;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import java.io.IOException;
 
+import java.io.IOException;
 import java.util.List;
+
 import org.junit.Test;
 
 public class JsonUtilsTest {
@@ -78,7 +80,8 @@ public class JsonUtilsTest {
     }
 
     /**
-     * This method test that the security hole in Jackson is not enabled in the default ObjectMapper.
+     * This method test that the security hole in GSON is not enabled in the default
+     * ObjectMapper.
      */
     @Test
     public void testCreateBeanDeserializer() {
@@ -91,48 +94,47 @@ public class JsonUtilsTest {
         assertFalse(testObject instanceof TestObject);
     }
 
-
     @Test
     public void shouldReturnJsonValueByName() throws IOException {
-        //given
+        // given
         String modelProperties = ResourceFileUtil
             .getResourceAsString("example/model-properties/custom/modelBpmnPropertiesMultiVF.json");
         JsonElement globalElement = JsonUtils.GSON.fromJson(modelProperties, JsonObject.class).get("global");
 
-        //when
+        // when
         String locationName = JsonUtils.getStringValueByName(globalElement, "location");
         String timeoutValue = JsonUtils.getStringValueByName(globalElement, "timeout");
 
-        //then
+        // then
         assertThat(locationName).isEqualTo("SNDGCA64");
         assertThat(timeoutValue).isEqualTo("500");
     }
 
     @Test
     public void shouldReturnJsonObjectByPropertyName() throws IOException {
-        //given
+        // given
         String modelProperties = ResourceFileUtil
             .getResourceAsString("example/model-properties/custom/modelBpmnPropertiesMultiVF.json");
         JsonElement globalElement = JsonUtils.GSON.fromJson(modelProperties, JsonObject.class).get("global");
 
-        //when
+        // when
         JsonObject deployParameters = JsonUtils.getJsonObjectByName(globalElement, "deployParameters");
 
-        //then
+        // then
         assertThat(deployParameters).isEqualToComparingFieldByField(DEPLOY_PARAMETERS);
     }
 
     @Test
     public void shouldReturnJsonValuesByPropertyName() throws IOException {
-        //given
+        // given
         String modelProperties = ResourceFileUtil
             .getResourceAsString("example/model-properties/custom/modelBpmnPropertiesMultiVF.json");
         JsonElement globalElement = JsonUtils.GSON.fromJson(modelProperties, JsonObject.class).get("global");
 
-        //when
+        // when
         List<String> vfs = JsonUtils.getStringValuesByName(globalElement, "vf");
 
-        //then
+        // then
         assertThat(vfs).containsExactly(
             "6c7aaec2-59eb-41d9-8681-b7f976ab668d",
             "8sadsad0-a98s-6a7s-fd12-sadji9sa8d12",
@@ -140,18 +142,17 @@ public class JsonUtilsTest {
         );
     }
 
-
     @Test
     public void shouldReturnJsonValueAsInteger() throws IOException {
-        //given
+        // given
         String modelProperties = ResourceFileUtil
             .getResourceAsString("example/model-properties/custom/modelBpmnPropertiesMultiVF.json");
         JsonElement globalElement = JsonUtils.GSON.fromJson(modelProperties, JsonObject.class).get("global");
 
-        //when
+        // when
         Integer timeoutValue = JsonUtils.getIntValueByName(globalElement, "timeout");
 
-        //then
+        // then
         assertThat(timeoutValue).isEqualTo(500);
     }
 }
