@@ -59,7 +59,7 @@
 			"Restart": "Restart",
 			"Rebuild": "Rebuild",
 			"Migrate": "Migrate",
-			"HealthCheck": "Health Check",
+			"Health-Check": "Health Check",
 			"ModifyConfig": "Modify Config",
 			"VF Module Create":"VF Module Create",
 			"VF Module Delete":"VF Module Delete",
