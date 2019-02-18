@@ -23,18 +23,8 @@
 
 
 <style>
-#deletePolicy {
-	height: 34px;
-	background-color: #dddd;
-}
-
 .disabled {
 	background-color: #dddd;
-}
-
-.modelSearchBox {
-	position: absolute;
-	padding: 25px 12px;
 }
 
 label {
@@ -44,12 +34,6 @@ label {
 
 .leftPolicyPanel {
 	padding: 0 10px 0 0;
-}
-
-#createNewPolicy {
-	height: 34px;
-	width: 120px; /*84*/
-	background-color: #f2bfab;
 }
 
 .idError {
@@ -72,14 +56,6 @@ label {
 
 label {
 	margin-bottom: 0px;
-}
-
-#policySearch {
-	height: 33px;
-	font-size: 12px;
-	padding: 2px 2px 2px 30px;
-	margin-bottom: 5px;
-	width: 100%;
 }
 
 #policyTable {
@@ -124,36 +100,17 @@ label {
 
 	<div class="modal-body">
 		<div attribute-test="policywindowpropertiesb" class="modal-body row">
-
-			<div class="leftPolicyPanel">
+			<div class="leftPolicyPanel" style="display: none;">
 				<div class="panel panel-default">
-					<i class="glyphicon glyphicon-search modelSearchBox"></i> <input
-						type="text" id="policySearch" onkeyup="searchPolicyList()"
-						placeholder="Search ...">
 					<div id="policyTableHolder">
 						<table id="policyTable"></table>
 					</div>
 				</div>
-				<div style="float: left">
-					<button type="button" id="createNewPolicy" class="btn btn-sm">New
-						Policy</button>
-					</span>
-				</div>
-				<div style="float: right">
-					<button type="button" id="deletePolicy"
-						class="btn btn-sm glyphicon glyphicon-trash" disabled></button>
-					</span>
-				</div>
-				<div id="repeatIdError" class="idError">Error: This Policy
-					name is already taken.</div>
-				<div id="newIdError" class="idError">Error: Please rename your
-					new Policy.</div>
+
 				<div id="spaceError" class="idError">Error: Spaces are not
 					allowed in the ID.</div>
 			</div>
-
-			<div class="panel panel-default col-sm-9 policyPanel"
-				style="display: none;">
+			<div class="panel panel-default col-sm-9 policyPanel">
 				<form id="Timeoutform" class="form-horizontal">
 					<div>
 						<div class="form-group clearfix row">
@@ -379,11 +336,12 @@ label {
 		}
 
 		function initTargetResourceId() {
+			if (vf_Services !== null && vf_Services !== undefined) {
 			// Set all the Resource Invariant UUID in the target resource ID list (+Empty and other) 
 			Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key) {
 					$("#targetResourceId").append($('<option></option>').val(key).html(key));
 			});
-			
+			}
 		}
 		
 		function changeTargetResourceIdOther() {
@@ -409,6 +367,7 @@ label {
 		//Basically this method will add a new form. All forms share the same class. When you want one form to show(active form) the other forms get the 
 		// css attribute display:none
 		$("#add_one_more").click(function(event) {
+			console.log("add one more");
 			event.preventDefault();
 			var num = add_one_more();
 			setMultiSelect();
@@ -425,7 +384,8 @@ label {
 		
 		//Grab saved values for dropdowns
 		var obj = elementMap[lastElementSelected];
-		
+		var loadPolicy;
+		console.log("lastElementSelected :"+ lastElementSelected);
 		if (!($.isEmptyObject(obj))){
 			allPolicies = jQuery.extend({}, obj);			
 			for (var x in allPolicies){
@@ -433,12 +393,23 @@ label {
 				if (allPolicies[x][1]['value']){
 					allPolIds.push(parseInt(allPolicies[x][1]['value']));
 				}
+				console.log("policies found :"+ x);
+				loadPolicy = x;
 			}
 		}
-		$("#pname").val('');		
+		
+		if (loadPolicy !== undefined && loadPolicy !== null) {
+			// load properties
+			console.log("load properties");
+			disperseConfig(allPolicies,loadPolicy);
+		} else  {
+			console.log("create new policy");
+			add_new_policy();
+		}		
 
 		//load recipes for a chosen policy
 		function disperseConfig(policyObj, id){
+			console.log("disperseConfig with id:" + id);
 			parent_policy={};
 			//remove old gui forms
 			for (var i=1; i<($(".formId").length + 1); i++){
@@ -446,18 +417,21 @@ label {
 			}
 			$(".formId").remove();
 			
-			if (policyObj !== undefined) {
+			if (policyObj !== undefined && policyObj[id] !== undefined) {
 				var el = policyObj[id][3]['policyConfigurations']
 				for (var i = 0; i < el.length; i++) {
 					loadingId=true;
 					var num = add_one_more();
+					console.log("number is=:" + num);
 					loadingId=false;
 					for (var j = 0; j < el[i].length; j++) {
 						if(el[i][j].hasOwnProperty("name")){
 							$("#formId" + num + " #" + el[i][j].name).val(
 									el[i][j].value);
-							if(el[i][j].name==="_id")
+							if(el[i][j].name==="_id") {
+								console.log("formId num:" + num + "; value is:" + el[i][j].value);
 								policy_ids["#formId" + num]=el[i][j].value
+							}
 							if(el[i][j].name==='parentPolicy')
 								parent_policy[num]=el[i][j].value 
 							if(el[i][j].name==='recipe' && el[i][j].value.toString()!==''){
@@ -563,25 +537,14 @@ label {
 		}
 		
 		$("#savePropsBtn").click(function(event) {
+			console.log("save properties triggered");
 			if($("#targetResourceIdOther").is(":visible")) {
 				$('#targetResourceId').append($('<option></option>').val($("#targetResourceIdOther").val()).html($("#targetResourceIdOther").val()))
 				$("#targetResourceId").val($("#targetResourceIdOther").val());
 			}
 			$(".idError").hide();
-			if ($("#policyTable .highlight td").html() !== $("#pname").val()){
-				//repeated name
-				if ($.inArray($("#pname").val(), Object.keys(allPolicies)) > -1){
-					$("#repeatIdError").show();
-					return;
-				} else { //not repeated
-					delete allPolicies[$("#policyTable .highlight td").html()];
-				}
-			}
-			if ($("#pname").val().trim() == "New_Policy"){
-				$("#newIdError").show();
-				return;
-			}
-			
+
+			console.log("save properties triggered2");
 			//Saves edits
 			/* if ($("#policyTable .highlight").length > 0){
 				saveLastPolicyLocally($("#policyTable .highlight").attr("id"));
@@ -589,12 +552,15 @@ label {
 			startNextItem();
 			
 			//Removes outdated (deleted) policies by checking against left menu
+			console.log("get all policies");
 			var finalSaveList = {};
 			$("#policyTable td").each(function(){
+				console.log("enter policy table each loop");
 				var tableVal = $(this).text();
 				if (tableVal in allPolicies){
 					finalSaveList[tableVal] = allPolicies[tableVal];
 				}
+				console.log("save properties; add tableVal to policies: "+ tableVal);
 			});
 
 			saveProperties(finalSaveList);
@@ -669,21 +635,8 @@ label {
 			
 			return count;
 		}
-		
-		function add_new_policy(issueNewNames) {	
-			//remove old gui forms
-			for (var i=1; i<($(".formId").length + 1); i++){
-				$("#go_properties_tab"+i).parent().remove();
-			}
-			$(".formId").remove();
-			
-			//Reset headers
-			//$("#pname").val("0");
-			$("#pname").val("New_Policy");
-			$("#timeout").val(defaults_props.policy.timeout);
-			
-			$("#add_one_more").click();
-		}
+
+
 
 		function addCustListen(count) {			
 			$('#go_properties_tab' + count).click(function(event) {
@@ -751,21 +704,8 @@ label {
 			this.name = name
 		}
 
-		//Policy table search filter
-		function searchPolicyList() {
-			var search = document.getElementById("policySearch");
-			var row = document.getElementsByTagName("td");
-			for (var i = 0; i < row.length; i++) {
-				if (row[i].innerHTML.toUpperCase().indexOf(
-						search.value.toUpperCase()) > -1) {
-					row[i].style.display = "";
-				} else {
-					row[i].style.display = "none";
-				}
-			}
-		}
-
 		function saveLastPolicyLocally(lastPolicyId) {
+			console.log("last policy id is:" + lastPolicyId);
 			var polForm = []
 
 			var properties = $(".saveProps").not("#formSpan .saveProps");
@@ -783,100 +723,29 @@ label {
 				d["policyConfigurations"].push(s);
 			}
 			polForm.push(d);
+		
+			for (var x in allPolicies){
+				if (x !== lastPolicyId) {
+					delete allPolicies[x];
+					console.log("remove old policy"+ x);
+				}
+			}
+			
 			allPolicies[lastPolicyId] = polForm;
 		}
-		
-		function getNextId(){
-			var newPolId;
-			allPolIds.sort();
-			if ((Math.min.apply(Math, allPolIds) == 0)
-					&& (allPolIds.length > 0)) {
-				loop1: 
-					for (var i = 1; i < allPolIds.length; i++) {
-						if ((allPolIds[i] - allPolIds[i - 1]) != 1) {
-							newPolId = (allPolIds[i - 1] + 1);
-							break loop1;
-						};
-					};
-				if (!newPolId) {
-					newPolId = (Math.max.apply(Math, allPolIds)) + 1;
-				}
-			} else {
-				newPolId = 0;
-			}
-			allPolIds.push(newPolId);
-			$("#pid").val(newPolId);
-		}
-
-		$("#deletePolicy").on('click', function() {
-			$(".idError").hide();
-			//delete policy id
-			allPolIds.splice((allPolIds.indexOf(parseInt($("#pid").val()))),1);
-			
-			//delete policy name
-			var deleteId = $("#policyTable .highlight td").html();
-			delete allPolicies[deleteId];
-			$("#policyTable .highlight").remove();
-			$("#pname").val('');
-			expandTable();
-		});
 
 		$('#policyTable').on('click', 'tr', function(event) {
+			
+			console.log("click on policyTable");
 			$(".idError").hide();
-			//edited name
-			if ($("#policyTable .highlight td").html() !== $("#pname").val()){
-				//repeated name
-				if ($.inArray($("#pname").val(), Object.keys(allPolicies)) > -1){
-					$("#repeatIdError").show();
-					return;
-				} else { //not repeated
-					$("#repeatIdError").hide();
-					delete allPolicies[$("#policyTable .highlight td").html()];
-				}
-			}
-			//if (parseInt($("#pname").val()) == 0){
-			if ($("#pname").val().trim() == "New_Policy"){
-				$("#newIdError").show();
-				return;
-			}
+
 			if (!(readMOnly)){
 				startNextItem();
-			} else {
-				if ($("#policyTable .highlight").length == 0){
-					collapseTable();		
-				}
 			}
 			$(this).addClass('highlight').siblings().removeClass('highlight');
 			disperseConfig(allPolicies, $(this).find("td").html());
 		});
 
-		$('#createNewPolicy').on('click', function(){
-			$(".idError").hide();
-			//edited name
-			if ($("#policyTable .highlight td").html() !== $("#pname").val()){
-				//repeated name
-				if ($.inArray($("#pname").val(), Object.keys(allPolicies)) > -1){
-					$("#repeatIdError").show();
-					return;
-				} else { //not repeated
-					$("#repeatIdError").hide();
-					delete allPolicies[$("#policyTable .highlight td").html()];
-				}
-			}
-			//if (parseInt($("#pname").val()) == 0){
-			if ($("#pname").val().trim() == "New_Policy"){
-				$("#newIdError").show();
-				return;
-			}
-			startNextItem();
-			add_new_policy();
-			if (("#policyTable .highlight").length > 0){
-				$('#policyTable tr.highlight').removeClass('highlight');
-			}
-            $("#policyTable").prepend("<tr class='highlight'><td>New_Policy</td></tr>");
-            
-            getNextId();
-		});
 
 		$('#pname').on('keypress', function(e){
 			/* var newVal = $(this).val() + String.fromCharCode(e.which);
@@ -898,22 +767,41 @@ label {
 		}
 
 		function startNextItem() {
+			console.log("start next Item");
 			//save last item before transitioning
 			var lastItem = $("#policyTable .highlight");
 			if (lastItem.length > 0) {
+				console.log("start next Item length > 0");
 				saveLastPolicyLocally($("#pname").val());
 				//lastItem.attr("id", $("#pname").val()); 
 				lastItem.find("td").html($("#pname").val());
-			} else {
-				collapseTable();
-			}
-
-			//allow deleting
-			if ($("#deletePolicy").prop("disabled")) {
-				$("#deletePolicy").prop("disabled", false);
 			}
 		}
 		
+		function add_new_policy(issueNewNames) {	
+			//remove old gui forms
+			for (var i=1; i<($(".formId").length + 1); i++){
+				$("#go_properties_tab"+i).parent().remove();
+			}
+			$(".formId").remove();
+			
+			//Reset headers
+			//$("#pname").val("0");
+			$("#pname").val("New_Policy");
+			$("#timeout").val(defaults_props.policy.timeout);
+			
+			$("#add_one_more").click();
+		}
+		
+		startNextItem();
+
+		if (("#policyTable .highlight").length > 0){
+			$('#policyTable tr.highlight').removeClass('highlight');
+		}
+        $("#policyTable").prepend("<tr class='highlight'><td>New_Policy</td></tr>");
+
+		$("#pid").val(0);
+
 		setASDCFields();
 		initTargetResourceId();
 		
@@ -922,7 +810,7 @@ label {
 			for (var i = 0; i < (elementMap["global"].length); i++){
 				if ((elementMap["global"][i]["name"]) == "actionSet"){
 					var asSel = elementMap["global"][i]["value"];
-					if (asSel == "vnfRecipe"){
+					if (asSel == "vnfRecipe" && vf_Services !== null && vf_Services !== undefined){
 						if (vf_Services["policy"][asSel]){
 							$.each((vf_Services["policy"][asSel]), function(val, text) {
 				                $('#recipe').append(
@@ -935,21 +823,6 @@ label {
 				};
 			};
 		};
-		//Show table panel only
-		function expandTable() {
-			$(".policyPanel").css("display", "none");
-			$(".leftPolicyPanel").removeClass("col-sm-3");
-			$(".modelSearchBox").css("padding", "25px 12px");
-			if (!($("#deletePolicy").prop("disabled"))) {
-				$("#deletePolicy").prop("disabled", true);
-			}
-		}
 
-		//Show both menus
-		function collapseTable() {
-			$(".leftPolicyPanel").addClass("col-sm-3");
-			$(".modelSearchBox").css("padding", "10px 12px");
-			$(".policyPanel").css("display", "unset");
-		}
 	</script>
 </div>
