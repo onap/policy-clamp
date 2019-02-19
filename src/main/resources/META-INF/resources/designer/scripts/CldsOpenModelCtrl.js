@@ -163,10 +163,8 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 			} else {
 				elementMap = JSON.parse(propText);
 			}
-			var simple = elementMap.simpleModel;
-			$rootScope.isSimpleModel = simple;
 			selected_model = modelName;
-			cldsModelService.processActionResponse(modelName, pars, simple);
+			cldsModelService.processActionResponse(modelName, pars);
 			// set model bpmn and open diagram
 			$rootScope.isPalette = true;
 		}, function(data) {
