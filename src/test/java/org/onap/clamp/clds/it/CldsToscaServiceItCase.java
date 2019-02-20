@@ -120,16 +120,14 @@ public class CldsToscaServiceItCase {
 
     @Test
     public void testGetToscaModel() throws Exception {
-        ResponseEntity<CldsToscaModel> responseEntity = cldsToscaService.getToscaModel("tca-policy-test");
-        CldsToscaModel savedModel = responseEntity.getBody();
+        CldsToscaModel savedModel = cldsToscaService.getToscaModel("tca-policy-test");
         assertNotNull(savedModel);
         assertEquals("tca-policy-test", savedModel.getToscaModelName());
     }
 
     @Test
     public void testGetToscaModelsByPolicyType() throws Exception {
-        ResponseEntity<CldsToscaModel> responseEntity = cldsToscaService.getToscaModelsByPolicyType("tca");
-        CldsToscaModel savedModel = responseEntity.getBody();
+        CldsToscaModel savedModel = cldsToscaService.getToscaModelsByPolicyType("tca");
         assertNotNull(savedModel);
         assertEquals("tca-policy-test", savedModel.getToscaModelName());
         assertEquals("tca", savedModel.getPolicyType());

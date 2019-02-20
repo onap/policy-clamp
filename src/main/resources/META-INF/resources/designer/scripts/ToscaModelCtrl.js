@@ -29,7 +29,7 @@ app.controller('ToscaModelCtrl',
 	        	toscaModelService.getHpModelJsonByPolicyType(selectedPolicy).then(function(response) {
 	        		$('#editor').empty();
 
-		    		var toscaModel = JSON.parse(response.body.toscaModelJson);
+		    		var toscaModel = JSON.parse(response.toscaModelJson);
 		    		if($scope.policyList && toscaModel.schema.properties && toscaModel.schema.properties.policyList){
 		    			toscaModel.schema.properties.policyList.enum = $scope.policyList;
 		    		}

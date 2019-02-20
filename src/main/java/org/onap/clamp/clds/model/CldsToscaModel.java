@@ -36,7 +36,12 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     private String id;
     private String policyType;
     private String toscaModelName;
-    private String toscaModelYaml;
+
+    /**
+     * Construct
+     */
+    public CldsToscaModel () {
+    }
 
     /**
      * Creates or updates Tosca Model to DB
@@ -121,23 +126,6 @@ public class CldsToscaModel extends CldsToscaModelRevision {
      */
     public void setToscaModelName(String toscaModelName) {
         this.toscaModelName = toscaModelName;
-    }
-
-    /**
-     * @return the toscaModelYaml
-     */
-    @Override
-    public String getToscaModelYaml() {
-        return toscaModelYaml;
-    }
-
-    /**
-     * @param toscaModelYaml
-     *        the toscaModelYaml to set
-     */
-    @Override
-    public void setToscaModelYaml(String toscaModelYaml) {
-        this.toscaModelYaml = toscaModelYaml;
     }
 
 }
