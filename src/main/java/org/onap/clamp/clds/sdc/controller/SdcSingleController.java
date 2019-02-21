@@ -33,6 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
+import org.onap.clamp.clds.exception.policy.PolicyModelException;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
@@ -257,6 +258,10 @@ public class SdcSingleController {
             logger.error("SdcDownloadException exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DOWNLOAD,
                 DistributionStatusEnum.DOWNLOAD_ERROR, e.getMessage());
+        } catch (PolicyModelException e) {
+            logger.error("PolicyModelException exception caught during the notification processing", e);
+            sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
+                DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
         } catch (InterruptedException e) {
             logger.error("Interrupt exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
@@ -266,7 +271,7 @@ public class SdcSingleController {
             logger.error("Unexpected exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(iNotif, csar, NotificationType.DEPLOY,
                 DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
-        } finally {
+        }  finally {
             this.changeControllerStatus(SdcSingleControllerStatus.IDLE);
         }
     }

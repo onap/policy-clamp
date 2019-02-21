@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,15 +21,11 @@
  *
  */
 
-package org.onap.clamp.clds.sdc.controller.installer;
+package org.onap.clamp.clds.exception.policy;
 
-import org.onap.clamp.clds.exception.policy.PolicyModelException;
-import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
+public class PolicyModelException extends Exception {
 
-public interface CsarInstaller {
-
-    boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException;
-
-    public void installTheCsar(CsarHandler csar)
-        throws SdcArtifactInstallerException, InterruptedException, PolicyModelException;
+    public PolicyModelException(String msg, Throwable throwable) {
+        super(msg, throwable);
+    }
 }

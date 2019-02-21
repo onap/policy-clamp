@@ -42,6 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.dao.CldsDao;
+import org.onap.clamp.clds.exception.policy.PolicyModelException;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.model.CldsModel;
@@ -78,7 +79,7 @@ public class CsarInstallerItCase {
 
     @Test(expected = SdcArtifactInstallerException.class)
     public void testInstallTheCsarFail() throws SdcArtifactInstallerException, SdcToscaParserException,
-        CsarHandlerException, IOException, InterruptedException {
+        CsarHandlerException, IOException, InterruptedException, PolicyModelException {
         CsarHandler csarHandler = Mockito.mock(CsarHandler.class);
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
         Mockito.when(blueprintArtifact.getResourceAttached()).thenReturn(Mockito.mock(IResourceInstance.class));
@@ -145,7 +146,7 @@ public class CsarInstallerItCase {
 
     @Test
     public void testIsCsarAlreadyDeployedTca() throws SdcArtifactInstallerException, SdcToscaParserException,
-        CsarHandlerException, IOException, InterruptedException {
+        CsarHandlerException, IOException, InterruptedException, PolicyModelException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
         assertFalse(csarInstaller.isCsarAlreadyDeployed(csarHandler));
@@ -155,7 +156,7 @@ public class CsarInstallerItCase {
 
     @Test
     public void testInstallTheCsarTca() throws SdcArtifactInstallerException, SdcToscaParserException,
-        CsarHandlerException, IOException, JSONException, InterruptedException {
+        CsarHandlerException, IOException, JSONException, InterruptedException, PolicyModelException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
