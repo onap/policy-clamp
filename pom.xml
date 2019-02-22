@@ -145,17 +145,17 @@
 
 		<distributionManagement>
 				<repository>
-						<id>onap-releases</id>
+						<id>ecomp-releases</id>
 						<name>Clamp Release Repository</name>
 						<url>https://nexus.onap.org/content/repositories/releases/</url>
 				</repository>
 				<snapshotRepository>
-						<id>onap-snapshots</id>
+						<id>ecomp-snapshots</id>
 						<name>Clamp Snapshot Repository</name>
 						<url>https://nexus.onap.org/content/repositories/snapshots/</url>
 				</snapshotRepository>
 				<site>
-						<id>onap-site</id>
+						<id>ecomp-site</id>
 						<url>dav:https://nexus.onap.org/content/sites/site/org/onap/clamp/${project.version}</url>
 				</site>
 		</distributionManagement>
@@ -167,17 +167,17 @@
 						<url>http://repo2.maven.org/maven2/</url>
 				</repository>
 				<repository>
-						<id>onap-releases</id>
+						<id>ecomp-releases</id>
 						<name>ONAP Release Repository</name>
 						<url>https://nexus.onap.org/content/repositories/releases/</url>
 				</repository>
 				<repository>
-						<id>onap-staging</id>
+						<id>ecomp-staging</id>
 						<name>ONAP Staging Repository</name>
 						<url>https://nexus.onap.org/content/repositories/staging/</url>
 				</repository>
 				<repository>
-						<id>onap-snapshots</id>
+						<id>ecomp-snapshots</id>
 						<name>ONAP Snapshot Repository</name>
 						<url>https://nexus.onap.org/content/repositories/snapshots/</url>
 						<snapshots>
