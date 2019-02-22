@@ -115,6 +115,7 @@
 				uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=parseToscaModelAndSave(${header.toscaModelName},${body})" />
 		</put>
 		<get uri="/tosca/models/policyType/{policyType}"
+		outType="org.onap.clamp.clds.model.CldsToscaModel"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=getToscaModelsByPolicyType(${header.policyType})" />
