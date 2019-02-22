@@ -334,6 +334,15 @@
 								</exclusion>
 						</exclusions>
 				</dependency>
+				<dependency>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-data-jpa</artifactId>
+				</dependency>
+				<dependency>
+					<groupId>com.vladmihalcea</groupId>
+					<artifactId>hibernate-types-52</artifactId>
+					<version>2.4.1</version>
+				</dependency>
 				<!-- Others dependencies -->
 				<dependency>
 					<groupId>org.onap.aaf.authz</groupId>
@@ -684,36 +693,26 @@
 
 				<plugins>
 						<plugin>
-							<groupId>org.sonatype.plugins</groupId>
-							<artifactId>port-allocator-maven-plugin</artifactId>
-							<version>1.2</version>
+							<groupId>de.jpdigital</groupId>
+							<artifactId>hibernate52-ddl-maven-plugin</artifactId>
+							<version>2.2.0</version>
 							<executions>
 								<execution>
-									<phase>validate</phase>
+									<phase>process-classes</phase>
 									<goals>
-										<goal>allocate-ports</goal>
+										<goal>gen-ddl</goal>
 									</goals>
 									<configuration>
-										<ports>
-											<port>
-												<name>docker.mariadb.port.host</name>
-											</port>
-											<port>
-												<name>docker.http-cache.port.host</name>
-											</port>
-											<port>
-												<name>clamp.it.tests.http-redirected</name>
-											</port>
-											<port>
-												<name>clamp.it.tests.https</name>
-											</port>
-											<port>
-												<name>clamp.it.tests.http</name>
-											</port>
-										</ports>
+										<packages><param>org.onap.clamp.dao.model</param></packages>
+										<dialects><param>MARIADB53</param></dialects>
+										<outputDirectory>${project.basedir}/extra/sql/bulkload/</outputDirectory>
+										<outputFileNameSuffix>create-tables</outputFileNameSuffix>
+										<!-- <createDropStatements>true</createDropStatements> -->
+										<omitDialectFromFileName>true</omitDialectFromFileName>
 									</configuration>
 								</execution>
 							</executions>
+					
 						</plugin>
 						<!-- Read the swagger.json file and the definition from SwaggerConfig.java;
 							generate a list of .adoc files containing the APIs info in more structured
@@ -866,6 +865,22 @@
 														</artifacts>
 												</configuration>
 										</execution>
+										<execution>
+											<id>reserve-port-for-tests</id>
+											<phase>process-resources</phase>
+											<goals>
+												<goal>reserve-network-port</goal>
+											</goals>
+											<configuration>
+												<portNames>
+													<portName>docker.mariadb.port.host</portName>
+													<portName>docker.http-cache.port.host</portName>
+													<portName>clamp.it.tests.http-redirected</portName>
+													<portName>clamp.it.tests.https</portName>
+													<portName>clamp.it.tests.http</portName>
+												</portNames>
+											</configuration>
+										</execution>
 								</executions>
 						</plugin>
 
@@ -952,7 +967,7 @@
 										<apiVersion>1.35</apiVersion>
 										<images>
 												<image>
-														<name>library/mariadb:10.1.11</name>
+														<name>library/mariadb:10.3.12</name>
 														<alias>mariadb</alias>
 														<run>
 																<env>
