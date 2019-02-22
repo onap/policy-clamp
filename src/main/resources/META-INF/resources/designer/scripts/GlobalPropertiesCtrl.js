@@ -104,17 +104,6 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
     
     $scope.submitForm = function() {
         saveGlobalProperties(noRepeats($("#saveProps").serializeArray()))
-        //module reset, based on property updates
-        if (elementMap["global"]) {
-	        $.each(Object.keys(elementMap), function(i, v) {
-		        if ((v.match(/^Policy/)) && asDiff) {
-			        elementMap[v] = {};
-		        }
-		        if ((v.match(/^TCA/)) && (vfDiff || serDiff)) {
-			        elementMap[v] = {};
-		        }
-	        });
-        }
         $uibModalInstance.close();
     }
   

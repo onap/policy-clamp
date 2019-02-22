@@ -151,7 +151,7 @@ function loadSharedPropertyByServiceProperties(callBack) {
     dataType: "json",
     url: '/restservices/clds/v1/clds/properties/',
     success: function(data) {
-      vf_Services = JSON.parse(data);
+
       setASDCFields();
       if (callBack && _.isFunction(callBack)) {
         callBack(true);
@@ -206,7 +206,7 @@ function setASDCFields() {
 //Typically used when opening a new model/template
 function reloadDefaultVariables(isTemp) {
   isTemplate = isTemp;
-  vf_Services = null;
+
 }
 
 $(window).on('load',function() {

@@ -28,8 +28,7 @@ app.controller('ToscaModelCtrl',
         	if (selectedPolicy && selectedPolicy != '') {
 	        	toscaModelService.getHpModelJsonByPolicyType(selectedPolicy).then(function(response) {
 	        		$('#editor').empty();
-	        		// get the list of available policies
-	        		$scope.getPolicyList();
+
 		    		var toscaModel = JSON.parse(response.body.toscaModelJson);
 		    		if($scope.policyList && toscaModel.schema.properties && toscaModel.schema.properties.policyList){
 		    			toscaModel.schema.properties.policyList.enum = $scope.policyList;
@@ -58,24 +57,6 @@ app.controller('ToscaModelCtrl',
 				$('#form1').hide();
 			}
         }
-
-        $scope.getPolicyList = function(){
-    			var policyNameList = [];
-    			if (typeof elementMap !== 'undefined'){
-        			for (key in elementMap){
-        				if (key.indexOf('Policy')>-1){
-        					angular.forEach(Object.keys(elementMap[key]), function(text, val){
-        						for (policyKey in elementMap[key][text]){
-        							if(elementMap[key][text][policyKey].name == 'pname'){
-        								policyNameList.push(elementMap[key][text][policyKey].value);
-        							}
-        						}
-        					});
-        				}
-        			}
-        		};
-    			$scope.policyList = policyNameList;
- 		}
 
         if($rootScope.selectedBoxName) {
         	var policyType = $rootScope.selectedBoxName.split('_')[0].toLowerCase();
