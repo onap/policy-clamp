@@ -709,56 +709,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    });
 	    }
-	    $scope.VesCollectorWindow = function(vesCollector) {
-
-		    var dlg = dialogs.create(
-		    'partials/portfolios/vesCollector_properties.html',
-		    'ImportSchemaCtrl', {
-		        closable : true,
-		        draggable : true
-		    }, {
-		        size : 'lg',
-		        keyboard : true,
-		        backdrop : 'static',
-		        windowClass : 'my-class'
-		    });
-		    dlg.result.then(function(name) {
-
-		    }, function() {
-
-		    });
-	    };
-	    $scope.HolmesWindow = function(holmes) {
-
-		    var partial = 'partials/portfolios/holmes_properties.html'
-		    var dlg = dialogs.create(partial, 'ImportSchemaCtrl', holmes, {
-		        closable : true,
-		        draggable : true
-		    }, {
-		        size : 'lg',
-		        keyboard : true,
-		        backdrop : 'static',
-		        windowClass : 'my-class'
-		    });
-	    };
-	    $scope.TCAWindow = function(tca) {
-
-		    var dlg = dialogs.create('partials/portfolios/tca_properties.html',
-		    'ImportSchemaCtrl', {
-		        closable : true,
-		        draggable : true
-		    }, {
-		        size : 'lg',
-		        keyboard : true,
-		        backdrop : 'static',
-		        windowClass : 'my-class'
-		    });
-		    dlg.result.then(function(name) {
-
-		    }, function() {
-
-		    });
-	    };
 	    $scope.ToscaModelWindow = function (tosca_model) {
 
 	    	var dlg = dialogs.create('partials/portfolios/tosca_model_properties.html','ToscaModelCtrl',{closable:true,draggable:true},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});
@@ -872,23 +822,9 @@ function importshema() {
 
 	angular.element(document.getElementById('navbar')).scope().importSchema();
 }
-function VesCollectorWindow(vesCollectorWin) {
-
-	angular.element(document.getElementById('navbar')).scope()
-	.VesCollectorWindow(vesCollectorWin);
-}
-function HolmesWindow(holmesWin) {
-
-	angular.element(document.getElementById('navbar')).scope().HolmesWindow(
-	holmesWin);
-}
 function F5Window() {
 
 	angular.element(document.getElementById('navbar')).scope().F5Window();
-}
-function TCAWindow(tca) {
-
-	angular.element(document.getElementById('navbar')).scope().TCAWindow(tca);
 }
 function GOCWindow() {
 

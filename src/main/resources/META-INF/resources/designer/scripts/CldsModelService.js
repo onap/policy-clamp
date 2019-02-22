@@ -30,10 +30,9 @@ app
     '$rootScope',
     function(alertService, $http, $q, $rootScope) {
 
-	    function checkIfElementType(name, isSimple) {
+	    function checkIfElementType(name) {
 
         //This will open the methods located in the app.js
-	  	  if (isSimple){
 	  		  if (undefined == name) {
 	  			  return;
 	  		  }else if (name.toLowerCase().indexOf("policy") >= 0){
@@ -42,21 +41,6 @@ app
 	  			  $rootScope.selectedBoxName = name.toLowerCase();
 	  			  ToscaModelWindow();
 	  		  }
-	  	  } else {
-	  		  if (undefined == name) {
-	  			  return;
-	  		  }
-	  		mapping = {
-			        'tca' : TCAWindow,
-			        'policy' : PolicyWindow,
-			        'vescollector' : VesCollectorWindow,
-			        'holmes' : HolmesWindow,
-			    };
-			    key = name.split('_')[0].toLowerCase()
-			    if (key in mapping) {
-				    mapping[key]();
-			    }
-	  	  };
 	    }
 	    function handleQueryToBackend(def, svcAction, svcUrl, svcPayload) {
 
@@ -226,7 +210,7 @@ app
 			    document.getElementById(menuText).classList.add('ThisLink');
 		    }
 	    };
-	    this.processActionResponse = function(modelName, pars, simple) {
+	    this.processActionResponse = function(modelName, pars) {
 
 		    // populate control name (prefix and uuid here)
 		    var controlNamePrefix = pars.controlNamePrefix;
@@ -244,7 +228,7 @@ app
 		    document.getElementById("modeler_name").textContent = headerText;
 		    document.getElementById("templa_name").textContent = ("Template Used - " + selected_template);
 		    setStatus(pars)
-		    disableBPMNAddSVG(pars, simple);
+		    disableBPMNAddSVG(pars);
 		    this.enableDisableMenuOptions(pars);
 	    };
 	    this.processRefresh = function(pars) {
@@ -293,7 +277,7 @@ app
 		    '<span id="status_clds" style="position: absolute;  left: 61%;top: 151px; font-size:20px;">Status: '
 		    + statusMsg + '</span>');
 	    }
-	    function disableBPMNAddSVG(pars, simple) {
+	    function disableBPMNAddSVG(pars) {
 
 		    var svg = pars.imageText.substring(pars.imageText.indexOf("<svg"))
 		    if ($("#svgContainer").length > 0)
@@ -314,7 +298,7 @@ app
 			    var name = $($(event.target).parent()).attr("data-element-id")
 			    lastElementSelected = $($(event.target).parent()).attr(
 			    "data-element-id")
-			    checkIfElementType(name, simple)
+			    checkIfElementType(name)
 		    });
 	    }
 	    this.enableDisableMenuOptions = function(pars) {
