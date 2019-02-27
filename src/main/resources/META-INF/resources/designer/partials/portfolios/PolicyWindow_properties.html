@@ -372,7 +372,6 @@ label {
 			var num = add_one_more();
 			setMultiSelect();
 		});
-		loadPropertyWindow("policy")
 		
 		// by default, parentPolicyConditions is disabled
 		//$("#parentPolicyConditions").prop('disabled', 'disabled');
@@ -383,7 +382,7 @@ label {
 		var allPolIds=[];
 		
 		//Grab saved values for dropdowns
-		var obj = elementMap[lastElementSelected];
+		var obj = getOperationalPolicyProperty();
 		var loadPolicy;
 		console.log("lastElementSelected :"+ lastElementSelected);
 		if (!($.isEmptyObject(obj))){
@@ -425,6 +424,7 @@ label {
 					console.log("number is=:" + num);
 					loadingId=false;
 					for (var j = 0; j < el[i].length; j++) {
+						console.log("attr:" + el[i][j].name + "; value is:" + el[i][j].value);
 						if(el[i][j].hasOwnProperty("name")){
 							$("#formId" + num + " #" + el[i][j].name).val(
 									el[i][j].value);
@@ -563,11 +563,13 @@ label {
 				console.log("save properties; add tableVal to policies: "+ tableVal);
 			});
 
-			saveProperties(finalSaveList);
+			saveOpPolicyProperties(finalSaveList);
 			$("#close_button").click();
 		})		
 
 		function add_one_more() {
+			console.log("add one more");
+			setPolicyOptions();
 			$("#nav_Tabs li").removeClass("active");
 			
 			//FormSpan contains a block of the form that is not being displayed. We will create clones of that and add them to tabs
@@ -767,9 +769,10 @@ label {
 		}
 
 		function startNextItem() {
-			console.log("start next Item");
+			console.log("start next Item, policyname is:" + $("#pname").val());
 			//save last item before transitioning
 			var lastItem = $("#policyTable .highlight");
+			console.log("start next Item, lastitem is:" + lastItem);
 			if (lastItem.length > 0) {
 				console.log("start next Item length > 0");
 				saveLastPolicyLocally($("#pname").val());
@@ -777,22 +780,20 @@ label {
 				lastItem.find("td").html($("#pname").val());
 			}
 		}
-		
+
 		function add_new_policy(issueNewNames) {	
+			console.log("add new policy");
 			//remove old gui forms
 			for (var i=1; i<($(".formId").length + 1); i++){
 				$("#go_properties_tab"+i).parent().remove();
 			}
 			$(".formId").remove();
-			
-			//Reset headers
-			//$("#pname").val("0");
 			$("#pname").val("New_Policy");
-			$("#timeout").val(defaults_props.policy.timeout);
-			
+			$("#timeout").val(getOperationalPolicyProperty().timeout);
+
 			$("#add_one_more").click();
 		}
-		
+		console.log("start next Item on 796");
 		startNextItem();
 
 		if (("#policyTable .highlight").length > 0){
@@ -804,7 +805,6 @@ label {
 
 		setASDCFields();
 		initTargetResourceId();
-		
 		//load metrics dropdown
 		if (elementMap["global"]) {
 			for (var i = 0; i < (elementMap["global"].length); i++){

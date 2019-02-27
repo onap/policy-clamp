@@ -34,7 +34,7 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
 
 		setASDCFields()
 
-		var el = elementMap["global"];
+		var el = getGlobalProperty();
 		if (el !== undefined) {
 			for (var i = 0; i < el.length; i++) {
 				if (el[i].name === 'deployParameters')
@@ -66,16 +66,7 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
 		console.log("close");
 		$uibModalInstance.close("closed");
 	};
-    $scope.convertDeployParametersJsonToString = function() {
-        var index = elementMap["global"].findIndex(function(e) {
-	        return (typeof e == "object" && !(e instanceof Array))
-	        && "deployParameters" == e["name"];
-        });
-        if (index != -1) {
-	        $('#deployParameters').val(JSON.stringify(elementMap["global"][index].value));
-        }
-    }
-    
+
     function noRepeats(form) {
         var select = {};
         for (var i = 0; i < form.length; i++) {

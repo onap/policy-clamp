@@ -24,15 +24,13 @@ app.controller('ToscaModelCtrl',
     ['$scope', '$rootScope', '$modalInstance', '$location', 'dialogs', 'toscaModelService',
     function($scope, $rootScope, $modalInstance, $location, dialogs, toscaModelService) {
 
-        $scope.jsonByPolicyType = function(selectedPolicy, oldSelectedPolicy, editorData){
+        $scope.jsonByPolicyType = function(selectedPolicy, oldSelectedPolicy){
         	if (selectedPolicy && selectedPolicy != '') {
-	        	toscaModelService.getHpModelJsonByPolicyType(selectedPolicy).then(function(response) {
+
 	        		$('#editor').empty();
 
-		    		var toscaModel = JSON.parse(response.toscaModelJson);
-		    		if($scope.policyList && toscaModel.schema.properties && toscaModel.schema.properties.policyList){
-		    			toscaModel.schema.properties.policyList.enum = $scope.policyList;
-		    		}
+		    		var toscaModel = getMsUI(selectedPolicy);
+		    		var editorData = getMsProperty(selectedPolicy);
 
 	  	        	JSONEditor.defaults.options.theme = 'bootstrap3';
 		    		JSONEditor.defaults.options.iconlib = 'bootstrap2';
@@ -51,22 +49,20 @@ app.controller('ToscaModelCtrl',
 
 		    		});
 		    		$('#form1').show();
-	        	});
+
         	} else {
 				$('#editor').empty();
 				$('#form1').hide();
 			}
         }
 
-        if($rootScope.selectedBoxName) {
-        	var policyType = $rootScope.selectedBoxName.split('_')[0].toLowerCase();
-	    	$scope.toscaModelName = policyType.toUpperCase() + " Microservice";
-	    	if(elementMap[lastElementSelected]) {
-	    		$scope.jsonByPolicyType(policyType, '', elementMap[lastElementSelected][policyType]);
-	    	}else{
-	    		$scope.jsonByPolicyType(policyType, '', '');
-	    	}
-	    }
+    	$scope.$watch('name', function() {
+            if($rootScope.selectedBoxName) {
+            	var policyType = $rootScope.selectedBoxName.split('_')[0].toLowerCase();
+    	    	$scope.toscaModelName = policyType.toUpperCase() + " Microservice";
+    	    	$scope.jsonByPolicyType(policyType, '', '');
+            }
+    	});
 
         $scope.getEditorData = function(){
         	if(!$scope.editor){
@@ -90,8 +86,7 @@ app.controller('ToscaModelCtrl',
         	var data = $scope.getEditorData();
 
             if(data !== null) {
-            	data = {[policyType]: data};
-        		saveProperties(data);
+            	saveMsProperties(policyType,data);
         		if($scope.editor) { $scope.editor.destroy(); $scope.editor = null; }
         		$modalInstance.close('closed');
         	}
@@ -109,7 +104,6 @@ app.controller('ToscaModelCtrl',
         };
 
         $scope.close = function(){
-        	angular.copy(elementMap[lastElementSelected], $scope.hpPolicyList);
 			$modalInstance.close('closed');
 			if($scope.editor) { $scope.editor.destroy(); $scope.editor = null; }
         }

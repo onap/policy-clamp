@@ -47,9 +47,8 @@ function($scope, $rootScope, $uibModalInstance, data, svnservice, fileUpload,
 	$rootScope.updateServiceInputPartInfo;
 	$rootScope.updateSchemElemant1;
 	// Below code is added to get the policyNames
-	for ( var polElement in elementMap) {
-		if (polElement.indexOf('Policy_') === 0) {
-			var obj = elementMap[polElement];
+	var policies = getOperationalPolicyProperty();
+	for ( var obj in policies) {
 			if (!($.isEmptyObject(obj))) {
 				allPolicies = jQuery.extend({}, obj);
 				$scope.policyNames = [];
@@ -57,8 +56,6 @@ function($scope, $rootScope, $uibModalInstance, data, svnservice, fileUpload,
 					$scope.policyNames.push(policy);
 				}
 			}
-			break;
-		}
 	}
 	setTimeout(function() {
 		console.log("setTimeout");

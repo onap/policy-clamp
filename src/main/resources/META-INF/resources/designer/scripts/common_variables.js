@@ -44,6 +44,7 @@ var isModelfrmClick = false;
 var autoSaveRevision =-1;
 var commandStackList = [];
 
+var cl_props=null
 var defaults_props=null
 var elementMap={}
 var lastElementSelected=null
