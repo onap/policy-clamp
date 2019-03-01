@@ -27,6 +27,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,6 +41,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ *
+ * This class holds the logs created by the Clamp Backend. The Instant is always
+ * rounded to the nearest second as the nano seconds can't be stored in the
+ * database. The logs can be therefore exposed to the UI or the client doing
+ * some GET Loop on the backend.
+ *
+ */
 @Entity
 @Table(name = "loop_logs")
 public class LoopLog implements Serializable {
@@ -51,7 +60,7 @@ public class LoopLog implements Serializable {
     @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @Expose
     @Column(name = "log_type", nullable = false)
@@ -68,13 +77,13 @@ public class LoopLog implements Serializable {
 
     @Expose
     @Column(name = "log_instant", nullable = false)
-    private Instant logInstant = Instant.now();
+    private Instant logInstant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -107,7 +116,32 @@ public class LoopLog implements Serializable {
     }
 
     public void setLogInstant(Instant logInstant) {
-        this.logInstant = logInstant;
+        this.logInstant = logInstant.truncatedTo(ChronoUnit.SECONDS);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        LoopLog other = (LoopLog) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 
 }

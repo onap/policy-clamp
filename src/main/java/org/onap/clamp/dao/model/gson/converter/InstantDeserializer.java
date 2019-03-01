@@ -21,13 +21,27 @@
  *
  */
 
-package org.onap.clamp.dao;
+package org.onap.clamp.dao.model.gson.converter;
 
-import org.onap.clamp.dao.model.LoopLog;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 
-@Repository
-public interface LoopLogRepository extends CrudRepository<LoopLog, Long> {
+import java.lang.reflect.Type;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 
+public class InstantDeserializer implements JsonDeserializer<Instant> {
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.US)
+        .withZone(ZoneId.systemDefault());
+
+    @Override
+    public Instant deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        return Instant.parse(json.getAsString());
+
+    }
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,8 @@ import java.util.stream.StreamSupport;
 import org.onap.clamp.clds.model.properties.AbstractModelElement;
 import org.onap.clamp.clds.service.SecureServicePermission;
 import org.onap.clamp.clds.service.SecureServicePermissionDeserializer;
+import org.onap.clamp.dao.model.gson.converter.InstantDeserializer;
+import org.onap.clamp.dao.model.gson.converter.InstantSerializer;
 
 /**
  * This class is used to access the GSON with restricted type access.
@@ -56,12 +59,17 @@ public class JsonUtils {
     public static final Gson GSON = new GsonBuilder()
         .registerTypeAdapter(SecureServicePermission.class, new SecureServicePermissionDeserializer()).create();
 
+    public static final Gson GSON_JPA_MODEL = new GsonBuilder()
+        .registerTypeAdapter(Instant.class, new InstantSerializer())
+        .registerTypeAdapter(Instant.class, new InstantDeserializer()).setPrettyPrinting()
+        .excludeFieldsWithoutExposeAnnotation().create();
+
     private JsonUtils() {
     }
 
     /**
-     * Return the value field of the json node element that has a name field equals
-     * to the given name.
+     * typeAdapter Return the value field of the json node element that has a name
+     * field equals to the given name.
      */
     public static String getStringValueByName(JsonElement jsonElement, String name) {
         String value = extractJsonValueFromElement(jsonElement, name).map(JsonUtils::extractStringValueFromElement)
