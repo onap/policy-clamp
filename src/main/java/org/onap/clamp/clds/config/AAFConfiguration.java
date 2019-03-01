@@ -58,6 +58,7 @@ public class AAFConfiguration {
         registration.addUrlPatterns("/restservices/clds/v1/tosca/*");
         registration.addUrlPatterns("/restservices/clds/v1/dictionary/*");
         registration.addUrlPatterns("/restservices/clds/v1/user/*");
+        registration.addUrlPatterns("/restservices/clds/v2/loop/*");
         //registration.addUrlPatterns("*");
         registration.setName("cadiFilter");
         registration.setOrder(0);

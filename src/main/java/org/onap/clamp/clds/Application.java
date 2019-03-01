@@ -108,7 +108,7 @@ public class Application extends SpringBootServletInitializer {
         eelfLogger.info(ResourceFileUtil.getResourceAsString("boot-message.txt") + "(v"
             + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator"));
         ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(),
-            "/restservices/clds/v1/*");
+            "/restservices/clds/*");
         registration.setName("CamelServlet");
         return registration;
     }

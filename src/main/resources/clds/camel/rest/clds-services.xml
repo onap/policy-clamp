@@ -1,36 +1,36 @@
 <rests xmlns="http://camel.apache.org/schema/spring">
-	<rest>
-		<get uri="/clds/cldsDetails"
+	<rest >
+		<get uri="/v1/clds/cldsDetails"
 			outType="org.onap.clamp.clds.model.CldsMonitoringDetails"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getCldsDetails()" />
 		</get>
-		<get uri="/clds/cldsInfo"
+		<get uri="/v1/clds/cldsInfo"
 			outType="org.onap.clamp.clds.model.CldsInfo"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getCldsInfo()" />
 		</get>
-		<get uri="/healthcheck" produces="application/json">
+		<get uri="/v1/healthcheck" produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsHealthcheckService?method=gethealthcheck()" />
 		</get>
-		<get uri="/clds/model/bpmn/{modelName}" produces="text/xml">
+		<get uri="/v1/clds/model/bpmn/{modelName}" produces="text/xml">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getBpmnXml(${header.modelName})" />
 		</get>
-		<get uri="/clds/model/image/{modelName}" produces="text/xml">
+		<get uri="/v1/clds/model/image/{modelName}" produces="text/xml">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getImageXml(${header.modelName})" />
 		</get>
-		<get uri="/clds/model/{modelName}"
+		<get uri="/v1/clds/model/{modelName}"
 			outType="org.onap.clamp.clds.model.CldsModel"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getModel(${header.modelName})" />
 		</get>
-		<put uri="/clds/model/{modelName}"
+		<put uri="/v1/clds/model/{modelName}"
 			type="org.onap.clamp.clds.model.CldsModel"
 			consumes="application/json"
 			outType="org.onap.clamp.clds.model.CldsModel"
@@ -38,35 +38,35 @@
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=putModel(${header.modelName},${body})" />
 		</put>
-		<get uri="/clds/model-names"
+		<get uri="/v1/clds/model-names"
 			outType="org.onap.clamp.clds.model.ValueItem"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getModelNames()" />
 		</get>
-		<put uri="/clds/action/{action}/{modelName}?test={test}"
+		<put uri="/v1/clds/action/{action}/{modelName}?test={test}"
 			type="org.onap.clamp.clds.model.CldsModel"
 			consumes="application/json" produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=putModelAndProcessAction(${header.action},${header.modelName},${header.test},${body})" />
 		</put>
-		<post uri="/clds/dcae/event?test={test}"
+		<post uri="/v1/clds/dcae/event?test={test}"
 			type="org.onap.clamp.clds.model.DcaeEvent"
 			consumes="application/json" produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=postDcaeEvent(${header.test},${body})" />
 		</post>
-		<get uri="/clds/properties" produces="application/json">
+		<get uri="/v1/clds/properties" produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=getSdcProperties()" />
 		</get>
-		<put uri="/clds/deploy/{modelName}"
+		<put uri="/v1/clds/deploy/{modelName}"
 			type="org.onap.clamp.clds.model.CldsModel"
 			consumes="application/json" produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsService?method=deployModel(${header.modelName},${body})" />
 		</put>
-		<put uri="/clds/undeploy/{modelName}"
+		<put uri="/v1/clds/undeploy/{modelName}"
 			type="org.onap.clamp.clds.model.CldsModel"
 			consumes="application/json" produces="application/json">
 			<to
@@ -76,23 +76,23 @@
 
 
 
-		<get uri="/cldsTempate/template/bpmn/{templateName}"
+		<get uri="/v1/cldsTempate/template/bpmn/{templateName}"
 			produces="text/xml">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsTemplateService?method=getBpmnTemplate(${header.templateName})" />
 		</get>
-		<get uri="/cldsTempate/template/image/{templateName}"
+		<get uri="/v1/cldsTempate/template/image/{templateName}"
 			produces="text/xml">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsTemplateService?method=getImageXml(${header.templateName})" />
 		</get>
-		<get uri="/cldsTempate/template/{templateName}"
+		<get uri="/v1/cldsTempate/template/{templateName}"
 			outType="org.onap.clamp.clds.model.CldsTemplate"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsTemplateService?method=getTemplate(${header.templateName})" />
 		</get>
-		<put uri="/cldsTempate/template/{templateName}"
+		<put uri="/v1/cldsTempate/template/{templateName}"
 			type="org.onap.clamp.clds.model.CldsTemplate"
 			consumes="application/json"
 			outType="org.onap.clamp.clds.model.CldsTemplate"
@@ -100,7 +100,7 @@
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsTemplateService?method=putTemplate(${header.templateName},${body})" />
 		</put>
-		<get uri="/cldsTempate/template-names"
+		<get uri="/v1/cldsTempate/template-names"
 			outType="org.onap.clamp.clds.model.ValueItem"
 			produces="application/json">
 			<to
@@ -108,25 +108,25 @@
 		</get>
 
 
-		<put uri="/tosca/models/{toscaModelName}"
+		<put uri="/v1/tosca/models/{toscaModelName}"
 			type="org.onap.clamp.clds.model.CldsToscaModel"
 			consumes="application/json" produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=parseToscaModelAndSave(${header.toscaModelName},${body})" />
 		</put>
-		<get uri="/tosca/models/policyType/{policyType}"
+		<get uri="/v1/tosca/models/policyType/{policyType}"
 		outType="org.onap.clamp.clds.model.CldsToscaModel"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=getToscaModelsByPolicyType(${header.policyType})" />
 		</get>
-		<get uri="/tosca/models"
+		<get uri="/v1/tosca/models"
 			outType="org.onap.clamp.clds.model.CldsToscaModel"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsToscaService?method=getAllToscaModels()" />
 		</get>
-		<get uri="/tosca/models/{toscaModelName}"
+		<get uri="/v1/tosca/models/{toscaModelName}"
 			outType="org.onap.clamp.clds.model.CldsToscaModel"
 			produces="application/json">
 			<to
@@ -134,7 +134,7 @@
 		</get>
 
 
-		<put uri="/dictionary/{dictionaryName}"
+		<put uri="/v1/dictionary/{dictionaryName}"
 			type="org.onap.clamp.clds.model.CldsDictionary"
 			outType="org.onap.clamp.clds.model.CldsDictionary"
 			consumes="application/json" produces="application/json">
@@ -142,14 +142,14 @@
 				uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=createOrUpdateDictionary(${header.dictionaryName},${body})" />
 		</put>
 
-		<get uri="/dictionary"
+		<get uri="/v1/dictionary"
 			outType="org.onap.clamp.clds.model.CldsDictionary"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=getAllDictionaryNames()" />
 		</get>
 
-		<put uri="/dictionary/{dictionaryName}/items"
+		<put uri="/v1/dictionary/{dictionaryName}/items"
 			type="org.onap.clamp.clds.model.CldsDictionaryItem"
 			outType="org.onap.clamp.clds.model.CldsDictionaryItem"
 			consumes="application/json" produces="application/json">
@@ -157,14 +157,14 @@
 				uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=createOrUpdateDictionaryElements(${header.dictionaryName},${body})" />
 		</put>
 
-		<get uri="/dictionary/{dictionaryName}/items"
+		<get uri="/v1/dictionary/{dictionaryName}/items"
 			outType="org.onap.clamp.clds.model.CldsDictionary"
 			produces="application/json">
 			<to
 				uri="bean:org.onap.clamp.clds.service.CldsDictionaryService?method=getDictionaryElementsByName(${header.dictionaryName})" />
 		</get>
 
-		<get uri="/user/getUser" produces="text/plain">
+		<get uri="/v1/user/getUser" produces="text/plain">
 			<to
 				uri="bean:org.onap.clamp.clds.service.UserService?method=getUser()" />
 		</get>

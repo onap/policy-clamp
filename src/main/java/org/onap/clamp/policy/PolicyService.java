@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +21,16 @@
  *
  */
 
-package org.onap.clamp.dao;
+package org.onap.clamp.policy;
 
-import org.onap.clamp.dao.model.LoopLog;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Set;
+import org.onap.clamp.loop.Loop;
 
-@Repository
-public interface LoopLogRepository extends CrudRepository<LoopLog, Long> {
+public interface PolicyService<T extends Policy> {
 
+    Set<T> updatePolicies(Loop loop,
+        List<T> newMicroservicePolicies);
+
+    boolean isExisting(String policyName);
 }

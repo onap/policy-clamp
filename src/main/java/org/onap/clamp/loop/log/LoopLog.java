@@ -21,48 +21,88 @@
  *
  */
 
-package org.onap.clamp.dao.model;
+package org.onap.clamp.loop.log;
 
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.onap.clamp.loop.Loop;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
-
+/**
+ *
+ * This class holds the logs created by the Clamp Backend. The Instant is always
+ * rounded to the nearest second as the nano seconds can't be stored in the
+ * database. The logs can be therefore exposed to the UI or the client doing
+ * some GET Loop on the backend.
+ *
+ */
 @Entity
-@Table(name = "operational_policies")
-@TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
-public class OperationalPolicy implements Serializable {
+@Table(name = "loop_logs")
+public class LoopLog implements Serializable {
     /**
      *
      */
-    private static final long serialVersionUID = 6117076450841538255L;
+    private static final long serialVersionUID = 1988276670074437631L;
 
     @Expose
     @Id
-    @Column(nullable = false, name = "name", unique = true)
-    private String name;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "configurations_json")
-    private JsonObject configurationsJson;
+    @Column(name = "log_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private LogType logType;
+
+    @Expose
+    @Column(name = "message", nullable = false)
+    private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loop_id", nullable = false)
     private Loop loop;
+
+    @Expose
+    @Column(name = "log_instant", nullable = false)
+    private Instant logInstant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LogType getLogType() {
+        return logType;
+    }
+
+    public void setLogType(LogType logType) {
+        this.logType = logType;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     public Loop getLoop() {
         return loop;
@@ -72,27 +112,19 @@ public class OperationalPolicy implements Serializable {
         this.loop = loop;
     }
 
-    public String getName() {
-        return name;
+    public Instant getLogInstant() {
+        return logInstant;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public JsonObject getConfigurationsJson() {
-        return configurationsJson;
-    }
-
-    public void setConfigurationsJson(JsonObject configurationsJson) {
-        this.configurationsJson = configurationsJson;
+    public void setLogInstant(Instant logInstant) {
+        this.logInstant = logInstant.truncatedTo(ChronoUnit.SECONDS);
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -104,11 +136,11 @@ public class OperationalPolicy implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        OperationalPolicy other = (OperationalPolicy) obj;
-        if (name == null) {
-            if (other.name != null)
+        LoopLog other = (LoopLog) obj;
+        if (id == null) {
+            if (other.id != null)
                 return false;
-        } else if (!name.equals(other.name))
+        } else if (!id.equals(other.id))
             return false;
         return true;
     }

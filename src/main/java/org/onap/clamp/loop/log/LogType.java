@@ -21,8 +21,8 @@
  *
  */
 
-package org.onap.clamp.dao.model;
+package org.onap.clamp.loop.log;
 
-public enum LoopState {
-    DESIGN, SUBMITTED, DEPLOYED, RUNNING, STOPPED, IN_ERROR, WAITING;
+public enum LogType {
+    INFO, WARNING, ERROR;
 }

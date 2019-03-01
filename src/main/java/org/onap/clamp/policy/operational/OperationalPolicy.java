@@ -21,107 +21,83 @@
  *
  */
 
-package org.onap.clamp.dao.model;
+package org.onap.clamp.policy.operational;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.loop.Loop;
+import org.onap.clamp.policy.Policy;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 
 @Entity
-@Table(name = "micro_service_policies")
+@Table(name = "operational_policies")
 @TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
-public class MicroServicePolicy implements Serializable {
+public class OperationalPolicy implements Serializable, Policy {
     /**
      *
      */
-    private static final long serialVersionUID = 6271238288583332616L;
+    private static final long serialVersionUID = 6117076450841538255L;
 
-    @Expose
     @Id
+    @Expose
     @Column(nullable = false, name = "name", unique = true)
     private String name;
 
     @Expose
     @Type(type = "json")
-    @Column(columnDefinition = "json", name = "properties")
-    private JsonObject properties;
+    @Column(columnDefinition = "json", name = "configurations_json")
+    private JsonObject configurationsJson;
 
-    @Expose
-    @Column(name = "shared", nullable = false)
-    private Boolean shared;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "loop_id", nullable = false)
+    private Loop loop;
 
-    @Expose
-    @Column(name = "policy_tosca", nullable = false)
-    private String policyTosca;
+    public OperationalPolicy() {
+        //Serialization
+    }
 
-    @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "json_representation", nullable = false)
-    private JsonObject jsonRepresentation;
-
-    @ManyToMany(mappedBy = "microServicePolicies")
-    private Set<Loop> usedByLoops = new HashSet<>();
+    public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson) {
+        this.name = name;
+        this.loop = loop;
+        this.configurationsJson = configurationsJson;
+    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLoop(Loop loopName) {
+        this.loop = loopName;
     }
 
-    public JsonObject getProperties() {
-        return properties;
+    public Loop getLoop(){
+        return loop;
     }
 
-    public void setProperties(JsonObject properties) {
-        this.properties = properties;
-    }
-
-    public Boolean getShared() {
-        return shared;
-    }
-
-    public void setShared(Boolean shared) {
-        this.shared = shared;
-    }
-
-    public String getPolicyTosca() {
-        return policyTosca;
-    }
-
-    public void setPolicyTosca(String policyTosca) {
-        this.policyTosca = policyTosca;
-    }
-
+    @Override
     public JsonObject getJsonRepresentation() {
-        return jsonRepresentation;
+        return configurationsJson;
     }
 
-    public void setJsonRepresentation(JsonObject jsonRepresentation) {
-        this.jsonRepresentation = jsonRepresentation;
+    public JsonObject getConfigurationsJson() {
+        return configurationsJson;
     }
 
-    public Set<Loop> getUsedByLoops() {
-        return usedByLoops;
-    }
-
-    public void setUsedByLoops(Set<Loop> usedBy) {
-        this.usedByLoops = usedBy;
+    public void setConfigurationsJson(JsonObject configurationsJson) {
+        this.configurationsJson = configurationsJson;
     }
 
     @Override
@@ -140,7 +116,7 @@ public class MicroServicePolicy implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MicroServicePolicy other = (MicroServicePolicy) obj;
+        OperationalPolicy other = (OperationalPolicy) obj;
         if (name == null) {
             if (other.name != null)
                 return false;

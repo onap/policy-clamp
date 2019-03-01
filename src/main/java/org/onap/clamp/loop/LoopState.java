@@ -21,13 +21,8 @@
  *
  */
 
-package org.onap.clamp.dao;
+package org.onap.clamp.loop;
 
-import org.onap.clamp.dao.model.OperationalPolicy;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface OperationalPolicyRepository extends CrudRepository<OperationalPolicy, String> {
-
+public enum LoopState {
+    DESIGN, SUBMITTED, DEPLOYED, RUNNING, STOPPED, IN_ERROR, WAITING;
 }

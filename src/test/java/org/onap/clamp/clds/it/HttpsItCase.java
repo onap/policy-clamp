@@ -130,7 +130,7 @@ public class HttpsItCase {
         });
         template.setRequestFactory(factory);
         ResponseEntity<String> httpsEntity = template
-            .getForEntity("https://localhost:" + this.httpsPort + "/restservices/clds/v1/api-doc", String.class);
+            .getForEntity("https://localhost:" + this.httpsPort + "/restservices/clds/api-doc", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpsEntity.getBody()).contains("swagger");
         FileUtils.writeStringToFile(

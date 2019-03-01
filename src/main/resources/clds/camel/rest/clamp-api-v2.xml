@@ -1,0 +1,34 @@
+<rests xmlns="http://camel.apache.org/schema/spring" >
+    <rest >
+        <get uri="/v2/loop/getAllNames"
+            outType="java.lang.String[]"
+            produces="application/json">
+            <to
+                uri="bean:org.onap.clamp.loop.LoopController?method=getLoopNames()" />
+        </get>
+        <get uri="/v2/loop/{loopName}"
+            outType="org.onap.clamp.loop.Loop"
+
+            produces="application/json">
+            <to
+                uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+        </get>
+        <post uri="/v2/loop/updateOperationalPolicies/{loopName}"
+            type="com.google.gson.JsonArray"
+            consumes="application/json"
+            outType="org.onap.clamp.loop.Loop"
+            produces="application/json">
+            <to
+                uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
+        </post>
+        <post uri="/v2/loop/updateMicroservicePolicies/{loopName}"
+            type="com.google.gson.JsonArray"
+            consumes="application/json"
+            outType="org.onap.clamp.loop.Loop"
+            produces="application/json">
+            <to
+                uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicies(${header.loopName},${body})" />
+        </post>
+    </rest>
+</rests>
+

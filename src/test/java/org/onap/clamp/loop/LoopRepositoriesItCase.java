@@ -21,7 +21,7 @@
  *
  */
 
-package org.onap.clamp.it.dao.model;
+package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,19 +31,17 @@ import com.google.gson.JsonObject;
 
 import java.time.Instant;
 
+import java.util.HashSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
-import org.onap.clamp.dao.LoopLogRepository;
-import org.onap.clamp.dao.LoopsRepository;
-import org.onap.clamp.dao.MicroServicePolicyRepository;
-import org.onap.clamp.dao.OperationalPolicyRepository;
-import org.onap.clamp.dao.model.LogType;
-import org.onap.clamp.dao.model.Loop;
-import org.onap.clamp.dao.model.LoopLog;
-import org.onap.clamp.dao.model.LoopState;
-import org.onap.clamp.dao.model.MicroServicePolicy;
-import org.onap.clamp.dao.model.OperationalPolicy;
+import org.onap.clamp.loop.log.LogType;
+import org.onap.clamp.loop.log.LoopLog;
+import org.onap.clamp.loop.log.LoopLogRepository;
+import org.onap.clamp.policy.microservice.MicroServicePolicy;
+import org.onap.clamp.policy.microservice.MicroservicePolicyService;
+import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.onap.clamp.policy.operational.OperationalPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -59,19 +57,16 @@ public class LoopRepositoriesItCase {
     private LoopsRepository loopRepository;
 
     @Autowired
-    private MicroServicePolicyRepository microServicePolicyRepository;
+    private MicroservicePolicyService microServicePolicyService;
 
     @Autowired
-    private OperationalPolicyRepository operationalPolicyRepository;
+    private OperationalPolicyService operationalPolicyService;
 
     @Autowired
     private LoopLogRepository loopLogRepository;
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name) {
-        OperationalPolicy opPolicy = new OperationalPolicy();
-        opPolicy.setName(name);
-        opPolicy.setConfigurationsJson(new Gson().fromJson(configJson, JsonObject.class));
-        return opPolicy;
+        return new OperationalPolicy(name, null, new Gson().fromJson(configJson, JsonObject.class));
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
@@ -90,13 +85,9 @@ public class LoopRepositoriesItCase {
 
     private MicroServicePolicy getMicroServicePolicy(String name, String jsonRepresentation, String policyTosca,
         String jsonProperties, boolean shared) {
-        MicroServicePolicy µService = new MicroServicePolicy();
-        µService.setJsonRepresentation(new Gson().fromJson(jsonRepresentation, JsonObject.class));
-        µService.setPolicyTosca(policyTosca);
+        MicroServicePolicy µService = new MicroServicePolicy(name, policyTosca, shared,
+            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
         µService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
-        µService.setShared(shared);
-
-        µService.setName(name);
         return µService;
     }
 
@@ -129,8 +120,8 @@ public class LoopRepositoriesItCase {
 
         assertThat(loopInDb).isEqualToComparingFieldByField(loopTest);
         assertThat(loopRepository.existsById(loopTest.getName())).isEqualTo(true);
-        assertThat(operationalPolicyRepository.existsById(opPolicy.getName())).isEqualTo(true);
-        assertThat(microServicePolicyRepository.existsById(microServicePolicy.getName())).isEqualTo(true);
+        assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isEqualTo(true);
+        assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isEqualTo(true);
         assertThat(loopLogRepository.existsById(loopLog.getId())).isEqualTo(true);
 
         // Now attempt to read from database
@@ -152,8 +143,8 @@ public class LoopRepositoriesItCase {
         // Attempt to delete the object and check it has well been cascaded
         loopRepository.delete(loopInDbRetrieved);
         assertThat(loopRepository.existsById(loopTest.getName())).isEqualTo(false);
-        assertThat(operationalPolicyRepository.existsById(opPolicy.getName())).isEqualTo(false);
-        assertThat(microServicePolicyRepository.existsById(microServicePolicy.getName())).isEqualTo(false);
+        assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isEqualTo(false);
+        assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isEqualTo(false);
         assertThat(loopLogRepository.existsById(loopLog.getId())).isEqualTo(false);
 
     }
