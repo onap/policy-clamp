@@ -37,9 +37,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -50,18 +49,18 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {
-    "org.onap.clamp.clds"
-})
-@EnableAutoConfiguration(exclude = {
-    DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, JpaRepositoriesAutoConfiguration.class,
-    SecurityAutoConfiguration.class,UserDetailsServiceAutoConfiguration .class
-})
+@ComponentScan(basePackages = { "org.onap.clamp" })
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, SecurityAutoConfiguration.class,
+    UserDetailsServiceAutoConfiguration.class })
+@EnableJpaRepositories(basePackages = { "org.onap.clamp" })
+@EntityScan(basePackages = { "org.onap.clamp" })
+@EnableTransactionManagement
 @EnableConfigurationProperties
 @EnableAsync
 @EnableScheduling
@@ -106,7 +105,8 @@ public class Application extends SpringBootServletInitializer {
      */
     @Bean
     public ServletRegistrationBean camelServletRegistrationBean() throws IOException {
-        eelfLogger.info(ResourceFileUtil.getResourceAsString("boot-message.txt")+"(v"+ ClampVersioning.getCldsVersionFromProps()+")"+System.getProperty("line.separator"));
+        eelfLogger.info(ResourceFileUtil.getResourceAsString("boot-message.txt") + "(v"
+            + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator"));
         ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(),
             "/restservices/clds/v1/*");
         registration.setName("CamelServlet");

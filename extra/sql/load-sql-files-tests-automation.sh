@@ -24,5 +24,8 @@
 ###
 
 cd /docker-entrypoint-initdb.d/bulkload
+### Keep previous DB for now (SOON DEPRECATED)
 mysql -uroot -p$MYSQL_ROOT_PASSWORD -f < clds-create-db-objects.sql
 mysql -uroot -p$MYSQL_ROOT_PASSWORD -f < clds-stored-procedures.sql
+## New model creation 
+mysql -uroot -p$MYSQL_ROOT_PASSWORD -f cldsdb4 < create-tables.sql
