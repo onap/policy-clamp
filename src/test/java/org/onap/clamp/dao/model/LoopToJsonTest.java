@@ -27,8 +27,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-import java.util.Map;
 import java.util.Random;
 
 import org.junit.Test;
@@ -39,29 +39,30 @@ public class LoopToJsonTest {
     private OperationalPolicy getOperationalPolicy(String configJson, String name) {
         OperationalPolicy opPolicy = new OperationalPolicy();
         opPolicy.setName(name);
-        opPolicy.setConfigurationsJson(new Gson().fromJson(configJson, Map.class));
+        opPolicy.setConfigurationsJson(new Gson().fromJson(configJson, JsonObject.class));
         return opPolicy;
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
-        String dcaeId, String dcaeUrl) {
+        String dcaeId, String dcaeUrl, String dcaeBlueprintId) {
         Loop loop = new Loop();
         loop.setName(name);
         loop.setSvgRepresentation(svgRepresentation);
         loop.setBlueprint(blueprint);
-        loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, Map.class));
+        loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
         loop.setDcaeDeploymentId(dcaeId);
         loop.setDcaeDeploymentStatusUrl(dcaeUrl);
+        loop.setDcaeBlueprintId(dcaeBlueprintId);
         return loop;
     }
 
     private MicroServicePolicy getMicroServicePolicy(String name, String jsonRepresentation, String policyTosca,
         String jsonProperties, boolean shared) {
         MicroServicePolicy µService = new MicroServicePolicy();
-        µService.setJsonRepresentation(new Gson().fromJson(jsonRepresentation, Map.class));
+        µService.setJsonRepresentation(new Gson().fromJson(jsonRepresentation, JsonObject.class));
         µService.setPolicyTosca(policyTosca);
-        µService.setProperties(new Gson().fromJson(jsonProperties, Map.class));
+        µService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
         µService.setShared(shared);
 
         µService.setName(name);
@@ -79,7 +80,7 @@ public class LoopToJsonTest {
     @Test
     public void LoopGsonTest() {
         Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
-            "123456789", "https://dcaetest.org");
+            "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy("{\"type\":\"GUARD\"}", "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
         MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "{\"configtype\":\"json\"}",
