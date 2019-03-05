@@ -23,11 +23,10 @@
 
 package org.onap.clamp.dao.model;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,10 +38,12 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 
 @Entity
 @Table(name = "operational_policies")
-@TypeDef(name = "json", typeClass = JsonStringType.class)
+@TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
 public class OperationalPolicy implements Serializable {
     /**
      *
@@ -57,7 +58,7 @@ public class OperationalPolicy implements Serializable {
     @Expose
     @Type(type = "json")
     @Column(columnDefinition = "json", name = "configurations_json")
-    private Map<String, Object> configurationsJson;
+    private JsonObject configurationsJson;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loop_id", nullable = false)
@@ -79,11 +80,11 @@ public class OperationalPolicy implements Serializable {
         this.name = name;
     }
 
-    public Map<String, Object> getConfigurationsJson() {
+    public JsonObject getConfigurationsJson() {
         return configurationsJson;
     }
 
-    public void setConfigurationsJson(Map<String, Object> configurationsJson) {
+    public void setConfigurationsJson(JsonObject configurationsJson) {
         this.configurationsJson = configurationsJson;
     }
 
