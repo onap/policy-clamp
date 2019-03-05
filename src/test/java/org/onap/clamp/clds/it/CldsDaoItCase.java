@@ -57,7 +57,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class CldsDaoItCase {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDao.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsDaoItCase.class);
     @Autowired
     public CldsDao cldsDao;
     private String bpmnText;
