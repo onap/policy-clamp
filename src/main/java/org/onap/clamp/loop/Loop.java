@@ -46,10 +46,10 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 
 @Entity
 @Table(name = "loops")
@@ -85,6 +85,11 @@ public class Loop implements Serializable {
     @Type(type = "json")
     @Column(columnDefinition = "json", name = "global_properties_json")
     private JsonObject globalPropertiesJson;
+
+    @Expose
+    @Type(type = "json")
+    @Column(columnDefinition = "json", name = "model_properties_json")
+    private JsonObject modelPropertiesJson;
 
     @Column(nullable = false, name = "blueprint_yaml")
     private String blueprint;
@@ -213,12 +218,27 @@ public class Loop implements Serializable {
         log.setLoop(this);
     }
 
-    public String getDcaeBlueprintId() {
+    String getDcaeBlueprintId() {
         return dcaeBlueprintId;
     }
 
-    public void setDcaeBlueprintId(String dcaeBlueprintId) {
+    void setDcaeBlueprintId(String dcaeBlueprintId) {
         this.dcaeBlueprintId = dcaeBlueprintId;
+    }
+
+    JsonObject getModelPropertiesJson() {
+        return modelPropertiesJson;
+    }
+
+    void setModelPropertiesJson(JsonObject modelPropertiesJson) {
+        this.modelPropertiesJson = modelPropertiesJson;
+    }
+
+    public static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
+        String blueprintFilename) {
+        StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
+            .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));
+        return buffer.toString().replace('.', '_').replaceAll(" ", "");
     }
 
     @Override

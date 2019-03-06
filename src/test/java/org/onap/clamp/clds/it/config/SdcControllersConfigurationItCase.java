@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.google.gson.JsonSyntaxException;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -35,6 +36,7 @@ import org.onap.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -43,6 +45,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller")
 public class SdcControllersConfigurationItCase {
 
     @Autowired

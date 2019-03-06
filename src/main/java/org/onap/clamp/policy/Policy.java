@@ -21,7 +21,6 @@
  *
  */
 
-
 package org.onap.clamp.policy;
 
 import com.google.gson.JsonObject;
@@ -31,5 +30,13 @@ public interface Policy {
     String getName();
 
     JsonObject getJsonRepresentation();
+
+    static String generatePolicyName(String policyType, String serviceName, String serviceVersion, String resourceName,
+        String blueprintFilename) {
+        StringBuilder buffer = new StringBuilder(policyType).append("_").append(serviceName).append("_v")
+            .append(serviceVersion).append("_").append(resourceName).append("_")
+            .append(blueprintFilename.replaceAll(".yaml", ""));
+        return buffer.toString().replace('.', '_').replaceAll(" ", "");
+    }
 
 }

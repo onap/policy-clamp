@@ -26,12 +26,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -52,10 +54,8 @@ public class BlueprintParser {
     private static final String CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM = "clamp_node.relationships.gets_input_from";
     private static final String TARGET = "target";
 
-    BlueprintParser() {}
-
-    Set<MicroService> getMicroServices(String blueprintString) {
-        Set <MicroService> microServices = new HashSet<>();
+    public Set<MicroService> getMicroServices(String blueprintString) {
+        Set<MicroService> microServices = new HashSet<>();
         JsonObject jsonObject = BlueprintParser.convertToJson(blueprintString);
         JsonObject results = jsonObject.get(NODE_TEMPLATES).getAsJsonObject();
 
@@ -70,15 +70,15 @@ public class BlueprintParser {
         return microServices;
     }
 
-    List<MicroService> fallbackToOneMicroService(String blueprintString) {
+    public List<MicroService> fallbackToOneMicroService(String blueprintString) {
         JsonObject jsonObject = BlueprintParser.convertToJson(blueprintString);
         JsonObject results = jsonObject.get(NODE_TEMPLATES).getAsJsonObject();
         String theBiggestMicroServiceContent = "";
         String theBiggestMicroServiceKey = "";
         for (Entry<String, JsonElement> entry : results.entrySet()) {
             String msAsString = entry.getValue().toString();
-            int len =msAsString.length();
-            if(len > theBiggestMicroServiceContent.length()) {
+            int len = msAsString.length();
+            if (len > theBiggestMicroServiceContent.length()) {
                 theBiggestMicroServiceContent = msAsString;
                 theBiggestMicroServiceKey = entry.getKey();
             }
@@ -105,7 +105,7 @@ public class BlueprintParser {
             JsonArray relationships = ob.getAsJsonArray(RELATIONSHIPS);
             for (JsonElement element : relationships) {
                 String target = getTarget(element.getAsJsonObject());
-                if(!target.isEmpty()) {
+                if (!target.isEmpty()) {
                     return target;
                 }
             }
@@ -120,9 +120,8 @@ public class BlueprintParser {
     }
 
     private String getTarget(JsonObject elementObject) {
-        if (elementObject.has(TYPE) &&
-            elementObject.has(TARGET) &&
-            elementObject.get(TYPE).getAsString().equals(CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM)) {
+        if (elementObject.has(TYPE) && elementObject.has(TARGET)
+            && elementObject.get(TYPE).getAsString().equals(CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM)) {
             return elementObject.get(TARGET).getAsString();
         }
         return "";

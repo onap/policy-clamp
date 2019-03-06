@@ -41,10 +41,12 @@ import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller")
 public class SdcSingleControllerItCase {
 
     private static final String SDC_FOLDER = "/tmp/csar-handler-tests";

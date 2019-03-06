@@ -170,13 +170,13 @@ public class CsarHandler {
         return mapOfBlueprints;
     }
 
-    Optional<String> getPolicyModelYaml() throws IOException {
+    public Optional<String> getPolicyModelYaml() throws IOException {
         String result = null;
         try (ZipFile zipFile = new ZipFile(csarFilePath)) {
             ZipEntry entry = zipFile.getEntry(POLICY_DEFINITION_NAME_SUFFIX);
             if (entry != null) {
                 result = IOUtils.toString(zipFile.getInputStream(entry));
-            } else{
+            } else {
                 logger.info("Policy model not found inside the CSAR file: " + csarFilePath);
             }
             return Optional.ofNullable(result);
