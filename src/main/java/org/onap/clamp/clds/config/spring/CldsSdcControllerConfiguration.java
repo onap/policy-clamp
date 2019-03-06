@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ *  * Modifications copyright (c) 2019 Nokia
  * ===================================================================
  *
  */
@@ -90,11 +91,6 @@ public class CldsSdcControllerConfiguration {
                 logger.error("Exception caught when stopping sdc controller", e1);
             }
         });
-    }
-
-    @Bean(name = "csarInstaller")
-    public CsarInstaller getCsarInstaller() {
-        return new CsarInstallerImpl();
     }
 
     @Bean(name = "sdcControllersConfiguration")

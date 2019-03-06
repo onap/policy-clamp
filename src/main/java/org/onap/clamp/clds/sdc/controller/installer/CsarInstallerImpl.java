@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 Nokia
  * ===================================================================
  *
  */
@@ -58,6 +59,7 @@ import org.onap.clamp.clds.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.Yaml;
 
@@ -66,6 +68,7 @@ import org.yaml.snakeyaml.Yaml;
  * There is no state kept by the bean. It's used to deploy the csar/notification
  * received from SDC in DB.
  */
+@Component
 public class CsarInstallerImpl implements CsarInstaller {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);
@@ -80,18 +83,24 @@ public class CsarInstallerImpl implements CsarInstaller {
      */
     @Value("${clamp.config.sdc.blueprint.parser.mapping:'classpath:/clds/blueprint-parser-mapping.json'}")
     protected String blueprintMappingFile;
-    @Autowired
     protected ApplicationContext appContext;
-    @Autowired
     private CldsDao cldsDao;
-    @Autowired
     CldsTemplateService cldsTemplateService;
-    @Autowired
     CldsService cldsService;
-    @Autowired
     DcaeInventoryServices dcaeInventoryService;
-    @Autowired
     private XslTransformer cldsBpmnTransformer;
+
+    @Autowired
+    public CsarInstallerImpl(ApplicationContext appContext,
+                             CldsDao cldsDao, CldsTemplateService cldsTemplateService, CldsService cldsService,
+                             DcaeInventoryServices dcaeInventoryService, XslTransformer cldsBpmnTransformer) {
+        this.appContext = appContext;
+        this.cldsDao = cldsDao;
+        this.cldsTemplateService = cldsTemplateService;
+        this.cldsService = cldsService;
+        this.dcaeInventoryService = dcaeInventoryService;
+        this.cldsBpmnTransformer = cldsBpmnTransformer;
+    }
 
     @Autowired
     private BlueprintParser blueprintParser;
@@ -154,16 +163,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         }
     }
 
-    private void createPolicyModel(CsarHandler csar) throws PolicyModelException {
-        try{
-            Optional<String> policyModelYaml = csar.getPolicyModelYaml();
-            // save policy model into the database
-        } catch (IOException e) {
-            throw new PolicyModelException("TransformerException when decoding the YamlText", e);
-        }
-    }
-
-    private BlueprintParserFilesConfiguration searchForRightMapping(BlueprintArtifact blueprintArtifact)
+    BlueprintParserFilesConfiguration searchForRightMapping(BlueprintArtifact blueprintArtifact)
         throws SdcArtifactInstallerException {
         List<BlueprintParserFilesConfiguration> listConfig = new ArrayList<>();
         Yaml yaml = new Yaml();
@@ -200,6 +200,15 @@ public class CsarInstallerImpl implements CsarInstaller {
         });
         node.addProperty("policy_id", "AUTO_GENERATED_POLICY_ID_AT_SUBMIT");
         return node.toString();
+    }
+
+    private void createPolicyModel(CsarHandler csar) throws PolicyModelException {
+        try{
+            Optional<String> policyModelYaml = csar.getPolicyModelYaml();
+            // save policy model into the database
+        } catch (IOException e) {
+            throw new PolicyModelException("TransformerException when decoding the YamlText", e);
+        }
     }
 
     private static String searchForPolicyScopePrefix(BlueprintArtifact blueprintArtifact)
