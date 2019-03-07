@@ -1,0 +1,92 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+imports:
+  - http://www.getcloudify.org/spec/cloudify/3.4/types.yaml
+  - https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.plugins/R4/k8splugin/1.4.4/k8splugin_types.yaml
+  - https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.plugins/R4/dcaepolicyplugin/2.3.0/dcaepolicyplugin_types.yaml
+inputs:
+  first_app_docker_image:
+    type: string
+    default: "image1"
+  second_app_docker_image:
+    type: string
+    default: "image2"
+  third_app_docker_image:
+    type: string
+    default: "image3"
+  dmaap_ip:
+    type: string
+    default: "message-router:3904"
+  dmaap_topic:
+    type: string
+    default: "/events/unauthenticated.DCAE_CL_OUTPUT"
+  policy_id:
+    type: string
+    default: "policy_id"
+node_templates:
+  second_app:
+    type: dcae.nodes.ContainerizedServiceComponentUsingDmaap
+    properties:
+      service_component_type: dcaegen2-analytics-tca
+      service_component_name_override: second_app
+      image: { get_input: second_app_docker_image }
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        start:
+          inputs:
+            envs:
+              grpc_server.host: "first_app.onap"
+              dmaap_ip: {get_input: dmaap_ip}
+              dmapp_topic: {get_input: dmaap_topic}
+              policy_id: {get_input: policy_id}
+            ports:
+              - 8080:8080
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: first_app
+      - type: clamp_node.relationships.gets_input_from
+        target: first_app
+  first_app:
+    type:  dcae.nodes.ContainerizedPlatformComponent
+    properties:
+      name: first_app
+      dns_name: "first_app"
+      image: { get_input: first_app_docker_image }
+      container_port: 6565
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        start:
+          inputs:
+            envs:
+              dmaap_ip: {get_input: dmaap_ip}
+              dmapp_topic: {get_input: dmaap_topic}
+              policy_id: {get_input: policy_id}
+            ports:
+              - 8081:8081
+    relationships:
+      - type: cloudify.relationships.connected_to
+        target: third_app
+      - type: clamp_node.relationships.gets_input_from
+        target: third_app
+
+  third_app:
+    type:  dcae.nodes.ContainerizedPlatformComponent
+    properties:
+      name: third_app
+      dns_name: "third_app"
+      image: { get_input: third_app_docker_image }
+      container_port: 443
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        start:
+          inputs:
+            envs:
+              dmaap_ip: {get_input: dmaap_ip}
+              dmapp_topic: {get_input: dmaap_topic}
+              policy_id: {get_input: policy_id}
+            ports:
+              - 8082:8082
+  tca_policy:
+    type: dcae.nodes.policy
+    properties:
+      policy_id: { get_input: policy_id }

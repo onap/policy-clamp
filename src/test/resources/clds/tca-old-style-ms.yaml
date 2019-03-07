@@ -1,0 +1,169 @@
+tosca_definitions_version: cloudify_dsl_1_3
+imports:
+  - "http://www.getcloudify.org/spec/cloudify/3.4/types.yaml"
+  - https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.plugins/R2/dockerplugin/3.2.0/dockerplugin_types.yaml
+  - https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.plugins/R2/relationshipplugin/1.0.0/relationshipplugin_types.yaml
+  - https://nexus.onap.org/service/local/repositories/raw/content/org.onap.dcaegen2.platform.plugins/R2/dcaepolicyplugin/2.3.0/dcaepolicyplugin_types.yaml
+
+inputs:
+  dh_override:
+    type: string
+    default: "component_dockerhost"
+  dh_location_id:
+    type: string
+    default: "zone1"
+  aaiEnrichmentHost:
+    type: string
+    default: "none"
+  aaiEnrichmentPort:
+    type: string
+    default: 8443
+  enableAAIEnrichment:
+    type: string
+    default: false
+  dmaap_host:
+    type: string
+    default: dmaap.onap-message-router
+  dmaap_port:
+    type: string
+    default: 3904
+  enableRedisCaching:
+    type: string
+    default: false
+  redisHosts:
+    type: string
+  tag_version:
+    type: string
+    default: "nexus3.onap.org:10001/onap//onap/org.onap.dcaegen2.deployments.tca-cdap-container:1.0.0"
+  consul_host:
+    type: string
+    default: consul-server.onap-consul
+  consul_port:
+    type: string
+    default: "8500"
+  cbs_host:
+    type: string
+    default: "config-binding-service.dcae"
+  cbs_port:
+    type: string
+    default: "10000"
+  policy_id:
+    type: string
+    default: "none"
+  external_port:
+    type: string
+    description: "Port for CDAPgui to be exposed"
+    default: "32010"
+
+node_templates:
+  docker_service_host:
+    properties:
+      docker_host_override:
+        get_input: dh_override
+      location_id:
+        get_input: dh_location_id
+    type: dcae.nodes.SelectedDockerHost
+  tca_docker:
+    relationships:
+      - type: dcae.relationships.component_contained_in
+        target: docker_service_host
+      - target: tca_policy
+        type: cloudify.relationships.depends_on
+    type: dcae.nodes.DockerContainerForComponentsUsingDmaap
+    properties:
+      application_config:
+        app_config:
+          appDescription: DCAE Analytics Threshold Crossing Alert Application
+          appName: dcae-tca
+          tcaAlertsAbatementTableName: TCAAlertsAbatementTable
+          tcaAlertsAbatementTableTTLSeconds: '1728000'
+          tcaSubscriberOutputStreamName: TCASubscriberOutputStream
+          tcaVESAlertsTableName: TCAVESAlertsTable
+          tcaVESAlertsTableTTLSeconds: '1728000'
+          tcaVESMessageStatusTableName: TCAVESMessageStatusTable
+          tcaVESMessageStatusTableTTLSeconds: '86400'
+          thresholdCalculatorFlowletInstances: '2'
+        app_preferences:
+          aaiEnrichmentHost:
+            get_input: aaiEnrichmentHost
+          aaiEnrichmentIgnoreSSLCertificateErrors: 'true'
+          aaiEnrichmentPortNumber: '8443'
+          aaiEnrichmentProtocol: https
+          aaiEnrichmentUserName: DCAE
+          aaiEnrichmentUserPassword: DCAE
+          aaiVMEnrichmentAPIPath: /aai/v11/search/nodes-query
+          aaiVNFEnrichmentAPIPath: /aai/v11/network/generic-vnfs/generic-vnf
+          enableAAIEnrichment:
+            get_input: enableAAIEnrichment
+          enableRedisCaching:
+            get_input: enableRedisCaching
+          redisHosts:
+            get_input: redisHosts
+          enableAlertCEFFormat: 'false'
+          publisherContentType: application/json
+          publisherHostName:
+            get_input: dmaap_host
+          publisherHostPort:
+            get_input: dmaap_port
+          publisherMaxBatchSize: '1'
+          publisherMaxRecoveryQueueSize: '100000'
+          publisherPollingInterval: '20000'
+          publisherProtocol: http
+          publisherTopicName: unauthenticated.DCAE_CL_OUTPUT
+          subscriberConsumerGroup: OpenDCAE-c12
+          subscriberConsumerId: c12
+          subscriberContentType: application/json
+          subscriberHostName:
+            get_input: dmaap_host
+          subscriberHostPort:
+            get_input: dmaap_port
+          subscriberMessageLimit: '-1'
+          subscriberPollingInterval: '30000'
+          subscriberProtocol: http
+          subscriberTimeoutMS: '-1'
+          subscriberTopicName: unauthenticated.SEC_MEASUREMENT_OUTPUT
+          tca_policy_default: '{"domain":"measurementsForVfScaling","metricsPerEventName":[{"eventName":"vFirewallBroadcastPackets","controlLoopSchemaType":"VNF","policyScope":"DCAE","policyName":"DCAE.Config_tca-hi-lo","policyVersion":"v0.0.1","thresholds":[{"closedLoopControlName":"ControlLoop-vFirewall-d0a1dfc6-94f5-4fd4-a5b5-4630b438850a","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.vNicUsageArray[*].receivedTotalPacketsDelta","thresholdValue":300,"direction":"LESS_OR_EQUAL","severity":"MAJOR","closedLoopEventStatus":"ONSET"},{"closedLoopControlName":"ControlLoop-vFirewall-d0a1dfc6-94f5-4fd4-a5b5-4630b438850a","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.vNicUsageArray[*].receivedTotalPacketsDelta","thresholdValue":700,"direction":"GREATER_OR_EQUAL","severity":"CRITICAL","closedLoopEventStatus":"ONSET"}]},{"eventName":"vLoadBalancer","controlLoopSchemaType":"VM","policyScope":"DCAE","policyName":"DCAE.Config_tca-hi-lo","policyVersion":"v0.0.1","thresholds":[{"closedLoopControlName":"ControlLoop-vDNS-6f37f56d-a87d-4b85-b6a9-cc953cf779b3","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.vNicUsageArray[*].receivedTotalPacketsDelta","thresholdValue":300,"direction":"GREATER_OR_EQUAL","severity":"CRITICAL","closedLoopEventStatus":"ONSET"}]},{"eventName":"Measurement_vGMUX","controlLoopSchemaType":"VNF","policyScope":"DCAE","policyName":"DCAE.Config_tca-hi-lo","policyVersion":"v0.0.1","thresholds":[{"closedLoopControlName":"ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value","thresholdValue":0,"direction":"EQUAL","severity":"MAJOR","closedLoopEventStatus":"ABATED"},{"closedLoopControlName":"ControlLoop-vCPE-48f0c2c3-a172-4192-9ae3-052274181b6e","version":"1.0.2","fieldPath":"$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value","thresholdValue":0,"direction":"GREATER","severity":"CRITICAL","closedLoopEventStatus":"ONSET"}]}]}'
+      service_component_type: dcaegen2-analytics_tca
+      docker_config:
+        healthcheck:
+          endpoint: /healthcheck
+          interval: 15s
+          timeout: 1s
+          type: http
+      image:
+        get_input: tag_version
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        start:
+          inputs:
+            envs:
+              DMAAPHOST:
+                { get_input: dmaap_host }
+              DMAAPPORT:
+                { get_input: dmaap_port }
+              DMAAPPUBTOPIC: "unauthenticated.DCAE_CL_OUTPUT"
+              DMAAPSUBTOPIC: "unauthenticated.SEC_MEASUREMENT_OUTPUT"
+              AAIHOST:
+                { get_input: aaiEnrichmentHost }
+              AAIPORT:
+                { get_input: aaiEnrichmentPort }
+              CONSUL_HOST:
+                { get_input: consul_host }
+              CONSUL_PORT:
+                { get_input: consul_port }
+              CBS_HOST:
+                { get_input: cbs_host }
+              CBS_PORT:
+                { get_input: cbs_port }
+              CONFIG_BINDING_SERVICE: "config_binding_service"
+            ports:
+              - concat: ["11011:", { get_input: external_port }]
+        stop:
+          inputs:
+            cleanup_image: true
+  tca_policy:
+    type: dcae.nodes.policy
+    properties:
+      policy_id:
+        get_input: policy_id
+

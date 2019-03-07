@@ -1,0 +1,117 @@
+tosca_definitions_version: cloudify_dsl_1_3
+imports:
+  - http://www.getcloudify.org/spec/cloudify/3.4/types.yaml
+  - https://nexus01.research.att.com:8443/repository/solutioning01-mte2-raw/type_files/docker/2.3.0+t.0.4/node-type.yaml
+  - https://nexus01.research.att.com:8443/repository/solutioning01-mte2-raw/type_files/relationship/1.0.0/node-type.yaml
+  - http://nexus01.research.att.com:8081/repository/solutioning01-mte2-raw/type_files/dmaap/1.2.0/dmaap.yaml
+inputs:
+  dcae_service_location:
+    type: string
+  docker_host_override:
+    type: string
+  topic0_aaf_password:
+    type: string
+  topic0_aaf_username:
+    type: string
+  topic0_client_role:
+    type: string
+  topic1_aaf_password:
+    type: string
+  topic1_aaf_username:
+    type: string
+  topic1_client_role:
+    type: string
+  location_id:
+    type: string
+  service_id:
+    type: string
+  policy_id:
+    type: string
+    default: "CLAMPPolicyTriggerNoaapp_v1_0_29b0578b_dcee_472c_8cdd0.ClosedLoop_860ee9f2_ba64_11e8_a16b_02bd571477fe_TCA_1d13unw"
+node_templates:
+  policy_0:
+    type: dcae.nodes.policy
+    properties:
+      policy_model: policy.nodes.holmes
+      policy_filter: "DCAE.Config_Holmes.*"
+      policy_id:
+        get_input: policy_id
+  docker_host_host:
+    type: dcae.nodes.SelectedDockerHost
+    properties:
+      docker_host_override:
+        get_input: docker_host_override
+      location_id:
+        get_input: dcae_service_location
+  holmes_rule_homes-rule:
+    type: dcae.nodes.DockerContainerForComponentsUsingDmaap
+    properties:
+      application_config:
+        services_calls:
+          - msb_config:
+              concat:
+                - '{{'
+                - get_property:
+                    - SELF
+                    - msb_config
+                    - node_name
+                - '}}'
+        streams_publishes: []
+        streams_subscribes:
+          - sec_measurement_unsecure:
+              aaf_password:
+                get_input: topic0_aaf_password
+              aaf_username:
+                get_input: topic0_aaf_username
+              dmaap_info: <<topic0>>
+              type: message_router
+          - sec_measurement:
+              aaf_password:
+                get_input: topic1_aaf_password
+              aaf_username:
+                get_input: topic1_aaf_username
+              dmaap_info: <<topic1>>
+              type: message_router
+      docker_config:
+        healthcheck:
+          endpoint: api/holmes-rule-mgmt/v1/healthcheck
+          interval: 15s
+          timeout: 1s
+          type: http
+        ports:
+          - 9101:9101
+      image: nexus3.onap.org:10001/onap/holmes/rule-manamgement:latest
+      location_id:
+        get_input: dcae_service_location
+      service_component_type: dcae-analytics-holmes-rule-manamgement
+      streams_publishes: []
+      streams_subscribes:
+        - client_role:
+            get_input: topic0_client_role
+          location:
+            get_input: dcae_service_location
+          name: topic0
+          type: message_router
+        - client_role:
+            get_input: topic1_client_role
+          location:
+            get_input: dcae_service_location
+          name: topic1
+          type: message_router
+    relationships:
+      - target: docker_host_host
+        type: dcae.relationships.component_contained_in
+      - target: topic0
+        type: dcae.relationships.subscribe_to_events
+      - target: topic1
+        type: dcae.relationships.subscribe_to_events
+      - target: policy_0
+        type: dcae.relationships.depends_on
+  topic0:
+    type: dcae.nodes.Topic
+    properties:
+      topic_name: ''
+  topic1:
+    type: dcae.nodes.Topic
+    properties:
+      topic_name: ''
