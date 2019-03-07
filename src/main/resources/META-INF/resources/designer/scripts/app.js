@@ -269,12 +269,8 @@ function($scope, $rootScope, $timeout, dialogs) {
 			    } else if (name == "Save CL") {
 				    $rootScope.isNewClosed = false;
 				    $scope.cldsPerformAction("SAVE");
-			    } else if (name == "Validation Test") {
-				    $scope.cldsPerformAction("TEST");
 			    } else if (name == "Submit") {
 				    $scope.cldsConfirmPerformAction("SUBMIT");
-			    } else if (name == "Resubmit") {
-				    $scope.cldsConfirmPerformAction("RESUBMIT");
 			    } else if (name == "Update") {
 				    $scope.cldsConfirmPerformAction("UPDATE");
 			    } else if (name == "Delete") {
@@ -319,17 +315,12 @@ function($scope, $rootScope, $timeout, dialogs) {
 	            name : "Close Model"
 	        } ],
 	        "Manage" : [ {
-	            link : "/cldsTestActivate",
-	            name : "Validation Test"
-	        }, {
 	            link : "/cldsSubmit",
 	            name : "Submit"
 	        }, {
-	            link : "/cldsResubmit",
-	            name : "Resubmit"
-	        }, {
-	            link : "/cldsUpdate",
-	            name : "Update"
+	        // disabled for Dublin since Policy doesn't support updating in this release
+		    //   link : "/cldsUpdate",
+	        //    name : "Update"
 	        }, {
 	            link : "/cldsStop",
 	            name : "Stop"

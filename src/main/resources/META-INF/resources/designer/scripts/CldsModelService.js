@@ -201,32 +201,13 @@ app
 		    });
 		    return def.promise;
 	    };
-	    this.checkPermittedActionCd = function(permittedActionCd, menuText,
-	                                           actionCd) {
-
-		    if (permittedActionCd.indexOf(actionCd) > -1) {
-			    document.getElementById(menuText).classList.remove('ThisLink');
-		    } else {
-			    document.getElementById(menuText).classList.add('ThisLink');
-		    }
-	    };
 	    this.processActionResponse = function(modelName, pars) {
 
 		    // populate control name (prefix and uuid here)
-		    var controlNamePrefix = pars.controlNamePrefix;
-		    var controlNameUuid = pars.controlNameUuid;
-		    deploymentId = pars.deploymentId;
-		    typeID = pars.typeId;
 		    var headerText = "Closed Loop Modeler - " + modelName;
-		    if (controlNameUuid != null) {
-			    headerText = headerText + " [" + controlNamePrefix
-			    + controlNameUuid + "]";
-		    }
-		    document.getElementById("modeler_name").textContent = headerText;
-		    document.getElementById("templa_name").textContent = ("Template Used - " + selected_template);
-		    setStatus(pars)
+		    setStatus();
 		    disableBPMNAddSVG(pars);
-		    this.enableDisableMenuOptions(pars);
+		    enableDisableMenuOptions();
 	    };
 	    this.processRefresh = function(pars) {
 
@@ -237,7 +218,7 @@ app
 		    typeID = newPars.typeId;
 		    deploymentId = newPars.deploymentId;
 		    setStatus(newPars);
-		    this.enableDisableMenuOptions(newPars);
+		    enableDisableMenuOptions();
 	    }
 	    function setStatus() {
 
@@ -297,49 +278,13 @@ app
 			    checkIfElementType(name)
 		    });
 	    }
-	    this.enableDisableMenuOptions = function(pars) {
-
-		    var permittedActionCd = pars.permittedActionCd;
+	    enableDisableMenuOptions = function() {
+	    	//var status = getStatus();
+	    	var status = "DESIGN";
 		    // dropdown options - always true
-		    document.getElementById('Open CL').classList.remove('ThisLink');
-		    if (readMOnly) {
-			    // enable model options
-			    document.getElementById('Properties CL').classList
-			    .remove('ThisLink');
-			    document.getElementById('Close Model').classList
-			    .remove('ThisLink');
-			    // disable models options
-			    document.getElementById('Save CL').classList.add('ThisLink');
-			    document.getElementById('Revert Model Changes').classList
-			    .add('ThisLink');
-		    } else {
-			    // enable menu options
-			    document.getElementById('Save CL').classList.remove('ThisLink');
-			    document.getElementById('Properties CL').classList
-			    .remove('ThisLink');
-			    document.getElementById('Revert Model Changes').classList
-			    .remove('ThisLink');
-			    document.getElementById('Close Model').classList
-			    .remove('ThisLink');
-			    document.getElementById('Validation Test').classList
-			    .remove('ThisLink');
-			    document.getElementById('Refresh Status').classList
-			    .remove('ThisLink');
-		    }
+	    	enableDefaultMenu();
 		    // enable/disable menu options based on permittedActionCd
 		    // list
-		    this.checkPermittedActionCd(permittedActionCd, 'Validation Test',
-		    'TEST');
-		    this.checkPermittedActionCd(permittedActionCd, 'Submit', 'SUBMIT');
-		    this.checkPermittedActionCd(permittedActionCd, 'Resubmit',
-		    'RESUBMIT');
-		    this.checkPermittedActionCd(permittedActionCd, 'Update', 'UPDATE');
-		    this.checkPermittedActionCd(permittedActionCd, 'Stop', 'STOP');
-		    this
-		    .checkPermittedActionCd(permittedActionCd, 'Restart', 'RESTART');
-		    this.checkPermittedActionCd(permittedActionCd, 'Delete', 'DELETE');
-		    this.checkPermittedActionCd(permittedActionCd, 'Deploy', 'DEPLOY');
-		    this.checkPermittedActionCd(permittedActionCd, 'UnDeploy',
-		    'UNDEPLOY');
+	    	enableActionMenu(status);
 	    }
     } ]);
