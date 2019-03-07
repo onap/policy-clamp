@@ -47,7 +47,7 @@ public class LoopService {
         this.operationalPolicyService = operationalPolicyService;
     }
 
-    Loop addNewLoop(Loop loop) {
+    Loop saveOrUpdateLoop(Loop loop) {
         return loopsRepository.save(loop);
     }
 

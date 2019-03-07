@@ -39,9 +39,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.Policy;
-import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 
 @Entity
 @Table(name = "micro_service_policies")
@@ -66,7 +66,6 @@ public class MicroServicePolicy implements Serializable, Policy {
     @Column(name = "shared", nullable = false)
     private Boolean shared;
 
-    @Expose
     @Column(name = "policy_tosca", nullable = false)
     private String policyTosca;
 
@@ -79,7 +78,7 @@ public class MicroServicePolicy implements Serializable, Policy {
     private Set<Loop> usedByLoops = new HashSet<>();
 
     public MicroServicePolicy() {
-        //serialization
+        // serialization
     }
 
     public MicroServicePolicy(String name, String policyTosca, Boolean shared, JsonObject jsonRepresentation,
@@ -91,6 +90,7 @@ public class MicroServicePolicy implements Serializable, Policy {
         this.usedByLoops = usedByLoops;
     }
 
+    @Override
     public String getName() {
         return name;
     }
@@ -119,6 +119,7 @@ public class MicroServicePolicy implements Serializable, Policy {
         this.policyTosca = policyTosca;
     }
 
+    @Override
     public JsonObject getJsonRepresentation() {
         return jsonRepresentation;
     }
