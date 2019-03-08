@@ -26,19 +26,16 @@ package org.onap.clamp.clds.sdc.controller.installer;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.xml.transform.TransformerException;
-
 import org.apache.commons.io.IOUtils;
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
@@ -55,6 +52,7 @@ import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -98,6 +96,9 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     @Autowired
     private ChainGenerator chainGenerator;
+
+    @Autowired
+    private SvgFacade svgFacade;
 
     @PostConstruct
     public void loadConfiguration() throws IOException {
@@ -255,7 +256,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         if(microServicesChain.isEmpty()) {
             microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
         }
-        //place where SVG text will be generated
+        String imageText = svgFacade.getSvgImage(microServicesChain);
 
         CldsTemplate template = new CldsTemplate();
         template.setBpmnId("Sdc-Generated");
@@ -264,7 +265,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         template.setPropText(
             "{\"global\":[{\"name\":\"service\",\"value\":[\"" + blueprintArtifact.getDcaeBlueprint() + "\"]}]}");
         template
-            .setImageText(IOUtils.toString(appContext.getResource(configFiles.getSvgXmlFilePath()).getInputStream()));
+            .setImageText(imageText);
         template.setName(TEMPLATE_NAME_PREFIX + buildModelName(csar, blueprintArtifact));
         template.save(cldsDao, null);
         logger.info("Fake Clds Template created for blueprint " + blueprintArtifact.getBlueprintArtifactName()
