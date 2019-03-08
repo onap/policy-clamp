@@ -1,0 +1,18 @@
+second_app:
+  type: dcae.nodes.ContainerizedServiceComponentUsingDmaap
+  interfaces:
+    cloudify.interfaces.lifecycle:
+      start:
+        inputs:
+          envs:
+            grpc_server.host: "first_app.onap"
+            dmaap_ip: {get_input: dmaap_ip}
+            dmapp_topic: {get_input: dmaap_topic}
+            policy_id: {get_input: policy_id}
+          ports:
+            - 8080:8080
+  relationships:
+    - type: cloudify.relationships.connected_to
+      target: first_app
+    - type: clamp_node.relationships.gets_input_from
+      target: first_app

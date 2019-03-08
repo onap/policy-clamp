@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import java.util.Optional;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.xml.transform.TransformerException;
 
@@ -91,6 +92,12 @@ public class CsarInstallerImpl implements CsarInstaller {
     DcaeInventoryServices dcaeInventoryService;
     @Autowired
     private XslTransformer cldsBpmnTransformer;
+
+    @Autowired
+    private BlueprintParser blueprintParser;
+
+    @Autowired
+    private ChainGenerator chainGenerator;
 
     @PostConstruct
     public void loadConfiguration() throws IOException {
@@ -242,6 +249,14 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintArtifact blueprintArtifact,
         BlueprintParserFilesConfiguration configFiles) throws IOException, SdcArtifactInstallerException {
+
+        Set<MicroService> microServicesFromBlueprint = blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()) ;
+        List<MicroService> microServicesChain = chainGenerator.getChainOfMicroServices(microServicesFromBlueprint);
+        if(microServicesChain.isEmpty()) {
+            microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
+        }
+        //place where SVG text will be generated
+
         CldsTemplate template = new CldsTemplate();
         template.setBpmnId("Sdc-Generated");
         template
