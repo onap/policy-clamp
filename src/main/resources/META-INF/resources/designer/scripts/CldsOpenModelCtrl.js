@@ -52,11 +52,9 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 	$scope.paramsRetry = function() {
 		// $("#paramsWarn").hide();
 		$("#ridinSpinners").css("display", "")
-		loadSharedPropertyByService(currentValue, true, callBack);
 		$("#ridinSpinners").css("display", "none")
 	};
 	$scope.paramsCancel = function() {
-		loadSharedPropertyByServiceProperties(callBack);
 		$("#paramsWarnrefresh").hide();
 	};
 	function completeClose() {
@@ -145,7 +143,7 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 		cldsModelService.getModel(modelName).then(function(pars) {
 			// deserialize model properties
 			selected_model = modelName;
-			cldsModelService.processActionResponse(modelName, pars);
+			cldsModelService.processActionResponse(modelName);
 			// set model bpmn and open diagram
 			$rootScope.isPalette = true;
 		}, function(data) {

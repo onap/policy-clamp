@@ -30,6 +30,10 @@ app.controller('ToscaModelCtrl',
 	        		$('#editor').empty();
 
 		    		var toscaModel = getMsUI(selectedPolicy);
+		    		if (toscaModel == null) {
+		    			$modalInstance.close('closed');
+		    			return;
+		    		}
 		    		var editorData = getMsProperty(selectedPolicy);
 
 	  	        	JSONEditor.defaults.options.theme = 'bootstrap3';

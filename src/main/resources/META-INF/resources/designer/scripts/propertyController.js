@@ -21,19 +21,66 @@
  * 
  */
  function saveMsProperties(type, form) {
-    for (p in cl_props["microServicePolicies"]) {
-        if (cl_props["microServicePolicies"][p]["name"] == type) {
-        	cl_props["microServicePolicies"][p]["properties"] = form;
+	 var newMsProperties = cl_props["microServicePolicies"];
+	 
+    for (p in newMsProperties) {
+        if (newMsProperties[p]["name"] == type) {
+        	newMsProperties[p]["properties"] = form;
         }
     }
+
+	 var def = $q.defer();
+	 var sets = [];
+	 var svcUrl = "/restservices/clds/v2/loop/updateMicroservicePolicies/" + modelName;
+	 var svcRequest = {
+			 loopName : modelName,
+			 newMicroservicePolicies : newMsProperties
+	 };
+	 $http.post(svcUrl, svcRequest).success(function(data) {
+		 def.resolve(data);
+	 }).error(function(data) {
+		 def.reject("Save Model not successful");
+		 return def.promise;
+    };
+    cl_props["microServicePolicies"] = newMsProperties;
 }
 
 function saveGlobalProperties(form) {
+	 var def = $q.defer();
+	 var sets = [];
+	 var svcUrl = "/restservices/clds/v2/loop/globalProperties/" + modelName;
+	 var svcRequest = {
+			 loopName : modelName,
+			 newGlobalPolicies : form
+	 };
+	 $http.post(svcUrl, svcRequest).success(function(data) {
+		 def.resolve(data);
+	 }).error(function(data) {
+		 def.reject("Save Model not successful");
+		 return def.promise;
+    };
     cl_props["globalPropertiesJson"] = form;
 }
 
 function saveOpPolicyProperties(form) {
-        cl_props["operationalPolicies"]["0"]["configurationsJson"] = form;
+	var newOpProperties = cl_props["operationalPolicies"];
+	newOpProperties["0"]["configurationsJson"]= form;
+	
+	var def = $q.defer();
+	 var sets = [];
+	 var svcUrl = "/restservices/clds/v2/loop/updateOperationalPolicies/" + modelName;
+	 var svcRequest = {
+			 loopName : modelName,
+			 newGlobalPolicies : newOpProperties
+	 };
+	 $http.post(svcUrl, svcRequest).success(function(data) {
+		 def.resolve(data);
+	 }).error(function(data) {
+		 def.reject("Save Model not successful");
+		 return def.promise;
+   };
+	
+        cl_props["operationalPolicies"] = newOpProperties;
 }
 
 function getOperationalPolicyProperty() {
@@ -62,10 +109,6 @@ function getMsUI(type) {
         }
     }
     return null;
-}
-
-function loadSharedPropertyByService(onChangeUUID, refresh, callBack) {
-      setASDCFields()
 }
 
 function getStatus() {

@@ -232,7 +232,7 @@ function($scope, $rootScope, $timeout, dialogs) {
 	    });
 	    $scope.emptyMenuClick = function(value, name) {
 
-		    if ($rootScope.isNewClosed && name != "Save CL"
+		    if ($rootScope.isNewClosed
 		    && name != "Close Model" && name != "Properties CL") {
 			    saveConfirmationNotificationPopUp();
 		    } else {
@@ -243,9 +243,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 			    $scope.saveConfirmationNotificationPopUp(function(data) {
 
 				    if (data) {
-					    if ($rootScope.isNewClosed) {
-						    isSaveCheck("Save CL");
-					    }
 					    $rootScope.isNewClosed = false;
 				    } else {
 					    return false;
@@ -266,9 +263,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 				    $scope.cldsClose();
 			    } else if (name == "Open CL") {
 				    $scope.cldsOpenModel();
-			    } else if (name == "Save CL") {
-				    $rootScope.isNewClosed = false;
-				    $scope.cldsPerformAction("SAVE");
 			    } else if (name == "Submit") {
 				    $scope.cldsConfirmPerformAction("SUBMIT");
 			    } else if (name == "Update") {
@@ -301,9 +295,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 	        "Closed Loop" : [ {
 	            link : "/cldsOpenModel",
 	            name : "Open CL"
-	        }, {
-	            link : "/cldsSaveModel",
-	            name : "Save CL"
 	        }, {
 	            link : "/cldsOpenModelProperties",
 	            name : "Properties CL"

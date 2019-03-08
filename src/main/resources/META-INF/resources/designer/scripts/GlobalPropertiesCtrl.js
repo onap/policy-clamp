@@ -32,8 +32,6 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
          dialogs, cldsTemplateService) {
 	$scope.$watch('name', function(newValue, oldValue) {
 
-		setASDCFields()
-
 		var el = getGlobalProperty();
 		if (el !== undefined) {
 			for (var i = 0; i < el.length; i++) {

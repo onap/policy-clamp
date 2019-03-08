@@ -71,44 +71,6 @@ function setMultiSelect() {
   });
 }
 
-
-
-function setASDCFields() {
-    try {
-      var location_values = defaults_props['global']['location'];
-      if (location_values) {
-        for (key in location_values) {
-          if ($("#location").length > 0) {
-            $("#location").append("<option value=\"" + key + "\">" + location_values[key] + "</opton>")
-          }
-        }
-        $("#location").multiselect("rebuild");
-      }
-
-      var actionSet_values = defaults_props['global']['actionSet'];
-      if (actionSet_values) {
-        for (key in actionSet_values) {
-          if ($("#actionSet").length > 0) {
-            $("#actionSet").append("<option value=\"" + key + "\">" + actionSet_values[key] + "</opton>")
-          }
-        }
-        $("#actionSet").multiselect("rebuild");
-      }
-      if ($("#location").length > 0 && !location_values) {
-        showWarn();
-      }
-
-      function showWarn() {
-        $("#paramsWarn").show();
-        $('#servName').text($("#service option:selected").text());
-      }
-    } catch (e) {
-      console.log(e)
-    }
- 
-}
-
-
 function setPolicyOptions() {
 console.log("reset policy default options");
     try {
