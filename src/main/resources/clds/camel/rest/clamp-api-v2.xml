@@ -13,6 +13,21 @@
             <to
                 uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
         </get>
+        <get uri="/v2/loop/svgRepresentation/{loopName}"
+            outType="java.lang.String"
+
+            produces="application/xml">
+            <to
+                uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
+        </get>
+        <post uri="/v2/loop/globalProperties/{loopName}"
+            type="com.google.gson.JsonArray"
+            consumes="application/json"
+            outType="org.onap.clamp.loop.Loop"
+            produces="application/json">
+            <to
+                uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
+        </post>
         <post uri="/v2/loop/updateOperationalPolicies/{loopName}"
             type="com.google.gson.JsonArray"
             consumes="application/json"

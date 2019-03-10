@@ -70,7 +70,7 @@ public class LoopServiceTestItCase {
         testLoop.setLastComputedState(LoopState.DESIGN);
 
         //when
-        Loop actualLoop = loopService.addNewLoop(testLoop);
+        Loop actualLoop = loopService.saveOrUpdateLoop(testLoop);
 
         //then
         assertThat(actualLoop).isNotNull();
@@ -166,7 +166,7 @@ public class LoopServiceTestItCase {
     private void saveTestLoopToDb() {
         Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, "blueprint", "representation");
         testLoop.setGlobalPropertiesJson(JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
-        loopService.addNewLoop(testLoop);
+        loopService.saveOrUpdateLoop(testLoop);
     }
 
     @Test

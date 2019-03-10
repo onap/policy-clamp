@@ -25,14 +25,15 @@ package org.onap.clamp.loop;
 
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.Type;
 import java.util.List;
+
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
 
 @Controller
 public class LoopController {
@@ -66,5 +67,10 @@ public class LoopController {
         List<MicroServicePolicy> microservicePolicies = JsonUtils.GSON
             .fromJson(microServicePoliciesJson, MICROSERVICE_POLICY_TYPE);
         return loopService.updateMicroservicePolicies(loopName, microservicePolicies);
+    }
+
+    public String getSVGRepresentation(String loopName) {
+        return loopService.getClosedLoopModelSVG(loopName);
+
     }
 }
