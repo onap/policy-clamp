@@ -107,12 +107,13 @@
 
         function propChangeAlert(actionset) {
 	        //throw warnings only if options were previously chosen
-	        if (elementMap["global"]) {
-		        loop1: for (var i = 0; i < elementMap["global"].length; i++) {
-			        if (elementMap["global"][i]["name"] == actionset.id) {
+	        var globalProp = getGlobalProperty();
+	        if (globalProp) {
+		        loop1: for (var i = 0; i < globalProp.length; i++) {
+			        if (globalProp[i]["name"] == actionset.id) {
 				        //user did not change properties						
-				        if (elementMap["global"][i]["value"][0] == actionset.value) {
-					        if (elementMap["global"][i]["name"] == "actionSet") {
+				        if (globalProp[i]["value"][0] == actionset.value) {
+					        if (globalProp[i]["name"] == "actionSet") {
 						        asDiff = false;
 					        }
 					        if (!asDiff) {
@@ -121,7 +122,7 @@
 					        ;
 					        //user changed properties
 				        } else {
-					        if (elementMap["global"][i]["name"] == "actionSet") {
+					        if (globalProp[i]["name"] == "actionSet") {
 						        asDiff = true;
 					        };
 					        $(".propChangeWarn").show();

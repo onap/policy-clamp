@@ -48,18 +48,7 @@
 					href="javascript:void(0)" class="btn-link" id='paramsRetry'>Retry
 				</a> / <a href="javascript:void(0)" class="btn-link" id='paramsCancel'>Cancel</a>
 			</div>
-			<div class="form-group clearfix" data-ng-if="policytypes">
-				<label for="policytypes" class="col-sm-4 control-label">
-					Policy Types<span id="locationErr"
-					style="display: none; color: red;">&nbsp;*Required*</span>
-				</label>
 
-				<div class="col-sm-8">
-					 <select class="form-control" id="policytype" data-ng-change = "jsonByPolicyType(selectedHPPolicy, '{{selectedHPPolicy}}', '')" data-ng-model ="$parent.selectedHPPolicy">
-					 	<option data-ng-repeat="pt in policytypes" value="{{pt}}">{{pt}}</option>
-					 </select>
-				</div>
-			</div>
 		</form>
 		<div class="alert alert-warning propChangeWarn" style="display: none;">
 			<strong>Warning!</strong> Property changes will reset all associated

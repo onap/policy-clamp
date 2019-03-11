@@ -37,76 +37,6 @@ function newElementProcessor(id) {
   }
 }
 
-function saveProperties(form) {
-  elementMap[lastElementSelected] = form;
-  totalJsonProperties = JSON.stringify(elementMap);
-
-  //Take off the red border because the element has been edited
-  if ($('g[data-element-id="' + lastElementSelected + '"]').length > 0) {
-    var _idNode = $('g[data-element-id="' + lastElementSelected + '"]')
-    _idNode.children("rect").each(function() {
-      if ($(this).attr('class') === 'djs-outline-no-property-saved') {
-        $(this).attr('class', "djs-outline")
-        $(this).attr('fill', 'none')
-      }
-    });
-  }
-}
-
-function saveGlobalProperties(form) {
-  elementMap["global"] = form;
-}
-var isObject = function(a) {
-  return (!!a) && (a.constructor === Object);
-};
-
-function loadPropertyWindow(type) {
-  if (readMOnly) {
-    if ($("#add_one_more").length == 1) {
-      $("#add_one_more").off();
-      $("#add_one_more").click(function(event) {
-        event.preventDefault();
-      })
-    }
-    $("input,#savePropsBtn").attr("disabled", "");
-    $(".modal-body button").attr("disabled", "");
-    ($("select:not([multiple])")).multiselect("disable");
-  }
-
-  var props = defaults_props[type];
-
-  for (p in props) {
-    if (isObject(props[p])) {
-      var mySelect = $('#' + p);
-      if (p == "operator") {
-        $.each(props[p], function(val, text) {
-          mySelect.append(
-            $('<option></option>').val(val).html(val)
-          );
-        });
-      } else {
-        $.each(props[p], function(val, text) {
-          mySelect.append(
-            $('<option></option>').val(val).html(text)
-          );
-        });
-      }
-    } else {
-      if (p == "pname") {
-        var ms = new Date().getTime();
-        props[p] = "Policy" + ms;
-      }
-      $("#" + p).val(props[p])
-    }
-  }
-  setTimeout(function() {
-    setMultiSelect(type);
-  }, 100);
-
-
-
-}
-
 function setMultiSelect() {
   $("select").each(function(index, mySelect) {
 
@@ -141,32 +71,7 @@ function setMultiSelect() {
   });
 }
 
-function loadSharedPropertyByService(onChangeUUID, refresh, callBack) {
-      setASDCFields()
-}
 
-function loadSharedPropertyByServiceProperties(callBack) {
-  $.ajax({
-    async: false,
-    dataType: "json",
-    url: '/restservices/clds/v1/clds/properties/',
-    success: function(data) {
-
-      setASDCFields();
-      if (callBack && _.isFunction(callBack)) {
-        callBack(true);
-      }
-    },
-    error: function(s, a, err) {
-      $('#servName').text($("#service option:selected").text());
-      if (callBack && _.isFunction(callBack)) {
-        callBack(false);
-      }
-    },
-    timeout: 100000
-
-  });
-}
 
 function setASDCFields() {
     try {
@@ -203,6 +108,58 @@ function setASDCFields() {
  
 }
 
+
+function setPolicyOptions() {
+console.log("reset policy default options");
+    try {
+      var actor_values = defaults_props['policy']['actor'];
+      if (actor_values) {
+        for (key in actor_values) {
+          if ($("#actor").length > 0) {
+            $("#actor").append("<option value=\"" + key + "\">" + actor_values[key] + "</opton>")
+          }
+        }
+        $("#actor").multiselect("rebuild");
+      }
+
+      var recipe_values = defaults_props['policy']['vnfRecipe'];
+      if (recipe_values) {
+        for (key in recipe_values) {
+          if ($("#recipe").length > 0) {
+            $("#recipe").append("<option value=\"" + key + "\">" + recipe_values[key] + "</opton>")
+          }
+        }
+        $("#recipe").multiselect("rebuild");
+      }
+      var parentPolicyConditions_values = defaults_props['policy']['parentPolicyConditions'];
+      if (parentPolicyConditions_values) {
+        for (key in parentPolicyConditions_values) {
+          if ($("#parentPolicyConditions").length > 0) {
+            $("#parentPolicyConditions").append("<option value=\"" + key + "\">" + parentPolicyConditions_values[key] + "</opton>")
+          }
+        }
+        $("#parentPolicyConditions").multiselect("rebuild");
+      }
+      var timeUnitsGuard_values = defaults_props['policy']['timeUnitsGuard'];
+      if (timeUnitsGuard_values) {
+        for (key in timeUnitsGuard_values) {
+          if ($("#timeUnitsGuard").length > 0) {
+            $("#timeUnitsGuard").append("<option value=\"" + key + "\">" + timeUnitsGuard_values[key] + "</opton>")
+          }
+        }
+        $("#timeUnitsGuard").multiselect("rebuild");
+      }
+      function showWarn() {
+        $("#paramsWarn").show();
+        $('#servName').text($("#service option:selected").text());
+      }
+    } catch (e) {
+      console.log(e)
+    }
+ 
+}
+
+
 //Typically used when opening a new model/template
 function reloadDefaultVariables(isTemp) {
   isTemplate = isTemp;
@@ -210,17 +167,18 @@ function reloadDefaultVariables(isTemp) {
 }
 
 $(window).on('load',function() {
-  $.ajax({
-    dataType: "json",
-    url: '/restservices/clds/v1/clds/properties',
-    success: function(data) {
-      defaults_props = JSON.parse(data);
-    },
-    error: function(s, a, err) {
-      console.log(err)
-      console.log(s)
-      console.log(a)
-    },
-    timeout: 100000
-  });
+	  $.ajax({
+	    dataType: "json",
+	    url: '/restservices/clds/v1/clds/properties',
+	    success: function(data) {
+	      defaults_props = JSON.parse(data);
+	    },
+	    error: function(s, a, err) {
+	      console.log(err)
+	      console.log(s)
+	      console.log(a)
+	    },
+	    timeout: 100000
+	  });
 })
+

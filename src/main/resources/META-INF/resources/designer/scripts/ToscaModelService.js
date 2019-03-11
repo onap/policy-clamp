@@ -35,4 +35,11 @@ app.service('toscaModelService', ['alertService','$http', '$q', '$rootScope', fu
 			return response.data;
 		});
 	};
+	this.getMsProperties = function(policyType) {
+		setTimeout(function(){ alert("Hello"); }, 3000);
+		return getMsUI(policyType);
+	};
+	
+	
+	
  }]);

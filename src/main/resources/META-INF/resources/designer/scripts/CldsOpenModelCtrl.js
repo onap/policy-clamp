@@ -143,26 +143,7 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 		utmModels.type = 'Model';
 		$rootScope.utmModels = utmModels;
 		cldsModelService.getModel(modelName).then(function(pars) {
-			// process data returned
-			var propText = pars.propText;
-			var status = pars.status;
-			controlNamePrefix = pars.controlNamePrefix;
-			var authorizedToUp = pars.userAuthorizedToUpdate;
-			typeID = pars.typeId;
-			controlNameUuid = pars.controlNameUuid;
-			selected_template = pars.templateName;
-			modelEventService = pars.event;
-			actionStateCd = pars.event.actionStateCd;
-			deploymentId = pars.deploymentId;
-			if (readMOnly) {
-				pars.permittedActionCd = [ "" ];
-			}
-
 			// deserialize model properties
-			if (propText == null) {
-			} else {
-				elementMap = JSON.parse(propText);
-			}
 			selected_model = modelName;
 			cldsModelService.processActionResponse(modelName, pars);
 			// set model bpmn and open diagram
