@@ -27,9 +27,8 @@ app.controller('GlobalPropertiesCtrl', [
 'cldsModelService',
 '$location',
 'dialogs',
-'cldsTemplateService',
 function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
-         dialogs, cldsTemplateService) {
+         dialogs) {
 	$scope.$watch('name', function(newValue, oldValue) {
 
 		var el = getGlobalProperty();

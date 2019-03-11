@@ -3,31 +3,39 @@
         <get uri="/v2/loop/getAllNames"
             outType="java.lang.String[]"
             produces="application/json">
-            <to
-                uri="bean:org.onap.clamp.loop.LoopController?method=getLoopNames()" />
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+                <to uri="bean:org.onap.clamp.loop.LoopController?method=getLoopNames()" />
+            </route>
         </get>
         <get uri="/v2/loop/{loopName}"
             outType="org.onap.clamp.loop.Loop"
 
             produces="application/json">
-            <to
-                uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+                <to uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+            </route>
         </get>
         <post uri="/v2/loop/updateOperationalPolicies/{loopName}"
             type="com.google.gson.JsonArray"
             consumes="application/json"
             outType="org.onap.clamp.loop.Loop"
             produces="application/json">
-            <to
-                uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
+            </route>
         </post>
         <post uri="/v2/loop/updateMicroservicePolicies/{loopName}"
             type="com.google.gson.JsonArray"
             consumes="application/json"
             outType="org.onap.clamp.loop.Loop"
             produces="application/json">
-            <to
-                uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicies(${header.loopName},${body})" />
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicies(${header.loopName},${body})" />
+            </route>
         </post>
     </rest>
 </rests>
