@@ -23,6 +23,7 @@
 
 package org.onap.clamp.clds.transform;
 
+import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -45,7 +46,7 @@ public class XslTransformer {
     private Templates templates;
 
     public void setXslResourceName(String xslResourceName) throws TransformerConfigurationException {
-        TransformerFactory tfactory = TransformerFactory.newInstance();
+        TransformerFactory tfactory = new TransformerFactoryImpl();
         tfactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         tfactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         templates = tfactory.newTemplates(new StreamSource(ResourceFileUtil.getResourceAsStream(xslResourceName)));

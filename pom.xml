@@ -221,6 +221,21 @@
 		</dependencyManagement>
 
 		<dependencies>
+			<dependency>
+				<groupId>org.apache.xmlgraphics</groupId>
+				<artifactId>batik-svggen</artifactId>
+				<version>1.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.xmlgraphics</groupId>
+				<artifactId>batik-svg-dom</artifactId>
+				<version>1.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.xmlgraphics</groupId>
+				<artifactId>batik-transcoder</artifactId>
+				<version>1.11</version>
+			</dependency>
 				<dependency>
 						<groupId>com.att.eelf</groupId>
 						<artifactId>eelf-core</artifactId>
