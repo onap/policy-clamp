@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
@@ -53,6 +52,7 @@ import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.onap.sdc.tosca.parser.enums.SdcTypes;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.Yaml;
 
@@ -71,77 +71,45 @@ public class CsarInstallerImpl implements CsarInstaller {
     public static final String MODEL_NAME_PREFIX = "Loop_";
 
     @Autowired
-    protected LoopsRepository loopRepository;
+    LoopsRepository loopRepository;
 
     @Autowired
-    private BlueprintParser blueprintParser;
+    BlueprintParser blueprintParser;
 
     @Autowired
-    private ChainGenerator chainGenerator;
+    ChainGenerator chainGenerator;
 
     @Autowired
     DcaeInventoryServices dcaeInventoryService;
-
-    @Autowired
-    public void CsarInstallerImpl(LoopsRepository loopRepository, BlueprintParser blueprintParser,
-        ChainGenerator chainGenerator, DcaeInventoryServices dcaeInventoryService) {
-        this.loopRepository = loopRepository;
-        this.blueprintParser = blueprintParser;
-        this.chainGenerator = chainGenerator;
-        this.dcaeInventoryService = dcaeInventoryService;
-    }
 
     @Override
     public boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
         boolean alreadyInstalled = true;
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
             alreadyInstalled = alreadyInstalled
-                && loopRepository.existsById(buildModelName(csar, blueprint.getValue()));
+                && loopRepository.existsById(Loop.generateLoopName(csar.getSdcNotification().getServiceName(),
+                    csar.getSdcNotification().getServiceVersion(),
+                    blueprint.getValue().getResourceAttached().getResourceInstanceName(),
+                    blueprint.getValue().getBlueprintArtifactName()));
         }
         return alreadyInstalled;
     }
 
-    public static String buildModelName(CsarHandler csar, BlueprintArtifact artifact) {
-
-        return (MODEL_NAME_PREFIX + "_" + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
-            + csar.getSdcNotification().getServiceVersion() + "_"
-            + artifact.getResourceAttached().getResourceInstanceName().replaceAll(" ", "") + "_"
-            + artifact.getBlueprintArtifactName().replace(".yaml", "")).replace('.', '_');
-    }
-
-    public static String buildOperationalPolicyName(CsarHandler csar, BlueprintArtifact artifact) {
-
-        return (MODEL_NAME_PREFIX + "_" + csar.getSdcCsarHelper().getServiceMetadata().getValue("name") + "_v"
-            + csar.getSdcNotification().getServiceVersion() + "_"
-            + artifact.getResourceAttached().getResourceInstanceName().replaceAll(" ", "") + "_"
-            + artifact.getBlueprintArtifactName().replace(".yaml", "")).replace('.', '_');
-    }
-
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public void installTheCsar(CsarHandler csar)
         throws SdcArtifactInstallerException, InterruptedException, PolicyModelException {
         try {
             logger.info("Installing the CSAR " + csar.getFilePath());
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
                 logger.info("Processing blueprint " + blueprint.getValue().getBlueprintArtifactName());
-                createLoopFromBlueprint(csar, blueprint.getValue());
+                loopRepository.save(createLoopFromBlueprint(csar, blueprint.getValue()));
             }
-            createPolicyModel(csar);
             logger.info("Successfully installed the CSAR " + csar.getFilePath());
         } catch (IOException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Csar installation in database", e);
         } catch (ParseException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Dcae query to get ServiceTypeId", e);
-        }
-    }
-
-    private void createPolicyModel(CsarHandler csar) throws PolicyModelException {
-        try {
-            Optional<String> policyModelYaml = csar.getPolicyModelYaml();
-            // save policy model into the database
-        } catch (IOException e) {
-            throw new PolicyModelException("TransformerException when decoding the YamlText", e);
         }
     }
 
@@ -154,15 +122,8 @@ public class CsarInstallerImpl implements CsarInstaller {
             blueprintArtifact.getResourceAttached().getResourceInstanceName(),
             blueprintArtifact.getBlueprintArtifactName()));
         newLoop.setLastComputedState(LoopState.DESIGN);
-        for (MicroService microService : blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint())) {
-            newLoop.getMicroServicePolicies().add(new MicroServicePolicy(microService.getName(),
-                csar.getPolicyModelYaml().orElse(""), false, new JsonObject(), new HashSet<>(Arrays.asList(newLoop))));
-        }
-        newLoop.setOperationalPolicies(
-            new HashSet<>(Arrays.asList(new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL",
-                csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
-                blueprintArtifact.getResourceAttached().getResourceInstanceName(),
-                blueprintArtifact.getBlueprintArtifactName()), newLoop, new JsonObject()))));
+        newLoop.setMicroServicePolicies(createMicroServicePolicies(csar, blueprintArtifact, newLoop));
+        newLoop.setOperationalPolicies(createOperationalPolicies(csar, blueprintArtifact, newLoop));
         // Set SVG XML computed
         // newLoop.setSvgRepresentation(svgRepresentation);
         newLoop.setGlobalPropertiesJson(createGlobalPropertiesJson(csar, blueprintArtifact));
@@ -170,6 +131,24 @@ public class CsarInstallerImpl implements CsarInstaller {
         DcaeInventoryResponse dcaeResponse = queryDcaeToGetServiceTypeId(blueprintArtifact);
         newLoop.setDcaeBlueprintId(dcaeResponse.getTypeId());
         return newLoop;
+    }
+
+    private HashSet<OperationalPolicy> createOperationalPolicies(CsarHandler csar, BlueprintArtifact blueprintArtifact,
+        Loop newLoop) {
+        return new HashSet<>(Arrays.asList(new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL",
+            csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
+            blueprintArtifact.getResourceAttached().getResourceInstanceName(),
+            blueprintArtifact.getBlueprintArtifactName()), newLoop, new JsonObject())));
+    }
+
+    private HashSet<MicroServicePolicy> createMicroServicePolicies(CsarHandler csar,
+        BlueprintArtifact blueprintArtifact, Loop newLoop) throws IOException {
+        HashSet<MicroServicePolicy> newSet = new HashSet<>();
+        for (MicroService microService : blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint())) {
+            newSet.add(new MicroServicePolicy(microService.getName(), csar.getPolicyModelYaml().orElse(""), false,
+                new HashSet<>(Arrays.asList(newLoop))));
+        }
+        return newSet;
     }
 
     private JsonObject createGlobalPropertiesJson(CsarHandler csar, BlueprintArtifact blueprintArtifact) {

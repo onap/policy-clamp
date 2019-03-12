@@ -161,7 +161,7 @@ public class CsarHandlerTest {
         CsarHandler csar = new CsarHandler(buildFakeSdcNotification(), "test-controller", "/tmp/csar-handler-tests");
         csar.save(buildFakeSdcResut());
         String policyModelYaml = csar.getPolicyModelYaml().get();
-        assertTrue(policyModelYaml.contains("tosca_simple_yaml_1_1"));
+        assertTrue(policyModelYaml.contains("tosca_simple_yaml_1_0_0"));
     }
 
     @Test

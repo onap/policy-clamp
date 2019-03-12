@@ -82,13 +82,15 @@ public class ToscaYamlToJsonConvertor {
         this.cldsDao = cldsDao;
     }
 
-    @SuppressWarnings("unchecked")
     public String parseToscaYaml(String yamlString) {
 
         Yaml yaml = new Yaml();
-        LinkedHashMap<String, Object> loadedYaml = (LinkedHashMap<String, Object>) yaml.load(yamlString);
-        LinkedHashMap<String, Object> nodeTypes = new LinkedHashMap<String, Object>();
-        LinkedHashMap<String, Object> dataNodes = new LinkedHashMap<String, Object>();
+        LinkedHashMap<String, Object> loadedYaml = yaml.load(yamlString);
+        if (loadedYaml == null) {
+            return "";
+        }
+        LinkedHashMap<String, Object> nodeTypes = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> dataNodes = new LinkedHashMap<>();
         JSONObject jsonEditorObject = new JSONObject();
         JSONObject jsonParentObject = new JSONObject();
         JSONObject jsonTempObject = new JSONObject();

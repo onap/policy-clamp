@@ -30,6 +30,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller")
 public class CsarInstallerItCase {
 
-    private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
     private static final String INVARIANT_SERVICE_UUID = "4cc5b45a-1f63-4194-8100-cd8e14248c92";
     private static final String INVARIANT_RESOURCE1_UUID = "07e266fc-49ab-4cd7-8378-ca4676f1b9ec";
     private static final String INVARIANT_RESOURCE2_UUID = "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad";
@@ -89,7 +89,8 @@ public class CsarInstallerItCase {
         blueprintMap.put("resourceid", blueprintArtifact);
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
         Mockito.when(blueprintArtifact.getDcaeBlueprint()).thenReturn(
-            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/not-recognized.yaml")));
+            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/not-recognized.yaml"),
+                StandardCharsets.UTF_8));
         csarInstaller.installTheCsar(csarHandler);
         fail("Should have raised an SdcArtifactInstallerException");
     }
@@ -164,16 +165,17 @@ public class CsarInstallerItCase {
         csarInstaller.installTheCsar(csar);
         CldsModel cldsModel1 = verifyClosedLoopModelLoadedInDb(csar, "tca.yaml");
         JSONAssert.assertEquals(
-            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json")),
+            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json"),
+                StandardCharsets.UTF_8),
             cldsModel1.getPropText(), true);
         CldsModel cldsModel2 = verifyClosedLoopModelLoadedInDb(csar, "tca_2.yaml");
-        JSONAssert.assertEquals(
-            IOUtils
-                .toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca-2.json")),
-            cldsModel2.getPropText(), true);
+        JSONAssert.assertEquals(IOUtils.toString(
+            ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca-2.json"),
+            StandardCharsets.UTF_8), cldsModel2.getPropText(), true);
         CldsModel cldsModel3 = verifyClosedLoopModelLoadedInDb(csar, "tca_3.yaml");
         JSONAssert.assertEquals(
-            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json")),
+            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json"),
+                StandardCharsets.UTF_8),
             cldsModel3.getPropText(), true);
     }
 

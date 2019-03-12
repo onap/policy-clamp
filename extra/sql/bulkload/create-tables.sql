@@ -16,7 +16,7 @@
 
     create table loops (
        name varchar(255) not null,
-        blueprint_yaml varchar(255) not null,
+        blueprint_yaml MEDIUMTEXT not null,
         dcae_blueprint_id varchar(255),
         dcae_deployment_id varchar(255),
         dcae_deployment_status_url varchar(255),
@@ -36,7 +36,7 @@
     create table micro_service_policies (
        name varchar(255) not null,
         json_representation json not null,
-        policy_tosca varchar(255) not null,
+        policy_tosca MEDIUMTEXT not null,
         properties json,
         shared bit not null,
         primary key (name)

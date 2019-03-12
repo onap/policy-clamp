@@ -23,8 +23,7 @@
 
 package org.onap.clamp.loop;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
@@ -62,12 +63,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller-new")
 public class CsarInstallerItCase {
 
-    private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
+    private static final String CSAR_ARTIFACT_NAME = "example/sdc/service-Simsfoimap0112.csar";
     private static final String INVARIANT_SERVICE_UUID = "4cc5b45a-1f63-4194-8100-cd8e14248c92";
     private static final String INVARIANT_RESOURCE1_UUID = "07e266fc-49ab-4cd7-8378-ca4676f1b9ec";
     private static final String INVARIANT_RESOURCE2_UUID = "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad";
     private static final String RESOURCE_INSTANCE_NAME_RESOURCE1 = "ResourceInstanceName1";
     private static final String RESOURCE_INSTANCE_NAME_RESOURCE2 = "ResourceInstanceName2";
+
+    @Autowired
+    private LoopsRepository loopsRepo;
 
     @Autowired
     private CsarInstaller csarInstaller;
@@ -113,10 +117,6 @@ public class CsarInstallerItCase {
             "example/sdc/blueprint-dcae/tca_3.yaml", "tca_3.yaml", INVARIANT_SERVICE_UUID);
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
 
-        SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
-        ISdcCsarHelper sdcHelper = factory.getSdcCsarHelper(Thread.currentThread().getContextClassLoader()
-            .getResource("example/sdc/service-Simsfoimap0112.csar").getFile());
-
         // Build fake csarhandler
         Mockito.when(csarHandler.getSdcNotification()).thenReturn(notificationData);
         // Build fake csar Helper
@@ -125,28 +125,54 @@ public class CsarInstallerItCase {
         Mockito.when(data.getValue("name")).thenReturn(generatedName);
         Mockito.when(notificationData.getServiceName()).thenReturn(generatedName);
         Mockito.when(csarHelper.getServiceMetadata()).thenReturn(data);
+
+        // Create helper based on real csar to test policy yaml and global properties
+        // set
+        SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
+        ISdcCsarHelper sdcHelper = factory
+            .getSdcCsarHelper(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile());
         Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(sdcHelper);
+
         // Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
-        Mockito.when(csarHandler.getPolicyModelYaml()).thenReturn(Optional.ofNullable(""));
+        Mockito.when(csarHandler.getPolicyModelYaml())
+            .thenReturn(Optional.ofNullable(ResourceFileUtil.getResourceAsString("tosca/tca-policy-test.yaml")));
         return csarHandler;
     }
 
+    @Test
+    @Transactional
     public void testIsCsarAlreadyDeployedTca() throws SdcArtifactInstallerException, SdcToscaParserException,
         CsarHandlerException, IOException, InterruptedException, PolicyModelException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
-        assertFalse(csarInstaller.isCsarAlreadyDeployed(csarHandler));
+        assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isFalse();
         csarInstaller.installTheCsar(csarHandler);
-        assertTrue(csarInstaller.isCsarAlreadyDeployed(csarHandler));
+        assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isTrue();
     }
 
     @Test
+    @Transactional
     public void testInstallTheCsarTca() throws SdcArtifactInstallerException, SdcToscaParserException,
         CsarHandlerException, IOException, JSONException, InterruptedException, PolicyModelException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
+        assertThat(loopsRepo
+            .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")))
+                .isTrue();
+        assertThat(loopsRepo
+            .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml")))
+                .isTrue();
+        assertThat(loopsRepo
+            .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml")))
+                .isTrue();
+        // Verify now that policy and json representation, global properties are well
+        // set
+        Loop loop = loopsRepo
+            .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")).get();
 
+        assertThat(loop.getModelPropertiesJson().get("serviceDetails")).isNotNull();
+        assertThat(loop.getModelPropertiesJson().get("resourceDetails")).isNotNull();
     }
 
 }

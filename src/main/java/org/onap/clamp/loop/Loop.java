@@ -91,7 +91,7 @@ public class Loop implements Serializable {
     @Column(columnDefinition = "json", name = "model_properties_json")
     private JsonObject modelPropertiesJson;
 
-    @Column(nullable = false, name = "blueprint_yaml")
+    @Column(columnDefinition = "MEDIUMTEXT", nullable = false, name = "blueprint_yaml")
     private String blueprint;
 
     @Expose
