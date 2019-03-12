@@ -49,13 +49,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller")
 public class SdcSingleControllerItCase {
 
-    private static final String SDC_FOLDER = "/tmp/csar-handler-tests";
     private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
     private static final String SERVICE_UUID = "serviceUUID";
     private static final String RESOURCE1_UUID = "resource1UUID";
     private static final String RESOURCE1_INSTANCE_NAME = "sim-1802 0";
-    private static final String RESOURCE1_INSTANCE_NAME_IN_CSAR = "sim18020";
-    private static final String BLUEPRINT1_NAME = "FOI.Simfoimap223S0112.event_proc_bp.yaml";
 
     @Autowired
     private ClampProperties clampProp;

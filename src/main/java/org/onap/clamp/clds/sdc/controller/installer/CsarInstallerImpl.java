@@ -28,6 +28,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -269,8 +270,8 @@ public class CsarInstallerImpl implements CsarInstaller {
 
         CldsTemplate template = new CldsTemplate();
         template.setBpmnId("Sdc-Generated");
-        template
-            .setBpmnText(IOUtils.toString(appContext.getResource(configFiles.getBpmnXmlFilePath()).getInputStream()));
+        template.setBpmnText(IOUtils.toString(appContext.getResource(configFiles.getBpmnXmlFilePath()).getInputStream(),
+            StandardCharsets.UTF_8));
         template.setPropText(
             "{\"global\":[{\"name\":\"service\",\"value\":[\"" + blueprintArtifact.getDcaeBlueprint() + "\"]}]}");
         template

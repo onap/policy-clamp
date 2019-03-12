@@ -19,7 +19,7 @@
  * ============LICENSE_END============================================
  * Modifications copyright (c) 2018 Nokia
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.client;
@@ -42,20 +42,17 @@ import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * 
+ *
  * This class manages the HTTP and HTTPS connections to DCAE.
  *
  */
 @Component
 public class DcaeHttpConnectionManager {
-    protected static final EELFLogger logger                  = EELFManager.getInstance()
-            .getLogger(DcaeHttpConnectionManager.class);
-    protected static final EELFLogger metricsLogger           = EELFManager.getInstance().getMetricsLogger();
-    private static final String       DCAE_REQUEST_FAILED_LOG = "Request Failed - response payload=";
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeHttpConnectionManager.class);
+    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    private static final String DCAE_REQUEST_FAILED_LOG = "Request Failed - response payload=";
 
-
-    private String doHttpsQuery(URL url, String requestMethod, String payload, String contentType)
-            throws IOException {
+    private String doHttpsQuery(URL url, String requestMethod, String payload, String contentType) throws IOException {
         logger.info("Using HTTPS URL to contact DCAE:" + url.toString());
         HttpsURLConnection secureConnection = (HttpsURLConnection) url.openConnection();
         secureConnection.setRequestMethod(requestMethod);
@@ -87,12 +84,11 @@ public class DcaeHttpConnectionManager {
         }
     }
 
-    private String doHttpQuery(URL url, String requestMethod, String payload, String contentType)
-            throws IOException {
-        LoggingUtils utils = new LoggingUtils (logger);
+    private String doHttpQuery(URL url, String requestMethod, String payload, String contentType) throws IOException {
+        LoggingUtils utils = new LoggingUtils(logger);
         logger.info("Using HTTP URL to contact DCAE:" + url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection = utils.invoke(connection,"DCAE", requestMethod);
+        connection = utils.invoke(connection, "DCAE", requestMethod);
         connection.setRequestMethod(requestMethod);
         connection.setRequestProperty("X-ECOMP-RequestID", LoggingUtils.getRequestId());
         if (payload != null && contentType != null) {
@@ -126,21 +122,21 @@ public class DcaeHttpConnectionManager {
 
     /**
      * This method does a HTTP/HTTPS query to DCAE with parameters specified.
-     * 
+     *
      * @param url
-     *            The string HTTP or HTTPS that mustr be used to connect
+     *        The string HTTP or HTTPS that mustr be used to connect
      * @param requestMethod
-     *            The Request Method (PUT, POST, GET, DELETE, etc ...)
+     *        The Request Method (PUT, POST, GET, DELETE, etc ...)
      * @param payload
-     *            The payload if any, in that case an ouputstream is opened
+     *        The payload if any, in that case an ouputstream is opened
      * @param contentType
-     *            The "application/json or application/xml, or whatever"
+     *        The "application/json or application/xml, or whatever"
      * @return The payload of the answer
      * @throws IOException
-     *             In case of issue with the streams
+     *         In case of issue with the streams
      */
     public String doDcaeHttpQuery(String url, String requestMethod, String payload, String contentType)
-            throws IOException {
+        throws IOException {
         URL urlObj = new URL(url);
         if (url.contains("https://")) { // Support for HTTPS
             return doHttpsQuery(urlObj, requestMethod, payload, contentType);

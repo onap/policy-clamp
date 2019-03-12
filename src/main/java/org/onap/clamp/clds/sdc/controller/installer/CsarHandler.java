@@ -29,6 +29,7 @@ import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -135,7 +136,7 @@ public class CsarHandler {
                     blueprintArtifact
                         .setBlueprintInvariantServiceUuid(this.getSdcNotification().getServiceInvariantUUID());
                     try (InputStream stream = zipFile.getInputStream(entry)) {
-                        blueprintArtifact.setDcaeBlueprint(IOUtils.toString(stream));
+                        blueprintArtifact.setDcaeBlueprint(IOUtils.toString(stream, StandardCharsets.UTF_8));
                     }
                     blueprintArtifact.setResourceAttached(searchForResourceByInstanceName(entry.getName().substring(
                         entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX) + RESOURCE_INSTANCE_NAME_PREFIX.length(),
@@ -175,7 +176,7 @@ public class CsarHandler {
         try (ZipFile zipFile = new ZipFile(csarFilePath)) {
             ZipEntry entry = zipFile.getEntry(POLICY_DEFINITION_NAME_SUFFIX);
             if (entry != null) {
-                result = IOUtils.toString(zipFile.getInputStream(entry));
+                result = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
             } else {
                 logger.info("Policy model not found inside the CSAR file: " + csarFilePath);
             }
