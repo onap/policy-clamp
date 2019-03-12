@@ -61,13 +61,7 @@ function enableDefaultMenu() {
 		    .remove('ThisLink');
 		    document.getElementById('Close Model').classList
 		    .remove('ThisLink');
-		    // disable models options
-		    document.getElementById('Save CL').classList.add('ThisLink');
-		    document.getElementById('Revert Model Changes').classList
-		    .add('ThisLink');
 	    } else {
-		    // enable menu options
-		    document.getElementById('Save CL').classList.remove('ThisLink');
 		    document.getElementById('Properties CL').classList
 		    .remove('ThisLink');
 		    document.getElementById('Revert Model Changes').classList

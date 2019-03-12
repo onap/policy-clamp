@@ -257,8 +257,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 				    window.open(value);
 			    } else if (name == "Contact Us") {
 				    $rootScope.contactUs();
-			    } else if (name == "Revert Model Changes") {
-				    $scope.cldsRevertModel();
 			    } else if (name == "Close Model") {
 				    $scope.cldsClose();
 			    } else if (name == "Open CL") {
@@ -299,9 +297,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 	            link : "/cldsOpenModelProperties",
 	            name : "Properties CL"
 	        }, {
-	            link : "/RevertChanges",
-	            name : "Revert Model Changes"
-	        }, {
 	            link : "/Close",
 	            name : "Close Model"
 	        } ],
@@ -312,7 +307,7 @@ function($scope, $rootScope, $timeout, dialogs) {
 	        // disabled for Dublin since Policy doesn't support updating in this release
 		    //   link : "/cldsUpdate",
 	        //    name : "Update"
-	        }, {
+	        //}, {
 	            link : "/cldsStop",
 	            name : "Stop"
 	        }, {
@@ -495,25 +490,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 		    }, function() {
 
 			    callBack(null);
-		    });
-	    };
-	    $scope.cldsRevertModel = function() {
-
-		    var dlg = dialogs.create(
-		    'partials/portfolios/ConfirmRevertChanges.html',
-		    'CldsOpenModelCtrl', {
-		        closable : true,
-		        draggable : true
-		    }, {
-		        size : 'lg',
-		        keyboard : true,
-		        backdrop : 'static',
-		        windowClass : 'my-class'
-		    });
-		    dlg.result.then(function(name) {
-
-		    }, function() {
-
 		    });
 	    };
 	    $rootScope.cldsOpenModelProperties = function() {
