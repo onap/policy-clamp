@@ -26,21 +26,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChainGenerator {
 
-    ChainGenerator() {}
+    ChainGenerator() {
+    }
 
-    List<MicroService> getChainOfMicroServices(Set<MicroService> input) {
+    public List<MicroService> getChainOfMicroServices(Set<MicroService> input) {
         LinkedList<MicroService> returnList = new LinkedList<>();
-        if(preValidate(input)) {
+        if (preValidate(input)) {
             LinkedList<MicroService> theList = new LinkedList<>();
             for (MicroService ms : input) {
                 insertNodeTemplateIntoChain(ms, theList);
             }
-            if(postValidate(theList)) {
+            if (postValidate(theList)) {
                 returnList = theList;
             }
         }
@@ -48,16 +50,16 @@ public class ChainGenerator {
     }
 
     private boolean preValidate(Set<MicroService> input) {
-        List<MicroService> noInputs =
-            input.stream().filter(ms -> "".equals(ms.getInputFrom())).collect(Collectors.toList());
+        List<MicroService> noInputs = input.stream().filter(ms -> "".equals(ms.getInputFrom()))
+            .collect(Collectors.toList());
         return noInputs.size() == 1;
     }
 
     private boolean postValidate(LinkedList<MicroService> microServices) {
         for (int i = 1; i < microServices.size() - 1; i++) {
-            MicroService prev = microServices.get(i-1);
+            MicroService prev = microServices.get(i - 1);
             MicroService current = microServices.get(i);
-            if(!current.getInputFrom().equals(prev.getName())) {
+            if (!current.getInputFrom().equals(prev.getName())) {
                 return false;
             }
         }

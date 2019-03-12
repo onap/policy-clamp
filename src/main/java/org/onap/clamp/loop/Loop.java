@@ -78,7 +78,7 @@ public class Loop implements Serializable {
     @Column(name = "dcae_blueprint_id")
     private String dcaeBlueprintId;
 
-    @Column(name = "svg_representation")
+    @Column(columnDefinition = "MEDIUMTEXT", name = "svg_representation")
     private String svgRepresentation;
 
     @Expose
