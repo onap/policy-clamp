@@ -6,6 +6,7 @@
 	               "org.onap.clamp.clds.cl|dev|read",
 	               "org.onap.clamp.clds.cl|dev|update",
 	               "org.onap.clamp.clds.cl.manage|dev|*",
+	               "org.onap.clamp.clds.cl.event|dev|*",
 	               "org.onap.clamp.clds.filter.vf|dev|*",
 	               "org.onap.clamp.clds.template|dev|read",
 	               "org.onap.clamp.clds.template|dev|update",

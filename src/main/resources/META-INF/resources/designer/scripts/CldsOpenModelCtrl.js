@@ -32,9 +32,8 @@ app
 'cldsModelService',
 '$location',
 'dialogs',
-'cldsTemplateService',
 function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsModelService, $location,
-         dialogs, cldsTemplateService) {
+         dialogs) {
 	$scope.typeModel = 'template';
 	$scope.error = {
 	flag : false,
@@ -67,15 +66,6 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 			$scope.close();
 		}
 	}
-	cldsTemplateService.getSavedTemplate().then(function(pars) {
-		$scope.templateNamel = []
-		for (var i = 0; i < pars.length; i++) {
-			$scope.templateNamel.push(pars[i].value);
-		}
-		setTimeout(function() {
-			setMultiSelect();
-		}, 100);
-	});
 	function contains(a, obj) {
 		var i = a && a.length > 0 ? a.length : 0;
 		while (i--) {
