@@ -25,6 +25,7 @@ package org.onap.clamp.clds.it;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -85,7 +86,7 @@ public class AuthorizationControllerItCase {
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
         PrincipalUtils.setSecurityContext(securityContext);
 
-        AuthorizationController auth = new AuthorizationController ();
+        AuthorizationController auth = new AuthorizationController();
         assertTrue(auth.isUserPermittedNoException(new SecureServicePermission("permission-type-cl","dev","read")));
         assertTrue(auth.isUserPermittedNoException(new SecureServicePermission("permission-type-cl-manage","dev","DEPLOY")));
         assertTrue(auth.isUserPermittedNoException(new SecureServicePermission("permission-type-filter-vf","dev","12345-55555-55555-5555")));

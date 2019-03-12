@@ -20,9 +20,9 @@
  * ===================================================================
  * 
  */
- function saveMsProperties(type, form) {
+
+function saveMsProperties(type, form) {
 	 var newMsProperties = cl_props["microServicePolicies"];
-	 
     for (p in newMsProperties) {
         if (newMsProperties[p]["name"] == type) {
         	newMsProperties[p]["properties"] = form;
@@ -40,9 +40,9 @@
 		 def.resolve(data);
 	 }).error(function(data) {
 		 def.reject("Save Model not successful");
-		 return def.promise;
-    };
+	 });
     cl_props["microServicePolicies"] = newMsProperties;
+    return def.promise;
 }
 
 function saveGlobalProperties(form) {
@@ -57,9 +57,9 @@ function saveGlobalProperties(form) {
 		 def.resolve(data);
 	 }).error(function(data) {
 		 def.reject("Save Model not successful");
-		 return def.promise;
-    };
+	 });
     cl_props["globalPropertiesJson"] = form;
+    return def.promise;
 }
 
 function saveOpPolicyProperties(form) {
@@ -77,10 +77,10 @@ function saveOpPolicyProperties(form) {
 		 def.resolve(data);
 	 }).error(function(data) {
 		 def.reject("Save Model not successful");
-		 return def.promise;
-   };
+   });
 	
-        cl_props["operationalPolicies"] = newOpProperties;
+   cl_props["operationalPolicies"] = newOpProperties;
+   return def.promise;
 }
 
 function getOperationalPolicyProperty() {
@@ -122,3 +122,4 @@ function getDeploymentID() {
 function getDeploymentStatusURL() {
     return cl_props["dcaeDeploymentStatusUrl"];
 }
+module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getStatus,getDeploymentID,getDeploymentStatusURL };
