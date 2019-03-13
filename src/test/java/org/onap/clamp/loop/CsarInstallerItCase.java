@@ -170,7 +170,10 @@ public class CsarInstallerItCase {
         // set
         Loop loop = loopsRepo
             .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")).get();
-
+        assertThat(loop.getSvgRepresentation()).startsWith("<svg ");
+        assertThat(loop.getGlobalPropertiesJson().get("dcaeDeployParameters")).isNotNull();
+        assertThat(loop.getMicroServicePolicies()).hasSize(1);
+        assertThat(loop.getOperationalPolicies()).hasSize(1);
         assertThat(loop.getModelPropertiesJson().get("serviceDetails")).isNotNull();
         assertThat(loop.getModelPropertiesJson().get("resourceDetails")).isNotNull();
     }
