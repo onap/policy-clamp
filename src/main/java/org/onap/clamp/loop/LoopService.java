@@ -26,6 +26,8 @@ package org.onap.clamp.loop;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
+
+import com.google.gson.JsonObject;
 import org.onap.clamp.policy.microservice.MicroservicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicyService;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
@@ -66,22 +68,42 @@ public class LoopService {
         return closedLoopByName.getSvgRepresentation();
     }
 
-    Loop updateOperationalPolicies(String loopName, List<OperationalPolicy> newOperationalPolicies) {
+    Loop updateAndSaveOperationalPolicies(String loopName, List<OperationalPolicy> newOperationalPolicies) {
         Loop loop = findClosedLoopByName(loopName);
-        Set<OperationalPolicy> newPolicies = operationalPolicyService
-            .updatePolicies(loop, newOperationalPolicies);
-
-        loop.setOperationalPolicies(newPolicies);
+        updateOperationalPolicies(loop, newOperationalPolicies);
         return loopsRepository.save(loop);
     }
 
-    Loop updateMicroservicePolicies(String loopName, List<MicroServicePolicy> newMicroservicePolicies) {
+    Loop updateAndSaveMicroservicePolicies(String loopName, List<MicroServicePolicy> newMicroservicePolicies) {
         Loop loop = findClosedLoopByName(loopName);
-        Set<MicroServicePolicy> newPolicies = microservicePolicyService
-            .updatePolicies(loop, newMicroservicePolicies);
-
-        loop.setMicroServicePolicies(newPolicies);
+        updateMicroservicePolicies(loop, newMicroservicePolicies);
         return loopsRepository.save(loop);
+    }
+
+    Loop updateAndSaveGlobalPropertiesJson(String loopName, JsonObject newGlobalPropertiesJson) {
+        Loop loop = findClosedLoopByName(loopName);
+        updateGlobalPropertiesJson(loop, newGlobalPropertiesJson);
+        return loopsRepository.save(loop);
+    }
+
+    private Loop updateOperationalPolicies(Loop loop, List<OperationalPolicy> newOperationalPolicies) {
+        Set<OperationalPolicy> newPolicies = operationalPolicyService
+                .updatePolicies(loop, newOperationalPolicies);
+
+        loop.setOperationalPolicies(newPolicies);
+        return loop;
+    }
+
+    private Loop updateMicroservicePolicies(Loop loop, List<MicroServicePolicy> newMicroservicePolicies) {
+        Set<MicroServicePolicy> newPolicies = microservicePolicyService
+                .updatePolicies(loop, newMicroservicePolicies);
+        loop.setMicroServicePolicies(newPolicies);
+        return loop;
+    }
+
+    private Loop updateGlobalPropertiesJson(Loop loop, JsonObject newGlobalPropertiesJson) {
+        loop.setGlobalPropertiesJson(newGlobalPropertiesJson);
+        return loop;
     }
 
     private Loop findClosedLoopByName(String loopName) {

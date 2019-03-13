@@ -24,6 +24,8 @@
 package org.onap.clamp.loop;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -60,13 +62,17 @@ public class LoopController {
     public Loop updateOperationalPolicies(String loopName, JsonArray operationalPoliciesJson) {
         List<OperationalPolicy> operationalPolicies = JsonUtils.GSON
             .fromJson(operationalPoliciesJson, OPERATIONAL_POLICY_TYPE);
-        return loopService.updateOperationalPolicies(loopName, operationalPolicies);
+        return loopService.updateAndSaveOperationalPolicies(loopName, operationalPolicies);
     }
 
     public Loop updateMicroservicePolicies(String loopName, JsonArray microServicePoliciesJson) {
         List<MicroServicePolicy> microservicePolicies = JsonUtils.GSON
             .fromJson(microServicePoliciesJson, MICROSERVICE_POLICY_TYPE);
-        return loopService.updateMicroservicePolicies(loopName, microservicePolicies);
+        return loopService.updateAndSaveMicroservicePolicies(loopName, microservicePolicies);
+    }
+
+    public Loop updateGlobalPropertiesJson(String loopName, JsonObject globalProperties){
+        return loopService.updateAndSaveGlobalPropertiesJson(loopName, globalProperties);
     }
 
     public String getSVGRepresentation(String loopName) {

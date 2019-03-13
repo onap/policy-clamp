@@ -92,7 +92,7 @@ public class LoopServiceTestItCase {
 
         //when
         Loop actualLoop = loopService
-            .updateOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(operationalPolicy));
+            .updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(operationalPolicy));
 
         //then
         assertThat(actualLoop).isNotNull();
@@ -118,7 +118,7 @@ public class LoopServiceTestItCase {
 
         //when
         Loop actualLoop = loopService
-            .updateMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(microServicePolicy));
+            .updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(microServicePolicy));
 
         //then
         assertThat(actualLoop).isNotNull();
@@ -143,14 +143,14 @@ public class LoopServiceTestItCase {
         String secondPolicyTosca = "secondPolicyTosca";
         MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy(firstPolicyName, "policyTosca",
             false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
-        loopService.updateMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
+        loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
 
         MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy(secondPolicyName, secondPolicyTosca, true,
             newJsonRepresentation, null);
 
         //when
         firstMicroServicePolicy.setJsonRepresentation(newJsonRepresentation);
-        Loop actualLoop = loopService.updateMicroservicePolicies(EXAMPLE_LOOP_NAME,
+        Loop actualLoop = loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME,
             Lists.newArrayList(firstMicroServicePolicy, secondMicroServicePolicy));
 
         //then
@@ -180,14 +180,14 @@ public class LoopServiceTestItCase {
         String secondPolicyTosca = "secondPolicyTosca";
         MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy(firstPolicyName, "policyTosca",
             false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
-        loopService.updateMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
+        loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
 
         MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy(secondPolicyName, secondPolicyTosca, true,
             jsonRepresentation, null);
 
         //when
         Loop actualLoop = loopService
-            .updateMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(secondMicroServicePolicy));
+            .updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(secondMicroServicePolicy));
 
         //then
         assertThat(actualLoop).isNotNull();
@@ -210,13 +210,13 @@ public class LoopServiceTestItCase {
         String secondPolicyName = "secondPolicyName";
         OperationalPolicy firstOperationalPolicy = new OperationalPolicy(firstPolicyName, null,
             JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
-        loopService.updateOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
+        loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
 
         OperationalPolicy secondOperationalPolicy = new OperationalPolicy(secondPolicyName, null, newJsonConfiguration);
 
         //when
         firstOperationalPolicy.setConfigurationsJson(newJsonConfiguration);
-        Loop actualLoop = loopService.updateOperationalPolicies(EXAMPLE_LOOP_NAME,
+        Loop actualLoop = loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME,
             Lists.newArrayList(firstOperationalPolicy, secondOperationalPolicy));
 
         //then
@@ -244,13 +244,13 @@ public class LoopServiceTestItCase {
         String secondPolicyName = "policyName";
         OperationalPolicy firstOperationalPolicy = new OperationalPolicy(firstPolicyName, null,
             JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
-        loopService.updateOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
+        loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
 
         OperationalPolicy secondOperationalPolicy = new OperationalPolicy(secondPolicyName, null, jsonRepresentation);
 
         //when
         Loop actualLoop = loopService
-            .updateOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(secondOperationalPolicy));
+            .updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(secondOperationalPolicy));
 
         //then
         assertThat(actualLoop).isNotNull();
@@ -262,6 +262,26 @@ public class LoopServiceTestItCase {
         OperationalPolicy savedPolicy = savedPolicies.iterator().next();
         assertThat(savedPolicy.getLoop().getName()).isEqualTo(EXAMPLE_LOOP_NAME);
 
+    }
+
+    @Test
+    public void shouldCreateModelPropertiesAndUpdateJsonRepresentationOfOldOne() {
+        //given
+        saveTestLoopToDb();
+        String expectedJson = "{\"test\":\"test\"}";
+        JsonObject baseGlobalProperites = JsonUtils.GSON.fromJson("{}", JsonObject.class);
+        JsonObject updatedGlobalProperites = JsonUtils.GSON.fromJson(expectedJson, JsonObject.class);
+        loopService.updateAndSaveGlobalPropertiesJson(EXAMPLE_LOOP_NAME, baseGlobalProperites);
+
+        //when
+        Loop actualLoop = loopService
+                .updateAndSaveGlobalPropertiesJson(EXAMPLE_LOOP_NAME, updatedGlobalProperites);
+
+        //then
+        assertThat(actualLoop).isNotNull();
+        assertThat(actualLoop.getName()).isEqualTo(EXAMPLE_LOOP_NAME);
+        JsonObject returnedGlobalProperties = actualLoop.getGlobalPropertiesJson();
+        assertThat(returnedGlobalProperties.getAsJsonObject()).isEqualTo(updatedGlobalProperites);
     }
 
     private Loop createTestLoop(String loopName, String loopBlueprint, String loopSvg) {

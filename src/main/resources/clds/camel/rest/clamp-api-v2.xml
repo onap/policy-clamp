@@ -24,13 +24,14 @@
             <to
                 uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
         </get>
-        <post uri="/v2/loop/globalProperties/{loopName}"
-            type="com.google.gson.JsonArray"
-            consumes="application/json"
-            outType="org.onap.clamp.loop.Loop"
-            produces="application/json">
+
+        <post uri="/v2/loop/updateGlobalProperties/{loopName}"
+              type="com.google.gson.JsonObject"
+              consumes="application/json"
+              outType="org.onap.clamp.loop.Loop"
+              produces="application/json">
             <to
-                uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
+                    uri="bean:org.onap.clamp.loop.LoopController?method=updateGlobalPropertiesJson(${header.loopName},${body})" />
         </post>
         <post uri="/v2/loop/updateOperationalPolicies/{loopName}"
             type="com.google.gson.JsonArray"
