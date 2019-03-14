@@ -53,13 +53,6 @@
 			<directory>${project.build.directory}</directory>
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
-		<fileSet>
-			<includes>
-				<include>**</include>
-			</includes>
-			<directory>src/main/docker/extra-files</directory>
-			<outputDirectory>/</outputDirectory>
-		</fileSet>
 	</fileSets>
 
 </assembly>
