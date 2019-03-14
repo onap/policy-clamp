@@ -562,8 +562,8 @@ label {
 				}
 				console.log("save properties; add tableVal to policies: "+ tableVal);
 			});
-
-			saveOpPolicyProperties(finalSaveList);
+			var scope = angular.element(document.getElementById('formSpan')).scope();
+			scope.submitForm(finalSaveList);
 			$("#close_button").click();
 		})		
 
@@ -803,7 +803,6 @@ label {
 
 		$("#pid").val(0);
 
-		setASDCFields();
 		initTargetResourceId();
 		//load metrics dropdown
 		if (elementMap["global"]) {

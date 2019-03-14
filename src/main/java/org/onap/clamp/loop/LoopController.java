@@ -75,6 +75,10 @@ public class LoopController {
         return loopService.updateAndSaveGlobalPropertiesJson(loopName, globalProperties);
     }
 
+    public MicroServicePolicy updateMicroservicePolicy(String loopName, MicroServicePolicy newMicroservicePolicy) {
+        return loopService.updateMicroservicePolicy(loopName, newMicroservicePolicy);
+    }
+
     public String getSVGRepresentation(String loopName) {
         return loopService.getClosedLoopModelSVG(loopName);
 

@@ -42,7 +42,7 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 	cldsModelService.getSavedModel().then(function(pars) {
 		$scope.modelNamel = []
 		for (var i = 0; i < pars.length; i++) {
-			$scope.modelNamel.push(pars[i].value);
+			$scope.modelNamel.push(pars[i]);
 		}
 		setTimeout(function() {
 			setMultiSelect();

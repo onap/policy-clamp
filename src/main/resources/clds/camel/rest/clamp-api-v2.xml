@@ -43,14 +43,14 @@
                 <to uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
             </route>
         </post>
-        <post uri="/v2/loop/updateMicroservicePolicies/{loopName}"
-            type="com.google.gson.JsonArray"
+        <post uri="/v2/loop/updateMicroservicePolicy/{loopName}"
+            type="org.onap.clamp.policy.microservice.MicroServicePolicy"
             consumes="application/json"
-            outType="org.onap.clamp.loop.Loop"
+            outType="org.onap.clamp.policy.microservice.MicroServicePolicy"
             produces="application/json">
             <route>
                 <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicies(${header.loopName},${body})" />
+                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicy(${header.loopName},${body})" />
             </route>
         </post>
     </rest>

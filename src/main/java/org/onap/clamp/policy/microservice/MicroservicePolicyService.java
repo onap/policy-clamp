@@ -24,11 +24,13 @@
 package org.onap.clamp.policy.microservice;
 
 import com.google.common.collect.Sets;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.onap.clamp.policy.PolicyService;
+
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.policy.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,12 +47,8 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
 
     @Override
     @Transactional
-    public Set<MicroServicePolicy> updatePolicies(Loop loop,
-        List<MicroServicePolicy> newMicroservicePolicies) {
-        return newMicroservicePolicies
-            .stream()
-            .map(policy ->
-                getAndUpdateMicroServicePolicy(loop, policy))
+    public Set<MicroServicePolicy> updatePolicies(Loop loop, List<MicroServicePolicy> newMicroservicePolicies) {
+        return newMicroservicePolicies.stream().map(policy -> getAndUpdateMicroServicePolicy(loop, policy))
             .collect(Collectors.toSet());
     }
 
@@ -59,13 +57,10 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
         return repository.existsById(policyName);
     }
 
-    private MicroServicePolicy getAndUpdateMicroServicePolicy(Loop loop, MicroServicePolicy policy) {
-        return repository
-            .findById(policy.getName())
-            .map(p -> updateMicroservicePolicyProperties(p, policy, loop))
-            .orElse(new MicroServicePolicy(policy.getName(), policy.getPolicyTosca(),
-                policy.getShared(), policy.getJsonRepresentation(),
-                Sets.newHashSet(loop)));
+    public MicroServicePolicy getAndUpdateMicroServicePolicy(Loop loop, MicroServicePolicy policy) {
+        return repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
+            .orElse(new MicroServicePolicy(policy.getName(), policy.getPolicyTosca(), policy.getShared(),
+                policy.getJsonRepresentation(), Sets.newHashSet(loop)));
     }
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,
