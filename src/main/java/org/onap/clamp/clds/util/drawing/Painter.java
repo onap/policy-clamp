@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 AT&T
  * ===================================================================
  *
  */
@@ -28,7 +29,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.util.List;
+
 import org.apache.batik.svggen.SVGGraphics2D;
+import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 
 public class Painter {
     private final int canvasSize;
@@ -47,7 +50,7 @@ public class Painter {
         this.canvasSize = DEFALUT_CANVAS_SIZE;
     }
 
-    DocumentBuilder doPaint(String collector, List<String> microServices, String policy) {
+    DocumentBuilder doPaint(String collector, List<MicroService> microServices, String policy) {
         int numOfRectangles = 2 + microServices.size();
         int numOfArrows = numOfRectangles + 1;
         int baseLength = (canvasSize - 2 * CIRCLE_RADIUS) / (numOfArrows + numOfRectangles);
@@ -63,29 +66,22 @@ public class Painter {
         return ib.getDocumentBuilder();
     }
 
-    private void doTheActualDrawing(String collector, List<String> microServices, String policy, ImageBuilder ib) {
-        ib.circle("start-circle", SLIM_LINE)
-            .arrow()
-            .rectangle(collector, RectTypes.COLECTOR, collector);
+    private void doTheActualDrawing(String collector, List<MicroService> microServices, String policy,
+        ImageBuilder ib) {
+        ib.circle("start-circle", SLIM_LINE).arrow().rectangle(collector, RectTypes.COLECTOR, collector);
 
-        for(String ms : microServices) {
-            ib.arrow().rectangle(ms, RectTypes.MICROSERVICE, ms);
+        for (MicroService ms : microServices) {
+            ib.arrow().rectangle(ms.getMappedNameJpa(), RectTypes.MICROSERVICE, ms.getName());
         }
 
-        ib.arrow()
-            .rectangle(policy, RectTypes.POLICY, policy)
-            .arrow()
-            .circle("stop-circle", THICK_LINE);
+        ib.arrow().rectangle(policy, RectTypes.POLICY, policy).arrow().circle("stop-circle", THICK_LINE);
     }
 
     private void adjustGraphics2DProperties() {
-        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-            RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-            RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
         g2d.setStroke(new BasicStroke(SLIM_LINE));
         g2d.setPaint(Color.BLACK);
     }
-
 
 }

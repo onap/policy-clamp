@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 AT&T
  * ===================================================================
  *
  */
@@ -24,6 +25,7 @@
 package org.onap.clamp.clds.util.drawing;
 
 import java.util.List;
+
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 import org.onap.clamp.clds.util.XmlTools;
@@ -38,9 +40,7 @@ public class SvgFacade {
         DocumentBuilder dp = new DocumentBuilder(document, svgGraphics2D.getDOMFactory());
         Painter p = new Painter(svgGraphics2D, dp);
         ClampGraphBuilder cgp = new ClampGraphBuilder(p).collector("VES");
-        for(MicroService ms : microServicesChain) {
-            cgp = cgp.microService(ms.getName());
-        }
+        cgp.addAllMicroServices(microServicesChain);
         ClampGraph cg = cgp.policy("Policy").build();
         return cg.getAsSVG();
     }

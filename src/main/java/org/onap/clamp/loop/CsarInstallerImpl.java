@@ -118,16 +118,6 @@ public class CsarInstallerImpl implements CsarInstaller {
         }
     }
 
-    private String getSvgInLoop(BlueprintArtifact blueprintArtifact) {
-        List<MicroService> microServicesChain = chainGenerator
-            .getChainOfMicroServices(blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()));
-        if (microServicesChain.isEmpty()) {
-            microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
-        }
-        return svgFacade.getSvgImage(microServicesChain);
-
-    }
-
     private Loop createLoopFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact)
         throws IOException, ParseException, InterruptedException {
         Loop newLoop = new Loop();
@@ -137,10 +127,18 @@ public class CsarInstallerImpl implements CsarInstaller {
             blueprintArtifact.getResourceAttached().getResourceInstanceName(),
             blueprintArtifact.getBlueprintArtifactName()));
         newLoop.setLastComputedState(LoopState.DESIGN);
-        newLoop.setMicroServicePolicies(createMicroServicePolicies(csar, blueprintArtifact, newLoop));
+
+        List<MicroService> microServicesChain = chainGenerator
+            .getChainOfMicroServices(blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()));
+        if (microServicesChain.isEmpty()) {
+            microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
+        }
+
+        newLoop
+            .setMicroServicePolicies(createMicroServicePolicies(microServicesChain, csar, blueprintArtifact, newLoop));
         newLoop.setOperationalPolicies(createOperationalPolicies(csar, blueprintArtifact, newLoop));
 
-        newLoop.setSvgRepresentation(getSvgInLoop(blueprintArtifact));
+        newLoop.setSvgRepresentation(svgFacade.getSvgImage(microServicesChain));
         newLoop.setGlobalPropertiesJson(createGlobalPropertiesJson(blueprintArtifact));
         newLoop.setModelPropertiesJson(createModelPropertiesJson(csar));
         DcaeInventoryResponse dcaeResponse = queryDcaeToGetServiceTypeId(blueprintArtifact);
@@ -156,21 +154,20 @@ public class CsarInstallerImpl implements CsarInstaller {
             blueprintArtifact.getBlueprintArtifactName()), newLoop, new JsonObject())));
     }
 
-    private HashSet<MicroServicePolicy> createMicroServicePolicies(CsarHandler csar,
-        BlueprintArtifact blueprintArtifact, Loop newLoop) throws IOException {
+    private HashSet<MicroServicePolicy> createMicroServicePolicies(List<MicroService> microServicesChain,
+        CsarHandler csar, BlueprintArtifact blueprintArtifact, Loop newLoop) throws IOException {
         HashSet<MicroServicePolicy> newSet = new HashSet<>();
-        List<MicroService> microServicesChain = chainGenerator
-            .getChainOfMicroServices(blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()));
-        if (microServicesChain.isEmpty()) {
-            microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
-        }
+
         for (MicroService microService : microServicesChain) {
-            newSet.add(new MicroServicePolicy(
+            MicroServicePolicy microServicePolicy = new MicroServicePolicy(
                 Policy.generatePolicyName(microService.getName(), csar.getSdcNotification().getServiceName(),
                     csar.getSdcNotification().getServiceVersion(),
                     blueprintArtifact.getResourceAttached().getResourceInstanceName(),
                     blueprintArtifact.getBlueprintArtifactName()),
-                csar.getPolicyModelYaml().orElse(""), false, new HashSet<>(Arrays.asList(newLoop))));
+                csar.getPolicyModelYaml().orElse(""), false, new HashSet<>(Arrays.asList(newLoop)));
+
+            newSet.add(microServicePolicy);
+            microService.setMappedNameJpa(microServicePolicy.getName());
         }
         return newSet;
     }
@@ -179,7 +176,6 @@ public class CsarInstallerImpl implements CsarInstaller {
         JsonObject globalProperties = new JsonObject();
         globalProperties.add("dcaeDeployParameters", getAllBlueprintParametersInJson(blueprintArtifact));
         return globalProperties;
-
     }
 
     private JsonObject createModelPropertiesJson(CsarHandler csar) {

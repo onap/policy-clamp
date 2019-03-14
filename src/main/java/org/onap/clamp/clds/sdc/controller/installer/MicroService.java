@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 AT&T
  * ===================================================================
  *
  */
@@ -25,44 +26,52 @@ package org.onap.clamp.clds.sdc.controller.installer;
 import java.util.Objects;
 
 public class MicroService {
-  private final String name;
-  private final String inputFrom;
+    private final String name;
+    private final String inputFrom;
+    private String mappedNameJpa;
 
-  public MicroService(String name, String inputFrom) {
-    this.name = name;
-    this.inputFrom = inputFrom;
-  }
-  public String getName() {
-    return name;
-  }
-
-  public String getInputFrom() {
-    return inputFrom;
-  }
-
-  @Override
-  public String toString() {
-    return "MicroService{" +
-        "name='" + name + '\'' +
-        ", inputFrom='" + inputFrom + '\'' +
-        '}';
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
+    public MicroService(String name, String inputFrom, String mappedNameJpa) {
+        this.name = name;
+        this.inputFrom = inputFrom;
+        this.mappedNameJpa = mappedNameJpa;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    MicroService that = (MicroService) o;
-    return name.equals(that.name) &&
-        inputFrom.equals(that.inputFrom);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(name, inputFrom);
-  }
+    public String getName() {
+        return name;
+    }
+
+    public String getInputFrom() {
+        return inputFrom;
+    }
+
+    @Override
+    public String toString() {
+        return "MicroService{" + "name='" + name + '\'' + ", inputFrom='" + inputFrom + '\'' + ", mappedNameJpa='"
+            + mappedNameJpa + '\'' + '}';
+    }
+
+    public String getMappedNameJpa() {
+        return mappedNameJpa;
+    }
+
+    public void setMappedNameJpa(String mappedNameJpa) {
+        this.mappedNameJpa = mappedNameJpa;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MicroService that = (MicroService) o;
+        return name.equals(that.name) && inputFrom.equals(that.inputFrom) && mappedNameJpa.equals(that.mappedNameJpa);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, inputFrom, mappedNameJpa);
+    }
 }

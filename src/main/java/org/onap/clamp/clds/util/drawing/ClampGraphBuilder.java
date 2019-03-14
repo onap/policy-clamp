@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 AT&T
  * ===================================================================
  *
  */
@@ -27,10 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.onap.clamp.clds.sdc.controller.installer.MicroService;
+
 public class ClampGraphBuilder {
     private String policy;
     private String collector;
-    private List<String> microServices = new ArrayList<>();
+    private List<MicroService> microServices = new ArrayList<>();
     private final Painter painter;
 
     public ClampGraphBuilder(Painter painter) {
@@ -47,16 +50,21 @@ public class ClampGraphBuilder {
         return this;
     }
 
-    public ClampGraphBuilder microService(String ms) {
+    public ClampGraphBuilder addMicroService(MicroService ms) {
         microServices.add(ms);
         return this;
     }
 
+    public ClampGraphBuilder addAllMicroServices(List<MicroService> msList) {
+        microServices.addAll(msList);
+        return this;
+    }
+
     public ClampGraph build() {
-        if(microServices.isEmpty()) {
+        if (microServices.isEmpty()) {
             throw new InvalidStateException("At least one microservice is required");
         }
-        if(Objects.isNull(policy) || policy.trim().isEmpty()) {
+        if (Objects.isNull(policy) || policy.trim().isEmpty()) {
             throw new InvalidStateException("Policy element must be present");
         }
         return new ClampGraph(painter.doPaint(collector, microServices, policy));
