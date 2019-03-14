@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 AT&T
  * ===================================================================
  *
  */
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +37,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClampGraphBuilderTest {
@@ -45,7 +48,7 @@ public class ClampGraphBuilderTest {
     private ArgumentCaptor<String> collectorCaptor;
 
     @Captor
-    private ArgumentCaptor<List<String>> microServicesCaptor;
+    private ArgumentCaptor<List<MicroService>> microServicesCaptor;
 
     @Captor
     private ArgumentCaptor<String> policyCaptor;
@@ -53,16 +56,17 @@ public class ClampGraphBuilderTest {
     @Test
     public void clampGraphBuilderCompleteChainTest() {
         String collector = "VES";
-        String ms1 = "ms1";
-        String ms2 = "ms2";
+        MicroService ms1 = new MicroService("ms1", "", "ms1_jpa_id");
+        MicroService ms2 = new MicroService("ms2", "", "ms2_jpa_id");
+        ;
         String policy = "Policy";
-        List<String> microServices = Arrays.asList(ms1, ms2);
+        List<MicroService> microServices = Arrays.asList(ms1, ms2);
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
-        clampGraphBuilder.collector(collector).microService(ms1).microService(ms2).policy(policy).build();
+        clampGraphBuilder.collector(collector).addMicroService(ms1).addMicroService(ms2).policy(policy).build();
 
-        verify(mockPainter, times(1))
-            .doPaint(collectorCaptor.capture(), microServicesCaptor.capture(), policyCaptor.capture());
+        verify(mockPainter, times(1)).doPaint(collectorCaptor.capture(), microServicesCaptor.capture(),
+            policyCaptor.capture());
 
         Assert.assertEquals(collector, collectorCaptor.getValue());
         Assert.assertEquals(microServices, microServicesCaptor.getValue());
@@ -72,11 +76,11 @@ public class ClampGraphBuilderTest {
     @Test(expected = InvalidStateException.class)
     public void clampGraphBuilderNoPolicyGivenTest() {
         String collector = "VES";
-        String ms1 = "ms1";
-        String ms2 = "ms2";
+        MicroService ms1 = new MicroService("ms1", "", "ms1_jpa_id");
+        MicroService ms2 = new MicroService("ms2", "", "ms2_jpa_id");
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
-        clampGraphBuilder.collector(collector).microService(ms1).microService(ms2).build();
+        clampGraphBuilder.collector(collector).addMicroService(ms1).addMicroService(ms2).build();
     }
 
     @Test(expected = InvalidStateException.class)

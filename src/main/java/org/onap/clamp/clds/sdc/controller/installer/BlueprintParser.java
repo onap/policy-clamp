@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 AT&T
  * ===================================================================
  *
  */
@@ -84,7 +85,7 @@ public class BlueprintParser {
             }
         }
         String msName = theBiggestMicroServiceKey.toLowerCase().contains(HOLMES_PREFIX) ? HOLMES : TCA;
-        return Collections.singletonList(new MicroService(msName, ""));
+        return Collections.singletonList(new MicroService(msName, "", ""));
     }
 
     String getName(Entry<String, JsonElement> entry) {
@@ -116,7 +117,7 @@ public class BlueprintParser {
     MicroService getNodeRepresentation(Entry<String, JsonElement> entry) {
         String name = getName(entry);
         String getInputFrom = getInput(entry);
-        return new MicroService(name, getInputFrom);
+        return new MicroService(name, getInputFrom, "");
     }
 
     private String getTarget(JsonObject elementObject) {

@@ -25,6 +25,7 @@ package org.onap.clamp.clds.sdc.controller.installer;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -59,10 +61,8 @@ public class BlueprintParserTest {
     public static void loadBlueprints() throws IOException {
         microServiceTheWholeBlueprintValid = ResourceFileUtil
             .getResourceAsString("clds/blueprint-with-microservice-chain.yaml");
-        microServiceBlueprintOldStyleTCA = ResourceFileUtil
-            .getResourceAsString("clds/tca-old-style-ms.yaml");
-        microServiceBlueprintOldStyleHolmes = ResourceFileUtil
-            .getResourceAsString("clds/holmes-old-style-ms.yaml");
+        microServiceBlueprintOldStyleTCA = ResourceFileUtil.getResourceAsString("clds/tca-old-style-ms.yaml");
+        microServiceBlueprintOldStyleHolmes = ResourceFileUtil.getResourceAsString("clds/holmes-old-style-ms.yaml");
 
         String microServiceBlueprintValid = ResourceFileUtil
             .getResourceAsString("clds/single-microservice-fragment-valid.yaml");
@@ -83,10 +83,8 @@ public class BlueprintParserTest {
     @Test
     public void getNameShouldReturnDefinedName() {
         final JsonObject jsonObject = jsonObjectBlueprintValid;
-        String expectedName = jsonObject.get(jsonObject.keySet().iterator().next())
-            .getAsJsonObject().get("properties")
-            .getAsJsonObject().get("name")
-            .getAsString();
+        String expectedName = jsonObject.get(jsonObject.keySet().iterator().next()).getAsJsonObject().get("properties")
+            .getAsJsonObject().get("name").getAsString();
         Entry<String, JsonElement> entry = jsonObject.entrySet().iterator().next();
         String actualName = new BlueprintParser().getName(entry);
 
@@ -141,7 +139,7 @@ public class BlueprintParserTest {
     public void getNodeRepresentationFromCompleteYaml() {
         final JsonObject jsonObject = jsonObjectBlueprintValid;
 
-        MicroService expected = new MicroService(SECOND_APPP, FIRST_APPP);
+        MicroService expected = new MicroService(SECOND_APPP, FIRST_APPP, "");
         Entry<String, JsonElement> entry = jsonObject.entrySet().iterator().next();
         MicroService actual = new BlueprintParser().getNodeRepresentation(entry);
 
@@ -150,9 +148,9 @@ public class BlueprintParserTest {
 
     @Test
     public void getMicroServicesFromBlueprintTest() {
-        MicroService thirdApp = new MicroService(THIRD_APPP, "");
-        MicroService firstApp = new MicroService(FIRST_APPP, THIRD_APPP);
-        MicroService secondApp = new MicroService(SECOND_APPP, FIRST_APPP);
+        MicroService thirdApp = new MicroService(THIRD_APPP, "", "");
+        MicroService firstApp = new MicroService(FIRST_APPP, THIRD_APPP, "");
+        MicroService secondApp = new MicroService(SECOND_APPP, FIRST_APPP, "");
 
         Set<MicroService> expected = new HashSet<>(Arrays.asList(firstApp, secondApp, thirdApp));
         Set<MicroService> actual = new BlueprintParser().getMicroServices(microServiceTheWholeBlueprintValid);
@@ -162,7 +160,7 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceTCATest() {
-        MicroService tcaMS = new MicroService(BlueprintParser.TCA, "");
+        MicroService tcaMS = new MicroService(BlueprintParser.TCA, "", "");
 
         List<MicroService> expected = Collections.singletonList(tcaMS);
         List<MicroService> actual = new BlueprintParser().fallbackToOneMicroService(microServiceBlueprintOldStyleTCA);
@@ -172,11 +170,11 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceHolmesTest() {
-        MicroService holmesMS = new MicroService(BlueprintParser.HOLMES, "");
+        MicroService holmesMS = new MicroService(BlueprintParser.HOLMES, "", "");
 
         List<MicroService> expected = Collections.singletonList(holmesMS);
-        List<MicroService> actual =
-            new BlueprintParser().fallbackToOneMicroService(microServiceBlueprintOldStyleHolmes);
+        List<MicroService> actual = new BlueprintParser()
+            .fallbackToOneMicroService(microServiceBlueprintOldStyleHolmes);
 
         Assert.assertEquals(expected, actual);
     }
