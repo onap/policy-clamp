@@ -30,7 +30,7 @@
 		<parent>
 				<groupId>org.onap.oparent</groupId>
 				<artifactId>oparent</artifactId>
-				<version>1.2.0</version>
+				<version>1.2.3</version>
 		</parent>
 
 		<description>
