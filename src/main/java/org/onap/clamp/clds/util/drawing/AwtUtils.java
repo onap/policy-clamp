@@ -17,6 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
+ * Modifications copyright (c) 2019 AT&T.
  * ===================================================================
  *
  */
@@ -33,39 +34,39 @@ import java.awt.Rectangle;
 public class AwtUtils {
     private static final int ARROW_W = 4;
     private static final int ARROW_H = 2;
-    private static final  int FONT_SIZE = 12;
-    private static final  int FONT_STYLE = Font.PLAIN;
+    private static final int FONT_SIZE = 12;
+    private static final int FONT_STYLE = Font.PLAIN;
     private static final String FONT_FACE = "SansSerif";
-    private static final Color TRANSPARENT = new Color(0.0f, 0.0f,0.0f,0.0f);
+    private static final Color TRANSPARENT = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 
-    static void rectWithText(Graphics2D g2d, String text, Point p, int w, int h) {
-        Rectangle rect = new Rectangle(p.x, p.y, w, h);
+    static void rectWithText(Graphics2D g2d, String text, Point point, int width, int height) {
+        Rectangle rect = new Rectangle(point.x, point.y, width, height);
         g2d.draw(rect);
         Color oldColor = g2d.getColor();
         g2d.setColor(TRANSPARENT);
         g2d.fill(rect);
         g2d.setColor(oldColor);
-        addText(g2d, text, p.x+w/2, p.y+h/2);
+        addText(g2d, text, point.x + width / 2, point.y + height / 2);
     }
 
     static void drawArrow(Graphics2D g2d, Point from, Point to, int lineThickness) {
         int x2 = to.x - lineThickness;
-        g2d.drawLine(from.x, from.y, x2-lineThickness, to.y);
-        g2d.drawPolygon(new int[] {x2-ARROW_W, x2-ARROW_W, x2},new int[] {to.y- ARROW_H, to.y+ ARROW_H, to.y},3);
-        g2d.fillPolygon(new int[] {x2-ARROW_W, x2-ARROW_W, x2},new int[] {to.y- ARROW_H, to.y+ ARROW_H, to.y},3);
+        g2d.drawLine(from.x, from.y, x2 - lineThickness, to.y);
+        g2d.drawPolygon(new int[]{x2 - ARROW_W, x2 - ARROW_W, x2}, new int[]{to.y - ARROW_H, to.y + ARROW_H, to.y}, 3);
+        g2d.fillPolygon(new int[]{x2 - ARROW_W, x2 - ARROW_W, x2}, new int[]{to.y - ARROW_H, to.y + ARROW_H, to.y}, 3);
     }
 
-    private static void addText(Graphics2D g2d, String text, int x, int y) {
-        Font f = new Font(FONT_FACE, FONT_STYLE, FONT_SIZE);
-        g2d.setFont(f);
+    private static void addText(Graphics2D g2d, String text, int abs, int ord) {
+        Font font = new Font(FONT_FACE, FONT_STYLE, FONT_SIZE);
+        g2d.setFont(font);
 
         FontMetrics fm1 = g2d.getFontMetrics();
         int w1 = fm1.stringWidth(text);
-        int x1 = x - (w1 / 2);
+        int x1 = abs - (w1 / 2);
 
-        g2d.setFont(f);
+        g2d.setFont(font);
         g2d.setColor(Color.BLACK);
-        g2d.drawString(text, x1, y);
+        g2d.drawString(text, x1, ord);
     }
 
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,12 +45,33 @@ public class CldsModel {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsModel.class);
     private static final int UUID_LENGTH = 36;
+    /**
+     * The constant STATUS_DESIGN.
+     */
     public static final String STATUS_DESIGN = "DESIGN";
+    /**
+     * The constant STATUS_DISTRIBUTED.
+     */
     public static final String STATUS_DISTRIBUTED = "DISTRIBUTED";
+    /**
+     * The constant STATUS_ACTIVE.
+     */
     public static final String STATUS_ACTIVE = "ACTIVE";
+    /**
+     * The constant STATUS_STOPPED.
+     */
     public static final String STATUS_STOPPED = "STOPPED";
+    /**
+     * The constant STATUS_DELETING.
+     */
     public static final String STATUS_DELETING = "DELETING";
+    /**
+     * The constant STATUS_ERROR.
+     */
     public static final String STATUS_ERROR = "ERROR";
+    /**
+     * The constant STATUS_UNKNOWN.
+     */
     public static final String STATUS_UNKNOWN = "UNKNOWN";
     private String id;
     private String templateId;
@@ -70,7 +91,7 @@ public class CldsModel {
     // This is a transient value used to return the failure message to UI
     private String errorMessageForUi;
     /**
-     * The service type Id received from DCAE by querying it
+     * The service type Id received from DCAE by querying it.
      */
     private String typeId;
     private String typeName;
@@ -81,10 +102,20 @@ public class CldsModel {
     private static StatusHandler statusHandler = new StatusHandlerImpl();
     private static ActionsHandler actionsHandler = new ActionsHandlerImpl();
 
+    /**
+     * Sets status handler.
+     *
+     * @param statHandler the stat handler
+     */
     public static synchronized void setStatusHandler(StatusHandler statHandler) {
         statusHandler = statHandler;
     }
 
+    /**
+     * Sets actions handler.
+     *
+     * @param cdHandler the cd handler
+     */
     public static synchronized void setActionsHandler(ActionsHandler cdHandler) {
         actionsHandler = cdHandler;
     }
@@ -98,6 +129,11 @@ public class CldsModel {
 
     /**
      * Retrieve from DB.
+     *
+     * @param cldsDao      the clds dao
+     * @param name         the name
+     * @param okIfNotFound the ok if not found
+     * @return the clds model
      */
     public static CldsModel retrieve(CldsDao cldsDao, String name, boolean okIfNotFound) {
         // get from db
@@ -110,6 +146,11 @@ public class CldsModel {
         return model;
     }
 
+    /**
+     * Can dcae inventory call boolean.
+     *
+     * @return the boolean
+     */
     public boolean canDcaeInventoryCall() {
         boolean canCall = false;
         /* Below checks the clds event is submit/resubmit/distribute */
@@ -122,6 +163,10 @@ public class CldsModel {
 
     /**
      * Save model to DB.
+     *
+     * @param cldsDao the clds dao
+     * @param userid  the userid
+     * @return the clds model
      */
     public CldsModel save(CldsDao cldsDao, String userid) {
         CldsModel cldsModel = cldsDao.setModel(this, userid);
@@ -131,7 +176,7 @@ public class CldsModel {
     }
 
     /**
-     * set the status in the model
+     * set the status in the model.
      */
     public void determineStatus() {
         status = statusHandler.determineStatusOnLastEvent(event);
@@ -151,6 +196,8 @@ public class CldsModel {
      * Validate requestedActionCd - determine permittedActionCd and then check if
      * contained in permittedActionCd Throw IllegalArgumentException if requested
      * actionCd is not permitted.
+     *
+     * @param requestedActionCd the requested action cd
      */
     public void validateAction(String requestedActionCd) {
         determinePermittedActionCd();
@@ -166,6 +213,9 @@ public class CldsModel {
      * controlNameUuid). No fields are populated other than controlNamePrefix and
      * controlNameUuid. Throws BadRequestException if length of given control name
      * is less than UUID_LENGTH.
+     *
+     * @param fullControlName the full control name
+     * @return the clds model
      */
     public static CldsModel createUsingControlName(String fullControlName) {
         if (fullControlName == null || fullControlName.length() < UUID_LENGTH) {
@@ -180,6 +230,8 @@ public class CldsModel {
     }
 
     /**
+     * Gets control name.
+     *
      * @return the controlName (controlNamePrefix + controlNameUuid)
      */
     public String getControlName() {
@@ -187,7 +239,12 @@ public class CldsModel {
     }
 
     /**
-     * To insert modelInstance to the database
+     * To insert modelInstance to the database.
+     *
+     * @param cldsDao   the clds dao
+     * @param dcaeEvent the dcae event
+     * @param userid    the userid
+     * @return the clds model
      */
     public static CldsModel insertModelInstance(CldsDao cldsDao, DcaeEvent dcaeEvent, String userid) {
         String controlName = dcaeEvent.getControlName();
@@ -205,6 +262,8 @@ public class CldsModel {
     }
 
     /**
+     * Gets name.
+     *
      * @return the name
      */
     public String getName() {
@@ -212,33 +271,53 @@ public class CldsModel {
     }
 
     /**
-     * @param name
-     *        the name to set
+     * Sets name.
+     *
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
+     * Gets type name.
+     *
      * @return the typeName
      */
     public String getTypeName() {
         return typeName;
     }
 
+    /**
+     * Sets type name.
+     *
+     * @param typeName the type name
+     */
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 
+    /**
+     * Gets template id.
+     *
+     * @return the template id
+     */
     public String getTemplateId() {
         return templateId;
     }
 
+    /**
+     * Sets template id.
+     *
+     * @param templateId the template id
+     */
     public void setTemplateId(String templateId) {
         this.templateId = templateId;
     }
 
     /**
+     * Gets control name prefix.
+     *
      * @return the controlNamePrefix
      */
     public String getControlNamePrefix() {
@@ -246,14 +325,17 @@ public class CldsModel {
     }
 
     /**
-     * @param controlNamePrefix
-     *        the controlNamePrefix to set
+     * Sets control name prefix.
+     *
+     * @param controlNamePrefix the controlNamePrefix to set
      */
     public void setControlNamePrefix(String controlNamePrefix) {
         this.controlNamePrefix = controlNamePrefix;
     }
 
     /**
+     * Gets control name uuid.
+     *
      * @return the controlNameUuid
      */
     public String getControlNameUuid() {
@@ -261,14 +343,17 @@ public class CldsModel {
     }
 
     /**
-     * @param controlNameUuid
-     *        the controlNameUuid to set
+     * Sets control name uuid.
+     *
+     * @param controlNameUuid the controlNameUuid to set
      */
     public void setControlNameUuid(String controlNameUuid) {
         this.controlNameUuid = controlNameUuid;
     }
 
     /**
+     * Gets prop text.
+     *
      * @return the propText
      */
     public String getPropText() {
@@ -276,45 +361,71 @@ public class CldsModel {
     }
 
     /**
-     * @param propText
-     *        the propText to set
+     * Sets prop text.
+     *
+     * @param propText the propText to set
      */
     public void setPropText(String propText) {
         this.propText = propText;
     }
 
     /**
+     * Gets event.
+     *
      * @return the event
      */
     public CldsEvent getEvent() {
         return event;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Gets template name.
+     *
+     * @return the template name
+     */
     public String getTemplateName() {
         return templateName;
     }
 
+    /**
+     * Sets template name.
+     *
+     * @param templateName the template name
+     */
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
     }
 
     /**
-     * @param event
-     *        the event to set
+     * Sets event.
+     *
+     * @param event the event to set
      */
     public void setEvent(CldsEvent event) {
         this.event = event;
     }
 
     /**
+     * Gets status.
+     *
      * @return the status
      */
     public String getStatus() {
@@ -322,53 +433,109 @@ public class CldsModel {
     }
 
     /**
-     * @param status
-     *        the status to set
+     * Sets status.
+     *
+     * @param status the status to set
      */
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * Gets blueprint text.
+     *
+     * @return the blueprint text
+     */
     public String getBlueprintText() {
         return blueprintText;
     }
 
+    /**
+     * Sets blueprint text.
+     *
+     * @param blueprintText the blueprint text
+     */
     public void setBlueprintText(String blueprintText) {
         this.blueprintText = blueprintText;
     }
 
+    /**
+     * Gets bpmn text.
+     *
+     * @return the bpmn text
+     */
     public String getBpmnText() {
         return bpmnText;
     }
 
+    /**
+     * Sets bpmn text.
+     *
+     * @param bpmnText the bpmn text
+     */
     public void setBpmnText(String bpmnText) {
         this.bpmnText = bpmnText;
     }
 
+    /**
+     * Gets image text.
+     *
+     * @return the image text
+     */
     public String getImageText() {
         return imageText;
     }
 
+    /**
+     * Sets image text.
+     *
+     * @param imageText the image text
+     */
     public void setImageText(String imageText) {
         this.imageText = imageText;
     }
 
+    /**
+     * Gets doc text.
+     *
+     * @return the doc text
+     */
     public String getDocText() {
         return docText;
     }
 
+    /**
+     * Sets doc text.
+     *
+     * @param docText the doc text
+     */
     public void setDocText(String docText) {
         this.docText = docText;
     }
 
+    /**
+     * Gets type id.
+     *
+     * @return the type id
+     */
     public String getTypeId() {
         return typeId;
     }
 
+    /**
+     * Sets type id.
+     *
+     * @param typeId the type id
+     */
     public void setTypeId(String typeId) {
         this.typeId = typeId;
     }
 
+    /**
+     * Gets clds model instance list.
+     *
+     * @return the clds model instance list
+     */
     public List<CldsModelInstance> getCldsModelInstanceList() {
         if (cldsModelInstanceList == null) {
             cldsModelInstanceList = new ArrayList<>();
@@ -376,30 +543,65 @@ public class CldsModel {
         return cldsModelInstanceList;
     }
 
+    /**
+     * Gets deployment id.
+     *
+     * @return the deployment id
+     */
     public String getDeploymentId() {
         return deploymentId;
     }
 
+    /**
+     * Sets deployment id.
+     *
+     * @param deploymentId the deployment id
+     */
     public void setDeploymentId(String deploymentId) {
         this.deploymentId = deploymentId;
     }
 
+    /**
+     * Gets permitted action cd.
+     *
+     * @return the permitted action cd
+     */
     public List<String> getPermittedActionCd() {
         return permittedActionCd;
     }
 
+    /**
+     * Gets error message for ui.
+     *
+     * @return the error message for ui
+     */
     public String getErrorMessageForUi() {
         return errorMessageForUi;
     }
 
+    /**
+     * Sets error message for ui.
+     *
+     * @param errorMessageForUi the error message for ui
+     */
     public void setErrorMessageForUi(String errorMessageForUi) {
         this.errorMessageForUi = errorMessageForUi;
     }
 
+    /**
+     * Gets deployment status url.
+     *
+     * @return the deployment status url
+     */
     public String getDeploymentStatusUrl() {
         return deploymentStatusUrl;
     }
 
+    /**
+     * Sets deployment status url.
+     *
+     * @param deploymentStatusUrl the deployment status url
+     */
     public void setDeploymentStatusUrl(String deploymentStatusUrl) {
         this.deploymentStatusUrl = deploymentStatusUrl;
     }

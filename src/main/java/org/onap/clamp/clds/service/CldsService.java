@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,23 +81,53 @@ import org.springframework.web.client.HttpClientErrorException;
 @Component
 public class CldsService extends SecureServiceBase {
 
+    /**
+     * The constant LIST_OF_SDC_SERVICE_INFO_TYPE.
+     */
     public static final Type LIST_OF_SDC_SERVICE_INFO_TYPE = new TypeToken<List<SdcServiceInfo>>() {
     }.getType();
     @Produce(uri = "direct:processSubmit")
     private CamelProxy camelProxy;
+    /**
+     * The constant securityLogger.
+     */
     protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
+    /**
+     * The constant logger.
+     */
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsService.class);
 
+    /**
+     * The constant GLOBAL_PROPERTIES_KEY.
+     */
     public static final String GLOBAL_PROPERTIES_KEY = "files.globalProperties";
     private final String cldsPermissionTypeClManage;
     private final String cldsPermissionTypeClEvent;
     private final String cldsPermissionTypeFilterVf;
     private final String cldsPermissionInstance;
+    /**
+     * The Permission read cl.
+     */
     final SecureServicePermission permissionReadCl;
+    /**
+     * The Permission update cl.
+     */
     final SecureServicePermission permissionUpdateCl;
+    /**
+     * The Permission read template.
+     */
     final SecureServicePermission permissionReadTemplate;
+    /**
+     * The Permission update template.
+     */
     final SecureServicePermission permissionUpdateTemplate;
+    /**
+     * The Permission read tosca.
+     */
     final SecureServicePermission permissionReadTosca;
+    /**
+     * The Permission update tosca.
+     */
     final SecureServicePermission permissionUpdateTosca;
 
     private final CldsDao cldsDao;
@@ -110,17 +140,40 @@ public class CldsService extends SecureServiceBase {
     @Autowired
     private HttpServletRequest request;
 
+    /**
+     * Instantiates a new Clds service.
+     *
+     * @param cldsDao                    the clds dao
+     * @param cldsBpmnTransformer        the clds bpmn transformer
+     * @param refProp                    the ref prop
+     * @param dcaeDispatcherServices     the dcae dispatcher services
+     * @param dcaeInventoryServices      the dcae inventory services
+     * @param cldsPersmissionTypeCl      the clds persmission type cl
+     * @param cldsPermissionTypeClManage the clds permission type cl manage
+     * @param cldsPermissionTypeClEvent  the clds permission type cl event
+     * @param cldsPermissionTypeFilterVf the clds permission type filter vf
+     * @param cldsPermissionTypeTemplate the clds permission type template
+     * @param cldsPermissionTypeTosca    the clds permission type tosca
+     * @param cldsPermissionInstance     the clds permission instance
+     */
     @Autowired
     public CldsService(CldsDao cldsDao, XslTransformer cldsBpmnTransformer, ClampProperties refProp,
         DcaeDispatcherServices dcaeDispatcherServices,
         DcaeInventoryServices dcaeInventoryServices,
-        @Value("${clamp.config.security.permission.type.cl:permission-type-cl}") String cldsPersmissionTypeCl,
-        @Value("${clamp.config.security.permission.type.cl.manage:permission-type-cl-manage}") String cldsPermissionTypeClManage,
-        @Value("${clamp.config.security.permission.type.cl.event:permission-type-cl-event}") String cldsPermissionTypeClEvent,
-        @Value("${clamp.config.security.permission.type.filter.vf:permission-type-filter-vf}") String cldsPermissionTypeFilterVf,
-        @Value("${clamp.config.security.permission.type.template:permission-type-template}") String cldsPermissionTypeTemplate,
-        @Value("${clamp.config.security.permission.type.tosca:permission-type-tosca}") String cldsPermissionTypeTosca,
-        @Value("${clamp.config.security.permission.instance:dev}") String cldsPermissionInstance) {
+        @Value("${clamp.config.security.permission.type.cl:permission-type-cl}")
+                                   String cldsPersmissionTypeCl,
+        @Value("${clamp.config.security.permission.type.cl.manage:permission-type-cl-manage}")
+                                   String cldsPermissionTypeClManage,
+        @Value("${clamp.config.security.permission.type.cl.event:permission-type-cl-event}")
+                                   String cldsPermissionTypeClEvent,
+        @Value("${clamp.config.security.permission.type.filter.vf:permission-type-filter-vf}")
+                                   String cldsPermissionTypeFilterVf,
+        @Value("${clamp.config.security.permission.type.template:permission-type-template}")
+                                   String cldsPermissionTypeTemplate,
+        @Value("${clamp.config.security.permission.type.tosca:permission-type-tosca}")
+                                   String cldsPermissionTypeTosca,
+        @Value("${clamp.config.security.permission.instance:dev}")
+                                   String cldsPermissionInstance) {
         this.cldsDao = cldsDao;
         this.cldsBpmnTransformer = cldsBpmnTransformer;
         this.refProp = refProp;
@@ -141,8 +194,9 @@ public class CldsService extends SecureServiceBase {
             "update");
     }
 
-    /*
-     * @return list of CLDS-Monitoring-Details: CLOSELOOP_NAME | Close loop name
+    /**
+     * Gets clds details.
+     * list of CLDS-Monitoring-Details: CLOSELOOP_NAME | Close loop name
      * used in the CLDS application (prefix: ClosedLoop- + unique ClosedLoop ID)
      * MODEL_NAME | Model Name in CLDS application SERVICE_TYPE_ID | TypeId returned
      * from the DCAE application when the ClosedLoop is submitted
@@ -150,11 +204,12 @@ public class CldsService extends SecureServiceBase {
      * generated when the ClosedLoop is deployed in DCAE. TEMPLATE_NAME | Template
      * used to generate the ClosedLoop model. ACTION_CD | Current state of the
      * ClosedLoop in CLDS application.
+     * @return the clds details
      */
     public List<CldsMonitoringDetails> getCldsDetails() {
         util.entering(request, "CldsService: GET model details");
         Date startTime = new Date();
-        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
+        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsDao.getCldsMonitoringDetails();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("GET cldsDetails completed");
@@ -162,9 +217,11 @@ public class CldsService extends SecureServiceBase {
         return cldsMonitoringDetailsList;
     }
 
-    /*
+    /**
+     * Gets clds info.
      * CLDS IFO service will return 3 things 1. User Name 2. CLDS code version that
      * is currently installed from pom.xml file 3. User permissions
+     * @return the clds info
      */
     public CldsInfo getCldsInfo() {
         util.entering(request, "CldsService: GET cldsInfo");
@@ -186,7 +243,7 @@ public class CldsService extends SecureServiceBase {
      * This is subset of the json getModel. This is only expected to be used for
      * testing purposes, not by the UI.
      *
-     * @param modelName
+     * @param modelName the model name
      * @return bpmn xml text - content of bpmn given name
      */
     public String getBpmnXml(String modelName) {
@@ -207,7 +264,7 @@ public class CldsService extends SecureServiceBase {
      * This is subset of the json getModel. This is only expected to be used for
      * testing purposes, not by the UI.
      *
-     * @param modelName
+     * @param modelName the model name
      * @return image xml text - content of image given name
      */
     public String getImageXml(String modelName) {
@@ -226,7 +283,7 @@ public class CldsService extends SecureServiceBase {
     /**
      * REST service that retrieves a CLDS model by name from the database.
      *
-     * @param modelName
+     * @param modelName the model name
      * @return clds model - clds model for the given model name
      */
     public CldsModel getModel(String modelName) {
@@ -266,7 +323,9 @@ public class CldsService extends SecureServiceBase {
     /**
      * REST service that saves a CLDS model by name in the database.
      *
-     * @param modelName
+     * @param modelName the model name
+     * @param cldsModel the clds model
+     * @return the clds model
      */
     public CldsModel putModel(String modelName, CldsModel cldsModel) {
         util.entering(request, "CldsService: PUT model");
@@ -322,19 +381,13 @@ public class CldsService extends SecureServiceBase {
     /**
      * REST service that saves and processes an action for a CLDS model by name.
      *
-     * @param action
-     * @param modelName
-     * @param test
-     * @param model
-     * @return
-     * @throws TransformerException
-     *         In case of issues when doing the XSLT of the BPMN flow
-     * @throws ParseException
-     *         In case of issues when parsing the JSON
-     * @throws GeneralSecurityException
-     *         In case of issues when decrypting the password
-     * @throws DecoderException
-     *         In case of issues with the Hex String decoding
+     * @param action    the action
+     * @param modelName the model name
+     * @param test      the test
+     * @param model     the model
+     * @return response entity
+     * @throws TransformerException In case of issues when doing the XSLT of the BPMN flow
+     * @throws ParseException       In case of issues when parsing the JSON
      */
     public ResponseEntity<?> putModelAndProcessAction(String action, String modelName, String test, CldsModel model)
         throws TransformerException, ParseException {
@@ -418,8 +471,9 @@ public class CldsService extends SecureServiceBase {
     /**
      * REST service that accepts events for a model.
      *
-     * @param test
-     * @param dcaeEvent
+     * @param test      the test
+     * @param dcaeEvent the dcae event
+     * @return the string
      */
     public String postDcaeEvent(String test, DcaeEvent dcaeEvent) {
         util.entering(request, "CldsService: Post dcae event");
@@ -462,10 +516,10 @@ public class CldsService extends SecureServiceBase {
     }
 
     /**
-     * REST service that retrieves total properties required by UI
+     * REST service that retrieves total properties required by UI.
      *
-     * @throws IOException
-     *         In case of issues
+     * @return the sdc properties
+     * @throws IOException In case of issues
      */
     public String getSdcProperties() throws IOException {
         return refProp.getJsonTemplate(GLOBAL_PROPERTIES_KEY).toString();
@@ -476,9 +530,8 @@ public class CldsService extends SecureServiceBase {
      * Determine if the user is authorized for a particular VF by its invariant
      * UUID.
      *
-     * @param vfInvariantUuid
-     * @throws NotAuthorizedException
-     * @return
+     * @param vfInvariantUuid the vf invariant uuid
+     * @return boolean or throws NotAuthorizedException
      */
     public boolean isAuthorizedForVf(String vfInvariantUuid) {
         if (cldsPermissionTypeFilterVf != null && !cldsPermissionTypeFilterVf.isEmpty()) {
@@ -497,7 +550,7 @@ public class CldsService extends SecureServiceBase {
      * Determine if the user is authorized for a particular VF by its invariant
      * UUID. If not authorized, then NotAuthorizedException is thrown.
      *
-     * @param model
+     * @param model The clds model
      * @return
      */
     private boolean isAuthorizedForVf(CldsModel model) {
@@ -510,6 +563,13 @@ public class CldsService extends SecureServiceBase {
         }
     }
 
+    /**
+     * Deploy model response entity.
+     *
+     * @param modelName the model name
+     * @param model     the model
+     * @return the response entity
+     */
     public ResponseEntity<CldsModel> deployModel(String modelName, CldsModel model) {
         util.entering(request, "CldsService: Deploy model");
         Date startTime = new Date();
@@ -559,6 +619,13 @@ public class CldsService extends SecureServiceBase {
         }
     }
 
+    /**
+     * Un deploy model response entity.
+     *
+     * @param modelName the model name
+     * @param model     the model
+     * @return the response entity
+     */
     public ResponseEntity<CldsModel> unDeployModel(String modelName, CldsModel model) {
         util.entering(request, "CldsService: Undeploy model");
         Date startTime = new Date();
@@ -642,6 +709,11 @@ public class CldsService extends SecureServiceBase {
         }
     }
 
+    /**
+     * Sets logging util.
+     *
+     * @param utilP the util p
+     */
     // Created for the integration test
     public void setLoggingUtil(LoggingUtils utilP) {
         util = utilP;

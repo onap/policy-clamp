@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,31 +29,91 @@ import org.onap.clamp.clds.dao.CldsDao;
  * Represent a CLDS Event.
  */
 public class CldsEvent {
+    /**
+     * The constant ACTION_TEST.
+     */
     public static final String ACTION_TEST = "TEST";
+    /**
+     * The constant ACTION_CREATE.
+     */
     public static final String ACTION_CREATE = "CREATE";
+    /**
+     * The constant ACTION_MODIFY.
+     */
     public static final String ACTION_MODIFY = "MODIFY";
+    /**
+     * The constant ACTION_SUBMIT.
+     */
     public static final String ACTION_SUBMIT = "SUBMIT";
+    /**
+     * The constant ACTION_RESUBMIT.
+     */
     // an update before model is active
     public static final String ACTION_RESUBMIT = "RESUBMIT";
+    /**
+     * The constant ACTION_SUBMITDCAE.
+     */
     // For simplified models
     public static final String ACTION_SUBMITDCAE = "SUBMITDCAE";
+    /**
+     * The constant ACTION_SUBMITPOLICY.
+     */
     public static final String ACTION_SUBMITPOLICY = "SUBMITPOLICY";
+    /**
+     * The constant ACTION_DISTRIBUTE.
+     */
     // only from dcae
     public static final String ACTION_DISTRIBUTE = "DISTRIBUTE";
+    /**
+     * The constant ACTION_DEPLOY.
+     */
     // only from dcae
     public static final String ACTION_DEPLOY = "DEPLOY";
+    /**
+     * The constant ACTION_UNDEPLOY.
+     */
     // only from dcae
     public static final String ACTION_UNDEPLOY = "UNDEPLOY";
+    /**
+     * The constant ACTION_UPDATE.
+     */
     public static final String ACTION_UPDATE = "UPDATE";
+    /**
+     * The constant ACTION_DELETE.
+     */
     public static final String ACTION_DELETE = "DELETE";
+    /**
+     * The constant ACTION_STOP.
+     */
     public static final String ACTION_STOP = "STOP";
+    /**
+     * The constant ACTION_RESTART.
+     */
     public static final String ACTION_RESTART = "RESTART";
 
+    /**
+     * The constant ACTION_STATE_INITIATED.
+     */
     public static final String ACTION_STATE_INITIATED = "INITIATED";
+    /**
+     * The constant ACTION_STATE_SENT.
+     */
     public static final String ACTION_STATE_SENT = "SENT";
+    /**
+     * The constant ACTION_STATE_COMPLETED.
+     */
     public static final String ACTION_STATE_COMPLETED = "COMPLETED";
+    /**
+     * The constant ACTION_STATE_RECEIVED.
+     */
     public static final String ACTION_STATE_RECEIVED = "RECEIVED";
+    /**
+     * The constant ACTION_STATE_ERROR.
+     */
     public static final String ACTION_STATE_ERROR = "ERROR";
+    /**
+     * The constant ACTION_STATE_ANY.
+     */
     public static final String ACTION_STATE_ANY = null;
 
     private String id;
@@ -62,22 +122,34 @@ public class CldsEvent {
     private String processInstanceId;
     private String userid;
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * @param cldsDao
-     * @param controlName
-     * @param userid
-     * @param actionCd
-     * @param actionStateCd
-     * @param processInstanceId
-     * @return
+     * Ins event clds event.
+     *
+     * @param cldsDao           the clds dao
+     * @param controlName       the control name
+     * @param userid            the userid
+     * @param actionCd          the action cd
+     * @param actionStateCd     the action state cd
+     * @param processInstanceId the process instance id
+     * @return clds event
      */
     public static CldsEvent insEvent(CldsDao cldsDao, String controlName, String userid, String actionCd,
         String actionStateCd, String processInstanceId) {
@@ -89,13 +161,13 @@ public class CldsEvent {
      * Insert event using controlNameUuid to find the model. This method meant for
      * processing events from dcae.
      *
-     * @param cldsDao
-     * @param model
-     * @param userId
-     * @param actionCd
-     * @param actionStateCd
-     * @param processInstanceId
-     * @return
+     * @param cldsDao           the clds dao
+     * @param model             the model
+     * @param userId            the user id
+     * @param actionCd          the action cd
+     * @param actionStateCd     the action state cd
+     * @param processInstanceId the process instance id
+     * @return clds event
      */
     public static CldsEvent insEvent(CldsDao cldsDao, CldsModel model, String userId, String actionCd,
         String actionStateCd, String processInstanceId) {
@@ -112,8 +184,8 @@ public class CldsEvent {
      * Check if actionCd is equal to the supplied checkActionCd checkActionCd should
      * not be null.
      *
-     * @param checkActionCd
-     * @return
+     * @param checkActionCd the check action cd
+     * @return boolean
      */
     public boolean isActionCd(String checkActionCd) {
         if (actionCd == null) {
@@ -127,9 +199,9 @@ public class CldsEvent {
      * and checkActionStateCd. Treat checkActionStateCd == null as a wildcard
      * checkActionCd should not be null.
      *
-     * @param checkActionCd
-     * @param checkActionStateCd
-     * @return
+     * @param checkActionCd      the check action cd
+     * @param checkActionStateCd the check action state cd
+     * @return boolean
      */
     public boolean isActionAndStateCd(String checkActionCd, String checkActionStateCd) {
         if (actionCd == null) {
@@ -147,14 +219,16 @@ public class CldsEvent {
      * Check if actionStateCd is equal to the supplied checkActionStateCd.
      * checkActionCd should not be null.
      *
-     * @param checkActionStateCd
-     * @return
+     * @param checkActionStateCd the check action state cd
+     * @return boolean
      */
     public boolean isActionStateCd(String checkActionStateCd) {
         return !(checkActionStateCd == null || actionStateCd == null) && actionStateCd.equals(checkActionStateCd);
     }
 
     /**
+     * Gets action cd.
+     *
      * @return the actionCd
      */
     public String getActionCd() {
@@ -162,14 +236,17 @@ public class CldsEvent {
     }
 
     /**
-     * @param actionCd
-     *        the actionCd to set
+     * Sets action cd.
+     *
+     * @param actionCd the actionCd to set
      */
     public void setActionCd(String actionCd) {
         this.actionCd = actionCd;
     }
 
     /**
+     * Gets action state cd.
+     *
      * @return the actionStateCd
      */
     public String getActionStateCd() {
@@ -177,14 +254,17 @@ public class CldsEvent {
     }
 
     /**
-     * @param actionStateCd
-     *        the actionStateCd to set
+     * Sets action state cd.
+     *
+     * @param actionStateCd the actionStateCd to set
      */
     public void setActionStateCd(String actionStateCd) {
         this.actionStateCd = actionStateCd;
     }
 
     /**
+     * Gets process instance id.
+     *
      * @return the processInstanceId
      */
     public String getProcessInstanceId() {
@@ -192,14 +272,17 @@ public class CldsEvent {
     }
 
     /**
-     * @param processInstanceId
-     *        the processInstanceId to set
+     * Sets process instance id.
+     *
+     * @param processInstanceId the processInstanceId to set
      */
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId;
     }
 
     /**
+     * Gets userid.
+     *
      * @return the userid
      */
     public String getUserid() {
@@ -207,8 +290,9 @@ public class CldsEvent {
     }
 
     /**
-     * @param userid
-     *        the userid to set
+     * Sets userid.
+     *
+     * @param userid the userid to set
      */
     public void setUserid(String userid) {
         this.userid = userid;

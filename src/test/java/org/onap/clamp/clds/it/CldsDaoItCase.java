@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -150,7 +150,7 @@ public class CldsDaoItCase {
     @Test
     public void testGetCldsMonitoringDetails() {
         List<CldsMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CldsMonitoringDetails>();
-        cldsMonitoringDetailsList = cldsDao.getCLDSMonitoringDetails();
+        cldsMonitoringDetailsList = cldsDao.getCldsMonitoringDetails();
         cldsMonitoringDetailsList.forEach(clName -> {
             logger.info(clName.getCloseloopName());
             assertNotNull(clName.getCloseloopName());

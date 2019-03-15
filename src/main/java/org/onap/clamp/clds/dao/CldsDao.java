@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -84,7 +84,7 @@ public class CldsDao {
     private static final String DATE_FORMAT = "MM-dd-yyyy HH:mm:ss";
 
     /**
-     * Log message when instantiating
+     * Log message when instantiating.
      */
     public CldsDao() {
         logger.info("CldsDao instantiating...");
@@ -92,6 +92,8 @@ public class CldsDao {
 
     /**
      * When dataSource is provided, instantiate spring jdbc objects.
+     *
+     * @param dataSource the data source
      */
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplateObject = new JdbcTemplate(dataSource);
@@ -114,16 +116,12 @@ public class CldsDao {
 
     /**
      * Get a model from the database given the model name.
+     *
+     * @param modelName the model name
+     * @return the model
      */
     public CldsModel getModel(String modelName) {
         return getModel(modelName, null);
-    }
-
-    /**
-     * Get a model from the database given the controlNameUuid.
-     */
-    public CldsModel getModelByUuid(String controlNameUuid) {
-        return getModel(null, controlNameUuid);
     }
 
     // Get a model from the database given the model name or a controlNameUuid.
@@ -138,11 +136,21 @@ public class CldsDao {
     }
 
     /**
+     * Get a model from the database given the controlNameUuid.
+     *
+     * @param controlNameUuid the control name uuid
+     * @return the model by uuid
+     */
+    public CldsModel getModelByUuid(String controlNameUuid) {
+        return getModel(null, controlNameUuid);
+    }
+    /**
      * Get a model and template information from the database given the model name.
      *
-     * @param modelName
-     * @return model
+     * @param modelName the model name
+     * @return model model template
      */
+
     public CldsModel getModelTemplate(String modelName) {
         CldsModel model = new CldsModel();
         model.setName(modelName);
@@ -171,9 +179,9 @@ public class CldsDao {
      * Update model in the database using parameter values and return updated model
      * object.
      *
-     * @param model
-     * @param userid
-     * @return
+     * @param model  the model
+     * @param userid the userid
+     * @return model
      */
     public CldsModel setModel(CldsModel model, String userid) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", model.getName())
@@ -200,9 +208,8 @@ public class CldsDao {
      * Inserts new modelInstance in the database using parameter values and return
      * updated model object.
      *
-     * @param model
-     * @param modelInstancesList
-     * @return
+     * @param model              the model
+     * @param modelInstancesList the model instances list
      */
     public void insModelInstance(CldsModel model, List<CldsModelInstance> modelInstancesList) {
         // Delete all existing model instances for given controlNameUUID
@@ -234,11 +241,11 @@ public class CldsDao {
      * Insert an event in the database - require either modelName or
      * controlNamePrefix/controlNameUuid.
      *
-     * @param modelName
-     * @param controlNamePrefix
-     * @param controlNameUuid
-     * @param cldsEvent
-     * @return
+     * @param modelName         the model name
+     * @param controlNamePrefix the control name prefix
+     * @param controlNameUuid   the control name uuid
+     * @param cldsEvent         the clds event
+     * @return clds event
      */
     public CldsEvent insEvent(String modelName, String controlNamePrefix, String controlNameUuid, CldsEvent cldsEvent) {
         CldsEvent event = new CldsEvent();
@@ -261,8 +268,8 @@ public class CldsDao {
     /**
      * Update event with process instance id.
      *
-     * @param eventId
-     * @param processInstanceId
+     * @param eventId           the event id
+     * @param processInstanceId the process instance id
      */
     public void updEvent(String eventId, String processInstanceId) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_event_id", eventId)
@@ -271,7 +278,7 @@ public class CldsDao {
     }
 
     /**
-     * Return list of model names
+     * Return list of model names.
      *
      * @return model names
      */
@@ -284,8 +291,8 @@ public class CldsDao {
      * Update template in the database using parameter values and return updated
      * template object.
      *
-     * @param template
-     * @param userid
+     * @param template the template
+     * @param userid   the userid
      */
     public void setTemplate(CldsTemplate template, String userid) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_template_name", template.getName())
@@ -303,7 +310,7 @@ public class CldsDao {
     }
 
     /**
-     * Return list of template names
+     * Return list of template names.
      *
      * @return template names
      */
@@ -315,8 +322,8 @@ public class CldsDao {
     /**
      * Get a template from the database given the model name.
      *
-     * @param templateName
-     * @return model
+     * @param templateName the template name
+     * @return model template
      */
     public CldsTemplate getTemplate(String templateName) {
         CldsTemplate template = new CldsTemplate();
@@ -345,6 +352,9 @@ public class CldsDao {
         }
     }
 
+    /**
+     * Do health check.
+     */
     public void doHealthCheck() {
         jdbcTemplateObject.execute(HEALTHCHECK);
     }
@@ -356,7 +366,8 @@ public class CldsDao {
      */
     public List<CldsModelProp> getDeployedModelProperties() {
         List<CldsModelProp> cldsModelPropList = new ArrayList<>();
-        String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, model_properties mp, event e "
+        String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, "
+                + "model_properties mp, event e "
             + "WHERE m.model_prop_id = mp.model_prop_id and m.event_id = e.event_id and e.action_cd = 'DEPLOY'";
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
         CldsModelProp cldsModelProp = null;
@@ -383,10 +394,11 @@ public class CldsDao {
      *         TEMPLATE_NAME | Template used to generate the ClosedLoop model.
      *         ACTION_CD | Current state of the ClosedLoop in CLDS application.
      */
-    public List<CldsMonitoringDetails> getCLDSMonitoringDetails() {
+    public List<CldsMonitoringDetails> getCldsMonitoringDetails() {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<>();
-        String modelsSql = "SELECT CONCAT(M.CONTROL_NAME_PREFIX, M.CONTROL_NAME_UUID) AS CLOSELOOP_NAME , M.MODEL_NAME, M.SERVICE_TYPE_ID, M.DEPLOYMENT_ID, T.TEMPLATE_NAME, E.ACTION_CD, E.USER_ID, E.TIMESTAMP "
+        String modelsSql = "SELECT CONCAT(M.CONTROL_NAME_PREFIX, M.CONTROL_NAME_UUID) AS CLOSELOOP_NAME , "
+            + "M.MODEL_NAME, M.SERVICE_TYPE_ID, M.DEPLOYMENT_ID, T.TEMPLATE_NAME, E.ACTION_CD, E.USER_ID, E.TIMESTAMP "
             + "FROM MODEL M, TEMPLATE T, EVENT E " + "WHERE M.TEMPLATE_ID = T.TEMPLATE_ID AND M.EVENT_ID = E.EVENT_ID "
             + "ORDER BY ACTION_CD";
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
@@ -409,7 +421,7 @@ public class CldsDao {
     /**
      * Method to delete model from database.
      *
-     * @param modelName
+     * @param modelName the model name
      */
     public void deleteModel(String modelName) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName);
@@ -440,7 +452,6 @@ public class CldsDao {
     /**
      * Method to retrieve a tosca models by Policy Type from database.
      *
-     * @param policyType
      * @return List of CldsToscaModel
      */
     public List<CldsToscaModel> getAllToscaModels() {
@@ -450,7 +461,7 @@ public class CldsDao {
     /**
      * Method to retrieve a tosca models by Policy Type from database.
      *
-     * @param policyType
+     * @param policyType the policy type
      * @return List of CldsToscaModel
      */
     public List<CldsToscaModel> getToscaModelByPolicyType(String policyType) {
@@ -460,7 +471,7 @@ public class CldsDao {
     /**
      * Method to retrieve a tosca models by toscaModelName, version from database.
      *
-     * @param policyType
+     * @param toscaModelName the tosca model name
      * @return List of CldsToscaModel
      */
     public List<CldsToscaModel> getToscaModelByName(String toscaModelName) {
@@ -473,12 +484,15 @@ public class CldsDao {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsToscaModel> cldsToscaModels = new ArrayList<>();
 
-        String toscaModelSql = "SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp, tmr.lastUpdatedTimestamp "
+        String toscaModelSql = "SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, "
+            + "tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp, "
+            + "tmr.lastUpdatedTimestamp "
             + ((toscaModelName != null) ? (", tmr.tosca_model_yaml ") : " ")
             + "FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id "
             + ((toscaModelName != null) ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : " ")
             + ((policyType != null) ? (" AND tm.policy_type = '" + policyType + "'") : " ")
-            + "AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id=st.tosca_model_id)";
+            + "AND tmr.version = (select max(version) from tosca_model_revision st "
+            + "where tmr.tosca_model_id=st.tosca_model_id)";
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(toscaModelSql);
 
@@ -504,12 +518,11 @@ public class CldsDao {
     }
 
     /**
-     * Method to upload a new version of Tosca Model Yaml in Database
+     * Method to upload a new version of Tosca Model Yaml in Database.
      *
-     * @param cldsToscaModel
-     * @param userId
-     * @return CldsToscaModel
-     *
+     * @param cldsToscaModel the clds tosca model
+     * @param userId         the user id
+     * @return CldsToscaModel clds tosca model
      */
     public CldsToscaModel updateToscaModelWithNewVersion(CldsToscaModel cldsToscaModel, String userId) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_tosca_model_id", cldsToscaModel.getId())
@@ -524,9 +537,9 @@ public class CldsDao {
     /**
      * Method to upload a new Tosca model Yaml in DB. Default version is 1.0
      *
-     * @param cldsToscaModel
-     * @param userId
-     * @return CldsToscaModel
+     * @param cldsToscaModel the clds tosca model
+     * @param userId         the user id
+     * @return CldsToscaModel clds tosca model
      */
     public CldsToscaModel insToscaModel(CldsToscaModel cldsToscaModel, String userId) {
         SqlParameterSource in = new MapSqlParameterSource()
@@ -543,9 +556,9 @@ public class CldsDao {
     }
 
     /**
-     * Method to insert a new Dictionary in Database
+     * Method to insert a new Dictionary in Database.
      *
-     * @param cldsDictionary
+     * @param cldsDictionary the clds dictionary
      */
     public void insDictionary(CldsDictionary cldsDictionary) {
         SqlParameterSource in = new MapSqlParameterSource()
@@ -556,11 +569,11 @@ public class CldsDao {
     }
 
     /**
-     * Method to update Dictionary with new info in Database
+     * Method to update Dictionary with new info in Database.
      *
-     * @param dictionaryId
-     * @param cldsDictionary
-     * @param userId
+     * @param dictionaryId   the dictionary id
+     * @param cldsDictionary the clds dictionary
+     * @param userId         the user id
      */
     public void updateDictionary(String dictionaryId, CldsDictionary cldsDictionary, String userId) {
 
@@ -571,16 +584,17 @@ public class CldsDao {
     }
 
     /**
-     * Method to get list of Dictionaries from the Database
+     * Method to get list of Dictionaries from the Database.
      *
-     * @param dictionaryId
-     * @param dictionaryName
-     * @return
+     * @param dictionaryId   the dictionary id
+     * @param dictionaryName the dictionary name
+     * @return dictionary
      */
     public List<CldsDictionary> getDictionary(String dictionaryId, String dictionaryName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionary> dictionaries = new ArrayList<>();
-        String dictionarySql = "SELECT dictionary_id, dictionary_name, created_by, modified_by, timestamp FROM dictionary"
+        String dictionarySql = "SELECT dictionary_id, dictionary_name, created_by, modified_by, "
+            + "timestamp FROM dictionary"
             + ((dictionaryId != null || dictionaryName != null)
                 ? (" WHERE " + ((dictionaryName != null) ? ("dictionary_name = '" + dictionaryName + "'") : "")
                     + ((dictionaryId != null && dictionaryName != null) ? (" AND ") : "")
@@ -604,10 +618,10 @@ public class CldsDao {
     }
 
     /**
-     * Method to insert a new Dictionary Element for given dictionary in Database
+     * Method to insert a new Dictionary Element for given dictionary in Database.
      *
-     * @param cldsDictionaryItem
-     * @param userId
+     * @param cldsDictionaryItem the clds dictionary item
+     * @param userId             the user id
      */
     public void insDictionarElements(CldsDictionaryItem cldsDictionaryItem, String userId) {
         SqlParameterSource in = new MapSqlParameterSource()
@@ -622,11 +636,11 @@ public class CldsDao {
 
     /**
      * Method to update Dictionary Elements with new info for a given dictionary in
-     * Database
+     * Database.
      *
-     * @param dictionaryElementId
-     * @param cldsDictionaryItem
-     * @param userId
+     * @param dictionaryElementId the dictionary element id
+     * @param cldsDictionaryItem  the clds dictionary item
+     * @param userId              the user id
      */
     public void updateDictionaryElements(String dictionaryElementId, CldsDictionaryItem cldsDictionaryItem,
         String userId) {
@@ -643,18 +657,20 @@ public class CldsDao {
 
     /**
      * Method to get list of all dictionary elements for a given dictionary in the
-     * Database
+     * Database.
      *
-     * @param dictionaryName
-     * @param dictionaryId
-     * @param dictElementShortName
-     * @return
+     * @param dictionaryName       the dictionary name
+     * @param dictionaryId         the dictionary id
+     * @param dictElementShortName the dict element short name
+     * @return dictionary elements
      */
     public List<CldsDictionaryItem> getDictionaryElements(String dictionaryName, String dictionaryId,
         String dictElementShortName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionaryItem> dictionaryItems = new ArrayList<>();
-        String dictionarySql = "SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, de.modified_by, de.timestamp  "
+        String dictionarySql = "SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, "
+            + "de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, "
+            + "de.modified_by, de.timestamp  "
             + "FROM dictionary_elements de, dictionary d WHERE de.dictionary_id = d.dictionary_id "
             + ((dictionaryId != null) ? (" AND d.dictionary_id = '" + dictionaryId + "'") : "")
             + ((dictElementShortName != null) ? (" AND de.dict_element_short_name = '" + dictElementShortName + "'")
@@ -683,9 +699,9 @@ public class CldsDao {
 
     /**
      * Method to get Map of all dictionary elements with key as dictionary short
-     * name and value as the full name
+     * name and value as the full name.
      *
-     * @param dictionaryElementType
+     * @param dictionaryElementType the dictionary element type
      * @return Map of dictionary elements as key value pair
      */
     public Map<String, String> getDictionaryElementsByType(String dictionaryElementType) {
