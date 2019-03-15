@@ -47,8 +47,7 @@ public class ToscaYamlToJsonConvertorTest {
 
         String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml);
         assertNotNull(parsedJsonSchema);
-        JSONAssert.assertEquals(
-            ResourceFileUtil.getResourceAsString("example/json-editor-schema/tca-policy-json-editor-schema.json"),
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json.json"),
             parsedJsonSchema, true);
     }
 }

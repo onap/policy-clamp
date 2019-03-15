@@ -135,7 +135,7 @@ public class CsarInstallerItCase {
 
         // Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
         Mockito.when(csarHandler.getPolicyModelYaml())
-            .thenReturn(Optional.ofNullable(ResourceFileUtil.getResourceAsString("tosca/tca-policy-test.yaml")));
+            .thenReturn(Optional.ofNullable(ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml")));
         return csarHandler;
     }
 
@@ -173,6 +173,7 @@ public class CsarInstallerItCase {
         assertThat(loop.getSvgRepresentation()).startsWith("<svg ");
         assertThat(loop.getGlobalPropertiesJson().get("dcaeDeployParameters")).isNotNull();
         assertThat(loop.getMicroServicePolicies()).hasSize(1);
+
         assertThat(loop.getOperationalPolicies()).hasSize(1);
         assertThat(loop.getModelPropertiesJson().get("serviceDetails")).isNotNull();
         assertThat(loop.getModelPropertiesJson().get("resourceDetails")).isNotNull();
