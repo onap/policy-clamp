@@ -35,4 +35,16 @@ app.service('toscaModelService', ['alertService','$http', '$q', '$rootScope', fu
 			return response.data;
 		});
 	};
+	
+	this.saveMsProperties = function(form) {
+		 var loopName = getLoopName();
+		 var def = $q.defer();
+		 var svcUrl = "/restservices/clds/v2/loop/updateMicroservicePolicies/" + loopName;
+		 $http.post(svcUrl, form).success(function(data) {
+			 def.resolve(data);
+		 }).error(function(data) {
+			 def.reject("Save Model not successful");
+		 });
+	    return def.promise;
+	};
  }]);

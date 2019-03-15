@@ -86,6 +86,13 @@ public class LoopService {
         return loopsRepository.save(loop);
     }
 
+    MicroServicePolicy updateMicroservicePolicy(String loopName, MicroServicePolicy newMicroservicePolicy) {
+    	Loop loop = findClosedLoopByName(loopName);
+        MicroServicePolicy newPolicies = microservicePolicyService
+                .getAndUpdateMicroServicePolicy(loop, newMicroservicePolicy);
+        return newPolicies;
+    }
+
     private Loop updateOperationalPolicies(Loop loop, List<OperationalPolicy> newOperationalPolicies) {
         Set<OperationalPolicy> newPolicies = operationalPolicyService
                 .updatePolicies(loop, newOperationalPolicies);

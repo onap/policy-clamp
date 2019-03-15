@@ -46,4 +46,16 @@ app.service('svnservice', ['$http', '$q', function ($http, $q) {
         
         return def.promise;
     };
+    
+ 	this.saveOpPolicyProperties = function(form) {
+ 		var modelName = getLoopName();
+ 	   	 var def = $q.defer();
+ 	   	 var svcUrl = "/restservices/clds/v2/loop/updateOperationalPolicies/" + modelName;
+ 	   	 $http.post(svcUrl, form).success(function(data) {
+ 	   		 def.resolve(data);
+ 	   	 }).error(function(data) {
+ 	   		 def.reject("Save Operational Policy not successful");
+ 	   	 });
+ 	       return def.promise;
+ 	};
 }]);

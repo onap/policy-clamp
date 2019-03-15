@@ -28,67 +28,40 @@ function saveMsProperties(type, form) {
         	newMsProperties[p]["properties"] = form;
         }
     }
-
-	 var def = $q.defer();
-	 var sets = [];
-	 var svcUrl = "/restservices/clds/v2/loop/updateMicroservicePolicies/" + modelName;
-	 var svcRequest = {
-			 loopName : modelName,
-			 newMicroservicePolicies : newMsProperties
-	 };
-	 $http.post(svcUrl, svcRequest).success(function(data) {
-		 def.resolve(data);
-	 }).error(function(data) {
-		 def.reject("Save Model not successful");
-	 });
-    cl_props["microServicePolicies"] = newMsProperties;
-    return def.promise;
 }
 
-function saveGlobalProperties(form) {
-	 var def = $q.defer();
-	 var sets = [];
-	 var svcUrl = "/restservices/clds/v2/loop/globalProperties/" + modelName;
-	 var svcRequest = {
-			 loopName : modelName,
-			 newGlobalPolicies : form
-	 };
-	 $http.post(svcUrl, svcRequest).success(function(data) {
-		 def.resolve(data);
-	 }).error(function(data) {
-		 def.reject("Save Model not successful");
-	 });
+function updateGlobalProperties(form) {
     cl_props["globalPropertiesJson"] = form;
-    return def.promise;
 }
 
-function saveOpPolicyProperties(form) {
-	var newOpProperties = cl_props["operationalPolicies"];
-	newOpProperties["0"]["configurationsJson"]= form;
-	
-	var def = $q.defer();
-	 var sets = [];
-	 var svcUrl = "/restservices/clds/v2/loop/updateOperationalPolicies/" + modelName;
-	 var svcRequest = {
-			 loopName : modelName,
-			 newGlobalPolicies : newOpProperties
-	 };
-	 $http.post(svcUrl, svcRequest).success(function(data) {
-		 def.resolve(data);
-	 }).error(function(data) {
-		 def.reject("Save Model not successful");
-   });
-	
+function updateOpPolicyProperties(form) {	
    cl_props["operationalPolicies"] = newOpProperties;
-   return def.promise;
+}
+
+function getLoopName() {
+    return cl_props["name"];
 }
 
 function getOperationalPolicyProperty() {
     return cl_props["operationalPolicies"]["0"]["configurationsJson"];
 }
 
+function getOperationalPolicies() {
+    return cl_props["operationalPolicies"];
+}
+
 function getGlobalProperty() {
     return cl_props["globalPropertiesJson"];
+}
+
+function getMsJson(type) {
+    var msProperties = cl_props["microServicePolicies"];
+    for (p in msProperties) {
+        if (msProperties[p]["name"] == type) {
+           return msProperties[p];
+        }
+    }
+    return null;
 }
 
 function getMsProperty(type) {

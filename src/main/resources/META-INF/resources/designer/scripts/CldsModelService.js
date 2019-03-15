@@ -269,10 +269,7 @@ app
 			    $("#svgContainer svg").attr('height', '100%');
 			    $("#svgContainer").click(
 			    function(event) {
-				    console.log("svgContainer:" + $("#svgContainer svg"));
 				    var name = $($($($(event.target).parent()).parent()).parent()).attr("data-element-id")
-				    lastElementSelected = $($(event.target).parent()).attr(
-				    "data-element-id")
 				    checkIfElementType(name)
 			    });
 			}, function(data) {

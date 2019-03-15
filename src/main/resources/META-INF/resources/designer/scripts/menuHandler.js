@@ -64,8 +64,6 @@ function enableDefaultMenu() {
 	    } else {
 		    document.getElementById('Properties CL').classList
 		    .remove('ThisLink');
-		    document.getElementById('Revert Model Changes').classList
-		    .remove('ThisLink');
 		    document.getElementById('Close Model').classList
 		    .remove('ThisLink');
 		    document.getElementById('Refresh Status').classList

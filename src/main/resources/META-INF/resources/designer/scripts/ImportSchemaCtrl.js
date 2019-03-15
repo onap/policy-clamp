@@ -281,4 +281,16 @@ function($scope, $rootScope, $uibModalInstance, data, svnservice, fileUpload,
 			// $scope.name = 'You did not enter in your name!';
 		});
 	};
+
+	$scope.submitForm = function(obj) {
+		var operationalPolicies = getOperationalPolicies();
+		if (obj !== null) {
+			operationalPolicies[0]["configurationsJson"] = obj;
+		}
+ 		svnservice.saveOpPolicyProperties(operationalPolicies).then(function(pars) {
+ 			updateOpPolicyProperties(operationalPolicies);
+ 		}, function(data) {
+ 		});
+     };
+
 } ]);

@@ -86,14 +86,19 @@ app.controller('ToscaModelCtrl',
         }
 
         $scope.saveToscaProps = function(){
-        	var policyType = $rootScope.selectedBoxName.split('_')[0].toLowerCase();
-        	var data = $scope.getEditorData();
+        	var policyType = $rootScope.selectedBoxName;
+            var data = $scope.getEditorData();
 
             if(data !== null) {
-            	saveMsProperties(policyType,data);
-        		if($scope.editor) { $scope.editor.destroy(); $scope.editor = null; }
-        		$modalInstance.close('closed');
-        	}
+            	var msJson = getMsJson(policyType);
+            	msJson["properties"] = data;
+            	cldsModelService.saveMsProperties(msJson).then(function(pars) {
+            		saveMsProperties(policyType, data);
+            	}, function(data) {
+            	});
+            	if($scope.editor) { $scope.editor.destroy(); $scope.editor = null; }
+            	$modalInstance.close('closed');
+            }
         }
 
         $scope.displayErrorMessage = function(errors){

@@ -24,22 +24,23 @@ app.controller('GlobalPropertiesCtrl', [
 '$scope',
 '$rootScope',
 '$uibModalInstance',
+'$http',
+'$q',
 'cldsModelService',
 '$location',
 'dialogs',
-function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
+function($scope, $rootScope, $uibModalInstance, $http, $q, cldsModelService, $location,
          dialogs) {
 	$scope.$watch('name', function(newValue, oldValue) {
 
 		var el = getGlobalProperty();
 		if (el !== undefined) {
-			for (var i = 0; i < el.length; i++) {
-				if (el[i].name === 'deployParameters')
+			for (var key in el) {
+				if (key === 'dcaeDeployParameters')
 				{
-					// This is a special case, that value is not a string but a JSON
-					$("#" + el[i].name).val(JSON.stringify(el[i].value));
+					$("#" + key).val(JSON.stringify(el[key]));
 				} else {
-					$("#" + el[i].name).val(el[i].value);
+					$("#" + key).val(el[key]);
 				}
 			}
 		}
@@ -64,11 +65,13 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
 		$uibModalInstance.close("closed");
 	};
 
+
     function noRepeats(form) {
+    	
         var select = {};
         for (var i = 0; i < form.length; i++) {
 	        if (form[i].hasOwnProperty("name")) {
-		        if (form[i].name === 'deployParameters') {
+		        if (form[i].name === 'dcaeDeployParameters') {
 					// This is a special case, that value MUST not be a string but a JSON
 		        	select[form[i].name]=JSON.parse(form[i].value);
 		        } else {
@@ -91,8 +94,31 @@ function($scope, $rootScope, $uibModalInstance, cldsModelService, $location,
     }
     
     $scope.submitForm = function() {
-        saveGlobalProperties(noRepeats($("#saveProps").serializeArray()))
+       var form = noRepeats($("#saveProps").serializeArray());
+       var obj = {};
+		for( var i = 0; i < form.length; ++i ) {
+			var name = form[i].name;
+			var value = form[i].value;
+			if( name ) {
+				obj[ name ] = value;
+			}
+		}
+
+    	$scope.saveGlobalProperties(JSON.stringify(obj)).then(function(pars) {
+	        updateGlobalProperties(obj);
+		}, function(data) {
+		});
         $uibModalInstance.close();
-    }
-  
+    };
+	$scope.saveGlobalProperties = function(form) {
+		var modelName = getLoopName();
+	   	 var def = $q.defer();
+	   	 var svcUrl = "/restservices/clds/v2/loop/updateGlobalProperties/" + modelName;
+	   	 $http.post(svcUrl, form).success(function(data) {
+	   		 def.resolve(data);
+	   	 }).error(function(data) {
+	   		 def.reject("Save Model not successful");
+	   	 });
+	       return def.promise;
+	   };
 } ]);
