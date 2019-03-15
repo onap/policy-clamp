@@ -162,9 +162,15 @@
 
 		<repositories>
 				<repository>
-						<id>central</id>
-						<name>Maven 2 repository 2</name>
-						<url>http://repo2.maven.org/maven2/</url>
+					<id>onap-public</id>
+					<name>onap-public</name>
+					<url>https://nexus.onap.org/content/repositories/public/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
 				</repository>
 				<repository>
 						<id>ecomp-releases</id>
@@ -188,16 +194,27 @@
 						</releases>
 				</repository>
 				<repository>
-						<id>spring-repo</id>
-						<name>Spring repo</name>
-						<url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
-				</repository>
-				<repository>
-						<id>repository.jboss.org-public</id>
-						<name>JBoss.org Maven repository</name>
-						<url>https://repository.jboss.org/nexus/content/groups/public</url>
+					<id>central</id>
+					<url>http://repo1.maven.org/maven2/</url>
 				</repository>
 		</repositories>
+		<pluginRepositories>
+			<pluginRepository>
+				<id>onap-public</id>
+				<name>onap-public</name>
+				<url>https://nexus.onap.org/content/repositories/public/</url>
+				<releases>
+					<enabled>true</enabled>
+				</releases>
+				<snapshots>
+					<enabled>false</enabled>
+				</snapshots>
+			</pluginRepository>
+			<pluginRepository>
+				<id>central</id>
+				<url>http://repo1.maven.org/maven2/</url>
+			</pluginRepository>
+		</pluginRepositories>
 
 		<dependencyManagement>
 				<dependencies>
@@ -615,21 +632,7 @@
 					<scope>test</scope>
 				</dependency>
 		</dependencies>
-		<pluginRepositories>
-				<pluginRepository>
-						<id>central-for-plugins</id>
-						<name>Maven 2 repository 2</name>
-						<url>http://repo2.maven.org/maven2/</url>
-				</pluginRepository>
-				<pluginRepository>
-						<snapshots>
-								<enabled>false</enabled>
-						</snapshots>
-						<id>jcenter-releases-for-plugins</id>
-						<name>jcenter</name>
-						<url>http://jcenter.bintray.com</url>
-				</pluginRepository>
-		</pluginRepositories>
+
 		<build>
 				<finalName>clamp</finalName>
 
