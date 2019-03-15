@@ -21,11 +21,11 @@
  * 
  */
 
-function saveMsProperties(type, form) {
-	 var newMsProperties = cl_props["microServicePolicies"];
+function updateMsProperties(type, form) {
+    var newMsProperties = cl_props["microServicePolicies"];
     for (p in newMsProperties) {
         if (newMsProperties[p]["name"] == type) {
-        	newMsProperties[p]["properties"] = form;
+        	cl_props["microServicePolicies"][p] = form;
         }
     }
 }

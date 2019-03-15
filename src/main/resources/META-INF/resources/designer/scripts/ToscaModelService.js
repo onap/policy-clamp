@@ -39,7 +39,7 @@ app.service('toscaModelService', ['alertService','$http', '$q', '$rootScope', fu
 	this.saveMsProperties = function(form) {
 		 var loopName = getLoopName();
 		 var def = $q.defer();
-		 var svcUrl = "/restservices/clds/v2/loop/updateMicroservicePolicies/" + loopName;
+		 var svcUrl = "/restservices/clds/v2/loop/updateMicroservicePolicy/" + loopName;
 		 $http.post(svcUrl, form).success(function(data) {
 			 def.resolve(data);
 		 }).error(function(data) {

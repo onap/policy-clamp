@@ -149,7 +149,7 @@ public class LoopServiceTestItCase {
             newJsonRepresentation, null);
 
         //when
-        firstMicroServicePolicy.setJsonRepresentation(newJsonRepresentation);
+        firstMicroServicePolicy.setProperties(JsonUtils.GSON.fromJson("{\"name1\":\"value1\"}", JsonObject.class));
         Loop actualLoop = loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME,
             Lists.newArrayList(firstMicroServicePolicy, secondMicroServicePolicy));
 

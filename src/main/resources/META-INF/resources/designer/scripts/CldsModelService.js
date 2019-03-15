@@ -38,7 +38,7 @@ app
 	  		  }else if (name.toLowerCase().indexOf("policy") >= 0){
 	  				  PolicyWindow();
 	  		  } else {
-	  			  $rootScope.selectedBoxName = name.toLowerCase();
+	  			  $rootScope.selectedBoxName = name;
 	  			  ToscaModelWindow();
 	  		  }
 	    }

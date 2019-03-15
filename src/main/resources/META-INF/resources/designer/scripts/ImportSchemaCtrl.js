@@ -283,7 +283,7 @@ function($scope, $rootScope, $uibModalInstance, data, svnservice, fileUpload,
 	};
 
 	$scope.submitForm = function(obj) {
-		var operationalPolicies = getOperationalPolicies();
+		var operationalPolicies = JSON.parse(JSON.stringify(getOperationalPolicies()));
 		if (obj !== null) {
 			operationalPolicies[0]["configurationsJson"] = obj;
 		}

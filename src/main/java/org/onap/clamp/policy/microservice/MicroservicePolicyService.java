@@ -57,6 +57,7 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
         return repository.existsById(policyName);
     }
 
+    @Transactional
     public MicroServicePolicy getAndUpdateMicroServicePolicy(Loop loop, MicroServicePolicy policy) {
         return repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
             .orElse(new MicroServicePolicy(policy.getName(), policy.getPolicyTosca(), policy.getShared(),
@@ -65,7 +66,7 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,
         MicroServicePolicy newPolicy, Loop loop) {
-        oldPolicy.setJsonRepresentation(newPolicy.getJsonRepresentation());
+        oldPolicy.setProperties(newPolicy.getProperties());
         if (oldPolicy.getUsedByLoops().contains(loop)) {
             oldPolicy.getUsedByLoops().add(loop);
         }

@@ -64,7 +64,7 @@ app.controller('ToscaModelCtrl',
             if($rootScope.selectedBoxName) {
             	var policyType = $rootScope.selectedBoxName.split('_')[0].toLowerCase();
     	    	$scope.toscaModelName = policyType.toUpperCase() + " Microservice";
-    	    	$scope.jsonByPolicyType(policyType, '', '');
+    	    	$scope.jsonByPolicyType($rootScope.selectedBoxName, '', '');
             }
     	});
 
@@ -88,12 +88,11 @@ app.controller('ToscaModelCtrl',
         $scope.saveToscaProps = function(){
         	var policyType = $rootScope.selectedBoxName;
             var data = $scope.getEditorData();
-
             if(data !== null) {
-            	var msJson = getMsJson(policyType);
-            	msJson["properties"] = data;
-            	cldsModelService.saveMsProperties(msJson).then(function(pars) {
-            		saveMsProperties(policyType, data);
+            	var msJson = JSON.parse(JSON.stringify(getMsJson(policyType)));
+            	msJson["properties"] = data[0];
+            	toscaModelService.saveMsProperties(msJson).then(function(pars) {
+            		updateMsProperties(policyType, msJson);
             	}, function(data) {
             	});
             	if($scope.editor) { $scope.editor.destroy(); $scope.editor = null; }
