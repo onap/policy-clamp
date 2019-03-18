@@ -50,7 +50,7 @@ import org.onap.clamp.policy.Policy;
 @TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
 public class MicroServicePolicy implements Serializable, Policy {
     /**
-     *
+     * The serial version ID.
      */
     private static final long serialVersionUID = 6271238288583332616L;
 
@@ -83,6 +83,13 @@ public class MicroServicePolicy implements Serializable, Policy {
         // serialization
     }
 
+    /**
+     * The constructor.
+     * @param name The name of the MicroService
+     * @param policyTosca The policy Tosca of the MicroService
+     * @param shared The flag indicate whether the MicroService is shared
+     * @param usedByLoops The list of loops that uses this MicroService
+     */
     public MicroServicePolicy(String name, String policyTosca, Boolean shared, Set<Loop> usedByLoops) {
         this.name = name;
         this.policyTosca = policyTosca;
@@ -92,6 +99,14 @@ public class MicroServicePolicy implements Serializable, Policy {
         this.usedByLoops = usedByLoops;
     }
 
+    /**
+     * The constructor.
+     * @param name The name of the MicroService
+     * @param policyTosca The policy Tosca of the MicroService
+     * @param shared The flag indicate whether the MicroService is shared
+     * @param jsonRepresentation The UI representation in json format
+     * @param usedByLoops The list of loops that uses this MicroService
+     */
     public MicroServicePolicy(String name, String policyTosca, Boolean shared, JsonObject jsonRepresentation,
         Set<Loop> usedByLoops) {
         this.name = name;
@@ -157,18 +172,23 @@ public class MicroServicePolicy implements Serializable, Policy {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         MicroServicePolicy other = (MicroServicePolicy) obj;
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         return true;
     }
 

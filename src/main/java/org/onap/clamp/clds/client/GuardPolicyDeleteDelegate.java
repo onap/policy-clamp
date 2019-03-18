@@ -70,7 +70,8 @@ public class GuardPolicyDeleteDelegate {
         String eventAction = (String) camelExchange.getProperty("eventAction");
         if (!eventAction.equalsIgnoreCase(CldsEvent.ACTION_CREATE) && policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                for(PolicyItem policyItem:GuardPolicyAttributesConstructor.getAllPolicyGuardsFromPolicyChain(policyChain)) {
+                for (PolicyItem policyItem:GuardPolicyAttributesConstructor
+                        .getAllPolicyGuardsFromPolicyChain(policyChain)) {
                     prop.setCurrentModelElementId(policy.getId());
                     prop.setPolicyUniqueId(policyChain.getPolicyId());
                     prop.setGuardUniqueId(policyItem.getId());

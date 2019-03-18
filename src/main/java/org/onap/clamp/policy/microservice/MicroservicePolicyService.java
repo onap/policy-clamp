@@ -57,6 +57,12 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
         return repository.existsById(policyName);
     }
 
+    /**
+     * Get and update the MicroService policy properties.
+     * @param loop The loop
+     * @param policy The new MicroService policy
+     * @return The updated MicroService policy
+     */
     @Transactional
     public MicroServicePolicy getAndUpdateMicroServicePolicy(Loop loop, MicroServicePolicy policy) {
         return repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))

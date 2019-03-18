@@ -42,9 +42,7 @@ import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * This class manages the HTTP and HTTPS connections to DCAE.
- *
  */
 @Component
 public class DcaeHttpConnectionManager {

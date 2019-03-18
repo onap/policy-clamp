@@ -58,30 +58,34 @@ public class AuthorizationController {
     private ClampProperties refProp;
 
     private SecurityContext securityContext = SecurityContextHolder.getContext();
-    private final static String permPrefix = "security.permission.type.";
-    private final static String permInstance = "security.permission.instance";
+    private static final String permPrefix = "security.permission.type.";
+    private static final String permInstance = "security.permission.instance";
 
     public AuthorizationController() {
     }
+
     /**
-     * Insert event using process variables.
+     * Insert authorize the api based on the permission
      *
      * @param camelExchange
      *        The Camel Exchange object containing the properties
-     * @param actionState
-     *        The action state that is used instead of the one in exchange property
+     * @param typeVar
+     *        The type of the permissions
+     * @param instanceVar
+     *        The instance of the permissions. e.g. dev
+     * @param action
+     *        The action of the permissions. e.g. read
      */
-
     public void authorize (Exchange camelExchange, String typeVar, String instanceVar, String action) {
         String type = refProp.getStringValue(permPrefix + typeVar);
         String instance = refProp.getStringValue(permInstance);
-        
+
         if (null == type || type.isEmpty()) {
             //authorization is turned off, since the permission is not defined
             return;
         }
         if (null != instanceVar && !instanceVar.isEmpty()) {
-             instance = instanceVar;
+            instance = instanceVar;
         }
         String principalName = PrincipalUtils.getPrincipalName();
         SecureServicePermission perm = SecureServicePermission.create(type, instance, action);
@@ -105,18 +109,22 @@ public class AuthorizationController {
         // check if the user has the permission key or the permission key with a
         // combination of  all instance and/or all action.
         if (hasRole(inPermission.getKey())) {
-            auditLogger.info("{} authorized because user has permission with * for instance: {}", principalName, inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for instance: {}", 
+                  principalName, inPermission.getKey());
             authorized = true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
         } else if (hasRole(inPermission.getKeyAllInstance())) {
-            auditLogger.info("{} authorized because user has permission with * for instance: {}", principalName, inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for instance: {}", 
+                  principalName, inPermission.getKey());
             authorized = true;
         } else if (hasRole(inPermission.getKeyAllInstanceAction())) {
-            auditLogger.info("{} authorized because user has permission with * for instance and * for action: {}", principalName, inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for instance and * for action: {}", 
+                  principalName, inPermission.getKey());
             authorized = true;
         } else if (hasRole(inPermission.getKeyAllAction())) {
-            auditLogger.info("{} authorized because user has permission with * for action: {}", principalName, inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for action: {}", 
+                  principalName, inPermission.getKey());
             authorized = true;
         } else {
             throw new NotAuthorizedException("");
@@ -124,9 +132,15 @@ public class AuthorizationController {
         return authorized;
     }
 
+    /**
+     * Verify whether the user has the permission
+     *
+     * @param inPermission
+     *        The permissions to verify
+     */
     public boolean isUserPermittedNoException(SecureServicePermission inPermission) {
         try {
-            return isUserPermitted (inPermission);
+            return isUserPermitted(inPermission);
         } catch (NotAuthorizedException e) {
             return false;
         }
@@ -138,8 +152,9 @@ public class AuthorizationController {
             return false;
         }
         for (GrantedAuthority auth : authentication.getAuthorities()) {
-            if (role.equals(auth.getAuthority()))
+            if (role.equals(auth.getAuthority())) {
                 return true;
+            }
         }
         return false;
     }

@@ -79,8 +79,8 @@ public class OperationalPolicyDelegate {
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                Map<AttributeType, Map<String, String>> attributes = OperationalPolicyAttributesConstructor.formatAttributes(refProp,
-                    prop, prop.getType(Policy.class).getId(), policyChain);
+                Map<AttributeType, Map<String, String>> attributes = OperationalPolicyAttributesConstructor
+                    .formatAttributes(refProp,prop, prop.getType(Policy.class).getId(), policyChain);
                 responseMessage = policyClient.sendBrmsPolicy(attributes, prop, LoggingUtils.getRequestId());
             }
             if (responseMessage != null) {

@@ -50,7 +50,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class ClampServlet extends CamelHttpTransportServlet {
 
     /**
-     *
+     * The serial version ID.
      */
     private static final long serialVersionUID = -4198841134910211542L;
 
@@ -109,8 +109,8 @@ public class ClampServlet extends CamelHttpTransportServlet {
     @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        Principal p = request.getUserPrincipal();
-        if (loadDynamicAuthenticationClass().isInstance(p)) {
+        Principal principal = request.getUserPrincipal();
+        if (loadDynamicAuthenticationClass().isInstance(principal)) {
             // When AAF is enabled, there is a need to provision the permissions to Spring
             // system
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
@@ -120,7 +120,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
                     grantedAuths.add(new SimpleGrantedAuthority(permString));
                 }
             }
-            Authentication auth = new UsernamePasswordAuthenticationToken(new User(p.getName(), "", grantedAuths), "",
+            Authentication auth = new UsernamePasswordAuthenticationToken(new User(principal.getName(), "", grantedAuths), "",
                 grantedAuths);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }

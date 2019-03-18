@@ -59,6 +59,16 @@ public class OperationalPolicyAttributesConstructor {
     private OperationalPolicyAttributesConstructor() {
     }
 
+    /**
+     * Format the attributes.
+     * @param refProp The Clamp properties
+     * @param modelProperties The model properties
+     * @param modelElementId The model element ID
+     * @param policyChain The policy chain
+     * @return The attributes map
+     * @throws BuilderException Exception while building up the attributes map
+     * @throws UnsupportedEncodingException Unsupported encoding exception
+     */
     public static Map<AttributeType, Map<String, String>> formatAttributes(ClampProperties refProp,
         ModelProperties modelProperties,
         String modelElementId, PolicyChain policyChain)
@@ -75,7 +85,8 @@ public class OperationalPolicyAttributesConstructor {
         return createAttributesMap(matchingAttributes, ruleAttributes);
     }
 
-    private static Map<String, String> prepareRuleAttributes(ClampProperties clampProperties, ModelProperties modelProperties,
+    private static Map<String, String> prepareRuleAttributes(ClampProperties clampProperties, 
+        ModelProperties modelProperties,
         String modelElementId, PolicyChain policyChain, String globalService)
             throws BuilderException, UnsupportedEncodingException {
         logger.info("Preparing rule attributes...");
@@ -112,7 +123,8 @@ public class OperationalPolicyAttributesConstructor {
         return attributes;
     }
 
-    private static ImmutableMap<String, String> createRuleAttributesFromPolicy(ClampProperties refProp, ModelProperties modelProperties,
+    private static ImmutableMap<String, String> createRuleAttributesFromPolicy(ClampProperties refProp, 
+        ModelProperties modelProperties,
         String modelElementId, PolicyChain policyChain,
         String globalService, String operationTopic)
             throws BuilderException, UnsupportedEncodingException {
@@ -127,7 +139,8 @@ public class OperationalPolicyAttributesConstructor {
         }
     }
 
-    private static ImmutableMap<String, String> createRuleAttributesFromPolicyItem(PolicyItem policyItem, String recipeTopic) {
+    private static ImmutableMap<String, String> createRuleAttributesFromPolicyItem(PolicyItem policyItem, 
+        String recipeTopic) {
         logger.info("recipeTopic=" + recipeTopic);
         return ImmutableMap.<String, String>builder()
             .put(RECIPE_TOPIC, recipeTopic)

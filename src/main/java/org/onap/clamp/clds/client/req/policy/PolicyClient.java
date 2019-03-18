@@ -519,7 +519,7 @@ public class PolicyClient {
     }
 
     /**
-     * Method to return correct policy name with prefix
+     * Method to return correct policy name with prefix.
      *
      * @param prop
      *        The ModelProperties
@@ -527,7 +527,7 @@ public class PolicyClient {
      *        Policy Prefix
      * @param policyNameWithPrefix
      *        Policy Name With Prefix
-     * @return
+     * @return The policy name with the prefix
      */
     protected String selectRightPolicyNameWithPrefix(ModelProperties prop, String policyPrefix,
         String policyNameWithPrefix) {
@@ -561,8 +561,8 @@ public class PolicyClient {
         deletePolicyParameters.setPdpGroup(refProp.getStringValue("policy.pdp.group"));
         deletePolicyParameters.setPolicyType(policyType);
         // send delete request
-        StringBuilder responseMessage = new StringBuilder(sendDeletePolicy(deletePolicyParameters, prop));
         logger.info("Deleting policy from PAP...");
+        StringBuilder responseMessage = new StringBuilder(sendDeletePolicy(deletePolicyParameters, prop));
         deletePolicyParameters.setPolicyComponent("PAP");
         deletePolicyParameters.setDeleteCondition(DeletePolicyCondition.ALL);
         // send delete request
@@ -605,7 +605,7 @@ public class PolicyClient {
     }
 
     /**
-     * Create a temp Tosca model file and perform import model to Policy Engine
+     * Create a temp Tosca model file and perform import model to Policy Engine.
      *
      * @param cldsToscaModel
      *        Policy model details
@@ -636,6 +636,7 @@ public class PolicyClient {
     }
 
     /**
+     * Import the model.
      * @param importParameters
      *        The ImportParameters
      * @return The response message from policy
@@ -671,6 +672,7 @@ public class PolicyClient {
     }
 
     /**
+     * Build file path for tosca file.
      * @param clampToscaPath
      *        Temp directory path for writing tosca files
      * @param toscaModelName

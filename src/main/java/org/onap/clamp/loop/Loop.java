@@ -57,7 +57,7 @@ import org.onap.clamp.policy.operational.OperationalPolicy;
 public class Loop implements Serializable {
 
     /**
-     *
+     * The serial version id.
      */
     private static final long serialVersionUID = -286522707701388642L;
 
@@ -105,7 +105,8 @@ public class Loop implements Serializable {
 
     @Expose
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "loops_microservicepolicies", joinColumns = @JoinColumn(name = "loop_id"), inverseJoinColumns = @JoinColumn(name = "microservicepolicy_id"))
+    @JoinTable(name = "loops_microservicepolicies", joinColumns = @JoinColumn(name = "loop_id"), 
+       inverseJoinColumns = @JoinColumn(name = "microservicepolicy_id"))
     private Set<MicroServicePolicy> microServicePolicies = new HashSet<>();
 
     @Expose
@@ -115,6 +116,9 @@ public class Loop implements Serializable {
     public Loop() {
     }
 
+    /**
+     * Constructor.
+     */
     public Loop(String name, String blueprint, String svgRepresentation) {
         this.name = name;
         this.svgRepresentation = svgRepresentation;
@@ -234,6 +238,14 @@ public class Loop implements Serializable {
         this.modelPropertiesJson = modelPropertiesJson;
     }
 
+    /**
+     * Generate the loop name.
+     * @param serviceName The service name
+     * @param serviceVersion The service version
+     * @param resourceName The resource name
+     * @param blueprintFileName The blueprint file name
+     * @return The generated loop name
+     */
     public static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
         String blueprintFilename) {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
@@ -251,18 +263,23 @@ public class Loop implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         Loop other = (Loop) obj;
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         return true;
     }
 

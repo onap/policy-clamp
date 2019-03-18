@@ -76,7 +76,8 @@ public class GuardPolicyDelegate {
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                for(PolicyItem policyItem:GuardPolicyAttributesConstructor.getAllPolicyGuardsFromPolicyChain(policyChain)) {
+                for (PolicyItem policyItem:GuardPolicyAttributesConstructor
+                        .getAllPolicyGuardsFromPolicyChain(policyChain)) {
                     prop.setCurrentModelElementId(policy.getId());
                     prop.setPolicyUniqueId(policyChain.getPolicyId());
                     prop.setGuardUniqueId(policyItem.getId());

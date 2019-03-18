@@ -25,13 +25,15 @@ package org.onap.clamp.loop;
 
 import java.util.List;
 import java.util.Set;
-import javax.persistence.EntityNotFoundException;
 
 import com.google.gson.JsonObject;
-import org.onap.clamp.policy.microservice.MicroservicePolicyService;
-import org.onap.clamp.policy.operational.OperationalPolicyService;
+
+import javax.persistence.EntityNotFoundException;
+
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
+import org.onap.clamp.policy.microservice.MicroservicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.onap.clamp.policy.operational.OperationalPolicyService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -41,6 +43,9 @@ public class LoopService {
     private final MicroservicePolicyService microservicePolicyService;
     private final OperationalPolicyService operationalPolicyService;
 
+    /**
+     * Constructor.
+     */
     public LoopService(LoopsRepository loopsRepository,
         MicroservicePolicyService microservicePolicyService,
         OperationalPolicyService operationalPolicyService) {
@@ -57,7 +62,7 @@ public class LoopService {
         return loopsRepository.getAllLoopNames();
     }
 
-    Loop getLoop(String loopName){
+    Loop getLoop(String loopName) {
         return loopsRepository
             .findById(loopName)
             .orElse(null);
@@ -87,7 +92,7 @@ public class LoopService {
     }
 
     MicroServicePolicy updateMicroservicePolicy(String loopName, MicroServicePolicy newMicroservicePolicy) {
-    	Loop loop = findClosedLoopByName(loopName);
+        Loop loop = findClosedLoopByName(loopName);
         MicroServicePolicy newPolicies = microservicePolicyService
                 .getAndUpdateMicroServicePolicy(loop, newMicroservicePolicy);
         return newPolicies;
