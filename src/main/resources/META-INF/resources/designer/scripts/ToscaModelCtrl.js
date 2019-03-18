@@ -36,11 +36,11 @@ app.controller('ToscaModelCtrl',
 		    		}
 		    		var editorData = getMsProperty(selectedPolicy);
 
-	  	        	JSONEditor.defaults.options.theme = 'bootstrap3';
-		    		JSONEditor.defaults.options.iconlib = 'bootstrap2';
+		    		JSONEditor.defaults.options.theme = 'bootstrap4';
+		    		//JSONEditor.defaults.options.iconlib = 'bootstrap2';
 		    		JSONEditor.defaults.options.object_layout = 'grid';
 		    		JSONEditor.defaults.options.disable_properties = true;
-		    		JSONEditor.defaults.options.disable_edit_json = true;
+		    		JSONEditor.defaults.options.disable_edit_json = false;
 		    		JSONEditor.defaults.options.disable_array_reorder = true;
 		    		JSONEditor.defaults.options.disable_array_delete_last_row = true;
 		    		JSONEditor.defaults.options.disable_array_delete_all_rows = false;
