@@ -21,20 +21,20 @@
  * 
  */
 
-function updateMsProperties(type, form) {
+function updateMsProperties(type, newMsProperties) {
     var newMsProperties = cl_props["microServicePolicies"];
     for (p in newMsProperties) {
         if (newMsProperties[p]["name"] == type) {
-        	cl_props["microServicePolicies"][p] = form;
+        	cl_props["microServicePolicies"][p] = newMsProperties;
         }
     }
 }
 
-function updateGlobalProperties(form) {
-    cl_props["globalPropertiesJson"] = form;
+function updateGlobalProperties(newGlobalProperties) {
+    cl_props["globalPropertiesJson"] = newGlobalProperties;
 }
 
-function updateOpPolicyProperties(form) {	
+function updateOpPolicyProperties(newOpProperties) {	
    cl_props["operationalPolicies"] = newOpProperties;
 }
 

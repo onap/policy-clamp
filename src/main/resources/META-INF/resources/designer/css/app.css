@@ -126,18 +126,6 @@ svg:not(:root) {
 	z-index:100000; /*a number that's more than the modal box*/
 	
 } /* '' */
-.upgrade-schema:before{ 
-	content: url('../images/UpgradeSchema.png'); 
-	position:relative; /*or absolute*/
-	z-index:100000; /*a number that's more than the modal box*/	
-	opacity:0.5;
-	cursor: none;
-} /* '' */
-.upgradeSchema:before{ 
-	content: url('../images/UpgradeSchema.png'); 
-	position:relative; /*or absolute*/
-	z-index:100000; /*a number that's more than the modal box*/	
-} /* '' */
 .set-default-values:before{ 
 	content: url('../images/SetDefaultValues.png'); 
 	position:relative; /*or absolute*/
