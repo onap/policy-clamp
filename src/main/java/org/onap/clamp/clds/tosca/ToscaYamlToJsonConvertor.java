@@ -109,19 +109,12 @@ public class ToscaYamlToJsonConvertor {
         LinkedHashMap<String, Object> dataNodes) {
         map.entrySet().stream().forEach(n -> {
             if (n.getKey().contains(ToscaSchemaConstants.NODE_TYPES) && n.getValue() instanceof Map) {
-
                 parseNodeAndDataType((LinkedHashMap<String, Object>) n.getValue(), nodeTypes, dataNodes);
-
             } else if (n.getKey().contains(ToscaSchemaConstants.DATA_TYPES) && n.getValue() instanceof Map) {
-
                 parseNodeAndDataType((LinkedHashMap<String, Object>) n.getValue(), nodeTypes, dataNodes);
-
             } else if (n.getKey().contains(ToscaSchemaConstants.POLICY_NODE)) {
-
                 nodeTypes.put(n.getKey(), n.getValue());
-
             } else if (n.getKey().contains(ToscaSchemaConstants.POLICY_DATA)) {
-
                 dataNodes.put(n.getKey(), n.getValue());
             }
 
@@ -149,7 +142,7 @@ public class ToscaYamlToJsonConvertor {
                                         .getValue();
                                     if (parentPropertiesMap.containsKey(ToscaSchemaConstants.TYPE)
                                         && ((String) parentPropertiesMap.get(ToscaSchemaConstants.TYPE))
-                                            .contains(ToscaSchemaConstants.TYPE_LIST)
+                                            .contains(ToscaSchemaConstants.TYPE_MAP)
                                         && parentPropertiesMap.containsKey(ToscaSchemaConstants.ENTRY_SCHEMA)) {
                                         parentPropertiesMap = (LinkedHashMap<String, Object>) parentPropertiesMap
                                             .get(ToscaSchemaConstants.ENTRY_SCHEMA);
