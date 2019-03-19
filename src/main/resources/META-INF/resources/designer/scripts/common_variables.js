@@ -30,7 +30,6 @@ var list_model_test_sets={};
 var list_model_path_details={};
 var list_model_schema_extensions={};
 var list_model_test_management_details={};
-var isImportSchema=false;
 var selected_decison_element='';
 var selected_element_name = '';
 var list_model_repeatable_heirarchical_elements={};

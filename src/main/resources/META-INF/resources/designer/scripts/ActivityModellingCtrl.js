@@ -305,7 +305,7 @@ app.directive('expandable', function ($compile) {
 });
 
 
-app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','dialogs', '$filter','Datafactory','soapRequestService', function($scope,$rootScope, $location,dialogs,$filter,Datafactory,soapRequestService){
+app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','dialogs', '$filter','Datafactory', function($scope,$rootScope, $location,dialogs,$filter,Datafactory){
 	
 	
 	$scope.count=0;
@@ -385,7 +385,7 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		}
 	};
 	
-	//Functionality for Hierarchical Elements
+	// Functionality for Hierarchical Elements
 	$scope.addHierarchicalElement1 = function(schemaElement, parentElement, elementKey, index){
         console.log("addHeirarchicalElement1");
 		if($rootScope.isHorR){
@@ -396,7 +396,8 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		if($scope.clonedSchemaElement.repeatableHierarchicalPrefix == null)
 			$scope.clonedSchemaElement.repeatableHierarchicalPrefix = "";
 		
-		//Remove any Heirarchical/Repeatable Elements in the ClonedSchemaElement
+		// Remove any Heirarchical/Repeatable Elements in the
+		// ClonedSchemaElement
 		for(var i=0;i<schemaElement.type.elements.length;i++) {
 			if(schemaElement.type.elements[i].element.name.indexOf(schemaElement.element.name) != -1) {
 				$scope.clonedSchemaElement.type.elements.splice(i,(schemaElement.type.elements.length-i));
@@ -410,7 +411,7 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		
 	}
 	
-	//Functionality for Hierarchical Elements
+	// Functionality for Hierarchical Elements
 	$scope.addHierarchicalElement = function(schemaElement, parentElement, elementKey){
         console.log("addHierarchicalElement");
 		$rootScope.isHorR = false;
@@ -420,7 +421,8 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		if($scope.clonedSchemaElement.repeatableHierarchicalPrefix == null)
 			$scope.clonedSchemaElement.repeatableHierarchicalPrefix = "";
 		
-		//Remove any Heirarchical/Repeatable Elements in the ClonedSchemaElement
+		// Remove any Heirarchical/Repeatable Elements in the
+		// ClonedSchemaElement
 		for(var i=0;i<schemaElement.type.elements.length;i++) {
 			if(schemaElement.type.elements[i].element.name.indexOf(schemaElement.element.name) != -1) {
 				$scope.clonedSchemaElement.type.elements.splice(i,(schemaElement.type.elements.length-i));
@@ -578,7 +580,8 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		if($scope.clonedSchemaElement.repeatableHierarchicalPrefix == null)
 			$scope.clonedSchemaElement.repeatableHierarchicalPrefix = "";
 		
-		//Remove any Heirarchical/Repeatable Elements in the ClonedSchemaElement
+		// Remove any Heirarchical/Repeatable Elements in the
+		// ClonedSchemaElement
 		if(schemaElement.type.complexType != null){
 		for(var i=0;i<schemaElement.type.elements.length;i++) {
 			if(schemaElement.type.elements[i].element.name.indexOf(schemaElement.element.name) != -1) {
@@ -598,7 +601,8 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		if(schemaElement.type.complexType != null){
 			for(var i=0;i<$scope.childElements.length;i++){
 				if(angular.equals($scope.childElements[i],schemaElement)){	
-					//console.log("Complex Element List Match :" +$scope.childElements[i]);
+					// console.log("Complex Element List Match :"
+					// +$scope.childElements[i]);
 					$scope.childElements.splice((i+1),0,$scope.clonedSchemaElement);
 					break;
 				}
@@ -606,7 +610,8 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		} else if(schemaElement.element.name !=null) {			
 			for(var j=0;j<$scope.childElements.length;j++){
 				if(angular.equals($scope.childElements[j],schemaElement)){				
-					//console.log("Element List Match :" +$scope.childElements[j]);				   
+					// console.log("Element List Match :"
+					// +$scope.childElements[j]);
 					$scope.childElements.splice((j+1),0,$scope.clonedSchemaElement);			  
 					break;
 				}
@@ -671,7 +676,8 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		if(schemaElement.type.complexType != null){
 			for(var i=0;i<$scope.childElements.length;i++){
 				if(angular.equals($scope.childElements[i],schemaElement)){	
-					//console.log("Complex Element List Match :" +$scope.childElements[i]);
+					// console.log("Complex Element List Match :"
+					// +$scope.childElements[i]);
 					$scope.childElements.splice(i,1);
 					$scope.index =i;
 					break;
@@ -680,7 +686,8 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		} else if(schemaElement.element.name !=null) {			
 			for(var j=0;j<$scope.childElements.length;j++){
 				if(angular.equals($scope.childElements[j],schemaElement)){				
-					//console.log("Element List Match :" +$scope.childElements[j]);				   
+					// console.log("Element List Match :"
+					// +$scope.childElements[j]);
 					$scope.childElements.splice(j,1);	
 					$scope.index= j;
 					break;
@@ -746,83 +753,6 @@ app.controller('ActivityModellingCtrl', ['$scope', '$rootScope', '$location','di
 		}
 		
 	};
-	
-	
-	
-	//Tst functions
-	
-	
-	//Generate and Download tst
-	$scope.generateTST = function(index){
-		console.log("generateTST");
-		Datafactory.setSelectedTestCase($rootScope.modeltestset.activityTestCases[index]);
-		
-		var tstInput={};
-		console.log("inside generateTST() method");
-		var generateTSTUrl ="/utm-service/soa_integration/generateTST";
-		var tempActivityTestcase= {};
-		angular.copy(Datafactory.getSelectedTestCase(),tempActivityTestcase);
-		
-		tstInput.activityTestCase = tempActivityTestcase;
-		
-		if(tstInput.activityTestCase.version != null){
-			var newTestCaseName = tstInput.activityTestCase.testCaseName + "_"+ tstInput.activityTestCase.version;
-			tstInput.activityTestCase.testCaseName = newTestCaseName;
-			
-		}
-			
-		tstInput.projectPreferenceInfo =  Datafactory.getProjectPreferenceInfo();
-		tstInput.environmentData =  $rootScope.environmentData;
-		tstInput.writeFileToolList=Datafactory.getWriteFileDataList();
-		tstInput.fileStreamWriterList=Datafactory.getFileStreamWriterList();
-		tstInput.commonPythonScriptList = Datafactory.getCommonPythonScriptList();
-		
-		
-		soapRequestService.generateTst(tstInput, generateTSTUrl)
-		.then(function(pars) {
-            console.log("pars");
-			
-			
-			var dlg = dialogs.confirm('Message','Do you want to download TST file?');
-			dlg.result.then(function(btn){
-                console.log("btn");
-			$scope.confirmed = 'You confirmed "Yes."';
-			var downloadTSTUrl ="/utm-service/soa_integration/downloadTST";
-			
-			soapRequestService.downloadTst(pars, tstInput.activityTestCase.testCaseName, downloadTSTUrl)
-			.then(function(results) {
-                console.log("results");
-				
-				var sets=results.data;
-	        	 console.log("Sets value"+sets);            
-	             var headerValue=results.headers;
-	             
-	             var fileName=results.config.data.tstName + ".tst";
-	             console.log("Filename "+fileName);
-	             
-	             var hiddenElement = document.createElement('a');
-	             var objectUrl = URL.createObjectURL(results.data);
-		  		
-		  	     hiddenElement.href = objectUrl;
-       	  		 hiddenElement.download = fileName;
-       	  		 
-	        	 hiddenElement.target = '_blank';
-	        	 document.body.appendChild(hiddenElement);
-	        	 hiddenElement.click(); 
-	        	 document.body.removeChild(hiddenElement);
-	        	 
-			});
-			},function(btn){
-                console.log("btn");
-			$scope.confirmed = 'You confirmed "No."';
-			});
-			
-		},
-		function(data) {
-            console.log("data");
 
-		});
-		
-		
-	}
+
 }]);

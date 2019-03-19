@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,7 +20,18 @@
  * ===================================================================
  * 
  */
-app.controller('exportCtrl', [ '$scope', '$rootScope', 'exportService',
-'dialogs', function($scope, $rootScope, exportService, dialogs) {
-	console.log("exportCtrl");
-} ]);
+app.service('operationalPolicyService', ['$http', '$q', function ($http, $q) {
+    console.log("//////OperationalPolicyService");
+    
+ 	this.saveOpPolicyProperties = function(form) {
+ 		var modelName = getLoopName();
+ 	   	 var def = $q.defer();
+ 	   	 var svcUrl = "/restservices/clds/v2/loop/updateOperationalPolicies/" + modelName;
+ 	   	 $http.post(svcUrl, form).success(function(data) {
+ 	   		 def.resolve(data);
+ 	   	 }).error(function(data) {
+ 	   		 def.reject("Save Operational Policy not successful");
+ 	   	 });
+ 	       return def.promise;
+ 	};
+}]);

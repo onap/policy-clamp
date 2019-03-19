@@ -678,7 +678,7 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    var dlg = dialogs.create(
 		    'partials/portfolios/PolicyWindow_properties.html',
-		    'ImportSchemaCtrl', {
+		    'operationalPolicyCtrl', {
 		        closable : true,
 		        draggable : true
 		    }, {
@@ -768,18 +768,7 @@ app.run([ '$route', function($route) {
 
 	$route.reload();
 } ]);
-function TestCtrl($scope) {
 
-	$scope.msg = "Hello from a controller method.";
-	$scope.returnHello = function() {
-
-		return $scope.msg;
-	}
-}
-function importshema() {
-
-	angular.element(document.getElementById('navbar')).scope().importSchema();
-}
 function F5Window() {
 
 	angular.element(document.getElementById('navbar')).scope().F5Window();
@@ -790,7 +779,7 @@ function GOCWindow() {
 }
 function ToscaModelWindow() {
     angular.element(document.getElementById('navbar')).scope().ToscaModelWindow();
-};
+}
 function PolicyWindow(PolicyWin) {
 
 	angular.element(document.getElementById('navbar')).scope().PolicyWindow(
@@ -806,23 +795,11 @@ function setdefaultvalue() {
 	angular.element(document.getElementById('navbar')).scope()
 	.setDefaultValue();
 }
-function upgradeSchemaVersion() {
-
-	angular.element(document.getElementById('navbar')).scope()
-	.upgradeSchemaVersion();
-}
 function saveProject() {
 
 	angular.element(document.getElementById('navbar')).scope().saveProject();
 }
-function modifySchema() {
 
-	angular.element(document.getElementById('navbar')).scope().modifySchema();
-}
-function definePID() {
-
-	angular.element(document.getElementById('navbar')).scope().definePID();
-}
 function defineServiceAcronym() {
 
 	angular.element(document.getElementById('navbar')).scope()
