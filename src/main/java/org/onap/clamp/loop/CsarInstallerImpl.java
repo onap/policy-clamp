@@ -216,7 +216,7 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     /**
      * ll get the latest version of the artifact (version can be specified to DCAE
-     * call)
+     * call).
      *
      * @return The DcaeInventoryResponse object containing the dcae values
      */

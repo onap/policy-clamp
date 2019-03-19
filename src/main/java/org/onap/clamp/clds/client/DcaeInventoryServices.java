@@ -64,6 +64,9 @@ public class DcaeInventoryServices {
     private final CldsDao cldsDao;
     private final DcaeHttpConnectionManager dcaeHttpConnectionManager;
 
+    /**
+     * Constructor.
+     */
     @Autowired
     public DcaeInventoryServices(ClampProperties refProp, CldsDao cldsDao,
         DcaeHttpConnectionManager dcaeHttpConnectionManager) {
@@ -179,7 +182,6 @@ public class DcaeInventoryServices {
      */
     public DcaeInventoryResponse getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
         throws IOException, ParseException, InterruptedException {
-        Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
         String queryString = "?asdcResourceId=" + resourceUuid + "&asdcServiceId=" + serviceUuid + "&typeName="
             + artifactName;
@@ -187,6 +189,7 @@ public class DcaeInventoryServices {
         logger.info("Dcae Inventory Service full url - " + fullUrl);
         DcaeInventoryResponse response = queryDcaeInventory(fullUrl);
         LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
+        Date startTime = new Date();
         LoggingUtils.setTimeContext(startTime, new Date());
         return response;
     }

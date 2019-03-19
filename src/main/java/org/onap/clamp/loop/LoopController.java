@@ -42,9 +42,9 @@ public class LoopController {
 
     private final LoopService loopService;
     private static final Type OPERATIONAL_POLICY_TYPE = new TypeToken<List<OperationalPolicy>>() {
-    }.getType();
+       }.getType();
     private static final Type MICROSERVICE_POLICY_TYPE = new TypeToken<List<MicroServicePolicy>>() {
-    }.getType();
+       }.getType();
 
     @Autowired
     public LoopController(LoopService loopService) {
@@ -59,26 +59,55 @@ public class LoopController {
         return loopService.getLoop(loopName);
     }
 
+    /**
+     * Update the Operational Policy properties.
+     * @param loopName The loop name
+     * @param operationalPoliciesJson The new Operational Policy properties
+     * @return The updated loop
+     */
     public Loop updateOperationalPolicies(String loopName, JsonArray operationalPoliciesJson) {
         List<OperationalPolicy> operationalPolicies = JsonUtils.GSON
             .fromJson(operationalPoliciesJson, OPERATIONAL_POLICY_TYPE);
         return loopService.updateAndSaveOperationalPolicies(loopName, operationalPolicies);
     }
 
+    /**
+     * Update the whole array of MicroService policies properties
+     * @param loopName The loop name
+     * @param microServicePoliciesJson The array of all MicroService policies properties
+     * @return The updated loop
+     */
     public Loop updateMicroservicePolicies(String loopName, JsonArray microServicePoliciesJson) {
         List<MicroServicePolicy> microservicePolicies = JsonUtils.GSON
             .fromJson(microServicePoliciesJson, MICROSERVICE_POLICY_TYPE);
         return loopService.updateAndSaveMicroservicePolicies(loopName, microservicePolicies);
     }
 
-    public Loop updateGlobalPropertiesJson(String loopName, JsonObject globalProperties){
+    /**
+     * Update the global properties
+     * @param loopName The loop name
+     * @param globalProperties The updated global properties
+     * @return The updated loop
+     */
+    public Loop updateGlobalPropertiesJson(String loopName, JsonObject globalProperties) {
         return loopService.updateAndSaveGlobalPropertiesJson(loopName, globalProperties);
     }
 
+    /**
+     * Update one MicroService policy properties
+     * @param loopName The loop name
+     * @param newMicroservicePolicy The new MicroService policy properties
+     * @return The updated MicroService policy
+     */
     public MicroServicePolicy updateMicroservicePolicy(String loopName, MicroServicePolicy newMicroservicePolicy) {
         return loopService.updateMicroservicePolicy(loopName, newMicroservicePolicy);
     }
 
+    /**
+     * Get the SVG representation of the loop
+     * @param loopName The loop name
+     * @return The SVG representation
+     */
     public String getSVGRepresentation(String loopName) {
         return loopService.getClosedLoopModelSVG(loopName);
 

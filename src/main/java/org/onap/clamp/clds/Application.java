@@ -101,7 +101,7 @@ public class Application extends SpringBootServletInitializer {
      * This method is used to declare the camel servlet.
      *
      * @return A servlet bean
-     * @throws IOException
+     * @throws IOException IO Exception
      */
     @Bean
     public ServletRegistrationBean camelServletRegistrationBean() throws IOException {

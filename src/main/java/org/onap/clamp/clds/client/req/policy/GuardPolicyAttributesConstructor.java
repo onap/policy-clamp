@@ -61,6 +61,11 @@ public class GuardPolicyAttributesConstructor {
         return createAttributesMap(matchingAttributes);
     }
 
+    /**
+     * Get all the Guard policies from the policy chain.
+     * @param policyChain The policy chain
+     * @return The list of guard policies
+     */
     public static List<PolicyItem> getAllPolicyGuardsFromPolicyChain(PolicyChain policyChain) {
         List<PolicyItem> listItem = new ArrayList<>();
         for (PolicyItem policyItem : policyChain.getPolicyItems()) {

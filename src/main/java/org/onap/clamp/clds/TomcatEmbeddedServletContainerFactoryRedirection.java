@@ -32,10 +32,8 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
  * This class is a factory that redirects by default all HTTP to HTTPS
  * connector. It is used by the Application.java class and defined in a Spring
  * Bean.
- *
  * In order to do this, the method postProcessContext has been overridden to
  * provide another behavior.
- *
  */
 public class TomcatEmbeddedServletContainerFactoryRedirection extends TomcatServletWebServerFactory {
 

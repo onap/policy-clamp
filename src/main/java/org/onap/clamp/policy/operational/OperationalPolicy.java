@@ -38,16 +38,16 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.Policy;
-import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 
 @Entity
 @Table(name = "operational_policies")
 @TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
 public class OperationalPolicy implements Serializable, Policy {
     /**
-     *
+     * The serial version ID.
      */
     private static final long serialVersionUID = 6117076450841538255L;
 
@@ -69,6 +69,12 @@ public class OperationalPolicy implements Serializable, Policy {
         //Serialization
     }
 
+    /**
+     * The constructor.
+     * @param name The name of the operational policy
+     * @param loop The loop that uses this operational policy
+     * @param configurationsJson The operational policy property in the format of json
+     */
     public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson) {
         this.name = name;
         this.loop = loop;
@@ -83,7 +89,7 @@ public class OperationalPolicy implements Serializable, Policy {
         this.loop = loopName;
     }
 
-    public Loop getLoop(){
+    public Loop getLoop() {
         return loop;
     }
 
@@ -110,18 +116,23 @@ public class OperationalPolicy implements Serializable, Policy {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         OperationalPolicy other = (OperationalPolicy) obj;
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         return true;
     }
 

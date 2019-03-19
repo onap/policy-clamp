@@ -63,6 +63,13 @@ public class DcaeDispatcherServices {
         this.dcaeHttpConnectionManager = dcaeHttpConnectionManager;
     }
 
+    /**
+     * Get the Operation Status from a specified URL with retry.
+     * @param operationStatusUrl
+     *        The URL of the DCAE
+     * @return The status
+     * @throws InterruptedException Exception during the retry
+     */
     public String getOperationStatusWithRetry(String operationStatusUrl) throws InterruptedException {
         String operationStatus = "";
         for (int i = 0; i < Integer.valueOf(refProp.getStringValue("dcae.dispatcher.retry.limit")); i++) {
@@ -81,7 +88,6 @@ public class DcaeDispatcherServices {
 
     /**
      * Get the Operation Status from a specified URL.
-     *
      * @param statusUrl
      *        The URL provided by a previous DCAE Query
      * @return The status
@@ -112,7 +118,6 @@ public class DcaeDispatcherServices {
 
     /**
      * Returns status URL for createNewDeployment operation.
-     *
      * @param deploymentId
      *        The deployment ID
      * @param serviceTypeId
@@ -150,7 +155,6 @@ public class DcaeDispatcherServices {
 
     /***
      * Returns status URL for deleteExistingDeployment operation.
-     *
      * @param deploymentId
      *        The deployment ID
      * @param serviceTypeId

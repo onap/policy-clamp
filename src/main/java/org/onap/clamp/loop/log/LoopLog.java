@@ -43,7 +43,6 @@ import javax.persistence.Table;
 import org.onap.clamp.loop.Loop;
 
 /**
- *
  * This class holds the logs created by the Clamp Backend. The Instant is always
  * rounded to the nearest second as the nano seconds can't be stored in the
  * database. The logs can be therefore exposed to the UI or the client doing
@@ -54,7 +53,7 @@ import org.onap.clamp.loop.Loop;
 @Table(name = "loop_logs")
 public class LoopLog implements Serializable {
     /**
-     *
+     * The serial version ID.
      */
     private static final long serialVersionUID = 1988276670074437631L;
 
@@ -130,18 +129,23 @@ public class LoopLog implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         LoopLog other = (LoopLog) obj;
         if (id == null) {
-            if (other.id != null)
+            if (other.id != null) {
                 return false;
-        } else if (!id.equals(other.id))
+            }
+        } else if (!id.equals(other.id)) {
             return false;
+        }
         return true;
     }
 

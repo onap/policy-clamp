@@ -40,7 +40,7 @@ public class PrincipalUtils {
     /**
      * Get the Full name.
      *
-     * @return
+     * @return The user name
      */
     public static String getUserName() {
         String name = userNameHandler.retrieveUserName(securityContext);
@@ -53,7 +53,7 @@ public class PrincipalUtils {
     /**
      * Get the userId from AAF/CSP.
      *
-     * @return
+     * @return The user ID
      */
     public static String getUserId() {
         return getUserName();
@@ -62,7 +62,7 @@ public class PrincipalUtils {
     /**
      * Get the principal name.
      *
-     * @return
+     * @return The principal name
      */
     public static String getPrincipalName() {
         String principal = ((UserDetails)securityContext.getAuthentication().getPrincipal()).getUsername();
@@ -72,6 +72,7 @@ public class PrincipalUtils {
         }
         return name;
     }
+
     public static void setSecurityContext(SecurityContext securityContext) {
         PrincipalUtils.securityContext = securityContext;
     }

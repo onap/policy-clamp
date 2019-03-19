@@ -21,6 +21,7 @@
  * ===================================================================
  *
  */
+
 package org.onap.clamp.clds.client.req.policy;
 
 import com.att.eelf.configuration.EELFLogger;
@@ -61,12 +62,12 @@ public class OperationalPolicyYamlFormatter {
     /**
      * Format Operational OpenLoop Policy yaml.
      *
-     * @param prop
-     * @param modelElementId
-     * @param policyChain
-     * @return
-     * @throws BuilderException
-     * @throws UnsupportedEncodingException
+     * @param prop The model properties
+     * @param modelElementId The model element ID
+     * @param policyChain The policy chain
+     * @return The operational openloop policy in yaml format
+     * @throws BuilderException The builder exception
+     * @throws UnsupportedEncodingException The unsupported encoding exception
      */
     public static String formatOpenLoopYaml(ModelProperties prop, String modelElementId, PolicyChain policyChain)
         throws BuilderException, UnsupportedEncodingException {
@@ -87,6 +88,15 @@ public class OperationalPolicyYamlFormatter {
         return URLEncoder.encode(results.getSpecification(), "UTF-8");
     }
 
+    /**
+     * Format Operational Policy yaml.
+     * @param prop The model properties
+     * @param modelElementId The model element ID
+     * @param policyChain The policy chain
+     * @return The operational policy properties in yaml format
+     * @throws BuilderException The builder exception
+     * @throws UnsupportedEncodingException The unsupported encoding exception
+     */
     public static String formatYaml(ModelProperties prop, String modelElementId, PolicyChain policyChain)
         throws BuilderException, UnsupportedEncodingException {
         // get property objects
