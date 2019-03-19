@@ -311,91 +311,6 @@ width: 14px;
 										</h6>
 									</div>
 
-									<div style="margin-left: 10px"
-										ng-class="{hidden:!showUTMViewDtl,chaldean:!showUTMViewDtl}">
-
-
-										<div ng-show="serviceInfo != null">
-											<h6>
-												<span class="pull-left"
-													ng-click="showUTMViewServiceName=!showUTMViewServiceName">
-													<i
-													ng-class="showUTMViewServiceName == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
-												</i>
-												</span><b>Service Name</b>
-											</h6>
-											<div style="margin-left: 10px"
-												ng-class="{hidden:!showUTMViewServiceName,chaldean:!showUTMViewServiceName}">
-												<div style="margin-left: 10px">
-													{{serviceInfo.service.name}}</div>
-											</div>
-
-										</div>
-
-										<div ng-show="serviceInfo != null">
-											<h6>
-												<span class="pull-left"
-													ng-click="showUTMViewPortName=!showUTMViewPortName">
-													<i
-													ng-class="showUTMViewPortName == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
-												</i>
-												</span><b>Port Name</b>
-											</h6>
-											<div style="margin-left: 10px"
-												ng-class="{hidden:!showUTMViewPortName,chaldean:!showUTMViewPortName}">
-												<div style="margin-left: 10px">
-													{{serviceInfo.service.ports[0].name}}</div>
-											</div>
-										</div>
-
-										<div ng-show="serviceInfo != null">
-											<h6>
-												<span class="pull-left"
-													ng-click="showUTMViewBindingName=!showUTMViewBindingName">
-													<i
-													ng-class="showUTMViewBindingName == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
-												</i>
-												</span><b> Binding Name</b>
-											</h6>
-											<div style="margin-left: 10px"
-												ng-class="{hidden:!showUTMViewBindingName,chaldean:!showUTMViewBindingName}">
-												<div style="margin-left: 10px">
-													{{serviceInfo.bindingInfo.binding.name}}</div>
-											</div>
-										</div>
-
-										<div ng-show="serviceInfo != null">
-											<h6>
-												<span class="pull-left"
-													ng-click="showUTMViewBindingPortType=!showUTMViewBindingPortType">
-													<i ng-class="showUTMViewBindingPortType == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
-												</i>
-												</span><b>Binding Port Type</b>
-											</h6>
-											<div style="margin-left: 10px"
-												ng-class="{hidden:!showUTMViewBindingPortType,chaldean:!showUTMViewBindingPortType}">
-												<div style="margin-left: 10px">
-													{{serviceInfo.bindingInfo.portTypeInfo.portType.name}}</div>
-											</div>
-										</div>
-
-										<div ng-show="serviceInfo != null">
-											<h6>
-												<span class="pull-left"
-													ng-click="showUTMViewOperation=!showUTMViewOperation">
-													<i
-													ng-class="showUTMViewOperation == true ?'fa fa-minus-circle':'fa fa-plus-circle'">
-												</i>
-												</span><b>Operation Name</b>
-											</h6>
-											<div style="margin-left: 10px"
-												ng-class="{hidden:!showUTMViewOperation,chaldean:!showUTMViewOperation}">
-												<div style="margin-left: 10px">
-													{{serviceInfo.bindingInfo.portTypeInfo.operationInfo[0].operation.name}}</div>
-											</div>
-										</div>
-									</div>
-
 									<table class="table-tree">
 										<tr>
 											<td class="td-label-tree" style="margin-top: 30px;">
@@ -488,26 +403,6 @@ width: 14px;
 											
 										</tr>
 								    </table>
-									<div style="margin-left: 20px;margin-top: -12px;"
-										ng-class="{hidden:showUTMViewInput,chaldean:showUTMViewInput}">
-									
-										<div ng-show="serviceInputPartInfo.length>0" >										
-											<h6>
-										        <!-- <div ng-repeat="inputInfo in serviceInputPartInfo">	
-										        		 inputInfo :: {{inputInfo}}								 
-									        		<div ng-repeat="schemaElement in inputInfo.schemaElements"   ng-include="'service_tree_element_renderer.html'" ng-init="currentElementName= inputInfo.part.name;parentName='ServiceInput'; parentElement=inputInfo; heirarchyLevel=1">
-									        		  
-									        		</div>
-									        									   			
-												</div> -->
-												<div ng-repeat="inputInfo in serviceInputPartInfo">
-													<div class="inputInfoClass" ng-init="currentElementName= inputInfo.part.name;parentName='ServiceInput'; parentElement=inputInfo; heirarchyLevel=1;infoType=inputInfo"></div>
-												</div>	
-											</h6>
-											
-										</div>
-									
-									</div>
 
 									<table class="table-tree" style="margin-top: -12px;>
 										<tr>
@@ -529,21 +424,7 @@ width: 14px;
 											</td>
 										</tr>
 							      	</table>
-								  	<div style="margin-left: 20px;"
-										ng-class="{hidden:showUTMViewOutput,chaldean:showUTMViewOutput}">
-										<div ng-show="serviceOutputPartInfo.length>0" style="width: 250px">
-											<h6>
-										        <!-- <div ng-repeat="outputInfo in serviceOutputPartInfo" >
-										        	  outputInfo:::	{{outputInfo}}
-									        		<div ng-repeat="schemaElement in outputInfo.schemaElements" ng-include="'service_tree_element_renderer.html'" ng-init="currentElementName=outputInfo.part.name;parentName='ServiceOutput'; parentElement=outputInfo; heirarchyLevel=1">
-									   				</div>
-												</div> -->	
-												<div ng-repeat="outputInfo in serviceOutputPartInfo">
-													<div class="inputInfoClass" ng-init="currentElementName=outputInfo.part.name;parentName='ServiceOutput'; parentElement=outputInfo; heirarchyLevel=1; infoType=outputInfo"></div>
-												</div>	
-											</h6>
-										</div>
-									</div>
+
 								
 									<table class="table-tree" style="margin-top: -12px;">
 										<tr>
@@ -563,22 +444,6 @@ width: 14px;
 											</td>
 										</tr>
 							      	</table>
-									<div style="margin-left: 20px;"
-										ng-class="{hidden:showUTMViewFault,chaldean:showUTMViewFault}">
-										
-										<div ng-show="servicefaultPartInfo.length>0" style="width: 250px">
-											<h6>
-										        <!-- <div ng-repeat="faultInfo in servicefaultPartInfo" style="margin-top: -12px;">
-										        faultInfo ::::{{faultInfo}}
-									        		<div ng-repeat="schemaElement in faultInfo.schemaElements" ng-include="'service_tree_element_renderer.html'" ng-init="currentElementName=faultInfo.schemaElements[0].name;parentName='ServiceFault'; parentElement=faultInfo; heirarchyLevel=1">
-									   				</div>
-												</div>	 -->
-												<div ng-repeat="faultInfo in servicefaultPartInfo">
-													<div class="inputInfoClass" ng-init="currentElementName=faultInfo.part.name;parentName='ServiceFault'; parentElement=faultInfo; heirarchyLevel=1; infoType=faultInfo"></div>
-												</div>	
-											</h6>
-										</div>
-									</div>	
 								</div>
 								
 							

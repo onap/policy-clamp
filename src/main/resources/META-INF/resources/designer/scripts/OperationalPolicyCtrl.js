@@ -33,18 +33,6 @@ app
 function($scope, $rootScope, $uibModalInstance, data, operationalPolicyService, 
          dialogs) {
 	console.log("//////operationalPolicyCtrl");
-	$rootScope.serviceInfo;
-	$rootScope.serviceInput;
-	$rootScope.serviceOutput;
-	$rootScope.serviceFault;
-	$rootScope.serviceInputPartInfo;
-	$rootScope.schemElemant1;
-	$rootScope.updateServiceInfo;
-	$rootScope.updateServiceInput;
-	$rootScope.updateServiceOutput;
-	$rootScope.updateServiceFault;
-	$rootScope.updateServiceInputPartInfo;
-	$rootScope.updateSchemElemant1;
 	// Below code is added to get the policyNames
 	var policies = getOperationalPolicyProperty();
 	for ( var obj in policies) {
