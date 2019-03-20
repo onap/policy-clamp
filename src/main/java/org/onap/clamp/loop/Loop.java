@@ -139,7 +139,7 @@ public class Loop implements Serializable {
         return dcaeDeploymentId;
     }
 
-    void setDcaeDeploymentId(String dcaeDeploymentId) {
+    public void setDcaeDeploymentId(String dcaeDeploymentId) {
         this.dcaeDeploymentId = dcaeDeploymentId;
     }
 
@@ -147,7 +147,7 @@ public class Loop implements Serializable {
         return dcaeDeploymentStatusUrl;
     }
 
-    void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
+    public void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
         this.dcaeDeploymentStatusUrl = dcaeDeploymentStatusUrl;
     }
 
@@ -167,11 +167,11 @@ public class Loop implements Serializable {
         this.blueprint = blueprint;
     }
 
-    LoopState getLastComputedState() {
+    public LoopState getLastComputedState() {
         return lastComputedState;
     }
 
-    void setLastComputedState(LoopState lastComputedState) {
+    public void setLastComputedState(LoopState lastComputedState) {
         this.lastComputedState = lastComputedState;
     }
 
@@ -222,7 +222,7 @@ public class Loop implements Serializable {
         log.setLoop(this);
     }
 
-    String getDcaeBlueprintId() {
+    public String getDcaeBlueprintId() {
         return dcaeBlueprintId;
     }
 
@@ -230,7 +230,7 @@ public class Loop implements Serializable {
         this.dcaeBlueprintId = dcaeBlueprintId;
     }
 
-    JsonObject getModelPropertiesJson() {
+    public JsonObject getModelPropertiesJson() {
         return modelPropertiesJson;
     }
 
