@@ -28,7 +28,6 @@ import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse Holmes bpmn parameters json properties.
- * <p>
  * Example json:
  * [{"name":"correlationalLogic","value":"vcwx"},{"name":"configPolicyName","value":"cccc"}]
  *
@@ -42,13 +41,13 @@ public class Holmes extends AbstractModelElement {
     private String              configPolicyName;
 
     /**
-     * Default constructor for Holmes Element
+     * Default constructor for Holmes Element.
      *
      * @param modelProp
      *            The ModelProperties containing the all the info, like bpmn,
      *            bpmn params, etc ...
-     * @param modelBpmn
-     * @param modelJson
+     * @param modelBpmn The model bpmn
+     * @param modelJson The model json
      */
     public Holmes(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
         super(TYPE_HOLMES, modelProp, modelBpmn, modelJson);

@@ -30,17 +30,17 @@ public class CldsVfData implements Serializable {
 
     private static final long   serialVersionUID = -5069670140274203606L;
     private String              vfName;
-    private String              vfInvariantResourceUUID;
+    private String              vfInvariantResourceUuid;
     private List<CldsVfcData>   cldsVfcs;
 
-    private List<CldsVfKPIData> cldsKPIList;
+    private List<CldsVfKPIData> cldsKpiList;
 
     public List<CldsVfKPIData> getCldsKPIList() {
-        return cldsKPIList;
+        return cldsKpiList;
     }
 
-    public void setCldsKPIList(List<CldsVfKPIData> cldsKPIList) {
-        this.cldsKPIList = cldsKPIList;
+    public void setCldsKPIList(List<CldsVfKPIData> cldsKpiList) {
+        this.cldsKpiList = cldsKpiList;
     }
 
     public String getVfName() {
@@ -60,11 +60,11 @@ public class CldsVfData implements Serializable {
     }
 
     public String getVfInvariantResourceUUID() {
-        return vfInvariantResourceUUID;
+        return vfInvariantResourceUuid;
     }
 
-    public void setVfInvariantResourceUUID(String vfInvariantResourceUUID) {
-        this.vfInvariantResourceUUID = vfInvariantResourceUUID;
+    public void setVfInvariantResourceUUID(String vfInvariantResourceUuid) {
+        this.vfInvariantResourceUuid = vfInvariantResourceUuid;
     }
 
 }

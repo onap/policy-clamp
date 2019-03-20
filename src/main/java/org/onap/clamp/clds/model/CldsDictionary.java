@@ -42,11 +42,11 @@ public class CldsDictionary {
     private List<CldsDictionaryItem> cldsDictionaryItems = new ArrayList<>();
 
     /**
-     * Creates or updates dictionary item for a dictionary in DB
+     * Creates or updates dictionary item for a dictionary in DB.
      *
-     * @param dictionaryName
-     * @param cldsDao
-     * @param userId
+     * @param dictionaryName The dictionary name
+     * @param cldsDao The CldsDao
+     * @param userId The user ID
      */
     public void save(String dictionaryName, CldsDao cldsDao, String userId) {
         List<CldsDictionary> list = cldsDao.getDictionary(this.getDictionaryId(), dictionaryName);
@@ -69,6 +69,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Get the dictionary ID.
      * @return the dictionaryId
      */
     public String getDictionaryId() {
@@ -76,6 +77,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Set the dictionary Id.
      * @param dictionaryId
      *        the dictionaryId to set
      */
@@ -84,6 +86,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Get the dictionary name.
      * @return the dictionaryName
      */
     public String getDictionaryName() {
@@ -91,6 +94,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Set the dictionary name.
      * @param dictionaryName
      *        the dictionaryName to set
      */
@@ -99,6 +103,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Get the createdBy info.
      * @return the createdBy
      */
     public String getCreatedBy() {
@@ -106,6 +111,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Set the createdBy info.
      * @param createdBy
      *        the createdBy to set
      */
@@ -114,6 +120,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Get the updatedBy info.
      * @return the updatedBy
      */
     public String getUpdatedBy() {
@@ -121,6 +128,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Set the updatedBy info.
      * @param updatedby
      *        the updatedBy to set
      */
@@ -129,6 +137,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Get the last updated date.
      * @return the lastUpdatedDate
      */
     public String getLastUpdatedDate() {
@@ -136,6 +145,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Set the last updated date.
      * @param lastUpdatedDate
      *        the lastUpdatedDate to set
      */
@@ -144,6 +154,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Get all the dictionary items.
      * @return the cldsDictionaryItems
      */
     public List<CldsDictionaryItem> getCldsDictionaryItems() {
@@ -151,6 +162,7 @@ public class CldsDictionary {
     }
 
     /**
+     * Set the whole dictionary items.
      * @param cldsDictionaryItems
      *        the cldsDictionaryItems to set
      */

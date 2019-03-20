@@ -50,9 +50,9 @@ public class TcaItem {
     private List<TcaThreshold>        tcaThresholds;
 
     /**
-     * Parse Tca Item given json node
+     * Parse Tca Item given json node.
      *
-     * @param tcaJson
+     * @param tcaJson The tac json
      */
     public TcaItem(JsonElement tcaJson) {
 

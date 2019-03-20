@@ -35,6 +35,11 @@ public class CldsDbServiceCache {
     private String serviceId;
     private InputStream cldsDataInstream;
 
+    /**
+     * Constructor.
+     * @param cldsServiceData The cles service data
+     * @throws IOException IO Exception
+     */
     public CldsDbServiceCache(CldsServiceData cldsServiceData) throws IOException {
         setCldsDataInstream(cldsServiceData);
         setInvariantId(cldsServiceData.getServiceInvariantUUID());

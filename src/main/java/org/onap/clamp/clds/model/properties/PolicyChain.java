@@ -35,7 +35,6 @@ import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse Policy json properties.
- *
  * Example json:
  * {"Policy_1e33tn8":{"PolicyTest1":[{"name":"pname","value":"PolicyTest1"},{
  * "name":"pid","value":"1"},{"name":"timeout","value":"345"},{
@@ -67,12 +66,17 @@ public class PolicyChain {
     private List<PolicyItem>          policyItems;
     private String                    policyType;
 
+    /**
+     * Constructor.
+     * @param node The policy element in JsonElement format
+     * @throws IOException The IO Exception
+     */
     public PolicyChain(JsonElement node) throws IOException {
         if (node != null && node.isJsonArray() && node.getAsJsonArray().size() > 0) {
-            JsonArray operationalPolicyParameters = node.getAsJsonArray();
             policyId = JsonUtils.getStringValueByName(node, "pid");
             timeout = JsonUtils.getIntValueByName(node, "timeout");
             policyType = JsonUtils.getStringValueByName(node, "policyType");
+            JsonArray operationalPolicyParameters = node.getAsJsonArray();
 
             JsonArray policyConfigurations = operationalPolicyParameters.get(operationalPolicyParameters.size() - 1)
                 .getAsJsonObject()
@@ -87,6 +91,7 @@ public class PolicyChain {
         }
     }
     /**
+     * Get the policy Id.
      * @return the policyId
      */
     public String getPolicyId() {
@@ -94,6 +99,7 @@ public class PolicyChain {
     }
 
     /**
+     * Get the time out.
      * @return the timeout
      */
     public Integer getTimeout() {
@@ -101,6 +107,7 @@ public class PolicyChain {
     }
 
     /**
+     * Get the policy items.
      * @return the policyItems
      */
     public List<PolicyItem> getPolicyItems() {
@@ -108,6 +115,7 @@ public class PolicyChain {
     }
 
     /**
+     * Get the policy type.
      * @return the policyType
      */
     public String getPolicyType() {

@@ -38,16 +38,16 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     private String toscaModelName;
 
     /**
-     * Construct
+     * Construct.
      */
-    public CldsToscaModel () {
+    public CldsToscaModel() {
     }
 
     /**
-     * Creates or updates Tosca Model to DB
+     * Creates or updates Tosca Model to DB.
      *
-     * @param cldsDao
-     * @param userId
+     * @param cldsDao The cldsDao
+     * @param userId The user Id
      */
     public CldsToscaModel save(CldsDao cldsDao, ClampProperties refProp, PolicyClient policyClient, String userId) {
         CldsToscaModel cldsToscaModel = null;
@@ -84,6 +84,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     }
 
     /**
+     * Get the Id.
      * @return the id
      */
     public String getId() {
@@ -91,6 +92,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     }
 
     /**
+     * Set the id.
      * @param id
      *        the id to set
      */
@@ -99,6 +101,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     }
 
     /**
+     * Get the policy type.
      * @return the policyType
      */
     public String getPolicyType() {
@@ -106,6 +109,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     }
 
     /**
+     * Set the policy type.
      * @param policyType
      *        the policyType to set
      */
@@ -114,6 +118,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     }
 
     /**
+     * Get the tosca model name.
      * @return the toscaModelName
      */
     public String getToscaModelName() {
@@ -121,6 +126,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
     }
 
     /**
+     * Set the tosca model name.
      * @param toscaModelName
      *        the toscaModelName to set
      */

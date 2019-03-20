@@ -36,7 +36,6 @@ import java.util.Map.Entry;
 
 /**
  * Parse Policy json properties.
- * <p>
  * Example json:
  * "Policy_005sny1":[[{"name":"timeout","value":"5"}],{"policyConfigurations":[[
  * {"name":"recipe","value":["restart"]},{"name":"maxRetries","value":["3"]},{
@@ -62,10 +61,10 @@ public class Policy extends AbstractModelElement {
     /**
      * Parse Policy given json node.
      *
-     * @param modelProp
-     * @param modelBpmn
-     * @param modelJson
-     * @throws IOException
+     * @param modelProp The model properties.
+     * @param modelBpmn The model bpmn
+     * @param modelJson The model json
+     * @throws IOException The IO Exception
      */
     public Policy(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) throws IOException {
         super(TYPE_POLICY, modelProp, modelBpmn, modelJson);
@@ -81,6 +80,7 @@ public class Policy extends AbstractModelElement {
     }
 
     /**
+     * Get the policy chains.
      * @return the policyChains
      */
     public List<PolicyChain> getPolicyChains() {

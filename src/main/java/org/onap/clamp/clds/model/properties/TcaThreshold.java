@@ -42,9 +42,9 @@ public class TcaThreshold {
     private String                    closedLoopEventStatus;
 
     /**
-     * Parse Tca Threshhold given json node
+     * Parse Tca Threshhold given json node.
      *
-     * @param tcaTresholdConfiguration
+     * @param tcaTresholdConfiguration The tca threshold in JsonArray format
      */
     public TcaThreshold(JsonArray tcaTresholdConfiguration) {
 

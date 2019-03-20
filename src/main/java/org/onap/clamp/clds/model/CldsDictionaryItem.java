@@ -42,6 +42,12 @@ public class CldsDictionaryItem {
     private String updatedBy;
     private String lastUpdatedDate;
 
+    /**
+     * Save the dictionary item.
+     * @param dictionaryName The name of the dictionary
+     * @param cldsDao The cldsDao
+     * @param userId The user id
+     */
     public void save(String dictionaryName, CldsDao cldsDao, String userId) {
         // Check if dictionary exists.
         List<CldsDictionary> list = cldsDao.getDictionary(this.getDictionaryId(), dictionaryName);
@@ -64,6 +70,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the dictionary element id.
      * @return the dictElementId
      */
     public String getDictElementId() {
@@ -71,6 +78,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the dictionary element id.
      * @param dictElementId
      *        the dictElementId to set
      */
@@ -79,6 +87,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the dictionary id.
      * @return the dictionaryId
      */
     public String getDictionaryId() {
@@ -86,6 +95,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the dictionary id.
      * @param dictionaryId
      *        the dictionaryId to set
      */
@@ -94,6 +104,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the dictionary name.
      * @return the dictElementName
      */
     public String getDictElementName() {
@@ -101,6 +112,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the dictionary name.
      * @param dictElementName
      *        the dictElementName to set
      */
@@ -109,6 +121,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the dictionary element short name.
      * @return the dictElementShortName
      */
     public String getDictElementShortName() {
@@ -116,6 +129,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the dictionary element short name.
      * @param dictElementShortName
      *        the dictElementShortName to set
      */
@@ -124,6 +138,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the dictionary element description.
      * @return the dictElementDesc
      */
     public String getDictElementDesc() {
@@ -131,6 +146,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the dictionary element description.
      * @param dictElementDesc
      *        the dictElementDesc to set
      */
@@ -139,6 +155,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the dictionary element type.
      * @return the dictElementType
      */
     public String getDictElementType() {
@@ -146,6 +163,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the dictionary element type.
      * @param dictElementType
      *        the dictElementType to set
      */
@@ -154,6 +172,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the createdBy info.
      * @return the createdBy
      */
     public String getCreatedBy() {
@@ -161,6 +180,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the createdBy info.
      * @param createdBy
      *        the createdBy to set
      */
@@ -169,6 +189,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the updatedBy info.
      * @return the updatedBy
      */
     public String getUpdatedBy() {
@@ -176,6 +197,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the updatedBy info.
      * @param updatedby
      *        the updatedBy to set
      */
@@ -184,6 +206,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Get the last updated date.
      * @return the lastUpdatedDate
      */
     public String getLastUpdatedDate() {
@@ -191,6 +214,7 @@ public class CldsDictionaryItem {
     }
 
     /**
+     * Set the last updated date.
      * @param lastUpdatedDate
      *        the lastUpdatedDate to set
      */

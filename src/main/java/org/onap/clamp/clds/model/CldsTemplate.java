@@ -36,9 +36,8 @@ public class CldsTemplate {
     public static final String STATUS_ACTIVE   = "ACTIVE";
     public static final String STATUS_STOPPED  = "STOPPED";
     public static final String STATUS_DELETING = "DELETING";
-    public static final String STATUS_ERROR    = "ERROR";   // manual
-                                                            // intervention
-                                                            // required
+    // manual intervention required
+    public static final String STATUS_ERROR    = "ERROR";
     public static final String STATUS_UNKNOWN  = "UNKNOWN";
 
     private String             id;
@@ -60,8 +59,8 @@ public class CldsTemplate {
     /**
      * Save template to DB.
      *
-     * @param cldsDao
-     * @param userid
+     * @param cldsDao The cldsDao
+     * @param userid The user Id
      */
     public void save(CldsDao cldsDao, String userid) {
         cldsDao.setTemplate(this, userid);
@@ -70,8 +69,10 @@ public class CldsTemplate {
     /**
      * Retrieve from DB.
      *
-     * @param cldsDao
-     * @param name
+     * @param cldsDao The cldsDao
+     * @param name The template name to retrieve
+     * @param okIfNotFound 
+     *     The flag indicating whether exception will be returned in case nothing is found
      * @return
      */
     public static CldsTemplate retrieve(CldsDao cldsDao, String name, boolean okIfNotFound) {

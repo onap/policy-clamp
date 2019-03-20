@@ -44,11 +44,11 @@ public class Tca extends AbstractModelElement {
     private static final String       TYPE_TCA    = "tca";
 
     /**
-     * Parse Tca given json node
+     * Parse Tca given json node.
      *
-     * @param modelProp
-     * @param modelBpmn
-     * @param modelJson
+     * @param modelProp The model properties
+     * @param modelBpmn The model bpmn
+     * @param modelJson The model json
      */
     public Tca(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
         super(TYPE_TCA, modelProp, modelBpmn, modelJson);

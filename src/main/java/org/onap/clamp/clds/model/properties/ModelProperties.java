@@ -127,7 +127,8 @@ public class ModelProperties {
                                 .newInstance(this, modelBpmn, modelJson)));
                     } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
                         | InvocationTargetException e) {
-                        logger.warn("Unable to instantiate a ModelElement "+ entry.getValue()+", exception follows: ", e);
+                        logger.warn("Unable to instantiate a ModelElement " + entry.getValue()
+                            + ", exception follows: ", e);
                     }
                 });
         }
@@ -136,8 +137,8 @@ public class ModelProperties {
     /**
      * Get the VF for a model. If return null if there is no VF.
      *
-     * @param model
-     * @return
+     * @param model The clds model
+     * @return The vf of the model
      */
     public static String getVf(CldsModel model) {
         List<String> vfs = null;
@@ -174,6 +175,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get the model name.
      * @return the modelName
      */
     public String getModelName() {
@@ -181,6 +183,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get the control name.
      * @return the controlName
      */
     public String getControlName() {
@@ -188,6 +191,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get the control name qnd policy uniqueId.
      * @return the controlNameAndPolicyUniqueId
      */
     public String getControlNameAndPolicyUniqueId() {
@@ -195,6 +199,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get the current policy name.
      * @return the currentPolicyName
      */
     private String getCurrentPolicyName() {
@@ -206,6 +211,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get the current policy scope and policy name.
      * @return the currentPolicyScopeAndPolicyName
      */
     public String getCurrentPolicyScopeAndPolicyName() {
@@ -213,6 +219,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get policy name for dcae deploy.
      * @return The policyName that wil be used in input parameters of DCAE deploy
      */
     public String getPolicyNameForDcaeDeploy(ClampProperties refProp) {
@@ -221,6 +228,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get policy scope and name with uniqueid.
      * @return the policyScopeAndNameWithUniqueId
      */
     public String getPolicyScopeAndNameWithUniqueId() {
@@ -229,6 +237,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get policy scope and name with unique guardid.
      * @return the policyScopeAndNameWithUniqueId
      */
     public String getPolicyScopeAndNameWithUniqueGuardId() {
@@ -237,6 +246,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get current policy scope and full policy name.
      * @return the currentPolicyScopeAndFullPolicyName
      */
     public String getCurrentPolicyScopeAndFullPolicyName(String policyNamePrefix) {
@@ -245,6 +255,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get policy name with scope context.
      * @return the PolicyNameWithScopeContext
      */
     public String getPolicyNameWithScopeContext(String policyScope, String policyType, String vnfScope, String context,
@@ -254,6 +265,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get policy name with prefix scope context.
      * @return the PolicyNameWithPrefixScopeContext
      */
     public String getPolicyNameWithPrefixScopeContext(String policyScope, String policyType, String vnfScope,
@@ -273,6 +285,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get current model element id.
      * @return the currentModelElementId
      */
     public String getCurrentModelElementId() {
@@ -291,6 +304,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get policy uniqueId.
      * @return the policyUniqueId
      */
     public String getPolicyUniqueId() {
@@ -317,6 +331,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get actioncd.
      * @return the actionCd
      */
     public String getActionCd() {
@@ -324,6 +339,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get the testOnly flag value.
      * @return the testOnly
      */
     public boolean isTestOnly() {
@@ -331,6 +347,7 @@ public class ModelProperties {
     }
 
     /**
+     * Get the global value.
      * @return the global
      */
     public Global getGlobal() {

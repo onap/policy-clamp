@@ -57,12 +57,12 @@ public class CldsAlarmCondition implements Serializable {
         this.alarmConditionKey = alarmConditionKey;
     }
 
-	public String getEventName() {
-		return eventName;
-	}
+    public String getEventName() {
+        return eventName;
+    }
 
-	public void setEventName(String eventName) {
-		this.eventName = eventName;
-	}
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
 
 }

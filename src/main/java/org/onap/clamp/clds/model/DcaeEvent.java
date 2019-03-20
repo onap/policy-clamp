@@ -39,15 +39,15 @@ public class DcaeEvent {
     public static final String ARTIFACT_NAME_SUFFIX = ".yml";
 
     private String event;
-    private String serviceUUID;
-    private String resourceUUID;
+    private String serviceUuid;
+    private String resourceUuid;
     private String artifactName; // controlName.yml
     private List<CldsModelInstance> instances;
 
     /**
-     * Transform a DCAE Event Action to a CldsEvent.actionCd
+     * Transform a DCAE Event Action to a CldsEvent.actionCd.
      *
-     * @return
+     * @return The clds action.
      */
     public String getCldsActionCd() {
         if (event == null || event.length() == 0) {
@@ -88,6 +88,7 @@ public class DcaeEvent {
     }
 
     /**
+     * Get the event.
      * @return the event
      */
     public String getEvent() {
@@ -95,6 +96,7 @@ public class DcaeEvent {
     }
 
     /**
+     * Set the event.
      * @param event
      *        the event to set
      */
@@ -103,36 +105,41 @@ public class DcaeEvent {
     }
 
     /**
+     * Get the serviceUUID.
      * @return the serviceUUID
      */
     public String getServiceUUID() {
-        return serviceUUID;
+        return serviceUuid;
     }
 
     /**
+     * Set the serviceUUID.
      * @param serviceUUID
      *        the serviceUUID to set
      */
-    public void setServiceUUID(String serviceUUID) {
-        this.serviceUUID = serviceUUID;
+    public void setServiceUUID(String serviceUuid) {
+        this.serviceUuid = serviceUuid;
     }
 
     /**
+     * Get the resourceUUID.
      * @return the resourceUUID
      */
     public String getResourceUUID() {
-        return resourceUUID;
+        return resourceUuid;
     }
 
     /**
+     * Set the resourceUUID.
      * @param resourceUUID
      *        the resourceUUID to set
      */
-    public void setResourceUUID(String resourceUUID) {
-        this.resourceUUID = resourceUUID;
+    public void setResourceUUID(String resourceUuid) {
+        this.resourceUuid = resourceUuid;
     }
 
     /**
+     * Get the artifact name.
      * @return the artifactName
      */
     public String getArtifactName() {
@@ -140,6 +147,7 @@ public class DcaeEvent {
     }
 
     /**
+     * Set the artifact name.
      * @param artifactName
      *        the artifactName to set
      */
@@ -147,10 +155,18 @@ public class DcaeEvent {
         this.artifactName = artifactName;
     }
 
+    /**
+     * Get the list of instances.
+     * @return The list of model instances
+     */
     public List<CldsModelInstance> getInstances() {
         return instances;
     }
 
+    /**
+     * Set the list of model instances.
+     * @param instances The list of model instances to set
+     */
     public void setInstances(List<CldsModelInstance> instances) {
         this.instances = instances;
     }

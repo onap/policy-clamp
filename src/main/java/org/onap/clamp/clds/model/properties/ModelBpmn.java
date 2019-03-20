@@ -43,7 +43,6 @@ import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse Model BPMN properties.
- * <p>
  * Example json: {"policy" :[{"id":"Policy_0oxeocn", "from":"StartEvent_1"}]}
  */
 public class ModelBpmn {
@@ -58,10 +57,10 @@ public class ModelBpmn {
     private List<String> bpmnElementIds;
 
     /**
-     * Create ModelBpmn and populate maps from json
+     * Create ModelBpmn and populate maps from json.
      *
-     * @param modelBpmnPropText
-     * @return
+     * @param modelBpmnPropText The model bpmn properties text
+     * @return The model bpmn
      */
     public static ModelBpmn create(String modelBpmnPropText) {
         try {
@@ -97,7 +96,7 @@ public class ModelBpmn {
     /**
      * Add entry to both maps.
      *
-     * @param entry
+     * @param entry The model bpmn entry.
      */
     private void addEntry(ModelBpmnEntry entry) {
         addEntry(entriesByType, entry, entry.getType());
@@ -107,9 +106,9 @@ public class ModelBpmn {
     /**
      * Add an entry to provided map with provided key.
      *
-     * @param map
-     * @param entry
-     * @param key
+     * @param map The map to add the model bpmn entry
+     * @param entry The model bmpn entry
+     * @param key The key
      */
     private static void addEntry(Map<String, List<ModelBpmnEntry>> map, ModelBpmnEntry entry, String key) {
         List<ModelBpmnEntry> list = map.computeIfAbsent(key, k -> new ArrayList<>());
@@ -129,6 +128,7 @@ public class ModelBpmn {
     }
 
     /**
+     * Get the id.
      * @return the id field given the ModelElement type
      */
     public String getId(String type) {
@@ -140,6 +140,7 @@ public class ModelBpmn {
     }
 
     /**
+     * Get the form id.
      * @return the fromId field given the ModelElement type
      */
     public String getFromId(String type) {
@@ -151,6 +152,7 @@ public class ModelBpmn {
     }
 
     /**
+     * Get the type.
      * @return the ModelElement type given the ModelElement id
      */
     public String getType(String id) {
@@ -158,6 +160,7 @@ public class ModelBpmn {
     }
 
     /**
+     * Get the bpmn element ids.
      * @return list of elementIds from bpmn
      */
     public List<String> getBpmnElementIds() {

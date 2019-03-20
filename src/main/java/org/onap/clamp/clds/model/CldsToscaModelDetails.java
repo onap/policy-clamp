@@ -40,6 +40,7 @@ public class CldsToscaModelDetails {
     private String lastUpdatedDate;
 
     /**
+     * Get the id.
      * @return the id
      */
     public String getId() {
@@ -47,6 +48,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Set the id.
      * @param id
      *        the id to set
      */
@@ -55,6 +57,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Get the tosca model name.
      * @return the toscaModelName
      */
     public String getToscaModelName() {
@@ -62,6 +65,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Set the tosca model name.
      * @param toscaModelName
      *        the toscaModelName to set
      */
@@ -70,6 +74,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Get the policy type.
      * @return the policyType
      */
     public String getPolicyType() {
@@ -77,6 +82,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Set the policy type.
      * @param policyType
      *        the policyType to set
      */
@@ -85,6 +91,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Get the list of tosca model revisions.
      * @return the toscaModelRevisions
      */
     public List<CldsToscaModelRevision> getToscaModelRevisions() {
@@ -92,6 +99,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Set the list of tosca model revisions.
      * @param toscaModelRevisions
      *        the toscaModelRevisions to set
      */
@@ -100,6 +108,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Get the user id.
      * @return the userId
      */
     public String getUserId() {
@@ -107,6 +116,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Set the user id.
      * @param userId
      *        the userId to set
      */
@@ -115,6 +125,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Get the last updated date.
      * @return the lastUpdatedDate
      */
     public String getLastUpdatedDate() {
@@ -122,6 +133,7 @@ public class CldsToscaModelDetails {
     }
 
     /**
+     * Set the last updated date.
      * @param lastUpdatedDate
      *        the lastUpdatedDate to set
      */

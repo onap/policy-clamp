@@ -37,7 +37,6 @@ import org.yaml.snakeyaml.Yaml;
 
 /**
  * Parse policyConfigurations from Policy json properties.
- * <p>
  * Example json:
  * "Policy_005sny1":[[{"name":"timeout","value":"5"}],{"policyConfigurations":[[
  * {"name":"recipe","value":["restart"]},{"name":"maxRetries","value":["3"]},{
@@ -131,6 +130,7 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
+     * Get the id.
      * @return the id
      */
     public String getId() {
@@ -138,6 +138,7 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
+     * Get the recipe.
      * @return the recipe
      */
     public String getRecipe() {
@@ -145,48 +146,55 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
-     * @set the id
+     * Set the id.
+     * @param the id
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * @set the recipe
+     * Set the recipe.
+     * @param the recipe
      */
     public void setRecipe(String recipe) {
         this.recipe = recipe;
     }
 
     /**
-     * @set the parentPolicy
+     * Set the parent policy.
+     * @param the parentPolicy
      */
     public void setParentPolicy(String parentPolicy) {
         this.parentPolicy = parentPolicy;
     }
 
     /**
-     * @set the maxRetries
+     * Set the max retries.
+     * @param the maxRetries
      */
     public void setMaxRetries(int maxRetries) {
         this.maxRetries = maxRetries;
     }
 
     /**
-     * @set the retryTimeLimit
+     * Set the retry time limit.
+     * @param the retryTimeLimit
      */
     public void setRetryTimeLimit(int retryTimeLimit) {
         this.retryTimeLimit = retryTimeLimit;
     }
 
     /**
-     * @set the parentPolicyConditions
+     * Set the parent policy conditions.
+     * @param the parentPolicyConditions
      */
     public void setParentPolicyConditions(List<String> parentPolicyConditions) {
         this.parentPolicyConditions = parentPolicyConditions;
     }
 
     /**
+     * Get the max retires.
      * @return the maxRetries
      */
     public int getMaxRetries() {
@@ -194,6 +202,7 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
+     * Get the retry time limit.
      * @return the retryTimeLimit
      */
     public int getRetryTimeLimit() {
@@ -201,6 +210,7 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
+     * Get the parent policy.
      * @return the parentPolicy
      */
     public String getParentPolicy() {
@@ -208,6 +218,7 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
+     * Get the list of parent policy conditions.
      * @return the parentPolicyConditions
      */
     public List<String> getParentPolicyConditions() {
@@ -215,6 +226,7 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
+     * Get the actor.
      * @return the actor
      */
     public String getActor() {
@@ -222,7 +234,8 @@ public class PolicyItem implements Cloneable {
     }
 
     /**
-     * @set the actor
+     * Set the actor.
+     * @param the actor
      */
     public void setActor(String actor) {
         this.actor = actor;
@@ -252,6 +265,10 @@ public class PolicyItem implements Cloneable {
         return recipePayload;
     }
 
+    /**
+     * Get oap rop.
+     * @return The oap rop?
+     */
     public String getOapRop() {
         if (oapRop == null) {
             oapRop = "0m";
@@ -259,6 +276,10 @@ public class PolicyItem implements Cloneable {
         return oapRop;
     }
 
+    /**
+     * Get oap limit.
+     * @return the oap limit
+     */
     public String getOapLimit() {
         if (oapLimit == null) {
             oapLimit = "0";

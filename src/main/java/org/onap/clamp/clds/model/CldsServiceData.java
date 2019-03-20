@@ -39,17 +39,17 @@ public class CldsServiceData implements Serializable {
     private static final long serialVersionUID = -9153372664377279423L;
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsServiceData.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-    private String serviceInvariantUUID;
-    private String serviceUUID;
+    private String serviceInvariantUuid;
+    private String serviceUiod;
     private Long ageOfRecord;
     private List<CldsVfData> cldsVfs;
 
     public String getServiceInvariantUUID() {
-        return serviceInvariantUUID;
+        return serviceInvariantUuid;
     }
 
-    public void setServiceInvariantUUID(String serviceInvariantUUID) {
-        this.serviceInvariantUUID = serviceInvariantUUID;
+    public void setServiceInvariantUUID(String serviceInvariantUuid) {
+        this.serviceInvariantUuid = serviceInvariantUuid;
     }
 
     public List<CldsVfData> getCldsVfs() {
@@ -61,11 +61,11 @@ public class CldsServiceData implements Serializable {
     }
 
     public String getServiceUUID() {
-        return serviceUUID;
+        return serviceUiod;
     }
 
-    public void setServiceUUID(String serviceUUID) {
-        this.serviceUUID = serviceUUID;
+    public void setServiceUUID(String serviceUuid) {
+        this.serviceUiod = serviceUuid;
     }
 
     public Long getAgeOfRecord() {
@@ -80,7 +80,7 @@ public class CldsServiceData implements Serializable {
      * Filter out any VFs that the user is not authorized for. Use the
      * CldsService to determine if the user is authorized for a VF.
      *
-     * @param svc
+     * @param svc The clds service
      */
     public void filterVfs(CldsService svc) {
         List<CldsVfData> filteredCldsVfs = new ArrayList<>();

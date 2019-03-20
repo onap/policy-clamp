@@ -25,6 +25,7 @@
  * Represents a CLDS Tosca model revision
  *
  */
+
 package org.onap.clamp.clds.model;
 
 public class CldsToscaModelRevision {
@@ -38,6 +39,7 @@ public class CldsToscaModelRevision {
     private String lastUpdatedDate;
 
     /**
+     * Get the revision id.
      * @return the revisionId
      */
     public String getRevisionId() {
@@ -45,6 +47,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Set the revision id.
      * @param revisionId
      *        the revisionId to set
      */
@@ -53,6 +56,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Get the tosca model yaml.
      * @return the toscaModelYaml
      */
     public String getToscaModelYaml() {
@@ -60,6 +64,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Set the tosca model yaml.
      * @param toscaModelYaml
      *        the toscaModelYaml to set
      */
@@ -68,6 +73,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Get the version.
      * @return the version
      */
     public double getVersion() {
@@ -75,6 +81,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Set the version.
      * @param version
      *        the version to set
      */
@@ -83,6 +90,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Get the tosca model json.
      * @return the toscaModelJson
      */
     public String getToscaModelJson() {
@@ -90,6 +98,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Set the tosca model json.
      * @param toscaModelJson
      *        the toscaModelJson to set
      */
@@ -98,6 +107,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Get the user id.
      * @return the userId
      */
     public String getUserId() {
@@ -105,6 +115,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Set the user id.
      * @param userId
      *        the userId to set
      */
@@ -113,6 +124,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Get the created date.
      * @return the createdDate
      */
     public String getCreatedDate() {
@@ -120,6 +132,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Set the created date.
      * @param createdDate
      *        the createdDate to set
      */
@@ -128,6 +141,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Get the last updated date.
      * @return the lastUpdatedDate
      */
     public String getLastUpdatedDate() {
@@ -135,6 +149,7 @@ public class CldsToscaModelRevision {
     }
 
     /**
+     * Set the last updated date.
      * @param lastUpdatedDate
      *        the lastUpdatedDate to set
      */

@@ -30,7 +30,7 @@ public class CldsVfcData implements Serializable {
 
     private static final long        serialVersionUID = 406993878174183557L;
     private String                   vfcName;
-    private String                   vfcInvariantResourceUUID;
+    private String                   vfcInvariantResourceUuid;
     private List<CldsAlarmCondition> cldsAlarmConditions;
 
     public String getVfcName() {
@@ -50,11 +50,11 @@ public class CldsVfcData implements Serializable {
     }
 
     public String getVfcInvariantResourceUUID() {
-        return vfcInvariantResourceUUID;
+        return vfcInvariantResourceUuid;
     }
 
-    public void setVfcInvariantResourceUUID(String vfcInvariantResourceUUID) {
-        this.vfcInvariantResourceUUID = vfcInvariantResourceUUID;
+    public void setVfcInvariantResourceUUID(String vfcInvariantResourceUuid) {
+        this.vfcInvariantResourceUuid = vfcInvariantResourceUuid;
     }
 
 }

@@ -27,8 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 /**
- * Model BPMN property entry
- * <p>
+ * Model BPMN property entry.
  * Example json: {"policy":
  * [{"id":"Policy_0oxeocn", "from":"StartEvent_1"}]}
  */
@@ -44,9 +43,9 @@ public class ModelBpmnEntry {
      * Parse the json so that the "id" and "from" fields can be retrieved on
      * demand.
      *
-     * @param type
-     * @param id
-     * @param fromId
+     * @param type The type
+     * @param id The id
+     * @param fromId The form id
      */
     public ModelBpmnEntry(String type, String id, String fromId) {
         this.type = type;
@@ -55,6 +54,7 @@ public class ModelBpmnEntry {
     }
 
     /**
+     * Get the type.
      * @return the type
      */
     public String getType() {
@@ -62,6 +62,7 @@ public class ModelBpmnEntry {
     }
 
     /**
+     * Set the type.
      * @param type
      *            the type to set
      */
@@ -70,6 +71,7 @@ public class ModelBpmnEntry {
     }
 
     /**
+     * Get the id.
      * @return the id
      */
     public String getId() {
@@ -77,6 +79,7 @@ public class ModelBpmnEntry {
     }
 
     /**
+     * Set the id.
      * @param id
      *            the id to set
      */
@@ -85,6 +88,7 @@ public class ModelBpmnEntry {
     }
 
     /**
+     * Get the form id.
      * @return the fromId
      */
     public String getFromId() {
@@ -92,6 +96,7 @@ public class ModelBpmnEntry {
     }
 
     /**
+     * Set the form id.
      * @param fromId
      *            the fromId to set
      */

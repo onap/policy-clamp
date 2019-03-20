@@ -33,7 +33,6 @@ import org.onap.clamp.clds.util.JsonUtils;
 
 /**
  * Parse global json properties.
- * <p>
  * Example json:
  * "global":[{"name":"service","value":["vUSP"]},{"name":"vnf","value":["vCTS",
  * "v3CDB"]},{"name":"location","value":["san_diego","san_antonio","kansas_city"
@@ -54,7 +53,7 @@ public class Global {
     /**
      * Parse global given json node.
      *
-     * @param modelJson
+     * @param modelJson The model in json format.
      */
     public Global(JsonObject modelJson) {
         JsonElement globalNode = modelJson.get("global");
@@ -68,6 +67,7 @@ public class Global {
     }
 
     /**
+     * Get the service.
      * @return the service
      */
     public String getService() {
@@ -75,6 +75,7 @@ public class Global {
     }
 
     /**
+     * Set the service.
      * @param service
      *            the service to set
      */
@@ -83,17 +84,24 @@ public class Global {
     }
 
     /**
+     * Get the action set.
      * @return the actionSet
      */
     public String getActionSet() {
         return actionSet;
     }
 
+    /**
+     * Set tje actionSet.
+     * @param actionSet
+     *             The actionSet to set
+     */
     public void setActionSet(String actionSet) {
         this.actionSet = actionSet;
     }
 
     /**
+     * Get the resource vf.
      * @return the resourceVf
      */
     public List<String> getResourceVf() {
@@ -101,6 +109,7 @@ public class Global {
     }
 
     /**
+     * Set the resourceVf.
      * @param resourceVf
      *            the resourceVf to set
      */
@@ -109,6 +118,7 @@ public class Global {
     }
 
     /**
+     * Get the resource Vfc.
      * @return the resourceVfc
      */
     public List<String> getResourceVfc() {
@@ -116,6 +126,7 @@ public class Global {
     }
 
     /**
+     * Set tje respirce Vfc.
      * @param resourceVfc
      *            the resourceVfc to set
      */
@@ -124,6 +135,7 @@ public class Global {
     }
 
     /**
+     * Get the list of locations.
      * @return the location
      */
     public List<String> getLocation() {
@@ -131,6 +143,7 @@ public class Global {
     }
 
     /**
+     * Set the list of locations.
      * @param location
      *            the location to set
      */
@@ -138,14 +151,27 @@ public class Global {
         this.location = location;
     }
 
+    /**
+     * Get the deploy parameters.
+     * @return The deploy parameters
+     */
     public JsonObject getDeployParameters() {
         return deployParameters;
     }
 
+    /**
+     * Set the deploy parameters.
+     * @param deployParameters
+     *         the deploy parameters to set
+     */
     public void setDeployParameters(JsonObject deployParameters) {
         this.deployParameters = deployParameters;
     }
 
+    /**
+     * Get the vnf scope.
+     * @return The vnf scope
+     */
     public String getVnfScope() {
         return vnfScope;
     }

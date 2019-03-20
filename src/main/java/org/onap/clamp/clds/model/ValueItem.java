@@ -32,7 +32,7 @@ public class ValueItem {
     /**
      * Instantiate using value.
      *
-     * @param value
+     * @param value The value
      */
     public ValueItem(String value) {
         this.value = value;
@@ -42,6 +42,7 @@ public class ValueItem {
     }
 
     /**
+     * Get the value.
      * @return the value
      */
     public String getValue() {
@@ -49,6 +50,7 @@ public class ValueItem {
     }
 
     /**
+     * Set the value.
      * @param value
      *            the value to set
      */

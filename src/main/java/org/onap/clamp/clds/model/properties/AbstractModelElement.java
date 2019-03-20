@@ -45,7 +45,7 @@ public abstract class AbstractModelElement {
     private final ModelProperties modelProp;
 
     /**
-     * Perform base parsing of properties for a ModelElement (such as, VesCollector, Policy and Tca)
+     * Perform base parsing of properties for a ModelElement (such as, VesCollector, Policy and Tca).
      */
     protected AbstractModelElement(String type, ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
         this.type = type;
@@ -57,6 +57,7 @@ public abstract class AbstractModelElement {
     }
 
     /**
+     * Get the topic publishes.
      * @return the topicPublishes
      */
     public String getTopicPublishes() {
@@ -65,6 +66,7 @@ public abstract class AbstractModelElement {
 
 
     /**
+     * Get the id.
      * @return the id
      */
     public String getId() {
@@ -72,6 +74,7 @@ public abstract class AbstractModelElement {
     }
 
     /**
+     * Get the isFound flag.
      * @return the isFound
      */
     public boolean isFound() {
