@@ -36,6 +36,7 @@ import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.dcae.DcaeDeploymentException;
 import org.onap.clamp.clds.util.LoggingUtils;
+import org.onap.clamp.util.HttpConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +50,7 @@ public class DcaeDispatcherServices {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeDispatcherServices.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private final ClampProperties refProp;
-    private final DcaeHttpConnectionManager dcaeHttpConnectionManager;
+    private final HttpConnectionManager dcaeHttpConnectionManager;
     private static final String STATUS_URL_LOG = "Status URL extracted: ";
     private static final String DCAE_URL_PREFIX = "/dcae-deployments/";
     private static final String DCAE_URL_PROPERTY_NAME = "dcae.dispatcher.url";
@@ -58,7 +59,7 @@ public class DcaeDispatcherServices {
     private static final String DCAE_STATUS_FIELD = "status";
 
     @Autowired
-    public DcaeDispatcherServices(ClampProperties refProp, DcaeHttpConnectionManager dcaeHttpConnectionManager) {
+    public DcaeDispatcherServices(ClampProperties refProp, HttpConnectionManager dcaeHttpConnectionManager) {
         this.refProp = refProp;
         this.dcaeHttpConnectionManager = dcaeHttpConnectionManager;
     }
@@ -98,7 +99,7 @@ public class DcaeDispatcherServices {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getOperationStatus");
         try {
-            String responseStr = dcaeHttpConnectionManager.doDcaeHttpQuery(statusUrl, "GET", null, null);
+            String responseStr = dcaeHttpConnectionManager.doGeneralHttpQuery(statusUrl, "GET", null, null, "DCAE");
             JSONObject jsonObj = parseResponse(responseStr);
             String operationType = (String) jsonObj.get("operationType");
             String status = (String) jsonObj.get(DCAE_STATUS_FIELD);
@@ -189,7 +190,7 @@ public class DcaeDispatcherServices {
         String nodeAttr) throws IOException, ParseException {
         Date startTime = new Date();
         try {
-            String responseStr = dcaeHttpConnectionManager.doDcaeHttpQuery(url, requestMethod, payload, contentType);
+            String responseStr = dcaeHttpConnectionManager.doGeneralHttpQuery(url, requestMethod, payload, contentType, "DCAE");
             JSONObject jsonObj = parseResponse(responseStr);
             JSONObject linksObj = (JSONObject) jsonObj.get(node);
             String statusUrl = (String) linksObj.get(nodeAttr);
