@@ -1,0 +1,319 @@
+<!--
+  ============LICENSE_START=======================================================
+  ONAP CLAMP
+  ================================================================================
+  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+                              reserved.
+  ================================================================================
+  Licensed under the Apache License, Version 2.0 (the "License"); 
+  you may not use this file except in compliance with the License. 
+  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software 
+  distributed under the License is distributed on an "AS IS" BASIS, 
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+  See the License for the specific language governing permissions and 
+  limitations under the License.
+  ============LICENSE_END============================================
+  ===================================================================
+  
+  -->
+
+
+<style>
+.disabled {
+	background-color: #dddd;
+}
+
+label {
+	text-align: right;
+	vertical-align: middle;
+}
+
+.leftPolicyPanel {
+	padding: 0 10px 0 0;
+}
+
+.idError {
+	color: red;
+	padding: 50px 0px;
+	text-align: center;
+	display: none;
+}
+
+.policyPanel {
+	background-color: #f5f5f5;
+	padding: 15px 5px 0 5px;
+}
+
+.form-group.clearfix {
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+}
+
+label {
+	margin-bottom: 0px;
+}
+
+#policyTable {
+	cursor: pointer;
+	width: 100%;
+}
+
+#policyTable tr {
+	border-bottom: 1px solid #ddd;
+	border-collapse: collapse;
+	text-align: left;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#policyTable td {
+	padding: 8px 10px;
+}
+
+#policyTable tr.highlight {
+	background-color: #f5f5f5;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+#policyTableHolder {
+	height: 200px;
+	width: 100%;
+	overflow: auto;
+}
+</style>
+
+
+<div attribute-test="policywindowproperties" id="configure-widgets"
+	class="disabled-block-container">
+	<div attribute-test="policywindowpropertiesh" class="modal-header">
+		<button type="button" class="close" ng-click="close(false)"
+			aria-hidden="true" style="margin-top: -3px">&times;</button>
+		<h4>Operational Policy</h4>
+	</div>
+
+
+	<div class="modal-body">
+		<div attribute-test="policywindowpropertiesb" class="modal-body row">
+			<div class="leftPolicyPanel" style="display: none;">
+				<div class="panel panel-default">
+					<div id="policyTableHolder">
+						<table id="policyTable"></table>
+					</div>
+				</div>
+
+				<div id="spaceError" class="idError">Error: Spaces are not
+					allowed in the ID.</div>
+			</div>
+			<div class="panel panel-default col-sm-9 policyPanel">
+				<form id="Timeoutform" class="form-horizontal">
+					<div>
+						<div class="form-group clearfix row">
+							<label class="col-sm-2">Name</label>
+							<div class="col-sm-3" style="padding: 0px;">
+								<input type="text" id="pname" name="pname" maxlength="48"
+									placeholder="Enter Unique Name" class="form-control">
+							</div>
+
+							<label class="col-sm-1">ID</label>
+							<div class="col-sm-1" style="padding: 0px;">
+								<input onkeydown="return false;" type="text" id="pid" name="pid"
+									class="form-control" readonly>
+							</div>
+
+							<label for="userID" class="col-sm-3"
+								style="padding-left: 5px; padding-right: 10px;">Overall
+								Time Limit</label>
+							<div class="col-sm-2" style="padding-left: 0px;">
+								<input type="text" maxlength="10"
+									ng-keypress="isNumberKey(event)" class="form-control"
+									id="timeout" name="timeout">
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="panel-heading" style="background-color: white;">
+					<ul id="nav_Tabs" class="nav nav-tabs">
+						<li class><a id="add_one_more" href="#desc_tab"><span
+								class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+					</ul>
+				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						<div id="properties_tab" class="tab-pane fade in active"></div>
+					</div>
+				</div>
+			</div>
+
+			<span id="formSpan" style="display: none">
+				<form class="saveProps" class="form-horizontal">
+					<div>
+						<div class="form-group clearfix">
+							<label class="col-sm-4 control-label" for="recipe">Recipe</label>
+							<div class="col-sm-8">
+								<select class="form-control" name="recipe" id="recipe"
+									enableFilter="true"></select>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="maxRetries" class="col-sm-4 control-label">
+								Max Retries</label>
+							<div class="col-sm-8">
+								<input type="text" maxlength="5" class="form-control"
+									id="maxRetries" ng-keypress="isNumberKey(event)"
+									name="maxRetries"> </input>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="retryTimeLimit" class="col-sm-4 control-label">
+								Retry Time Limit</label>
+							<div class="col-sm-8">
+								<input type="text" maxlength="5" class="form-control"
+									id="retryTimeLimit" ng-keypress="isNumberKey(event)"
+									name="retryTimeLimit"></input>
+							</div>
+						</div>
+						<div style="display: none;" class="form-group clearfix">
+							<label for="_id" class="col-sm-4 control-label"> PolicyID</label>
+							<div class="col-sm-8">
+								<input type="text" onkeydown="return false;"
+									class="form-control" id="_id" name="_id" value=""></input>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="parentPolicy" class="col-sm-4 control-label">
+								Parent Policy</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="parentPolicy"
+									name="parentPolicy" enableFilter="true"><option
+										value=""></option></select>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="parentPolicyConditions"
+								class="col-sm-4 control-label"> Parent Policy Conditions</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="parentPolicyConditions"
+									name="parentPolicyConditions" multiple></select>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+
+							<label for="actor" class="col-sm-4 control-label"> Actor</label>
+							<div class="col-sm-8">
+								<select class="form-control" id="actor" name="actor"></select>
+							</div>
+
+							<label for="payload" class="col-sm-4 control-label">
+								Payload (YAML)</label>
+							<div class="col-sm-8">
+								<textarea class="form-control" id="recipePayload" name=recipePayload></textarea>
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="targetType" class="col-sm-4 control-label">
+								Target Type</label>
+							<div class="col-sm-8">
+								<select class="form-control" name="recipeLevel" id="recipeLevel">
+								</select>
+							</div>
+
+							<label for="targetResourceId" class="col-sm-4 control-label">
+								Target ResourceId</label>
+							<div class="col-sm-8">
+								<select class="form-control" name="targetResourceId"
+									id="targetResourceId" enableFilter="true"
+									ng-change="changeTargetResourceIdOther()" ng-model="targetResource" >
+									<option value=""></option>
+									<option value="Other:">Other:</option>
+								</select>
+							</div>
+							<input type="text" style="display: none" class="form-control"
+								id="targetResourceIdOther" name="targetResourceIdOther" value=""></input>
+						</div>
+						<div style="border: 2px dotted gray;">
+							<div class="form-group clearfix">
+								<label for="enableGuardPolicy" class="col-sm-4 control-label">
+									Enable Guard Policy</label>
+								<div class="col-sm-8">
+									<input type="checkbox" class="form-control"
+										name="enableGuardPolicy" id="enableGuardPolicy">
+								</div>
+								<div class="col-sm-8">
+									<label for="guardPolicyType" class="col-sm-4 control-label">
+										Guard Policy Type</label> <select class="form-control"
+										name="guardPolicyType" id="guardPolicyType"
+										ng-change="changeGuardPolicyType()" ng-model="guardType">
+										<option value="GUARD_MIN_MAX">MinMax</option>
+										<option value="GUARD_YAML">FrequencyLimiter</option>
+									</select>
+								</div>
+								<label for="guardTargets" class="col-sm-4 control-label">Guard
+									targets</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="guardTargets"
+										id="guardTargets" />
+								</div>
+							</div>
+
+							<div class="form-group clearfix" id="minMaxGuardPolicyDiv">
+								<label for="minGuard" class="col-sm-4 control-label">
+									Min Guard</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="minGuard" id="minGuard" />
+								</div>
+								<label for="maxGuard" class="col-sm-4 control-label">
+									Max Guard</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="maxGuard" id="maxGuard" />
+								</div>
+							</div>
+							<div class="form-group clearfix"
+								id="frequencyLimiterGuardPolicyDiv" style="display: none">
+								<label for="limitGuard" class="col-sm-4 control-label">Limit</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="limitGuard" id="limitGuard" />
+								</div>
+								<div class="col-sm-8">
+									<select class="form-control" name="timeUnitsGuard"
+										id="timeUnitsGuard" /> <label for="timeWindowGuard"
+										class="col-sm-4 control-label">Time Window</label>
+								</div>
+								<div class="col-sm-8">
+									<input class="form-control" name="timeWindowGuard"
+										id="timeWindowGuard" />
+								</div>
+							</div>
+							<div class="form-group clearfix">
+								<label for="guardActiveStart" class="col-sm-4 control-label">
+									Guard Active Start</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="guardActiveStart"
+										id="guardActiveStart" />
+								</div>
+								<label for="guardActiveEnd" class="col-sm-4 control-label">
+									Guard Active End</label>
+								<div class="col-sm-8">
+									<input class="form-control" name="guardActiveEnd"
+										id="guardActiveEnd" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</span>
+		</div>
+	</div>
+
+	<div attribute-test="policywindowpropertiesf" class="modal-footer">
+		<button id="savePropsBtn" class="btn btn-primary">Close</button>
+		<button ng-click="close(true)" id="close_button"
+			class="btn btn-primary">Cancel</button>
+	</div>
+
+</div>
