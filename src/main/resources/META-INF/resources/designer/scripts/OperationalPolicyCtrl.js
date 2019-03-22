@@ -54,7 +54,7 @@ function($scope, $rootScope, $uibModalInstance, data, operationalPolicyService,
 	};
 
 	$scope.submitForm = function(obj) {
-		var operationalPolicies = JSON.parse(JSON.stringify(getOperationalPolicies()));
+		var operationalPolicies = getOperationalPolicies();
 		if (obj !== null) {
 			operationalPolicies[0]["configurationsJson"] = obj;
 		}

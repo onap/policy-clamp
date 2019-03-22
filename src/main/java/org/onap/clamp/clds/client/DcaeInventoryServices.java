@@ -45,6 +45,7 @@ import org.onap.clamp.clds.model.properties.Global;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
+import org.onap.clamp.util.HttpConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,17 +63,17 @@ public class DcaeInventoryServices {
     public static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
     private final ClampProperties refProp;
     private final CldsDao cldsDao;
-    private final DcaeHttpConnectionManager dcaeHttpConnectionManager;
+    private final HttpConnectionManager httpConnectionManager;
 
     /**
      * Constructor.
      */
     @Autowired
     public DcaeInventoryServices(ClampProperties refProp, CldsDao cldsDao,
-        DcaeHttpConnectionManager dcaeHttpConnectionManager) {
+    		HttpConnectionManager httpConnectionManager) {
         this.refProp = refProp;
         this.cldsDao = cldsDao;
-        this.dcaeHttpConnectionManager = dcaeHttpConnectionManager;
+        this.httpConnectionManager = httpConnectionManager;
     }
 
     /**
@@ -206,7 +207,7 @@ public class DcaeInventoryServices {
         }
         for (int i = 0; i < retryLimit; i++) {
             metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
-            String response = dcaeHttpConnectionManager.doDcaeHttpQuery(fullUrl, "GET", null, null);
+            String response = httpConnectionManager.doGeneralHttpQuery(fullUrl, "GET", null, null, "DCAE");
             int totalCount = getTotalCountFromDcaeInventoryResponse(response);
             metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
             if (totalCount > 0) {

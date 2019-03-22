@@ -31,8 +31,8 @@ describe('Property controller tests', function() {
 		  expect(propertyController.getMsUI("test")).toEqual(null);
 	});
 
-	test('getStatus', () => {
-		  expect(propertyController.getStatus()).toEqual('DESIGN');
+	test('getLastUpdatedStatus', () => {
+		  expect(propertyController.getLastUpdatedStatus()).toEqual('DESIGN');
 	});
 
 	test('getDeploymentID', () => {

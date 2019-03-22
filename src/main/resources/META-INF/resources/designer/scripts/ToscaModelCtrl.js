@@ -89,7 +89,7 @@ app.controller('ToscaModelCtrl',
         	var policyType = $rootScope.selectedBoxName;
             var data = $scope.getEditorData();
             if(data !== null) {
-            	var msJson = JSON.parse(JSON.stringify(getMsJson(policyType)));
+            	var msJson = getMsJson(policyType);
             	msJson["properties"] = data[0];
             	toscaModelService.saveMsProperties(msJson).then(function(pars) {
             		updateMsProperties(policyType, msJson);
