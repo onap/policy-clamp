@@ -44,7 +44,6 @@ function($scope, $rootScope, $uibModalInstance, $http, $q, cldsModelService, $lo
 				}
 			}
 		}
-		setMultiSelect();
 		if (readMOnly) {
 			$("#savePropsBtn").attr("disabled", "");
 			$('select[multiple] option').each(function() {
