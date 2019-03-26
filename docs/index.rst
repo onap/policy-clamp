@@ -1,6 +1,6 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright (c) 2017-2018 AT&T Intellectual Property. All rights reserved.
+.. Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
 
 CLAMP - Closed Loop Automation Management Platform
 ==================================================
@@ -168,8 +168,8 @@ This file is a JSON that must be specified to Spring config, here is an example:
 
 Multiple controllers can be configured so that Clamp is able to receive the notifications from different SDC servers.
 Each Clamp existing in a cluster should have different consumerGroup and consumerId so that they can each consume the SDC notification.
-The environmentName is normally the Dmaap Topic used by SDC. 
-If the sdcAddress is not specified or not available (connection failure) the messageBusAddresses will be used (Dmaap servers) 
+The environmentName is normally the Dmaap Topic used by SDC.
+If the sdcAddress is not specified or not available (connection failure) the messageBusAddresses will be used (Dmaap servers)
 
 Administration
 --------------
@@ -184,7 +184,7 @@ For OOM, the URL is https://<host-ip>:30258/designer/index.html
      Default password : password
 
    - With AAF enabled, the certificate p12 must be added to the browser
-     ca path: src/main/resources/clds/aaf/org.onap.clamp.p12, password "China in the Spring"
+     ca path: src/main/resources/clds/aaf/org.onap.clamp.p12, password "34xqGdj]VnHothQ]5qCykV3X"
      Or get it from this page : https://wiki.onap.org/display/DW/Control+Loop+Flows+and+Models+for+Casablanca
 
 Human Interfaces
@@ -193,7 +193,7 @@ Human Interfaces
 
 User Interface (CLAMP Designer) - serve to configure control loop
 CLAMP UI is used to configure the Control Loop designed and distributed by SDC. From that UI it's possible to distribute the configuration policies and control the life-cycle of the DCAE Micro Services.
- 
+
 The following actions are done using the UI:
 
 * Design a control loop flow by selecting a predefined template from a list
