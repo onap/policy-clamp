@@ -71,6 +71,24 @@
                 <to uri="bean:org.onap.clamp.operation.LoopOperation?method=unDeployLoop(${header.loopName})" />
             </route>
         </put>
+        <put uri="/v2/loop/submit/{loopName}">
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=submitMsPolicies(${header.loopName})" />
+                <!-- <to uri="bean:org.onap.clamp.operation.LoopOperation?method=submitOpPolicy(${header.loopName})" />-->
+                <!--<to uri="bean:org.onap.clamp.operation.LoopOperation?method=submitGuardPolicy(${header.loopName})" /> -->
+            </route>
+        </put>
+        <put uri="/v2/loop/delete/{loopName}"
+            outType="org.onap.clamp.loop.Loop"
+            produces="application/json">
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteMsPolicies(${header.loopName})" />
+                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteOpPolicy(${header.loopName})" />
+                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteGuardPolicy(${header.loopName})" />
+            </route>
+        </put>
     </rest>
 </rests>
 

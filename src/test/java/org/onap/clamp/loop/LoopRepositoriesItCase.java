@@ -83,10 +83,10 @@ public class LoopRepositoriesItCase {
         return loop;
     }
 
-    private MicroServicePolicy getMicroServicePolicy(String name, String jsonRepresentation, String policyTosca,
+    private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation, String policyTosca,
         String jsonProperties, boolean shared) {
-        MicroServicePolicy µService = new MicroServicePolicy(name, policyTosca, shared,
-            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
+        MicroServicePolicy µService = new MicroServicePolicy(name, modelType, policyTosca, shared,
+            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>(), "");
         µService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
         return µService;
     }
@@ -105,7 +105,7 @@ public class LoopRepositoriesItCase {
             "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy("{\"type\":\"GUARD\"}", "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
-        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "{\"configtype\":\"json\"}",
+        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "", "{\"configtype\":\"json\"}",
             "YamlContent", "{\"param1\":\"value1\"}", true);
         loopTest.addMicroServicePolicy(microServicePolicy);
         LoopLog loopLog = getLoopLog(LogType.INFO, "test message");

@@ -163,8 +163,8 @@ public class CsarInstallerImpl implements CsarInstaller {
                 Policy.generatePolicyName(microService.getName(), csar.getSdcNotification().getServiceName(),
                     csar.getSdcNotification().getServiceVersion(),
                     blueprintArtifact.getResourceAttached().getResourceInstanceName(),
-                    blueprintArtifact.getBlueprintArtifactName()),
-                csar.getPolicyModelYaml().orElse(""), false, new HashSet<>(Arrays.asList(newLoop)));
+                    blueprintArtifact.getBlueprintArtifactName()), microService.getModelType(),
+                csar.getPolicyModelYaml().orElse(""), false, new HashSet<>(Arrays.asList(newLoop)), microService.getBlueprintName());
 
             newSet.add(microServicePolicy);
             microService.setMappedNameJpa(microServicePolicy.getName());

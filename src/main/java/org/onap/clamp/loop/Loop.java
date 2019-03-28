@@ -183,7 +183,7 @@ public class Loop implements Serializable {
         this.operationalPolicies = operationalPolicies;
     }
 
-    Set<MicroServicePolicy> getMicroServicePolicies() {
+    public Set<MicroServicePolicy> getMicroServicePolicies() {
         return microServicePolicies;
     }
 

@@ -85,7 +85,7 @@ public class DcaeDispatcherServicesTest {
     @Test
     public void shouldReturnDcaeOperationSataus() throws IOException {
         //given
-        Mockito.when(httpConnectionManager.doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE"))
+        Mockito.when(httpConnectionManager.doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE", null, null))
                 .thenReturn(STATUS_RESPONSE_PROCESSING);
         //when
         String operationStatus = dcaeDispatcherServices.getOperationStatus(DEPLOYMENT_STATUS_URL);
@@ -98,7 +98,7 @@ public class DcaeDispatcherServicesTest {
     public void shouldTryMultipleTimesWhenProcessing() throws IOException, InterruptedException {
         //given
         Mockito.when(httpConnectionManager.doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET",
-                null, null, "DCAE"))
+                null, null, "DCAE", null, null))
                 .thenReturn(STATUS_RESPONSE_PROCESSING, STATUS_RESPONSE_PROCESSING, STATUS_RESPONSE_ACTIVE);
         //when
         String operationStatus = dcaeDispatcherServices.getOperationStatusWithRetry(DEPLOYMENT_STATUS_URL);
@@ -106,7 +106,7 @@ public class DcaeDispatcherServicesTest {
         //then
         Assertions.assertThat(operationStatus).isEqualTo("succeeded");
         Mockito.verify(httpConnectionManager, Mockito.times(3))
-                .doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE");
+                .doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE", null, null);
 
     }
 
@@ -114,7 +114,7 @@ public class DcaeDispatcherServicesTest {
     public void shouldTryOnlyAsManyTimesAsConfigured() throws IOException, InterruptedException {
         //given
         Mockito.when(httpConnectionManager
-                .doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE"))
+                .doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE", null, null))
                 .thenReturn(STATUS_RESPONSE_PROCESSING, STATUS_RESPONSE_PROCESSING, STATUS_RESPONSE_PROCESSING,
                         STATUS_RESPONSE_PROCESSING, STATUS_RESPONSE_PROCESSING);
         //when
@@ -123,7 +123,7 @@ public class DcaeDispatcherServicesTest {
         //then
         Assertions.assertThat(operationStatus).isEqualTo("processing");
         Mockito.verify(httpConnectionManager, Mockito.times(3))
-                .doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE");
+                .doGeneralHttpQuery(DEPLOYMENT_STATUS_URL, "GET", null, null, "DCAE", null, null);
 
     }
 
@@ -140,7 +140,7 @@ public class DcaeDispatcherServicesTest {
                                 + "/dcae-deployments/closedLoop_152367c8-b172-47b3-9e58-c53add75d869_deploymentId",
                         "PUT",
                         "{\"serviceTypeId\":\"e2ba40f7-bf42-41e7-acd7-48fd07586d90\",\"inputs\":{}}",
-                        "application/json", "DCAE"))
+                        "application/json", "DCAE", null, null))
                 .thenReturn(DEPLOY_RESPONSE_STRING);
         JsonObject blueprintInputJson = new JsonObject();
 

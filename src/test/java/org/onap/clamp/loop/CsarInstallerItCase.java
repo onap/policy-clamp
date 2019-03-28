@@ -173,7 +173,6 @@ public class CsarInstallerItCase {
         assertThat(loop.getSvgRepresentation()).startsWith("<svg ");
         assertThat(loop.getGlobalPropertiesJson().get("dcaeDeployParameters")).isNotNull();
         assertThat(loop.getMicroServicePolicies()).hasSize(1);
-
         assertThat(loop.getOperationalPolicies()).hasSize(1);
         assertThat(loop.getModelPropertiesJson().get("serviceDetails")).isNotNull();
         assertThat(loop.getModelPropertiesJson().get("resourceDetails")).isNotNull();

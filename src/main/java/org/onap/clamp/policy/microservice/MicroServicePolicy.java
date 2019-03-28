@@ -60,6 +60,14 @@ public class MicroServicePolicy implements Serializable, Policy {
     private String name;
 
     @Expose
+    @Column(nullable = false, name = "model_type")
+    private String modelType;
+
+    @Expose
+    @Column(nullable = false, name = "blueprint_name")
+    private String blueprintName;
+
+    @Expose
     @Type(type = "json")
     @Column(columnDefinition = "json", name = "properties")
     private JsonObject properties;
@@ -86,39 +94,55 @@ public class MicroServicePolicy implements Serializable, Policy {
     /**
      * The constructor.
      * @param name The name of the MicroService
+     * @param type The model type of the MicroService
+     * @param blueprintName The name in the blueprint
      * @param policyTosca The policy Tosca of the MicroService
      * @param shared The flag indicate whether the MicroService is shared
      * @param usedByLoops The list of loops that uses this MicroService
      */
-    public MicroServicePolicy(String name, String policyTosca, Boolean shared, Set<Loop> usedByLoops) {
+    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared, Set<Loop> usedByLoops, String blueprintName) {
         this.name = name;
+        this.modelType = modelType;
         this.policyTosca = policyTosca;
         this.shared = shared;
         this.jsonRepresentation = JsonUtils.GSON_JPA_MODEL
             .fromJson(new ToscaYamlToJsonConvertor(null).parseToscaYaml(policyTosca), JsonObject.class);
         this.usedByLoops = usedByLoops;
+        this.blueprintName = blueprintName;
     }
 
     /**
      * The constructor.
      * @param name The name of the MicroService
+     * @param type The model type of the MicroService
+     * @param blueprintName The name in the blueprint
      * @param policyTosca The policy Tosca of the MicroService
      * @param shared The flag indicate whether the MicroService is shared
      * @param jsonRepresentation The UI representation in json format
      * @param usedByLoops The list of loops that uses this MicroService
      */
-    public MicroServicePolicy(String name, String policyTosca, Boolean shared, JsonObject jsonRepresentation,
-        Set<Loop> usedByLoops) {
+    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared, JsonObject jsonRepresentation,
+        Set<Loop> usedByLoops, String blueprintName) {
         this.name = name;
+        this.modelType = modelType;
         this.policyTosca = policyTosca;
         this.shared = shared;
         this.usedByLoops = usedByLoops;
         this.jsonRepresentation = jsonRepresentation;
+        this.blueprintName = blueprintName;
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    public String getModelType() {
+        return modelType;
+    }
+
+    public String getBlueprintName() {
+        return blueprintName;
     }
 
     public JsonObject getProperties() {

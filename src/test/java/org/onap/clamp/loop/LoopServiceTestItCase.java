@@ -114,7 +114,7 @@ public class LoopServiceTestItCase {
         JsonObject confJson = JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class);
         String policyName = "policyName";
         String policyTosca = "policyTosca";
-        MicroServicePolicy microServicePolicy = new MicroServicePolicy(policyName, policyTosca, false, confJson, null);
+        MicroServicePolicy microServicePolicy = new MicroServicePolicy(policyName, "", policyTosca, false, confJson, null, "");
 
         //when
         Loop actualLoop = loopService
@@ -141,12 +141,12 @@ public class LoopServiceTestItCase {
         JsonObject newJsonRepresentation = JsonUtils.GSON.fromJson("{}", JsonObject.class);
         String secondPolicyName = "secondPolicyName";
         String secondPolicyTosca = "secondPolicyTosca";
-        MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy(firstPolicyName, "policyTosca",
-            false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+        MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy(firstPolicyName, "", "policyTosca",
+            false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, "");
         loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
 
-        MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy(secondPolicyName, secondPolicyTosca, true,
-            newJsonRepresentation, null);
+        MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy(secondPolicyName, "", secondPolicyTosca, true,
+            newJsonRepresentation, null, "");
 
         //when
         firstMicroServicePolicy.setProperties(JsonUtils.GSON.fromJson("{\"name1\":\"value1\"}", JsonObject.class));
@@ -178,12 +178,12 @@ public class LoopServiceTestItCase {
         String firstPolicyName = "firstPolicyName";
         String secondPolicyName = "policyName";
         String secondPolicyTosca = "secondPolicyTosca";
-        MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy(firstPolicyName, "policyTosca",
-            false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+        MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy(firstPolicyName, "", "policyTosca",
+            false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, "");
         loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
 
-        MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy(secondPolicyName, secondPolicyTosca, true,
-            jsonRepresentation, null);
+        MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy(secondPolicyName, "", secondPolicyTosca, true,
+            jsonRepresentation, null, "");
 
         //when
         Loop actualLoop = loopService
