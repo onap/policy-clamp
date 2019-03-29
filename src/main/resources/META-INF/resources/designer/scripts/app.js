@@ -580,9 +580,8 @@ function($scope, $rootScope, $timeout, dialogs) {
 		    var svgXml = $("#svgContainer").html();
 		    console.log("refreStatus modelName=" + modelName);
 		    cldsModelService.getModel(modelName).then(function(pars) {
-
 			    console.log("refreStatus: pars=" + pars);
-			    cldsModelService.processRefresh(pars);
+			    cldsModelService.processRefresh();
 		    }, function(data) {
 
 		    });
@@ -629,40 +628,10 @@ function($scope, $rootScope, $timeout, dialogs) {
 		    });
 	    };
 	    function cldsToggleDeploy(uiAction) {
-
-		    var modelName = selected_model;
-		    var controlNamePrefix = "ClosedLoop-";
-		    var bpmnText = modelXML;
-		    // serialize model properties
-		    var propText = JSON.stringify(elementMap);
-		    var templateName = selected_template;
-		    var svgXml = $("#svgContainer").html();
 		    console.log("cldsPerformAction: " + uiAction + " modelName="
-		    + modelName);
-		    console.log("cldsPerformAction: " + uiAction
-		    + " controlNamePrefix=" + controlNamePrefix);
-		    console.log("cldsPerformAction: " + uiAction + " bpmnText="
-		    + bpmnText);
-		    console.log("cldsPerformAction: " + uiAction + " propText="
-		    + propText);
-		    console.log("cldsPerformAction: " + uiAction
-		    + " modelEventService=" + modelEventService);
-		    console.log("cldsPerformAction: " + uiAction + " typeID=" + typeID);
-		    console.log("cldsPerformAction: " + uiAction + " deploymentId="
-		    + deploymentId);
-		    cldsModelService.toggleDeploy(uiAction, modelName,
-		    controlNamePrefix, bpmnText, propText, svgXml, templateName,
-		    typeID, controlNameUuid, modelEventService, deploymentId).then(
+		        + selected_model);
+		    cldsModelService.toggleDeploy(uiAction, selected_model).then(
 		    function(pars) {
-
-			    var cldsObject = pars.body;
-			    typeID = cldsObject.typeId;
-			    controlNameUuid = cldsObject.controlNameUuid;
-			    selected_template = cldsObject.templateName;
-			    modelEventService = cldsObject.event;
-			    actionStateCd = cldsObject.event.actionStateCd;
-			    deploymentId = cldsObject.deploymentId;
-			    cldsModelService.processActionResponse(modelName, cldsObject);
 		    }, function(data) {
 
 		    });

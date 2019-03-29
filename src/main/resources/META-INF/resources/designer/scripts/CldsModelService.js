@@ -24,84 +24,47 @@ app
 .service(
 'cldsModelService',
 [
-    'alertService',
-    '$http',
-    '$q',
-    '$rootScope',
-    function(alertService, $http, $q, $rootScope) {
+	'alertService',
+	'$http',
+	'$q',
+	'$rootScope',
+	function(alertService, $http, $q, $rootScope) {
 
-	    function checkIfElementType(name) {
-
-        //This will open the methods located in the app.js
-	  		  if (undefined == name) {
-	  			  return;
-	  		  }else if (name.toLowerCase().indexOf("policy") >= 0){
-	  				  PolicyWindow();
-	  		  } else {
-	  			  $rootScope.selectedBoxName = name;
-	  			  ToscaModelWindow();
-	  		  }
-	    }
-	    function handleQueryToBackend(def, svcAction, svcUrl, svcPayload) {
-
-		    $http.put(svcUrl, svcPayload).success(
-		    function(data) {
-
-			    def.resolve(data);
-			    if (typeof data.statusCodeValue === 'undefined'
-			    || data.statusCodeValue === 200) {
-				    alertService.alertMessage(
-				    "Action Successful: " + svcAction, 1)
-			    } else {
-				    if (typeof data.body !== 'undefined') {
-					    alertService.alertMessage("Action Failure: "
-					    + svcAction + ", " + data.body.errorMessageForUi, 2);
-				    } else {
-					    alertService.alertMessage("Action Failure: "
-					    + svcAction, 2);
-				    }
-				    def.reject(svcAction + " not successful");
-			    }
-		    }).error(
-		    function(data) {
-
-			    def.resolve(data);
-			    if (typeof data.body !== 'undefined') {
-				    alertService.alertMessage("Action Failure: " + svcAction
-				    + ", " + data.body.errorMessageForUi, 2);
-			    } else {
-				    alertService
-				    .alertMessage("Action Failure: " + svcAction, 2);
-			    }
-			    def.reject(svcAction + " not successful");
-		    });
-	    }
-	    this.toggleDeploy = function(uiAction, modelName, controlNamePrefixIn,
-	                                 bpmnTextIn, propTextIn, svgXmlIn,
-	                                 templateName, typeID, controlNameUuid,
-	                                 modelEventService, deploymentId) {
-
-		    var def = $q.defer();
-		    var sets = [];
-		    var action = uiAction.toLowerCase();
-		    var deployUrl = "/restservices/clds/v1/clds/" + action + "/"
-		    + modelName;
-		    var requestData = {
-		        name : modelName,
-		        controlNamePrefix : controlNamePrefixIn,
-		        bpmnText : bpmnTextIn,
-		        propText : propTextIn,
-		        imageText : svgXmlIn,
-		        templateName : templateName,
-		        typeId : typeID,
-		        controlNameUuid : controlNameUuid,
-		        event : modelEventService,
-		        deploymentId : deploymentId
-		    };
-		    handleQueryToBackend(def, action, deployUrl, requestData);
-		    return def.promise;
-	    };
-	    this.getModel = function(modelName) {
+		function checkIfElementType(name) {
+		//This will open the methods located in the app.js
+			if (undefined == name) {
+				return;
+			}else if (name.toLowerCase().indexOf("policy") >= 0){
+				PolicyWindow();
+			} else {
+				$rootScope.selectedBoxName = name;
+				ToscaModelWindow();
+			}
+		}
+		this.toggleDeploy = function(uiAction, modelName) {
+			var svcAction = uiAction.toLowerCase();
+			var deployUrl = "/restservices/clds/v2/loop/" + svcAction + "Loop/" + modelName;
+			var def = $q.defer();
+			var sets = [];
+			$http.put(deployUrl).success(
+				function(data) {
+					def.resolve(data);
+					alertService.alertMessage("Action Successful: " + svcAction, 1)
+					// update deploymentID, lastUpdatedStatus
+					setLastUpdatedStatus(data.lastUpdatedStatus);
+					setDeploymentStatusURL(data.dcaeDeploymentStatusUrl);
+					setDeploymentID(data.dcaeDeploymentId);
+					setStatus();
+					enableDisableMenuOptions();
+			}).error(
+				function(data) {
+					def.resolve(data);
+					alertService.alertMessage("Action Failure: " + svcAction, 2);
+					def.reject(svcAction + " not successful");
+			});
+			return def.promise;
+		}
+		this.getModel = function(modelName) {
 		    var def = $q.defer();
 		    var sets = [];
 		    var svcUrl = "/restservices/clds/v2/loop/" + modelName;
@@ -112,7 +75,6 @@ app
 		    	cl_props = data;
 			    def.resolve(data);
 		    }).error(function(data) {
-
 			    def.reject("Open Model not successful");
 		    });
 		    return def.promise;
@@ -145,7 +107,6 @@ app
 		        propText : propTextIn
 		    };
 		    $http.put(svcUrl, svcRequest).success(function(data) {
-
 			    def.resolve(data);
 		    }).error(function(data) {
 
@@ -205,27 +166,18 @@ app
 		    return def.promise;
 	    };
 	    this.processActionResponse = function(modelName) {
-
-		    // populate control name (prefix and uuid here)
+	    	// populate control name (prefix and uuid here)
 		    var headerText = "Closed Loop Modeler - " + modelName;
 		    setStatus();
 		    manageCLImage(modelName);
 		    enableDisableMenuOptions();
 	    };
-	    this.processRefresh = function(pars) {
-
-		    var newPars = pars;
-		    if (typeof pars.body !== 'undefined') {
-			    newPars = pars.body;
-		    }
-		    typeID = newPars.typeId;
-		    deploymentId = newPars.deploymentId;
+	    this.processRefresh = function() {
 		    setStatus();
 		    enableDisableMenuOptions();
 	    }
 	    function setStatus() {
-
-		    var status = getStatus();
+		    var status = getLastUpdatedStatus();
 		    // apply color to status
 		    var statusColor = 'white';
 		    if (status.trim() === "DESIGN") {
