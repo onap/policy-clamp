@@ -54,7 +54,7 @@ public class LoopService {
         this.operationalPolicyService = operationalPolicyService;
     }
 
-    Loop saveOrUpdateLoop(Loop loop) {
+    public Loop saveOrUpdateLoop(Loop loop) {
         return loopsRepository.save(loop);
     }
 
@@ -62,7 +62,7 @@ public class LoopService {
         return loopsRepository.getAllLoopNames();
     }
 
-    Loop getLoop(String loopName) {
+    public Loop getLoop(String loopName) {
         return loopsRepository
             .findById(loopName)
             .orElse(null);

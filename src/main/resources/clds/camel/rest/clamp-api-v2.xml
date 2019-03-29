@@ -10,7 +10,6 @@
         </get>
         <get uri="/v2/loop/{loopName}"
             outType="org.onap.clamp.loop.Loop"
-
             produces="application/json">
             <route>
                 <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
@@ -19,19 +18,22 @@
         </get>
         <get uri="/v2/loop/svgRepresentation/{loopName}"
             outType="java.lang.String"
-
             produces="application/xml">
-            <to
-                uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+                <to uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
+            </route>
         </get>
 
         <post uri="/v2/loop/updateGlobalProperties/{loopName}"
-              type="com.google.gson.JsonObject"
-              consumes="application/json"
-              outType="org.onap.clamp.loop.Loop"
-              produces="application/json">
-            <to
-                    uri="bean:org.onap.clamp.loop.LoopController?method=updateGlobalPropertiesJson(${header.loopName},${body})" />
+            type="com.google.gson.JsonObject"
+            consumes="application/json"
+            outType="org.onap.clamp.loop.Loop"
+            produces="application/json">
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateGlobalPropertiesJson(${header.loopName},${body})" />
+            </route>
         </post>
         <post uri="/v2/loop/updateOperationalPolicies/{loopName}"
             type="com.google.gson.JsonArray"
@@ -53,6 +55,22 @@
                 <to uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicy(${header.loopName},${body})" />
             </route>
         </post>
+        <put uri="/v2/loop/deployLoop/{loopName}"
+            outType="org.onap.clamp.loop.Loop"
+            produces="application/json">
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deployLoop(*,${header.loopName})" />
+            </route>
+        </put>
+        <put uri="/v2/loop/undeployLoop/{loopName}"
+            outType="org.onap.clamp.loop.Loop"
+            produces="application/json">
+            <route>
+                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=unDeployLoop(${header.loopName})" />
+            </route>
+        </put>
     </rest>
 </rests>
 

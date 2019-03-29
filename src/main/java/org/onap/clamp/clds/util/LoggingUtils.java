@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
@@ -259,6 +260,36 @@ public class LoggingUtils {
         this.mLogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{"+ invocationID +"}");
         return con;
     }
+
+    /**
+     * Report pending invocation with <tt>INVOKE</tt> marker,
+     * setting standard ONAP logging headers automatically.
+     *
+     * @param builder request builder, for setting headers.
+     * @param sync whether synchronous, nullable.
+     * @return invocation ID to be passed with invocation.
+     */
+    public HttpsURLConnection invokeHttps(final HttpsURLConnection con, String targetEntity, String targetServiceName) {
+        final String invocationID = UUID.randomUUID().toString();
+
+        // Set standard HTTP headers on (southbound request) builder.
+        con.setRequestProperty(ONAPLogConstants.Headers.REQUEST_ID,
+            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
+        con.setRequestProperty(ONAPLogConstants.Headers.INVOCATION_ID,
+            invocationID);
+        con.setRequestProperty(ONAPLogConstants.Headers.PARTNER_NAME,
+            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
+
+        invokeContext(targetEntity, targetServiceName, invocationID);
+
+        // Log INVOKE*, with the invocationID as the message body.
+        // (We didn't really want this kind of behavior in the standard,
+        // but is it worse than new, single-message MDC?)
+        this.mLogger.info(ONAPLogConstants.Markers.INVOKE);
+        this.mLogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{"+ invocationID +"}");
+        return con;
+    }
+
     public void invokeReturn() {
         // Add the Invoke-return marker and clear the needed MDC
         this.mLogger.info(ONAPLogConstants.Markers.INVOKE_RETURN);
