@@ -83,7 +83,7 @@ public class PolicyOperation {
             String url = refProp.getStringValue(POLICY_URL_PROPERTY_NAME) + policyType + POLICY_URL_SUFFIX;
             String userName = refProp.getStringValue(POLICY_USER_NAME);
             String encodedPass = refProp.getStringValue(POLICY_PASSWORD);
-            httpConnectionManager.doGeneralHttpQuery(url, "POST", payload.toString(), "application/json", "POLICY", userName, encodedPass);
+            httpConnectionManager.doHttpRequest(url, "POST", payload.toString(), "application/json", "POLICY", userName, encodedPass);
         }
     }
 
@@ -93,7 +93,7 @@ public class PolicyOperation {
             String url = refProp.getStringValue(POLICY_URL_PROPERTY_NAME) + policyType + POLICY_URL_SUFFIX + "/" + msPolicy.getName();
             String userName = refProp.getStringValue(POLICY_USER_NAME);
             String encodedPass = refProp.getStringValue(POLICY_PASSWORD);
-            httpConnectionManager.doGeneralHttpQuery(url, "POST", null, null, "POLICY", userName, encodedPass);
+            httpConnectionManager.doHttpRequest(url, "POST", null, null, "POLICY", userName, encodedPass);
         }
     }
 

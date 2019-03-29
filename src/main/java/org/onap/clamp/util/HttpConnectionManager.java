@@ -27,22 +27,19 @@ package org.onap.clamp.util;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import sun.misc.BASE64Encoder;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.GeneralSecurityException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.BadRequestException;
 
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.io.IOUtils;
-import org.onap.clamp.clds.util.CryptoUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.springframework.stereotype.Component;
 
@@ -55,14 +52,16 @@ public class HttpConnectionManager {
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private static final String REQUEST_FAILED_LOG = "Request Failed - response payload=";
 
-    private String doHttpsQuery(URL url, String requestMethod, String payload, String contentType, String target, String userName, String password) throws IOException {
+    private String doHttpsQuery(URL url, String requestMethod, String payload, String contentType, String target,
+        String userName, String password) throws IOException {
         LoggingUtils utils = new LoggingUtils(logger);
         logger.info("Using HTTPS URL:" + url.toString());
         HttpsURLConnection secureConnection = (HttpsURLConnection) url.openConnection();
         secureConnection = utils.invokeHttps(secureConnection, target, requestMethod);
         secureConnection.setRequestMethod(requestMethod);
         if (userName != null && password != null) {
-            secureConnection.setRequestProperty("Authorization", "Basic " + generateBasicAuth(userName, password));
+            secureConnection.setRequestProperty("Authorization", "Basic "
+                + Base64.getEncoder().encodeToString((userName + ":" + password).getBytes(StandardCharsets.UTF_8)));
         }
         if (payload != null && contentType != null) {
             secureConnection.setRequestProperty("Content-Type", contentType);
@@ -91,14 +90,16 @@ public class HttpConnectionManager {
         }
     }
 
-    private String doHttpQuery(URL url, String requestMethod, String payload, String contentType, String target, String userName, String password) throws IOException {
+    private String doHttpQuery(URL url, String requestMethod, String payload, String contentType, String target,
+        String userName, String password) throws IOException {
         LoggingUtils utils = new LoggingUtils(logger);
         logger.info("Using HTTP URL:" + url);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection = utils.invoke(connection, target, requestMethod);
         connection.setRequestMethod(requestMethod);
         if (userName != null && password != null) {
-            connection.setRequestProperty("Authorization", "Basic " + generateBasicAuth(userName, password));
+            connection.setRequestProperty("Authorization", "Basic "
+                + Base64.getEncoder().encodeToString((userName + ":" + password).getBytes(StandardCharsets.UTF_8)));
         }
         if (payload != null && contentType != null) {
             connection.setRequestProperty("Content-Type", contentType);
@@ -144,27 +145,13 @@ public class HttpConnectionManager {
      * @throws IOException
      *         In case of issue with the streams
      */
-    public String doGeneralHttpQuery(String url, String requestMethod, String payload, String contentType, String target, String userName, String password)
-        throws IOException {
+    public String doHttpRequest(String url, String requestMethod, String payload, String contentType, String target,
+        String userName, String password) throws IOException {
         URL urlObj = new URL(url);
         if (url.contains("https://")) { // Support for HTTPS
             return doHttpsQuery(urlObj, requestMethod, payload, contentType, target, userName, password);
         } else { // Support for HTTP
             return doHttpQuery(urlObj, requestMethod, payload, contentType, target, userName, password);
         }
-    }
-
-    private String generateBasicAuth(String userName, String encodedPassword) {
-        String password = "";
-        try {
-            password = CryptoUtils.decrypt(encodedPassword);
-        } catch (GeneralSecurityException e) {
-            logger.error("Unable to decrypt the password", e);
-        } catch (DecoderException e) {
-            logger.error("Exception caught when decoding the HEX String Key for encryption", e);
-        }
-        BASE64Encoder enc = new sun.misc.BASE64Encoder();
-        String userpassword = userName + ":" + password;
-        return enc.encode( userpassword.getBytes() );
     }
 }

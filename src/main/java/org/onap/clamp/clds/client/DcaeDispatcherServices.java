@@ -99,7 +99,7 @@ public class DcaeDispatcherServices {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getOperationStatus");
         try {
-            String responseStr = dcaeHttpConnectionManager.doGeneralHttpQuery(statusUrl, "GET", null, null, "DCAE", null, null);
+            String responseStr = dcaeHttpConnectionManager.doHttpRequest(statusUrl, "GET", null, null, "DCAE", null, null);
             JSONObject jsonObj = parseResponse(responseStr);
             String operationType = (String) jsonObj.get("operationType");
             String status = (String) jsonObj.get(DCAE_STATUS_FIELD);
@@ -190,7 +190,7 @@ public class DcaeDispatcherServices {
         String nodeAttr) throws IOException, ParseException {
         Date startTime = new Date();
         try {
-            String responseStr = dcaeHttpConnectionManager.doGeneralHttpQuery(url, requestMethod, payload, contentType, "DCAE", null, null);
+            String responseStr = dcaeHttpConnectionManager.doHttpRequest(url, requestMethod, payload, contentType, "DCAE", null, null);
             JSONObject jsonObj = parseResponse(responseStr);
             JSONObject linksObj = (JSONObject) jsonObj.get(node);
             String statusUrl = (String) linksObj.get(nodeAttr);

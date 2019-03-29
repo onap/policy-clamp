@@ -21,7 +21,7 @@
  *
  */
 
-package org.onap.clamp.operation;
+package org.onap.clamp.loop;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -45,9 +45,6 @@ import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ONAPLogConstants;
 import org.onap.clamp.exception.OperationException;
-import org.onap.clamp.loop.Loop;
-import org.onap.clamp.loop.LoopService;
-import org.onap.clamp.loop.LoopState;
 import org.onap.clamp.policy.PolicyOperation;
 import org.onap.clamp.util.HttpConnectionManager;
 import org.slf4j.event.Level;

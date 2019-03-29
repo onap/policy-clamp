@@ -110,7 +110,7 @@ public class HttpConnectionManagerItCase {
     @Test
     public void testHttpGet() throws Exception {
         String response = httpConnectionManager
-                .doGeneralHttpQuery("http://localhost:" + this.httpPort + "/designer/index.html", "GET", null, null, "DCAE", null, null);
+                .doHttpRequest("http://localhost:" + this.httpPort + "/designer/index.html", "GET", null, null, "DCAE", null, null);
         assertNotNull(response);
         // Should be a redirection so 302, so empty
         assertTrue(response.isEmpty());
@@ -119,7 +119,7 @@ public class HttpConnectionManagerItCase {
     @Test
     public void testHttpsGet() throws Exception {
         String response = httpConnectionManager
-                .doGeneralHttpQuery("https://localhost:" + this.httpsPort + "/designer/index.html", "GET", null, null, "DCAE", null, null);
+                .doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index.html", "GET", null, null, "DCAE", null, null);
         assertNotNull(response);
         // Should contain something
         assertTrue(!response.isEmpty());
@@ -127,21 +127,21 @@ public class HttpConnectionManagerItCase {
 
     @Test(expected = BadRequestException.class)
     public void testHttpsGet404() throws IOException {
-    	httpConnectionManager.doGeneralHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
+    	httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html",
                 "GET", null, null, "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpsPost404() throws IOException {
-    	httpConnectionManager.doGeneralHttpQuery("https://localhost:" + this.httpsPort + "/designer/index1.html",
+    	httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html",
                 "POST", "", "application/json", "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpException() throws IOException {
-    	httpConnectionManager.doGeneralHttpQuery("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
+    	httpConnectionManager.doHttpRequest("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
                 null, null, "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }

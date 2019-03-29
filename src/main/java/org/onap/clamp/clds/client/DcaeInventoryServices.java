@@ -207,7 +207,7 @@ public class DcaeInventoryServices {
         }
         for (int i = 0; i < retryLimit; i++) {
             metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
-            String response = httpConnectionManager.doGeneralHttpQuery(fullUrl, "GET", null, null, "DCAE", null, null);
+            String response = httpConnectionManager.doHttpRequest(fullUrl, "GET", null, null, "DCAE", null, null);
             int totalCount = getTotalCountFromDcaeInventoryResponse(response);
             metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
             if (totalCount > 0) {

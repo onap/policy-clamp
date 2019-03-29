@@ -105,8 +105,7 @@ public class Loop implements Serializable {
 
     @Expose
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "loops_microservicepolicies", joinColumns = @JoinColumn(name = "loop_id"), 
-       inverseJoinColumns = @JoinColumn(name = "microservicepolicy_id"))
+    @JoinTable(name = "loops_microservicepolicies", joinColumns = @JoinColumn(name = "loop_id"), inverseJoinColumns = @JoinColumn(name = "microservicepolicy_id"))
     private Set<MicroServicePolicy> microServicePolicies = new HashSet<>();
 
     @Expose
@@ -135,23 +134,23 @@ public class Loop implements Serializable {
         this.name = name;
     }
 
-    public String getDcaeDeploymentId() {
+    String getDcaeDeploymentId() {
         return dcaeDeploymentId;
     }
 
-    public void setDcaeDeploymentId(String dcaeDeploymentId) {
+    void setDcaeDeploymentId(String dcaeDeploymentId) {
         this.dcaeDeploymentId = dcaeDeploymentId;
     }
 
-    public String getDcaeDeploymentStatusUrl() {
+    String getDcaeDeploymentStatusUrl() {
         return dcaeDeploymentStatusUrl;
     }
 
-    public void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
+    void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
         this.dcaeDeploymentStatusUrl = dcaeDeploymentStatusUrl;
     }
 
-    public String getSvgRepresentation() {
+    String getSvgRepresentation() {
         return svgRepresentation;
     }
 
@@ -159,7 +158,7 @@ public class Loop implements Serializable {
         this.svgRepresentation = svgRepresentation;
     }
 
-    public String getBlueprint() {
+    String getBlueprint() {
         return blueprint;
     }
 
@@ -167,11 +166,11 @@ public class Loop implements Serializable {
         this.blueprint = blueprint;
     }
 
-    public LoopState getLastComputedState() {
+    LoopState getLastComputedState() {
         return lastComputedState;
     }
 
-    public void setLastComputedState(LoopState lastComputedState) {
+    void setLastComputedState(LoopState lastComputedState) {
         this.lastComputedState = lastComputedState;
     }
 
@@ -183,7 +182,7 @@ public class Loop implements Serializable {
         this.operationalPolicies = operationalPolicies;
     }
 
-    public Set<MicroServicePolicy> getMicroServicePolicies() {
+    Set<MicroServicePolicy> getMicroServicePolicies() {
         return microServicePolicies;
     }
 
@@ -222,7 +221,7 @@ public class Loop implements Serializable {
         log.setLoop(this);
     }
 
-    public String getDcaeBlueprintId() {
+    String getDcaeBlueprintId() {
         return dcaeBlueprintId;
     }
 
@@ -230,7 +229,7 @@ public class Loop implements Serializable {
         this.dcaeBlueprintId = dcaeBlueprintId;
     }
 
-    public JsonObject getModelPropertiesJson() {
+    JsonObject getModelPropertiesJson() {
         return modelPropertiesJson;
     }
 
@@ -240,13 +239,18 @@ public class Loop implements Serializable {
 
     /**
      * Generate the loop name.
-     * @param serviceName The service name
-     * @param serviceVersion The service version
-     * @param resourceName The resource name
-     * @param blueprintFileName The blueprint file name
+     *
+     * @param serviceName
+     *        The service name
+     * @param serviceVersion
+     *        The service version
+     * @param resourceName
+     *        The resource name
+     * @param blueprintFileName
+     *        The blueprint file name
      * @return The generated loop name
      */
-    public static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
+    static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
         String blueprintFilename) {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
             .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));
