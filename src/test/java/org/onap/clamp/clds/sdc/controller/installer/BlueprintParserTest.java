@@ -47,6 +47,9 @@ public class BlueprintParserTest {
     private static final String FIRST_APPP = "first_app";
     private static final String SECOND_APPP = "second_app";
     private static final String THIRD_APPP = "third_app";
+    private static final String MODEL_TYPE1 = "type1";
+    private static final String MODEL_TYPE2 = "type2";
+    private static final String MODEL_TYPE3 = "type3";
 
     private static String microServiceTheWholeBlueprintValid;
     private static String microServiceBlueprintOldStyleTCA;
@@ -139,7 +142,7 @@ public class BlueprintParserTest {
     public void getNodeRepresentationFromCompleteYaml() {
         final JsonObject jsonObject = jsonObjectBlueprintValid;
 
-        MicroService expected = new MicroService(SECOND_APPP, FIRST_APPP, "");
+        MicroService expected = new MicroService(SECOND_APPP, MODEL_TYPE1, FIRST_APPP, "", SECOND_APPP);
         Entry<String, JsonElement> entry = jsonObject.entrySet().iterator().next();
         MicroService actual = new BlueprintParser().getNodeRepresentation(entry);
 
@@ -148,9 +151,9 @@ public class BlueprintParserTest {
 
     @Test
     public void getMicroServicesFromBlueprintTest() {
-        MicroService thirdApp = new MicroService(THIRD_APPP, "", "");
-        MicroService firstApp = new MicroService(FIRST_APPP, THIRD_APPP, "");
-        MicroService secondApp = new MicroService(SECOND_APPP, FIRST_APPP, "");
+        MicroService thirdApp = new MicroService(THIRD_APPP, MODEL_TYPE3, "", "", THIRD_APPP);
+        MicroService firstApp = new MicroService(FIRST_APPP, MODEL_TYPE1, THIRD_APPP, "", FIRST_APPP);
+        MicroService secondApp = new MicroService(SECOND_APPP, MODEL_TYPE2, FIRST_APPP, "", SECOND_APPP);
 
         Set<MicroService> expected = new HashSet<>(Arrays.asList(firstApp, secondApp, thirdApp));
         Set<MicroService> actual = new BlueprintParser().getMicroServices(microServiceTheWholeBlueprintValid);
@@ -160,7 +163,7 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceTCATest() {
-        MicroService tcaMS = new MicroService(BlueprintParser.TCA, "", "");
+        MicroService tcaMS = new MicroService(BlueprintParser.TCA, "", "", "", "");
 
         List<MicroService> expected = Collections.singletonList(tcaMS);
         List<MicroService> actual = new BlueprintParser().fallbackToOneMicroService(microServiceBlueprintOldStyleTCA);
@@ -170,7 +173,7 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceHolmesTest() {
-        MicroService holmesMS = new MicroService(BlueprintParser.HOLMES, "", "");
+        MicroService holmesMS = new MicroService(BlueprintParser.HOLMES, "", "", "", "");
 
         List<MicroService> expected = Collections.singletonList(holmesMS);
         List<MicroService> actual = new BlueprintParser()

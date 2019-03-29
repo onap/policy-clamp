@@ -96,7 +96,7 @@ app
 		    var def = $q.defer();
 		    var sets = [];
 		    var svcAction = uiAction.toLowerCase();
-		    var svcUrl = "/restservices/clds/v2/loop/" + "action/" + svcAction + "/" + modelName;
+		    var svcUrl = "/restservices/clds/v2/loop/" + svcAction + "/" + modelName;
 
 			$http.put(svcUrl).success(
 				function(data) {

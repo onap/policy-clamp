@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -51,6 +52,8 @@ public class BlueprintParser {
     private static final String TYPE = "type";
     private static final String PROPERTIES = "properties";
     private static final String NAME = "name";
+    private static final String POLICYID = "policy_id";
+    private static final String POLICY_TYPEID = "policy_type_id";
     private static final String RELATIONSHIPS = "relationships";
     private static final String CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM = "clamp_node.relationships.gets_input_from";
     private static final String TARGET = "target";
@@ -85,7 +88,7 @@ public class BlueprintParser {
             }
         }
         String msName = theBiggestMicroServiceKey.toLowerCase().contains(HOLMES_PREFIX) ? HOLMES : TCA;
-        return Collections.singletonList(new MicroService(msName, "", ""));
+        return Collections.singletonList(new MicroService(msName, "", "", "", ""));
     }
 
     String getName(Entry<String, JsonElement> entry) {
@@ -114,10 +117,30 @@ public class BlueprintParser {
         return "";
     }
 
+    String getModelType(Entry<String, JsonElement> entry) {
+        JsonObject ob = entry.getValue().getAsJsonObject();
+        if (ob.has(PROPERTIES)) {
+            JsonObject properties = ob.get(PROPERTIES).getAsJsonObject();
+            if (properties.has(POLICYID)) {
+                JsonObject policyIdObj = properties.get(POLICYID).getAsJsonObject();
+                if (policyIdObj.has(POLICY_TYPEID)) {
+                   return policyIdObj.get(POLICY_TYPEID).getAsString();
+                }
+            }
+        }
+        return "";
+    }
+
+    String getBlueprintName(Entry<String, JsonElement> entry) {
+        return entry.getKey();
+    }
+
     MicroService getNodeRepresentation(Entry<String, JsonElement> entry) {
         String name = getName(entry);
         String getInputFrom = getInput(entry);
-        return new MicroService(name, getInputFrom, "");
+        String modelType = getModelType(entry);
+        String blueprintName = getBlueprintName(entry);
+        return new MicroService(name, modelType, getInputFrom, "", blueprintName);
     }
 
     private String getTarget(JsonObject elementObject) {

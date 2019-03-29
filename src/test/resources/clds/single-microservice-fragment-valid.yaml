@@ -5,6 +5,8 @@ second_app:
     service_component_name_override: second_app
     image: { get_input: second_app_docker_image }
     name: second_app
+    policy_id:
+        policy_type_id: type1
   interfaces:
     cloudify.interfaces.lifecycle:
       start:
