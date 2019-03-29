@@ -545,39 +545,18 @@ function($scope, $rootScope, $timeout, dialogs) {
 		    });
 	    };
 	    $scope.cldsPerformAction = function(uiAction) {
-
 		    var modelName = selected_model;
-		    var controlNamePrefix = "ClosedLoop-";
-		    var bpmnText = modelXML;
-		    // serialize model properties
-		    var propText = JSON.stringify(elementMap);
-		    var templateName = selected_template
-		    var svgXml = $("#svgContainer").html();
 		    console.log("cldsPerformAction: " + uiAction + " modelName="
 		    + modelName);
-		    console.log("cldsPerformAction: " + uiAction
-		    + " controlNamePrefix=" + controlNamePrefix);
-		    console.log("cldsPerformAction: " + uiAction + " bpmnText="
-		    + bpmnText);
-		    console.log("cldsPerformAction: " + uiAction + " propText="
-		    + propText);
-		    console.log("cldsPerformAction: " + uiAction + " typeID=" + typeID);
-		    console.log("cldsPerformAction: " + uiAction + " deploymentId="
-		    + deploymentId);
-		    cldsModelService.processAction(uiAction, modelName,
-		    controlNamePrefix, bpmnText, propText, svgXml, templateName,
-		    typeID, deploymentId).then(function(pars) {
 
+		    cldsModelService.processAction(uiAction, modelName).then(function(pars) {
 			    console.log("cldsPerformAction: pars=" + pars);
-			    cldsModelService.processRefresh(pars);
 		    }, function(data) {
 
 		    });
 	    };
 	    $scope.refreshStatus = function() {
-
 		    var modelName = selected_model;
-		    var svgXml = $("#svgContainer").html();
 		    console.log("refreStatus modelName=" + modelName);
 		    cldsModelService.getModel(modelName).then(function(pars) {
 			    console.log("refreStatus: pars=" + pars);

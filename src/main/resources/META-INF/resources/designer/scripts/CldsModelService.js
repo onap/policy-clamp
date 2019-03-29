@@ -80,10 +80,8 @@ app
 		    return def.promise;
 	    };
 	    this.getSavedModel = function() {
-
 		    var def = $q.defer();
 		    var sets = [];
-		    //var svcUrl = "/restservices/clds/v1/clds/model-names";
 		    var svcUrl = "/restservices/clds/v2/loop/getAllNames";
 		    $http.get(svcUrl).success(function(data) {
 
@@ -94,53 +92,29 @@ app
 		    });
 		    return def.promise;
 	    };
-	    this.setModel = function(modelName, controlNamePrefixIn, bpmnTextIn,
-	                             propTextIn) {
-
+	    this.processAction = function(uiAction, modelName) {
 		    var def = $q.defer();
 		    var sets = [];
-		    var svcUrl = "/restservices/clds/v1/clds/model/" + modelName;
-		    var svcRequest = {
-		        name : modelName,
-		        controlNamePrefix : controlNamePrefixIn,
-		        bpmnText : bpmnTextIn,
-		        propText : propTextIn
-		    };
-		    $http.put(svcUrl, svcRequest).success(function(data) {
-			    def.resolve(data);
-		    }).error(function(data) {
-
-			    def.reject("Save Model not successful");
-		    });
-		    return def.promise;
-	    };
-	    this.processAction = function(uiAction, modelName, controlNamePrefixIn,
-	                                  bpmnTextIn, propTextIn, svgXmlIn,
-	                                  templateName, typeID, deploymentId) {
-
-		    var def = $q.defer();
-		    var sets = [];
-		    // console.log(svgXmlIn);
-		    var svcUrl = "/restservices/clds/v1/clds/";
 		    var svcAction = uiAction.toLowerCase();
-		    if (svcAction == "save" || svcAction == "refresh") {
-			    svcUrl = svcUrl + "model/" + modelName;
-		    } else if (svcAction == "test") {
-			    svcUrl = svcUrl + "action/submit/" + modelName + "?test=true";
-		    } else {
-			    svcUrl = svcUrl + "action/" + svcAction + "/" + modelName;
-		    }
-		    var svcRequest = {
-		        name : modelName,
-		        controlNamePrefix : controlNamePrefixIn,
-		        bpmnText : bpmnTextIn,
-		        propText : propTextIn,
-		        imageText : svgXmlIn,
-		        templateName : templateName,
-		        typeId : typeID,
-		        deploymentId : deploymentId
-		    };
-		    handleQueryToBackend(def, svcAction, svcUrl, svcRequest);
+		    var svcUrl = "/restservices/clds/v2/loop/" + "action/" + svcAction + "/" + modelName;
+
+			$http.put(svcUrl).success(
+				function(data) {
+					def.resolve(data);
+					alertService.alertMessage("Action Successful: " + svcAction, 1)
+					// update deploymentID, lastUpdatedStatus
+					setLastUpdatedStatus(data.lastUpdatedStatus);
+					setDeploymentStatusURL(data.dcaeDeploymentStatusUrl);
+					setDeploymentID(data.dcaeDeploymentId);
+					setStatus();
+					enableDisableMenuOptions();
+			}).error(
+				function(data) {
+					def.resolve(data);
+					alertService.alertMessage("Action Failure: " + svcAction, 2);
+					def.reject(svcAction + " not successful");
+			});
+		    
 		    return def.promise;
 	    };
 	    this.manageAction = function(modelName, typeId, typeName) {
