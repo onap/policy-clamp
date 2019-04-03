@@ -1,0 +1,2008 @@
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+tosca_definitions_version: tosca_simple_yaml_1_1
+imports:
+- data.yml
+policy_types:
+  tosca.policies.Root:
+    description: The TOSCA Policy Type all other TOSCA Policy Types derive from
+  tosca.policies.Placement:
+    derived_from: tosca.policies.Root
+    description: The TOSCA Policy Type definition that is used to govern placement of TOSCA nodes or groups of nodes.
+  tosca.policies.Scaling:
+    derived_from: tosca.policies.Root
+    description: The TOSCA Policy Type definition that is used to govern scaling of TOSCA nodes or groups of nodes.
+  tosca.policies.Update:
+    derived_from: tosca.policies.Root
+    description: The TOSCA Policy Type definition that is used to govern update of TOSCA nodes or groups of nodes.
+  tosca.policies.Performance:
+    derived_from: tosca.policies.Root
+    description: The TOSCA Policy Type definition that is used to declare performance requirements for TOSCA nodes or groups of nodes.
+  org.openecomp.policies.placement.Antilocate:
+    derived_from: tosca.policies.Placement
+    description: My placement policy for separation based upon container type value
+    properties:
+      name:
+        type: string
+        description: The name of the policy
+        required: false
+        status: SUPPORTED
+      container_type:
+        type: string
+        description: container type
+        required: false
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - host
+          - region
+          - compute
+  org.openecomp.policies.placement.Colocate:
+    derived_from: tosca.policies.Placement
+    description: Keep associated nodes (groups of nodes) based upon affinity value
+    properties:
+      name:
+        type: string
+        description: The name of the policy
+        required: false
+        status: SUPPORTED
+      affinity:
+        type: string
+        description: affinity
+        required: true
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - host
+          - region
+          - compute
+  org.openecomp.policies.placement.valet.Diversity:
+    derived_from: tosca.policies.Placement
+    description: Valet Diversity
+    properties:
+      level:
+        type: string
+        description: diversity
+        required: false
+        default: host
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - host
+          - rack
+  org.openecomp.policies.placement.valet.Exclusivity:
+    derived_from: tosca.policies.Placement
+    description: Valet Exclusivity
+    properties:
+      level:
+        type: string
+        description: exclusivity
+        required: false
+        default: host
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - host
+          - rack
+  org.openecomp.policies.placement.valet.Affinity:
+    derived_from: tosca.policies.Placement
+    description: Valet Affinity
+    properties:
+      level:
+        type: string
+        description: affinity
+        required: false
+        default: host
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - host
+          - rack
+  org.openecomp.policies.scaling.Fixed:
+    derived_from: tosca.policies.Scaling
+    properties:
+      quantity:
+        description: the exact number of instances to keep up
+        type: integer
+        required: true
+  org.openecomp.policies.External:
+    derived_from: tosca.policies.Root
+    description: externally managed policy (for example, type="network assignment", source="Policy Manager", name="route target")
+    properties:
+      source:
+        type: string
+        description: The name of the server that exposes the policy with predefined type and name.
+        required: false
+      type:
+        type: string
+        description: The type (category) of the policy same as it is defined in the source.
+        required: false
+      name:
+        type: string
+        description: The name of the policy, that related to specific type, same as it is defined in the source.
+        required: false
+  tosca.policies.Monitoring:
+    derived_from: tosca.policies.Root
+    description: A base policy type for all policies that governs monitoring provisioning
+  onap.policy.monitoring.cdap.tca.hi.lo.app:
+    derived_from: tosca.policies.Monitoring
+    version: 1.0.0
+    properties:
+      tca_policy:
+        type: map
+        description: TCA Policy JSON
+        entry_schema:
+          type: onap.datatypes.monitoring.tca_policy
+data_types:
+  tosca.datatypes.Root:
+    description: The TOSCA root Data Type all other TOSCA base Data Types derive from
+  integer:
+    derived_from: tosca.datatypes.Root
+  string:
+    derived_from: tosca.datatypes.Root
+  boolean:
+    derived_from: tosca.datatypes.Root
+  float:
+    derived_from: tosca.datatypes.Root
+  list:
+    derived_from: tosca.datatypes.Root
+  map:
+    derived_from: tosca.datatypes.Root
+  json:
+    derived_from: tosca.datatypes.Root
+  scalar-unit:
+    derived_from: tosca.datatypes.Root
+  scalar-unit.size:
+    derived_from: scalar-unit
+  scalar-unit.time:
+    derived_from: scalar-unit
+  scalar-unit.frequency:
+    derived_from: scalar-unit
+  tosca.datatypes.Credential:
+    derived_from: tosca.datatypes.Root
+    properties:
+      protocol:
+        type: string
+        required: false
+      token_type:
+        type: string
+        default: password
+      token:
+        type: string
+      keys:
+        type: map
+        required: false
+        entry_schema:
+          type: string
+      user:
+        type: string
+        required: false
+  org.openecomp.datatypes.PortMirroringConnectionPointDescription:
+    derived_from: tosca.datatypes.Root
+    properties:
+      nf_naming_code:
+        type: string
+      nfc_naming_code:
+        type: string
+      network_role:
+        type: string
+      pps_capacity:
+        type: string
+      nf_type:
+        type: string
+        description: deprecated
+      nfc_type:
+        type: string
+        description: deprecated
+  tosca.datatypes.TimeInterval:
+    derived_from: tosca.datatypes.Root
+    properties:
+      start_time:
+        type: timestamp
+        required: true
+      end_time:
+        type: timestamp
+        required: true
+  tosca.datatypes.network.NetworkInfo:
+    derived_from: tosca.datatypes.Root
+    properties:
+      network_name:
+        type: string
+      network_id:
+        type: string
+      addresses:
+        type: list
+        entry_schema:
+          type: string
+  tosca.datatypes.network.PortInfo:
+    derived_from: tosca.datatypes.Root
+    properties:
+      port_name:
+        type: string
+      port_id:
+        type: string
+      network_id:
+        type: string
+      mac_address:
+        type: string
+      addresses:
+        type: list
+        entry_schema:
+          type: string
+  tosca.datatypes.network.PortDef:
+    derived_from: integer
+    constraints:
+    - in_range:
+      - 1
+      - 65535
+  tosca.datatypes.network.PortSpec:
+    derived_from: tosca.datatypes.Root
+    properties:
+      protocol:
+        type: string
+        required: true
+        default: tcp
+        constraints:
+        - valid_values:
+          - udp
+          - tcp
+          - igmp
+      target:
+        type: tosca.datatypes.network.PortDef
+      target_range:
+        type: range
+        constraints:
+        - in_range:
+          - 1
+          - 65535
+      source:
+        type: tosca.datatypes.network.PortDef
+      source_range:
+        type: range
+        constraints:
+        - in_range:
+          - 1
+          - 65535
+  org.openecomp.datatypes.heat.network.AddressPair:
+    derived_from: tosca.datatypes.Root
+    description: MAC/IP address pairs
+    properties:
+      mac_address:
+        type: string
+        description: MAC address
+        required: false
+        status: SUPPORTED
+      ip_address:
+        type: string
+        description: IP address
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.network.subnet.HostRoute:
+    derived_from: tosca.datatypes.Root
+    description: Host route info for the subnet
+    properties:
+      destination:
+        type: string
+        description: The destination for static route
+        required: false
+        status: SUPPORTED
+      nexthop:
+        type: string
+        description: The next hop for the destination
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.network.AllocationPool:
+    derived_from: tosca.datatypes.Root
+    description: The start and end addresses for the allocation pool
+    properties:
+      start:
+        type: string
+        description: Start address for the allocation pool
+        required: false
+        status: SUPPORTED
+      end:
+        type: string
+        description: End address for the allocation pool
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.network.neutron.Subnet:
+    derived_from: tosca.datatypes.Root
+    description: A subnet represents an IP address block that can be used for assigning IP addresses to virtual instances
+    properties:
+      tenant_id:
+        type: string
+        description: The ID of the tenant who owns the network
+        required: false
+        status: SUPPORTED
+      enable_dhcp:
+        type: boolean
+        description: Set to true if DHCP is enabled and false if DHCP is disabled
+        required: false
+        default: true
+        status: SUPPORTED
+      ipv6_address_mode:
+        type: string
+        description: IPv6 address mode
+        required: false
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - dhcpv6-stateful
+          - dhcpv6-stateless
+          - slaac
+      ipv6_ra_mode:
+        type: string
+        description: IPv6 RA (Router Advertisement) mode
+        required: false
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - dhcpv6-stateful
+          - dhcpv6-stateless
+          - slaac
+      value_specs:
+        type: map
+        description: Extra parameters to include in the request
+        required: false
+        default: {}
+        status: SUPPORTED
+        entry_schema:
+          type: string
+      allocation_pools:
+        type: list
+        description: The start and end addresses for the allocation pools
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.network.AllocationPool
+      subnetpool:
+        type: string
+        description: The name or ID of the subnet pool
+        required: false
+        status: SUPPORTED
+      dns_nameservers:
+        type: list
+        description: A specified set of DNS name servers to be used
+        required: false
+        default: []
+        status: SUPPORTED
+        entry_schema:
+          type: string
+      host_routes:
+        type: list
+        description: The gateway IP address
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.network.subnet.HostRoute
+      ip_version:
+        type: integer
+        description: The gateway IP address
+        required: false
+        default: 4
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - '4'
+          - '6'
+      name:
+        type: string
+        description: The name of the subnet
+        required: false
+        status: SUPPORTED
+      prefixlen:
+        type: integer
+        description: Prefix length for subnet allocation from subnet pool
+        required: false
+        status: SUPPORTED
+        constraints:
+        - greater_or_equal: 0
+      cidr:
+        type: string
+        description: The CIDR
+        required: false
+        status: SUPPORTED
+      gateway_ip:
+        type: string
+        description: The gateway IP address
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.novaServer.network.PortExtraProperties:
+    derived_from: tosca.datatypes.Root
+    description: Nova server network expand properties for port
+    properties:
+      port_security_enabled:
+        type: boolean
+        description: Flag to enable/disable port security on the port
+        required: false
+        status: SUPPORTED
+      mac_address:
+        type: string
+        description: MAC address to give to this port
+        required: false
+        status: SUPPORTED
+      admin_state_up:
+        type: boolean
+        description: The administrative state of this port
+        required: false
+        default: true
+        status: SUPPORTED
+      qos_policy:
+        type: string
+        description: The name or ID of QoS policy to attach to this port
+        required: false
+        status: SUPPORTED
+      allowed_address_pairs:
+        type: list
+        description: Additional MAC/IP address pairs allowed to pass through the port
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.network.AddressPair
+      binding:vnic_type:
+        type: string
+        description: The vnic type to be bound on the neutron port
+        required: false
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - macvtap
+          - direct
+          - normal
+      value_specs:
+        type: map
+        description: Extra parameters to include in the request
+        required: false
+        default: {}
+        status: SUPPORTED
+        entry_schema:
+          type: string
+  org.openecomp.datatypes.heat.novaServer.network.AddressInfo:
+    derived_from: tosca.datatypes.network.NetworkInfo
+    description: Network addresses with corresponding port id
+    properties:
+      port_id:
+        type: string
+        description: Port id
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.neutron.port.FixedIps:
+    derived_from: tosca.datatypes.Root
+    description: subnet/ip_address
+    properties:
+      subnet:
+        type: string
+        description: Subnet in which to allocate the IP address for this port
+        required: false
+        status: SUPPORTED
+      ip_address:
+        type: string
+        description: IP address desired in the subnet for this port
+        required: false
+        status: SUPPORTED
+      subnet_id:
+        type: string
+        description: Subnet in which to allocate the IP address for this port
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.FileInfo:
+    derived_from: tosca.datatypes.Root
+    description: Heat File Info
+    properties:
+      file:
+        type: string
+        description: The required URI string (relative or absolute) which can be used to locate the file
+        required: true
+        status: SUPPORTED
+      file_type:
+        type: string
+        description: The type of the file
+        required: true
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - base
+          - env
+          - volume
+          - network
+  org.openecomp.datatypes.heat.contrail.network.rule.PortPairs:
+    derived_from: tosca.datatypes.Root
+    description: source and destination port pairs
+    properties:
+      start_port:
+        type: string
+        description: Start port
+        required: false
+        status: SUPPORTED
+      end_port:
+        type: string
+        description: End port
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrail.network.rule.Rule:
+    derived_from: tosca.datatypes.Root
+    description: policy rule
+    properties:
+      src_ports:
+        type: list
+        description: Source ports
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrail.network.rule.PortPairs
+      protocol:
+        type: string
+        description: Protocol
+        required: false
+        status: SUPPORTED
+      dst_addresses:
+        type: list
+        description: Destination addresses
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrail.network.rule.VirtualNetwork
+      apply_service:
+        type: string
+        description: Service to apply
+        required: false
+        status: SUPPORTED
+      dst_ports:
+        type: list
+        description: Destination ports
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrail.network.rule.PortPairs
+      src_addresses:
+        type: list
+        description: Source addresses
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrail.network.rule.VirtualNetwork
+      direction:
+        type: string
+        description: Direction
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrail.network.rule.RuleList:
+    derived_from: tosca.datatypes.Root
+    description: list of policy rules
+    properties:
+      policy_rule:
+        type: list
+        description: Contrail network rule
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrail.network.rule.Rule
+  org.openecomp.datatypes.heat.contrail.network.rule.VirtualNetwork:
+    derived_from: tosca.datatypes.Root
+    description: source and destination addresses
+    properties:
+      virtual_network:
+        type: string
+        description: Virtual network
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.network.neutron.SecurityRules.Rule:
+    derived_from: tosca.datatypes.Root
+    description: Rules Pairs
+    properties:
+      remote_group_id:
+        type: string
+        description: The remote group ID to be associated with this security group rule
+        required: false
+        status: SUPPORTED
+      protocol:
+        type: string
+        description: The protocol that is matched by the security group rule
+        required: false
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - tcp
+          - udp
+          - icmp
+      ethertype:
+        type: string
+        description: Ethertype of the traffic
+        required: false
+        default: IPv4
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - IPv4
+          - IPv6
+      port_range_max:
+        type: integer
+        description: 'The maximum port number in the range that is matched by the
+          security group rule. '
+        required: false
+        status: SUPPORTED
+        constraints:
+        - in_range:
+          - 0
+          - 65535
+      remote_ip_prefix:
+        type: string
+        description: The remote IP prefix (CIDR) to be associated with this security group rule
+        required: false
+        status: SUPPORTED
+      remote_mode:
+        type: string
+        description: Whether to specify a remote group or a remote IP prefix
+        required: false
+        default: remote_ip_prefix
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - remote_ip_prefix
+          - remote_group_id
+      direction:
+        type: string
+        description: The direction in which the security group rule is applied
+        required: false
+        default: ingress
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - egress
+          - ingress
+      port_range_min:
+        type: integer
+        description: The minimum port number in the range that is matched by the security group rule.
+        required: false
+        status: SUPPORTED
+        constraints:
+        - in_range:
+          - 0
+          - 65535
+  org.openecomp.datatypes.heat.substitution.SubstitutionFiltering:
+    derived_from: tosca.datatypes.Root
+    description: Substitution Filter
+    properties:
+      substitute_service_template:
+        type: string
+        description: Substitute Service Template
+        required: true
+        status: SUPPORTED
+      index_value:
+        type: integer
+        description: Index value of the substitution service template runtime instance
+        required: false
+        default: 0
+        status: SUPPORTED
+        constraints:
+        - greater_or_equal: 0
+      count:
+        type: string
+        description: Count
+        required: false
+        default: 1
+        status: SUPPORTED
+      scaling_enabled:
+        type: boolean
+        description: Indicates whether service scaling is enabled
+        required: false
+        default: true
+        status: SUPPORTED
+      mandatory:
+        type: boolean
+        description: Mandatory
+        required: false
+        default: true
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.RefDataSequence:
+    derived_from: tosca.datatypes.Root
+    description: network policy refs data sequence
+    properties:
+      network_policy_refs_data_sequence_major:
+        type: integer
+        description: Network Policy ref data sequence Major
+        required: false
+        status: SUPPORTED
+      network_policy_refs_data_sequence_minor:
+        type: integer
+        description: Network Policy ref data sequence Minor
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.RefData:
+    derived_from: tosca.datatypes.Root
+    description: network policy refs data
+    properties:
+      network_policy_refs_data_sequence:
+        type: org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.RefDataSequence
+        description: Network Policy ref data sequence
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.ref.data.IpamSubnet:
+    derived_from: tosca.datatypes.Root
+    description: Network Ipam Ref Data Subnet
+    properties:
+      network_ipam_refs_data_ipam_subnets_subnet_ip_prefix_len:
+        type: string
+        description: Network ipam refs data ipam subnets ip prefix len
+        required: false
+        status: SUPPORTED
+      network_ipam_refs_data_ipam_subnets_subnet_ip_prefix:
+        type: string
+        description: Network ipam refs data ipam subnets ip prefix
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.ref.data.IpamSubnetList:
+    derived_from: tosca.datatypes.Root
+    description: Network Ipam Ref Data Subnet List
+    properties:
+      network_ipam_refs_data_ipam_subnets_subnet:
+        type: org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.ref.data.IpamSubnet
+        description: Network ipam refs data ipam subnets
+        required: false
+        status: SUPPORTED
+      network_ipam_refs_data_ipam_subnets_addr_from_start:
+        type: string
+        description: Network ipam refs data ipam subnets addr from start
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.IpamRefData:
+    derived_from: tosca.datatypes.Root
+    description: Network Ipam Ref Data
+    properties:
+      network_ipam_refs_data_ipam_subnets:
+        type: list
+        description: Network ipam refs data ipam subnets
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrailV2.virtual.network.rule.ref.data.IpamSubnetList
+  org.openecomp.datatypes.heat.contrailV2.network.rule.SrcVirtualNetwork:
+    derived_from: tosca.datatypes.Root
+    description: source addresses
+    properties:
+      network_policy_entries_policy_rule_src_addresses_virtual_network:
+        type: string
+        description: Source addresses Virtual network
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.network.rule.DstVirtualNetwork:
+    derived_from: tosca.datatypes.Root
+    description: destination addresses
+    properties:
+      network_policy_entries_policy_rule_dst_addresses_virtual_network:
+        type: string
+        description: Destination addresses Virtual network
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.network.rule.DstPortPairs:
+    derived_from: tosca.datatypes.Root
+    description: destination port pairs
+    properties:
+      network_policy_entries_policy_rule_dst_ports_start_port:
+        type: string
+        description: Start port
+        required: false
+        status: SUPPORTED
+      network_policy_entries_policy_rule_dst_ports_end_port:
+        type: string
+        description: End port
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.network.rule.SrcPortPairs:
+    derived_from: tosca.datatypes.Root
+    description: source port pairs
+    properties:
+      network_policy_entries_policy_rule_src_ports_start_port:
+        type: string
+        description: Start port
+        required: false
+        status: SUPPORTED
+      network_policy_entries_policy_rule_src_ports_end_port:
+        type: string
+        description: End port
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.network.rule.ActionList:
+    derived_from: tosca.datatypes.Root
+    description: Action List
+    properties:
+      network_policy_entries_policy_rule_action_list_simple_action:
+        type: string
+        description: Simple Action
+        required: false
+        status: SUPPORTED
+      network_policy_entries_policy_rule_action_list_apply_service:
+        type: list
+        description: Apply Service
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: string
+  org.openecomp.datatypes.heat.contrailV2.network.rule.Rule:
+    derived_from: tosca.datatypes.Root
+    description: policy rule
+    properties:
+      network_policy_entries_policy_rule_dst_addresses:
+        type: list
+        description: Destination addresses
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrailV2.network.rule.DstVirtualNetwork
+      network_policy_entries_policy_rule_dst_ports:
+        type: list
+        description: Destination ports
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrailV2.network.rule.DstPortPairs
+      network_policy_entries_policy_rule_protocol:
+        type: string
+        description: Protocol
+        required: false
+        status: SUPPORTED
+      network_policy_entries_policy_rule_src_addresses:
+        type: list
+        description: Source addresses
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrailV2.network.rule.SrcVirtualNetwork
+      network_policy_entries_policy_rule_direction:
+        type: string
+        description: Direction
+        required: false
+        status: SUPPORTED
+      network_policy_entries_policy_rule_src_ports:
+        type: list
+        description: Source ports
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrailV2.network.rule.SrcPortPairs
+      network_policy_entries_policy_rule_action_list:
+        type: org.openecomp.datatypes.heat.contrailV2.network.rule.ActionList
+        description: Action list
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.network.rule.RuleList:
+    derived_from: tosca.datatypes.Root
+    description: list of policy rules
+    properties:
+      network_policy_entries_policy_rule:
+        type: list
+        description: Contrail network rule
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrailV2.network.rule.Rule
+  org.openecomp.datatypes.heat.network.contrail.port.StaticRoute:
+    derived_from: tosca.datatypes.Root
+    description: static route
+    properties:
+      prefix:
+        type: string
+        description: Route prefix
+        required: false
+        status: SUPPORTED
+      next_hop:
+        type: string
+        description: Next hop
+        required: false
+        status: SUPPORTED
+      next_hop_type:
+        type: string
+        description: Next hop type
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.network.contrail.AddressPair:
+    derived_from: tosca.datatypes.Root
+    description: Address Pair
+    properties:
+      address_mode:
+        type: string
+        description: Address mode active-active or active-standy
+        required: false
+        status: SUPPORTED
+        constraints:
+        - valid_values:
+          - active-active
+          - active-standby
+      prefix:
+        type: string
+        description: IP address prefix
+        required: false
+        status: SUPPORTED
+      mac_address:
+        type: string
+        description: Mac address
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.network.contrail.InterfaceData:
+    derived_from: tosca.datatypes.Root
+    description: Interface Data
+    properties:
+      static_routes:
+        type: list
+        description: An ordered list of static routes to be added to this interface
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.network.contrail.port.StaticRoute
+      virtual_network:
+        type: string
+        description: Virtual Network for this interface
+        required: true
+        status: SUPPORTED
+      allowed_address_pairs:
+        type: list
+        description: List of allowed address pair for this interface
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.network.contrail.AddressPair
+      ip_address:
+        type: string
+        description: IP for this interface
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.machine.interface.Properties:
+    derived_from: tosca.datatypes.Root
+    description: Virtual Machine Interface Properties.
+    properties:
+      virtual_machine_interface_properties_service_interface_type:
+        type: string
+        description: Service Interface Type.
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.Root:
+    derived_from: tosca.datatypes.Root
+    description: |
+      The ECOMP root Data Type all other Data Types derive from
+    properties:
+      supplemental_data:
+        type: map
+        entry_schema:
+          description: |
+            A placeholder for missing properties that would be included in future ecomp model versions. fromat <key>:<value>
+          type: string
+  org.openecomp.datatypes.AssignmentRequirements:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      is_required:
+        description: |
+          "true" indicates that assignment is required
+        type: boolean
+        default: false
+        required: true
+      count:
+        description: number of assignments required
+        type: integer
+        required: false
+  org.openecomp.datatypes.network.SubnetAssignments:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      ip_network_address_plan:
+        type: string
+        required: false
+        description: Reference to EIPAM, VLAN or other address plan ID used to assign subnets to this network
+      dhcp_enabled:
+        type: boolean
+        required: false
+        description: \"true\" indicates the network has 1 or more policies
+      ip_version:
+        type: integer
+        constraints:
+        - valid_values:
+          - 4
+          - 6
+        required: true
+        description: The IP version of the subnet
+      cidr_mask:
+        type: integer
+        required: true
+        description: The default subnet CIDR mask
+      min_subnets_count:
+        type: integer
+        default: 1
+        required: true
+        description: Quantity of subnets that must be initially assigned
+  org.openecomp.datatypes.network.IPv4SubnetAssignments:
+    derived_from: org.openecomp.datatypes.network.SubnetAssignments
+    properties:
+      use_ipv4:
+        type: boolean
+        required: true
+        description: Indicates IPv4 subnet assignments
+  org.openecomp.datatypes.network.IPv6SubnetAssignments:
+    derived_from: org.openecomp.datatypes.network.SubnetAssignments
+    properties:
+      use_ipv6:
+        type: boolean
+        required: true
+        description: Indicates IPv6 subnet assignments
+  org.openecomp.datatypes.network.NetworkAssignments:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      ecomp_generated_network_assignment:
+        type: boolean
+        required: true
+        default: false
+        description: |
+          \"true\" indicates that the network assignments will be auto-generated by ECOMP \"false\" indicates operator-supplied Network assignments file upload is required (e.g. VID will present prompt to operator to upload operator-supplied Network assignments file).
+      is_shared_network:
+        type: boolean
+        required: true
+        description: \"true\" means this network is shared by multiple Openstack tenants
+      is_external_network:
+        type: boolean
+        required: true
+        default: false
+        description: |
+          \"true\" means this Contrail external network
+      ipv4_subnet_default_assignment:
+        type: org.openecomp.datatypes.network.IPv4SubnetAssignments
+        required: true
+        description: IPv4 defualt subnet assignments
+      ipv6_subnet_default_assignment:
+        type: org.openecomp.datatypes.network.IPv6SubnetAssignments
+        required: true
+        description: IPv6 defualt subnet assignments
+      related_networks:
+        type: list
+        required: false
+        description: Related Networks List.
+        entry_schema:
+          type: org.openecomp.datatypes.network.RelatedNetworksAssignments
+      is_trunked:
+        type: boolean
+        required: true
+        description: \"true\" indicates that network is trunked
+        default: false
+  org.openecomp.datatypes.network.ProviderNetwork:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      is_provider_network:
+        type: boolean
+        required: true
+        description: \"true\" indicates that this a Neutron provider type of network
+      physical_network_name:
+        type: string
+        required: false
+        constraints:
+        - valid_values:
+          - Physnet41
+          - Physnet42
+          - Physnet43
+          - Physnet44
+          - Physnet21
+          - Physnet22
+          - sriovnet1
+          - sriovnet2
+          - oam
+        description: |
+          Identifies the NUMA processor cluster to which this physical network interface belongs. NUMA instance correlates to the first digit of the Physical Network Name suffix (e.g. \"01\" = NUMA 0, \"11\" = NUMA 1)
+      numa:
+        type: string
+        required: false
+        constraints:
+        - valid_values:
+          - NUMA 0
+          - NUMA 1
+        description: |
+          PNIC instance within the NUMA processor cluster PNIC Instance correlates to the second digit of the Physical Network Name suffix (e.g. "01" = PNIC 1, "02" = "PNIC 2)
+      pnic_instance:
+        type: integer
+        required: false
+        description: PNIC instance within the NUMA processor cluster
+  org.openecomp.datatypes.network.NetworkFlows:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      is_network_policy:
+        type: boolean
+        required: false
+        default: false
+        description: \"true\" indicates the network has 1 or more policies
+      network_policy:
+        type: string
+        required: false
+        description: 'Identifies the specific Cloud network policy that must be applied
+          to this network (source: from Policy Manager).'
+      is_bound_to_vpn:
+        type: boolean
+        required: false
+        default: false
+        description: \"true\" indicates the network has 1 or more vpn bindings
+      vpn_binding:
+        type: string
+        required: false
+        description: 'Identifies the specific VPN Binding entry in A&AI that must
+          be applied when creating this network (source: A&AI)'
+  org.openecomp.datatypes.network.VlanRequirements:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      vlan_range_plan:
+        type: string
+        required: true
+        description: reference to a vlan range plan
+      vlan_type:
+        type: string
+        required: true
+        constraints:
+        - valid_values:
+          - c-tag
+          - s-tag
+        description: identifies the vlan type (e.g., c-tag)
+      vlan_count:
+        type: integer
+        required: true
+        description: identifies the number of vlan tags to assign to the CP from the plan
+  org.openecomp.datatypes.network.IpRequirements:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      ip_version:
+        type: integer
+        required: true
+        constraints:
+        - valid_values:
+          - 4
+          - 6
+      ip_count:
+        description: identifies the number of ip address to assign to the CP from the plan
+        type: integer
+        required: false
+      floating_ip_count:
+        type: integer
+        required: false
+      subnet_role:
+        type: string
+        required: false
+      assingment_method:
+        type: string
+        required: true
+        constraints:
+        - valid_values:
+          - fixed
+          - dhcp
+      dhcp_enabled:
+        type: boolean
+        required: false
+      ip_count_required:
+        description: identifies the number of ip address to assign to the CP from the plan
+        type: org.openecomp.datatypes.AssignmentRequirements
+        required: false
+      floating_ip_count_required:
+        type: org.openecomp.datatypes.AssignmentRequirements
+        required: false
+      ip_address_plan_name:
+        type: string
+        required: false
+      vrf_name:
+        type: string
+        required: false
+  org.openecomp.datatypes.network.MacAssignments:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      mac_range_plan:
+        type: string
+        required: true
+        description: reference to a MAC address range plan
+      mac_count:
+        type: integer
+        required: true
+        description: identifies the number of MAC addresses to assign to the CP from the plan
+  org.openecomp.datatypes.EcompHoming:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      ecomp_selected_instance_node_target:
+        type: boolean
+        required: true
+        default: false
+        description: |
+          \"true\" indicates that the target deployment node for this instance will be auto-selected by ECOMP \"false\" indicates operator-supplied instance target deployment node required (e.g. VID will present a prompt to operator and collect the operator-selected target node for the deployment of this Network instance).
+      homing_policy:
+        type: string
+        required: false
+        description: Referenc to a service level homing policy that ECOMP will use for instance deployment target node
+      instance_node_target:
+        type: string
+        required: false
+        description: Instance target deployment node
+  org.openecomp.datatypes.EcompNaming:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      ecomp_generated_naming:
+        type: boolean
+        required: true
+        default: true
+        description: |
+          \"true\" indicates that the name for the instance will be auto-generated by ECOMP. \"false\" indicates operator-supplied name required (e.g. VID will present prompt to operator and collect the operator-supplied instance name).
+      naming_policy:
+        type: string
+        required: false
+        description: Referenc to naming policy that ECOMP will use when the name is auto-generated
+  org.openecomp.datatypes.network.MacRequirements:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      mac_range_plan:
+        description: reference to a MAC address range plan
+        type: string
+        required: false
+      mac_count:
+        description: identifies the number of MAC addresses to assign to the CP from the plan
+        type: integer
+        required: false
+      mac_count_required:
+        description: identifies the number of MAC addresses to assign to the CP from the plan
+        type: org.openecomp.datatypes.AssignmentRequirements
+  org.openecomp.datatypes.heat.contrailV2.virtual.machine.subInterface.AddressPairIp:
+    derived_from: tosca.datatypes.Root
+    description: Virtual Machine Sub Interface Address Pair IP.
+    properties:
+      ip_prefix:
+        type: string
+        description: IP Prefix.
+        required: false
+        status: SUPPORTED
+      ip_prefix_len:
+        type: integer
+        description: IP Prefix Len.
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.machine.subInterface.MacAddress:
+    derived_from: tosca.datatypes.Root
+    description: Virtual Machine Sub Interface Mac Address.
+    properties:
+      mac_address:
+        type: list
+        description: Mac Addresses List.
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: string
+  org.openecomp.datatypes.heat.contrailV2.virtual.machine.subInterface.Properties:
+    derived_from: tosca.datatypes.Root
+    description: Virtual Machine Sub Interface VLAN Properties.
+    properties:
+      sub_interface_vlan_tag:
+        type: string
+        description: Sub Interface VLAN Tag.
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.machine.subInterface.AddressPair:
+    derived_from: tosca.datatypes.Root
+    description: Virtual Machine Sub Interface Address Pair.
+    properties:
+      address_mode:
+        type: string
+        description: Address Mode.
+        required: false
+        status: SUPPORTED
+      ip:
+        type: org.openecomp.datatypes.heat.contrailV2.virtual.machine.subInterface.AddressPairIp
+        description: IP.
+        required: false
+        status: SUPPORTED
+      mac:
+        type: string
+        description: Mac.
+        required: false
+        status: SUPPORTED
+  org.openecomp.datatypes.heat.contrailV2.virtual.machine.subInterface.AddressPairs:
+    derived_from: tosca.datatypes.Root
+    description: Virtual Machine Sub Interface Address Pairs.
+    properties:
+      allowed_address_pair:
+        type: list
+        description: Addresses pair List.
+        required: false
+        status: SUPPORTED
+        entry_schema:
+          type: org.openecomp.datatypes.heat.contrailV2.virtual.machine.subInterface.AddressPair
+  org.openecomp.datatypes.Naming:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      ecomp_generated_naming:
+        description: |
+          "true" indicates that the name for the instance will be auto-generated by ECOMP. "false" indicates operator-supplied name required (e.g. VID will present prompt to operator and collect the operator-supplied instance name).
+        type: boolean
+        default: true
+        required: true
+      naming_policy:
+        description: Reference to naming policy that ECOMP will use when the name is auto-generated
+        type: string
+        required: false
+      instance_name:
+        description: indicates operator-supplied name required (e.g. VID will present prompt to operator and collect the operator-supplied instance name).
+        type: string
+        required: false
+  org.openecomp.datatypes.flavors.ComputeFlavor:
+    derived_from: tosca.datatypes.Root
+    properties:
+      num_cpus:
+        type: integer
+      disk_size:
+        type: scalar-unit.size
+      mem_size:
+        type: scalar-unit.size
+  org.openecomp.datatypes.flavors.LicenseFlavor:
+    derived_from: tosca.datatypes.Root
+    properties:
+      feature_group_uuid:
+        type: string
+  org.openecomp.datatypes.flavors.VendorInfo:
+    derived_from: tosca.datatypes.Root
+    properties:
+      manufacturer_reference_number:
+        type: string
+      vendor_model:
+        type: string
+  org.openecomp.datatypes.flavors.DeploymentFlavor:
+    derived_from: tosca.datatypes.Root
+    properties:
+      sp_part_number:
+        type: string
+      vendor_info:
+        type: org.openecomp.datatypes.flavors.VendorInfo
+      compute_flavor:
+        type: org.openecomp.datatypes.flavors.ComputeFlavor
+      license_flavor:
+        type: org.openecomp.datatypes.flavors.LicenseFlavor
+        required: false
+  org.openecomp.datatypes.ImageInfo:
+    derived_from: tosca.datatypes.Root
+    properties:
+      software_version:
+        type: string
+      file_name:
+        type: string
+      file_hash:
+        type: string
+        description: checksum/signature
+      file_hash_type:
+        type: string
+        required: false
+        default: md5
+  org.openecomp.datatypes.network.RelatedNetworksAssignments:
+    derived_from: org.openecomp.datatypes.Root
+    properties:
+      related_network_role:
+        type: string
+        description: The network role of the related network, sharing provider network.
+        required: false
+  tosca.datatypes.nfv.VnfcConfigurableProperties:
+    derived_from: tosca.datatypes.Root
+    properties:
+      additional_vnfc_configurable_properties:
+        type: map
+        entry_schema:
+          type: string
+        required: false
+  tosca.datatypes.nfv.RequestedAdditionalCapability:
+    derived_from: tosca.datatypes.Root
+    properties:
+      support_mandatory:
+        type: boolean
+        required: true
+      min_requested_additional_capability_version:
+        type: string
+        required: false
+      preferred_requested_additional_capability_version:
+        type: string
+        required: false
+      requested_additional_capability_name:
+        type: string
+        required: true
+      target_performance_parameters:
+        type: map
+        entry_schema:
+          type: string
+        required: true
+  tosca.datatypes.nfv.VirtualMemory:
+    derived_from: tosca.datatypes.Root
+    properties:
+      virtual_mem_size:
+        type: scalar-unit.size
+        required: true
+      virtual_mem_oversubscription_policy:
+        type: string
+        required: false
+      vdu_memory_requirements:
+        type: map
+        entry_schema:
+          type: string
+        required: false
+      numa_enabled:
+        type: boolean
+        required: false
+  tosca.datatypes.nfv.VirtualCpuPinning:
+    derived_from: tosca.datatypes.Root
+    properties:
+      cpu_pinning_policy:
+        type: string
+        constraints:
+        - valid_values:
+          - static
+          - dynamic
+        required: false
+      cpu_pinning_map:
+        type: map
+        entry_schema:
+          type: string
+        required: false
+  tosca.datatypes.nfv.VirtualCpu:
+    derived_from: tosca.datatypes.Root
+    properties:
+      cpu_architecture:
+        type: string
+        required: false
+      num_virtual_cpu:
+        type: integer
+        required: true
+      virtual_cpu_clock:
+        type: scalar-unit.frequency
+        required: false
+      virtual_cpu_oversubscription_policy:
+        type: string
+        required: false
+      vdu_cpu_requirements:
+        type: map
+        entry_schema:
+          type: string
+        required: false
+      virtual_cpu_pinning:
+        type: tosca.datatypes.nfv.VirtualCpuPinning
+        required: false
+  tosca.datatypes.nfv.LogicalNodeData:
+    derived_from: tosca.datatypes.Root
+    properties:
+      logical_node_requirements:
+        type: map
+        entry_schema:
+          type: string
+        required: false
+  tosca.datatypes.nfv.VirtualNetworkInterfaceRequirements:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: false
+      description:
+        type: string
+        required: false
+      support_mandatory:
+        type: boolean
+        required: true
+      requirement:
+        type: string
+        required: false
+      network_interface_requirements:
+        type: map
+        entry_schema:
+          type: string
+        required: true
+      nic_io_requirements:
+        type: tosca.datatypes.nfv.LogicalNodeData
+        required: false
+  tosca.datatypes.nfv.injectFile:
+    derived_from: tosca.datatypes.Root
+    properties:
+      source_path:
+        type: string
+        required: true
+      dest_path:
+        type: string
+        required: true
+  tosca.datatypes.nfv.L2AddressData:
+    derived_from: tosca.datatypes.Root
+    properties:
+      mac_address_assignment:
+        type: boolean
+        required: true
+      address:
+        type: string
+        required: false
+  tosca.datatypes.nfv.L3AddressData:
+    derived_from: tosca.datatypes.Root
+    properties:
+      ip_address_assignment:
+        type: boolean
+        required: true
+      floating_ip_activated:
+        type: boolean
+        required: true
+      ip_address_type:
+        type: string
+        required: false
+        constraints:
+        - valid_values:
+          - ipv4
+          - ipv6
+      number_of_ip_address:
+        type: integer
+        required: false
+      fixed_ip_address:
+        type: list
+        entry_schema:
+          type: string
+        required: false
+  tosca.datatypes.nfv.AddressData:
+    properties:
+      address_type:
+        constraints:
+        - valid_values:
+          - mac_address
+          - ip_address
+        type: string
+        required: true
+      l2_address_data:
+        required: false
+        type: tosca.datatypes.nfv.L2AddressData
+      l3_address_data:
+        required: false
+        type: tosca.datatypes.nfv.L3AddressData
+  tosca.datatypes.nfv.ConnectivityType:
+    derived_from: tosca.datatypes.Root
+    properties:
+      layer_protocol:
+        type: string
+        required: true
+        constraints:
+        - valid_values:
+          - ethernet
+          - mpls
+          - odu2
+          - ipv4
+          - ipv6
+          - pseudo_wire
+      flow_pattern:
+        type: string
+        required: false
+        constraints:
+        - valid_values:
+          - Line
+          - Tree
+          - Mesh
+  tosca.datatypes.nfv.VlFlavour:
+    derived_from: tosca.datatypes.Root
+    properties:
+      flavourId:
+        type: string
+  tosca.datatypes.nfv.ext.AddressPairs:
+    properties:
+      ip:
+        type: string
+        required: false
+      mac:
+        type: string
+        required: false
+  tosca.datatypes.nfv.ext.FloatingIP:
+    properties:
+      external_network:
+        type: string
+        required: false
+      ip_address:
+        type: string
+        required: false
+  tosca.datatypes.nfv.ext.LocationInfo:
+    properties:
+      availability_zone:
+        type: string
+        required: false
+      vimid:
+        type: integer
+        required: false
+      tenant:
+        type: string
+        required: false
+  tosca.datatypes.nfv.ext.HostRouteInfo:
+    properties:
+      destination:
+        type: string
+        required: false
+      nexthop:
+        type: string
+        required: false
+  tosca.datatypes.nfv.ext.InjectData:
+    properties:
+      file_name:
+        type: string
+        required: false
+      file_data:
+        type: string
+        required: false
+  tosca.datatypes.nfv.ext.zte.WatchDog:
+    properties:
+      enable_delay:
+        type: integer
+        required: false
+      action:
+        type: string
+        required: false
+  tosca.datatypes.nfv.ext.LocalAffinityOrAntiAffinityRule:
+    properties:
+      scope:
+        type: string
+        required: false
+      affinity_antiaffinity:
+        type: string
+        required: false
+  tosca.datatypes.nfv.VduProfile:
+    derived_from: tosca.datatypes.Root
+    properties:
+      min_number_of_instances:
+        type: integer
+        required: true
+      max_number_of_instances:
+        type: integer
+        required: true
+      watchdog:
+        type: string
+        required: true
+      vmBootUpTimeOut:
+        type: integer
+        required: false
+  tosca.datatypes.nfv.LinkBitRateRequirements:
+    derived_from: tosca.datatypes.Root
+    properties:
+      root:
+        type: integer
+        required: true
+      leaf:
+        type: integer
+        required: true
+  tosca.datatypes.nfv.Qos:
+    derived_from: tosca.datatypes.Root
+    properties:
+      latency:
+        type: integer
+        required: true
+      packet_delay_variation:
+        type: integer
+        required: true
+      packet_loss_ratio:
+        type: float
+        constraints:
+        - in_range:
+          - 0.0
+          - 1.0
+        required: false
+  tosca.datatypes.nfv.VlProfile:
+    derived_from: tosca.datatypes.Root
+    properties:
+      max_bit_rate_requirements:
+        type: tosca.datatypes.nfv.LinkBitRateRequirements
+        required: true
+      min_bit_rate_requirements:
+        type: tosca.datatypes.nfv.LinkBitRateRequirements
+        required: true
+      qos:
+        type: tosca.datatypes.nfv.Qos
+        required: false
+      initiationParameters:
+        type: map
+        entry_schema:
+          type: string
+        required: false
+      cidr:
+        type: string
+        required: false
+      networkName:
+        type: string
+        required: false
+      startIp:
+        type: string
+        required: false
+      endIp:
+        type: string
+        required: false
+      gatewayIp:
+        type: string
+        required: false
+      segmentationId:
+        type: integer
+        required: false
+      physicalNetwork:
+        type: string
+        required: false
+      networkType:
+        type: string
+        required: false
+        constraints:
+        - valid_values:
+          - VLAN
+          - VXLAN
+      dhcpEnabled:
+        type: boolean
+        required: false
+      vlanTransparent:
+        type: boolean
+        required: false
+  tosca.datatypes.nfv.VduLevel:
+    derived_from: tosca.datatypes.Root
+    properties:
+      number_of_instances:
+        type: integer
+        required: true
+  tosca.datatypes.nfv.ScaleInfo:
+    derived_from: tosca.datatypes.Root
+    properties:
+      scaleLevel:
+        type: integer
+        required: true
+  tosca.datatypes.nfv.ScaleAspect:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      description:
+        type: string
+        required: true
+      associated_group:
+        type: string
+        required: false
+      max_scale_level:
+        type: integer
+        required: true
+  tosca.datatypes.nfv.InstantiationLevel:
+    derived_from: tosca.datatypes.Root
+    properties:
+      description:
+        type: string
+        required: true
+      vdu_levels:
+        type: map
+        required: true
+        entry_schema:
+          type: tosca.datatypes.nfv.VduLevel
+      scale_info:
+        type: map
+        required: false
+        entry_schema:
+          type: tosca.datatypes.nfv.ScaleInfo
+  tosca.datatypes.nfv.VnfScaleOperationConfiguration:
+    derived_from: tosca.datatypes.Root
+    properties:
+      scaling_by_more_than_one_step_supported:
+        type: boolean
+  tosca.datatypes.nfv.VnfScaleToLevelOperationConfiguration:
+    derived_from: tosca.datatypes.Root
+    properties:
+      arbitrary_target_levels_supported:
+        type: boolean
+  tosca.datatypes.nfv.VnfHealOperationConfiguration:
+    derived_from: tosca.datatypes.Root
+    properties:
+      causes:
+        type: list
+        entry_schema:
+          type: string
+  tosca.datatypes.nfv.VnfTerminateOperationConfiguration:
+    derived_from: tosca.datatypes.Root
+    properties:
+      min_graceful_termination_timeout:
+        type: integer
+      max_recommended_graceful_termination_timeout:
+        type: integer
+  tosca.datatypes.nfv.VnfOperateOperationConfiguration:
+    derived_from: tosca.datatypes.Root
+    properties:
+      min_graceful_termination_timeout:
+        type: integer
+      max_recommended_graceful_termination_timeout:
+        type: integer
+  tosca.datatypes.nfv.VnfLcmOperationsConfiguration:
+    derived_from: tosca.datatypes.Root
+    properties:
+      scale:
+        type: tosca.datatypes.nfv.VnfScaleOperationConfiguration
+      scale_to_level:
+        type: tosca.datatypes.nfv.VnfScaleToLevelOperationConfiguration
+      heal:
+        type: tosca.datatypes.nfv.VnfHealOperationConfiguration
+      terminate:
+        type: tosca.datatypes.nfv.VnfTerminateOperationConfiguration
+      operate:
+        type: tosca.datatypes.nfv.VnfOperateOperationConfiguration
+  tosca.datatypes.nfv.CpProtocolData:
+    derived_from: tosca.datatypes.Root
+    properties:
+      asscociated_layer_protocol:
+        type: string
+        constraints:
+        - valid_values:
+          - ethernet
+          - mpls
+          - odu2
+          - ipv4
+          - ipv6
+          - pseudo-wire
+        required: true
+      address_data:
+        type: tosca.datatypes.nfv.AddressData
+        required: false
+  tosca.datatypes.nfv.VnfConfigurableProperties:
+    derived_from: tosca.datatypes.Root
+    properties:
+      is_autoscale_enabled:
+        type: boolean
+        required: false
+      is_autoheal_enabled:
+        type: boolean
+        required: false
+  tosca.datatypes.nfv.VnfInfoModifiableAttributesExtensions:
+    derived_from: tosca.datatypes.Root
+    properties:
+      description:
+        type: string
+        required: false
+  tosca.datatypes.nfv.VnfInfoModifiableAttributesMetadata:
+    derived_from: tosca.datatypes.Root
+    properties:
+      description:
+        type: string
+        required: false
+  tosca.datatypes.nfv.VnfInfoModifiableAttributes:
+    derived_from: tosca.datatypes.Root
+    properties:
+      extensions:
+        type: tosca.datatypes.nfv.VnfInfoModifiableAttributesExtensions
+        required: false
+      metadata:
+        type: tosca.datatypes.nfv.VnfInfoModifiableAttributesMetadata
+        required: false
+  onap.datatypes.monitoring.metricsPerEventName:
+    derived_from: tosca.datatypes.Root
+    properties:
+      controlLoopSchemaType:
+        constraints:
+        - valid_values:
+          - VM
+          - VNF
+        description: Specifies Control Loop Schema Type for the event Name e.g. VNF, VM
+        required: true
+        type: string
+      eventName:
+        description: Event name to which thresholds need to be applied
+        required: true
+        type: string
+      policyName:
+        description: TCA Policy Scope Name
+        required: true
+        type: string
+      policyScope:
+        description: TCA Policy Scope
+        required: true
+        type: string
+      policyVersion:
+        description: TCA Policy Scope Version
+        required: true
+        type: string
+      thresholds:
+        description: Thresholds associated with eventName
+        entry_schema:
+          type: onap.datatypes.monitoring.thresholds
+        required: true
+        type: list
+  onap.datatypes.monitoring.tca_policy:
+    derived_from: tosca.datatypes.Root
+    properties:
+      domain:
+        constraints:
+        - equal: measurementsForVfScaling
+        default: measurementsForVfScaling
+        description: Domain name to which TCA needs to be applied
+        required: true
+        type: string
+      metricsPerEventName:
+        description: Contains eventName and threshold details that need to be applied to given eventName
+        entry_schema:
+          type: onap.datatypes.monitoring.metricsPerEventName
+        required: true
+        type: list
+  onap.datatypes.monitoring.thresholds:
+    derived_from: tosca.datatypes.Root
+    properties:
+      closedLoopControlName:
+        description: Closed Loop Control Name associated with the threshold
+        required: true
+        type: string
+      closedLoopEventStatus:
+        constraints:
+        - valid_values:
+          - ONSET
+          - ABATED
+        description: Closed Loop Event Status of the threshold
+        required: true
+        type: string
+      direction:
+        constraints:
+        - valid_values:
+          - LESS
+          - LESS_OR_EQUAL
+          - GREATER
+          - GREATER_OR_EQUAL
+          - EQUAL
+        description: Direction of the threshold
+        required: true
+        type: string
+      fieldPath:
+        constraints:
+        - valid_values:
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedOctetsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedUnicastPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedMulticastPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedErrorPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedOctetsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedUnicastPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedMulticastPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedErrorPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedTotalPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedOctetsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedUnicastPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedMulticastPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedBroadcastPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedDiscardedPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedErrorPacketsDelta
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedTotalPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedOctetsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedUnicastPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedMulticastPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedBroadcastPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedDiscardedPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedErrorPacketsAccumulated
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuIdle
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageInterrupt
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageNice
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageSoftIrq
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageSteal
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageSystem
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuWait
+          - $.event.measurementsForVfScalingFields.cpuUsageArray[*].percentUsage
+          - $.event.measurementsForVfScalingFields.meanRequestLatency
+          - $.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryBuffered
+          - $.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryCached
+          - $.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryConfigured
+          - $.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryFree
+          - $.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryUsed
+          - $.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value
+        description: Json field Path as per CEF message which needs to be analyzed for TCA
+        required: true
+        type: string
+      severity:
+        constraints:
+        - valid_values:
+          - CRITICAL
+          - MAJOR
+          - MINOR
+          - WARNING
+          - NORMAL
+        description: Threshold Event Severity
+        required: true
+        type: string
+      thresholdValue:
+        description: Threshold value for the field Path inside CEF message
+        required: true
+        type: integer
+      version:
+        description: Version number associated with the threshold
+        required: true
+        type: string
