@@ -23,15 +23,20 @@
 
 package org.onap.clamp.policy.microservice;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -39,11 +44,13 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.json.JSONObject;
 import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.Policy;
+import org.yaml.snakeyaml.Yaml;
 
 @Entity
 @Table(name = "micro_service_policies")
@@ -64,10 +71,6 @@ public class MicroServicePolicy implements Serializable, Policy {
     private String modelType;
 
     @Expose
-    @Column(nullable = false, name = "blueprint_name")
-    private String blueprintName;
-
-    @Expose
     @Type(type = "json")
     @Column(columnDefinition = "json", name = "properties")
     private JsonObject properties;
@@ -84,7 +87,7 @@ public class MicroServicePolicy implements Serializable, Policy {
     @Column(columnDefinition = "json", name = "json_representation", nullable = false)
     private JsonObject jsonRepresentation;
 
-    @ManyToMany(mappedBy = "microServicePolicies")
+    @ManyToMany(mappedBy = "microServicePolicies", fetch = FetchType.EAGER)
     private Set<Loop> usedByLoops = new HashSet<>();
 
     public MicroServicePolicy() {
@@ -92,15 +95,22 @@ public class MicroServicePolicy implements Serializable, Policy {
     }
 
     /**
-     * The constructor.
-     * @param name The name of the MicroService
-     * @param type The model type of the MicroService
-     * @param blueprintName The name in the blueprint
-     * @param policyTosca The policy Tosca of the MicroService
-     * @param shared The flag indicate whether the MicroService is shared
-     * @param usedByLoops The list of loops that uses this MicroService
+     * The constructor that create the json representation from the policyTosca
+     * using the ToscaYamlToJsonConvertor.
+     *
+     * @param name
+     *        The name of the MicroService
+     * @param type
+     *        The model type of the MicroService
+     * @param policyTosca
+     *        The policy Tosca of the MicroService
+     * @param shared
+     *        The flag indicate whether the MicroService is shared
+     * @param usedByLoops
+     *        The list of loops that uses this MicroService
      */
-    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared, Set<Loop> usedByLoops, String blueprintName) {
+    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared,
+        Set<Loop> usedByLoops) {
         this.name = name;
         this.modelType = modelType;
         this.policyTosca = policyTosca;
@@ -108,28 +118,39 @@ public class MicroServicePolicy implements Serializable, Policy {
         this.jsonRepresentation = JsonUtils.GSON_JPA_MODEL
             .fromJson(new ToscaYamlToJsonConvertor(null).parseToscaYaml(policyTosca), JsonObject.class);
         this.usedByLoops = usedByLoops;
-        this.blueprintName = blueprintName;
+    }
+
+    private JsonObject createJsonFromPolicyTosca() {
+        Map<String, Object> map = new Yaml().load(this.getPolicyTosca());
+        JSONObject jsonObject = new JSONObject(map);
+        return new Gson().fromJson(jsonObject.toString(), JsonObject.class);
     }
 
     /**
-     * The constructor.
-     * @param name The name of the MicroService
-     * @param type The model type of the MicroService
-     * @param blueprintName The name in the blueprint
-     * @param policyTosca The policy Tosca of the MicroService
-     * @param shared The flag indicate whether the MicroService is shared
-     * @param jsonRepresentation The UI representation in json format
-     * @param usedByLoops The list of loops that uses this MicroService
+     * The constructor that does not make use of ToscaYamlToJsonConvertor but take
+     * the jsonRepresentation instead.
+     *
+     * @param name
+     *        The name of the MicroService
+     * @param type
+     *        The model type of the MicroService
+     * @param policyTosca
+     *        The policy Tosca of the MicroService
+     * @param shared
+     *        The flag indicate whether the MicroService is shared
+     * @param jsonRepresentation
+     *        The UI representation in json format
+     * @param usedByLoops
+     *        The list of loops that uses this MicroService
      */
-    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared, JsonObject jsonRepresentation,
-        Set<Loop> usedByLoops, String blueprintName) {
+    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared,
+        JsonObject jsonRepresentation, Set<Loop> usedByLoops) {
         this.name = name;
         this.modelType = modelType;
         this.policyTosca = policyTosca;
         this.shared = shared;
         this.usedByLoops = usedByLoops;
         this.jsonRepresentation = jsonRepresentation;
-        this.blueprintName = blueprintName;
     }
 
     @Override
@@ -141,8 +162,8 @@ public class MicroServicePolicy implements Serializable, Policy {
         return modelType;
     }
 
-    public String getBlueprintName() {
-        return blueprintName;
+    void setModelType(String modelType) {
+        this.modelType = modelType;
     }
 
     public JsonObject getProperties() {
@@ -157,7 +178,7 @@ public class MicroServicePolicy implements Serializable, Policy {
         return shared;
     }
 
-    public void setShared(Boolean shared) {
+    void setShared(Boolean shared) {
         this.shared = shared;
     }
 
@@ -165,7 +186,7 @@ public class MicroServicePolicy implements Serializable, Policy {
         return policyTosca;
     }
 
-    public void setPolicyTosca(String policyTosca) {
+    void setPolicyTosca(String policyTosca) {
         this.policyTosca = policyTosca;
     }
 
@@ -174,7 +195,7 @@ public class MicroServicePolicy implements Serializable, Policy {
         return jsonRepresentation;
     }
 
-    public void setJsonRepresentation(JsonObject jsonRepresentation) {
+    void setJsonRepresentation(JsonObject jsonRepresentation) {
         this.jsonRepresentation = jsonRepresentation;
     }
 
@@ -182,7 +203,7 @@ public class MicroServicePolicy implements Serializable, Policy {
         return usedByLoops;
     }
 
-    public void setUsedByLoops(Set<Loop> usedBy) {
+    void setUsedByLoops(Set<Loop> usedBy) {
         this.usedByLoops = usedBy;
     }
 
@@ -214,6 +235,43 @@ public class MicroServicePolicy implements Serializable, Policy {
             return false;
         }
         return true;
+    }
+
+    private String getMicroServicePropertyNameFromTosca(JsonObject object) {
+        return object.getAsJsonObject("policy_types").getAsJsonObject(this.modelType).getAsJsonObject("properties")
+            .keySet().toArray(new String[1])[0];
+    }
+
+    @Override
+    public String createPolicyPayload() {
+        JsonObject toscaJson = createJsonFromPolicyTosca();
+
+        JsonObject policyPayloadResult = new JsonObject();
+
+        policyPayloadResult.add("tosca_definitions_version", toscaJson.get("tosca_definitions_version"));
+
+        JsonObject topologyTemplateNode = new JsonObject();
+        policyPayloadResult.add("topology_template", topologyTemplateNode);
+
+        JsonArray policiesArray = new JsonArray();
+        topologyTemplateNode.add("policies", policiesArray);
+
+        JsonObject thisPolicy = new JsonObject();
+        policiesArray.add(thisPolicy);
+
+        JsonObject policyDetails = new JsonObject();
+        thisPolicy.add(this.getName(), policyDetails);
+        policyDetails.addProperty("type", this.getModelType());
+        policyDetails.addProperty("version", "1.0.0");
+
+        JsonObject policyMetadata = new JsonObject();
+        policyDetails.add("metadata", policyMetadata);
+        policyMetadata.addProperty("policy-id", this.getName());
+
+        JsonObject policyProperties = new JsonObject();
+        policyDetails.add("properties", policyProperties);
+        policyProperties.add(this.getMicroServicePropertyNameFromTosca(toscaJson), this.getProperties());
+        return new GsonBuilder().setPrettyPrinting().create().toJson(policyPayloadResult);
     }
 
 }

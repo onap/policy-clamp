@@ -40,6 +40,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import org.onap.clamp.loop.Loop;
 
 /**
@@ -78,6 +79,15 @@ public class LoopLog implements Serializable {
     @Expose
     @Column(name = "log_instant", nullable = false)
     private Instant logInstant = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+
+    public LoopLog() {
+    }
+
+    public LoopLog(String message, LogType logType, Loop loop) {
+        this.message = message;
+        this.logType = logType;
+        this.loop = loop;
+    }
 
     public Long getId() {
         return id;

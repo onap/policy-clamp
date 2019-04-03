@@ -31,13 +31,21 @@ public interface Policy {
 
     JsonObject getJsonRepresentation();
 
+    String createPolicyPayload();
+
     /**
      * Generate the policy name.
-     * @param policyType The policy type
-     * @param serviceName The service name
-     * @param serviceVersion The service version
-     * @param resourceName The resource name
-     * @param blueprintFilename The blueprint file name
+     *
+     * @param policyType
+     *        The policy type
+     * @param serviceName
+     *        The service name
+     * @param serviceVersion
+     *        The service version
+     * @param resourceName
+     *        The resource name
+     * @param blueprintFilename
+     *        The blueprint file name
      * @return The generated policy name
      */
     static String generatePolicyName(String policyType, String serviceName, String serviceVersion, String resourceName,

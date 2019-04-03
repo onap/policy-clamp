@@ -134,7 +134,7 @@ public class Loop implements Serializable {
         this.name = name;
     }
 
-    String getDcaeDeploymentId() {
+    public String getDcaeDeploymentId() {
         return dcaeDeploymentId;
     }
 
@@ -142,7 +142,7 @@ public class Loop implements Serializable {
         this.dcaeDeploymentId = dcaeDeploymentId;
     }
 
-    String getDcaeDeploymentStatusUrl() {
+    public String getDcaeDeploymentStatusUrl() {
         return dcaeDeploymentStatusUrl;
     }
 
@@ -150,7 +150,7 @@ public class Loop implements Serializable {
         this.dcaeDeploymentStatusUrl = dcaeDeploymentStatusUrl;
     }
 
-    String getSvgRepresentation() {
+    public String getSvgRepresentation() {
         return svgRepresentation;
     }
 
@@ -158,7 +158,7 @@ public class Loop implements Serializable {
         this.svgRepresentation = svgRepresentation;
     }
 
-    String getBlueprint() {
+    public String getBlueprint() {
         return blueprint;
     }
 
@@ -166,7 +166,7 @@ public class Loop implements Serializable {
         this.blueprint = blueprint;
     }
 
-    LoopState getLastComputedState() {
+    public LoopState getLastComputedState() {
         return lastComputedState;
     }
 
@@ -174,7 +174,7 @@ public class Loop implements Serializable {
         this.lastComputedState = lastComputedState;
     }
 
-    Set<OperationalPolicy> getOperationalPolicies() {
+    public Set<OperationalPolicy> getOperationalPolicies() {
         return operationalPolicies;
     }
 
@@ -182,7 +182,7 @@ public class Loop implements Serializable {
         this.operationalPolicies = operationalPolicies;
     }
 
-    Set<MicroServicePolicy> getMicroServicePolicies() {
+    public Set<MicroServicePolicy> getMicroServicePolicies() {
         return microServicePolicies;
     }
 
@@ -190,7 +190,7 @@ public class Loop implements Serializable {
         this.microServicePolicies = microServicePolicies;
     }
 
-    JsonObject getGlobalPropertiesJson() {
+    public JsonObject getGlobalPropertiesJson() {
         return globalPropertiesJson;
     }
 
@@ -198,7 +198,7 @@ public class Loop implements Serializable {
         this.globalPropertiesJson = globalPropertiesJson;
     }
 
-    Set<LoopLog> getLoopLogs() {
+    public Set<LoopLog> getLoopLogs() {
         return loopLogs;
     }
 
@@ -221,7 +221,7 @@ public class Loop implements Serializable {
         log.setLoop(this);
     }
 
-    String getDcaeBlueprintId() {
+    public String getDcaeBlueprintId() {
         return dcaeBlueprintId;
     }
 
@@ -229,7 +229,7 @@ public class Loop implements Serializable {
         this.dcaeBlueprintId = dcaeBlueprintId;
     }
 
-    JsonObject getModelPropertiesJson() {
+    public JsonObject getModelPropertiesJson() {
         return modelPropertiesJson;
     }
 
