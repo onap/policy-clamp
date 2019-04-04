@@ -54,17 +54,7 @@ app
 		    }
 		    console.log("No active formId found !");
 	    }
-	    function initTargetResourceId() {
 
-		    if (vf_Services !== null && vf_Services !== undefined) {
-			    // Set all the Resource Invariant UUID in the target resource ID
-			    // list (+Empty and other)
-			    Object.keys(vf_Services["shared"]["byVf"]).forEach(function(key) {
-
-				    $("#targetResourceId").append($('<option></option>').val(key).html(key));
-			    });
-		    }
-	    }
 	    function add_one_more() {
 
 		    console.log("add one more");
@@ -212,6 +202,59 @@ app
 			    });
 		    });
 	    }
+	    
+	    $scope.initTargetResourceId = function() {
+
+			var recipe = $(event.target).val();
+
+			var type = $(event.target).val();
+			
+			$('#resourceId').empty();
+			$("#resourceId")
+					.append(
+							$('<option></option>').val("")
+									.html(""));
+			$("#resourceId").append(
+					$('<option></option>').val("Other:")
+							.html("Other:"));
+			
+			var resourceVnf = getResourceDetailsProperty();
+			if (type == "VNF"
+					&& (null !== resourceVnf || undefined !== resourceVnf)) {
+				for ( var prop in resourceVnf) {
+					var name = resourceVnf[prop]["name"];
+					$("#resourceId").append(
+							$('<option></option>')
+									.val(name).html(name));
+				}
+
+			}
+			var resourceVfc = getResourceDetailsVfcProperty();
+			if (type == "VFC"
+					&& (null !== resourceVfc || undefined !== resourceVfc)) {
+				if (recipe == 'VF Module Create'
+						|| recipe == 'VF Module Delete') {
+					for ( var prop in resourceVfc) {
+						if (resourceVfc[prop]["isBase"] == false) {
+							var name = resourceVfc[prop]["name"];
+							$("#resourceId").append(
+									$('<option></option>')
+											.val(name)
+											.html(name));
+						}
+					}
+				} 
+		        else 
+		        {
+		          for ( var prop in resourceVfc) {
+				          var name = resourceVfc[prop]["name"];
+		    					$("#resourceId").append(
+		    							$('<option></option>')
+		    									.val(name).html(name));
+		    			}
+					} 
+		}
+
 
 	    $scope.changeGuardPolicyType = function() {
 
@@ -264,7 +307,6 @@ app
 				    angular.element(document.getElementById('formSpan')).scope().submitForm(allPolicies);
 				    $("#close_button").click();
 			    });
-			    initTargetResourceId();
 		    });
 	    }
 	    $scope.init();
