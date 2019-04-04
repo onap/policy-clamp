@@ -66,10 +66,10 @@ def main():
 
     base_config_path = args.configuration_path
 
-    # get list of all objects available
-    url = "%s/api/saved_objects/" % (args.kibana_host.rstrip("/"),)
+    # get list of the set of objects we update
+    url = "%s/api/saved_objects/_find" % (args.kibana_host.rstrip("/"),)
     saved_objects_req = requests.get(url,
-                                     params={'per_page': PER_PAGE})
+                                     params={'per_page': PER_PAGE,'type':['config','search','dashboard','visualization','index-pattern']})
 
     saved_objects = saved_objects_req.json()['saved_objects']
 
