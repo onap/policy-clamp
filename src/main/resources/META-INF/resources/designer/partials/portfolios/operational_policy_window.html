@@ -197,8 +197,8 @@ label {
 								<option value="APPC">APPC</option>
 								<option value="SO">SO</option>
 								<option value="VFC">VFC</option>
-								<option value="SDNC">SDNC</option>Â°
-								<option value="SDNR">SDNR</option>Â°
+								<option value="SDNC">SDNC</option>°
+								<option value="SDNR">SDNR</option>°
 							</select>
 						</div>
 
@@ -282,10 +282,53 @@ label {
 							Target ResourceId</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="resourceId" id="resourceId"
-								enableFilter="true" ng-model="resourceId">
+								enableFilter="true" ng-click="changeTargetResourceId()"
+								ng-model="resourceId">
 								<option value=""></option>
 								<option value="Other:">Other:</option>
 							</select>
+						</div>
+					</div>
+					<div id="metadata">
+						<div class="form-group clearfix">
+							<label for="modelInvariantId" class="col-sm-4 control-label">
+								Model Invariant Id</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="modelInvariantId"
+									id="modelInvariantId" readonly />
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="modelVersionId" class="col-sm-4 control-label">
+								Model Version Id</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="modelVersionId"
+									id="modelVersionId" readonly />
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="modelName" class="col-sm-4 control-label">
+								Model Name</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="modelName" id="modelName"
+									readonly />
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="modelVersion" class="col-sm-4 control-label">
+								Model Version</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="modelVersion"
+									id="modelVersion" readonly />
+							</div>
+						</div>
+						<div class="form-group clearfix">
+							<label for="modelCustomizationId" class="col-sm-4 control-label">
+								Model Customization Id</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="modelCustomizationId"
+									id="modelCustomizationId" readonly />
+							</div>
 						</div>
 					</div>
 				</form>

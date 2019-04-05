@@ -209,6 +209,11 @@ app
 
 			var type = $(event.target).val();
 			
+			$("#modelName").val("");
+			$("#modelInvariantId").val("");
+			$("#modelVersionId").val("");
+			$("#modelVersion").val("");
+			$("#modelCustomizationId").val("");
 			$('#resourceId').empty();
 			$("#resourceId")
 					.append(
@@ -217,6 +222,9 @@ app
 			$("#resourceId").append(
 					$('<option></option>').val("Other:")
 							.html("Other:"));
+			if (type == "VM" || type == "" || type == "VNF" ) {
+				$("#metadata *").prop('disabled',true);
+			}
 			
 			var resourceVnf = getResourceDetailsProperty();
 			if (type == "VNF"
@@ -244,17 +252,57 @@ app
 						}
 					}
 				} 
-		        else 
+		        else
 		        {
 		          for ( var prop in resourceVfc) {
-				          var name = resourceVfc[prop]["name"];
-		    					$("#resourceId").append(
-		    							$('<option></option>')
-		    									.val(name).html(name));
+				     var name = resourceVfc[prop]["name"];
+		    	      $("#resourceId").append(
+		    		     $('<option></option>')
+		    			    .val(name).html(name));
 		    			}
-					} 
-		}
+					}
+				}
+	    }	
 
+		$scope.changeTargetResourceId = function() {
+			$("#modelName").val("");
+			$("#modelInvariantId").val("");
+			$("#modelVersionId").val("");
+			$("#modelVersion").val("");
+			$("#modelCustomizationId").val("");
+			var resourceVfc = getResourceDetailsVfcProperty();
+			var type = $("#type").val();
+			var recipe = $("#recipe").val();
+			vfBaseName = $(event.target).val();
+			if (type == "VFC"
+					&& (null !== resourceVfc || undefined !== resourceVfc)
+					&& (recipe == 'VF Module Create' || recipe == 'VF Module Delete')) {
+				for ( var prop in resourceVfc) {
+					var name = resourceVfc[prop]["name"];
+					if (name == vfBaseName) {
+						var vfModuleModelName = resourceVfc[prop]["name"];
+						$("#modelName").val(
+								vfModuleModelName);
+						var vfModuleModelInvariantUUID = resourceVfc[prop]["invariantUUID"];
+						$("#modelInvariantId").val(
+								vfModuleModelInvariantUUID);
+						var vfModuleModelUUID = resourceVfc[prop]["UUID"];
+						$("#modelVersionId").val(
+								vfModuleModelUUID);
+						var vfModuleModelVersion = resourceVfc[prop]["version"];
+						$("#modelVersion").val(
+								vfModuleModelVersion);
+						var vfModuleModelCustomizationUUID = resourceVfc[prop]["customizationUUID"];
+						$("#modelCustomizationId")
+								.val(
+										vfModuleModelCustomizationUUID);
+					}
+				}
+			}
+			else {
+				$("#metadata *").prop('disabled',true);
+			}
+		}
 
 	    $scope.changeGuardPolicyType = function() {
 
