@@ -1,0 +1,16 @@
+{
+	"policy-id": "guard2",
+	"contents": {
+		"recipe": "Migrate",
+		"actor": "SO",
+		"clname": "testloop",
+		"guardTargets": ".*",
+		"minGuard": "1",
+		"maxGuard": "2",
+		"limitGuard": "",
+		"timeUnitsGuard": "",
+		"timeWindowGuard": "",
+		"guardActiveStart": "00:00:01-05:00",
+		"guardActiveEnd": "23:59:01-05:00"
+	}
+}

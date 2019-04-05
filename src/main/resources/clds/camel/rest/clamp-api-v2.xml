@@ -1,94 +1,147 @@
-<rests xmlns="http://camel.apache.org/schema/spring" >
-    <rest >
-        <get uri="/v2/loop/getAllNames"
-            outType="java.lang.String[]"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
-                <to uri="bean:org.onap.clamp.loop.LoopController?method=getLoopNames()" />
-            </route>
-        </get>
-        <get uri="/v2/loop/{loopName}"
-            outType="org.onap.clamp.loop.Loop"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
-                <to uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
-            </route>
-        </get>
-        <get uri="/v2/loop/svgRepresentation/{loopName}"
-            outType="java.lang.String"
-            produces="application/xml">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
-                <to uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
-            </route>
-        </get>
+<rests xmlns="http://camel.apache.org/schema/spring">
+	<rest>
+		<get
+			uri="/v2/loop/getAllNames"
+			outType="java.lang.String[]"
+			produces="application/json">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+				<to
+					uri="bean:org.onap.clamp.loop.LoopController?method=getLoopNames()" />
+			</route>
+		</get>
+		<get
+			uri="/v2/loop/{loopName}"
+			outType="org.onap.clamp.loop.Loop"
+			produces="application/json">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+				<to
+					uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+			</route>
+		</get>
+		<get
+			uri="/v2/loop/svgRepresentation/{loopName}"
+			outType="java.lang.String"
+			produces="application/xml">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+				<to
+					uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
+			</route>
+		</get>
 
-        <post uri="/v2/loop/updateGlobalProperties/{loopName}"
-            type="com.google.gson.JsonObject"
-            consumes="application/json"
-            outType="org.onap.clamp.loop.Loop"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateGlobalPropertiesJson(${header.loopName},${body})" />
-            </route>
-        </post>
-        <post uri="/v2/loop/updateOperationalPolicies/{loopName}"
-            type="com.google.gson.JsonArray"
-            consumes="application/json"
-            outType="org.onap.clamp.loop.Loop"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
-            </route>
-        </post>
-        <post uri="/v2/loop/updateMicroservicePolicy/{loopName}"
-            type="org.onap.clamp.policy.microservice.MicroServicePolicy"
-            consumes="application/json"
-            outType="org.onap.clamp.policy.microservice.MicroServicePolicy"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicy(${header.loopName},${body})" />
-            </route>
-        </post>
-        <put uri="/v2/loop/deployLoop/{loopName}"
-            outType="org.onap.clamp.loop.Loop"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deployLoop(*,${header.loopName})" />
-            </route>
-        </put>
-        <put uri="/v2/loop/undeployLoop/{loopName}"
-            outType="org.onap.clamp.loop.Loop"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=unDeployLoop(${header.loopName})" />
-            </route>
-        </put>
-        <put uri="/v2/loop/submit/{loopName}">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=submitMsPolicies(${header.loopName})" />
-                <!-- <to uri="bean:org.onap.clamp.operation.LoopOperation?method=submitOpPolicy(${header.loopName})" />-->
-                <!--<to uri="bean:org.onap.clamp.operation.LoopOperation?method=submitGuardPolicy(${header.loopName})" /> -->
-            </route>
-        </put>
-        <put uri="/v2/loop/delete/{loopName}"
-            outType="org.onap.clamp.loop.Loop"
-            produces="application/json">
-            <route>
-                <to uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteMsPolicies(${header.loopName})" />
-                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteOpPolicy(${header.loopName})" />
-                <to uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteGuardPolicy(${header.loopName})" />
-            </route>
-        </put>
-    </rest>
+		<post
+			uri="/v2/loop/updateGlobalProperties/{loopName}"
+			type="com.google.gson.JsonObject"
+			consumes="application/json"
+			outType="org.onap.clamp.loop.Loop"
+			produces="application/json">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+				<to
+					uri="bean:org.onap.clamp.loop.LoopController?method=updateGlobalPropertiesJson(${header.loopName},${body})" />
+			</route>
+		</post>
+		<post
+			uri="/v2/loop/updateOperationalPolicies/{loopName}"
+			type="com.google.gson.JsonArray"
+			consumes="application/json"
+			outType="org.onap.clamp.loop.Loop"
+			produces="application/json">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+				<to
+					uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${body})" />
+			</route>
+		</post>
+		<post
+			uri="/v2/loop/updateMicroservicePolicy/{loopName}"
+			type="org.onap.clamp.policy.microservice.MicroServicePolicy"
+			consumes="application/json"
+			outType="org.onap.clamp.policy.microservice.MicroServicePolicy"
+			produces="application/json">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+				<to
+					uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicy(${header.loopName},${body})" />
+			</route>
+		</post>
+		<put
+			uri="/v2/loop/deployLoop/{loopName}"
+			outType="org.onap.clamp.loop.Loop"
+			produces="application/json">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+				<to
+					uri="bean:org.onap.clamp.operation.LoopOperation?method=deployLoop(*,${header.loopName})" />
+			</route>
+		</put>
+		<put
+			uri="/v2/loop/undeployLoop/{loopName}"
+			outType="org.onap.clamp.loop.Loop"
+			produces="application/json">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+				<to
+					uri="bean:org.onap.clamp.operation.LoopOperation?method=unDeployLoop(${header.loopName})" />
+			</route>
+		</put>
+		<put uri="/v2/loop/submit/{loopName}">
+			<route>
+				<setBody>
+					<simple>${header.loopName}</simple>
+				</setBody>
+				<log
+					loggingLevel="INFO"
+					message="Loop name received: ${body}"></log>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+				<setHeader headerName="LoopObject">
+					<method
+						ref="org.onap.clamp.loop.LoopService"
+						method="getLoop" />
+				</setHeader>
+				<split streaming="true">
+					<simple>${header.LoopObject.getMicroServicePolicies()}
+					</simple>
+					<setHeader headerName="HttpQueryException">
+						<simple resultType="java.lang.Boolean">false</simple>
+					</setHeader>
+					<to uri="direct:delete-micro-service"/>
+					
+					<setHeader headerName="HttpQueryException">
+						<simple resultType="java.lang.Boolean">true</simple>
+					</setHeader>
+					<setBody>
+						<simple>${body.createPolicyPayload()}</simple>
+					</setBody>
+					<to uri="direct:create-micro-service"/>
+
+				</split>
+			</route>
+		</put>
+		<put
+			uri="/v2/loop/delete/{loopName}">
+			<route>
+				<to
+					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+				<to
+					uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteMsPolicies(${header.loopName})" />
+				<to
+					uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteOpPolicy(${header.loopName})" />
+				<to
+					uri="bean:org.onap.clamp.operation.LoopOperation?method=deleteGuardPolicy(${header.loopName})" />
+			</route>
+		</put>
+	</rest>
 </rests>
 
