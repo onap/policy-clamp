@@ -42,6 +42,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.plexus.util.StringUtils;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.sdc.api.notification.IArtifactInfo;
@@ -71,6 +72,8 @@ public class CsarHandler {
     public static final String RESOURCE_INSTANCE_NAME_PREFIX = "/Artifacts/Resources/";
     public static final String RESOURCE_INSTANCE_NAME_SUFFIX = "/Deployment/";
     public static final String POLICY_DEFINITION_NAME_SUFFIX = "Definitions/policies.yml";
+    public static final String DATA_DEFINITION_NAME_SUFFIX = "Definitions/data.yml";
+    public static final String DATA_DEFINITION_KEY = "data_types:";
 
     public CsarHandler(INotificationData iNotif, String controller, String clampCsarPath) throws CsarHandlerException {
         this.sdcNotification = iNotif;
@@ -159,6 +162,10 @@ public class CsarHandler {
         return csarFilePath;
     }
 
+    public String setFilePath(String newPath) {
+        return csarFilePath = newPath;
+    }
+
     public synchronized ISdcCsarHelper getSdcCsarHelper() {
         return sdcCsarHelper;
     }
@@ -171,12 +178,26 @@ public class CsarHandler {
         return mapOfBlueprints;
     }
 
+    /**
+     * Get the whole policy model Yaml. It combines the content of policies.yaml and data.yaml.
+     * @return The whole policy model yaml
+     * @throws IOException The IO Exception
+     */
     public Optional<String> getPolicyModelYaml() throws IOException {
         String result = null;
         try (ZipFile zipFile = new ZipFile(csarFilePath)) {
             ZipEntry entry = zipFile.getEntry(POLICY_DEFINITION_NAME_SUFFIX);
             if (entry != null) {
-                result = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+                ZipEntry data = zipFile.getEntry(DATA_DEFINITION_NAME_SUFFIX);
+                if (data != null) {
+                    String dataStr = IOUtils.toString(zipFile.getInputStream(data), StandardCharsets.UTF_8);
+                    String dataStrWithoutHeader = dataStr.substring(dataStr.indexOf(DATA_DEFINITION_KEY));
+                    String policyStr = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+                    StringUtils.chomp(policyStr);
+                    result = policyStr.concat(dataStrWithoutHeader);
+                } else {
+                    result = IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8);
+                }
             } else {
                 logger.info("Policy model not found inside the CSAR file: " + csarFilePath);
             }

@@ -72,7 +72,9 @@ function getMsProperty(type) {
     var msProperties = cl_props["microServicePolicies"];
     for (p in msProperties) {
         if (msProperties[p]["name"] == type) {
-           return JSON.parse(JSON.stringify(msProperties[p]["properties"]));
+        	if (msProperties[p]["properties"] !== null && msProperties[p]["properties"] !== undefined) {
+        		return JSON.parse(JSON.stringify(msProperties[p]["properties"]));
+        	}
         }
     }
     return null;
@@ -82,7 +84,7 @@ function getMsUI(type) {
     var msProperties = cl_props["microServicePolicies"];
     for (p in msProperties) {
         if (msProperties[p]["name"] == type) {
-           return JSON.parse(JSON.stringify(msProperties[p]["jsonRepresentation"]));
+        	return JSON.parse(JSON.stringify(msProperties[p]["jsonRepresentation"]));
         }
     }
     return null;

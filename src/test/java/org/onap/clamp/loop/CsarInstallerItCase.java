@@ -36,6 +36,7 @@ import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -47,6 +48,7 @@ import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
 import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
@@ -55,6 +57,7 @@ import org.onap.sdc.tosca.parser.impl.SdcToscaParserFactory;
 import org.onap.sdc.toscaparser.api.elements.Metadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -63,7 +66,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller-new")
 public class CsarInstallerItCase {
 
-    private static final String CSAR_ARTIFACT_NAME = "example/sdc/service-Simsfoimap0112.csar";
+    private static final String CSAR_ARTIFACT_NAME = "example/sdc/service-Vloadbalancerms-csar.csar";
     private static final String INVARIANT_SERVICE_UUID = "4cc5b45a-1f63-4194-8100-cd8e14248c92";
     private static final String INVARIANT_RESOURCE1_UUID = "07e266fc-49ab-4cd7-8378-ca4676f1b9ec";
     private static final String INVARIANT_RESOURCE2_UUID = "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad";
@@ -129,14 +132,33 @@ public class CsarInstallerItCase {
         // Create helper based on real csar to test policy yaml and global properties
         // set
         SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
+        String path = Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile();
         ISdcCsarHelper sdcHelper = factory
-            .getSdcCsarHelper(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile());
+            .getSdcCsarHelper(path);
         Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(sdcHelper);
 
         // Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
         Mockito.when(csarHandler.getPolicyModelYaml())
             .thenReturn(Optional.ofNullable(ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml")));
         return csarHandler;
+    }
+
+    @Test
+    @Transactional
+    public void testGetPolicyModelYaml() throws IOException, SdcToscaParserException, CsarHandlerException {
+        INotificationData notificationData = Mockito.mock(INotificationData.class);
+        IArtifactInfo serviceArtifacts = Mockito.mock(IArtifactInfo.class);
+        Mockito.when(serviceArtifacts.getArtifactType()).thenReturn("TOSCA_CSAR");
+        List<IArtifactInfo> serviceArtifactsList = new ArrayList<>();
+        serviceArtifactsList.add(serviceArtifacts);
+        Mockito.when(notificationData.getServiceArtifacts()).thenReturn(serviceArtifactsList);
+
+        CsarHandler csarHandler = new CsarHandler(notificationData, "", "");
+        csarHandler.setFilePath(Thread.currentThread().getContextClassLoader()
+                .getResource(CSAR_ARTIFACT_NAME).getFile());
+        Optional<String> testyaml = csarHandler.getPolicyModelYaml();
+        Assert.assertEquals(testyaml, Optional.ofNullable(ResourceFileUtil
+                .getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
     }
 
     @Test
