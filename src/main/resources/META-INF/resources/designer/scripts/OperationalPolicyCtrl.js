@@ -37,7 +37,8 @@ app
 	    var allPolicies = {};
 	    $scope.guardType = "GUARD_MIN_MAX";
 	    $scope.number = 0;
-	    $scope.clname="";
+	    $scope.clname = "";
+	    $scope.guard_ids = [];
 	    function getAllFormId() {
 
 		    return Array.from(document.getElementsByClassName("formId"));
@@ -92,6 +93,7 @@ app
 		    $(".formId").not($("#formId" + count)).css("display", "none");
 		    addCustListen(count);
 		    $("#formId" + count + " #id").val("new");
+		    $("#formId" + count + " #clname").val($scope.clname);
 		    return count;
 	    }
 	    function addCustListen(count) {
@@ -140,10 +142,11 @@ app
 	    }
 	    function savePolicyLocally() {
 
-		    var polForm = {}
-		    polForm = serializeElement($("#operationalPolicyHeaderForm"));
+		    var polForm = {};
+		    var clPolForm = {};
+		    clPolForm = serializeElement($("#operationalPolicyHeaderForm"));
+		    allPolicies['guard_policies'] = {};
 		    var policiesArray = []
-		    allPolicies['guard_policies'] = [];
 		    $.each($(".formId"), function() {
 
 			    var policyProperties = serializeElement($("#" + this.id + " .policyProperties"));
@@ -151,9 +154,15 @@ app
 			    policiesArray.push(policyProperties);
 			    // Now get the Guard
 			    if ($("#" + this.id + " #enableGuardPolicy").is(':checked')) {
-				    allPolicies['guard_policies'].push(serializeElement($("#" + this.id + " .guardProperties")));
+			    	var guardPolicyBody = serializeElement($("#" + this.id + " .guardProperties"));
+			    	var guardPolicyId = guardPolicyBody['id'];
+			    	delete guardPolicyBody['id'];
+
+				    allPolicies['guard_policies'][guardPolicyId] = guardPolicyBody;
+				    $scope.guard_ids.push(guardPolicyId);
 			    }
 		    });
+		    polForm['controlLoop'] = clPolForm;
 		    polForm['policies'] = policiesArray;
 		    allPolicies['operational_policy'] = polForm;
 	    }
@@ -173,7 +182,7 @@ app
 		    // Set the header
 		    $.each($('#operationalPolicyHeaderForm').find('.form-control'), function() {
 
-			    $(this).val(allPolicies['operational_policy'][this.id]);
+			    $(this).val(allPolicies['operational_policy']['controlLoop'][this.id]);
 		    });
 		    // Set the sub-policies
 		    $.each(allPolicies['operational_policy']['policies'], function(opPolicyElemIndex, opPolicyElemValue) {
@@ -188,13 +197,14 @@ app
 			    $("#go_properties_tab" + formNum).text(
 			    allPolicies['operational_policy']['policies'][opPolicyElemIndex]['id']);
 			    // Check if there is a guard set for it
-			    $.each(allPolicies['guard_policies'], function(guardElemIndex, guardElemValue) {
+			    $.each(allPolicies['guard_policies'], function(guardElemId, guardElemValue) {
 
 				    if (guardElemValue.recipe === $($("#formId" + formNum + " #recipe")[0]).val()) {
 					    // Found one, set all guard prop
 					    $.each($('.guardProperties').find('.form-control'), function(guardPropElemIndex,guardPropElemValue) {
+					    	guardElemValue['id'] = guardElemId;
 					    	$("#formId"+formNum+" .guardProperties").find("#"+guardPropElemValue.id).val(
-						    allPolicies['guard_policies'][guardElemIndex][guardPropElemValue.id]);
+						    guardElemValue[guardPropElemValue.id]);
 					    });
 					    // And finally enable the flag
 					    $("#formId" + formNum + " #enableGuardPolicy").prop("checked", true);
@@ -349,9 +359,17 @@ app
 				    add_new_policy();
 			    }
 			    $("#savePropsBtn").click(function(event) {
-
 				    console.log("save properties triggered");
 				    savePolicyLocally();
+			    	for(var i = 0; i <= $scope.guard_ids.length; i++) {
+			            for(var j = i; j <= $scope.guard_ids.length; j++) {
+			                if(i != j && $scope.guard_ids[i] == $scope.guard_ids[j]) {
+			                    // duplacated guard policy id exist
+			                	alert("The guard policy ID should be unique.");
+			                	return;
+			                }
+			            }
+			        }
 				    angular.element(document.getElementById('formSpan')).scope().submitForm(allPolicies);
 				    $("#close_button").click();
 			    });
@@ -363,6 +381,12 @@ app
 		    var formNum = $(event.target).closest('.formId').attr('id').substring(6);
 		    // Get the second recipe (guard one) and update it
 		    $($("#formId" + formNum + " #recipe")[1]).val($(event.target).val());
+	    }
+	    $scope.updateGuardActor = function(event) {
+
+		    var formNum = $(event.target).closest('.formId').attr('id').substring(6);
+		    // Get the second actor (guard one) and update it
+		    $($("#formId" + formNum + " #actor")[1]).val($(event.target).val());
 	    }
 	    // When we change the name of a policy
 	    $scope.updateTabLabel = function(event) {

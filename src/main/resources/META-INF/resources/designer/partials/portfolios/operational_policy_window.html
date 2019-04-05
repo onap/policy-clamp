@@ -110,7 +110,9 @@ label {
 								<select type="text" id="trigger_policy" name="trigger_policy"
 									class="form-control" ng-model="null_dump"
 									ng-init="initPolicySelect()"
-									ng-options="policy for policy in policy_ids track by policy"></select>
+									ng-options="policy for policy in policy_ids track by policy">
+									<option value="">-- choose an option --</option>
+									</select>
 							</div>
 
 							<label for="timeout" class="col-sm-3"
@@ -126,6 +128,13 @@ label {
 								<input type="checkbox" id="abatement" name="abatement"
 									checked="true" class="form-control">
 							</div>
+						</div>
+						<div class="form-group clearfix row">
+   						    <label class="col-sm-4 control-label" for="clname">ControlLoopName</label>
+						    <div class="col-sm-8">
+							    <input type="text" class="form-control" name="controlLoopName"
+								    readonly="readonly" id="clname" ng-model="clname"/>
+						    </div>
 						</div>
 					</div>
 				</form>
@@ -158,9 +167,8 @@ label {
 						<label class="col-sm-4 control-label" for="recipe">Recipe</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="recipe" id="recipe"
-								enableFilter="true"
-								ng-click="updateGuardRecipe($event);initTargetResourceId()"
-								ng-model="recipe">
+								enableFilter="true"  ng-model="recipe" ng-click="updateGuardRecipe($event)">
+								<option value="">-- choose an option --</option>
 								<option value="Restart">Restart</option>
 								<option value="Rebuild">Rebuild</option>
 								<option value="Migrate">Migrate</option>
@@ -193,7 +201,8 @@ label {
 					<div class="form-group clearfix">
 						<label for="actor" class="col-sm-4 control-label"> Actor</label>
 						<div class="col-sm-8">
-							<select class="form-control" id="actor" name="actor">
+							<select class="form-control" id="actor" name="actor" ng-click="updateGuardActor($event)" ng-model="actor">
+							    <option value="">-- choose an option --</option>
 								<option value="APPC">APPC</option>
 								<option value="SO">SO</option>
 								<option value="VFC">VFC</option>
@@ -214,7 +223,9 @@ label {
 						<div class="col-sm-8">
 							<select class="form-control" id="success" name="success"
 								ng-model="null_dump"
-								ng-options="policy for policy in policy_ids track by policy"></select>
+								ng-options="policy for policy in policy_ids track by policy">
+								<option value="">-- choose an option --</option>
+								</select>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -223,7 +234,9 @@ label {
 						<div class="col-sm-8">
 							<select class="form-control" id="failure" name="failure"
 								ng-model="null_dump"
-								ng-options="policy for policy in policy_ids track by policy"></select>
+								ng-options="policy for policy in policy_ids track by policy">
+								<option value="">-- choose an option --</option>
+								</select>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -232,7 +245,9 @@ label {
 						<div class="col-sm-8">
 							<select class="form-control" id="failure_timeout"
 								name="failure_timeout" ng-model="null_dump"
-								ng-options="policy for policy in policy_ids track by policy"></select>
+								ng-options="policy for policy in policy_ids track by policy">
+								<option value="">-- choose an option --</option>
+								</select>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -241,7 +256,9 @@ label {
 						<div class="col-sm-8">
 							<select class="form-control" id="failure_retries"
 								name="failure_retries" ng-model="null_dump"
-								ng-options="policy for policy in policy_ids track by policy"></select>
+								ng-options="policy for policy in policy_ids track by policy">
+								<option value="">-- choose an option --</option>
+								</select>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -250,7 +267,9 @@ label {
 						<div class="col-sm-8">
 							<select class="form-control" id="failure_exception"
 								name="failure_exception" ng-model="null_dump"
-								ng-options="policy for policy in policy_ids track by policy"></select>
+								ng-options="policy for policy in policy_ids track by policy">
+								<option value="">-- choose an option --</option>
+								</select>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -259,7 +278,9 @@ label {
 						<div class="col-sm-8">
 							<select class="form-control" id="failure_guard"
 								name="failure_guard" ng-model="null_dump"
-								ng-options="policy for policy in policy_ids track by policy"></select>
+								ng-options="policy for policy in policy_ids track by policy">
+								<option value="">-- choose an option --</option>
+								</select>
 						</div>
 					</div>
 				</form>
@@ -354,7 +375,7 @@ label {
 					title="Guard policy associated" style="border: 2px dotted gray;">
 
 					<div class="form-group clearfix">
-						<label class="col-sm-4 control-label" for="id">ID</label>
+						<label class="col-sm-4 control-label" for="id">Guard Policy ID</label>
 						<div class="col-sm-8">
 							<input type="text" class="form-control" name="id" id="id" />
 						</div>
@@ -363,7 +384,7 @@ label {
 						<label class="col-sm-4 control-label" for="recipe">Recipe</label>
 						<div class="col-sm-8">
 							<input type="text" class="form-control" name="recipe"
-								readonly="readonly" id="recipe" />
+								readonly="readonly" id="recipe"/>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -373,8 +394,13 @@ label {
 								readonly="readonly" id="clname" ng-model="clname"/>
 						</div>
 					</div>
-					
-					
+					<div class="form-group clearfix">
+					    <label for="actor" class="col-sm-4 control-label">Actor</label>
+						<div class="col-sm-8">
+						    <input type="text" class="form-control" name="actor"
+								readonly="readonly" id="actor" />
+						</div>
+					</div>
 					<div class="form-group clearfix">
 
 						<label for="guardTargets" class="col-sm-4 control-label">Guard
