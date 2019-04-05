@@ -33,11 +33,11 @@ import java.util.HashSet;
 import java.util.Random;
 
 import org.junit.Test;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-import org.onap.clamp.clds.util.JsonUtils;
 
 public class LoopToJsonTest {
 
@@ -58,19 +58,17 @@ public class LoopToJsonTest {
         return loop;
     }
 
-    private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation, String policyTosca,
-        String jsonProperties, boolean shared) {
+    private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
+        String policyTosca, String jsonProperties, boolean shared) {
         MicroServicePolicy µService = new MicroServicePolicy(name, modelType, policyTosca, shared,
-            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>(), "");
+            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
         µService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
 
         return µService;
     }
 
-    private LoopLog getLoopLog(LogType type, String message) {
-        LoopLog log = new LoopLog();
-        log.setLogType(type);
-        log.setMessage(message);
+    private LoopLog getLoopLog(LogType type, String message, Loop loop) {
+        LoopLog log = new LoopLog(message, type, loop);
         log.setId(Long.valueOf(new Random().nextInt()));
         return log;
     }
@@ -81,10 +79,11 @@ public class LoopToJsonTest {
             "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy("{\"type\":\"GUARD\"}", "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
-        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "", "{\"configtype\":\"json\"}",
-            "YamlContent", "{\"param1\":\"value1\"}", true);
+        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
+            "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+            "{\"param1\":\"value1\"}", true);
         loopTest.addMicroServicePolicy(microServicePolicy);
-        LoopLog loopLog = getLoopLog(LogType.INFO, "test message");
+        LoopLog loopLog = getLoopLog(LogType.INFO, "test message", loopTest);
         loopTest.addLog(loopLog);
 
         String jsonSerialized = JsonUtils.GSON_JPA_MODEL.toJson(loopTest);
@@ -94,7 +93,7 @@ public class LoopToJsonTest {
         assertNotNull(loopTestDeserialized);
         assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest, "svgRepresentation", "blueprint");
 
-        //svg and blueprint not exposed so wont be deserialized
+        // svg and blueprint not exposed so wont be deserialized
         assertThat(loopTestDeserialized.getBlueprint()).isEqualTo(null);
         assertThat(loopTestDeserialized.getSvgRepresentation()).isEqualTo(null);
 

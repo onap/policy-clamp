@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -124,7 +123,7 @@ public class BlueprintParser {
             if (properties.has(POLICYID)) {
                 JsonObject policyIdObj = properties.get(POLICYID).getAsJsonObject();
                 if (policyIdObj.has(POLICY_TYPEID)) {
-                   return policyIdObj.get(POLICY_TYPEID).getAsString();
+                    return policyIdObj.get(POLICY_TYPEID).getAsString();
                 }
             }
         }

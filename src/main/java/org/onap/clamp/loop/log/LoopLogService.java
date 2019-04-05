@@ -21,16 +21,23 @@
  *
  */
 
-package org.onap.clamp.policy;
-
-import java.util.List;
-import java.util.Set;
+package org.onap.clamp.loop.log;
 
 import org.onap.clamp.loop.Loop;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public interface PolicyService<T extends Policy> {
+@Service
+public class LoopLogService {
 
-    Set<T> updatePolicies(Loop loop, List<T> newPolicies);
+    private final LoopLogRepository repository;
 
-    boolean isExisting(String policyName);
+    @Autowired
+    public LoopLogService(LoopLogRepository repository) {
+        this.repository = repository;
+    }
+
+    public void addLog(String message, String logType, Loop loop) {
+        repository.save(new LoopLog(message, LogType.valueOf(logType), loop));
+    }
 }

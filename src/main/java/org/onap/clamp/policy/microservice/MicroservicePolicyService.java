@@ -33,7 +33,6 @@ import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MicroservicePolicyService implements PolicyService<MicroServicePolicy> {
@@ -46,7 +45,6 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
     }
 
     @Override
-    @Transactional
     public Set<MicroServicePolicy> updatePolicies(Loop loop, List<MicroServicePolicy> newMicroservicePolicies) {
         return newMicroservicePolicies.stream().map(policy -> getAndUpdateMicroServicePolicy(loop, policy))
             .collect(Collectors.toSet());
@@ -59,21 +57,23 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
 
     /**
      * Get and update the MicroService policy properties.
-     * @param loop The loop
-     * @param policy The new MicroService policy
+     *
+     * @param loop
+     *        The loop
+     * @param policy
+     *        The new MicroService policy
      * @return The updated MicroService policy
      */
-    @Transactional
     public MicroServicePolicy getAndUpdateMicroServicePolicy(Loop loop, MicroServicePolicy policy) {
         return repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
-            .orElse(new MicroServicePolicy(policy.getName(), policy.getModelType(), policy.getPolicyTosca(), policy.getShared(),
-                policy.getJsonRepresentation(), Sets.newHashSet(loop), policy.getBlueprintName()));
+            .orElse(new MicroServicePolicy(policy.getName(), policy.getModelType(), policy.getPolicyTosca(),
+                policy.getShared(), policy.getJsonRepresentation(), Sets.newHashSet(loop)));
     }
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,
         MicroServicePolicy newPolicy, Loop loop) {
         oldPolicy.setProperties(newPolicy.getProperties());
-        if (oldPolicy.getUsedByLoops().contains(loop)) {
+        if (!oldPolicy.getUsedByLoops().contains(loop)) {
             oldPolicy.getUsedByLoops().add(loop);
         }
         return oldPolicy;

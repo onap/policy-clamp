@@ -30,8 +30,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.time.Instant;
-
 import java.util.HashSet;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
@@ -83,19 +83,16 @@ public class LoopRepositoriesItCase {
         return loop;
     }
 
-    private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation, String policyTosca,
-        String jsonProperties, boolean shared) {
+    private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
+        String policyTosca, String jsonProperties, boolean shared) {
         MicroServicePolicy µService = new MicroServicePolicy(name, modelType, policyTosca, shared,
-            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>(), "");
+            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
         µService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
         return µService;
     }
 
-    private LoopLog getLoopLog(LogType type, String message) {
-        LoopLog log = new LoopLog();
-        log.setLogType(type);
-        log.setMessage(message);
-        return log;
+    private LoopLog getLoopLog(LogType type, String message, Loop loop) {
+        return new LoopLog(message, type, loop);
     }
 
     @Test
@@ -105,10 +102,11 @@ public class LoopRepositoriesItCase {
             "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy("{\"type\":\"GUARD\"}", "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
-        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "", "{\"configtype\":\"json\"}",
-            "YamlContent", "{\"param1\":\"value1\"}", true);
+        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
+            "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+            "{\"param1\":\"value1\"}", true);
         loopTest.addMicroServicePolicy(microServicePolicy);
-        LoopLog loopLog = getLoopLog(LogType.INFO, "test message");
+        LoopLog loopLog = getLoopLog(LogType.INFO, "test message", loopTest);
         loopTest.addLog(loopLog);
 
         // Attemp to save into the database the entire loop
