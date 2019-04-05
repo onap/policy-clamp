@@ -65,9 +65,10 @@ public class MicroservicePolicyService implements PolicyService<MicroServicePoli
      * @return The updated MicroService policy
      */
     public MicroServicePolicy getAndUpdateMicroServicePolicy(Loop loop, MicroServicePolicy policy) {
-        return repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
-            .orElse(new MicroServicePolicy(policy.getName(), policy.getModelType(), policy.getPolicyTosca(),
-                policy.getShared(), policy.getJsonRepresentation(), Sets.newHashSet(loop)));
+        return repository
+            .save(repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
+                .orElse(new MicroServicePolicy(policy.getName(), policy.getModelType(), policy.getPolicyTosca(),
+                    policy.getShared(), policy.getJsonRepresentation(), Sets.newHashSet(loop))));
     }
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,

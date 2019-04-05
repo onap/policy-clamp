@@ -17,6 +17,7 @@ node_templates:
     properties:
       policy_id: 
         get_input: policy_id
+        policy_type_id: onap.policy.monitoring.cdap.tca.hi.lo.ap
   cdap_host_host:
     type: dcae.nodes.StreamingAnalytics.SelectedCDAPInfrastructure
     properties:
