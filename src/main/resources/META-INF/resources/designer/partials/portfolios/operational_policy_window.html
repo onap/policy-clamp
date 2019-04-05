@@ -158,7 +158,9 @@ label {
 						<label class="col-sm-4 control-label" for="recipe">Recipe</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="recipe" id="recipe"
-								enableFilter="true" ng-click="updateGuardRecipe($event)">
+								enableFilter="true"
+								ng-click="updateGuardRecipe($event);initTargetResourceId()"
+								ng-model="recipe">
 								<option value="Restart">Restart</option>
 								<option value="Rebuild">Rebuild</option>
 								<option value="Migrate">Migrate</option>
@@ -195,8 +197,8 @@ label {
 								<option value="APPC">APPC</option>
 								<option value="SO">SO</option>
 								<option value="VFC">VFC</option>
-								<option value="SDNC">SDNC</option>°
-								<option value="SDNR">SDNR</option>°
+								<option value="SDNC">SDNC</option>Â°
+								<option value="SDNR">SDNR</option>Â°
 							</select>
 						</div>
 
@@ -267,7 +269,8 @@ label {
 						<label for="type" class="col-sm-4 control-label"> Target
 							Type</label>
 						<div class="col-sm-8">
-							<select class="form-control" name="type" id="type">
+							<select class="form-control" name="type" id="type"
+								ng-click="initTargetResourceId()" ng-model="type">
 								<option value="VFC">VFC</option>
 								<option value="VM">VM</option>
 								<option value="VNF">VNF</option>
@@ -279,7 +282,9 @@ label {
 							Target ResourceId</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="resourceId" id="resourceId"
-								enableFilter="true">
+								enableFilter="true" ng-model="resourceId">
+								<option value=""></option>
+								<option value="Other:">Other:</option>
 							</select>
 						</div>
 					</div>

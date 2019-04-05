@@ -113,4 +113,13 @@ function getDeploymentStatusURL() {
 function setDeploymentStatusURL(deploymentStatusURL) {
     cl_props["dcaeDeploymentStatusUrl"] = deploymentStatusURL;
 }
-module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL };
+
+function getResourceDetailsProperty() {
+	return cl_props["modelPropertiesJson"]["resourceDetails"]["VF"];
+}
+
+function getResourceDetailsVfcProperty() {
+	return cl_props["modelPropertiesJson"]["resourceDetails"]["VFC"];
+}
+
+module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL,getResourceDetailsProperty,getResourceDetailsVfcProperty };
