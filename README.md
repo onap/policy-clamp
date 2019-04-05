@@ -125,8 +125,8 @@ There is a section for SSL enablement and cadi configuration (for AAF) + one spr
 
 server.port=8443
 server.ssl.key-store=classpath:/clds/aaf/org.onap.clamp.p12
-server.ssl.key-store-password=34xqGdj]VnHothQ]5qCykV3X
-server.ssl.key-password=34xqGdj]VnHothQ]5qCykV3X
+server.ssl.key-store-password=China in the Spring
+server.ssl.key-password=China in the Spring
 server.ssl.key-store-type=PKCS12
 server.ssl.key-alias=clamp@clamp.onap.org
 server.ssl.client-auth=want
@@ -139,21 +139,21 @@ spring.profiles.active=clamp-default,clamp-aaf-authentication,clamp-sdc-controll
 ....
 clamp.config.cadi.keyFile=classpath:/clds/aaf/org.onap.clamp.keyfile
 clamp.config.cadi.cadiLoglevel=DEBUG
-clamp.config.cadi.cadiLatitude=37.78187
-clamp.config.cadi.cadiLongitude=-122.26147
+clamp.config.cadi.cadiLatitude=10
+clamp.config.cadi.cadiLongitude=10
 clamp.config.cadi.aafLocateUrl=https://aaf.api.simpledemo.onap.org:8095
 clamp.config.cadi.cadiKeystorePassword=enc:V_kq_EwDNb4itWp_lYfDGXIWJzemHGkhkZOxAQI9IHs
 clamp.config.cadi.cadiTruststorePassword=enc:Mj0YQqNCUKbKq2lPp1kTFQWeqLxaBXKNwd5F1yB1ukf
 clamp.config.cadi.aafEnv=DEV
 clamp.config.cadi.aafUrl=https://AAF_LOCATE_URL/AAF_NS.service:2.0
-clamp.config.cadi.cadiX509Issuers=CN=intermediateCA_1, OU=OSAAF, O=ONAP, C=US
+clamp.config.cadi.cadiX509Issuers=CN=intermediateCA_9, OU=OSAAF, O=ONAP, C=US:CN=intermediateCA_1, OU=OSAAF, O=ONAP, C=US
 
 In that case a certificate must be added in the browser and is required to login properly
 Please check that section to get the certificate
 https://wiki.onap.org/display/DW/Control+Loop+Flows+and+Models+for+Casablanca#ControlLoopFlowsandModelsforCasablanca-Configure
 
 Or it can be found in the Clamp source code folder src/main/resources/clds/aaf
-(Default Password: "34xqGdj]VnHothQ]5qCykV3X")
+(Default Password: "China in the Spring")
 
 2. Spring authentication
 It's possible to enable the spring authentication by disabling the "clamp-aaf-authentication" profile and enabling only the "clamp-default-user"
