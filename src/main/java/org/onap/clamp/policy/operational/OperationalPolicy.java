@@ -23,12 +23,18 @@
 
 package org.onap.clamp.policy.operational;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,6 +50,7 @@ import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.Policy;
+import org.yaml.snakeyaml.Yaml;
 
 @Entity
 @Table(name = "operational_policies")
@@ -156,11 +163,36 @@ public class OperationalPolicy implements Serializable, Policy {
         JsonArray policiesArray = new JsonArray();
         topologyTemplateNode.add("policies", policiesArray);
 
-        return new GsonBuilder().setPrettyPrinting().create().toJson(policyPayloadResult);
+        JsonObject operationalPolicy = new JsonObject();
+        policiesArray.add(operationalPolicy);
+
+        JsonObject operationalPolicyDetails = new JsonObject();
+        operationalPolicy.add(this.name, operationalPolicyDetails);
+        operationalPolicyDetails.addProperty("type", "onap.policies.controlloop.Operational");
+        operationalPolicyDetails.addProperty("version", "1.0.0");
+
+        JsonObject metadata = new JsonObject();
+        operationalPolicyDetails.add("metadata", metadata);
+        metadata.addProperty("policy-id", this.name);
+
+        operationalPolicyDetails.add("properties", this.configurationsJson.get("operational_policy"));
+
+        Gson gson = new GsonBuilder().create();
+        Map<?, ?> jsonMap = gson.fromJson(gson.toJson(policyPayloadResult), Map.class);
+        return (new Yaml()).dump(jsonMap);
     }
 
-    public String createGuardPolicyPayload() {
-        return null;
+    public List<String> createGuardPolicyPayloads() {
+        List<String> result = new ArrayList<>();
+
+        JsonObject guard = new JsonObject();
+        JsonElement guardsList = this.getConfigurationsJson().get("guard_policies");
+        for (Entry<String, JsonElement> guardElem : guardsList.getAsJsonObject().entrySet()) {
+            guard.addProperty("policy-id", guardElem.getKey());
+            guard.add("contents", guardElem.getValue());
+            result.add(new GsonBuilder().create().toJson(guard));
+        }
+        return result;
     }
 
 }

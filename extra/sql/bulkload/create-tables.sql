@@ -35,7 +35,6 @@
 
     create table micro_service_policies (
        name varchar(255) not null,
-        blueprint_name varchar(255) not null,
         json_representation json not null,
         model_type varchar(255) not null,
         policy_tosca MEDIUMTEXT not null,

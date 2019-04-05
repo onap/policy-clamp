@@ -1,0 +1,16 @@
+{
+	"policy-id": "guard1",
+	"contents": {
+		"recipe": "Rebuild",
+		"actor": "SO",
+		"clname": "testloop",
+		"guardTargets": ".*",
+		"minGuard": "3",
+		"maxGuard": "7",
+		"limitGuard": "",
+		"timeUnitsGuard": "",
+		"timeWindowGuard": "",
+		"guardActiveStart": "00:00:01-05:00",
+		"guardActiveEnd": "23:59:01-05:00"
+	}
+}

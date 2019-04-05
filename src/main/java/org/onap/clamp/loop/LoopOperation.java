@@ -45,7 +45,6 @@ import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ONAPLogConstants;
 import org.onap.clamp.exception.OperationException;
-import org.onap.clamp.policy.PolicyOperation;
 import org.onap.clamp.util.HttpConnectionManager;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,30 +58,30 @@ import org.yaml.snakeyaml.Yaml;
 @Component
 public class LoopOperation {
 
-    protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(LoopOperation.class);
-    protected static final EELFLogger auditLogger     = EELFManager.getInstance().getMetricsLogger();
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(LoopOperation.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getMetricsLogger();
     private final DcaeDispatcherServices dcaeDispatcherServices;
     private final LoopService loopService;
     private LoggingUtils util = new LoggingUtils(logger);
-    private PolicyOperation policyOp;
 
     @Autowired
     private HttpServletRequest request;
 
     @Autowired
-    public LoopOperation(LoopService loopService, DcaeDispatcherServices dcaeDispatcherServices, 
-            ClampProperties refProp, HttpConnectionManager httpConnectionManager, PolicyOperation policyOp) {
+    public LoopOperation(LoopService loopService, DcaeDispatcherServices dcaeDispatcherServices,
+        ClampProperties refProp, HttpConnectionManager httpConnectionManager) {
         this.loopService = loopService;
         this.dcaeDispatcherServices = dcaeDispatcherServices;
-        this.policyOp =  policyOp;
     }
 
     /**
      * Deploy the closed loop.
      *
-     * @param loopName the loop name
+     * @param loopName
+     *        the loop name
      * @return the updated loop
-     * @throws Exceptions during the operation
+     * @throws Exceptions
+     *         during the operation
      */
     public Loop deployLoop(Exchange camelExchange, String loopName) throws OperationException {
         util.entering(request, "CldsService: Deploy model");
@@ -98,10 +97,9 @@ public class LoopOperation {
 
         // verify the current closed loop state
         if (loop.getLastComputedState() != LoopState.SUBMITTED) {
-            String msg = "Deploy loop exception: This closed loop is in state:" + loop.getLastComputedState() 
+            String msg = "Deploy loop exception: This closed loop is in state:" + loop.getLastComputedState()
                 + ". It could be deployed only when it is in SUBMITTED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
+            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             throw new OperationException(msg);
         }
 
@@ -118,25 +116,27 @@ public class LoopOperation {
         Map<String, Object> yamlMap = yaml.load(loop.getBlueprint());
         JsonObject bluePrint = wrapSnakeObject(yamlMap).getAsJsonObject();
 
-        loop.setDcaeDeploymentStatusUrl(dcaeDispatcherServices.createNewDeployment(deploymentId, loop.getDcaeBlueprintId(), bluePrint));
+        loop.setDcaeDeploymentStatusUrl(
+            dcaeDispatcherServices.createNewDeployment(deploymentId, loop.getDcaeBlueprintId(), bluePrint));
         loop.setLastComputedState(LoopState.DEPLOYED);
         // save the updated loop
-        loopService.saveOrUpdateLoop (loop);
+        loopService.saveOrUpdateLoop(loop);
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("Deploy model completed");
         util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return  loop;
+        return loop;
     }
 
     /**
      * Un deploy closed loop.
      *
-     * @param loopName the loop name
+     * @param loopName
+     *        the loop name
      * @return the updated loop
      */
-    public Loop unDeployLoop(String loopName)  throws OperationException {
+    public Loop unDeployLoop(String loopName) throws OperationException {
         util.entering(request, "LoopOperation: Undeploy the closed loop");
         Date startTime = new Date();
         Loop loop = loopService.getLoop(loopName);
@@ -146,14 +146,13 @@ public class LoopOperation {
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), msg, Level.INFO,
                 ONAPLogConstants.ResponseStatus.ERROR);
             throw new OperationException(msg);
-        } 
+        }
 
         // verify the current closed loop state
         if (loop.getLastComputedState() != LoopState.DEPLOYED) {
-            String msg = "Unploy loop exception: This closed loop is in state:" + loop.getLastComputedState() 
+            String msg = "Unploy loop exception: This closed loop is in state:" + loop.getLastComputedState()
                 + ". It could be undeployed only when it is in DEPLOYED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
+            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             throw new OperationException(msg);
         }
 
@@ -165,7 +164,7 @@ public class LoopOperation {
         loop.setLastComputedState(LoopState.SUBMITTED);
 
         // save the updated loop
-        loopService.saveOrUpdateLoop (loop);
+        loopService.saveOrUpdateLoop(loop);
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
@@ -175,14 +174,14 @@ public class LoopOperation {
     }
 
     private JsonElement wrapSnakeObject(Object o) {
-        //NULL => JsonNull
+        // NULL => JsonNull
         if (o == null)
             return JsonNull.INSTANCE;
 
         // Collection => JsonArray
         if (o instanceof Collection) {
             JsonArray array = new JsonArray();
-            for (Object childObj : (Collection<?>)o)
+            for (Object childObj : (Collection<?>) o)
                 array.add(wrapSnakeObject(childObj));
             return array;
         }
@@ -192,14 +191,14 @@ public class LoopOperation {
             JsonArray array = new JsonArray();
 
             int length = Array.getLength(array);
-            for (int i=0; i<length; i++)
+            for (int i = 0; i < length; i++)
                 array.add(wrapSnakeObject(Array.get(array, i)));
             return array;
         }
 
         // Map => JsonObject
         if (o instanceof Map) {
-            Map<?, ?> map = (Map<?, ?>)o;
+            Map<?, ?> map = (Map<?, ?>) o;
 
             JsonObject jsonObject = new JsonObject();
             for (final Map.Entry<?, ?> entry : map.entrySet()) {
@@ -217,12 +216,15 @@ public class LoopOperation {
     /**
      * Submit the Ms policies.
      *
-     * @param loopName the loop name
+     * @param loopName
+     *        the loop name
      * @return the updated loop
-     * @throws IOException IO exception
-     * @throws Exceptions during the operation
+     * @throws IOException
+     *         IO exception
+     * @throws Exceptions
+     *         during the operation
      */
-    public Loop submitMsPolicies (String loopName) throws OperationException, IOException {
+    public Loop submitMsPolicies(String loopName) throws OperationException, IOException {
         util.entering(request, "LoopOperation: delete microservice policies");
         Date startTime = new Date();
         Loop loop = loopService.getLoop(loopName);
@@ -236,33 +238,34 @@ public class LoopOperation {
 
         // verify the current closed loop state
         if (loop.getLastComputedState() != LoopState.SUBMITTED && loop.getLastComputedState() != LoopState.DESIGN) {
-            String msg = "Submit MS policies exception: This closed loop is in state:" + loop.getLastComputedState() 
+            String msg = "Submit MS policies exception: This closed loop is in state:" + loop.getLastComputedState()
                 + ". It could be deleted only when it is in SUBMITTED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
+            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             throw new OperationException(msg);
         }
 
         // Establish the api call to Policy to create the ms services
-        policyOp.createMsPolicy(loop.getMicroServicePolicies());
+        // policyOp.createMsPolicy(loop.getMicroServicePolicies());
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("Deletion of MS policies completed");
         util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return  loop;
+        return loop;
     }
 
-    
     /**
      * Delete the Ms policies.
      *
-     * @param loopName the loop name
+     * @param loopName
+     *        the loop name
      * @return the updated loop
-     * @throws IOException IO exception
-     * @throws Exceptions during the operation
+     * @throws IOException
+     *         IO exception
+     * @throws Exceptions
+     *         during the operation
      */
-    public Loop deleteMsPolicies (Exchange camelExchange, String loopName) throws OperationException, IOException {
+    public Loop deleteMsPolicies(Exchange camelExchange, String loopName) throws OperationException, IOException {
         util.entering(request, "LoopOperation: delete microservice policies");
         Date startTime = new Date();
         Loop loop = loopService.getLoop(loopName);
@@ -276,31 +279,32 @@ public class LoopOperation {
 
         // verify the current closed loop state
         if (loop.getLastComputedState() != LoopState.SUBMITTED) {
-            String msg = "Delete MS policies exception: This closed loop is in state:" + loop.getLastComputedState() 
+            String msg = "Delete MS policies exception: This closed loop is in state:" + loop.getLastComputedState()
                 + ". It could be deleted only when it is in SUBMITTED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
+            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             throw new OperationException(msg);
         }
 
         // Establish the api call to Policy to create the ms services
-        policyOp.deleteMsPolicy(loop.getMicroServicePolicies());
+        // policyOp.deleteMsPolicy(loop.getMicroServicePolicies());
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("Deletion of MS policies completed");
         util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return  loop;
+        return loop;
     }
 
     /**
      * Delete the operational policy.
      *
-     * @param loopName the loop name
+     * @param loopName
+     *        the loop name
      * @return the updated loop
-     * @throws Exceptions during the operation
+     * @throws Exceptions
+     *         during the operation
      */
-    public Loop deleteOpPolicy (Exchange camelExchange, String loopName) throws OperationException {
+    public Loop deleteOpPolicy(Exchange camelExchange, String loopName) throws OperationException {
         util.entering(request, "LoopOperation: delete guard policy");
         Date startTime = new Date();
         Loop loop = loopService.getLoop(loopName);
@@ -314,31 +318,32 @@ public class LoopOperation {
 
         // verify the current closed loop state
         if (loop.getLastComputedState() != LoopState.SUBMITTED) {
-            String msg = "Delete MS policies exception: This closed loop is in state:" + loop.getLastComputedState() 
+            String msg = "Delete MS policies exception: This closed loop is in state:" + loop.getLastComputedState()
                 + ". It could be deleted only when it is in SUBMITTED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
+            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             throw new OperationException(msg);
         }
 
         // Establish the api call to Policy to delete operational policy
-        //client.deleteOpPolicy();
+        // client.deleteOpPolicy();
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("Deletion of Guard policy completed");
         util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return  loop;
+        return loop;
     }
 
     /**
      * Delete the Guard policy.
      *
-     * @param loopName the loop name
+     * @param loopName
+     *        the loop name
      * @return the updated loop
-     * @throws Exceptions during the operation
+     * @throws Exceptions
+     *         during the operation
      */
-    public Loop deleteGuardPolicy (Exchange camelExchange, String loopName) throws OperationException {
+    public Loop deleteGuardPolicy(Exchange camelExchange, String loopName) throws OperationException {
         util.entering(request, "LoopOperation: delete operational policy");
         Date startTime = new Date();
         Loop loop = loopService.getLoop(loopName);
@@ -352,20 +357,19 @@ public class LoopOperation {
 
         // verify the current closed loop state
         if (loop.getLastComputedState() != LoopState.SUBMITTED) {
-            String msg = "Delete MS policies exception: This closed loop is in state:" + loop.getLastComputedState() 
+            String msg = "Delete MS policies exception: This closed loop is in state:" + loop.getLastComputedState()
                 + ". It could be deleted only when it is in SUBMITTED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
+            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
             throw new OperationException(msg);
         }
 
         // Establish the api call to Policy to delete Guard policy
-        //client.deleteOpPolicy();
+        // client.deleteOpPolicy();
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("Deletion of operational policy completed");
         util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return  loop;
+        return loop;
     }
 }
