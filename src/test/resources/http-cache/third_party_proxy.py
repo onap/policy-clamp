@@ -171,7 +171,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             with open(cached_file_content, 'w') as f:
                 f.write(jsonGenerated)
         return True
-     elif (self.path.startswith("/pdp/api/") and http_type == "PUT" or http_type == "DELETE") or (self.path.startswith("/pdp/api/policyEngineImport") and http_type == "POST"):
+     elif (self.path.startswith("/pdp/api/") and (http_type == "PUT" or http_type == "DELETE")) or (self.path.startswith("/pdp/api/policyEngineImport") and http_type == "POST"):
         print "self.path start with /pdp/api/, copying body to response ..."
         if not os.path.exists(cached_file_folder):
             os.makedirs(cached_file_folder, 0777)
@@ -179,6 +179,25 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
         with open(cached_file_content, 'w+') as f:
             f.write(self.data_string)
+        return True
+     elif self.path.startswith("/policy/api/v1/policyTypes/") and http_type == "POST":
+        print "self.path start with POST new policy API /pdp/api/, copying body to response ..."
+        if not os.path.exists(cached_file_folder):
+            os.makedirs(cached_file_folder, 0777)
+        with open(cached_file_header, 'w+') as f:
+            f.write("{\"Content-Length\": \"" + str(len(self.data_string)) + "\", \"Content-Type\": \""+str(self.headers['Content-Type'])+"\"}")
+        with open(cached_file_content, 'w+') as f:
+            f.write(self.data_string)
+        return True
+     elif self.path.startswith("/policy/api/v1/policyTypes/") and http_type == "DELETE":
+        print "self.path start with DELETE new policy API /policy/api/v1/policyTypes/ ..."
+        if not os.path.exists(cached_file_folder):
+            os.makedirs(cached_file_folder, 0777)
+    
+        with open(cached_file_header, 'w+') as f:
+                f.write("{\"Content-Length\": \"" + str(len("")) + "\", \"Content-Type\": \""+str("")+"\"}")
+        with open(cached_file_content, 'w+') as f:
+                f.write(self.data_string)
         return True
      else:
         return False
@@ -337,7 +356,10 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         cached_file_header=""
         print("\n\n\nGot a DELETE for %s " % self.path)
         self.check_credentials()
-        self.data_string = self.rfile.read(int(self.headers['Content-Length']))
+        if self.headers.get('Content-Length') is not None:
+            self.data_string = self.rfile.read(int(self.headers['Content-Length']))
+        else:
+            self.data_string = "empty generated"
         print("self.headers:\n %s" % self.headers)
 
         is_special = self._execute_content_generated_cases("DELETE")

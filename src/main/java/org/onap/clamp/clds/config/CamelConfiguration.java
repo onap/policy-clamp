@@ -21,13 +21,18 @@
  */
 package org.onap.clamp.clds.config;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.onap.clamp.clds.util.ClampVersioning;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
+
+    @Autowired
+    CamelContext camelContext;
 
     @Override
     public void configure() {
@@ -38,5 +43,6 @@ public class CamelConfiguration extends RouteBuilder {
             .apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
             .apiProperty("base.path", "/restservices/clds/");
         // .apiProperty("cors", "true");
+        camelContext.setTracing(true);
     }
 }

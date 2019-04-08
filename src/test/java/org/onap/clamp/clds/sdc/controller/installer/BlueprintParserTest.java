@@ -163,7 +163,7 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceTCATest() {
-        MicroService tcaMS = new MicroService(BlueprintParser.TCA, "onap.policy.monitoring.cdap.tca.hi.lo.ap", "", "",
+        MicroService tcaMS = new MicroService(BlueprintParser.TCA, "onap.policy.monitoring.cdap.tca.hi.lo.app", "", "",
             "");
 
         List<MicroService> expected = Collections.singletonList(tcaMS);
@@ -174,8 +174,8 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceHolmesTest() {
-        MicroService holmesMS = new MicroService(BlueprintParser.HOLMES, "onap.policy.monitoring.cdap.tca.hi.lo.ap", "",
-            "", "");
+        MicroService holmesMS = new MicroService(BlueprintParser.HOLMES, "onap.policy.monitoring.cdap.tca.hi.lo.app",
+            "", "", "");
 
         List<MicroService> expected = Collections.singletonList(holmesMS);
         List<MicroService> actual = new BlueprintParser()

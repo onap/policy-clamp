@@ -75,43 +75,168 @@
 			</when>
 		</choice>
 	</route>
-	<route id="delete-micro-service">
-		<from uri="direct:delete-micro-service" />
 
+	<route id="load-loop">
+		<from uri="direct:load-loop" />
+		<setHeader headerName="LoopObject">
+			<method
+				ref="org.onap.clamp.loop.LoopService"
+				method="getLoop" />
+		</setHeader>
+
+		<when>
+			<simple>${header.LoopObject} == null</simple>
+			<setHeader headerName="CamelHttpResponseCode">
+				<constant>404</constant>
+			</setHeader>
+			<log
+				loggingLevel="WARNING"
+				message="Loop not found in database: ${body}" />
+			<stop />
+		</when>
+
+	</route>
+
+	<route id="create-micro-service-policy">
+		<from uri="direct:create-micro-service-policy" />
+		<log
+			loggingLevel="INFO"
+			message="Creating Micro Service Policy: ${header.microServicePolicy.getName()}" />
+		<setBody>
+			<simple>${header.microServicePolicy.createPolicyPayload()}
+			</simple>
+		</setBody>
+		<setHeader headerName="CamelHttpMethod">
+			<constant>POST</constant>
+		</setHeader>
+		<setHeader headerName="Content-Type">
+			<constant>application/json</constant>
+		</setHeader>
+		<setHeader headerName="CamelHttpUri">
+			<simple>{{clamp.config.policy.url}}/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies
+			</simple>
+		</setHeader>
+		<log
+			loggingLevel="INFO"
+			message="Policy Endpoint for microservice: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+		<toD
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+	</route>
+	<route id="delete-micro-service-policy">
+		<from uri="direct:delete-micro-service-policy" />
+		<log
+			loggingLevel="INFO"
+			message="Deleting Micro Service Policy: ${header.microServicePolicy.getName()}" />
+		<setBody>
+			<constant>null</constant>
+		</setBody>
 		<setHeader headerName="CamelHttpMethod">
 			<constant>DELETE</constant>
 		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/${body.getModelType()}/versions/1.0.0/policies/${body.getName()}
+			<simple>{{clamp.config.policy.url}}/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies/${header.microServicePolicy.getName()}
 			</simple>
 		</setHeader>
-		<setBody>
-			<constant>null</constant>
-		</setBody>
-		<!--<convertBodyTo type="org.onap.clamp.policy.microservice.MicroServicePolicy"/> -->
 		<log
 			loggingLevel="INFO"
 			message="Policy Endpoint for microservice: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryException}" />
-
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
 	</route>
-	<route id="create-micro-service">
-		<from uri="direct:create-micro-service" />
 
+	<route id="create-operational-policy">
+		<from uri="direct:create-operational-policy" />
+		<log
+			loggingLevel="INFO"
+			message="Creating Operational Policy: ${header.operationalPolicy.getName()}" />
+		<setBody>
+			<simple>${header.operationalPolicy.createPolicyPayload()}
+			</simple>
+		</setBody>
 		<setHeader headerName="CamelHttpMethod">
 			<constant>POST</constant>
 		</setHeader>
+		<setHeader headerName="Content-Type">
+			<constant>application/json</constant>
+		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/${body.getModelType()}/versions/1.0.0/policies
+			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies
 			</simple>
 		</setHeader>
-		<!--<convertBodyTo type="org.onap.clamp.policy.microservice.MicroServicePolicy"/> -->
 		<log
 			loggingLevel="INFO"
-			message="Policy Endpoint for microservice: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Policy Endpoint for operational ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryException}" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+	</route>
+	<route id="delete-operational-policy">
+		<from uri="direct:delete-operational-policy" />
+		<log
+			loggingLevel="INFO"
+			message="Deleting Operational Policy: ${header.operationalPolicy.getName()}" />
+		<setBody>
+			<constant>null</constant>
+		</setBody>
+		<setHeader headerName="CamelHttpMethod">
+			<constant>DELETE</constant>
+		</setHeader>
+		<setHeader headerName="CamelHttpUri">
+			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies/${header.operationalPolicy.getName()}
+			</simple>
+		</setHeader>
+		<log
+			loggingLevel="INFO"
+			message="Policy Endpoint for operational: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+		<toD
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
+
+	</route>
+
+	<route id="create-guard-policy">
+		<from uri="direct:create-guard-policy" />
+		<log
+			loggingLevel="INFO"
+			message="Creating Guard Policy: ${header.guardPolicy.getKey()}" />
+		<setBody>
+			<simple>${header.guardPolicy.getValue()}
+			</simple>
+		</setBody>
+		<setHeader headerName="CamelHttpMethod">
+			<constant>POST</constant>
+		</setHeader>
+		<setHeader headerName="Content-Type">
+			<constant>application/json</constant>
+		</setHeader>
+		<setHeader headerName="CamelHttpUri">
+			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies
+			</simple>
+		</setHeader>
+		<log
+			loggingLevel="INFO"
+			message="Policy Endpoint for operational ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+		<toD
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+	</route>
+	<route id="delete-guard-policy">
+		<from uri="direct:delete-guard-policy" />
+		<log
+			loggingLevel="INFO"
+			message="Deleting Guard Policy: ${header.guardPolicy.getKey()}" />
+		<setBody>
+			<constant>null</constant>
+		</setBody>
+		<setHeader headerName="CamelHttpMethod">
+			<constant>DELETE</constant>
+		</setHeader>
+		<setHeader headerName="CamelHttpUri">
+			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${header.guardPolicy.getKey()}
+			</simple>
+		</setHeader>
+		<log
+			loggingLevel="INFO"
+			message="Policy Endpoint for operational: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+		<toD
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
 	</route>
 
 </routes>
