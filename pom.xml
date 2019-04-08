@@ -88,7 +88,7 @@
 				<docker.skip.tag>true</docker.skip.tag>
 				<skip.staging.artifacts>false</skip.staging.artifacts>
 				<python.http.proxy.param/>
-				<tomcat.version>8.5.34</tomcat.version>
+				<tomcat.version>9.0.16</tomcat.version>
 		</properties>
 
 		<profiles>
