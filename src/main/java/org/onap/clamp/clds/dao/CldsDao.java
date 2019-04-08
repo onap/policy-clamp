@@ -26,7 +26,6 @@ package org.onap.clamp.clds.dao;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +34,6 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.onap.clamp.clds.model.CldsDbServiceCache;
 import org.onap.clamp.clds.model.CldsDictionary;
 import org.onap.clamp.clds.model.CldsDictionaryItem;
 import org.onap.clamp.clds.model.CldsEvent;
@@ -43,11 +41,11 @@ import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelInstance;
 import org.onap.clamp.clds.model.CldsModelProp;
 import org.onap.clamp.clds.model.CldsMonitoringDetails;
-import org.onap.clamp.clds.model.CldsServiceData;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.CldsToscaModel;
 import org.onap.clamp.clds.model.ValueItem;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -86,14 +84,17 @@ public class CldsDao {
     /**
      * Log message when instantiating.
      */
-    public CldsDao() {
+    @Autowired
+    public CldsDao(@Qualifier("cldsDataSource") DataSource dataSource) {
         logger.info("CldsDao instantiating...");
+        setDataSource(dataSource);
     }
 
     /**
      * When dataSource is provided, instantiate spring jdbc objects.
      *
-     * @param dataSource the data source
+     * @param dataSource
+     *        the data source
      */
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplateObject = new JdbcTemplate(dataSource);
@@ -117,7 +118,8 @@ public class CldsDao {
     /**
      * Get a model from the database given the model name.
      *
-     * @param modelName the model name
+     * @param modelName
+     *        the model name
      * @return the model
      */
     public CldsModel getModel(String modelName) {
@@ -138,16 +140,19 @@ public class CldsDao {
     /**
      * Get a model from the database given the controlNameUuid.
      *
-     * @param controlNameUuid the control name uuid
+     * @param controlNameUuid
+     *        the control name uuid
      * @return the model by uuid
      */
     public CldsModel getModelByUuid(String controlNameUuid) {
         return getModel(null, controlNameUuid);
     }
+
     /**
      * Get a model and template information from the database given the model name.
      *
-     * @param modelName the model name
+     * @param modelName
+     *        the model name
      * @return model model template
      */
 
@@ -179,8 +184,10 @@ public class CldsDao {
      * Update model in the database using parameter values and return updated model
      * object.
      *
-     * @param model  the model
-     * @param userid the userid
+     * @param model
+     *        the model
+     * @param userid
+     *        the userid
      * @return model
      */
     public CldsModel setModel(CldsModel model, String userid) {
@@ -208,8 +215,10 @@ public class CldsDao {
      * Inserts new modelInstance in the database using parameter values and return
      * updated model object.
      *
-     * @param model              the model
-     * @param modelInstancesList the model instances list
+     * @param model
+     *        the model
+     * @param modelInstancesList
+     *        the model instances list
      */
     public void insModelInstance(CldsModel model, List<CldsModelInstance> modelInstancesList) {
         // Delete all existing model instances for given controlNameUUID
@@ -241,10 +250,14 @@ public class CldsDao {
      * Insert an event in the database - require either modelName or
      * controlNamePrefix/controlNameUuid.
      *
-     * @param modelName         the model name
-     * @param controlNamePrefix the control name prefix
-     * @param controlNameUuid   the control name uuid
-     * @param cldsEvent         the clds event
+     * @param modelName
+     *        the model name
+     * @param controlNamePrefix
+     *        the control name prefix
+     * @param controlNameUuid
+     *        the control name uuid
+     * @param cldsEvent
+     *        the clds event
      * @return clds event
      */
     public CldsEvent insEvent(String modelName, String controlNamePrefix, String controlNameUuid, CldsEvent cldsEvent) {
@@ -268,8 +281,10 @@ public class CldsDao {
     /**
      * Update event with process instance id.
      *
-     * @param eventId           the event id
-     * @param processInstanceId the process instance id
+     * @param eventId
+     *        the event id
+     * @param processInstanceId
+     *        the process instance id
      */
     public void updEvent(String eventId, String processInstanceId) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_event_id", eventId)
@@ -291,8 +306,10 @@ public class CldsDao {
      * Update template in the database using parameter values and return updated
      * template object.
      *
-     * @param template the template
-     * @param userid   the userid
+     * @param template
+     *        the template
+     * @param userid
+     *        the userid
      */
     public void setTemplate(CldsTemplate template, String userid) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_template_name", template.getName())
@@ -322,7 +339,8 @@ public class CldsDao {
     /**
      * Get a template from the database given the model name.
      *
-     * @param templateName the template name
+     * @param templateName
+     *        the template name
      * @return model template
      */
     public CldsTemplate getTemplate(String templateName) {
@@ -367,7 +385,7 @@ public class CldsDao {
     public List<CldsModelProp> getDeployedModelProperties() {
         List<CldsModelProp> cldsModelPropList = new ArrayList<>();
         String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, "
-                + "model_properties mp, event e "
+            + "model_properties mp, event e "
             + "WHERE m.model_prop_id = mp.model_prop_id and m.event_id = e.event_id and e.action_cd = 'DEPLOY'";
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
         CldsModelProp cldsModelProp = null;
@@ -421,7 +439,8 @@ public class CldsDao {
     /**
      * Method to delete model from database.
      *
-     * @param modelName the model name
+     * @param modelName
+     *        the model name
      */
     public void deleteModel(String modelName) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName);
@@ -461,7 +480,8 @@ public class CldsDao {
     /**
      * Method to retrieve a tosca models by Policy Type from database.
      *
-     * @param policyType the policy type
+     * @param policyType
+     *        the policy type
      * @return List of CldsToscaModel
      */
     public List<CldsToscaModel> getToscaModelByPolicyType(String policyType) {
@@ -471,7 +491,8 @@ public class CldsDao {
     /**
      * Method to retrieve a tosca models by toscaModelName, version from database.
      *
-     * @param toscaModelName the tosca model name
+     * @param toscaModelName
+     *        the tosca model name
      * @return List of CldsToscaModel
      */
     public List<CldsToscaModel> getToscaModelByName(String toscaModelName) {
@@ -486,8 +507,7 @@ public class CldsDao {
 
         String toscaModelSql = "SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, "
             + "tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp, "
-            + "tmr.lastUpdatedTimestamp "
-            + ((toscaModelName != null) ? (", tmr.tosca_model_yaml ") : " ")
+            + "tmr.lastUpdatedTimestamp " + ((toscaModelName != null) ? (", tmr.tosca_model_yaml ") : " ")
             + "FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id "
             + ((toscaModelName != null) ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : " ")
             + ((policyType != null) ? (" AND tm.policy_type = '" + policyType + "'") : " ")
@@ -520,8 +540,10 @@ public class CldsDao {
     /**
      * Method to upload a new version of Tosca Model Yaml in Database.
      *
-     * @param cldsToscaModel the clds tosca model
-     * @param userId         the user id
+     * @param cldsToscaModel
+     *        the clds tosca model
+     * @param userId
+     *        the user id
      * @return CldsToscaModel clds tosca model
      */
     public CldsToscaModel updateToscaModelWithNewVersion(CldsToscaModel cldsToscaModel, String userId) {
@@ -537,8 +559,10 @@ public class CldsDao {
     /**
      * Method to upload a new Tosca model Yaml in DB. Default version is 1.0
      *
-     * @param cldsToscaModel the clds tosca model
-     * @param userId         the user id
+     * @param cldsToscaModel
+     *        the clds tosca model
+     * @param userId
+     *        the user id
      * @return CldsToscaModel clds tosca model
      */
     public CldsToscaModel insToscaModel(CldsToscaModel cldsToscaModel, String userId) {
@@ -558,7 +582,8 @@ public class CldsDao {
     /**
      * Method to insert a new Dictionary in Database.
      *
-     * @param cldsDictionary the clds dictionary
+     * @param cldsDictionary
+     *        the clds dictionary
      */
     public void insDictionary(CldsDictionary cldsDictionary) {
         SqlParameterSource in = new MapSqlParameterSource()
@@ -571,9 +596,12 @@ public class CldsDao {
     /**
      * Method to update Dictionary with new info in Database.
      *
-     * @param dictionaryId   the dictionary id
-     * @param cldsDictionary the clds dictionary
-     * @param userId         the user id
+     * @param dictionaryId
+     *        the dictionary id
+     * @param cldsDictionary
+     *        the clds dictionary
+     * @param userId
+     *        the user id
      */
     public void updateDictionary(String dictionaryId, CldsDictionary cldsDictionary, String userId) {
 
@@ -586,8 +614,10 @@ public class CldsDao {
     /**
      * Method to get list of Dictionaries from the Database.
      *
-     * @param dictionaryId   the dictionary id
-     * @param dictionaryName the dictionary name
+     * @param dictionaryId
+     *        the dictionary id
+     * @param dictionaryName
+     *        the dictionary name
      * @return dictionary
      */
     public List<CldsDictionary> getDictionary(String dictionaryId, String dictionaryName) {
@@ -620,8 +650,10 @@ public class CldsDao {
     /**
      * Method to insert a new Dictionary Element for given dictionary in Database.
      *
-     * @param cldsDictionaryItem the clds dictionary item
-     * @param userId             the user id
+     * @param cldsDictionaryItem
+     *        the clds dictionary item
+     * @param userId
+     *        the user id
      */
     public void insDictionarElements(CldsDictionaryItem cldsDictionaryItem, String userId) {
         SqlParameterSource in = new MapSqlParameterSource()
@@ -638,9 +670,12 @@ public class CldsDao {
      * Method to update Dictionary Elements with new info for a given dictionary in
      * Database.
      *
-     * @param dictionaryElementId the dictionary element id
-     * @param cldsDictionaryItem  the clds dictionary item
-     * @param userId              the user id
+     * @param dictionaryElementId
+     *        the dictionary element id
+     * @param cldsDictionaryItem
+     *        the clds dictionary item
+     * @param userId
+     *        the user id
      */
     public void updateDictionaryElements(String dictionaryElementId, CldsDictionaryItem cldsDictionaryItem,
         String userId) {
@@ -659,9 +694,12 @@ public class CldsDao {
      * Method to get list of all dictionary elements for a given dictionary in the
      * Database.
      *
-     * @param dictionaryName       the dictionary name
-     * @param dictionaryId         the dictionary id
-     * @param dictElementShortName the dict element short name
+     * @param dictionaryName
+     *        the dictionary name
+     * @param dictionaryId
+     *        the dictionary id
+     * @param dictElementShortName
+     *        the dict element short name
      * @return dictionary elements
      */
     public List<CldsDictionaryItem> getDictionaryElements(String dictionaryName, String dictionaryId,
@@ -701,7 +739,8 @@ public class CldsDao {
      * Method to get Map of all dictionary elements with key as dictionary short
      * name and value as the full name.
      *
-     * @param dictionaryElementType the dictionary element type
+     * @param dictionaryElementType
+     *        the dictionary element type
      * @return Map of dictionary elements as key value pair
      */
     public Map<String, String> getDictionaryElementsByType(String dictionaryElementType) {

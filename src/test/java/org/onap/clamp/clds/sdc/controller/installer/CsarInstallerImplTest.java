@@ -22,12 +22,13 @@
  *
  */
 
-
 package org.onap.clamp.clds.sdc.controller.installer;
 
 import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -38,7 +39,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.config.sdc.BlueprintParserFilesConfiguration;
-import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.service.CldsTemplateService;
@@ -83,64 +83,54 @@ public class CsarInstallerImplTest {
     private BlueprintArtifact artifact;
 
     /**
-     * Set up method.
-     * throws: Exception
+     * Set up method. throws: Exception
      */
     @Before
     public void setUp() throws Exception {
         String dceaBlueprint = ResourceFileUtil.getResourceAsString("tosca/dcea_blueprint.yml");
         artifact = prepareBlueprintArtifact(dceaBlueprint);
-        csarInstaller = new CsarInstallerImpl(applicationContext, new CldsDao(), new CldsTemplateService(),
-                cldsService, dcaeInventoryServices, new XslTransformer());
+        csarInstaller = new CsarInstallerImpl(applicationContext, null, new CldsTemplateService(), cldsService,
+            dcaeInventoryServices, new XslTransformer());
     }
 
     @Test
     public void shouldReturnInputParametersFromBlueprint() {
-        //given
+        // given
         String expectedBlueprintInputsText = "{\"aaiEnrichmentHost\":\"aai.onap.svc.cluster.local\""
-                + ",\"aaiEnrichmentPort\":\"8443\""
-                + ",\"enableAAIEnrichment\":true"
-                + ",\"dmaap_host\":\"message-router\""
-                + ",\"dmaap_port\":\"3904\""
-                + ",\"enableRedisCaching\":false"
-                + ",\"redisHosts\":\"dcae-redis:6379\""
-                + ",\"tag_version\":"
-                + "\"nexus3.onap.org:10001/onap/org.onap.dcaegen2.deployments.tca-cdap-container:1.1.0\""
-                + ",\"consul_host\":\"consul-server\""
-                + ",\"consul_port\":\"8500\",\"cbs_host\":\"{\\\"test\\\":"
-                + "{\\\"test\\\":\\\"test\\\"}}\",\"cbs_port\":\"10000\""
-                + ",\"external_port\":\"32010\",\"policy_id\":\"AUTO_GENERATED_POLICY_ID_AT_SUBMIT\"}";
+            + ",\"aaiEnrichmentPort\":\"8443\"" + ",\"enableAAIEnrichment\":true" + ",\"dmaap_host\":\"message-router\""
+            + ",\"dmaap_port\":\"3904\"" + ",\"enableRedisCaching\":false" + ",\"redisHosts\":\"dcae-redis:6379\""
+            + ",\"tag_version\":"
+            + "\"nexus3.onap.org:10001/onap/org.onap.dcaegen2.deployments.tca-cdap-container:1.1.0\""
+            + ",\"consul_host\":\"consul-server\"" + ",\"consul_port\":\"8500\",\"cbs_host\":\"{\\\"test\\\":"
+            + "{\\\"test\\\":\\\"test\\\"}}\",\"cbs_port\":\"10000\""
+            + ",\"external_port\":\"32010\",\"policy_id\":\"AUTO_GENERATED_POLICY_ID_AT_SUBMIT\"}";
 
         JsonObject expectedBlueprintInputs = JsonUtils.GSON.fromJson(expectedBlueprintInputsText, JsonObject.class);
-        //when
+        // when
         String parametersInJson = csarInstaller.getAllBlueprintParametersInJson(artifact);
-        //then
+        // then
         Assertions.assertThat(JsonUtils.GSON.fromJson(parametersInJson, JsonObject.class))
-                .isEqualTo(expectedBlueprintInputs);
+            .isEqualTo(expectedBlueprintInputs);
     }
 
     @Test
     public void shouldReturnBuildModelName() throws SdcArtifactInstallerException {
-        //given
-        String expectedModelName = "CLAMP_test_name_"
-                + "vtest_service_version_"
-                + "test_resource_instance_name_"
-                + "test_artifact_name";
-        prepareMockCsarHandler("name", "test_name",
-                "test_service_version");
+        // given
+        String expectedModelName = "CLAMP_test_name_" + "vtest_service_version_" + "test_resource_instance_name_"
+            + "test_artifact_name";
+        prepareMockCsarHandler("name", "test_name", "test_service_version");
         Mockito.when(resourceInstance.getResourceInstanceName()).thenReturn("test_resource_instance_name");
-        //when
+        // when
         String actualModelName = CsarInstallerImpl.buildModelName(csarHandler, artifact);
-        //then
+        // then
         Assertions.assertThat(actualModelName).isEqualTo(expectedModelName);
     }
 
     @Test
     public void shouldReturnRightMapping() throws SdcArtifactInstallerException, IOException {
-        //given
-        String input = "[{\"blueprintKey\":\"tca_k8s\","
-                + "\"dcaeDeployable\":false,"
-                + "\"files\":{\"svgXmlFilePath\":\"samplePath\",\"bpmnXmlFilePath\":\"samplePath\"}}]";
+        // given
+        String input = "[{\"blueprintKey\":\"tca_k8s\"," + "\"dcaeDeployable\":false,"
+            + "\"files\":{\"svgXmlFilePath\":\"samplePath\",\"bpmnXmlFilePath\":\"samplePath\"}}]";
         BlueprintParserFilesConfiguration filesConfiguration = new BlueprintParserFilesConfiguration();
         filesConfiguration.setBpmnXmlFilePath("samplePath");
         filesConfiguration.setSvgXmlFilePath("samplePath");
@@ -149,10 +139,10 @@ public class CsarInstallerImplTest {
         Mockito.when(applicationContext.getResource(Mockito.any(String.class))).thenReturn(resource);
         Mockito.when(resource.getInputStream()).thenReturn(inputStream);
         csarInstaller.loadConfiguration();
-        //when
+        // when
         BlueprintParserFilesConfiguration configuration = csarInstaller.searchForRightMapping(artifact);
 
-        //then
+        // then
         Assertions.assertThat(configuration.getBpmnXmlFilePath()).isEqualTo("samplePath");
         Assertions.assertThat(configuration.getSvgXmlFilePath()).isEqualTo("samplePath");
     }
@@ -167,7 +157,7 @@ public class CsarInstallerImplTest {
     }
 
     private void prepareMockCsarHandler(String metadataNameMockInput, String metadataNameMockOutput,
-                                        String serviceVersion) {
+        String serviceVersion) {
         Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(sdcCsarHelper);
         Mockito.when(sdcCsarHelper.getServiceMetadata()).thenReturn(metadata);
         Mockito.when(metadata.getValue(metadataNameMockInput)).thenReturn(metadataNameMockOutput);

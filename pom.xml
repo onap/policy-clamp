@@ -64,8 +64,8 @@
 				<java.version>1.8</java.version>
 
 				<eelf.core.version>1.0.0</eelf.core.version>
-				<camel.version>2.22.1</camel.version>
-				<springboot.version>2.0.6.RELEASE</springboot.version>
+				<camel.version>2.23.1</camel.version>
+				<springboot.version>2.1.4.RELEASE</springboot.version>
 
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 				<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -409,6 +409,7 @@
 				<dependency>
 						<groupId>com.googlecode.json-simple</groupId>
 						<artifactId>json-simple</artifactId>
+						<version>1.1.1</version>
 				</dependency>
 				<dependency>
 						<groupId>org.apache.commons</groupId>
