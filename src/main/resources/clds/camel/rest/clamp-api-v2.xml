@@ -175,8 +175,17 @@
 						</setHeader>
 						<to uri="direct:create-guard-policy" />
 					</split>
-
 				</split>
+				<setHeader headerName="HttpQueryExceptionFlag">
+					<simple resultType="java.lang.Boolean">true</simple>
+				</setHeader>
+				<to uri="direct:create-pdp-group-policy" />
+				
+				<log
+					loggingLevel="INFO"
+					message="SUBMIT request successfully executed for loop: ${body}" />
+				<to
+					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('SUBMIT request successfully executed','INFO',${header.LoopObject})" />
 			</route>
 		</put>
 		<put uri="/v2/loop/delete/{loopName}">

@@ -29,15 +29,18 @@ import static org.junit.Assert.assertNotNull;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
 
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 public class LoopToJsonTest {
 
@@ -74,10 +77,11 @@ public class LoopToJsonTest {
     }
 
     @Test
-    public void LoopGsonTest() {
+    public void LoopGsonTest() throws IOException {
         Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
             "123456789", "https://dcaetest.org", "UUID-blueprint");
-        OperationalPolicy opPolicy = this.getOperationalPolicy("{\"type\":\"GUARD\"}", "GuardOpPolicyTest");
+        OperationalPolicy opPolicy = this.getOperationalPolicy(
+            ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
         MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
             "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
@@ -102,5 +106,21 @@ public class LoopToJsonTest {
         assertThat(loopTestDeserialized.getLoopLogs()).containsExactly(loopLog);
         assertThat((LoopLog) loopTestDeserialized.getLoopLogs().toArray()[0]).isEqualToIgnoringGivenFields(loopLog,
             "loop");
+    }
+
+    @Test
+    public void createPoliciesPayloadPdpGroupTest() throws IOException {
+        Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+            "123456789", "https://dcaetest.org", "UUID-blueprint");
+        OperationalPolicy opPolicy = this.getOperationalPolicy(
+            ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
+        loopTest.addOperationalPolicy(opPolicy);
+        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
+            "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+            "{\"param1\":\"value1\"}", true);
+        loopTest.addMicroServicePolicy(microServicePolicy);
+
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/pdp-group-policy-payload.json"),
+            loopTest.createPoliciesPayloadPdpGroup(), false);
     }
 }

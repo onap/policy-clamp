@@ -113,7 +113,7 @@
 			<constant>application/json</constant>
 		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies
+			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies
 			</simple>
 		</setHeader>
 		<log
@@ -136,7 +136,7 @@
 			<constant>DELETE</constant>
 		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies/${header.microServicePolicy.getName()}
+			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies/${header.microServicePolicy.getName()}
 			</simple>
 		</setHeader>
 		<log
@@ -161,10 +161,10 @@
 			<constant>POST</constant>
 		</setHeader>
 		<setHeader headerName="Content-Type">
-			<constant>application/json</constant>
+			<constant>application/yaml; legacy-version</constant>
 		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies
+			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies
 			</simple>
 		</setHeader>
 		<log
@@ -187,7 +187,7 @@
 			<constant>DELETE</constant>
 		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies/${header.operationalPolicy.getName()}
+			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies/${header.operationalPolicy.getName()}
 			</simple>
 		</setHeader>
 		<log
@@ -215,7 +215,7 @@
 			<constant>application/json</constant>
 		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies
+			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies
 			</simple>
 		</setHeader>
 		<log
@@ -238,7 +238,7 @@
 			<constant>DELETE</constant>
 		</setHeader>
 		<setHeader headerName="CamelHttpUri">
-			<simple>{{clamp.config.policy.url}}/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${header.guardPolicy.getKey()}
+			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${header.guardPolicy.getKey()}
 			</simple>
 		</setHeader>
 		<log
@@ -249,5 +249,32 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy deleted successfully','INFO',${header.LoopObject})" />
 	</route>
-
+	
+	<route id="create-pdp-group-policy">
+		<from uri="direct:create-pdp-group-policy" />
+		<log
+			loggingLevel="INFO"
+			message="Creating PDP Group Policy: ${header.guardPolicy.getKey()}" />
+		<setBody>
+			<simple>${header.LoopObject.createPoliciesPayloadPdpGroup()}
+			</simple>
+		</setBody>
+		<setHeader headerName="CamelHttpMethod">
+			<constant>POST</constant>
+		</setHeader>
+		<setHeader headerName="Content-Type">
+			<constant>application/json</constant>
+		</setHeader>
+		<setHeader headerName="CamelHttpUri">
+			<simple>{{clamp.config.policy.url}}/policy/pap/v1/pdps
+			</simple>
+		</setHeader>
+		<log
+			loggingLevel="INFO"
+			message="Endpoint to create PDP Group policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+		<toD
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Pdp Group created successfully','INFO',${header.LoopObject})" />
+	</route>
 </routes>
