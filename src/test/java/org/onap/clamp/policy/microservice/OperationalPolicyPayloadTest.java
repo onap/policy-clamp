@@ -29,7 +29,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.onap.clamp.clds.util.ResourceFileUtil;
@@ -53,12 +53,12 @@ public class OperationalPolicyPayloadTest {
             ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), JsonObject.class);
         OperationalPolicy policy = new OperationalPolicy("testPolicy", null, jsonConfig);
 
-        List<String> guardsList = policy.createGuardPolicyPayloads();
+        Map<String, String> guardsList = policy.createGuardPolicyPayloads();
 
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/guard1-policy-payload.json"),
-            guardsList.get(0), false);
+            guardsList.get("guard1"), false);
 
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/guard2-policy-payload.json"),
-            guardsList.get(1), false);
+            guardsList.get("guard2"), false);
     }
 }
