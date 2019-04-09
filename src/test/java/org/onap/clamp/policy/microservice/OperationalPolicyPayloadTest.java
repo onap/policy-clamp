@@ -48,17 +48,28 @@ public class OperationalPolicyPayloadTest {
     }
 
     @Test
+    public void testGuardPolicyEmptyPayloadConstruction() throws IOException {
+        JsonObject jsonConfig = new GsonBuilder().create().fromJson(
+            ResourceFileUtil.getResourceAsString("tosca/operational-policy-no-guard-properties.json"),
+            JsonObject.class);
+        OperationalPolicy policy = new OperationalPolicy("testPolicy", null, jsonConfig);
+        Map<String, String> guardsMap = policy.createGuardPolicyPayloads();
+        assertThat(guardsMap).isEmpty();
+        assertThat(guardsMap.entrySet()).isEmpty();
+    }
+
+    @Test
     public void testGuardPolicyPayloadConstruction() throws IOException {
         JsonObject jsonConfig = new GsonBuilder().create().fromJson(
             ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), JsonObject.class);
         OperationalPolicy policy = new OperationalPolicy("testPolicy", null, jsonConfig);
 
-        Map<String, String> guardsList = policy.createGuardPolicyPayloads();
+        Map<String, String> guardsMap = policy.createGuardPolicyPayloads();
 
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/guard1-policy-payload.json"),
-            guardsList.get("guard1"), false);
+            guardsMap.get("guard1"), false);
 
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/guard2-policy-payload.json"),
-            guardsList.get("guard2"), false);
+            guardsMap.get("guard2"), false);
     }
 }
