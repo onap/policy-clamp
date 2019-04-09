@@ -5,6 +5,22 @@
 Release Notes
 =============
 
+Version: 3.0.4 - maintenance release
+------------------------------------
+
+:Release Date: 2019-04-06
+
+**New Features**
+none
+
+**Bug Fixes**
+none
+
+**Known Issues**
+CLAMP certificates have been renewed to extend their expiry dates
+    - `CLAMP-335 <https://jira.onap.org/browse/CLAMP-335>`_ Update Certificates on Casablanca release.
+
+
 Version: 3.0.3 - maintenance release
 ------------------------------------
 
