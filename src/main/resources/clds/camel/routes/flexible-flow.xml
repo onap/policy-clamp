@@ -118,9 +118,11 @@
 		</setHeader>
 		<log
 			loggingLevel="INFO"
-			message="Policy Endpoint for microservice: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Endpoint to create microservice policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy created successfully','INFO',${header.LoopObject})" />
 	</route>
 	<route id="delete-micro-service-policy">
 		<from uri="direct:delete-micro-service-policy" />
@@ -139,9 +141,11 @@
 		</setHeader>
 		<log
 			loggingLevel="INFO"
-			message="Policy Endpoint for microservice: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Endpoint to delete microservice policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy deleted successfully','INFO',${header.LoopObject})" />
 	</route>
 
 	<route id="create-operational-policy">
@@ -165,9 +169,11 @@
 		</setHeader>
 		<log
 			loggingLevel="INFO"
-			message="Policy Endpoint for operational ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Endpoint to create operational policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy created successfully','INFO',${header.LoopObject})" />
 	</route>
 	<route id="delete-operational-policy">
 		<from uri="direct:delete-operational-policy" />
@@ -186,10 +192,11 @@
 		</setHeader>
 		<log
 			loggingLevel="INFO"
-			message="Policy Endpoint for operational: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Endpoint to delete operational policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
-
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy deleted successfully','INFO',${header.LoopObject})" />
 	</route>
 
 	<route id="create-guard-policy">
@@ -213,9 +220,11 @@
 		</setHeader>
 		<log
 			loggingLevel="INFO"
-			message="Policy Endpoint for operational ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Endpoint to create guard policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy created successfully','INFO',${header.LoopObject})" />
 	</route>
 	<route id="delete-guard-policy">
 		<from uri="direct:delete-guard-policy" />
@@ -234,9 +243,11 @@
 		</setHeader>
 		<log
 			loggingLevel="INFO"
-			message="Policy Endpoint for operational: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Endpoint to delete guard policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy deleted successfully','INFO',${header.LoopObject})" />
 	</route>
 
 </routes>

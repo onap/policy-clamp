@@ -106,6 +106,8 @@
 				<to
 					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 				<to uri="direct:load-loop" />
+				<to
+					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive SUBMIT request','INFO',${header.LoopObject})" />
 				<log
 					loggingLevel="INFO"
 					message="Processing all MICRO-SERVICES policies defined in loop ${header.LoopObject.getName()}" />
