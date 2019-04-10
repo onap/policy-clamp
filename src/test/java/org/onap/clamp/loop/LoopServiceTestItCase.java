@@ -38,8 +38,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.loop.log.LogType;
+import org.onap.clamp.loop.log.LoopLog;
+import org.onap.clamp.loop.log.LoopLogService;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
+import org.onap.clamp.policy.microservice.MicroservicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.onap.clamp.policy.operational.OperationalPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -56,6 +61,15 @@ public class LoopServiceTestItCase {
 
     @Autowired
     LoopsRepository loopsRepository;
+
+    @Autowired
+    MicroservicePolicyService microServicePolicyService;
+
+    @Autowired
+    OperationalPolicyService operationalPolicyService;
+
+    @Autowired
+    LoopLogService loopLogService;
 
     @After
     public void tearDown() {
@@ -274,6 +288,35 @@ public class LoopServiceTestItCase {
         assertThat(actualLoop.getName()).isEqualTo(EXAMPLE_LOOP_NAME);
         JsonObject returnedGlobalProperties = actualLoop.getGlobalPropertiesJson();
         assertThat(returnedGlobalProperties.getAsJsonObject()).isEqualTo(updatedGlobalProperites);
+    }
+
+    @Test
+    @Transactional
+    public void deleteAttempt() {
+        saveTestLoopToDb();
+        // Add log
+        Loop loop = loopsRepository.findById(EXAMPLE_LOOP_NAME).orElse(null);
+        loop.addLog(new LoopLog("test", LogType.INFO, loop));
+        loop = loopService.saveOrUpdateLoop(loop);
+        // Add op policy
+        OperationalPolicy operationalPolicy = new OperationalPolicy("opPolicy", null,
+            JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
+        loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(operationalPolicy));
+
+        // Add Micro service policy
+        MicroServicePolicy microServicePolicy = new MicroServicePolicy("microPolicy", "",
+            "tosca_definitions_version: tosca_simple_yaml_1_0_0", false,
+            JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+        loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(microServicePolicy));
+
+        // Verify it's there
+        assertThat(loopsRepository.findById(EXAMPLE_LOOP_NAME).orElse(null)).isNotNull();
+        loopService.deleteLoop(EXAMPLE_LOOP_NAME);
+        // Verify it's well deleted and has been cascaded
+        assertThat(loopsRepository.findById(EXAMPLE_LOOP_NAME).orElse(null)).isNull();
+        assertThat(microServicePolicyService.isExisting("microPolicy")).isFalse();
+        assertThat(operationalPolicyService.isExisting("opPolicy")).isFalse();
+        assertThat(loopLogService.isExisting(((LoopLog) loop.getLoopLogs().toArray()[0]).getId())).isFalse();
     }
 
     private Loop createTestLoop(String loopName, String loopBlueprint, String loopSvg) {

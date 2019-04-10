@@ -67,6 +67,10 @@ public class LoopService {
         return loopsRepository.findById(loopName).orElse(null);
     }
 
+    public void deleteLoop(String loopName) {
+        loopsRepository.deleteById(loopName);
+    }
+
     Loop updateAndSaveOperationalPolicies(String loopName, List<OperationalPolicy> newOperationalPolicies) {
         Loop loop = findClosedLoopByName(loopName);
         Set<OperationalPolicy> newPolicies = operationalPolicyService.updatePolicies(loop, newOperationalPolicies);

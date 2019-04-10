@@ -40,4 +40,8 @@ public class LoopLogService {
     public void addLog(String message, String logType, Loop loop) {
         repository.save(new LoopLog(message, LogType.valueOf(logType), loop));
     }
+
+    public boolean isExisting(Long logId) {
+        return repository.existsById(logId);
+    }
 }

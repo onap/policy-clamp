@@ -120,7 +120,7 @@
 			loggingLevel="INFO"
 			message="Endpoint to create microservice policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy created successfully','INFO',${header.LoopObject})" />
 	</route>
@@ -143,7 +143,7 @@
 			loggingLevel="INFO"
 			message="Endpoint to delete microservice policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy deleted successfully','INFO',${header.LoopObject})" />
 	</route>
@@ -171,7 +171,7 @@
 			loggingLevel="INFO"
 			message="Endpoint to create operational policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy created successfully','INFO',${header.LoopObject})" />
 	</route>
@@ -194,7 +194,7 @@
 			loggingLevel="INFO"
 			message="Endpoint to delete operational policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy deleted successfully','INFO',${header.LoopObject})" />
 	</route>
@@ -222,7 +222,7 @@
 			loggingLevel="INFO"
 			message="Endpoint to create guard policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy created successfully','INFO',${header.LoopObject})" />
 	</route>
@@ -245,7 +245,7 @@
 			loggingLevel="INFO"
 			message="Endpoint to delete guard policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy deleted successfully','INFO',${header.LoopObject})" />
 	</route>
@@ -273,7 +273,7 @@
 			loggingLevel="INFO"
 			message="Endpoint to create PDP Group policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
-			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.HttpQueryExceptionFlag}" />
+			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Pdp Group created successfully','INFO',${header.LoopObject})" />
 	</route>
