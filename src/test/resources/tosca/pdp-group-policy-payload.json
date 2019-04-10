@@ -1,0 +1,16 @@
+{
+  "policies": [
+    {
+      "policy-id": "GuardOpPolicyTest"
+    },
+    {
+      "policy-id": "guard2"
+    },
+    {
+      "policy-id": "guard1"
+    },
+    {
+      "policy-id": "configPolicyTest"
+    }
+  ]
+}

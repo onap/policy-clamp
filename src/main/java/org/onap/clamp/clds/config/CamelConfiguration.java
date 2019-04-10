@@ -36,7 +36,7 @@ public class CamelConfiguration extends RouteBuilder {
 
     @Override
     public void configure() {
-        restConfiguration().component("servlet").bindingMode(RestBindingMode.json).jsonDataFormat("json-gson")
+        restConfiguration().component("servlet").bindingMode(RestBindingMode.json).jsonDataFormat("clamp-gson")
             .dataFormatProperty("prettyPrint", "true")// .enableCORS(true)
             // turn on swagger api-doc
             .apiContextPath("api-doc").apiVendorExtension(true).apiProperty("api.title", "Clamp Rest API")

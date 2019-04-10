@@ -23,6 +23,8 @@
 
 package org.onap.clamp.loop;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
@@ -255,6 +257,30 @@ public class Loop implements Serializable {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
             .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));
         return buffer.toString().replace('.', '_').replaceAll(" ", "");
+    }
+
+    public String createPoliciesPayloadPdpGroup() {
+        JsonObject jsonObject = new JsonObject();
+        JsonArray jsonArray = new JsonArray();
+        jsonObject.add("policies", jsonArray);
+
+        for (OperationalPolicy opPolicy : this.getOperationalPolicies()) {
+            JsonObject policyNode = new JsonObject();
+            jsonArray.add(policyNode);
+            policyNode.addProperty("policy-id", opPolicy.getName());
+
+            for (String guardName : opPolicy.createGuardPolicyPayloads().keySet()) {
+                JsonObject guardPolicyNode = new JsonObject();
+                jsonArray.add(guardPolicyNode);
+                guardPolicyNode.addProperty("policy-id", guardName);
+            }
+        }
+        for (MicroServicePolicy microServicePolicy : this.getMicroServicePolicies()) {
+            JsonObject policyNode = new JsonObject();
+            jsonArray.add(policyNode);
+            policyNode.addProperty("policy-id", microServicePolicy.getName());
+        }
+        return new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
     }
 
     @Override
