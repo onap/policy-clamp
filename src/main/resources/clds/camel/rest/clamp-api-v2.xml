@@ -115,6 +115,48 @@
 			</route>
 		</put>
 		<put
+			uri="/v2/loop/stop/{loopName}"
+			outType="org.onap.clamp.loop.Loop"
+			produces="application/json">
+			<route>
+				<log
+					loggingLevel="INFO"
+					message="Receive STOP request for loop: ${header.loopName}" />
+			</route>
+			<to
+				uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+			<to uri="direct:load-loop" />
+			<to uri="direct:remove-all-policy-from-active-pdp-group" />
+			<log
+				loggingLevel="INFO"
+				message="STOP request successfully executed for loop: ${body}" />
+			<to
+				uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('STOP request successfully executed','INFO',${header.LoopObject})" />
+			<to
+				uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+		</put>
+		<put
+			uri="/v2/loop/start/{loopName}"
+			outType="org.onap.clamp.loop.Loop"
+			produces="application/json">
+			<route>
+				<log
+					loggingLevel="INFO"
+					message="Receive START request for loop: ${header.loopName}" />
+			</route>
+			<to
+				uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+			<to uri="direct:load-loop" />
+			<to uri="direct:add-all-to-active-pdp-group" />
+			<log
+				loggingLevel="INFO"
+				message="START request successfully executed for loop: ${body}" />
+			<to
+				uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('START request successfully executed','INFO',${header.LoopObject})" />
+			<to
+				uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+		</put>
+		<put
 			uri="/v2/loop/submit/{loopName}"
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
