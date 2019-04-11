@@ -139,7 +139,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         newLoop.setOperationalPolicies(createOperationalPolicies(csar, blueprintArtifact, newLoop));
 
         newLoop.setSvgRepresentation(svgFacade.getSvgImage(microServicesChain));
-        newLoop.setGlobalPropertiesJson(createGlobalPropertiesJson(blueprintArtifact));
+        newLoop.setGlobalPropertiesJson(createGlobalPropertiesJson(blueprintArtifact, newLoop));
         newLoop.setModelPropertiesJson(createModelPropertiesJson(csar));
         DcaeInventoryResponse dcaeResponse = queryDcaeToGetServiceTypeId(blueprintArtifact);
         newLoop.setDcaeBlueprintId(dcaeResponse.getTypeId());
@@ -173,9 +173,9 @@ public class CsarInstallerImpl implements CsarInstaller {
         return newSet;
     }
 
-    private JsonObject createGlobalPropertiesJson(BlueprintArtifact blueprintArtifact) {
+    private JsonObject createGlobalPropertiesJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {
         JsonObject globalProperties = new JsonObject();
-        globalProperties.add("dcaeDeployParameters", getAllBlueprintParametersInJson(blueprintArtifact));
+        globalProperties.add("dcaeDeployParameters", getAllBlueprintParametersInJson(blueprintArtifact, newLoop));
         return globalProperties;
     }
 
@@ -198,7 +198,7 @@ public class CsarInstallerImpl implements CsarInstaller {
         return modelProperties;
     }
 
-    private JsonObject getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact) {
+    private JsonObject getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {
         JsonObject node = new JsonObject();
         Yaml yaml = new Yaml();
         Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
@@ -211,7 +211,8 @@ public class CsarInstallerImpl implements CsarInstaller {
                 node.addProperty(elem.getKey(), "");
             }
         });
-        node.addProperty("policy_id", "AUTO_GENERATED_POLICY_ID_AT_SUBMIT");
+        // For Dublin only one micro service is expected
+        node.addProperty("policy_id", ((MicroServicePolicy) newLoop.getMicroServicePolicies().toArray()[0]).getName());
         return node;
     }
 
