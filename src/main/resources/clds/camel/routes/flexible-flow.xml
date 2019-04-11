@@ -78,6 +78,9 @@
 
 	<route id="load-loop">
 		<from uri="direct:load-loop" />
+		<setBody>
+			<simple>${header.loopName}</simple>
+		</setBody>
 		<setHeader headerName="LoopObject">
 			<method
 				ref="org.onap.clamp.loop.LoopService"
@@ -94,11 +97,11 @@
 				message="Loop not found in database: ${body}" />
 			<stop />
 		</when>
-
 	</route>
 
 	<route id="create-micro-service-policy">
 		<from uri="direct:create-micro-service-policy" />
+		<to uri="direct:check-raise-http-exception-flag" />
 		<log
 			loggingLevel="INFO"
 			message="Creating Micro Service Policy: ${header.microServicePolicy.getName()}" />
@@ -123,9 +126,11 @@
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy created successfully','INFO',${header.LoopObject})" />
+		<to uri="direct:reset-raise-http-exception-flag" />
 	</route>
 	<route id="delete-micro-service-policy">
 		<from uri="direct:delete-micro-service-policy" />
+		<to uri="direct:check-raise-http-exception-flag" />
 		<log
 			loggingLevel="INFO"
 			message="Deleting Micro Service Policy: ${header.microServicePolicy.getName()}" />
@@ -146,10 +151,12 @@
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy deleted successfully','INFO',${header.LoopObject})" />
+		<to uri="direct:reset-raise-http-exception-flag" />
 	</route>
 
 	<route id="create-operational-policy">
 		<from uri="direct:create-operational-policy" />
+		<to uri="direct:check-raise-http-exception-flag" />
 		<log
 			loggingLevel="INFO"
 			message="Creating Operational Policy: ${header.operationalPolicy.getName()}" />
@@ -174,9 +181,11 @@
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy created successfully','INFO',${header.LoopObject})" />
+		<to uri="direct:reset-raise-http-exception-flag" />
 	</route>
 	<route id="delete-operational-policy">
 		<from uri="direct:delete-operational-policy" />
+		<to uri="direct:check-raise-http-exception-flag" />
 		<log
 			loggingLevel="INFO"
 			message="Deleting Operational Policy: ${header.operationalPolicy.getName()}" />
@@ -197,10 +206,12 @@
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy deleted successfully','INFO',${header.LoopObject})" />
+		<to uri="direct:reset-raise-http-exception-flag" />
 	</route>
 
 	<route id="create-guard-policy">
 		<from uri="direct:create-guard-policy" />
+		<to uri="direct:check-raise-http-exception-flag" />
 		<log
 			loggingLevel="INFO"
 			message="Creating Guard Policy: ${header.guardPolicy.getKey()}" />
@@ -225,9 +236,11 @@
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy created successfully','INFO',${header.LoopObject})" />
+		<to uri="direct:reset-raise-http-exception-flag" />
 	</route>
 	<route id="delete-guard-policy">
 		<from uri="direct:delete-guard-policy" />
+		<to uri="direct:check-raise-http-exception-flag" />
 		<log
 			loggingLevel="INFO"
 			message="Deleting Guard Policy: ${header.guardPolicy.getKey()}" />
@@ -248,13 +261,14 @@
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy deleted successfully','INFO',${header.LoopObject})" />
+		<to uri="direct:reset-raise-http-exception-flag" />
 	</route>
-	
-	<route id="create-pdp-group-policy">
-		<from uri="direct:create-pdp-group-policy" />
+	<route id="add-all-to-active-pdp-group">
+		<from uri="direct:add-all-to-active-pdp-group" />
+		<to uri="direct:check-raise-http-exception-flag" />
 		<log
 			loggingLevel="INFO"
-			message="Creating PDP Group Policy: ${header.guardPolicy.getKey()}" />
+			message="Adding loop policies to PDP Group: ${header.LoopObject.getName()}" />
 		<setBody>
 			<simple>${header.LoopObject.createPoliciesPayloadPdpGroup()}
 			</simple>
@@ -271,10 +285,60 @@
 		</setHeader>
 		<log
 			loggingLevel="INFO"
-			message="Endpoint to create PDP Group policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			message="Endpoint to add policies to PDP Group: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
 		<toD
 			uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
 		<to
-			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Pdp Group created successfully','INFO',${header.LoopObject})" />
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Policies pushed to PDP Group successfully','INFO',${header.LoopObject})" />
+		<to uri="direct:reset-raise-http-exception-flag" />
+	</route>
+
+	<route id="remove-all-policy-from-active-pdp-group">
+		<from uri="direct:remove-all-policy-from-active-pdp-group" />
+		<to uri="direct:check-raise-http-exception-flag" />
+		<log
+			loggingLevel="INFO"
+			message="Removing policies from active PDP group for loop: ${header.LoopObject.getName()}" />
+		<split>
+			<simple>${header.LoopObject.listPolicyNamesPdpGroup()}</simple>
+			<setHeader headerName="PolicyName">
+				<simple>${body}</simple>
+			</setHeader>
+			<setBody>
+				<constant>null</constant>
+			</setBody>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>DELETE</constant>
+			</setHeader>
+			<setHeader headerName="CamelHttpUri">
+				<simple>{{clamp.config.policy.url}}/pdps/policies/${header.PolicyName}/versions/1.0.0
+				</simple>
+			</setHeader>
+			<log
+				loggingLevel="INFO"
+				message="Endpoint to delete policy from PDP Group: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
+			<toD
+				uri="http4://policyhost:8085?throwExceptionOnFailure=${header.RaiseHttpExceptionFlag}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.userName}}&amp;authPassword={{clamp.config.policy.password}}" />
+			<to
+				uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog(${header.PolicyName}' Policy removed from PDP Group successfully','INFO',${header.LoopObject})" />
+		</split>
+		<to uri="direct:reset-raise-http-exception-flag" />
+	</route>
+
+	<route id="check-raise-http-exception-flag">
+		<from uri="direct:check-raise-http-exception-flag" />
+		<when>
+			<simple>${header.RaiseHttpExceptionFlag} == null</simple>
+			<setHeader headerName="RaiseHttpExceptionFlag">
+				<simple resultType="java.lang.Boolean">true</simple>
+			</setHeader>
+		</when>
+	</route>
+	
+	<route id="reset-raise-http-exception-flag">
+		<from uri="direct:reset-raise-http-exception-flag" />
+			<setHeader headerName="RaiseHttpExceptionFlag">
+				<constant>null</constant>
+			</setHeader>
 	</route>
 </routes>

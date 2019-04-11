@@ -29,7 +29,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -259,28 +261,43 @@ public class Loop implements Serializable {
         return buffer.toString().replace('.', '_').replaceAll(" ", "");
     }
 
+    /**
+     * Generates the Json that must be sent to policy to add all policies to Active
+     * PDP group.
+     *
+     * @return The json, payload to send
+     */
     public String createPoliciesPayloadPdpGroup() {
         JsonObject jsonObject = new JsonObject();
         JsonArray jsonArray = new JsonArray();
         jsonObject.add("policies", jsonArray);
 
-        for (OperationalPolicy opPolicy : this.getOperationalPolicies()) {
+        for (String policyName : this.listPolicyNamesPdpGroup()) {
             JsonObject policyNode = new JsonObject();
             jsonArray.add(policyNode);
-            policyNode.addProperty("policy-id", opPolicy.getName());
+            policyNode.addProperty("policy-id", policyName);
+        }
+        return new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+    }
 
+    /**
+     * Generates the list of policy names that must be send/remove to/from active
+     * PDP group.
+     *
+     * @return A list of policy names
+     */
+    public List<String> listPolicyNamesPdpGroup() {
+        List<String> policyNamesList = new ArrayList<>();
+        for (OperationalPolicy opPolicy : this.getOperationalPolicies()) {
+            policyNamesList.add(opPolicy.getName());
             for (String guardName : opPolicy.createGuardPolicyPayloads().keySet()) {
-                JsonObject guardPolicyNode = new JsonObject();
-                jsonArray.add(guardPolicyNode);
-                guardPolicyNode.addProperty("policy-id", guardName);
+                policyNamesList.add(guardName);
             }
         }
         for (MicroServicePolicy microServicePolicy : this.getMicroServicePolicies()) {
-            JsonObject policyNode = new JsonObject();
-            jsonArray.add(policyNode);
-            policyNode.addProperty("policy-id", microServicePolicy.getName());
+            policyNamesList.add(microServicePolicy.getName());
         }
-        return new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+        return policyNamesList;
     }
 
     @Override
