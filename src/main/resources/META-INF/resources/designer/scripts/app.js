@@ -390,61 +390,6 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    var dlg = dialogs.notify('Error', msg);
 	    }
-	    $scope.reviewTestSet = function() {
-
-		    $rootScope.modeltestset = list_model_test_sets[selected_model];
-		    $rootScope.isPalette = false;
-		    $rootScope.isTestset = true;
-		    $rootScope.isRequirementCoverage = false;
-		    document.getElementById("modeler_name").textContent = "UTM Test Set";
-		    $('div').find('.k-collapse-next').click();
-	    };
-	    $scope.requirementCoverage = function() {
-
-		    $rootScope.testCaseRequirements = [];
-		    $rootScope.validTestRequirementArray = [];
-		    $rootScope.validTestRequirements = {};
-		    $rootScope.modeltestset = list_model_test_sets[selected_model];
-		    var allPathDetails = [];
-		    $scope.currentSelectedModel = {};
-		    $rootScope.pathDetailsList = list_model_path_details[selected_model];
-		    for (var x = 0; x < allPathDetails.length; x++) {
-			    var tempPathDetails = allPathDetails[x];
-			    if (tempPathDetails != null) {
-				    for (var i = 0; i < tempPathDetails.length; i++) {
-					    var pathDetails = tempPathDetails[i];
-					    if (pathDetails.requirement !== ''
-					    && pathDetails.requirement !== null) {
-						    $rootScope.testCaseRequirements
-						    .push(pathDetails.requirement);
-					    }
-				    }
-			    }
-		    }
-		    for (var p = 0; p < $rootScope.modeltestset.activityTestCases.length; p++) {
-			    var activityTestCases = $rootScope.modeltestset.activityTestCases[p];
-			    if (activityTestCases.mappedRequirements != null) {
-				    for (var i = 0; i < activityTestCases.mappedRequirements.length; i++) {
-					    var testCaseNames = $rootScope.validTestRequirements[activityTestCases.mappedRequirements[i]];
-					    if (testCaseNames == null) {
-						    testCaseNames = [];
-					    }
-					    if (activityTestCases.version != null)
-						    var testCase = activityTestCases.testCaseName + "_"
-						    + activityTestCases.version;
-					    else
-						    var testCase = activityTestCases.testCaseName;
-					    testCaseNames.push(testCase);
-					    $rootScope.validTestRequirements[activityTestCases.mappedRequirements[i]] = testCaseNames;
-				    }
-			    }
-		    }
-		    $rootScope.isPalette = false;
-		    $rootScope.isTestset = false;
-		    $rootScope.isRequirementCoverage = true;
-		    document.getElementById("modeler_name").textContent = "Test Case / Requirement Coverage";
-		    $('div').find('.k-collapse-next').click();
-	    };
 	    $scope.activityModelling = function() {
 
 	    };
