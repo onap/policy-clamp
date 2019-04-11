@@ -23,26 +23,51 @@
 
 <html>
 <head>
-    <title>Svg model display</title>
-    <link rel="stylesheet" href="css/diagram-js.css"/>
-    <link rel="stylesheet" href="css/app.css"/>
-    <script type="text/javascript" src="./scripts/app.js"></script>
+<title>Svg model display</title>
+<link rel="stylesheet" href="css/diagram-js.css" />
+<link rel="stylesheet" href="css/app.css" />
+<script type="text/javascript" src="./scripts/app.js"></script>
 </head>
+
 <body>
 
-<div class="content" id="js-drop-zone" id="div_content" ng-app="clds-app" ng-controller="MenuCtrl">
-    <div class="message error">
-        <div class="note">
-            <p>Ooops, we could not display the Closed Loop Model.</p>
-            <div class="details">
-                <span>cause of the problem</span>
-                <pre></pre>
-            </div>
-        </div>
-    </div>
+	<div class="content" id="js-drop-zone" id="div_content"
+		ng-app="clds-app" ng-controller="MenuCtrl">
+		<div class="message error">
+			<div class="note">
+				<p>Ooops, we could not display the Closed Loop Model.</p>
+				<div class="details">
+					<span>cause of the problem</span>
+					<pre></pre>
+				</div>
+			</div>
+		</div>
 
-    <div class="canvas" id="js-canvas" style="margin-top:100px"></div>
-</div>
+		<div class="canvas" id="js-canvas" style="margin-top: 100px">
+			<label for="loop-log-div" class="col-sm-4 control-label">Loop Logs</label>
+			<div id="loop-log-div" style="border: 2px solid gray;height: 20vh">
+				<div id="loop-log-table-scroll" style="width: 100%;height: 87%;overflow: auto;margin-top: 20px;">
+					<table id="loop-log-table" style="width: 100%">
+						<thead>
+							<tr>
+								<th><span align="left" class="text">Date</span></th>
+								<th><span align="center" class="text">Type</span></th>
+								<th><span align="right" class="text">Log</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="log in loop_logs" ng-class="{reverse: reverse}">
+								<td>{{log.logInstant}}</td>
+								<td>{{log.logType}}</td>
+								<td>{{log.message}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
 </body>
 
 </html>

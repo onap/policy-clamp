@@ -122,4 +122,8 @@ function getResourceDetailsVfcProperty() {
 	return cl_props["modelPropertiesJson"]["resourceDetails"]["VFC"];
 }
 
+function getLoopLogsArray() {
+	return cl_props.loopLogs;
+}
+
 module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL,getResourceDetailsProperty,getResourceDetailsVfcProperty };

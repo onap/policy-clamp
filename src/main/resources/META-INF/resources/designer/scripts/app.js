@@ -214,8 +214,8 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 	    console.log("MenuCtrl");
 	    $rootScope.screenName = "Universal Test Modeler";
+	    $rootScope.loop_logs = [];
 	    $rootScope.testSet = null;
-	    var testingType = "";
 	    $rootScope.contactUs = function() {
 
 		    console.log("contactUs");
@@ -466,11 +466,20 @@ function($scope, $rootScope, $timeout, dialogs) {
 		        windowClass : 'my-class'
 		    });
 		    dlg.result.then(function(name) {
-
+		    	
 		    }, function() {
-
 		    });
 	    };
+	    $rootScope.refreshLoopLog = function() {
+	    	var newLogArray = [];
+	    	if (getLoopLogsArray() != undefined) {
+	    		newLogArray=getLoopLogsArray();
+	    	}
+	    	$rootScope.loop_logs.splice(0, $rootScope.loop_logs.length);
+	    	for (var i=0;i<newLogArray.length;i++) {
+	    		$rootScope.loop_logs.push(newLogArray[i]);
+	    	}
+	    }
 	    $scope.extraUserInfo = function() {
 
 		    var dlg = dialogs.create(
@@ -496,6 +505,7 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    cldsModelService.processAction(uiAction, modelName).then(function(pars) {
 			    console.log("cldsPerformAction: pars=" + pars);
+			    $rootScope.refreshLoopLog();
 		    }, function(data) {
 
 		    });

@@ -133,6 +133,7 @@ function($scope, $rootScope, $modalInstance, $window, $uibModalInstance, cldsMod
 			// deserialize model properties
 			selected_model = modelName;
 			cldsModelService.processActionResponse(modelName);
+			$rootScope.refreshLoopLog();
 			// set model bpmn and open diagram
 			$rootScope.isPalette = true;
 		}, function(data) {
