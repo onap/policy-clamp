@@ -30,20 +30,20 @@ package org.onap.clamp.exception;
 public class OperationException extends RuntimeException {
 
     /**
-	 * The serial version ID.
-	 */
-	private static final long serialVersionUID = 2788967876393519620L;
+     * The serial version ID.
+     */
+    private static final long serialVersionUID = 2788967876393519620L;
 
-	/**
+    /**
      * This constructor can be used to create a new CldsUsersException.
-     * 
+     *
      * @param message
      *            A string message detailing the problem
-     * @param e
+     * @param cause
      *            The exception sent by the code
      */
-    public OperationException(String message, Throwable e) {
-        super(message, e);
+    public OperationException(String message, Throwable cause) {
+        super(message, cause);
     }
 
     /**

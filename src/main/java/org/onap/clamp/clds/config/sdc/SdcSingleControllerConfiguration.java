@@ -81,7 +81,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     public static final String TOSCA_CSAR = "TOSCA_CSAR";
     public static final String VF_MODULES_METADATA = "VF_MODULES_METADATA";
     private static final String[] SUPPORTED_ARTIFACT_TYPES = {
-            TOSCA_CSAR, VF_MODULES_METADATA
+        TOSCA_CSAR, VF_MODULES_METADATA
     };
     public static final List<String> SUPPORTED_ARTIFACT_TYPES_LIST = Collections
             .unmodifiableList(Arrays.asList(SUPPORTED_ARTIFACT_TYPES));
@@ -105,6 +105,11 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
         return sdcControllerName;
     }
 
+    /**
+     * Sets SDC controller name.
+     *
+     * @param controllerName SDC controller name
+     */
     public void setSdcControllerName(String controllerName) {
         this.sdcControllerName = controllerName;
         errorMessageKeyNotFound = " parameter cannot be found in config file for controller name" + sdcControllerName;
@@ -198,7 +203,8 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     @Override
     public boolean activateServerTLSAuth() {
-        if (jsonRootNode != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH) != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).isJsonPrimitive()) {
+        if (jsonRootNode != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH) != null &&
+                jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).isJsonPrimitive()) {
             return jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).getAsBoolean();
         } else {
             return false;

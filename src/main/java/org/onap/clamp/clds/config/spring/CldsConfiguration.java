@@ -47,7 +47,7 @@ public class CldsConfiguration {
     private ClampProperties refProp;
 
     /**
-     * Clds Identity database DataSource configuration
+     * Clds Identity database DataSource configuration.
      *
      * @return
      */

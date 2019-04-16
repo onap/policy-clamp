@@ -19,6 +19,7 @@
  * ============LICENSE_END============================================
  * ===================================================================
  */
+
 package org.onap.clamp.clds.service;
 
 import com.att.eelf.configuration.EELFLogger;
@@ -46,7 +47,7 @@ public class CldsHealthcheckService {
     @Autowired
     private CldsDao cldsDao;
 
-    protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(CldsHealthcheckService.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsHealthcheckService.class);
 
     /**
      * REST service that retrieves clds healthcheck information.
@@ -76,11 +77,13 @@ public class CldsHealthcheckService {
         }
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
-        if(healthcheckFailed) {
-            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Healthcheck failed", Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
+        if (healthcheckFailed) {
+            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Healthcheck failed", Level.INFO,
+                         ONAPLogConstants.ResponseStatus.ERROR);
             return new ResponseEntity<>(cldsHealthCheck, HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
-            util.exiting("200", "Healthcheck failed", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+            util.exiting("200", "Healthcheck failed", Level.INFO,
+                         ONAPLogConstants.ResponseStatus.COMPLETED);
             return new ResponseEntity<>(cldsHealthCheck, HttpStatus.OK);
         }
     }

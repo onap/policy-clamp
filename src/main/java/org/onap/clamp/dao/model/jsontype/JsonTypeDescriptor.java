@@ -35,17 +35,20 @@ import org.onap.clamp.clds.util.JsonUtils;
 public class JsonTypeDescriptor extends AbstractTypeDescriptor<JsonObject> {
 
     /**
-     *
+     * The serial version ID.
      */
     private static final long serialVersionUID = -3439698221196089003L;
 
     public static final JsonTypeDescriptor INSTANCE = new JsonTypeDescriptor();
 
+    /**
+     * Creates an instance of JsonTypeDescriptor.
+     */
     public JsonTypeDescriptor() {
         super(JsonObject.class, new ImmutableMutabilityPlan<JsonObject>() {
 
             /**
-             *
+             * The serial version ID.
              */
             private static final long serialVersionUID = 1169396106518110214L;
 
@@ -74,8 +77,9 @@ public class JsonTypeDescriptor extends AbstractTypeDescriptor<JsonObject> {
 
     @Override
     public <X> X unwrap(JsonObject value, Class<X> type, WrapperOptions options) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
 
         if (String.class.isAssignableFrom(type)) {
             return (X) toString(value);
@@ -89,11 +93,13 @@ public class JsonTypeDescriptor extends AbstractTypeDescriptor<JsonObject> {
 
     @Override
     public <X> JsonObject wrap(X value, WrapperOptions options) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
 
-        if (String.class.isInstance(value))
+        if (String.class.isInstance(value)) {
             return JsonUtils.GSON_JPA_MODEL.fromJson((String) value, JsonObject.class);
+        }
 
         throw unknownWrap(value.getClass());
     }

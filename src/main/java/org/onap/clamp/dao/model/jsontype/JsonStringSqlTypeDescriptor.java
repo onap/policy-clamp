@@ -40,7 +40,7 @@ import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;
 public class JsonStringSqlTypeDescriptor implements SqlTypeDescriptor {
 
     /**
-     *
+     * The serial version ID.
      */
     private static final long serialVersionUID = 1103168570216921981L;
 

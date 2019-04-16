@@ -19,6 +19,7 @@
  * ============LICENSE_END============================================
  * ===================================================================
  */
+
 package org.onap.clamp.clds.config;
 
 import org.apache.camel.CamelContext;

@@ -30,7 +30,7 @@ import org.onap.clamp.clds.model.ValueItem;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * Generic mapper for list of values
+ * Generic mapper for list of values.
  */
 public final class ValueItemMapper implements RowMapper<ValueItem> {
     @Override

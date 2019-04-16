@@ -43,7 +43,7 @@ import org.onap.clamp.clds.util.JsonUtils;
 public class BlueprintParserMappingConfiguration {
 
     private static final Type BLUEPRINT_MAP_CONF_TYPE = new TypeToken<List<BlueprintParserMappingConfiguration>>() {
-    }.getType();
+        }.getType();
     private String blueprintKey;
     private boolean dcaeDeployable;
     private BlueprintParserFilesConfiguration files;

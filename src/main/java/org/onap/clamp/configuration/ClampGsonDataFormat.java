@@ -19,6 +19,7 @@
  * ============LICENSE_END============================================
  * ===================================================================
  */
+
 package org.onap.clamp.configuration;
 
 import com.google.gson.Gson;
@@ -50,7 +51,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     }
 
     /**
-     * Use the default Gson {@link Gson} and with a custom unmarshal type
+     * Use the default Gson {@link Gson} and with a custom unmarshal type.
      *
      * @param unmarshalType
      *        the custom unmarshal type
@@ -60,7 +61,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     }
 
     /**
-     * Use a custom Gson mapper and and unmarshal type
+     * Use a custom Gson mapper and and unmarshal type.
      *
      * @param gson
      *        the custom mapper
@@ -73,7 +74,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     }
 
     /**
-     * Use the default Gson {@link Gson} and with a custom unmarshal generic type
+     * Use the default Gson {@link Gson} and with a custom unmarshal generic type.
      *
      * @param unmarshalGenericType
      *        the custom unmarshal generic type
@@ -83,7 +84,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     }
 
     /**
-     * Use a custom Gson mapper and and unmarshal token type
+     * Use a custom Gson mapper and and unmarshal token type.
      *
      * @param gson
      *        the custom mapper

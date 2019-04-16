@@ -32,7 +32,7 @@ import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;
 public class StringJsonUserType extends AbstractSingleColumnStandardBasicType<JsonObject> {
 
     /**
-     *
+     * The serial version ID.
      */
     private static final long serialVersionUID = -7929809808079327767L;
 

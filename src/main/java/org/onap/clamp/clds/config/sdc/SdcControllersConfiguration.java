@@ -63,11 +63,18 @@ public class SdcControllersConfiguration {
      */
     private JsonObject jsonRootNode;
 
+    /**
+     * Loads configuration from SDC controller config file.
+     *
+     * @throws IOException IO Exception
+     */
     @PostConstruct
     public void loadConfiguration() throws IOException {
         Resource resource = appContext.getResource(sdcControllerFile);
         // Try to load json tree
-        jsonRootNode = JsonUtils.GSON.fromJson(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8), JsonObject.class);
+        jsonRootNode = JsonUtils.GSON.fromJson(new InputStreamReader(
+                resource.getInputStream(), StandardCharsets.UTF_8),
+                                               JsonObject.class);
     }
 
     public SdcSingleControllerConfiguration getSdcSingleControllerConfiguration(String controllerName) {

@@ -113,6 +113,11 @@ public class PolicyConfiguration {
         this.policyEnvironment = environment;
     }
 
+    /**
+     * Returns policy configuration properties.
+     *
+     * @return policy configuration properties
+     */
     public Properties getProperties() {
         Properties prop = new Properties();
         prop.put(PDP_URL1, pdpUrl1);

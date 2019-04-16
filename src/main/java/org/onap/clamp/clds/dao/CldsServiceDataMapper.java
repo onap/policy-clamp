@@ -39,7 +39,7 @@ import org.onap.clamp.clds.model.CldsVfcData;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * Generic mapper for CldsDBServiceCache
+ * Generic mapper for CldsDBServiceCache.
  */
 public final class CldsServiceDataMapper implements RowMapper<CldsServiceData> {
 

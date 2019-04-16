@@ -86,7 +86,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
      * defined in cldsUsersFile variable (this file path can be configured in the
      * application.properties).
      *
-     * @param auth
+     * @param auth authentication manager builder
      */
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {

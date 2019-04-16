@@ -53,6 +53,12 @@ public class CldsUserJsonDecoder {
         }
     }
 
+    /**
+     * This method decodes the JSON string to a CldsUser Array.
+     *
+     * @param cldsUsersString JSON string
+     * @return CldsUser[] Array containing a list of the user defined in the JSON
+     */
     public static CldsUser[] decodeJson(String cldsUsersString) {
         try {
             // the ObjectMapper readValue method closes the stream no need to do

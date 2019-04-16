@@ -100,7 +100,7 @@ public class MicroServicePolicy implements Serializable, Policy {
      *
      * @param name
      *        The name of the MicroService
-     * @param type
+     * @param modelType
      *        The model type of the MicroService
      * @param policyTosca
      *        The policy Tosca of the MicroService
@@ -132,7 +132,7 @@ public class MicroServicePolicy implements Serializable, Policy {
      *
      * @param name
      *        The name of the MicroService
-     * @param type
+     * @param modelType
      *        The model type of the MicroService
      * @param policyTosca
      *        The policy Tosca of the MicroService

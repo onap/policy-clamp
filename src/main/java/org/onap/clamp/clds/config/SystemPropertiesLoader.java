@@ -43,7 +43,7 @@ public class SystemPropertiesLoader implements ApplicationListener<ContextRefres
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        logger.info("Loading additional JVM properties:"+myTranslator.toString());
+        logger.info("Loading additional JVM properties:" + myTranslator.toString());
         System.getProperties().putAll(myTranslator);
     }
 }
