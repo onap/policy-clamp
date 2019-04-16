@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -505,14 +507,15 @@ public class CldsDao {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsToscaModel> cldsToscaModels = new ArrayList<>();
 
-        String toscaModelSql = "SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, "
-            + "tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp, "
-            + "tmr.lastUpdatedTimestamp " + ((toscaModelName != null) ? (", tmr.tosca_model_yaml ") : " ")
-            + "FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id "
-            + ((toscaModelName != null) ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : " ")
-            + ((policyType != null) ? (" AND tm.policy_type = '" + policyType + "'") : " ")
-            + "AND tmr.version = (select max(version) from tosca_model_revision st "
-            + "where tmr.tosca_model_id=st.tosca_model_id)";
+        String toscaModelSql = new StringBuilder("SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, " +
+                "tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp, " +
+                "tmr.lastUpdatedTimestamp")
+                .append(toscaModelName != null ? (", tmr.tosca_model_yaml") : "")
+                .append(" FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id")
+                .append(toscaModelName != null ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : "")
+                .append(policyType != null ? (" AND tm.policy_type = '" + policyType + "'") : "")
+                .append(" AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id=st.tosca_model_id)")
+                .toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(toscaModelSql);
 
@@ -605,8 +608,11 @@ public class CldsDao {
      */
     public void updateDictionary(String dictionaryId, CldsDictionary cldsDictionary, String userId) {
 
-        String dictionarySql = "UPDATE dictionary " + "SET dictionary_name = '" + cldsDictionary.getDictionaryName()
-            + "', modified_by = '" + userId + "'" + "WHERE dictionary_id = '" + dictionaryId + "'";
+        String dictionarySql = new StringBuilder("UPDATE dictionary SET dictionary_name = '")
+                .append(cldsDictionary.getDictionaryName())
+                .append("', modified_by = '").append(userId)
+                .append("'WHERE dictionary_id = '").append(dictionaryId).append("'")
+                .toString();
         jdbcTemplateObject.update(dictionarySql);
         cldsDictionary.setUpdatedBy(userId);
     }
@@ -623,13 +629,21 @@ public class CldsDao {
     public List<CldsDictionary> getDictionary(String dictionaryId, String dictionaryName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionary> dictionaries = new ArrayList<>();
-        String dictionarySql = "SELECT dictionary_id, dictionary_name, created_by, modified_by, "
-            + "timestamp FROM dictionary"
-            + ((dictionaryId != null || dictionaryName != null)
-                ? (" WHERE " + ((dictionaryName != null) ? ("dictionary_name = '" + dictionaryName + "'") : "")
-                    + ((dictionaryId != null && dictionaryName != null) ? (" AND ") : "")
-                    + ((dictionaryId != null) ? ("dictionary_id = '" + dictionaryId + "'") : ""))
-                : "");
+
+        String whereFilter = " WHERE ";
+        if (dictionaryName != null) {
+            whereFilter += "dictionary_name = '" + dictionaryName + "'";
+            if (dictionaryId != null){
+                whereFilter += " AND dictionary_id = '" + dictionaryId + "'";
+            }
+        } else if (dictionaryId != null) {
+            whereFilter += "dictionary_id = '" + dictionaryId + "'";
+        } else {
+            whereFilter = "";
+        }
+        String dictionarySql = new StringBuilder("SELECT dictionary_id, dictionary_name, created_by, " +
+                "modified_by, timestamp FROM dictionary")
+                .append(whereFilter).toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
 
@@ -680,12 +694,15 @@ public class CldsDao {
     public void updateDictionaryElements(String dictionaryElementId, CldsDictionaryItem cldsDictionaryItem,
         String userId) {
 
-        String dictionarySql = "UPDATE dictionary_elements SET dict_element_name = '"
-            + cldsDictionaryItem.getDictElementName() + "', dict_element_short_name = '"
-            + cldsDictionaryItem.getDictElementShortName() + "', dict_element_description= '"
-            + cldsDictionaryItem.getDictElementDesc() + "', dict_element_type = '"
-            + cldsDictionaryItem.getDictElementType() + "', modified_by = '" + userId + "' "
-            + "WHERE dict_element_id = '" + dictionaryElementId + "'";
+        String dictionarySql = new StringBuilder().append("UPDATE dictionary_elements SET dict_element_name = '")
+                .append(cldsDictionaryItem.getDictElementName())
+                .append("', dict_element_short_name = '").append(cldsDictionaryItem.getDictElementShortName())
+                .append("', dict_element_description= '").append(cldsDictionaryItem.getDictElementDesc())
+                .append("', dict_element_type = '").append(cldsDictionaryItem.getDictElementType())
+                .append("', modified_by = '").append(userId).append("'")
+                .append(" WHERE dict_element_id = '")
+                .append(dictionaryElementId).append("'")
+                .toString();
         jdbcTemplateObject.update(dictionarySql);
         cldsDictionaryItem.setUpdatedBy(userId);
     }
@@ -706,14 +723,13 @@ public class CldsDao {
         String dictElementShortName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionaryItem> dictionaryItems = new ArrayList<>();
-        String dictionarySql = "SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, "
-            + "de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, "
-            + "de.modified_by, de.timestamp  "
-            + "FROM dictionary_elements de, dictionary d WHERE de.dictionary_id = d.dictionary_id "
-            + ((dictionaryId != null) ? (" AND d.dictionary_id = '" + dictionaryId + "'") : "")
-            + ((dictElementShortName != null) ? (" AND de.dict_element_short_name = '" + dictElementShortName + "'")
-                : "")
-            + ((dictionaryName != null) ? (" AND dictionary_name = '" + dictionaryName + "'") : "");
+        String dictionarySql = new StringBuilder("SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, " +
+                "de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, " +
+                "de.modified_by, de.timestamp FROM dictionary_elements de, " +
+                "dictionary d WHERE de.dictionary_id = d.dictionary_id")
+                .append((dictionaryId != null) ? (" AND d.dictionary_id = '" + dictionaryId + "'") : "")
+                .append((dictElementShortName != null) ? (" AND de.dict_element_short_name = '" + dictElementShortName + "'") : "")
+                .append((dictionaryName != null) ? (" AND dictionary_name = '" + dictionaryName + "'") : "").toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
 
@@ -745,8 +761,9 @@ public class CldsDao {
      */
     public Map<String, String> getDictionaryElementsByType(String dictionaryElementType) {
         Map<String, String> dictionaryItems = new HashMap<>();
-        String dictionarySql = "SELECT dict_element_name, dict_element_short_name " + "FROM dictionary_elements "
-            + "WHERE dict_element_type = '" + dictionaryElementType + "'";
+        String dictionarySql = new StringBuilder("SELECT dict_element_name, dict_element_short_name " +
+                "FROM dictionary_elements WHERE dict_element_type = '")
+                .append(dictionaryElementType).append("'").toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
 
