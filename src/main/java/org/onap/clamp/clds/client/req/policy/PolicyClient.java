@@ -434,18 +434,7 @@ public class PolicyClient {
      * @return The response message from Policy
      */
     public String deleteMicrosService(ModelProperties prop) {
-        String deletePolicyResponse = "";
-        try {
-            String policyNamePrefix = refProp.getStringValue(POLICY_MS_NAME_PREFIX_PROPERTY_NAME);
-            if (checkPolicyExists(prop, policyNamePrefix, null)) {
-                String policyType = refProp.getStringValue(POLICY_MSTYPE_PROPERTY_NAME);
-                deletePolicyResponse = deletePolicy(prop, policyType, null);
-            }
-        } catch (Exception e) {
-            logger.error("Exception occurred during policy communication", e);
-            throw new PolicyClientException("Exception while communicating with Policy", e);
-        }
-        return deletePolicyResponse;
+        return findAndDelete(prop, POLICY_MS_NAME_PREFIX_PROPERTY_NAME, POLICY_MSTYPE_PROPERTY_NAME);
     }
 
     /**
@@ -488,11 +477,15 @@ public class PolicyClient {
      * @return The response message from policy
      */
     public String deleteBrms(ModelProperties prop) {
+        return findAndDelete(prop, POLICY_OP_NAME_PREFIX_PROPERTY_NAME, POLICY_OP_TYPE_PROPERTY_NAME);
+    }
+
+    private String findAndDelete(ModelProperties prop, String policyPrefixProperty, String policyTypeProperty) {
         String deletePolicyResponse = "";
         try {
-            String policyNamePrefix = refProp.getStringValue(POLICY_OP_NAME_PREFIX_PROPERTY_NAME);
+            String policyNamePrefix = refProp.getStringValue(policyPrefixProperty);
             if (checkPolicyExists(prop, policyNamePrefix, null)) {
-                String policyType = refProp.getStringValue(POLICY_OP_TYPE_PROPERTY_NAME);
+                String policyType = refProp.getStringValue(policyTypeProperty);
                 deletePolicyResponse = deletePolicy(prop, policyType, null);
             }
         } catch (Exception e) {
