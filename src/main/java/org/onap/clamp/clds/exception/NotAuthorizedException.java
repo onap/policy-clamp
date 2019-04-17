@@ -30,7 +30,7 @@ package org.onap.clamp.clds.exception;
 public class NotAuthorizedException extends RuntimeException {
 
     /**
-     * 
+     * The serial version ID.
      */
     private static final long serialVersionUID = -5738167530541646123L;
 
@@ -39,11 +39,11 @@ public class NotAuthorizedException extends RuntimeException {
      *
      * @param message
      *        A string message detailing the problem
-     * @param e
+     * @param ex
      *        The exception sent by the code
      */
-    public NotAuthorizedException(String message, Throwable e) {
-        super(message, e);
+    public NotAuthorizedException(String message, Throwable ex) {
+        super(message, ex);
     }
 
     /**

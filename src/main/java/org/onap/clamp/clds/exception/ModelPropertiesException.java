@@ -40,11 +40,11 @@ public class ModelPropertiesException extends RuntimeException {
      * 
      * @param message
      *            A string message detailing the problem
-     * @param e
+     * @param ex
      *            The exception sent by the code
      */
-    public ModelPropertiesException(String message, Throwable e) {
-        super(message, e);
+    public ModelPropertiesException(String message, Throwable ex) {
+        super(message, ex);
     }
 
     /**

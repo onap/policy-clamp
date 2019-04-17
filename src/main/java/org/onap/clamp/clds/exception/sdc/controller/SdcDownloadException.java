@@ -34,20 +34,19 @@ public class SdcDownloadException extends Exception {
     private static final long serialVersionUID = -5276848693231134901L;
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcDownloadException.
+     *
+     * @param message The message to dump
      */
     public SdcDownloadException(final String message) {
         super(message);
     }
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcDownloadException.
+     *
+     * @param message The message to dump
+     * @param cause The Throwable cause object
      */
     public SdcDownloadException(final String message, final Throwable cause) {
         super(message, cause);

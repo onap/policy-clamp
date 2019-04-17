@@ -52,7 +52,7 @@ public class CldsTemplateService extends SecureServiceBase {
     private SecureServicePermission permissionReadTemplate;
     private SecureServicePermission permissionUpdateTemplate;
     @Autowired
-	private HttpServletRequest request;
+    private HttpServletRequest request;
 
     @PostConstruct
     private final void afterConstruction() {
@@ -71,11 +71,11 @@ public class CldsTemplateService extends SecureServiceBase {
      * database. This is subset of the json getModel. This is only expected to
      * be used for testing purposes, not by the UI.
      *
-     * @param templateName
+     * @param templateName template name
      * @return bpmn xml text - content of bpmn given name
      */
     public String getBpmnTemplate(String templateName) {
-    	util.entering(request, "CldsTemplateService: GET template bpmn");
+        util.entering(request, "CldsTemplateService: GET template bpmn");
         Date startTime = new Date();
         isAuthorized(permissionReadTemplate);
         logger.info("GET bpmnText for templateName=" + templateName);
@@ -92,11 +92,11 @@ public class CldsTemplateService extends SecureServiceBase {
      * database. This is subset of the json getModel. This is only expected to
      * be used for testing purposes, not by the UI.
      *
-     * @param templateName
+     * @param templateName template name
      * @return image xml text - content of image given name
      */
     public String getImageXml(String templateName) {
-    	util.entering(request, "CldsTemplateService: GET template image");
+        util.entering(request, "CldsTemplateService: GET template image");
         Date startTime = new Date();
         isAuthorized(permissionReadTemplate);
         logger.info("GET imageText for templateName=" + templateName);
@@ -111,11 +111,11 @@ public class CldsTemplateService extends SecureServiceBase {
     /**
      * REST service that retrieves a CLDS template by name from the database.
      *
-     * @param templateName
+     * @param templateName template name
      * @return clds template - clds template for the given template name
      */
     public CldsTemplate getTemplate(String templateName) {
-    	util.entering(request, "CldsTemplateService: GET template");
+        util.entering(request, "CldsTemplateService: GET template");
         Date startTime = new Date();
         isAuthorized(permissionReadTemplate);
         logger.info("GET model for  templateName=" + templateName);
@@ -131,12 +131,12 @@ public class CldsTemplateService extends SecureServiceBase {
     /**
      * REST service that saves a CLDS template by name in the database.
      *
-     * @param templateName
-     * @param cldsTemplate
+     * @param templateName template name
+     * @param cldsTemplate clds template
      * @return The CldsTemplate modified and saved in DB
      */
     public CldsTemplate putTemplate(String templateName, CldsTemplate cldsTemplate) {
-    	util.entering(request, "CldsTemplateService: PUT template");
+        util.entering(request, "CldsTemplateService: PUT template");
         Date startTime = new Date();
         isAuthorized(permissionUpdateTemplate);
         logger.info("PUT Template for  templateName=" + templateName);
@@ -158,7 +158,7 @@ public class CldsTemplateService extends SecureServiceBase {
      * @return template names in JSON
      */
     public List<ValueItem> getTemplateNames() {
-    	util.entering(request, "CldsTemplateService: GET template names");
+        util.entering(request, "CldsTemplateService: GET template names");
         Date startTime = new Date();
         isAuthorized(permissionReadTemplate);
         logger.info("GET list of template names");
@@ -171,7 +171,7 @@ public class CldsTemplateService extends SecureServiceBase {
     }
 
     // Created for the integration test
-    public void setLoggingUtil (LoggingUtils utilP) {
+    public void setLoggingUtil(LoggingUtils utilP) {
         util =  utilP;
     }
 }

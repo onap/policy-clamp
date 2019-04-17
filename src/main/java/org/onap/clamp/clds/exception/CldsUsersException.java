@@ -30,7 +30,7 @@ package org.onap.clamp.clds.exception;
 public class CldsUsersException extends RuntimeException {
 
     /**
-     * 
+     * The serial version ID.
      */
     private static final long serialVersionUID = 933535057227505342L;
 
@@ -39,11 +39,11 @@ public class CldsUsersException extends RuntimeException {
      * 
      * @param message
      *            A string message detailing the problem
-     * @param e
+     * @param ex
      *            The exception sent by the code
      */
-    public CldsUsersException(String message, Throwable e) {
-        super(message, e);
+    public CldsUsersException(String message, Throwable ex) {
+        super(message, ex);
     }
 
     /**

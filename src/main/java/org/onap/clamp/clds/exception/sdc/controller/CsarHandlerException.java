@@ -29,25 +29,24 @@ package org.onap.clamp.clds.exception.sdc.controller;
 public class CsarHandlerException extends Exception {
 
     /**
-     * 
+     * The serial version ID.
      */
     private static final long serialVersionUID = -7628640776124409155L;
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new CsarHandlerException.
+     *
+     * @param message The message to dump
      */
     public CsarHandlerException(final String message) {
         super(message);
     }
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new CsarHandlerException.
+     *
+     * @param message The message to dump
+     * @param cause The Throwable cause object
      */
     public CsarHandlerException(final String message, final Throwable cause) {
         super(message, cause);

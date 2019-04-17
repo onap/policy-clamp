@@ -41,7 +41,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
- * REST services to manage Tosca Model
+ * REST services to manage Tosca Model.
  */
 @Component
 public class CldsToscaService extends SecureServiceBase {

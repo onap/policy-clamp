@@ -37,10 +37,10 @@ public class SecureServicePermission {
     /**
      * Factory method to create permission given type, instance, and action.
      *
-     * @param type
-     * @param instance
-     * @param action
-     * @return
+     * @param type type of the permission
+     * @param instance instance of the permission
+     * @param action action of the permission
+     * @return instance of SecureServicePermission with type, instance and action
      */
     public static SecureServicePermission create(String type, String instance, String action) {
         return new SecureServicePermission(type, instance, action);
@@ -50,9 +50,9 @@ public class SecureServicePermission {
      * Factory method to create permission given type and instance. Default
      * action to ALL/*.
      *
-     * @param type
-     * @param instance
-     * @return
+     * @param type type of the permission
+     * @param instance instance of the permission
+     * @return instance of SecureServicePermission with type, instance and default action
      */
     public static SecureServicePermission create(String type, String instance) {
         return new SecureServicePermission(type, instance, ALL);
@@ -62,8 +62,8 @@ public class SecureServicePermission {
      * Factory method to create permission given type. Default instance and
      * action to ALL/*.
      *
-     * @param type
-     * @return
+     * @param type type of the permission
+     * @return instance of SecureServicePermission with type and default instance and action
      */
     public static SecureServicePermission create(String type) {
         return new SecureServicePermission(type, ALL, ALL);
@@ -72,9 +72,9 @@ public class SecureServicePermission {
     /**
      * Instantiate permission given type, instance, and action.
      *
-     * @param type
-     * @param instance
-     * @param action
+     * @param type type of the permission
+     * @param instance instance of the permission
+     * @param action action of the permission
      */
     public SecureServicePermission(String type, String instance, String action) {
         this.type = type;
@@ -99,7 +99,7 @@ public class SecureServicePermission {
     }
 
     /**
-     * Override toString - return permission in key format
+     * Override toString - return permission in key format.
      */
     @Override
     public String toString() {
@@ -110,7 +110,7 @@ public class SecureServicePermission {
      * Return Permission in Key format = type, instance, and action separate by
      * pipe character.
      *
-     * @return
+     * @return permission in key format
      */
     public String getKey() {
         return type + "|" + instance + "|" + action;
@@ -120,7 +120,7 @@ public class SecureServicePermission {
      * Return Permission in Key format = type, all instance, and action separate
      * by pipe character.
      *
-     * @return
+     * @return permission in key format
      */
     public String getKeyAllInstance() {
         return type + "|" + ALL + "|" + action;
@@ -130,7 +130,7 @@ public class SecureServicePermission {
      * Return Permission in Key format = type, all instance, and all action
      * separate by pipe character.
      *
-     * @return
+     * @return permission in key format
      */
     public String getKeyAllInstanceAction() {
         return type + "|" + ALL + "|" + ALL;
@@ -140,13 +140,15 @@ public class SecureServicePermission {
      * Return Permission in Key format = type, instance, and all action separate
      * by pipe character.
      *
-     * @return
+     * @return permission in key format
      */
     public String getKeyAllAction() {
         return type + "|" + instance + "|" + ALL;
     }
 
     /**
+     * Returns the permission type.
+     *
      * @return the type
      */
     public String getType() {
@@ -154,14 +156,17 @@ public class SecureServicePermission {
     }
 
     /**
-     * @param type
-     *            the type to set
+     * Sets the type of permission.
+     *
+     * @param type the type to set
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
+     * Returns the instance of permission.
+     *
      * @return the instance
      */
     public String getInstance() {
@@ -169,14 +174,17 @@ public class SecureServicePermission {
     }
 
     /**
-     * @param instance
-     *            the instance to set
+     * Sets the instance of permission.
+     *
+     * @param instance the instance to set
      */
     public void setInstance(String instance) {
         this.instance = instance;
     }
 
     /**
+     * Returns the action of permission.
+     *
      * @return the action
      */
     public String getAction() {
@@ -184,8 +192,9 @@ public class SecureServicePermission {
     }
 
     /**
-     * @param action
-     *            the action to set
+     * Sets the action of permission.
+     *
+     * @param action the action to set
      */
     public void setAction(String action) {
         this.action = action;

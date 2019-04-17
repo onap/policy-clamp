@@ -203,8 +203,8 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     @Override
     public boolean activateServerTLSAuth() {
-        if (jsonRootNode != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH) != null &&
-                jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).isJsonPrimitive()) {
+        if (jsonRootNode != null && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH) != null
+                && jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).isJsonPrimitive()) {
             return jsonRootNode.get(ACTIVATE_SERVER_TLS_AUTH).getAsBoolean();
         } else {
             return false;

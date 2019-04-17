@@ -56,6 +56,9 @@ public class SdcControllerConfiguration {
     @Autowired
     protected CsarInstaller csarInstaller;
 
+    /**
+     * Loads SDC controller configuration.
+     */
     @PostConstruct
     public void loadSdcControllers() {
         SdcControllersConfiguration sdcControllersConfig = getSdcControllersConfiguration();
@@ -66,6 +69,9 @@ public class SdcControllerConfiguration {
         });
     }
 
+    /**
+     * Checks whether all SDC controllers defined are up and running.
+     */
     @Scheduled(fixedRate = 120000)
     public void checkAllSdcControllers() {
         logger.info("Checking that all SDC Controllers defined are up and running");
@@ -81,6 +87,9 @@ public class SdcControllerConfiguration {
         logger.info("SDC Controllers check completed");
     }
 
+    /**
+     * Closes all SDC Controller and the SDC Client.
+     */
     @PreDestroy
     public void killSdcControllers() {
         sdcControllersList.forEach(e -> {

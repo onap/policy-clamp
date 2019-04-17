@@ -49,7 +49,7 @@ public class CldsConfiguration {
     /**
      * Clds Identity database DataSource configuration.
      *
-     * @return
+     * @return encoded password data source
      */
     @Bean(name = "cldsDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.cldsdb")

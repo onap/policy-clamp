@@ -34,20 +34,19 @@ public class SdcArtifactInstallerException extends Exception {
     private static final long serialVersionUID = 4095937499475915021L;
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcArtifactInstallerException.
+     *
+     * @param message The message to dump
      */
     public SdcArtifactInstallerException(final String message) {
         super(message);
     }
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcArtifactInstallerException.
+     *
+     * @param message The message to dump
+     * @param cause The Throwable cause object
      */
     public SdcArtifactInstallerException(final String message, final Throwable cause) {
         super(message, cause);

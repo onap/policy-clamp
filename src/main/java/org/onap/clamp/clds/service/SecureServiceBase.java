@@ -53,7 +53,7 @@ public abstract class SecureServiceBase {
     /**
      * Get the userId from AAF/CSP.
      *
-     * @return
+     * @return user ID
      */
     public String getUserId() {
         return getUserName();
@@ -62,7 +62,7 @@ public abstract class SecureServiceBase {
     /**
      * Get the Full name.
      *
-     * @return
+     * @return user name
      */
     public String getUserName() {
         String name = userNameHandler.retrieveUserName(securityContext);
@@ -76,7 +76,7 @@ public abstract class SecureServiceBase {
     /**
      * Get the principal name.
      *
-     * @return
+     * @return the principal name
      */
     public String getPrincipalName() {
         String principal = ((UserDetails)securityContext.getAuthentication().getPrincipal()).getUsername();
@@ -175,13 +175,16 @@ public abstract class SecureServiceBase {
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
         } else if (hasRole(inPermission.getKeyAllInstance())) {
-            securityLogger.info("{} authorized because user has permission with * for instance: {}", getPrincipalName(), inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for instance: {}",
+                                getPrincipalName(), inPermission.getKey());
             authorized = true;
         } else if (hasRole(inPermission.getKeyAllInstanceAction())) {
-            securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}", getPrincipalName(), inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for instance and * for action: {}",
+                                getPrincipalName(), inPermission.getKey());
             authorized = true;
         } else if (hasRole(inPermission.getKeyAllAction())) {
-            securityLogger.info("{} authorized because user has permission with * for action: {}", getPrincipalName(), inPermission.getKey());
+            securityLogger.info("{} authorized because user has permission with * for action: {}",
+                                getPrincipalName(), inPermission.getKey());
             authorized = true;
         } else {
             throw new NotAuthorizedException("");
@@ -196,8 +199,9 @@ public abstract class SecureServiceBase {
         }
 
         for (GrantedAuthority auth : authentication.getAuthorities()) {
-            if (role.equals(auth.getAuthority()))
+            if (role.equals(auth.getAuthority())) {
                 return true;
+            }
         }
 
         return false;

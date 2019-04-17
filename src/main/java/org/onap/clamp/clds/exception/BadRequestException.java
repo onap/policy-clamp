@@ -30,20 +30,20 @@ package org.onap.clamp.clds.exception;
 public class BadRequestException extends RuntimeException {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5738167530541646123L;
+     * The serial version ID.
+     */
+    private static final long serialVersionUID = -5738167530541646123L;
 
-	/**
+    /**
      * This constructor can be used to create a new CldsConfigException.
      * 
      * @param message
      *            A string message detailing the problem
-     * @param e
+     * @param ex
      *            The exception sent by the code
      */
-    public BadRequestException(String message, Throwable e) {
-        super(message, e);
+    public BadRequestException(String message, Throwable ex) {
+        super(message, ex);
     }
 
     /**
