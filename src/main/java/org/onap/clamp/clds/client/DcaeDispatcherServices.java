@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,7 +56,6 @@ public class DcaeDispatcherServices {
     private static final String STATUS_URL_LOG = "Status URL extracted: ";
     private static final String DCAE_URL_PREFIX = "/dcae-deployments/";
     private static final String DCAE_URL_PROPERTY_NAME = "dcae.dispatcher.url";
-    public static final String DCAE_REQUESTID_PROPERTY_NAME = "dcae.header.requestId";
     private static final String DCAE_LINK_FIELD = "links";
     private static final String DCAE_STATUS_FIELD = "status";
 

@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -173,7 +175,7 @@ public class TcaRequestFormatter {
     /**
      * This method updates the blueprint that is received in the UI with the TCA
      * Json.
-     * 
+     *
      * @param refProp
      *            * The refProp generally created by Spring, it's an access on
      *            the clds-references.properties file
@@ -188,11 +190,11 @@ public class TcaRequestFormatter {
         String jsonPolicy = JsonUtils.GSON.toJson(createPolicyContent(refProp, modelProperties, null, null, null));
         logger.info("Yaml that will be updated:" + yamlValue);
         Yaml yaml = new Yaml();
-        Map<String, Object> loadedYaml = (Map<String, Object>) yaml.load(yamlValue);
-        Map<String, Object> nodeTemplates = (Map<String, Object>) loadedYaml.get("node_templates");
-        Map<String, Object> tcaObject = (Map<String, Object>) nodeTemplates.get("tca_tca");
-        Map<String, Object> propsObject = (Map<String, Object>) tcaObject.get("properties");
-        Map<String, Object> appPreferences = (Map<String, Object>) propsObject.get("app_preferences");
+        Map<String, Map> loadedYaml = yaml.load(yamlValue);
+        Map<String, Map> nodeTemplates = loadedYaml.get("node_templates");
+        Map<String, Map> tcaObject = nodeTemplates.get("tca_tca");
+        Map<String, Map> propsObject = tcaObject.get("properties");
+        Map<String, String> appPreferences = propsObject.get("app_preferences");
         appPreferences.put("tca_policy", jsonPolicy);
         String blueprint = yaml.dump(loadedYaml);
         logger.info("Yaml updated:" + blueprint);
