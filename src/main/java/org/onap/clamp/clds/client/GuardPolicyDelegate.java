@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,19 +28,15 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
-import java.io.UnsupportedEncodingException;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.GuardPolicyAttributesConstructor;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
 import org.onap.clamp.clds.model.properties.PolicyChain;
 import org.onap.clamp.clds.model.properties.PolicyItem;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.policy.controlloop.policy.builder.BuilderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,41 +50,32 @@ public class GuardPolicyDelegate {
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(GuardPolicyDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private final PolicyClient policyClient;
-    private final ClampProperties refProp;
 
     @Autowired
-    public GuardPolicyDelegate(PolicyClient policyClient, ClampProperties refProp) {
+    public GuardPolicyDelegate(PolicyClient policyClient) {
         this.policyClient = policyClient;
-        this.refProp = refProp;
     }
 
     /**
      * Perform activity. Send Guard Policies info to policy api.
      *
-     * @param camelExchange
-     *        The Camel Exchange object containing the properties
-     * @throws BuilderException
-     *         In case of issues with OperationalPolicyRequestAttributesConstructor
-     * @throws UnsupportedEncodingException
-     *         In case of issues with the Charset encoding
+     * @param camelExchange The Camel Exchange object containing the properties
      */
     @Handler
-    public void execute(Exchange camelExchange) throws BuilderException, UnsupportedEncodingException {
+    public void execute(Exchange camelExchange) {
         ModelProperties prop = ModelProperties.create(camelExchange);
         Policy policy = prop.getType(Policy.class);
         if (policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                for (PolicyItem policyItem:GuardPolicyAttributesConstructor
+                for (PolicyItem policyItem : GuardPolicyAttributesConstructor
                         .getAllPolicyGuardsFromPolicyChain(policyChain)) {
                     prop.setCurrentModelElementId(policy.getId());
                     prop.setPolicyUniqueId(policyChain.getPolicyId());
                     prop.setGuardUniqueId(policyItem.getId());
                     policyClient.sendGuardPolicy(GuardPolicyAttributesConstructor
-                        .formatAttributes(prop, policyItem), prop, LoggingUtils.getRequestId(), policyItem);
+                            .formatAttributes(prop, policyItem), prop, LoggingUtils.getRequestId(), policyItem);
                 }
             }
         }
     }
-
-
 }

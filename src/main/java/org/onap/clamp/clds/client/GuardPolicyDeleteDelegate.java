@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,7 +32,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.onap.clamp.clds.client.req.policy.GuardPolicyAttributesConstructor;
 import org.onap.clamp.clds.client.req.policy.PolicyClient;
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.Policy;
@@ -46,21 +47,19 @@ import org.springframework.stereotype.Component;
 public class GuardPolicyDeleteDelegate {
 
     protected static final EELFLogger logger = EELFManager.getInstance()
-        .getLogger(GuardPolicyDeleteDelegate.class);
+            .getLogger(GuardPolicyDeleteDelegate.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private final PolicyClient policyClient;
-    private final ClampProperties refProp;
 
     @Autowired
-    public GuardPolicyDeleteDelegate(PolicyClient policyClient, ClampProperties refProp) {
+    public GuardPolicyDeleteDelegate(PolicyClient policyClient) {
         this.policyClient = policyClient;
-        this.refProp = refProp;
     }
+
     /**
      * Perform activity. Delete Operational Policy via policy api.
      *
-     * @param camelExchange
-     *            The Camel Exchange object containing the properties
+     * @param camelExchange The Camel Exchange object containing the properties
      */
     @Handler
     public void execute(Exchange camelExchange) {
@@ -70,7 +69,7 @@ public class GuardPolicyDeleteDelegate {
         String eventAction = (String) camelExchange.getProperty("eventAction");
         if (!eventAction.equalsIgnoreCase(CldsEvent.ACTION_CREATE) && policy.isFound()) {
             for (PolicyChain policyChain : prop.getType(Policy.class).getPolicyChains()) {
-                for (PolicyItem policyItem:GuardPolicyAttributesConstructor
+                for (PolicyItem policyItem : GuardPolicyAttributesConstructor
                         .getAllPolicyGuardsFromPolicyChain(policyChain)) {
                     prop.setCurrentModelElementId(policy.getId());
                     prop.setPolicyUniqueId(policyChain.getPolicyId());
@@ -80,5 +79,4 @@ public class GuardPolicyDeleteDelegate {
             }
         }
     }
-
 }
