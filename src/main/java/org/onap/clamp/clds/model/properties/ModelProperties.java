@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -118,19 +120,19 @@ public class ModelProperties {
             // Parse the list of base Model Elements and build up the
             // ModelElements
             modelElementClasses.entrySet().stream().parallel()
-                .filter(entry -> (AbstractModelElement.class.isAssignableFrom(entry.getKey())
-                    && missingTypes.contains(entry.getValue())))
-                .forEach(entry -> {
-                    try {
-                        modelElements.put(entry.getValue(),
-                            (entry.getKey().getConstructor(ModelProperties.class, ModelBpmn.class, JsonObject.class)
-                                .newInstance(this, modelBpmn, modelJson)));
-                    } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
-                        | InvocationTargetException e) {
-                        logger.warn("Unable to instantiate a ModelElement " + entry.getValue()
-                            + ", exception follows: ", e);
-                    }
-                });
+                    .filter(entry -> (AbstractModelElement.class.isAssignableFrom(entry.getKey())
+                            && missingTypes.contains(entry.getValue())))
+                    .forEach(entry -> {
+                        try {
+                            modelElements.put(entry.getValue(),
+                                    (entry.getKey().getConstructor(ModelBpmn.class, JsonObject.class)
+                                            .newInstance(modelBpmn, modelJson)));
+                        } catch (InstantiationException | NoSuchMethodException | IllegalAccessException
+                                | InvocationTargetException e) {
+                            logger.warn("Unable to instantiate a ModelElement " + entry.getValue()
+                                    + ", exception follows: ", e);
+                        }
+                    });
         }
     }
 

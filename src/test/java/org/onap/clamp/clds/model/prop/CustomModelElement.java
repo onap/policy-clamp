@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,7 +28,6 @@ package org.onap.clamp.clds.model.prop;
 import com.google.gson.JsonObject;
 import org.onap.clamp.clds.model.properties.AbstractModelElement;
 import org.onap.clamp.clds.model.properties.ModelBpmn;
-import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.JsonUtils;
 
 /**
@@ -40,8 +41,8 @@ public class CustomModelElement extends AbstractModelElement {
     /**
      * Main Constructor.
      */
-    public CustomModelElement(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
-        super(CUSTOM_TYPE, modelProp, modelBpmn, modelJson);
+    public CustomModelElement(ModelBpmn modelBpmn, JsonObject modelJson) {
+        super(CUSTOM_TYPE, modelBpmn, modelJson);
         topicPublishes = JsonUtils.getStringValueByName(modelElementJsonNode, "topicPublishes");
         test = JsonUtils.getStringValueByName(modelElementJsonNode, "test");
     }

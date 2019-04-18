@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +20,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.properties;
@@ -27,31 +29,30 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.util.Map.Entry;
 import java.util.Set;
 
 /**
  * Parse ONAP Tca json properties.
- *
  */
 public class Tca extends AbstractModelElement {
 
-    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(Tca.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(Tca.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private TcaItem                   tcaItem;
+    private TcaItem tcaItem;
 
-    private static final String       TYPE_TCA    = "tca";
+    private static final String TYPE_TCA = "tca";
 
     /**
      * Parse Tca given json node.
      *
-     * @param modelProp The model properties
      * @param modelBpmn The model bpmn
      * @param modelJson The model json
      */
-    public Tca(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
-        super(TYPE_TCA, modelProp, modelBpmn, modelJson);
+    public Tca(ModelBpmn modelBpmn, JsonObject modelJson) {
+        super(TYPE_TCA, modelBpmn, modelJson);
 
         // process Server_Configurations
         if (modelElementJsonNode != null) {
@@ -68,5 +69,4 @@ public class Tca extends AbstractModelElement {
     public static final String getType() {
         return TYPE_TCA;
     }
-
 }

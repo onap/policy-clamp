@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,9 +27,9 @@ package org.onap.clamp.clds.model.properties;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -51,23 +53,22 @@ import java.util.Map.Entry;
  * "vf3RtPi"]}]]}]
  */
 public class Policy extends AbstractModelElement {
-    protected static final EELFLogger logger      = EELFManager.getInstance().getLogger(Policy.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(Policy.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
 
-    private List<PolicyChain>         policyChains;
+    private List<PolicyChain> policyChains;
 
-    private static final String       TYPE_POLICY = "policy";
+    private static final String TYPE_POLICY = "policy";
 
     /**
      * Parse Policy given json node.
      *
-     * @param modelProp The model properties.
      * @param modelBpmn The model bpmn
      * @param modelJson The model json
      * @throws IOException The IO Exception
      */
-    public Policy(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) throws IOException {
-        super(TYPE_POLICY, modelProp, modelBpmn, modelJson);
+    public Policy(ModelBpmn modelBpmn, JsonObject modelJson) throws IOException {
+        super(TYPE_POLICY, modelBpmn, modelJson);
 
         // process policies
         if (modelElementJsonNode != null) {
@@ -81,6 +82,7 @@ public class Policy extends AbstractModelElement {
 
     /**
      * Get the policy chains.
+     *
      * @return the policyChains
      */
     public List<PolicyChain> getPolicyChains() {
@@ -90,5 +92,4 @@ public class Policy extends AbstractModelElement {
     public static final String getType() {
         return TYPE_POLICY;
     }
-
 }

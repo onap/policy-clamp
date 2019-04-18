@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +20,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model.properties;
@@ -30,27 +32,22 @@ import org.onap.clamp.clds.util.JsonUtils;
  * Parse Holmes bpmn parameters json properties.
  * Example json:
  * [{"name":"correlationalLogic","value":"vcwx"},{"name":"configPolicyName","value":"cccc"}]
- *
  */
 public class Holmes extends AbstractModelElement {
 
     private static final String TYPE_HOLMES = "holmes";
 
-    private String              correlationLogic;
-
-    private String              configPolicyName;
+    private String correlationLogic;
+    private String configPolicyName;
 
     /**
      * Default constructor for Holmes Element.
      *
-     * @param modelProp
-     *            The ModelProperties containing the all the info, like bpmn,
-     *            bpmn params, etc ...
      * @param modelBpmn The model bpmn
      * @param modelJson The model json
      */
-    public Holmes(ModelProperties modelProp, ModelBpmn modelBpmn, JsonObject modelJson) {
-        super(TYPE_HOLMES, modelProp, modelBpmn, modelJson);
+    public Holmes(ModelBpmn modelBpmn, JsonObject modelJson) {
+        super(TYPE_HOLMES, modelBpmn, modelJson);
 
         correlationLogic = JsonUtils.getStringValueByName(modelElementJsonNode, "correlationalLogic");
         configPolicyName = JsonUtils.getStringValueByName(modelElementJsonNode, "configPolicyName");
@@ -67,5 +64,4 @@ public class Holmes extends AbstractModelElement {
     public String getConfigPolicyName() {
         return configPolicyName;
     }
-
 }
