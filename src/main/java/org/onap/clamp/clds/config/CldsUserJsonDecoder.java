@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -35,6 +37,9 @@ import org.onap.clamp.clds.service.CldsUser;
 import org.onap.clamp.clds.util.JsonUtils;
 
 public class CldsUserJsonDecoder {
+
+    private CldsUserJsonDecoder() {
+    }
 
     /**
      * This method decodes the JSON file provided to a CldsUser Array. The stream is
@@ -67,8 +72,5 @@ public class CldsUserJsonDecoder {
         } catch (JsonParseException e) {
             throw new CldsUsersException("Exception occurred during the decoding of the clds-users.json", e);
         }
-    }
-
-    private CldsUserJsonDecoder() {
     }
 }
