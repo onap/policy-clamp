@@ -211,8 +211,6 @@ public class DcaeDispatcherServices {
 
     private JSONObject parseResponse(String responseStr) throws ParseException {
         JSONParser parser = new JSONParser();
-        Object obj0 = parser.parse(responseStr);
-        JSONObject jsonObj = (JSONObject) obj0;
-        return jsonObj;
+        return (JSONObject) parser.parse(responseStr);
     }
 }

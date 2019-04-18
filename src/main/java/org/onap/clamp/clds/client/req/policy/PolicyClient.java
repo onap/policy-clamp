@@ -65,7 +65,6 @@ import org.onap.policy.api.PolicyType;
 import org.onap.policy.api.PushPolicyParameters;
 import org.onap.policy.api.RuleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -76,22 +75,23 @@ import org.springframework.stereotype.Component;
 @Primary
 public class PolicyClient {
 
-    protected PolicyEngine policyEngine;
-    protected static final String LOG_POLICY_PREFIX = "Response is ";
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyClient.class);
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
-    public static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
-    public static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
-    public static final String POLICY_BASENAME_PREFIX_PROPERTY_NAME = "policy.base.policyNamePrefix";
-    public static final String POLICY_OP_NAME_PREFIX_PROPERTY_NAME = "policy.op.policyNamePrefix";
+    private PolicyEngine policyEngine;
+    private static final String LOG_POLICY_PREFIX = "Response is ";
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyClient.class);
+    private static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    private static final String POLICY_MSTYPE_PROPERTY_NAME = "policy.ms.type";
+    private static final String POLICY_ONAPNAME_PROPERTY_NAME = "policy.onap.name";
+    private static final String POLICY_BASENAME_PREFIX_PROPERTY_NAME = "policy.base.policyNamePrefix";
+    private static final String POLICY_OP_NAME_PREFIX_PROPERTY_NAME = "policy.op.policyNamePrefix";
     public static final String POLICY_MS_NAME_PREFIX_PROPERTY_NAME = "policy.ms.policyNamePrefix";
-    public static final String POLICY_OP_TYPE_PROPERTY_NAME = "policy.op.type";
-    public static final String TOSCA_FILE_TEMP_PATH = "tosca.filePath";
+    private static final String POLICY_OP_TYPE_PROPERTY_NAME = "policy.op.type";
+    private static final String TOSCA_FILE_TEMP_PATH = "tosca.filePath";
+    private static final String POLICY_COMMUNICATION_LOG_MESSAGE = "Exception occurred during policy communication";
+    private static final String POLICY_COMMUNICATION_EXC_MESSAGE = "Exception while communicating with Policy";
+    private static final String POLICY = "Policy";
 
     @Autowired
-    protected ApplicationContext appContext;
-    @Autowired
-    protected ClampProperties refProp;
+    private ClampProperties refProp;
     @Autowired
     private PolicyConfiguration policyConfiguration;
 
@@ -274,12 +274,12 @@ public class PolicyClient {
             if ((PolicyClass.Decision.equals(policyParameters.getPolicyClass()) && !checkDecisionPolicyExists(prop))
                 || (PolicyClass.Config.equals(policyParameters.getPolicyClass())
                     && !checkPolicyExists(prop, policyPrefix, policyNameWithPrefix))) {
-                LoggingUtils.setTargetContext("Policy", "createPolicy");
+                LoggingUtils.setTargetContext(POLICY, "createPolicy");
                 logger.info("Attempting to create policy for action=" + prop.getActionCd());
                 response = getPolicyEngine().createPolicy(policyParameters);
                 responseMessage = response.getResponseMessage();
             } else {
-                LoggingUtils.setTargetContext("Policy", "updatePolicy");
+                LoggingUtils.setTargetContext(POLICY, "updatePolicy");
                 logger.info("Attempting to update policy for action=" + prop.getActionCd());
                 response = getPolicyEngine().updatePolicy(policyParameters);
                 responseMessage = response.getResponseMessage();
@@ -287,8 +287,8 @@ public class PolicyClient {
         } catch (Exception e) {
             LoggingUtils.setResponseContext("900", "Policy send failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Policy send error");
-            logger.error("Exception occurred during policy communication", e);
-            throw new PolicyClientException("Exception while communicating with Policy", e);
+            logger.error(POLICY_COMMUNICATION_LOG_MESSAGE, e);
+            throw new PolicyClientException(POLICY_COMMUNICATION_EXC_MESSAGE, e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
         LoggingUtils.setTimeContext(startTime, new Date());
@@ -329,7 +329,7 @@ public class PolicyClient {
         PolicyChangeResponse response;
         String responseMessage = "";
         try {
-            LoggingUtils.setTargetContext("Policy", "pushPolicy");
+            LoggingUtils.setTargetContext(POLICY, "pushPolicy");
             logger.info("Attempting to push policy...");
             response = getPolicyEngine().pushPolicy(pushPolicyParameters);
             if (response != null) {
@@ -338,8 +338,8 @@ public class PolicyClient {
         } catch (Exception e) {
             LoggingUtils.setResponseContext("900", "Policy push failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Policy push error");
-            logger.error("Exception occurred during policy communication", e);
-            throw new PolicyClientException("Exception while communicating with Policy", e);
+            logger.error(POLICY_COMMUNICATION_LOG_MESSAGE, e);
+            throw new PolicyClientException(POLICY_COMMUNICATION_EXC_MESSAGE, e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
         if (response != null && (response.getResponseCode() == 200 || response.getResponseCode() == 204)) {
@@ -466,8 +466,8 @@ public class PolicyClient {
                 deletePolicyResponse = deletePolicy(prop, DictionaryType.Decision.toString(), null);
             }
         } catch (Exception e) {
-            logger.error("Exception occurred during policy communication", e);
-            throw new PolicyClientException("Exception while communicating with Policy", e);
+            logger.error(POLICY_COMMUNICATION_LOG_MESSAGE, e);
+            throw new PolicyClientException(POLICY_COMMUNICATION_EXC_MESSAGE, e);
         }
         return deletePolicyResponse;
     }
@@ -492,8 +492,8 @@ public class PolicyClient {
                 deletePolicyResponse = deletePolicy(prop, policyType, null);
             }
         } catch (Exception e) {
-            logger.error("Exception occurred during policy communication", e);
-            throw new PolicyClientException("Exception while communicating with Policy", e);
+            logger.error(POLICY_COMMUNICATION_LOG_MESSAGE, e);
+            throw new PolicyClientException(POLICY_COMMUNICATION_EXC_MESSAGE, e);
         }
         return deletePolicyResponse;
     }
@@ -650,8 +650,8 @@ public class PolicyClient {
         } catch (Exception e) {
             LoggingUtils.setResponseContext("900", "Policy Model import failed", this.getClass().getName());
             LoggingUtils.setErrorContext("900", "Policy Model import error");
-            logger.error("Exception occurred during policy communication", e);
-            throw new PolicyClientException("Exception while communicating with Policy", e);
+            logger.error(POLICY_COMMUNICATION_LOG_MESSAGE, e);
+            throw new PolicyClientException(POLICY_COMMUNICATION_EXC_MESSAGE, e);
         }
         logger.info(LOG_POLICY_PREFIX + responseMessage);
         if (response != null && (response.getResponseCode() == 200 || response.getResponseCode() == 204)) {
