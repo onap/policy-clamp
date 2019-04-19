@@ -118,12 +118,12 @@ function getResourceDetailsProperty() {
 	return cl_props["modelPropertiesJson"]["resourceDetails"]["VF"];
 }
 
-function getResourceDetailsVfcProperty() {
-	return cl_props["modelPropertiesJson"]["resourceDetails"]["VFC"];
+function getResourceDetailsVfModuleProperty() {
+	return cl_props["modelPropertiesJson"]["resourceDetails"]["VFModule"];
 }
 
 function getLoopLogsArray() {
 	return cl_props.loopLogs;
 }
 
-module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL,getResourceDetailsProperty,getResourceDetailsVfcProperty };
+module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL,getResourceDetailsProperty,getResourceDetailsVfModuleProperty };

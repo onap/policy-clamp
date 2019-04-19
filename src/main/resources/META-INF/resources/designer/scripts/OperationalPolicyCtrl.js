@@ -228,7 +228,7 @@ app
 			$("#resourceId")
 					.append(
 							$('<option></option>').val("")
-									.html(""));
+									.html("-- choose an option --"));
 			$("#resourceId").append(
 					$('<option></option>').val("Other:")
 							.html("Other:"));
@@ -247,14 +247,14 @@ app
 				}
 
 			}
-			var resourceVfc = getResourceDetailsVfcProperty();
-			if (type == "VFC"
-					&& (null !== resourceVfc || undefined !== resourceVfc)) {
+			var resourceVFModule = getResourceDetailsVfModuleProperty();
+			if (type == "VFModule"
+					&& (null !== resourceVFModule || undefined !== resourceVFModule)) {
 				if (recipe == 'VF Module Create'
 						|| recipe == 'VF Module Delete') {
-					for ( var prop in resourceVfc) {
-						if (resourceVfc[prop]["isBase"] == false) {
-							var name = resourceVfc[prop]["name"];
+					for ( var prop in resourceVFModule) {
+						if (resourceVFModule[prop]["isBase"] == false) {
+							var name = resourceVFModule[prop]["name"];
 							$("#resourceId").append(
 									$('<option></option>')
 											.val(name)
@@ -264,8 +264,8 @@ app
 				} 
 		        else
 		        {
-		          for ( var prop in resourceVfc) {
-				     var name = resourceVfc[prop]["name"];
+		          for ( var prop in resourceVFModule) {
+				     var name = resourceVFModule[prop]["name"];
 		    	      $("#resourceId").append(
 		    		     $('<option></option>')
 		    			    .val(name).html(name));
@@ -280,29 +280,29 @@ app
 			$("#modelVersionId").val("");
 			$("#modelVersion").val("");
 			$("#modelCustomizationId").val("");
-			var resourceVfc = getResourceDetailsVfcProperty();
+			var resourceVFModule = getResourceDetailsVfModuleProperty();
 			var type = $("#type").val();
 			var recipe = $("#recipe").val();
 			vfBaseName = $(event.target).val();
-			if (type == "VFC"
-					&& (null !== resourceVfc || undefined !== resourceVfc)
+			if (type == "VFModule"
+					&& (null !== resourceVFModule || undefined !== resourceVFModule)
 					&& (recipe == 'VF Module Create' || recipe == 'VF Module Delete')) {
-				for ( var prop in resourceVfc) {
-					var name = resourceVfc[prop]["name"];
+				for ( var prop in resourceVFModule) {
+					var name = resourceVFModule[prop]["name"];
 					if (name == vfBaseName) {
-						var vfModuleModelName = resourceVfc[prop]["name"];
+						var vfModuleModelName = resourceVFModule[prop]["name"];
 						$("#modelName").val(
 								vfModuleModelName);
-						var vfModuleModelInvariantUUID = resourceVfc[prop]["invariantUUID"];
+						var vfModuleModelInvariantUUID = resourceVFModule[prop]["invariantUUID"];
 						$("#modelInvariantId").val(
 								vfModuleModelInvariantUUID);
-						var vfModuleModelUUID = resourceVfc[prop]["UUID"];
+						var vfModuleModelUUID = resourceVFModule[prop]["UUID"];
 						$("#modelVersionId").val(
 								vfModuleModelUUID);
-						var vfModuleModelVersion = resourceVfc[prop]["version"];
+						var vfModuleModelVersion = resourceVFModule[prop]["version"];
 						$("#modelVersion").val(
 								vfModuleModelVersion);
-						var vfModuleModelCustomizationUUID = resourceVfc[prop]["customizationUUID"];
+						var vfModuleModelCustomizationUUID = resourceVFModule[prop]["customizationUUID"];
 						$("#modelCustomizationId")
 								.val(
 										vfModuleModelCustomizationUUID);
