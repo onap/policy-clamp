@@ -39,7 +39,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
- * REST services to manage dictionary and dictionary items for Tosca Model
+ * REST services to manage dictionary and dictionary items for Tosca Model.
  */
 @Component
 public class CldsDictionaryService extends SecureServiceBase {
@@ -65,10 +65,10 @@ public class CldsDictionaryService extends SecureServiceBase {
     }
 
     /**
-     * REST Service that creates or Updates a Dictionary
+     * REST Service that creates or Updates a Dictionary.
      * 
-     * @param dictionaryName
-     * @param cldsDictionary
+     * @param dictionaryName dictionary name
+     * @param cldsDictionary clds dictionary
      * @return CldsDictionary that was created in DB.
      */
     public ResponseEntity<CldsDictionary> createOrUpdateDictionary(String dictionaryName,
@@ -90,10 +90,10 @@ public class CldsDictionaryService extends SecureServiceBase {
 
     /**
      * REST Service that creates or Updates a Dictionary Elements for dictionary
-     * in DB
+     * in DB.
      * 
-     * @param dictionaryName
-     * @param dictionaryItem
+     * @param dictionaryName dictionary name
+     * @param dictionaryItem dictionary item
      * @return CldsDictionaryItem A dictionary items that was created or updated
      *         in DB
      */
@@ -111,7 +111,7 @@ public class CldsDictionaryService extends SecureServiceBase {
     }
 
     /**
-     * Rest Service that retrieves all CLDS dictionary in DB
+     * Rest Service that retrieves all CLDS dictionary in DB.
      * 
      * @return CldsDictionary List List of CldsDictionary available in DB
      */
@@ -129,9 +129,9 @@ public class CldsDictionaryService extends SecureServiceBase {
 
     /**
      * Rest Service that retrieves all CLDS dictionary items in DB for a give
-     * dictionary name
+     * dictionary name.
      * 
-     * @param dictionaryName
+     * @param dictionaryName dictionary name
      * @return CldsDictionaryItem list List of CLDS Dictionary items for a given
      *         dictionary name
      */

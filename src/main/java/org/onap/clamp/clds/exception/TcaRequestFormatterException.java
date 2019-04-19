@@ -30,7 +30,7 @@ package org.onap.clamp.clds.exception;
 public class TcaRequestFormatterException extends RuntimeException {
 
     /**
-     * 
+     * The serial version ID.
      */
     private static final long serialVersionUID = 169875373143236667L;
 
@@ -40,11 +40,11 @@ public class TcaRequestFormatterException extends RuntimeException {
      * 
      * @param message
      *            A string message detailing the problem
-     * @param e
+     * @param ex
      *            The exception sent by the code
      */
-    public TcaRequestFormatterException(String message, Throwable e) {
-        super(message, e);
+    public TcaRequestFormatterException(String message, Throwable ex) {
+        super(message, ex);
     }
 
     /**

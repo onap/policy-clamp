@@ -35,12 +35,11 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class UserService {
 
-    private SecurityContext           securityContext= SecurityContextHolder.getContext();
+    private SecurityContext           securityContext = SecurityContextHolder.getContext();
 
     /**
      * REST service that returns the username.
      *
-     * @param userName
      * @return the user name
      */
     public String getUser() {

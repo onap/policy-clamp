@@ -34,20 +34,19 @@ public class SdcControllerException extends Exception {
     private static final long serialVersionUID = -4236006447255525130L;
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcControllerException.
+     *
+     * @param message The message to dump
      */
     public SdcControllerException(final String message) {
         super(message);
     }
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcControllerException.
+     *
+     * @param message The message to dump
+     * @param cause The Throwable cause object
      */
     public SdcControllerException(final String message, final Throwable cause) {
         super(message, cause);

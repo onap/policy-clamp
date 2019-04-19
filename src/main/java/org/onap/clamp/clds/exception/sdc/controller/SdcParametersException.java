@@ -34,20 +34,19 @@ public class SdcParametersException extends RuntimeException {
     private static final long serialVersionUID = 8425657297510362736L;
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcParametersException.
+     *
+     * @param message The message to dump
      */
     public SdcParametersException(final String message) {
         super(message);
     }
 
     /**
-     * @param message
-     *            The message to dump
-     * @param cause
-     *            The Throwable cause object
+     * This constructor can be used to create a new SdcParametersException.
+     *
+     * @param message The message to dump
+     * @param cause The Throwable cause object
      */
     public SdcParametersException(final String message, final Throwable cause) {
         super(message, cause);

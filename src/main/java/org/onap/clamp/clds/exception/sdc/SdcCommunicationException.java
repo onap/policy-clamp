@@ -30,7 +30,7 @@ package org.onap.clamp.clds.exception.sdc;
 public class SdcCommunicationException extends RuntimeException {
 
     /**
-     * Generated ID
+     * Generated ID.
      */
     private static final long serialVersionUID = 8452294782552680243L;
 
@@ -39,11 +39,11 @@ public class SdcCommunicationException extends RuntimeException {
      * 
      * @param message
      *            A string message detailing the problem
-     * @param e
+     * @param ex
      *            The exception sent by the code
      */
-    public SdcCommunicationException(String message, Throwable e) {
-        super(message, e);
+    public SdcCommunicationException(String message, Throwable ex) {
+        super(message, ex);
     }
 
     /**

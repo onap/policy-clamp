@@ -41,11 +41,11 @@ public class ModelBpmnException extends RuntimeException {
      * 
      * @param message
      *            A string message detailing the problem
-     * @param e
+     * @param ex
      *            The exception sent by the code
      */
-    public ModelBpmnException(String message, Throwable e) {
-        super(message, e);
+    public ModelBpmnException(String message, Throwable ex) {
+        super(message, ex);
     }
 
     /**
