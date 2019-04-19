@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -61,6 +62,7 @@ public class LoggingUtils {
 
     /** Logger delegate. */
     private EELFLogger mlogger;
+
     /** Automatic UUID, overrideable per adapter or per invocation. */
     private static UUID sInstanceUUID = UUID.randomUUID();
 
@@ -72,7 +74,7 @@ public class LoggingUtils {
     }
 
     /**
-     * Set request related logging variables in thread local data via MDC
+     * Set request related logging variables in thread local data via MDC.
      *
      * @param service Service Name of API (ex. "PUT template")
      * @param partner Partner name (client or user invoking API)
@@ -98,7 +100,7 @@ public class LoggingUtils {
      * @param endTimeStamp End time
      */
     public static void setTimeContext(@NotNull Date beginTimeStamp, @NotNull Date endTimeStamp) {
-        MDC.put("BeginTimestamp", generateTimestampStr(beginTimeStamp));
+        MDC.put("EntryTimestamp", generateTimestampStr(beginTimeStamp));
         MDC.put("EndTimestamp", generateTimestampStr(endTimeStamp));
         MDC.put("ElapsedTime", String.valueOf(endTimeStamp.getTime() - beginTimeStamp.getTime()));
     }
@@ -118,7 +120,7 @@ public class LoggingUtils {
     }
 
     /**
-     * Set target related logging variables in thread local data via MDC
+     * Set target related logging variables in thread local data via MDC.
      *
      * @param targetEntity Target entity (an external/sub component, for ex. "sdc")
      * @param targetServiceName Target service name (name of API invoked on target)
@@ -219,6 +221,7 @@ public class LoggingUtils {
     /**
      * Report <tt>EXITING</tt> marker.
      *
+
      * @param code response code
      * @param descrption response description
      * @param severity response severity
@@ -230,6 +233,13 @@ public class LoggingUtils {
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_DESCRIPTION, defaultToEmpty(descrption));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_SEVERITY, defaultToEmpty(severity));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_STATUS_CODE, defaultToEmpty(status));
+
+            ZonedDateTime startTime = ZonedDateTime.parse(MDC.get(ONAPLogConstants.MDCs.ENTRY_TIMESTAMP),
+                DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC));
+            ZonedDateTime endTime = ZonedDateTime.now(ZoneOffset.UTC);
+            MDC.put(ONAPLogConstants.MDCs.END_TIMESTAMP, endTime.format(DateTimeFormatter.ISO_INSTANT));
+            long duration = ChronoUnit.MILLIS.between(startTime, endTime);
+            MDC.put(ONAPLogConstants.MDCs.ELAPSED_TIMESTAMP, String.valueOf(duration)); 
             this.mlogger.info(ONAPLogConstants.Markers.EXIT);
         }
         finally {
@@ -238,13 +248,23 @@ public class LoggingUtils {
     }
 
     /**
+     * Get the property value.
+     *
+     * @param name The name of the property
+     * @return The value of the property
+     */
+    public String getProperties(String name) {
+        return MDC.get(name);
+    }
+    
+    /**
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
      *
-     * @param con http URL connection
-     * @param targetEntity target entity
-     * @param targetServiceName target service name
-     * @return invocation ID to be passed with invocation
+     * @param con The HTTP url connection
+     * @param targetEntity The target entity
+     * @param targetServiceName The target service name
+     * @return The HTTP url connection
      */
     public HttpURLConnection invoke(final HttpURLConnection con, String targetEntity, String targetServiceName) {
         final String invocationId = UUID.randomUUID().toString();
@@ -271,10 +291,29 @@ public class LoggingUtils {
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
      *
-     * @param con http URL connection
-     * @param targetEntity target entity
-     * @param targetServiceName target service name
-     * @return invocation ID to be passed with invocation
+     * @param targetEntity The target entity
+     * @param targetServiceName The target service name
+     */
+    public void invoke(String targetEntity, String targetServiceName) {
+        final String invocationId = UUID.randomUUID().toString();
+
+        invokeContext(targetEntity, targetServiceName, invocationId);
+
+        // Log INVOKE*, with the invocationID as the message body.
+        // (We didn't really want this kind of behavior in the standard,
+        // but is it worse than new, single-message MDC?)
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE);
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
+    }
+
+    /**
+     * Report pending invocation with <tt>INVOKE</tt> marker,
+     * setting standard ONAP logging headers automatically.
+     *
+     * @param con The HTTPS url connection
+     * @param targetEntity The target entity
+     * @param targetServiceName The target service name
+     * @return The HTTPS url connection
      */
     public HttpsURLConnection invokeHttps(final HttpsURLConnection con, String targetEntity, String targetServiceName) {
         final String invocationId = UUID.randomUUID().toString();
@@ -298,7 +337,7 @@ public class LoggingUtils {
     }
 
     /**
-     * Invokes return context.
+     * Report pending invocation with <tt>INVOKE-RETURN</tt> marker.
      */
     public void invokeReturn() {
         // Add the Invoke-return marker and clear the needed MDC
@@ -369,5 +408,6 @@ public class LoggingUtils {
         MDC.remove(ONAPLogConstants.MDCs.TARGET_ENTITY);
         MDC.remove(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME);
         MDC.remove(ONAPLogConstants.MDCs.INVOCATIONID_OUT);
+        MDC.remove(ONAPLogConstants.MDCs.INVOKE_TIMESTAMP);
     }
 }

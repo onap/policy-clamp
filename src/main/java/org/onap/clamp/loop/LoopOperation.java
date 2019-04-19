@@ -52,7 +52,7 @@ import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- * Closed loop operations
+ * Closed loop operations.
  */
 @Component
 public class LoopOperation {
@@ -72,15 +72,15 @@ public class LoopOperation {
         this.loopService = loopService;
         this.dcaeDispatcherServices = dcaeDispatcherServices;
     }
-
+    
     /**
      * Deploy the closed loop.
      *
      * @param loopName
      *        the loop name
      * @return the updated loop
-     * @throws Exceptions
-     *         during the operation
+     * @throws OperationException
+     *         Exception during the operation
      */
     public Loop deployLoop(Exchange camelExchange, String loopName) throws OperationException {
         util.entering(request, "CldsService: Deploy model");
@@ -172,32 +172,35 @@ public class LoopOperation {
         return loop;
     }
 
-    private JsonElement wrapSnakeObject(Object o) {
+    private JsonElement wrapSnakeObject(Object obj) {
         // NULL => JsonNull
-        if (o == null)
+        if (obj == null) {
             return JsonNull.INSTANCE;
+        }
 
         // Collection => JsonArray
-        if (o instanceof Collection) {
+        if (obj instanceof Collection) {
             JsonArray array = new JsonArray();
-            for (Object childObj : (Collection<?>) o)
+            for (Object childObj : (Collection<?>) obj) {
                 array.add(wrapSnakeObject(childObj));
+            }
             return array;
         }
 
         // Array => JsonArray
-        if (o.getClass().isArray()) {
+        if (obj.getClass().isArray()) {
             JsonArray array = new JsonArray();
 
             int length = Array.getLength(array);
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++) {
                 array.add(wrapSnakeObject(Array.get(array, i)));
+            }
             return array;
         }
 
         // Map => JsonObject
-        if (o instanceof Map) {
-            Map<?, ?> map = (Map<?, ?>) o;
+        if (obj instanceof Map) {
+            Map<?, ?> map = (Map<?, ?>) obj;
 
             JsonObject jsonObject = new JsonObject();
             for (final Map.Entry<?, ?> entry : map.entrySet()) {
@@ -209,7 +212,7 @@ public class LoopOperation {
         }
 
         // otherwise take it as a string
-        return new JsonPrimitive(String.valueOf(o));
+        return new JsonPrimitive(String.valueOf(obj));
     }
 
 }

@@ -98,13 +98,14 @@
 			<stop />
 		</when>
 	</route>
-
 	<route id="create-micro-service-policy">
 		<from uri="direct:create-micro-service-policy" />
 		
 		<log
 			loggingLevel="INFO"
 			message="Creating Micro Service Policy: ${header.microServicePolicy.getName()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Micro Service Policy')" />
 		<setBody>
 			<simple>${header.microServicePolicy.createPolicyPayload()}
 			</simple>
@@ -119,6 +120,18 @@
 			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies
 			</simple>
 		</setHeader>
+		<setHeader headerName="X-ONAP-RequestID">
+			<simple>${header.X-ONAP-REAUESTID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-InvocationID">
+			<simple>${header.X-ONAP-InvocationID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-PartnerName">
+			<simple>${header.X-ONAP-PartnerName}
+			</simple>
+		</setHeader>
 		<log
 			loggingLevel="INFO"
 			message="Endpoint to create microservice policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -127,6 +140,7 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy created successfully','INFO',${header.LoopObject})" />
 		<to uri="direct:reset-raise-http-exception-flag" />
+	<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
 	<route id="delete-micro-service-policy">
 		<from uri="direct:delete-micro-service-policy" />
@@ -134,6 +148,8 @@
 		<log
 			loggingLevel="INFO"
 			message="Deleting Micro Service Policy: ${header.microServicePolicy.getName()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Micro Service Policy')" />
 		<setBody>
 			<constant>null</constant>
 		</setBody>
@@ -144,6 +160,18 @@
 			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/${header.microServicePolicy.getModelType()}/versions/1.0.0/policies/${header.microServicePolicy.getName()}
 			</simple>
 		</setHeader>
+		<setHeader headerName="X-ONAP-RequestID">
+			<simple>${header.X-ONAP-REAUESTID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-InvocationID">
+			<simple>${header.X-ONAP-InvocationID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-PartnerName">
+			<simple>${header.X-ONAP-PartnerName}
+			</simple>
+		</setHeader>
 		<log
 			loggingLevel="INFO"
 			message="Endpoint to delete microservice policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -152,6 +180,7 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('MicroService policy deleted successfully','INFO',${header.LoopObject})" />
 		<to uri="direct:reset-raise-http-exception-flag" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
 
 	<route id="create-operational-policy">
@@ -160,6 +189,8 @@
 		<log
 			loggingLevel="INFO"
 			message="Creating Operational Policy: ${header.operationalPolicy.getName()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Operational Policy')" />
 		<setBody>
 			<simple>${header.operationalPolicy.createPolicyPayload()}
 			</simple>
@@ -174,6 +205,18 @@
 			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies
 			</simple>
 		</setHeader>
+		<setHeader headerName="X-ONAP-RequestID">
+			<simple>${header.X-ONAP-REAUESTID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-InvocationID">
+			<simple>${header.X-ONAP-InvocationID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-PartnerName">
+			<simple>${header.X-ONAP-PartnerName}
+			</simple>
+		</setHeader>
 		<log
 			loggingLevel="INFO"
 			message="Endpoint to create operational policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -182,6 +225,7 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy created successfully','INFO',${header.LoopObject})" />
 		<to uri="direct:reset-raise-http-exception-flag" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
 	<route id="delete-operational-policy">
 		<from uri="direct:delete-operational-policy" />
@@ -189,6 +233,8 @@
 		<log
 			loggingLevel="INFO"
 			message="Deleting Operational Policy: ${header.operationalPolicy.getName()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Operational Policy')" />
 		<setBody>
 			<constant>null</constant>
 		</setBody>
@@ -199,6 +245,18 @@
 			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controloop.operational/versions/1.0.0/policies/${header.operationalPolicy.getName()}
 			</simple>
 		</setHeader>
+		<setHeader headerName="X-ONAP-RequestID">
+			<simple>${header.X-ONAP-REAUESTID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-InvocationID">
+			<simple>${header.X-ONAP-InvocationID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-PartnerName">
+			<simple>${header.X-ONAP-PartnerName}
+			</simple>
+		</setHeader>
 		<log
 			loggingLevel="INFO"
 			message="Endpoint to delete operational policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -207,6 +265,7 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policy deleted successfully','INFO',${header.LoopObject})" />
 		<to uri="direct:reset-raise-http-exception-flag" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
 
 	<route id="create-guard-policy">
@@ -215,6 +274,8 @@
 		<log
 			loggingLevel="INFO"
 			message="Creating Guard Policy: ${header.guardPolicy.getKey()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Guard Policy')" />
 		<setBody>
 			<simple>${header.guardPolicy.getValue()}
 			</simple>
@@ -229,6 +290,18 @@
 			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies
 			</simple>
 		</setHeader>
+		<setHeader headerName="X-ONAP-RequestID">
+			<simple>${header.X-ONAP-REAUESTID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-InvocationID">
+			<simple>${header.X-ONAP-InvocationID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-PartnerName">
+			<simple>${header.X-ONAP-PartnerName}
+			</simple>
+		</setHeader>
 		<log
 			loggingLevel="INFO"
 			message="Endpoint to create guard policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -237,6 +310,7 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy created successfully','INFO',${header.LoopObject})" />
 		<to uri="direct:reset-raise-http-exception-flag" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
 	<route id="delete-guard-policy">
 		<from uri="direct:delete-guard-policy" />
@@ -244,6 +318,8 @@
 		<log
 			loggingLevel="INFO"
 			message="Deleting Guard Policy: ${header.guardPolicy.getKey()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Guard Policy')" />
 		<setBody>
 			<constant>null</constant>
 		</setBody>
@@ -254,6 +330,18 @@
 			<simple>{{clamp.config.policy.url}}/policy/api/v1/policyTypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${header.guardPolicy.getKey()}
 			</simple>
 		</setHeader>
+		<setHeader headerName="X-ONAP-RequestID">
+			<simple>${header.X-ONAP-REAUESTID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-InvocationID">
+			<simple>${header.X-ONAP-InvocationID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-PartnerName">
+			<simple>${header.X-ONAP-PartnerName}
+			</simple>
+		</setHeader>
 		<log
 			loggingLevel="INFO"
 			message="Endpoint to delete guard policy: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -262,6 +350,7 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Guard policy deleted successfully','INFO',${header.LoopObject})" />
 		<to uri="direct:reset-raise-http-exception-flag" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
 	<route id="add-all-to-active-pdp-group">
 		<from uri="direct:add-all-to-active-pdp-group" />
@@ -269,6 +358,8 @@
 		<log
 			loggingLevel="INFO"
 			message="Adding loop policies to PDP Group: ${header.LoopObject.getName()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Add policies to PDP group')" />
 		<setBody>
 			<simple>${header.LoopObject.createPoliciesPayloadPdpGroup()}
 			</simple>
@@ -283,6 +374,18 @@
 			<simple>{{clamp.config.policy.url}}/policy/pap/v1/pdps
 			</simple>
 		</setHeader>
+		<setHeader headerName="X-ONAP-RequestID">
+			<simple>${header.X-ONAP-REAUESTID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-InvocationID">
+			<simple>${header.X-ONAP-InvocationID}
+			</simple>
+		</setHeader>
+		<setHeader headerName="X-ONAP-PartnerName">
+			<simple>${header.X-ONAP-PartnerName}
+			</simple>
+		</setHeader>
 		<log
 			loggingLevel="INFO"
 			message="Endpoint to add policies to PDP Group: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -291,6 +394,7 @@
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Policies pushed to PDP Group successfully','INFO',${header.LoopObject})" />
 		<to uri="direct:reset-raise-http-exception-flag" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
 
 	<route id="remove-all-policy-from-active-pdp-group">
@@ -298,6 +402,8 @@
 		<log
 			loggingLevel="INFO"
 			message="Removing policies from active PDP group for loop: ${header.LoopObject.getName()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Removing policies PDP group')" />
 		<split>
 			<simple>${header.LoopObject.listPolicyNamesPdpGroup()}</simple>
 			<setHeader headerName="PolicyName">
@@ -313,6 +419,18 @@
 				<simple>{{clamp.config.policy.url}}/pdps/policies/${header.PolicyName}/versions/1.0.0
 				</simple>
 			</setHeader>
+			<setHeader headerName="X-ONAP-RequestID">
+				<simple>${header.X-ONAP-REAUESTID}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-InvocationID">
+				<simple>${header.X-ONAP-InvocationID}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-PartnerName">
+				<simple>${header.X-ONAP-PartnerName}
+				</simple>
+			</setHeader>
 			<log
 				loggingLevel="INFO"
 				message="Endpoint to delete policy from PDP Group: ${header.CamelHttpMethod} ${header.CamelHttpUri}"></log>
@@ -322,8 +440,8 @@
 				uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog(${header.PolicyName}' Policy removed from PDP Group successfully','INFO',${header.LoopObject})" />
 		</split>
 		<to uri="direct:reset-raise-http-exception-flag" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 	</route>
-
 	<route id="reset-raise-http-exception-flag">
 		<from uri="direct:reset-raise-http-exception-flag" />
 		<setHeader headerName="RaiseHttpExceptionFlag">

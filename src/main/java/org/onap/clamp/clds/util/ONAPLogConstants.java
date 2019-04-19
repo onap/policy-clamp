@@ -122,7 +122,8 @@ public final class ONAPLogConstants {
          * </p>
          * */
         public static final String ENTRY_TIMESTAMP = "EntryTimestamp";
-
+        public static final String END_TIMESTAMP = "EndTimestamp";
+        public static final String ELAPSED_TIMESTAMP = "ElapsedTime";
         /** MDC recording timestamp at the start of the current invocation. */
         public static final String INVOKE_TIMESTAMP = "InvokeTimestamp";
 
