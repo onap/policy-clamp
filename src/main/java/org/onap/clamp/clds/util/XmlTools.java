@@ -37,6 +37,13 @@ import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
 public class XmlTools {
+
+    /**
+     * Transforms document to XML string.
+     *
+     * @param doc XML document
+     * @return XML string
+     */
     public static String exportXmlDocumentAsString(Document doc) {
         try {
             TransformerFactory tf = TransformerFactory.newInstance();
@@ -49,9 +56,15 @@ public class XmlTools {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Creates empty svg document.
+     *
+     * @return Document
+     */
     public static Document createEmptySvgDocument() {
         DOMImplementation domImplementation = GenericDOMImplementation.getDOMImplementation();
-        String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
-        return domImplementation.createDocument(svgNS, SVGConstants.SVG_SVG_TAG, null);
+        String svgNs = SVGDOMImplementation.SVG_NAMESPACE_URI;
+        return domImplementation.createDocument(svgNs, SVGConstants.SVG_SVG_TAG, null);
     }
 }

@@ -43,6 +43,11 @@ public class ClampVersioning {
     private ClampVersioning() {
     }
 
+    /**
+     * Returns Clds version from properties.
+     *
+     * @return Clds version from properties
+     */
     public static String getCldsVersionFromProps() {
         String cldsVersion = "";
         Properties props = new Properties();
@@ -50,7 +55,7 @@ public class ClampVersioning {
             props.load(resourceStream);
             cldsVersion = props.getProperty(CLDS_VERSION_PROPERTY);
         } catch (Exception ex) {
-            LOGGER.error("Exception caught during the "+CLDS_VERSION_PROPERTY+" property reading", ex);
+            LOGGER.error("Exception caught during the " + CLDS_VERSION_PROPERTY + " property reading", ex);
         }
         return cldsVersion;
     }

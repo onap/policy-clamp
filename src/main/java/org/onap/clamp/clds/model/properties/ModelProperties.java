@@ -279,8 +279,8 @@ public class ModelProperties {
     /**
      * Replace all '-' with '_' within policy scope and name.
      *
-     * @param inName
-     * @return
+     * @param inName policy scope and name
+     * @return policy scope and name with "-" replaced with "_"
      */
     private String normalizePolicyScopeName(String inName) {
         return inName.replaceAll("-", "_");
@@ -359,6 +359,12 @@ public class ModelProperties {
         return global;
     }
 
+    /**
+     * Registers model element.
+     *
+     * @param modelElementClass model element class
+     * @param type model element type
+     */
     public static final synchronized void registerModelElement(Class<? extends AbstractModelElement> modelElementClass,
         String type) {
         if (!modelElementClasses.containsKey(modelElementClass.getClass())) {

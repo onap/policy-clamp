@@ -70,7 +70,7 @@ public class DcaeInventoryServices {
      */
     @Autowired
     public DcaeInventoryServices(ClampProperties refProp, CldsDao cldsDao,
-    		HttpConnectionManager httpConnectionManager) {
+                                 HttpConnectionManager httpConnectionManager) {
         this.refProp = refProp;
         this.cldsDao = cldsDao;
         this.httpConnectionManager = httpConnectionManager;
@@ -97,8 +97,8 @@ public class DcaeInventoryServices {
         }
         try {
             // Below are the properties required for calling the dcae inventory
-            ModelProperties prop = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), null, false,
-                "{}", cldsModel.getPropText());
+            ModelProperties prop = new ModelProperties(cldsModel.getName(), cldsModel.getControlName(), null,
+                                                       false, "{}", cldsModel.getPropText());
             Global global = prop.getGlobal();
             String invariantServiceUuid = global.getService();
             List<String> resourceUuidList = global.getResourceVf();

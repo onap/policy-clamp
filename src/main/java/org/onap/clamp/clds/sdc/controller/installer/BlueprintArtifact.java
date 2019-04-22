@@ -20,15 +20,15 @@
  * ===================================================================
  * 
  */
-/**
- * This class is useful to store the information concerning
- * blueprint artifact extracted from SDC CSAR
- */
 
 package org.onap.clamp.clds.sdc.controller.installer;
 
 import org.onap.sdc.api.notification.IResourceInstance;
 
+/**
+ * This class is useful to store the information concerning
+ * blueprint artifact extracted from SDC CSAR.
+ */
 public class BlueprintArtifact {
 
     private String dcaeBlueprint;

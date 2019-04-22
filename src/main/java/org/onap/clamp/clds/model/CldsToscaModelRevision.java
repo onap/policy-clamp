@@ -22,8 +22,7 @@
  */
 
 /**
- * Represents a CLDS Tosca model revision
- *
+ * Represents a CLDS Tosca model revision.
  */
 
 package org.onap.clamp.clds.model;

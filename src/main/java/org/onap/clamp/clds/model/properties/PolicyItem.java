@@ -83,10 +83,10 @@ public class PolicyItem implements Cloneable {
     private String guardActiveEnd;
 
     /**
-     * Parse Policy given json node.
+     * Parse Policy given JSON node.
      *
-     * @param item
-     * @throws IOException
+     * @param item policy in JSON format
+     * @throws IOException IO exception
      */
     public PolicyItem(JsonElement item) throws IOException {
         id = JsonUtils.getStringValueByName(item, "_id");

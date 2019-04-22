@@ -40,7 +40,7 @@ import org.yaml.snakeyaml.Yaml;
 
 /**
  * Tosca Model Yaml parser and convertor to JSON Schema consumable for JSON
- * Editor
+ * Editor.
  *
  */
 public class ToscaYamlToJsonConvertor {
@@ -68,6 +68,8 @@ public class ToscaYamlToJsonConvertor {
     }
 
     /**
+     * Returns the CldsDao.
+     *
      * @return the cldsDao
      */
     public CldsDao getCldsDao() {
@@ -75,13 +77,20 @@ public class ToscaYamlToJsonConvertor {
     }
 
     /**
-     * @param cldsDao
-     *        the cldsDao to set
+     * Sets the CldsDao.
+     *
+     * @param cldsDao the cldsDao to set
      */
     public void setCldsDao(CldsDao cldsDao) {
         this.cldsDao = cldsDao;
     }
 
+    /**
+     * Parses Tosca YAML string.
+     *
+     * @param yamlString YAML string
+     * @return JSON string
+     */
     public String parseToscaYaml(String yamlString) {
 
         Yaml yaml = new Yaml();
@@ -91,7 +100,6 @@ public class ToscaYamlToJsonConvertor {
         }
         LinkedHashMap<String, Object> nodeTypes = new LinkedHashMap<>();
         LinkedHashMap<String, Object> dataNodes = new LinkedHashMap<>();
-        JSONObject jsonEditorObject = new JSONObject();
         JSONObject jsonParentObject = new JSONObject();
         JSONObject jsonTempObject = new JSONObject();
         parseNodeAndDataType(loadedYaml, nodeTypes, dataNodes);
@@ -99,6 +107,7 @@ public class ToscaYamlToJsonConvertor {
         if (jsonTempObject.length() > 0) {
             jsonParentObject = jsonTempObject;
         }
+        JSONObject jsonEditorObject = new JSONObject();
         jsonEditorObject.put(JsonEditorSchemaConstants.SCHEMA, jsonParentObject);
         return jsonEditorObject.toString();
     }
@@ -138,8 +147,8 @@ public class ToscaYamlToJsonConvertor {
                                     boolean isListNode = false;
                                     parseDescription((LinkedHashMap<String, Object>) ntPropertiesElement.getValue(),
                                         jsonParentObject);
-                                    LinkedHashMap<String, Object> parentPropertiesMap = (LinkedHashMap<String, Object>) ntPropertiesElement
-                                        .getValue();
+                                    LinkedHashMap<String, Object> parentPropertiesMap =
+                                            (LinkedHashMap<String, Object>) ntPropertiesElement.getValue();
                                     if (parentPropertiesMap.containsKey(ToscaSchemaConstants.TYPE)
                                         && ((String) parentPropertiesMap.get(ToscaSchemaConstants.TYPE))
                                             .contains(ToscaSchemaConstants.TYPE_MAP)

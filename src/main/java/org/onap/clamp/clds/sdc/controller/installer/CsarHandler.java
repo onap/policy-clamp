@@ -75,10 +75,10 @@ public class CsarHandler {
     public static final String DATA_DEFINITION_NAME_SUFFIX = "Definitions/data.yml";
     public static final String DATA_DEFINITION_KEY = "data_types:";
 
-    public CsarHandler(INotificationData iNotif, String controller, String clampCsarPath) throws CsarHandlerException {
-        this.sdcNotification = iNotif;
+    public CsarHandler(INotificationData data, String controller, String clampCsarPath) throws CsarHandlerException {
+        this.sdcNotification = data;
         this.controllerName = controller;
-        this.artifactElement = searchForUniqueCsar(iNotif);
+        this.artifactElement = searchForUniqueCsar(data);
         this.csarFilePath = buildFilePathForCsar(artifactElement, clampCsarPath);
     }
 

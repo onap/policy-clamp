@@ -99,7 +99,9 @@ public class DcaeDispatcherServices {
         Date startTime = new Date();
         LoggingUtils.setTargetContext("DCAE", "getOperationStatus");
         try {
-            String responseStr = dcaeHttpConnectionManager.doHttpRequest(statusUrl, "GET", null, null, "DCAE", null, null);
+            String responseStr = dcaeHttpConnectionManager.doHttpRequest(statusUrl, "GET", null,
+                                                                         null, "DCAE", null,
+                                                                         null);
             JSONObject jsonObj = parseResponse(responseStr);
             String operationType = (String) jsonObj.get("operationType");
             String status = (String) jsonObj.get(DCAE_STATUS_FIELD);
@@ -156,6 +158,7 @@ public class DcaeDispatcherServices {
 
     /***
      * Returns status URL for deleteExistingDeployment operation.
+     *
      * @param deploymentId
      *        The deployment ID
      * @param serviceTypeId

@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a CLDS Tosca model
- *
+ * Represents a CLDS Tosca model.
  */
 public class CldsToscaModelDetails {
 

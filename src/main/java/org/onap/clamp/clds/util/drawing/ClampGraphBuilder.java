@@ -40,13 +40,13 @@ public class ClampGraphBuilder {
         this.painter = painter;
     }
 
-    public ClampGraphBuilder collector(String c) {
-        collector = c;
+    public ClampGraphBuilder collector(String collector) {
+        this.collector = collector;
         return this;
     }
 
-    public ClampGraphBuilder policy(String p) {
-        policy = p;
+    public ClampGraphBuilder policy(String policy) {
+        this.policy = policy;
         return this;
     }
 

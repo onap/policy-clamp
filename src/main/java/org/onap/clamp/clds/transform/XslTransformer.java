@@ -45,6 +45,12 @@ public class XslTransformer {
 
     private Templates templates;
 
+    /**
+     * Sets Xsl Resource name.
+     *
+     * @param xslResourceName xsl resource name
+     * @throws TransformerConfigurationException exception if there is configuration error
+     */
     public void setXslResourceName(String xslResourceName) throws TransformerConfigurationException {
         TransformerFactory tfactory = new TransformerFactoryImpl();
         tfactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -55,8 +61,8 @@ public class XslTransformer {
     /**
      * Given xml input, return the transformed result.
      *
-     * @param xml
-     * @throws TransformerException
+     * @param xml xml string
+     * @throws TransformerException exception during transformation
      */
     public String doXslTransformToString(String xml) throws TransformerException {
         StringWriter output = new StringWriter(4096);

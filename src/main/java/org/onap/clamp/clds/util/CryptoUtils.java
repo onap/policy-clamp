@@ -153,7 +153,7 @@ public final class CryptoUtils {
     }
 
     /**
-     * Reads SecretKeySpec from file specified by propertiesFileName
+     * Reads SecretKeySpec from file specified by propertiesFileName.
      *
      * @param propertiesFileName
      *            File name with properties
@@ -162,15 +162,15 @@ public final class CryptoUtils {
     private static SecretKeySpec readSecretKeySpec(String propertiesFileName) {
         Properties props = new Properties();
         try {
-        	//Workaround fix to make encryption key configurable.
-        	//System environment variable takes precedence for over clds/key.properties
-        	String encryptionKey = System.getenv(AES_ENCRYPTION_KEY);
-        	if(encryptionKey != null && encryptionKey.trim().length() > 0) {
-        		return getSecretKeySpec(encryptionKey);
-        	} else {
-        		props.load(ResourceFileUtil.getResourceAsStream(propertiesFileName));
+            //Workaround fix to make encryption key configurable
+            // System environment variable takes precedence for over clds/key.properties
+            String encryptionKey = System.getenv(AES_ENCRYPTION_KEY);
+            if(encryptionKey != null && encryptionKey.trim().length() > 0) {
+                return getSecretKeySpec(encryptionKey);
+            } else {
+                props.load(ResourceFileUtil.getResourceAsStream(propertiesFileName));
                 return getSecretKeySpec(props.getProperty(KEY_PARAM));
-        	}
+            }
         } catch (IOException | DecoderException e) {
             logger.error("Exception occurred during the key reading", e);
             return null;

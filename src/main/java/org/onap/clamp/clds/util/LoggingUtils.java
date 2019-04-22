@@ -60,14 +60,15 @@ public class LoggingUtils {
     private static final String EMPTY_MESSAGE = "";
 
     /** Logger delegate. */
-    private EELFLogger mLogger;
+    private EELFLogger mlogger;
     /** Automatic UUID, overrideable per adapter or per invocation. */
     private static UUID sInstanceUUID = UUID.randomUUID();
+
     /**
-     * Constructor
+     * Constructor.
      */
     public LoggingUtils(final EELFLogger loggerP) {
-        this.mLogger = checkNotNull(loggerP);
+        this.mlogger = checkNotNull(loggerP);
     }
 
     /**
@@ -173,20 +174,21 @@ public class LoggingUtils {
     /**
      * Report <tt>ENTERING</tt> marker.
      *
-     * @param request non-null incoming request (wrapper).
-     * @return this.
+     * @param request non-null incoming request (wrapper)
+     * @param serviceName service name
      */
     public void entering(HttpServletRequest request, String serviceName) {
         MDC.clear();
         checkNotNull(request);
         // Extract MDC values from standard HTTP headers.
-        final String requestID = defaultToUUID(request.getHeader(ONAPLogConstants.Headers.REQUEST_ID));
-        final String invocationID = defaultToUUID(request.getHeader(ONAPLogConstants.Headers.INVOCATION_ID));
+        final String requestId = defaultToUUID(request.getHeader(ONAPLogConstants.Headers.REQUEST_ID));
+        final String invocationId = defaultToUUID(request.getHeader(ONAPLogConstants.Headers.INVOCATION_ID));
         final String partnerName = defaultToEmpty(request.getHeader(ONAPLogConstants.Headers.PARTNER_NAME));
 
         // Default the partner name to the user name used to login to clamp
         if (partnerName.equalsIgnoreCase(EMPTY_MESSAGE)) {
-            MDC.put(ONAPLogConstants.MDCs.PARTNER_NAME, new DefaultUserNameHandler().retrieveUserName(SecurityContextHolder.getContext()));
+            MDC.put(ONAPLogConstants.MDCs.PARTNER_NAME, new DefaultUserNameHandler()
+                    .retrieveUserName(SecurityContextHolder.getContext()));
         }
 
         // Set standard MDCs. Override this entire method if you want to set
@@ -196,28 +198,31 @@ public class LoggingUtils {
         MDC.put(ONAPLogConstants.MDCs.ENTRY_TIMESTAMP,
             ZonedDateTime.now(ZoneOffset.UTC)
             .format(DateTimeFormatter.ISO_INSTANT));
-        MDC.put(ONAPLogConstants.MDCs.REQUEST_ID, requestID);
-        MDC.put(ONAPLogConstants.MDCs.INVOCATION_ID, invocationID);
+        MDC.put(ONAPLogConstants.MDCs.REQUEST_ID, requestId);
+        MDC.put(ONAPLogConstants.MDCs.INVOCATION_ID, invocationId);
         MDC.put(ONAPLogConstants.MDCs.CLIENT_IP_ADDRESS, defaultToEmpty(request.getRemoteAddr()));
         MDC.put(ONAPLogConstants.MDCs.SERVER_FQDN, defaultToEmpty(request.getServerName()));
         MDC.put(ONAPLogConstants.MDCs.INSTANCE_UUID, defaultToEmpty(sInstanceUUID));
 
         // Default the service name to the requestURI, in the event that
         // no value has been provided.
-        if (serviceName == null ||
-            serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
+        if (serviceName == null
+                || serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(ONAPLogConstants.MDCs.SERVICE_NAME, request.getRequestURI());
         } else {
             MDC.put(ONAPLogConstants.MDCs.SERVICE_NAME, serviceName);
         }
 
-        this.mLogger.info(ONAPLogConstants.Markers.ENTRY);
+        this.mlogger.info(ONAPLogConstants.Markers.ENTRY);
     }
 
     /**
      * Report <tt>EXITING</tt> marker.
      *
-     * @return this.
+     * @param code response code
+     * @param descrption response description
+     * @param severity response severity
+     * @param status response status code
      */
     public void exiting(String code, String descrption, Level severity, ONAPLogConstants.ResponseStatus status) {
         try {
@@ -225,7 +230,7 @@ public class LoggingUtils {
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_DESCRIPTION, defaultToEmpty(descrption));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_SEVERITY, defaultToEmpty(severity));
             MDC.put(ONAPLogConstants.MDCs.RESPONSE_STATUS_CODE, defaultToEmpty(status));
-            this.mLogger.info(ONAPLogConstants.Markers.EXIT);
+            this.mlogger.info(ONAPLogConstants.Markers.EXIT);
         }
         finally {
             MDC.clear();
@@ -236,28 +241,29 @@ public class LoggingUtils {
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
      *
-     * @param builder request builder, for setting headers.
-     * @param sync whether synchronous, nullable.
-     * @return invocation ID to be passed with invocation.
+     * @param con http URL connection
+     * @param targetEntity target entity
+     * @param targetServiceName target service name
+     * @return invocation ID to be passed with invocation
      */
     public HttpURLConnection invoke(final HttpURLConnection con, String targetEntity, String targetServiceName) {
-        final String invocationID = UUID.randomUUID().toString();
+        final String invocationId = UUID.randomUUID().toString();
 
         // Set standard HTTP headers on (southbound request) builder.
         con.setRequestProperty(ONAPLogConstants.Headers.REQUEST_ID,
             defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
         con.setRequestProperty(ONAPLogConstants.Headers.INVOCATION_ID,
-            invocationID);
+            invocationId);
         con.setRequestProperty(ONAPLogConstants.Headers.PARTNER_NAME,
             defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
 
-        invokeContext(targetEntity, targetServiceName, invocationID);
+        invokeContext(targetEntity, targetServiceName, invocationId);
 
         // Log INVOKE*, with the invocationID as the message body.
         // (We didn't really want this kind of behavior in the standard,
         // but is it worse than new, single-message MDC?)
-        this.mLogger.info(ONAPLogConstants.Markers.INVOKE);
-        this.mLogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{"+ invocationID +"}");
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE);
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
         return con;
     }
 
@@ -265,43 +271,47 @@ public class LoggingUtils {
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
      *
-     * @param builder request builder, for setting headers.
-     * @param sync whether synchronous, nullable.
-     * @return invocation ID to be passed with invocation.
+     * @param con http URL connection
+     * @param targetEntity target entity
+     * @param targetServiceName target service name
+     * @return invocation ID to be passed with invocation
      */
     public HttpsURLConnection invokeHttps(final HttpsURLConnection con, String targetEntity, String targetServiceName) {
-        final String invocationID = UUID.randomUUID().toString();
+        final String invocationId = UUID.randomUUID().toString();
 
         // Set standard HTTP headers on (southbound request) builder.
         con.setRequestProperty(ONAPLogConstants.Headers.REQUEST_ID,
             defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
         con.setRequestProperty(ONAPLogConstants.Headers.INVOCATION_ID,
-            invocationID);
+            invocationId);
         con.setRequestProperty(ONAPLogConstants.Headers.PARTNER_NAME,
             defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
 
-        invokeContext(targetEntity, targetServiceName, invocationID);
+        invokeContext(targetEntity, targetServiceName, invocationId);
 
         // Log INVOKE*, with the invocationID as the message body.
         // (We didn't really want this kind of behavior in the standard,
         // but is it worse than new, single-message MDC?)
-        this.mLogger.info(ONAPLogConstants.Markers.INVOKE);
-        this.mLogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{"+ invocationID +"}");
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE);
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
         return con;
     }
 
+    /**
+     * Invokes return context.
+     */
     public void invokeReturn() {
         // Add the Invoke-return marker and clear the needed MDC
-        this.mLogger.info(ONAPLogConstants.Markers.INVOKE_RETURN);
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE_RETURN);
         invokeReturnContext();
     }
 
     /**
      * Dependency-free nullcheck.
      *
-     * @param in to be checked.
-     * @param <T> argument (and return) type.
-     * @return input arg.
+     * @param in to be checked
+     * @param <T> argument (and return) type
+     * @return input arg
      */
     private static <T> T checkNotNull(final T in) {
         if (in == null) {
@@ -313,8 +323,8 @@ public class LoggingUtils {
     /**
      * Dependency-free string default.
      *
-     * @param in to be filtered.
-     * @return input string or null.
+     * @param in to be filtered
+     * @return input string or null
      */
     private static String defaultToEmpty(final Object in) {
         if (in == null) {
@@ -326,8 +336,8 @@ public class LoggingUtils {
     /**
      * Dependency-free string default.
      *
-     * @param in to be filtered.
-     * @return input string or null.
+     * @param in to be filtered
+     * @return input string or null
      */
     private static String defaultToUUID(final String in) {
         if (in == null) {
@@ -337,13 +347,13 @@ public class LoggingUtils {
     }
 
     /**
-     * Set target related logging variables in thread local data via MDC
+     * Set target related logging variables in thread local data via MDC.
      *
      * @param targetEntity Target entity (an external/sub component, for ex. "sdc")
      * @param targetServiceName Target service name (name of API invoked on target)
-     * @param invocationId The invocation ID
+     * @param invocationID The invocation ID
      */
-    private void invokeContext (String targetEntity, String targetServiceName, String invocationID) {
+    private void invokeContext(String targetEntity, String targetServiceName, String invocationID) {
         MDC.put(ONAPLogConstants.MDCs.TARGET_ENTITY, defaultToEmpty(targetEntity));
         MDC.put(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME, defaultToEmpty(targetServiceName));
         MDC.put(ONAPLogConstants.MDCs.INVOCATIONID_OUT, invocationID);
@@ -353,10 +363,9 @@ public class LoggingUtils {
     }
 
     /**
-     * Clear target related logging variables in thread local data via MDC
-     *
+     * Clear target related logging variables in thread local data via MDC.
      */
-    private void invokeReturnContext () {
+    private void invokeReturnContext() {
         MDC.remove(ONAPLogConstants.MDCs.TARGET_ENTITY);
         MDC.remove(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME);
         MDC.remove(ONAPLogConstants.MDCs.INVOCATIONID_OUT);

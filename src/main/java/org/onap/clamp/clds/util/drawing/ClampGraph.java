@@ -34,8 +34,13 @@ public class ClampGraph {
         this.documentBuilder = documentBuilder;
     }
 
+    /**
+     * Returns svg string.
+     *
+     * @return svg string
+     */
     public String getAsSVG() {
-        if(Objects.isNull(svg) || svg.isEmpty()) {
+        if (Objects.isNull(svg) || svg.isEmpty()) {
             svg = XmlTools.exportXmlDocumentAsString(this.documentBuilder.getGroupingDocument());
         }
         return svg;

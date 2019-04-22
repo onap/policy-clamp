@@ -57,9 +57,9 @@ public class ImageBuilder {
 
     ImageBuilder rectangle(String dataElementId, RectTypes rectType, String text) {
         Point next = new Point(currentPoint.x + baseLength, currentPoint.y);
-        Point p = coordinatesForRectangle(currentPoint, next);
+        Point point = coordinatesForRectangle(currentPoint, next);
 
-        handleBasedOnRectType(rectType, text, p, baseLength, rectHeight);
+        handleBasedOnRectType(rectType, text, point, baseLength, rectHeight);
 
         documentBuilder.pushChangestoDocument(g2d, dataElementId);
         currentPoint = next;
@@ -94,36 +94,37 @@ public class ImageBuilder {
         return documentBuilder;
     }
 
-    private void handleBasedOnRectType(RectTypes rectType, String text, Point p, int w, int h) {
-        AwtUtils.rectWithText(g2d, text, p, w, h);
+    private void handleBasedOnRectType(RectTypes rectType, String text, Point point, int width, int height) {
+        AwtUtils.rectWithText(g2d, text, point, width, height);
         switch (rectType) {
             case COLECTOR:
-                drawVerticalLineForCollector(p, w, h);
+                drawVerticalLineForCollector(point, width, height);
                 break;
             case MICROSERVICE:
-                drawHorizontalLineForMicroService(p, w, h);
+                drawHorizontalLineForMicroService(point, width, height);
                 break;
             case POLICY:
-                drawDiagonalLineForPolicy(p, w, h);
+                drawDiagonalLineForPolicy(point, width, height);
                 break;
         }
     }
 
-    private void drawVerticalLineForCollector(Point p, int w, int h) {
-        g2d.drawLine(p.x + w / COLLECTOR_LINE_RATIO, p.y, p.x + w / COLLECTOR_LINE_RATIO, p.y + h);
+    private void drawVerticalLineForCollector(Point point, int width, int height) {
+        g2d.drawLine(point.x + width / COLLECTOR_LINE_RATIO, point.y, point.x + width / COLLECTOR_LINE_RATIO,
+                     point.y + height);
     }
 
-    private void drawHorizontalLineForMicroService(Point p, int w, int h) {
-        int y = calculateMsHorizontalLineYCoordinate(p,h);
-        g2d.drawLine(p.x, y, p.x + w, y);
+    private void drawHorizontalLineForMicroService(Point point, int width, int height) {
+        int y = calculateMsHorizontalLineYCoordinate(point,height);
+        g2d.drawLine(point.x, y, point.x + width, y);
     }
 
-    private void drawDiagonalLineForPolicy(Point p, int w, int h) {
-        g2d.drawLine(p.x, p.y + h / POLICY_LINE_RATIO, p.x + w / POLICY_LINE_RATIO, p.y);
+    private void drawDiagonalLineForPolicy(Point point, int width, int height) {
+        g2d.drawLine(point.x, point.y + height / POLICY_LINE_RATIO, point.x + width / POLICY_LINE_RATIO, point.y);
     }
 
-    private int calculateMsHorizontalLineYCoordinate(Point p, int h) {
-        return (int)(p.y * h * MS_LINE_TO_HEIGHT_RATIO);
+    private int calculateMsHorizontalLineYCoordinate(Point point, int height) {
+        return (int)(point.y * height * MS_LINE_TO_HEIGHT_RATIO);
     }
 
     private Point coordinatesForRectangle(Point from, Point next) {

@@ -21,6 +21,7 @@
  * ===================================================================
  *
  */
+
 package org.onap.clamp.clds.sdc.controller.installer;
 
 import java.util.Objects;
@@ -58,8 +59,9 @@ public class MicroService {
 
     @Override
     public String toString() {
-        return "MicroService{" + "name='" + name + '\'' + ", modelType='" + modelType + '\'' + ", inputFrom='" + inputFrom + '\'' + ", mappedNameJpa='"
-            + mappedNameJpa + '\'' + ", blueprintName='" + blueprintName + '\'' + '}';
+        return "MicroService{" + "name='" + name + '\'' + ", modelType='" + modelType + '\'' + ", inputFrom='"
+                + inputFrom + '\'' + ", mappedNameJpa='" + mappedNameJpa + '\'' + ", blueprintName='"
+                + blueprintName + '\'' + '}';
     }
 
     public String getMappedNameJpa() {

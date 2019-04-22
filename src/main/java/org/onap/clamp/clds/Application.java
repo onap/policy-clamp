@@ -135,7 +135,8 @@ public class Application extends SpringBootServletInitializer {
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
             eelfLogger.warn(
-                "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1 (Connector disabled)");
+                "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
+                  + " (Connector disabled)");
             return null;
         }
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");

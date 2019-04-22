@@ -126,31 +126,38 @@ public class SdcResource implements Comparable<SdcResource> {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         SdcResource other = (SdcResource) obj;
         if (resourceInstanceName == null) {
-            if (other.resourceInstanceName != null)
+            if (other.resourceInstanceName != null) {
                 return false;
-        } else if (!resourceInstanceName.equals(other.resourceInstanceName))
+            }
+        } else if (!resourceInstanceName.equals(other.resourceInstanceName)) {
             return false;
+        }
         if (resourceVersion == null) {
-            if (other.resourceVersion != null)
+            if (other.resourceVersion != null) {
                 return false;
-        } else if (!resourceVersion.equals(other.resourceVersion))
+            }
+        } else if (!resourceVersion.equals(other.resourceVersion)) {
             return false;
+        }
         return true;
     }
 
     /**
-     * Convert version String into a BigDecimal
+     * Convert version String into a BigDecimal.
      *
-     * @param versionText
-     * @return
+     * @param versionText version
+     * @return version in BigDecimal
      */
     private BigDecimal convertVersion(String versionText) {
         BigDecimal rtn = BigDecimal.valueOf(0.0);

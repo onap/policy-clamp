@@ -507,14 +507,14 @@ public class CldsDao {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsToscaModel> cldsToscaModels = new ArrayList<>();
 
-        String toscaModelSql = new StringBuilder("SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, " +
-                "tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp, " +
-                "tmr.lastUpdatedTimestamp")
-                .append(toscaModelName != null ? (", tmr.tosca_model_yaml") : "")
+        String toscaModelSql = new StringBuilder("SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, "
+                + "tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp,"
+                + "tmr.lastUpdatedTimestamp").append(toscaModelName != null ? (", tmr.tosca_model_yaml") : "")
                 .append(" FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id")
                 .append(toscaModelName != null ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : "")
                 .append(policyType != null ? (" AND tm.policy_type = '" + policyType + "'") : "")
-                .append(" AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id=st.tosca_model_id)")
+                .append(" AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id"
+                + "=st.tosca_model_id)")
                 .toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(toscaModelSql);
@@ -633,7 +633,7 @@ public class CldsDao {
         String whereFilter = " WHERE ";
         if (dictionaryName != null) {
             whereFilter += "dictionary_name = '" + dictionaryName + "'";
-            if (dictionaryId != null){
+            if (dictionaryId != null) {
                 whereFilter += " AND dictionary_id = '" + dictionaryId + "'";
             }
         } else if (dictionaryId != null) {
@@ -641,8 +641,8 @@ public class CldsDao {
         } else {
             whereFilter = "";
         }
-        String dictionarySql = new StringBuilder("SELECT dictionary_id, dictionary_name, created_by, " +
-                "modified_by, timestamp FROM dictionary")
+        String dictionarySql = new StringBuilder("SELECT dictionary_id, dictionary_name, created_by, "
+                + "modified_by, timestamp FROM dictionary")
                 .append(whereFilter).toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);

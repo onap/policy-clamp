@@ -20,6 +20,7 @@
  * ===================================================================
  *
  */
+
 package org.onap.clamp.clds.filter;
 
 import com.att.eelf.configuration.EELFLogger;

@@ -44,6 +44,12 @@ public class Painter {
     private static final double RECT_RATIO = 3.0 / 2.0;
     private static final int CIRCLE_RADIUS = 17;
 
+    /**
+     * Constructor to create instance of Painter.
+     *
+     * @param svgGraphics2D svg graphics
+     * @param documentBuilder document builder
+     */
     public Painter(SVGGraphics2D svgGraphics2D, DocumentBuilder documentBuilder) {
         this.g2d = svgGraphics2D;
         this.documentBuilder = documentBuilder;

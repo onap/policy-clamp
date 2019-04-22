@@ -73,7 +73,7 @@ public class CldsTemplate {
      * @param name The template name to retrieve
      * @param okIfNotFound 
      *     The flag indicating whether exception will be returned in case nothing is found
-     * @return
+     * @return Clds template from DB
      */
     public static CldsTemplate retrieve(CldsDao cldsDao, String name, boolean okIfNotFound) {
         // get from db

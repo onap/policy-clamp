@@ -27,7 +27,8 @@ import com.att.eelf.i18n.EELFResolvableErrorEnum;
 import com.att.eelf.i18n.EELFResourceManager;
 
 public enum LogMessages implements EELFResolvableErrorEnum {
-    LOGSERVICE_HELLO_MESSAGE, LOGSERVICE_EMAIL_ERROR, LOGSERVICE_EMAIL_CLASS, LOGSERVICE_EMAIL_CLASS_NULL, PROCESS_INSTANCE_ID;
+    LOGSERVICE_HELLO_MESSAGE, LOGSERVICE_EMAIL_ERROR, LOGSERVICE_EMAIL_CLASS, LOGSERVICE_EMAIL_CLASS_NULL,
+    PROCESS_INSTANCE_ID;
 
     static {
         EELFResourceManager.loadMessageBundle("logmessages");
