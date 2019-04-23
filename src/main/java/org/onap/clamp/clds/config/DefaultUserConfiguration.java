@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,6 +56,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DefaultUserConfiguration.class);
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+    private static final String SETUP_WEB_USERS_EXCEPTION_MSG = "Exception occurred during the setup of the Web users in memory";
     @Autowired
     private ClampProperties refProp;
     @Value("${clamp.config.security.permission.type.cl:permission-type-cl}")
@@ -76,8 +79,8 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
             .and().invalidSessionUrl("/designer/timeout.html");
 
         } catch (Exception e) {
-            logger.error("Exception occurred during the setup of the Web users in memory", e);
-            throw new CldsUsersException("Exception occurred during the setup of the Web users in memory", e);
+            logger.error(SETUP_WEB_USERS_EXCEPTION_MSG, e);
+            throw new CldsUsersException(SETUP_WEB_USERS_EXCEPTION_MSG, e);
         }
     }
 
@@ -105,8 +108,8 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
                 .authorities(user.getPermissionsString()).and().passwordEncoder(passwordEncoder);
             }
         } catch (Exception e) {
-            logger.error("Exception occurred during the setup of the Web users in memory", e);
-            throw new CldsUsersException("Exception occurred during the setup of the Web users in memory", e);
+            logger.error(SETUP_WEB_USERS_EXCEPTION_MSG, e);
+            throw new CldsUsersException(SETUP_WEB_USERS_EXCEPTION_MSG, e);
         }
     }
 
