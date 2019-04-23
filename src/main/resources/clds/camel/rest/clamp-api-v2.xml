@@ -5,10 +5,23 @@
 			outType="java.lang.String[]"
 			produces="application/json">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
-				<to
-					uri="bean:org.onap.clamp.loop.LoopController?method=getLoopNames()" />
+			 	<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get All ClosedLoop')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=getLoopNames()" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</get>
 		<get
@@ -16,10 +29,23 @@
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
-				<to
-					uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+				<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get Closed Loop')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</get>
 		<get
@@ -27,10 +53,23 @@
 			outType="java.lang.String"
 			produces="application/xml">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
-				<to
-					uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
+				<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get SVG Representation')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</get>
 
@@ -41,16 +80,29 @@
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-				<setHeader headerName="GlobalPropertiesJson">
-					<simple>${body}</simple>
-				</setHeader>
-				<to uri="direct:load-loop" />
-				<to
-					uri="bean:org.onap.clamp.loop.LoopController?method=updateGlobalPropertiesJson(${header.loopName},${header.GlobalPropertiesJson})" />
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Global Properties UPDATED','INFO',${header.LoopObject})" />
+				<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Update the global properties')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<setHeader headerName="GlobalPropertiesJson">
+						<simple>${body}</simple>
+					</setHeader>
+					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=updateGlobalPropertiesJson(${header.loopName},${header.GlobalPropertiesJson})" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Global Properties UPDATED','INFO',${header.LoopObject})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</post>
 		<post
@@ -60,16 +112,29 @@
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-				<setHeader headerName="OperationalPoliciesArray">
-					<simple>${body}</simple>
-				</setHeader>
-				<to uri="direct:load-loop" />
-				<to
-					uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${header.OperationalPoliciesArray})" />
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational and Guard policies UPDATED','INFO',${header.LoopObject})" />
+				<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Update operational policies')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<setHeader headerName="OperationalPoliciesArray">
+						<simple>${body}</simple>
+					</setHeader>
+					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${header.OperationalPoliciesArray})" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational and Guard policies UPDATED','INFO',${header.LoopObject})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</post>
 		<post
@@ -79,17 +144,30 @@
 			outType="org.onap.clamp.policy.microservice.MicroServicePolicy"
 			produces="application/json">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-				<setHeader headerName="MicroServicePolicyObject">
-					<simple>${body}</simple>
-				</setHeader>
+				<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Update Microservice policies')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<setHeader headerName="MicroServicePolicyObject">
+						<simple>${body}</simple>
+					</setHeader>
 
-				<to uri="direct:load-loop" />
-				<to
-					uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicy(${header.loopName},${header.MicroServicePolicyObject})" />
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Micro Service policies UPDATED','INFO',${header.LoopObject})" />
+					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=updateMicroservicePolicy(${header.loopName},${header.MicroServicePolicyObject})" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Micro Service policies UPDATED','INFO',${header.LoopObject})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</post>
 		<put
@@ -97,10 +175,23 @@
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-				<to
-					uri="bean:org.onap.clamp.operation.LoopOperation?method=deployLoop(*,${header.loopName})" />
+				<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Deploy the closed loop')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to
+						uri="bean:org.onap.clamp.operation.LoopOperation?method=deployLoop(*,${header.loopName})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</put>
 		<put
@@ -108,10 +199,23 @@
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-				<to
-					uri="bean:org.onap.clamp.operation.LoopOperation?method=unDeployLoop(${header.loopName})" />
+				<doTry>
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Undeploy the closed loop')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to
+						uri="bean:org.onap.clamp.operation.LoopOperation?method=unDeployLoop(${header.loopName})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</put>
 		<put
@@ -119,193 +223,393 @@
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<log
-					loggingLevel="INFO"
-					message="Receive STOP request for loop: ${header.loopName}" />
+				<doTry>
+					<log
+						loggingLevel="INFO"
+						message="Receive STOP request for loop: ${header.loopName}" />
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog('Stop the closed loop')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to uri="direct:load-loop" />
+
+					<doTry>	
+						<to uri="direct:remove-all-policy-from-active-pdp-group" />
+						<doCatch>
+            				<exception>java.lang.Exception</exception>
+            				<handled>
+                				<constant>false</constant>
+            				</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        				</doCatch>
+					</doTry>
+
+
+					<log
+						loggingLevel="INFO"
+						message="STOP request successfully executed for loop: ${body}" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('STOP request successfully executed','INFO',${header.LoopObject})" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
-			<to
-				uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-			<to uri="direct:load-loop" />
-			<to uri="direct:remove-all-policy-from-active-pdp-group" />
-			<log
-				loggingLevel="INFO"
-				message="STOP request successfully executed for loop: ${body}" />
-			<to
-				uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('STOP request successfully executed','INFO',${header.LoopObject})" />
-			<to
-				uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
 		</put>
 		<put
 			uri="/v2/loop/start/{loopName}"
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<log
-					loggingLevel="INFO"
-					message="Receive START request for loop: ${header.loopName}" />
+				<doTry>
+					<log
+						loggingLevel="INFO"
+						message="Receive START request for loop: ${header.loopName}" />
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog('Start the closed loop')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to uri="direct:load-loop" />
+					
+					<doTry>	
+						<to uri="direct:add-all-to-active-pdp-group" />
+						<doCatch>
+            				<exception>java.lang.Exception</exception>
+            				<handled>
+                				<constant>false</constant>
+            				</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        				</doCatch>
+					</doTry>
+
+					<log
+						loggingLevel="INFO"
+						message="START request successfully executed for loop: ${body}" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('START request successfully executed','INFO',${header.LoopObject})" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
-			<to
-				uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-			<to uri="direct:load-loop" />
-			<to uri="direct:add-all-to-active-pdp-group" />
-			<log
-				loggingLevel="INFO"
-				message="START request successfully executed for loop: ${body}" />
-			<to
-				uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('START request successfully executed','INFO',${header.LoopObject})" />
-			<to
-				uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
 		</put>
 		<put
 			uri="/v2/loop/submit/{loopName}"
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
-				<log
-					loggingLevel="INFO"
-					message="Receive SUBMIT request for loop: ${header.loopName}" />
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-				<to uri="direct:load-loop" />
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive SUBMIT request','INFO',${header.LoopObject})" />
-				<setHeader headerName="RaiseHttpExceptionFlag">
-					<simple resultType="java.lang.Boolean">false</simple>
-				</setHeader>
-				<to uri="direct:remove-all-policy-from-active-pdp-group" />
-				<log
-					loggingLevel="INFO"
-					message="Processing all MICRO-SERVICES policies defined in loop ${header.LoopObject.getName()}" />
-				<split>
-					<simple>${header.LoopObject.getMicroServicePolicies()}
-					</simple>
-					<setHeader headerName="microServicePolicy">
-						<simple>${body}</simple>
-					</setHeader>
+				<doTry>
 					<log
 						loggingLevel="INFO"
-						message="Processing Micro Service Policy: ${header.microServicePolicy.getName()}" />
+						message="Receive SUBMIT request for loop: ${header.loopName}" />
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Submit the closed loop')" />	
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive SUBMIT request','INFO',${header.LoopObject})" />
 					<setHeader headerName="RaiseHttpExceptionFlag">
 						<simple resultType="java.lang.Boolean">false</simple>
 					</setHeader>
-					<to uri="direct:delete-micro-service-policy" />
+					
+					<doTry>	
+						<to uri="direct:remove-all-policy-from-active-pdp-group" />
+						<doCatch>
+            				<exception>java.lang.Exception</exception>
+            				<handled>
+                				<constant>false</constant>
+            				</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        				</doCatch>
+					</doTry>
 
-					<to uri="direct:create-micro-service-policy" />
-				</split>
-
-				<log
-					loggingLevel="INFO"
-					message="Processing all OPERATIONAL policies defined in loop ${header.LoopObject.getName()}" />
-				<split>
-					<simple>${header.LoopObject.getOperationalPolicies()}
-					</simple>
-					<setHeader headerName="operationalPolicy">
-						<simple>${body}</simple>
-					</setHeader>
 					<log
 						loggingLevel="INFO"
-						message="Processing Operational Policy: ${header.operationalPolicy.getName()}" />
-					<setHeader headerName="RaiseHttpExceptionFlag">
-						<simple resultType="java.lang.Boolean">false</simple>
-					</setHeader>
-					<to uri="direct:delete-operational-policy" />
-
-					<to uri="direct:create-operational-policy" />
-					<log
-						loggingLevel="INFO"
-						message="Processing all GUARD policies defined in loop ${header.LoopObject.getName()}" />
+						message="Processing all MICRO-SERVICES policies defined in loop ${header.LoopObject.getName()}" />
 					<split>
-						<simple>${header.operationalPolicy.createGuardPolicyPayloads().entrySet()}
+						<simple>${header.LoopObject.getMicroServicePolicies()}
 						</simple>
-						<setHeader headerName="guardPolicy">
+						<setHeader headerName="microServicePolicy">
 							<simple>${body}</simple>
 						</setHeader>
 						<log
 							loggingLevel="INFO"
-							message="Processing Guard Policy: ${header.guardPolicy.getKey()}" />
-
+							message="Processing Micro Service Policy: ${header.microServicePolicy.getName()}" />
 						<setHeader headerName="RaiseHttpExceptionFlag">
 							<simple resultType="java.lang.Boolean">false</simple>
 						</setHeader>
-						<to uri="direct:delete-guard-policy" />
 
-						<to uri="direct:create-guard-policy" />
+						<doTry>	
+							<to uri="direct:delete-micro-service-policy" />
+							<doCatch>
+            					<exception>java.lang.Exception</exception>
+            					<handled>
+                					<constant>false</constant>
+            					</handled>
+            				<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        					</doCatch>
+						</doTry>
+
+						<doTry>	
+							<to uri="direct:create-micro-service-policy" />
+							<doCatch>
+            					<exception>java.lang.Exception</exception>
+            					<handled>
+                					<constant>false</constant>
+            					</handled>
+            				<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        					</doCatch>
+						</doTry>
+						
 					</split>
-				</split>
-				<to uri="direct:add-all-to-active-pdp-group" />
+					<log
+						loggingLevel="INFO"
+						message="Processing all OPERATIONAL policies defined in loop ${header.LoopObject.getName()}" />
+					<split>
+						<simple>${header.LoopObject.getOperationalPolicies()}
+						</simple>
+						<setHeader headerName="operationalPolicy">
+							<simple>${body}</simple>
+						</setHeader>
+						<log
+							loggingLevel="INFO"
+							message="Processing Operational Policy: ${header.operationalPolicy.getName()}" />
+						<setHeader headerName="RaiseHttpExceptionFlag">
+							<simple resultType="java.lang.Boolean">false</simple>
+						</setHeader>	
 
-				<log
-					loggingLevel="INFO"
-					message="SUBMIT request successfully executed for loop: ${body}" />
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('SUBMIT request successfully executed','INFO',${header.LoopObject})" />
-				<to
-					uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+						<doTry>	
+							<to uri="direct:delete-operational-policy" />
+							<doCatch>
+            					<exception>java.lang.Exception</exception>
+            					<handled>
+                					<constant>false</constant>
+            					</handled>
+            				<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        					</doCatch>
+						</doTry>
+
+						<doTry>	
+							<to uri="direct:create-operational-policy" />
+							<doCatch>
+            					<exception>java.lang.Exception</exception>
+            					<handled>
+                					<constant>false</constant>
+            					</handled>
+            				<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        					</doCatch>
+						</doTry>
+
+						
+						<log
+							loggingLevel="INFO"
+							message="Processing all GUARD policies defined in loop ${header.LoopObject.getName()}" />
+						<split>
+							<simple>${header.operationalPolicy.createGuardPolicyPayloads().entrySet()}
+							</simple>
+							<setHeader headerName="guardPolicy">
+								<simple>${body}</simple>
+							</setHeader>
+							<log
+								loggingLevel="INFO"
+								message="Processing Guard Policy: ${header.guardPolicy.getKey()}" />
+
+							<setHeader headerName="RaiseHttpExceptionFlag">
+								<simple resultType="java.lang.Boolean">false</simple>
+							</setHeader>
+							
+							<doTry>	
+								<to uri="direct:delete-guard-policy" />
+								<doCatch>
+            						<exception>java.lang.Exception</exception>
+            						<handled>
+                						<constant>false</constant>
+            						</handled>
+            					<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        						</doCatch>
+							</doTry>
+
+							<doTry>	
+								<to uri="direct:create-guard-policy" />
+								<doCatch>
+            						<exception>java.lang.Exception</exception>
+            						<handled>
+                						<constant>false</constant>
+            						</handled>
+            					<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        						</doCatch>
+							</doTry>
+
+						</split>
+					</split>
+					
+					
+					<doTry>	
+						<to uri="direct:add-all-to-active-pdp-group" />
+						<doCatch>
+            				<exception>java.lang.Exception</exception>
+            				<handled>
+                				<constant>false</constant>
+            				</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        				</doCatch>
+					</doTry>
+					
+
+
+					<log
+						loggingLevel="INFO"
+						message="SUBMIT request successfully executed for loop: ${body}" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('SUBMIT request successfully executed','INFO',${header.LoopObject})" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</put>
 		<put uri="/v2/loop/delete/{loopName}">
 			<route>
-				<log
-					loggingLevel="INFO"
-					message="Receive DELETE request for loop: ${header.loopName}" />
-				<to
-					uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
-				<to uri="direct:load-loop" />
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive DELETE request','INFO',${header.LoopObject})" />
-				<to uri="direct:remove-all-policy-from-active-pdp-group" />
-				<split>
-					<simple>${header.LoopObject.getMicroServicePolicies()}
-					</simple>
-					<setHeader headerName="microServicePolicy">
-						<simple>${body}</simple>
-					</setHeader>
+				<doTry>
 					<log
 						loggingLevel="INFO"
-						message="Processing Micro Service Policy: ${header.microServicePolicy.getName()}" />
+						message="Receive DELETE request for loop: ${header.loopName}" />
+        			<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog('Delete the closed loop')" />
+					<to
+						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive DELETE request','INFO',${header.LoopObject})" />
 
-					<to uri="direct:delete-micro-service-policy" />
-				</split>
+					<doTry>	
+						<to uri="direct:remove-all-policy-from-active-pdp-group" />
+						<doCatch>
+            				<exception>java.lang.Exception</exception>
+            				<handled>
+                				<constant>false</constant>
+            				</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        				</doCatch>
+					</doTry>
 
-				<log
-					loggingLevel="INFO"
-					message="Processing all OPERATIONAL policies defined in loop ${header.LoopObject.getName()}" />
-				<split>
-					<simple>${header.LoopObject.getOperationalPolicies()}
-					</simple>
-					<setHeader headerName="operationalPolicy">
-						<simple>${body}</simple>
-					</setHeader>
-					<log
-						loggingLevel="INFO"
-						message="Processing Operational Policy: ${header.operationalPolicy.getName()}" />
-
-					<to uri="direct:delete-operational-policy" />
-					<log
-						loggingLevel="INFO"
-						message="Processing all GUARD policies defined in loop ${header.LoopObject.getName()}" />
+					
 					<split>
-						<simple>${header.operationalPolicy.createGuardPolicyPayloads().entrySet()}
+						<simple>${header.LoopObject.getMicroServicePolicies()}
 						</simple>
-						<setHeader headerName="guardPolicy">
+						<setHeader headerName="microServicePolicy">
 							<simple>${body}</simple>
 						</setHeader>
 						<log
 							loggingLevel="INFO"
-							message="Processing Guard Policy: ${header.guardPolicy.getKey()}" />
+							message="Processing Micro Service Policy: ${header.microServicePolicy.getName()}" />
 
-						<to uri="direct:delete-guard-policy" />
+						<doTry>	
+							<to uri="direct:delete-micro-service-policy" />
+							<doCatch>
+            					<exception>java.lang.Exception</exception>
+            					<handled>
+                					<constant>false</constant>
+            					</handled>
+            				<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        					</doCatch>
+						</doTry>
+
 					</split>
-				</split>
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopService?method=deleteLoop(${header.loopName})" />
-				<log
-					loggingLevel="INFO"
-					message="DELETE request successfully executed for loop: ${body}" />
-				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DELETE request successfully executed','INFO',${header.LoopObject})" />
+
+					<log
+						loggingLevel="INFO"
+						message="Processing all OPERATIONAL policies defined in loop ${header.LoopObject.getName()}" />
+					<split>
+						<simple>${header.LoopObject.getOperationalPolicies()}
+						</simple>
+						<setHeader headerName="operationalPolicy">
+							<simple>${body}</simple>
+						</setHeader>
+						<log
+							loggingLevel="INFO"
+							message="Processing Operational Policy: ${header.operationalPolicy.getName()}" />
+						
+						<doTry>	
+							<to uri="direct:delete-operational-policy" />
+							<doCatch>
+            					<exception>java.lang.Exception</exception>
+            					<handled>
+                					<constant>false</constant>
+            					</handled>
+            				<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        					</doCatch>
+						</doTry>
+
+						<log
+							loggingLevel="INFO"
+							message="Processing all GUARD policies defined in loop ${header.LoopObject.getName()}" />
+						<split>
+							<simple>${header.operationalPolicy.createGuardPolicyPayloads().entrySet()}
+							</simple>
+							<setHeader headerName="guardPolicy">
+								<simple>${body}</simple>
+							</setHeader>
+							<log
+								loggingLevel="INFO"
+								message="Processing Guard Policy: ${header.guardPolicy.getKey()}" />
+
+							<doTry>	
+								<to uri="direct:delete-guard-policy" />
+								<doCatch>
+		            				<exception>java.lang.Exception</exception>
+            						<handled>
+                						<constant>false</constant>
+            						</handled>
+            					<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+        						</doCatch>
+							</doTry>
+
+						</split>
+					</split>
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopService?method=deleteLoop(${header.loopName})" />
+					<log
+						loggingLevel="INFO"
+						message="DELETE request successfully executed for loop: ${body}" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DELETE request successfully executed','INFO',${header.LoopObject})" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+        			<doCatch>
+            			<exception>java.lang.Exception</exception>
+            			<handled>
+                			<constant>false</constant>
+            			</handled>
+            			<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+        			</doCatch>
+    			</doTry>
 			</route>
 		</put>
 	</rest>
 </rests>
-

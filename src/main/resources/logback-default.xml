@@ -144,7 +144,7 @@
 		<appender-ref ref="DEBUG" />
 	</logger>
 	<!-- CLDS related loggers -->
-	<logger name="org.onap.clamp.clds" level="INFO"
+	<logger name="org.onap.clamp" level="INFO"
 		additivity="true">
 		<appender-ref ref="ERROR" />
 	</logger>
