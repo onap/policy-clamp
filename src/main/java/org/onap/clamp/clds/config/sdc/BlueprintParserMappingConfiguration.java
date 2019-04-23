@@ -23,9 +23,6 @@
 
 package org.onap.clamp.clds.config.sdc;
 
-
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import java.io.InputStream;
 import java.io.InputStreamReader;

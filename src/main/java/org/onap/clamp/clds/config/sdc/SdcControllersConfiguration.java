@@ -5,6 +5,8 @@
  * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,9 +24,6 @@
  */
 
 package org.onap.clamp.clds.config.sdc;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -49,8 +48,7 @@ import org.springframework.core.io.Resource;
  */
 public class SdcControllersConfiguration {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcControllersConfiguration.class);
-    public static final String CONTROLLER_SUBTREE_KEY = "sdc-connections";
+    private static final String CONTROLLER_SUBTREE_KEY = "sdc-connections";
     @Autowired
     protected ApplicationContext appContext;
     /**

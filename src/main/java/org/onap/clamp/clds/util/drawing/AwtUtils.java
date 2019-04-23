@@ -5,6 +5,8 @@
  * Copyright (C) 2019 Nokia. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -38,6 +40,9 @@ public class AwtUtils {
     private static final int FONT_STYLE = Font.PLAIN;
     private static final String FONT_FACE = "SansSerif";
     private static final Color TRANSPARENT = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+
+    private AwtUtils() {
+    }
 
     static void rectWithText(Graphics2D g2d, String text, Point point, int width, int height) {
         Rectangle rect = new Rectangle(point.x, point.y, width, height);
