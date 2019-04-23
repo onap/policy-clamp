@@ -292,7 +292,8 @@ label {
 						<div class="col-sm-8">
 							<select class="form-control" name="type" id="type"
 								ng-click="initTargetResourceId()" ng-model="type">
-								<option value="VFC">VFC</option>
+                						<option value="">-- choose an option --</option>                                                    
+								<option value="VFModule">VFModule</option>
 								<option value="VM">VM</option>
 								<option value="VNF">VNF</option>
 							</select>
@@ -305,7 +306,7 @@ label {
 							<select class="form-control" name="resourceId" id="resourceId"
 								enableFilter="true" ng-click="changeTargetResourceId()"
 								ng-model="resourceId">
-								<option value=""></option>
+								<option value="">-- choose an option --</option>
 								<option value="Other:">Other:</option>
 							</select>
 						</div>
