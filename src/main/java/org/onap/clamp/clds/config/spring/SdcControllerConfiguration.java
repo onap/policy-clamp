@@ -25,36 +25,39 @@ package org.onap.clamp.clds.config.spring;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcControllersConfiguration;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.sdc.controller.SdcSingleController;
 import org.onap.clamp.clds.sdc.controller.SdcSingleControllerStatus;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
-import org.onap.clamp.loop.CsarInstallerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
+@ComponentScan(basePackages = {"org.onap.clamp.loop", "org.onap.clamp.clds.config"})
 @Profile("clamp-sdc-controller-new")
 public class SdcControllerConfiguration {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcControllerConfiguration.class);
     private List<SdcSingleController> sdcControllersList = new ArrayList<>();
+    private final ClampProperties clampProp;
+    private final CsarInstaller csarInstaller;
+
     @Autowired
-    private ClampProperties clampProp;
-    @Autowired
-    protected CsarInstaller csarInstaller;
+    public SdcControllerConfiguration(ClampProperties clampProp, @Qualifier("loopInstaller") CsarInstaller csarInstaller) {
+        this.clampProp = clampProp;
+        this.csarInstaller = csarInstaller;
+    }
 
     /**
      * Loads SDC controller configuration.
@@ -99,11 +102,6 @@ public class SdcControllerConfiguration {
                 logger.error("Exception caught when stopping sdc controller", e1);
             }
         });
-    }
-
-    @Bean(name = "csarInstaller")
-    public CsarInstaller getCsarInstaller() {
-        return new CsarInstallerImpl();
     }
 
     @Bean(name = "sdcControllersConfiguration")

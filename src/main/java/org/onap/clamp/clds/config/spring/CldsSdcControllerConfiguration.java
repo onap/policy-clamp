@@ -39,23 +39,27 @@ import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.sdc.controller.SdcSingleController;
 import org.onap.clamp.clds.sdc.controller.SdcSingleControllerStatus;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
-import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
+@ComponentScan(basePackages = "org.onap.clamp.clds")
 @Profile("clamp-sdc-controller")
 public class CldsSdcControllerConfiguration {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsSdcControllerConfiguration.class);
     private List<SdcSingleController> sdcControllersList = new ArrayList<>();
-    @Autowired
-    private ClampProperties clampProp;
-    @Autowired
-    protected CsarInstaller csarInstaller;
+    private final ClampProperties clampProp;
+    private final CsarInstaller csarInstaller;
+
+    public CldsSdcControllerConfiguration(ClampProperties clampProp, @Qualifier("oldModelInstaller") CsarInstaller csarInstaller) {
+        this.clampProp = clampProp;
+        this.csarInstaller = csarInstaller;
+    }
 
     /**
      * Loads SDC controllers configuration.

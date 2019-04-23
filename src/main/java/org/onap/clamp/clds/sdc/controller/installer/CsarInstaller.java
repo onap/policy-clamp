@@ -27,6 +27,7 @@ import org.onap.clamp.clds.exception.policy.PolicyModelException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 
 public interface CsarInstaller {
+    String TEMPLATE_NAME_PREFIX = "DCAE-Designer-Template-";
 
     boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException;
 

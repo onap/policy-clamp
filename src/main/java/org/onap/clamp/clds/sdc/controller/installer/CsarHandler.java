@@ -132,7 +132,7 @@ public class CsarHandler {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                if (entry.getName().contains(BLUEPRINT_TYPE)) {
+                if (!entry.isDirectory() && entry.getName().contains(BLUEPRINT_TYPE)) {
                     BlueprintArtifact blueprintArtifact = new BlueprintArtifact();
                     blueprintArtifact.setBlueprintArtifactName(
                         entry.getName().substring(entry.getName().lastIndexOf('/') + 1, entry.getName().length()));
