@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.EnumMap;
 
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.properties.PolicyChain;
@@ -99,7 +102,7 @@ public class GuardPolicyAttributesConstructor {
     }
 
     private static Map<AttributeType, Map<String, String>> createAttributesMap(Map<String, String> matchingAttributes) {
-        Map<AttributeType, Map<String, String>> attributes = new HashMap<>();
+        Map<AttributeType, Map<String, String>> attributes = new EnumMap<>(AttributeType.class);
         attributes.put(AttributeType.MATCHING, matchingAttributes);
         return attributes;
     }

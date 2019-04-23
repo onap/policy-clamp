@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -84,7 +86,6 @@ public class PolicyClient {
     public static final String POLICY_OP_NAME_PREFIX_PROPERTY_NAME = "policy.op.policyNamePrefix";
     public static final String POLICY_MS_NAME_PREFIX_PROPERTY_NAME = "policy.ms.policyNamePrefix";
     public static final String POLICY_OP_TYPE_PROPERTY_NAME = "policy.op.type";
-    public static final String POLICY_GUARD_SUFFIX = "_Guard";
     public static final String TOSCA_FILE_TEMP_PATH = "tosca.filePath";
 
     @Autowired
@@ -382,10 +383,12 @@ public class PolicyClient {
      * Use list Policy API to retrieve the policy. Return true if policy exists
      * otherwise return false.
      *
-     * @param policyNamePrefix
-     *        The Policy Name Prefix
      * @param prop
      *        The ModelProperties
+     * @param policyPrefix
+     *        The Policy Name Prefix
+     * @param policyNameWithPrefix
+     *        The Policy Full Name
      * @return The response message from policy
      * @throws PolicyConfigException
      *         In case of issues with policy engine
