@@ -37,7 +37,7 @@ public class MicroServicePayloadTest {
 
     @Test
     public void testPayloadConstruction() throws IOException {
-        MicroServicePolicy policy = new MicroServicePolicy("testPolicy", "onap.policy.monitoring.cdap.tca.hi.lo.app",
+        MicroServicePolicy policy = new MicroServicePolicy("testPolicy", "onap.policies.monitoring.cdap.tca.hi.lo.app",
             ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml"), false, new HashSet<>());
         policy.setProperties(JsonUtils.GSON.fromJson(
             ResourceFileUtil.getResourceAsString("tosca/micro-service-policy-properties.json"), JsonObject.class));

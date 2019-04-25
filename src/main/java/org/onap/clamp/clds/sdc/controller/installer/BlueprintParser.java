@@ -89,7 +89,7 @@ public class BlueprintParser {
         }
         String msName = theBiggestMicroServiceKey.toLowerCase().contains(HOLMES_PREFIX) ? HOLMES : TCA;
         return Collections
-            .singletonList(new MicroService(msName, "onap.policy.monitoring.cdap.tca.hi.lo.app", "", "", ""));
+            .singletonList(new MicroService(msName, "onap.policies.monitoring.cdap.tca.hi.lo.app", "", "", ""));
     }
 
     String getName(Entry<String, JsonElement> entry) {

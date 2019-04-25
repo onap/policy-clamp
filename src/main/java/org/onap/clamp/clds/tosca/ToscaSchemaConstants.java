@@ -58,7 +58,7 @@ public class ToscaSchemaConstants {
     public static final String PATTERN = "pattern";
 
     // Prefix for policy nodes
-    public static final String POLICY_NODE = "onap.policy.";
+    public static final String POLICY_NODE = "onap.policies.";
 
     // Prefix for data nodes
     public static final String POLICY_DATA = "onap.datatypes.";
