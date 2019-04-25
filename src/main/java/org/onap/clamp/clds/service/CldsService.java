@@ -5,6 +5,8 @@
  * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -203,7 +205,7 @@ public class CldsService extends SecureServiceBase {
     public List<CldsMonitoringDetails> getCldsDetails() {
         util.entering(request, "CldsService: GET model details");
         Date startTime = new Date();
-        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsDao.getCldsMonitoringDetails();
+        final List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsDao.getCldsMonitoringDetails();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("GET cldsDetails completed");
@@ -223,7 +225,7 @@ public class CldsService extends SecureServiceBase {
         LoggingUtils.setTimeContext(startTime, new Date());
 
         CldsInfoProvider cldsInfoProvider = new CldsInfoProvider(this);
-        CldsInfo cldsInfo = cldsInfoProvider.getCldsInfo();
+        final CldsInfo cldsInfo = cldsInfoProvider.getCldsInfo();
 
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
@@ -245,7 +247,7 @@ public class CldsService extends SecureServiceBase {
         Date startTime = new Date();
         isAuthorized(permissionReadCl);
         logger.info("GET bpmnText for modelName={}", modelName);
-        CldsModel model = CldsModel.retrieve(cldsDao, modelName, false);
+        final CldsModel model = CldsModel.retrieve(cldsDao, modelName, false);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("GET model bpmn completed");
@@ -266,7 +268,7 @@ public class CldsService extends SecureServiceBase {
         Date startTime = new Date();
         isAuthorized(permissionReadCl);
         logger.info("GET imageText for modelName={}", modelName);
-        CldsModel model = CldsModel.retrieve(cldsDao, modelName, false);
+        final CldsModel model = CldsModel.retrieve(cldsDao, modelName, false);
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("GET model image completed");
@@ -282,7 +284,7 @@ public class CldsService extends SecureServiceBase {
      */
     public CldsModel getModel(String modelName) {
         util.entering(request, "CldsService: GET model");
-        Date startTime = new Date();
+        final Date startTime = new Date();
         isAuthorized(permissionReadCl);
         logger.debug("GET model for  modelName={}", modelName);
         CldsModel cldsModel = CldsModel.retrieve(cldsDao, modelName, false);
@@ -323,7 +325,7 @@ public class CldsService extends SecureServiceBase {
      */
     public CldsModel putModel(String modelName, CldsModel cldsModel) {
         util.entering(request, "CldsService: PUT model");
-        Date startTime = new Date();
+        final Date startTime = new Date();
         isAuthorized(permissionUpdateCl);
         isAuthorizedForVf(cldsModel);
         logger.info("PUT model for  modelName={}", modelName);
@@ -350,7 +352,7 @@ public class CldsService extends SecureServiceBase {
         Date startTime = new Date();
         isAuthorized(permissionReadCl);
         logger.info("GET list of model names");
-        List<ValueItem> names = cldsDao.getModelNames();
+        final List<ValueItem> names = cldsDao.getModelNames();
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info("GET model names completed");
@@ -409,11 +411,11 @@ public class CldsService extends SecureServiceBase {
             model.save(cldsDao, getUserId());
 
             // get vars and format if necessary
-            String prop = model.getPropText();
-            String bpmn = model.getBpmnText();
-            String docText = model.getDocText();
-            String controlName = model.getControlName();
-            String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
+            final String prop = model.getPropText();
+            final String bpmn = model.getBpmnText();
+            final String docText = model.getDocText();
+            final String controlName = model.getControlName();
+            final String bpmnJson = cldsBpmnTransformer.doXslTransformToString(bpmn);
             logger.info("PUT bpmnJson={}", bpmnJson);
             // Test flag coming from UI or from Clamp config
             boolean isTest = Boolean.parseBoolean(test)
@@ -471,7 +473,7 @@ public class CldsService extends SecureServiceBase {
      */
     public String postDcaeEvent(String test, DcaeEvent dcaeEvent) {
         util.entering(request, "CldsService: Post dcae event");
-        Date startTime = new Date();
+        final Date startTime = new Date();
         String userid = null;
         // TODO: allow auth checking to be turned off by removing the permission
         // type property
