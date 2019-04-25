@@ -64,7 +64,7 @@
 				<java.version>1.8</java.version>
 
 				<eelf.core.version>1.0.0</eelf.core.version>
-				<camel.version>2.23.1</camel.version>
+				<camel.version>2.23.2</camel.version>
 				<springboot.version>2.1.4.RELEASE</springboot.version>
 
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -286,7 +286,7 @@
 				<!-- For CAMEL -->
 				<dependency>
 					<groupId>org.apache.camel</groupId>
-					<artifactId>camel-http4</artifactId>
+					<artifactId>camel-http4-starter</artifactId>
 				</dependency>
 				<dependency>
 						<groupId>org.apache.camel</groupId>

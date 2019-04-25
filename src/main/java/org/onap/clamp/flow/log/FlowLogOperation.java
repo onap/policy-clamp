@@ -52,16 +52,15 @@ public class FlowLogOperation {
     /**
      * Generate the entry log.
      *
-     * @param serviceDesc The service description
-     *        the loop name
+     * @param serviceDesc
+     *        The service description the loop name
      */
     public void startLog(Exchange exchange, String serviceDesc) {
         util.entering(request, serviceDesc);
-        exchange.getIn().setHeader(ONAPLogConstants.Headers.REQUEST_ID, 
-            util.getProperties(ONAPLogConstants.MDCs.REQUEST_ID));
-        exchange.getIn().setHeader(ONAPLogConstants.Headers.INVOCATION_ID, 
+        exchange.setProperty(ONAPLogConstants.Headers.REQUEST_ID, util.getProperties(ONAPLogConstants.MDCs.REQUEST_ID));
+        exchange.setProperty(ONAPLogConstants.Headers.INVOCATION_ID,
             util.getProperties(ONAPLogConstants.MDCs.INVOCATION_ID));
-        exchange.getIn().setHeader(ONAPLogConstants.Headers.PARTNER_NAME, 
+        exchange.setProperty(ONAPLogConstants.Headers.PARTNER_NAME,
             util.getProperties(ONAPLogConstants.MDCs.PARTNER_NAME));
     }
 
@@ -69,18 +68,17 @@ public class FlowLogOperation {
      * Generate the exiting log.
      */
     public void endLog() {
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, 
-            ONAPLogConstants.ResponseStatus.COMPLETED);
+        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
     }
 
     /**
      * Generate the error exiting log.
      */
     public void errorLog() {
-        util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Failed",
-            Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
+        util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Failed", Level.INFO,
+            ONAPLogConstants.ResponseStatus.ERROR);
     }
-    
+
     /**
      * Generate the error exiting log.
      */
