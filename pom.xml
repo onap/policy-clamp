@@ -27,11 +27,12 @@
 		<version>4.0.0-SNAPSHOT</version>
 		<name>clamp</name>
 
-		<parent>
-				<groupId>org.onap.oparent</groupId>
-				<artifactId>oparent</artifactId>
-				<version>1.2.3</version>
-		</parent>
+<!--  -->
+<!-- 		<parent> -->
+<!-- 				<groupId>org.onap.oparent</groupId> -->
+<!-- 				<artifactId>oparent</artifactId> -->
+<!-- 				<version>1.2.3</version> -->
+<!-- 		</parent> -->
 
 		<description>
            This project build the ONAP CLAMP JAR that contains CLAMP back-end code and its UI part.
@@ -605,6 +606,7 @@
 				<dependency>
 						<groupId>com.google.guava</groupId>
 						<artifactId>guava</artifactId>
+						<version>27.0-jre</version>
 				</dependency>
 				<!-- Remove the MYSQL connector and replace it by Mariadb -->
 				<dependency>
