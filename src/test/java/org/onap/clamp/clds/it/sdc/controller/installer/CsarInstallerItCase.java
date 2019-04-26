@@ -5,6 +5,8 @@
  * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications copyright (c) 2019 Nokia
+ * ===================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -60,6 +62,7 @@ import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 import org.onap.sdc.toscaparser.api.elements.Metadata;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -74,8 +77,11 @@ public class CsarInstallerItCase {
     private static final String INVARIANT_RESOURCE2_UUID = "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad";
     private static final String RESOURCE_INSTANCE_NAME_RESOURCE1 = "ResourceInstanceName1";
     private static final String RESOURCE_INSTANCE_NAME_RESOURCE2 = "ResourceInstanceName2";
+
     @Autowired
+    @Qualifier("oldModelInstaller")
     private CsarInstaller csarInstaller;
+
     @Autowired
     private CldsDao cldsDao;
 

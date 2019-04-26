@@ -53,7 +53,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CsarInstallerImplTest {
+public class LoopCsarInstallerTest {
 
     @Mock
     private CsarHandler csarHandler;

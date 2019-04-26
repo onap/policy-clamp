@@ -56,6 +56,7 @@ import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -68,6 +69,7 @@ import org.yaml.snakeyaml.Yaml;
  * received from SDC in DB.
  */
 @Component
+@Qualifier("oldModelInstaller")
 public class CsarInstallerImpl implements CsarInstaller {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);

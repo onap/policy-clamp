@@ -26,7 +26,6 @@ package org.onap.clamp.clds.service;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -35,11 +34,9 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.BadRequestException;
 import javax.xml.transform.TransformerException;
-
 import org.apache.camel.Produce;
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.camel.CamelProxy;
@@ -59,7 +56,7 @@ import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.model.ValueItem;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
-import org.onap.clamp.clds.sdc.controller.installer.CsarInstallerImpl;
+import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.transform.XslTransformer;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -295,7 +292,7 @@ public class CldsService extends SecureServiceBase {
         try {
             // Method to call dcae inventory and invoke insert event method
             if (cldsModel.canDcaeInventoryCall()
-                && !cldsModel.getTemplateName().startsWith(CsarInstallerImpl.TEMPLATE_NAME_PREFIX)) {
+                && !cldsModel.getTemplateName().startsWith(CsarInstaller.TEMPLATE_NAME_PREFIX)) {
                 dcaeInventoryServices.setEventInventory(cldsModel, getUserId());
             }
             // This is a blocking call

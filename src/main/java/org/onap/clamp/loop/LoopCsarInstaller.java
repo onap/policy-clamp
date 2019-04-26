@@ -51,9 +51,12 @@ import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
 import org.onap.sdc.tosca.parser.enums.SdcTypes;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.Yaml;
@@ -63,10 +66,11 @@ import org.yaml.snakeyaml.Yaml;
  * There is no state kept by the bean. It's used to deploy the csar/notification
  * received from SDC in DB.
  */
-public class CsarInstallerImpl implements CsarInstaller {
+@Component
+@Qualifier("loopInstaller")
+public class LoopCsarInstaller implements CsarInstaller {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstallerImpl.class);
-    public static final String TEMPLATE_NAME_PREFIX = "DCAE-Designer-Template-";
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(LoopCsarInstaller.class);
     public static final String CONTROL_NAME_PREFIX = "ClosedLoop-";
     public static final String GET_INPUT_BLUEPRINT_PARAM = "get_input";
     // This will be used later as the policy scope
@@ -182,13 +186,14 @@ public class CsarInstallerImpl implements CsarInstaller {
     private JsonObject createModelPropertiesJson(CsarHandler csar) {
         JsonObject modelProperties = new JsonObject();
         Gson gson = new Gson();
+        ISdcCsarHelper csarHelper = csar.getSdcCsarHelper();
         modelProperties.add("serviceDetails",
-            gson.fromJson(gson.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class));
+            gson.fromJson(gson.toJson(csarHelper.getServiceMetadataAllProperties()), JsonObject.class));
 
         JsonObject resourcesProp = new JsonObject();
         for (SdcTypes type : SdcTypes.values()) {
             JsonObject resourcesPropByType = new JsonObject();
-            for (NodeTemplate nodeTemplate : csar.getSdcCsarHelper().getServiceNodeTemplateBySdcType(type)) {
+            for (NodeTemplate nodeTemplate : csarHelper.getServiceNodeTemplateBySdcType(type)) {
                 resourcesPropByType.add(nodeTemplate.getName(), JsonUtils.GSON_JPA_MODEL
                     .fromJson(new Gson().toJson(nodeTemplate.getMetaData().getAllProperties()), JsonObject.class));
             }
