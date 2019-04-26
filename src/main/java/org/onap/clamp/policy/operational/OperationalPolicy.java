@@ -31,6 +31,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -150,8 +153,7 @@ public class OperationalPolicy implements Serializable, Policy {
         return true;
     }
 
-    @Override
-    public String createPolicyPayload() {
+    public String createPolicyPayloadYaml() {
         JsonObject policyPayloadResult = new JsonObject();
 
         policyPayloadResult.addProperty("tosca_definitions_version", "tosca_simple_yaml_1_0_0");
@@ -179,6 +181,16 @@ public class OperationalPolicy implements Serializable, Policy {
         Gson gson = new GsonBuilder().create();
         Map<?, ?> jsonMap = gson.fromJson(gson.toJson(policyPayloadResult), Map.class);
         return (new Yaml()).dump(jsonMap);
+    }
+
+    @Override
+    public String createPolicyPayload() throws UnsupportedEncodingException {
+
+        // Now the Yaml payload must be injected in a json ...
+        JsonObject payload = new JsonObject();
+        payload.addProperty("policy-id", this.getName());
+        payload.addProperty("content", URLEncoder.encode(createPolicyPayloadYaml(), StandardCharsets.UTF_8.toString()));
+        return new GsonBuilder().setPrettyPrinting().create().toJson(payload);
     }
 
     /**
