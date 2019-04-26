@@ -207,7 +207,7 @@ public class CsarInstallerImpl implements CsarInstaller {
     }
 
     private void createPolicyModel(CsarHandler csar) throws PolicyModelException {
-        try{
+        try {
             Optional<String> policyModelYaml = csar.getPolicyModelYaml();
             // save policy model into the database
         } catch (IOException e) {
@@ -228,8 +228,8 @@ public class CsarInstallerImpl implements CsarInstaller {
             if (policyName != null) {
                 policyNameList.add(filteredPolicyName);
             } else {
-                String inputPolicyName = (String) ((Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>) ef
-                    .getValue()).get("properties")).get("policy_id")).get(GET_INPUT_BLUEPRINT_PARAM);
+                String inputPolicyName = (String) ((Map<String, Object>) ((Map<String, Object>) ((Map<String, Object>)
+                        ef.getValue()).get("properties")).get("policy_id")).get(GET_INPUT_BLUEPRINT_PARAM);
                 if (inputPolicyName != null) {
                     policyNameList.add(GET_INPUT_BLUEPRINT_PARAM);
                 }
@@ -249,7 +249,7 @@ public class CsarInstallerImpl implements CsarInstaller {
 
     /**
      * This call must be done when deploying the SDC notification as this call get
-     * the latest version of the artifact (version can be specified to DCAE call)
+     * the latest version of the artifact (version can be specified to DCAE call).
      *
      * @return The DcaeInventoryResponse object containing the dcae values
      */
@@ -263,9 +263,10 @@ public class CsarInstallerImpl implements CsarInstaller {
     private CldsTemplate createFakeCldsTemplate(CsarHandler csar, BlueprintArtifact blueprintArtifact,
         BlueprintParserFilesConfiguration configFiles) throws IOException, SdcArtifactInstallerException {
 
-        Set<MicroService> microServicesFromBlueprint = blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()) ;
+        Set<MicroService> microServicesFromBlueprint = blueprintParser.getMicroServices(
+                blueprintArtifact.getDcaeBlueprint()) ;
         List<MicroService> microServicesChain = chainGenerator.getChainOfMicroServices(microServicesFromBlueprint);
-        if(microServicesChain.isEmpty()) {
+        if (microServicesChain.isEmpty()) {
             microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
         }
         String imageText = svgFacade.getSvgImage(microServicesChain);
@@ -290,7 +291,8 @@ public class CsarInstallerImpl implements CsarInstaller {
 
         if (dcaeInventoryResponse == null) {
             throw new SdcArtifactInstallerException(
-                "DCAE inventory response is NULL, query to DCAE fail to be answered properly, this is required to deploy CSAR properly !!!");
+                "DCAE inventory response is NULL, query to DCAE fail to be answered properly, "
+                        + "this is required to deploy CSAR properly !!!");
         }
         try {
             CldsModel cldsModel = new CldsModel();

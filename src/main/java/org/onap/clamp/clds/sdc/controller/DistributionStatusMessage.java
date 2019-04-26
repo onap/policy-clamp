@@ -34,13 +34,27 @@ public class DistributionStatusMessage implements IDistributionStatusMessage {
     private DistributionStatusEnum distributionStatus;
     private long timestamp;
 
+    /**
+     * Distribution status message constructor.
+     *
+     * @param artifactUrl
+     *        Url of specific SDC artifact(resource)
+     * @param consumerId
+     *        Unique ID of SDC component instance
+     * @param distributionId
+     *        Distribution ID published in the distribution notification.
+     * @param distributionStatusEnum
+     *        Status to send in the message
+     * @param timestamp
+     *        Timestamp of the message
+     */
     public DistributionStatusMessage(final String artifactUrl, final String consumerId, final String distributionId,
-            final DistributionStatusEnum distributionStatusEnum, final long timestampL) {
-        artifactURL = artifactUrl;
-        consumerID = consumerId;
-        distributionID = distributionId;
-        distributionStatus = distributionStatusEnum;
-        timestamp = timestampL;
+            final DistributionStatusEnum distributionStatusEnum, final long timestamp) {
+        this.artifactURL = artifactUrl;
+        this.consumerID = consumerId;
+        this.distributionID = distributionId;
+        this.distributionStatus = distributionStatusEnum;
+        this.timestamp = timestamp;
     }
 
     @Override

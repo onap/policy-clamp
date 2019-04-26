@@ -30,6 +30,8 @@ import java.util.Date;
 import javax.ws.rs.NotAuthorizedException;
 
 import org.onap.clamp.clds.util.LoggingUtils;
+import org.onap.clamp.clds.util.ONAPLogConstants;
+import org.slf4j.event.Level;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -205,5 +207,20 @@ public abstract class SecureServiceBase {
         }
 
         return false;
+    }
+
+    protected void auditLogInfo(LoggingUtils util, String actionDescription, Date startTime) {
+        LoggingUtils.setTimeContext(startTime, new Date());
+        auditLogger.info(actionDescription + " completed");
+        util.exiting("200", actionDescription + " success", Level.INFO,
+            ONAPLogConstants.ResponseStatus.COMPLETED);
+    }
+
+    protected void auditLogInfo(String actionDescription, Date startTime) {
+
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", actionDescription + " success",
+            this.getClass().getName());
+        auditLogger.info(actionDescription + " completed");
     }
 }

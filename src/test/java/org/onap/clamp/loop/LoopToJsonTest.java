@@ -5,7 +5,9 @@
  * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
+ *  Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -63,11 +65,11 @@ public class LoopToJsonTest {
 
     private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
         String policyTosca, String jsonProperties, boolean shared) {
-        MicroServicePolicy µService = new MicroServicePolicy(name, modelType, policyTosca, shared,
+        MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
             gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
-        µService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
+        microService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
 
-        return µService;
+        return microService;
     }
 
     private LoopLog getLoopLog(LogType type, String message, Loop loop) {
@@ -77,7 +79,7 @@ public class LoopToJsonTest {
     }
 
     @Test
-    public void LoopGsonTest() throws IOException {
+    public void loopGsonTest() throws IOException {
         Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
             "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy(

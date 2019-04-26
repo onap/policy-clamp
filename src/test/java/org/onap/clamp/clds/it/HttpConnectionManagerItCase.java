@@ -127,21 +127,21 @@ public class HttpConnectionManagerItCase {
 
     @Test(expected = BadRequestException.class)
     public void testHttpsGet404() throws IOException {
-    	httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html",
-                "GET", null, null, "DCAE", null, null);
+        httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html", "GET",
+                null, null, "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpsPost404() throws IOException {
-    	httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html",
-                "POST", "", "application/json", "DCAE", null, null);
+        httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html", "POST",
+                "", "application/json", "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpException() throws IOException {
-    	httpConnectionManager.doHttpRequest("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
+        httpConnectionManager.doHttpRequest("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
                 null, null, "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }

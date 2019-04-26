@@ -101,7 +101,7 @@ public class TcaRequestFormatterTest {
     }
 
     @Test(expected = TcaRequestFormatterException.class)
-    public void shouldThrowTcaRequestFormatterException() throws IOException{
+    public void shouldThrowTcaRequestFormatterException() throws IOException {
         //given
         String service = "TestService";
         String policy = "TestService_scope.PolicyName";

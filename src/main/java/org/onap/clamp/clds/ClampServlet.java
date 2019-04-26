@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -101,8 +102,8 @@ public class ClampServlet extends CamelHttpTransportServlet {
             permissionList.add(SecureServicePermission
                     .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA), cldsPermissionInstance, READ));
             permissionList.add(SecureServicePermission
-                    .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA), cldsPermissionInstance,
-                            UPDATE));
+                    .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA),
+                            cldsPermissionInstance, UPDATE));
         }
         return permissionList;
     }
