@@ -25,13 +25,15 @@ package org.onap.clamp.policy;
 
 import com.google.gson.JsonObject;
 
+import java.io.UnsupportedEncodingException;
+
 public interface Policy {
 
     String getName();
 
     JsonObject getJsonRepresentation();
 
-    String createPolicyPayload();
+    String createPolicyPayload() throws UnsupportedEncodingException;
 
     /**
      * Generate the policy name.

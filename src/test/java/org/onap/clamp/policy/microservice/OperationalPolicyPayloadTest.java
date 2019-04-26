@@ -43,8 +43,10 @@ public class OperationalPolicyPayloadTest {
         JsonObject jsonConfig = new GsonBuilder().create().fromJson(
             ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), JsonObject.class);
         OperationalPolicy policy = new OperationalPolicy("testPolicy", null, jsonConfig);
-        assertThat(policy.createPolicyPayload())
+        assertThat(policy.createPolicyPayloadYaml())
             .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload.yaml"));
+        assertThat(policy.createPolicyPayload())
+            .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload.json"));
     }
 
     @Test

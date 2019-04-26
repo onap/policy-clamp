@@ -210,7 +210,7 @@
 				<constant>POST</constant>
 			</setHeader>
 			<setHeader headerName="Content-Type">
-				<constant>application/yaml; vnd.onap.operational</constant>
+				<constant>application/json</constant>
 			</setHeader>
 			<setHeader headerName="X-ONAP-RequestID">
 				<simple>${exchangeProperty[X-ONAP-RequestID]}
