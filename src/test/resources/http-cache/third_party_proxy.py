@@ -199,6 +199,18 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         with open(cached_file_content, 'w+') as f:
                 f.write(self.data_string)
         return True
+     elif self.path.startswith("/policy/api/v1/policytypes/") and http_type == "GET":
+        print "self.path start with /policy/api/v1/policytypes/, generating response json..."
+        jsonGenerated =  "{\"policyTypeId\": \"onap.policies.controlloop.operational\",\"policyTypeVersion\": \"1.0.0\",\"policyId\": \"OPERATIONAL_z711F_v1_0_ResourceInstanceName1_tca\"}"
+        print "jsonGenerated: " + jsonGenerated
+        if not os.path.exists(cached_file_folder):
+            os.makedirs(cached_file_folder, 0777)
+
+        with open(cached_file_header, 'w') as f:
+            f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+        with open(cached_file_content, 'w') as f:
+            f.write(jsonGenerated)
+        return True
      else:
         return False
 

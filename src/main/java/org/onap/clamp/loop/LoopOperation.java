@@ -31,23 +31,18 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.camel.Exchange;
-import org.onap.clamp.clds.client.DcaeDispatcherServices;
+import org.apache.camel.Message;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.config.ClampProperties;
-import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.clds.util.ONAPLogConstants;
-import org.onap.clamp.exception.OperationException;
-import org.onap.clamp.util.HttpConnectionManager;
-import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
 
@@ -59,117 +54,179 @@ public class LoopOperation {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(LoopOperation.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getMetricsLogger();
-    private final DcaeDispatcherServices dcaeDispatcherServices;
+    private static final String DCAE_LINK_FIELD = "links";
+    private static final String DCAE_STATUS_FIELD = "status";
+    private static final String DCAE_DEPLOYMENT_TEMPLATE = "dcae.deployment.template";
+    private static final String DCAE_SERVICETYPE_ID = "serviceTypeId";
+    private static final String DCAE_INPUTS = "inputs";
+    private static final String DCAE_DEPLOYMENT_PREFIX = "closedLoop_";
+    private static final String DCAE_DEPLOYMENT_SUFIX = "_deploymentId";
     private final LoopService loopService;
-    private LoggingUtils util = new LoggingUtils(logger);
+    private final ClampProperties refProp;
 
-    @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
-    public LoopOperation(LoopService loopService, DcaeDispatcherServices dcaeDispatcherServices,
-        ClampProperties refProp, HttpConnectionManager httpConnectionManager) {
-        this.loopService = loopService;
-        this.dcaeDispatcherServices = dcaeDispatcherServices;
+    public enum TempLoopState {
+        NOT_SUBMITTED, SUBMITTED, DEPLOYED, NOT_DEPLOYED, PROCESSING, IN_ERROR;
     }
-    
+
     /**
-     * Deploy the closed loop.
-     *
-     * @param loopName
-     *        the loop name
-     * @return the updated loop
-     * @throws OperationException
-     *         Exception during the operation
+     * The constructor.
+     * @param loopService The loop service
+     * @param refProp The clamp properties
      */
-    public Loop deployLoop(Exchange camelExchange, String loopName) throws OperationException {
-        util.entering(request, "CldsService: Deploy model");
-        Date startTime = new Date();
-        Loop loop = loopService.getLoop(loopName);
+    @Autowired
+    public LoopOperation(LoopService loopService, ClampProperties refProp) {
+        this.loopService = loopService;
+        this.refProp = refProp;
+    }
 
-        if (loop == null) {
-            String msg = "Deploy loop exception: Not able to find closed loop:" + loopName;
-            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
-            throw new OperationException(msg);
+    /**
+     * Get the payload used to send the deploy closed loop request.
+     *
+     * @param loop The loop
+     * @return The payload used to send deploy closed loop request
+     * @throws IOException IOException
+     */
+    public String getDeployPayload(Loop loop) throws IOException {
+        Yaml yaml = new Yaml();
+        Map<String, Object> yamlMap = yaml.load(loop.getBlueprint());
+        JsonObject bluePrint = wrapSnakeObject(yamlMap).getAsJsonObject();
+
+        String serviceTypeId = loop.getDcaeBlueprintId();
+
+        JsonObject rootObject = refProp.getJsonTemplate(DCAE_DEPLOYMENT_TEMPLATE).getAsJsonObject();
+        rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
+        if (bluePrint != null) {
+            rootObject.add(DCAE_INPUTS, bluePrint);
         }
+        String apiBodyString = rootObject.toString();
+        logger.info("Dcae api Body String - " + apiBodyString);
 
-        // verify the current closed loop state
-        if (loop.getLastComputedState() != LoopState.SUBMITTED) {
-            String msg = "Deploy loop exception: This closed loop is in state:" + loop.getLastComputedState()
-                + ". It could be deployed only when it is in SUBMITTED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
-            throw new OperationException(msg);
-        }
+        return apiBodyString;
+    }
 
+    /**
+     * Get the deployment id.
+     *
+     * @param loop The loop
+     * @return The deployment id
+     * @throws IOException IOException
+     */
+    public String getDeploymentId(Loop loop) {
         // Set the deploymentId if not present yet
         String deploymentId = "";
         // If model is already deployed then pass same deployment id
         if (loop.getDcaeDeploymentId() != null && !loop.getDcaeDeploymentId().isEmpty()) {
             deploymentId = loop.getDcaeDeploymentId();
         } else {
-            loop.setDcaeDeploymentId(deploymentId = "closedLoop_" + loopName + "_deploymentId");
+            deploymentId = DCAE_DEPLOYMENT_PREFIX + loop.getName() + DCAE_DEPLOYMENT_SUFIX;
         }
-
-        Yaml yaml = new Yaml();
-        Map<String, Object> yamlMap = yaml.load(loop.getBlueprint());
-        JsonObject bluePrint = wrapSnakeObject(yamlMap).getAsJsonObject();
-
-        loop.setDcaeDeploymentStatusUrl(
-            dcaeDispatcherServices.createNewDeployment(deploymentId, loop.getDcaeBlueprintId(), bluePrint));
-        loop.setLastComputedState(LoopState.DEPLOYED);
-        // save the updated loop
-        loopService.saveOrUpdateLoop(loop);
-
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        auditLogger.info("Deploy model completed");
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return loop;
+        return deploymentId;
     }
 
     /**
-     * Un deploy closed loop.
+     * Update the loop info.
      *
-     * @param loopName
-     *        the loop name
-     * @return the updated loop
+     * @param camelExchange The camel exchange
+     * @param loop The loop
+     * @param deploymentId The deployment id
+     * @throws ParseException The parse exception
      */
-    public Loop unDeployLoop(String loopName) throws OperationException {
-        util.entering(request, "LoopOperation: Undeploy the closed loop");
-        Date startTime = new Date();
-        Loop loop = loopService.getLoop(loopName);
+    public void updateLoopInfo(Exchange camelExchange, Loop loop, String deploymentId) throws ParseException {
+        Message in = camelExchange.getIn();
+        String msg = in.getBody(String.class);
 
-        if (loop == null) {
-            String msg = "Undeploy loop exception: Not able to find closed loop:" + loopName;
-            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), msg, Level.INFO,
-                ONAPLogConstants.ResponseStatus.ERROR);
-            throw new OperationException(msg);
-        }
+        JSONParser parser = new JSONParser();
+        Object obj0 = parser.parse(msg);
+        JSONObject jsonObj = (JSONObject) obj0;
 
-        // verify the current closed loop state
-        if (loop.getLastComputedState() != LoopState.DEPLOYED) {
-            String msg = "Unploy loop exception: This closed loop is in state:" + loop.getLastComputedState()
-                + ". It could be undeployed only when it is in DEPLOYED state.";
-            util.exiting(HttpStatus.CONFLICT.toString(), msg, Level.INFO, ONAPLogConstants.ResponseStatus.ERROR);
-            throw new OperationException(msg);
-        }
+        JSONObject linksObj = (JSONObject) jsonObj.get(DCAE_LINK_FIELD);
+        String statusUrl = (String) linksObj.get(DCAE_STATUS_FIELD);
 
-        loop.setDcaeDeploymentStatusUrl(
-            dcaeDispatcherServices.deleteExistingDeployment(loop.getDcaeDeploymentId(), loop.getDcaeBlueprintId()));
+        // use http4 instead of http, because camel http4 component is used to do the http call
+        statusUrl.replace("http", "http4");
 
-        // clean the deployment ID
-        loop.setDcaeDeploymentId(null);
-        loop.setLastComputedState(LoopState.SUBMITTED);
-
-        // save the updated loop
+        loop.setDcaeDeploymentId(deploymentId);
+        loop.setDcaeDeploymentStatusUrl(statusUrl);
         loopService.saveOrUpdateLoop(loop);
+    }
 
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        auditLogger.info("Undeploy model completed");
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-        return loop;
+    /**
+     * Get the Closed Loop status based on the reply from Policy.
+     *
+     * @param statusCode The status code
+     * @return The state based on policy response
+     * @throws ParseException The parse exception
+     */
+    public String analysePolicyResponse(int statusCode) throws ParseException {
+        if (statusCode == 200) {
+            return TempLoopState.SUBMITTED.toString();
+        } else if (statusCode == 404) {
+            return TempLoopState.NOT_SUBMITTED.toString();
+        }
+        return TempLoopState.IN_ERROR.toString();
+    }
+
+    /**
+     * Get the Closed Loop status based on the reply from DCAE.
+     *
+     * @param camelExchange The camel exchange
+     * @return The state based on DCAE response
+     * @throws ParseException The parse exception
+     */
+    public String analyseDcaeResponse(Exchange camelExchange, Integer statusCode) throws ParseException {
+        if (statusCode == null) {
+            return TempLoopState.NOT_DEPLOYED.toString();
+        }
+        if (statusCode == 200) {
+            Message in = camelExchange.getIn();
+            String msg = in.getBody(String.class);
+
+            JSONParser parser = new JSONParser();
+            Object obj0 = parser.parse(msg);
+            JSONObject jsonObj = (JSONObject) obj0;
+
+            String opType = (String) jsonObj.get("operationType");
+            String status = (String) jsonObj.get("status");
+
+            // status = processing/successded/failed
+            if (status == "successed") {
+                if (opType == "install") {
+                    return TempLoopState.DEPLOYED.toString();
+                } else if (status == "successed") {
+                    return TempLoopState.NOT_DEPLOYED.toString();
+                }
+            } else if (status == "processing") {
+                return TempLoopState.PROCESSING.toString();
+            }
+        } else if (statusCode == 404) {
+            return TempLoopState.NOT_DEPLOYED.toString();
+        }
+        return TempLoopState.IN_ERROR.toString();
+    }
+
+    /**
+     * Get the status of the closed loop based on the response from Policy and DCAE.
+     *
+     * @param policyState The state get from Policy
+     * @param dcaeState The state get from DCAE
+     * @throws ParseException The parse exception
+     */
+    public LoopState updateLoopStatus(TempLoopState policyState, TempLoopState dcaeState) {
+        LoopState clState = LoopState.IN_ERROR;
+        if (policyState == TempLoopState.SUBMITTED) {
+            if (dcaeState == TempLoopState.DEPLOYED) {
+                clState = LoopState.DEPLOYED;
+            } else if (dcaeState == TempLoopState.PROCESSING) {
+                clState = LoopState.WAITING;
+            } else if (dcaeState == TempLoopState.NOT_DEPLOYED) {
+                clState = LoopState.SUBMITTED;
+            }
+        } else if (policyState == TempLoopState.NOT_SUBMITTED) {
+            if (dcaeState == TempLoopState.NOT_DEPLOYED) {
+                clState = LoopState.DESIGN;
+            }
+        }
+        return clState;
     }
 
     private JsonElement wrapSnakeObject(Object obj) {
