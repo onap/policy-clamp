@@ -20,6 +20,8 @@ RUN chmod 700 /opt/clamp/app.jar
 
 RUN chown -R clamp:onap /opt/clamp
 
+RUN apk add fontconfig
+
 USER clamp
 WORKDIR /opt/clamp/
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Xms256m", "-Xmx1g", "-jar" ,"./app.jar"]
