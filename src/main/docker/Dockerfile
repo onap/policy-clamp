@@ -1,7 +1,7 @@
-FROM openjdk:8u191-jdk-alpine3.9
+FROM ubuntu:16.04
 
 MAINTAINER "The Onap Team"
-LABEL Description="This immage contains alpine, openjdk 11 and clamp"
+LABEL Description="This immage contains an updated ubuntu 16.04 with the openjdk installed" Version="16.04-8"
 
 ARG http_proxy
 ARG https_proxy
@@ -10,7 +10,12 @@ ENV HTTPS_PROXY=$https_proxy
 ENV http_proxy=$HTTP_PROXY
 ENV https_proxy=$HTTPS_PROXY
 
-RUN addgroup onap && adduser -D -G onap clamp
+RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /etc/apt/apt.conf.d/02proxy || true &&  \
+    apt-get update &&  \
+    apt-get -y dist-upgrade &&  \
+    apt-get install -y openjdk-8-jre-headless
+
+RUN groupadd -r onap && useradd --no-log-init -r -g onap clamp
 VOLUME /opt/clamp/config
 RUN mkdir /var/log/onap
 RUN chmod a+rwx /var/log/onap
@@ -19,8 +24,6 @@ COPY onap-clamp/clamp.jar /opt/clamp/app.jar
 RUN chmod 700 /opt/clamp/app.jar
 
 RUN chown -R clamp:onap /opt/clamp
-
-RUN apk add fontconfig
 
 USER clamp
 WORKDIR /opt/clamp/
