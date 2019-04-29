@@ -30,7 +30,7 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.util.Date;
 
-import javax.ws.rs.NotAuthorizedException;
+import org.onap.clamp.clds.exception.NotAuthorizedException;
 
 import org.apache.camel.Exchange;
 import org.onap.clamp.clds.config.ClampProperties;
@@ -57,7 +57,7 @@ public class AuthorizationController {
     @Autowired
     private ClampProperties refProp;
 
-    private static final String PERM_PREFIX = "security.permission.type.";
+    public static final String PERM_PREFIX = "security.permission.type.";
     private static final String PERM_INSTANCE = "security.permission.instance";
 
     /**
