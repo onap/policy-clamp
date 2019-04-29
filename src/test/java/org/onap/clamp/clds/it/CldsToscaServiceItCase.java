@@ -69,7 +69,7 @@ public class CldsToscaServiceItCase {
     private String toscaModelYaml;
     private Authentication authentication;
     private CldsToscaModel cldsToscaModel;
-    private List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
+    private List<GrantedAuthority> authList = new LinkedList<>();
     private LoggingUtils util;
 
     /**

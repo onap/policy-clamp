@@ -47,9 +47,6 @@ public class DocumentBuilderTest {
     @Mock
     private SVGGraphics2D mockG2d;
 
-    @Mock
-    private Document mockDomImpl;
-
     @Test
     public void pushChangestoDocumentTest() throws IOException, ParserConfigurationException, SAXException {
         String dataElementId = "someId";

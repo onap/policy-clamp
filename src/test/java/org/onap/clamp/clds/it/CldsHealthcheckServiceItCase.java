@@ -25,8 +25,6 @@ package org.onap.clamp.clds.it;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import javax.ws.rs.core.Response;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.model.CldsHealthCheck;

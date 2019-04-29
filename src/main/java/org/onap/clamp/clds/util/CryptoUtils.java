@@ -162,7 +162,7 @@ public final class CryptoUtils {
     private static SecretKeySpec readSecretKeySpec(String propertiesFileName) {
         Properties props = new Properties();
         try {
-            //Workaround fix to make encryption key configurable
+            // Workaround fix to make encryption key configurable
             // System environment variable takes precedence for over clds/key.properties
             String encryptionKey = System.getenv(AES_ENCRYPTION_KEY);
             if(encryptionKey != null && encryptionKey.trim().length() > 0) {
