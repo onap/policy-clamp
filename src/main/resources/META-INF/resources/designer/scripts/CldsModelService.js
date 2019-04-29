@@ -34,7 +34,7 @@ app
 		//This will open the methods located in the app.js
 			if (undefined == name) {
 				return;
-			}else if (name.toLowerCase().indexOf("policy") >= 0){
+			}else if (name === "OperationalPolicy"){
 				PolicyWindow();
 			} else {
 				$rootScope.selectedBoxName = name;

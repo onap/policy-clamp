@@ -58,8 +58,8 @@ public class ClampGraphBuilderTest {
         String collector = "VES";
         MicroService ms1 = new MicroService("ms1", "", "", "ms1_jpa_id", "");
         MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id", "");
-        ;
-        String policy = "Policy";
+
+        String policy = "OperationalPolicy";
         List<MicroService> microServices = Arrays.asList(ms1, ms2);
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
@@ -86,7 +86,7 @@ public class ClampGraphBuilderTest {
     @Test(expected = InvalidStateException.class)
     public void clampGraphBuilderNoMicroServiceGivenTest() {
         String collector = "VES";
-        String policy = "Policy";
+        String policy = "OperationalPolicy";
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
         clampGraphBuilder.collector(collector).policy(policy).build();

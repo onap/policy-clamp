@@ -41,7 +41,7 @@ public class SvgFacade {
         Painter p = new Painter(svgGraphics2D, dp);
         ClampGraphBuilder cgp = new ClampGraphBuilder(p).collector("VES");
         cgp.addAllMicroServices(microServicesChain);
-        ClampGraph cg = cgp.policy("Policy").build();
+        ClampGraph cg = cgp.policy("OperationalPolicy").build();
         return cg.getAsSVG();
     }
 
