@@ -26,11 +26,11 @@
 package org.onap.clamp.clds.model.properties;
 
 import com.google.gson.JsonObject;
+
 import org.onap.clamp.clds.util.JsonUtils;
 
 /**
- * Parse Holmes bpmn parameters json properties.
- * Example json:
+ * Parse Holmes bpmn parameters json properties. Example json:
  * [{"name":"correlationalLogic","value":"vcwx"},{"name":"configPolicyName","value":"cccc"}]
  */
 public class Holmes extends AbstractModelElement {
@@ -43,14 +43,18 @@ public class Holmes extends AbstractModelElement {
     /**
      * Default constructor for Holmes Element.
      *
-     * @param modelBpmn The model bpmn
-     * @param modelJson The model json
+     * @param modelBpmn
+     *        The model bpmn
+     * @param modelJson
+     *        The model json
      */
     public Holmes(ModelBpmn modelBpmn, JsonObject modelJson) {
         super(TYPE_HOLMES, modelBpmn, modelJson);
 
-        correlationLogic = JsonUtils.getStringValueByName(modelElementJsonNode, "correlationalLogic");
-        configPolicyName = JsonUtils.getStringValueByName(modelElementJsonNode, "configPolicyName");
+        if (modelElementJsonNode != null) {
+            correlationLogic = JsonUtils.getStringValueByName(modelElementJsonNode, "correlationalLogic");
+            configPolicyName = JsonUtils.getStringValueByName(modelElementJsonNode, "configPolicyName");
+        }
     }
 
     public static final String getType() {
