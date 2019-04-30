@@ -1,0 +1,2 @@
+<!-- Empty Configuration to prevent creating log files by Units Tests (e.g LoggingUtilsTest) ! -->
+<configuration />

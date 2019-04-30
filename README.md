@@ -106,7 +106,7 @@ Once the image has been built and is available locally, you can use the `docker-
 
 ### Logs
 
-Clamp uses logback framework to generate logs. The logback.xml file cand be found under the [src/main/resources/ folder](src/main/resources). 
+Clamp uses logback framework to generate logs. The logback.xml file can be found under the [src/main/resources/ folder](src/main/resources). 
 
 With the default log settings, all logs will be generated into console and into root.log file under the Clamp root folder. The root.log file is not allowed to be appended, thus restarting the clamp will result in cleaning of the old log files.
 
