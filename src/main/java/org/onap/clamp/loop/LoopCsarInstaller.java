@@ -25,7 +25,6 @@ package org.onap.clamp.loop;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -51,9 +50,13 @@ import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-import org.onap.sdc.tosca.parser.api.ISdcCsarHelper;
+import org.onap.sdc.tosca.parser.api.IEntityDetails;
+import org.onap.sdc.tosca.parser.elements.queries.EntityQuery;
+import org.onap.sdc.tosca.parser.elements.queries.TopologyTemplateQuery;
+import org.onap.sdc.tosca.parser.enums.EntityTemplateType;
 import org.onap.sdc.tosca.parser.enums.SdcTypes;
 import org.onap.sdc.toscaparser.api.NodeTemplate;
+import org.onap.sdc.toscaparser.api.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -183,22 +186,49 @@ public class LoopCsarInstaller implements CsarInstaller {
         return globalProperties;
     }
 
-    private JsonObject createModelPropertiesJson(CsarHandler csar) {
-        JsonObject modelProperties = new JsonObject();
-        Gson gson = new Gson();
-        ISdcCsarHelper csarHelper = csar.getSdcCsarHelper();
-        modelProperties.add("serviceDetails",
-            gson.fromJson(gson.toJson(csarHelper.getServiceMetadataAllProperties()), JsonObject.class));
+    private static JsonObject createVfModuleProperties(CsarHandler csar) {
+        JsonObject vfModuleProps = new JsonObject();
+        // Loop on all Groups defined in the service (VFModule entries type:
+        // org.openecomp.groups.VfModule)
+        for (IEntityDetails entity : csar.getSdcCsarHelper().getEntity(
+            EntityQuery.newBuilder(EntityTemplateType.GROUP).build(),
+            TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE).build(), false)) {
+            // Get all metadata info
+            JsonObject allVfProps = (JsonObject) JsonUtils.GSON.toJsonTree(entity.getMetadata().getAllProperties());
+            vfModuleProps.add(entity.getMetadata().getAllProperties().get("vfModuleModelName"), allVfProps);
+            // now append the properties section so that we can also have isBase,
+            // volume_group, etc ... fields under the VFmodule name
+            for (Entry<String, Property> additionalProp : entity.getProperties().entrySet()) {
+                allVfProps.add(additionalProp.getValue().getName(),
+                    JsonUtils.GSON.toJsonTree(additionalProp.getValue().getValue()));
+            }
+        }
+        return vfModuleProps;
+    }
 
+    private static JsonObject createServicePropertiesByType(CsarHandler csar) {
         JsonObject resourcesProp = new JsonObject();
+        // Iterate on all types defined in the tosca lib
         for (SdcTypes type : SdcTypes.values()) {
             JsonObject resourcesPropByType = new JsonObject();
-            for (NodeTemplate nodeTemplate : csarHelper.getServiceNodeTemplateBySdcType(type)) {
-                resourcesPropByType.add(nodeTemplate.getName(), JsonUtils.GSON_JPA_MODEL
-                    .fromJson(new Gson().toJson(nodeTemplate.getMetaData().getAllProperties()), JsonObject.class));
+            // For each type, get the metadata of each nodetemplate
+            for (NodeTemplate nodeTemplate : csar.getSdcCsarHelper().getServiceNodeTemplateBySdcType(type)) {
+                resourcesPropByType.add(nodeTemplate.getName(),
+                    JsonUtils.GSON.toJsonTree(nodeTemplate.getMetaData().getAllProperties()));
             }
             resourcesProp.add(type.getValue(), resourcesPropByType);
         }
+        return resourcesProp;
+    }
+
+    private static JsonObject createModelPropertiesJson(CsarHandler csar) {
+        JsonObject modelProperties = new JsonObject();
+        // Add service details
+        modelProperties.add("serviceDetails", JsonUtils.GSON.fromJson(
+            JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class));
+        // Add properties details for each type, VfModule, VF, VFC, ....
+        JsonObject resourcesProp = createServicePropertiesByType(csar);
+        resourcesProp.add("VFModule", createVfModuleProperties(csar));
         modelProperties.add("resourceDetails", resourcesProp);
         return modelProperties;
     }

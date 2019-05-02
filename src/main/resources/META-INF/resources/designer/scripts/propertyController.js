@@ -114,7 +114,7 @@ function setDeploymentStatusURL(deploymentStatusURL) {
     cl_props["dcaeDeploymentStatusUrl"] = deploymentStatusURL;
 }
 
-function getResourceDetailsProperty() {
+function getResourceDetailsVfProperty() {
 	return cl_props["modelPropertiesJson"]["resourceDetails"]["VF"];
 }
 
@@ -126,4 +126,4 @@ function getLoopLogsArray() {
 	return cl_props.loopLogs;
 }
 
-module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL,getResourceDetailsProperty,getResourceDetailsVfModuleProperty };
+module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL,getResourceDetailsVfProperty,getResourceDetailsVfModuleProperty };
