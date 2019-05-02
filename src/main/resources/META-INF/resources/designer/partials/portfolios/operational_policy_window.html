@@ -2,7 +2,7 @@
   ============LICENSE_START=======================================================
   ONAP CLAMP
   ================================================================================
-  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+  Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
                               reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -291,7 +291,7 @@ label {
 							Type</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="type" id="type"
-								ng-click="initTargetResourceId()" ng-model="type">
+								ng-click="initTargetResourceId($event)" ng-model="type">
                 						<option value="">-- choose an option --</option>                                                    
 								<option value="VFModule">VFModule</option>
 								<option value="VM">VM</option>
@@ -304,10 +304,9 @@ label {
 							Target ResourceId</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="resourceId" id="resourceId"
-								enableFilter="true" ng-click="changeTargetResourceId()"
+								enableFilter="true" ng-click="changeTargetResourceId($event)"
 								ng-model="resourceId">
 								<option value="">-- choose an option --</option>
-								<option value="Other:">Other:</option>
 							</select>
 						</div>
 					</div>

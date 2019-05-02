@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -55,7 +55,6 @@ app
 		    }
 		    console.log("No active formId found !");
 	    }
-
 	    function add_one_more() {
 
 		    console.log("add one more");
@@ -154,10 +153,9 @@ app
 			    policiesArray.push(policyProperties);
 			    // Now get the Guard
 			    if ($("#" + this.id + " #enableGuardPolicy").is(':checked')) {
-			    	var guardPolicyBody = serializeElement($("#" + this.id + " .guardProperties"));
-			    	var guardPolicyId = guardPolicyBody['id'];
-			    	delete guardPolicyBody['id'];
-
+				    var guardPolicyBody = serializeElement($("#" + this.id + " .guardProperties"));
+				    var guardPolicyId = guardPolicyBody['id'];
+				    delete guardPolicyBody['id'];
 				    allPolicies['guard_policies'][guardPolicyId] = guardPolicyBody;
 				    $scope.guard_ids.push(guardPolicyId);
 			    }
@@ -190,8 +188,13 @@ app
 			    var formNum = add_one_more();
 			    $.each($('.policyProperties').find('.form-control'), function(opPolicyPropIndex, opPolicyPropValue) {
 
-				    $("#formId"+formNum+" .policyProperties").find("#"+opPolicyPropValue.id).val(
+				    $("#formId" + formNum + " .policyProperties").find("#" + opPolicyPropValue.id).val(
 				    allPolicies['operational_policy']['policies'][opPolicyElemIndex][opPolicyPropValue.id]);
+			    });
+			    $.each($('.policyTarget').find('.form-control'), function(opPolicyTargetPropIndex, opPolicyTargetPropValue) {
+
+				    $("#formId" + formNum + " .policyTarget").find("#" + opPolicyTargetPropValue.id).val(
+				    allPolicies['operational_policy']['policies'][opPolicyElemIndex]['target'][opPolicyTargetPropValue.id]);
 			    });
 			    // update the current tab label
 			    $("#go_properties_tab" + formNum).text(
@@ -201,9 +204,11 @@ app
 
 				    if (guardElemValue.recipe === $($("#formId" + formNum + " #recipe")[0]).val()) {
 					    // Found one, set all guard prop
-					    $.each($('.guardProperties').find('.form-control'), function(guardPropElemIndex,guardPropElemValue) {
-					    	guardElemValue['id'] = guardElemId;
-					    	$("#formId"+formNum+" .guardProperties").find("#"+guardPropElemValue.id).val(
+					    $.each($('.guardProperties').find('.form-control'), function(guardPropElemIndex,
+					                                                                 guardPropElemValue) {
+
+						    guardElemValue['id'] = guardElemId;
+						    $("#formId" + formNum + " .guardProperties").find("#" + guardPropElemValue.id).val(
 						    guardElemValue[guardPropElemValue.id]);
 					    });
 					    // And finally enable the flag
@@ -212,108 +217,69 @@ app
 			    });
 		    });
 	    }
-	    
-	    $scope.initTargetResourceId = function() {
-
-			var recipe = $(event.target).val();
-
-			var type = $(event.target).val();
-			
-			$("#modelName").val("");
-			$("#modelInvariantId").val("");
-			$("#modelVersionId").val("");
-			$("#modelVersion").val("");
-			$("#modelCustomizationId").val("");
-			$('#resourceId').empty();
-			$("#resourceId")
-					.append(
-							$('<option></option>').val("")
-									.html("-- choose an option --"));
-			$("#resourceId").append(
-					$('<option></option>').val("Other:")
-							.html("Other:"));
-			if (type == "VM" || type == "" || type == "VNF" ) {
-				$("#metadata *").prop('disabled',true);
-			}
-			
-			var resourceVnf = getResourceDetailsProperty();
-			if (type == "VNF"
-					&& (null !== resourceVnf || undefined !== resourceVnf)) {
-				for ( var prop in resourceVnf) {
-					var name = resourceVnf[prop]["name"];
-					$("#resourceId").append(
-							$('<option></option>')
-									.val(name).html(name));
-				}
-
-			}
-			var resourceVFModule = getResourceDetailsVfModuleProperty();
-			if (type == "VFModule"
-					&& (null !== resourceVFModule || undefined !== resourceVFModule)) {
-				if (recipe == 'VF Module Create'
-						|| recipe == 'VF Module Delete') {
-					for ( var prop in resourceVFModule) {
-						if (resourceVFModule[prop]["isBase"] == false) {
-							var name = resourceVFModule[prop]["name"];
-							$("#resourceId").append(
-									$('<option></option>')
-											.val(name)
-											.html(name));
-						}
-					}
-				} 
-		        else
-		        {
-		          for ( var prop in resourceVFModule) {
-				     var name = resourceVFModule[prop]["name"];
-		    	      $("#resourceId").append(
-		    		     $('<option></option>')
-		    			    .val(name).html(name));
-		    			}
-					}
-				}
-	    }	
-
-		$scope.changeTargetResourceId = function() {
-			$("#modelName").val("");
-			$("#modelInvariantId").val("");
-			$("#modelVersionId").val("");
-			$("#modelVersion").val("");
-			$("#modelCustomizationId").val("");
-			var resourceVFModule = getResourceDetailsVfModuleProperty();
-			var type = $("#type").val();
-			var recipe = $("#recipe").val();
-			vfBaseName = $(event.target).val();
-			if (type == "VFModule"
-					&& (null !== resourceVFModule || undefined !== resourceVFModule)
-					&& (recipe == 'VF Module Create' || recipe == 'VF Module Delete')) {
-				for ( var prop in resourceVFModule) {
-					var name = resourceVFModule[prop]["name"];
-					if (name == vfBaseName) {
-						var vfModuleModelName = resourceVFModule[prop]["name"];
-						$("#modelName").val(
-								vfModuleModelName);
-						var vfModuleModelInvariantUUID = resourceVFModule[prop]["invariantUUID"];
-						$("#modelInvariantId").val(
-								vfModuleModelInvariantUUID);
-						var vfModuleModelUUID = resourceVFModule[prop]["UUID"];
-						$("#modelVersionId").val(
-								vfModuleModelUUID);
-						var vfModuleModelVersion = resourceVFModule[prop]["version"];
-						$("#modelVersion").val(
-								vfModuleModelVersion);
-						var vfModuleModelCustomizationUUID = resourceVFModule[prop]["customizationUUID"];
-						$("#modelCustomizationId")
-								.val(
-										vfModuleModelCustomizationUUID);
-					}
-				}
-			}
-			else {
-				$("#metadata *").prop('disabled',true);
-			}
-		}
-
+	    $scope.initTargetResourceId = function(event) {
+	    	var formNum = $(event.target).closest('.formId').attr('id').substring(6);
+	    	
+		    var type = $(event.target).val();
+		    var recipe = $("#formId" + formNum + "#recipe").val();
+		    $("#formId" + formNum + " #modelName").val("");
+		    $("#formId" + formNum + " #modelInvariantId").val("");
+		    $("#formId" + formNum + " #modelVersionId").val("");
+		    $("#formId" + formNum + " #modelVersion").val("");
+		    $("#formId" + formNum + " #modelCustomizationId").val("");
+		    $("#formId" + formNum + " #resourceId").empty();
+		    $("#formId" + formNum + " #resourceId").append($('<option></option>').val("").html("-- choose an option --"));
+		    if (type == "VM" || type == "" || type == "VNF") {
+			    $("#formId" + formNum + " #metadata *").prop('disabled', true);
+		    }
+		    var resourceVnf = getResourceDetailsVfProperty();
+		    if (type == "VNF" && (null !== resourceVnf || undefined !== resourceVnf)) {
+			    for ( var prop in resourceVnf) {
+				    var name = resourceVnf[prop]["name"];
+				    $("#formId" + formNum + " #resourceId").append($('<option></option>').val(name).html(name));
+			    }
+		    }
+		    var resourceVFModule = getResourceDetailsVfModuleProperty();
+		    if (type == "VFModule" && (null !== resourceVFModule || undefined !== resourceVFModule)) {
+			    if (recipe == 'VF Module Create' || recipe == 'VF Module Delete') {
+				    for ( var prop in resourceVFModule) {
+					    if (resourceVFModule[prop]["isBase"] == false) {
+						    $("#formId" + formNum + " #resourceId").append($('<option></option>').val(resourceVFModule[prop]["vfModuleModelName"]).html(resourceVFModule[prop]["vfModuleModelName"]));
+					    }
+				    }
+			    } else {
+				    for ( var prop in resourceVFModule) {
+					    $("#formId" + formNum + " #resourceId").append($('<option></option>').val(resourceVFModule[prop]["vfModuleModelName"]).html(resourceVFModule[prop]["vfModuleModelName"]));
+				    }
+			    }
+		    }
+	    }
+	    $scope.changeTargetResourceId = function(event) {
+		    var formNum = $(event.target).closest('.formId').attr('id').substring(6);
+		    $("#formId" + formNum +" #modelName").val("");
+		    $("#formId" + formNum +" #modelInvariantId").val("");
+		    $("#formId" + formNum +" #modelVersionId").val("");
+		    $("#formId" + formNum +" #modelVersion").val("");
+		    $("#formId" + formNum +" #modelCustomizationId").val("");
+		    var resourceVFModule = getResourceDetailsVfModuleProperty();
+		    var type = $("#formId" + formNum +" #type").val();
+		    var recipe = $("#formId" + formNum +" #recipe").val();
+		    if (type == "VFModule" && (null !== resourceVFModule || undefined !== resourceVFModule)
+		    && (recipe == 'VF Module Create' || recipe == 'VF Module Delete')) {
+			    for ( var prop in resourceVFModule) {
+				    if (prop ==  $(event.target).val()) {
+					    $("#formId" + formNum +" #modelName").val(resourceVFModule[prop]["vfModuleModelName"]);
+					    $("#formId" + formNum +" #modelInvariantId").val(resourceVFModule[prop]["vfModuleModelInvariantUUID"]);
+					    $("#formId" + formNum +" #modelVersionId").val(resourceVFModule[prop]["vfModuleModelUUID"]);
+					    $("#formId" + formNum +" #modelVersion").val(resourceVFModule[prop]["vfModuleModelVersion"]);
+					    $("#formId" + formNum +" #modelCustomizationId").val(resourceVFModule[prop]["vfModuleModelCustomizationUUID"]);
+					    $("#formId" + formNum +" #metadata *").prop('disabled', false);
+				    }
+			    }
+		    } else {
+			    $("#formId" + formNum +" #metadata *").prop('disabled', true);
+		    }
+	    }
 	    $scope.changeGuardPolicyType = function() {
 
 		    var formItemActive = searchActiveFormId();
@@ -343,7 +309,8 @@ app
 	    $scope.init = function() {
 
 		    $(function() {
-		    	$scope.clname=getLoopName();
+
+			    $scope.clname = getLoopName();
 			    $("#add_one_more").click(function(event) {
 
 				    console.log("add one more");
@@ -359,17 +326,18 @@ app
 				    add_new_policy();
 			    }
 			    $("#savePropsBtn").click(function(event) {
+
 				    console.log("save properties triggered");
 				    savePolicyLocally();
-			    	for(var i = 0; i <= $scope.guard_ids.length; i++) {
-			            for(var j = i; j <= $scope.guard_ids.length; j++) {
-			                if(i != j && $scope.guard_ids[i] == $scope.guard_ids[j]) {
-			                    // duplacated guard policy id exist
-			                	alert("The guard policy ID should be unique.");
-			                	return;
-			                }
-			            }
-			        }
+				    for (var i = 0; i <= $scope.guard_ids.length; i++) {
+					    for (var j = i; j <= $scope.guard_ids.length; j++) {
+						    if (i != j && $scope.guard_ids[i] == $scope.guard_ids[j]) {
+							    // duplacated guard policy id exist
+							    alert("The guard policy ID should be unique.");
+							    return;
+						    }
+					    }
+				    }
 				    angular.element(document.getElementById('formSpan')).scope().submitForm(allPolicies);
 				    $("#close_button").click();
 			    });
