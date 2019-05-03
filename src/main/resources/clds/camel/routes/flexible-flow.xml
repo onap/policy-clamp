@@ -605,9 +605,10 @@
 				message="Query Closed Loop status from policy DPD: ${exchangeProperty[loopObject].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Query operational policies to PDP group')" />
-			<setBody>
-				<constant>null</constant>
-			</setBody>
+			<setProperty propertyName="operationalPolicyName">
+				<method ref="org.onap.clamp.loop.LoopOperation"
+					method="getOperationalPolicyName(${exchangeProperty[loopObject]})" />
+			</setProperty>
 			<setHeader headerName="CamelHttpMethod">
 				<constant>GET</constant>
 			</setHeader>
@@ -625,9 +626,9 @@
 			</setHeader>
 			<log
 				loggingLevel="INFO"
-				message="Endpoint to query from Policy DPD: {{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicy].getName()}/versions/deployed"></log>
+				message="Endpoint to query from Policy DPD: {{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed"></log>
 			<toD
-				uri="{{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicy].getName()}/versions/deployed?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+				uri="{{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
@@ -639,9 +640,6 @@
 					<method ref="org.onap.clamp.loop.LoopOperation"
 					method="analysePolicyResponse(${header.CamelHttpResponseCode})" />
 				</setProperty>
-				<log
-						loggingLevel="INFO"
-						message="policy status: ${exchangeProperty[policyStatus]}"></log>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>

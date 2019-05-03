@@ -34,7 +34,9 @@ import com.google.gson.JsonPrimitive;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -42,6 +44,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -143,10 +146,10 @@ public class LoopOperation {
         String statusUrl = (String) linksObj.get(DCAE_STATUS_FIELD);
 
         // use http4 instead of http, because camel http4 component is used to do the http call
-        statusUrl.replace("http", "http4");
+        String newStatusUrl = statusUrl.replaceAll("http:", "http4:");
 
         loop.setDcaeDeploymentId(deploymentId);
-        loop.setDcaeDeploymentStatusUrl(statusUrl);
+        loop.setDcaeDeploymentStatusUrl(newStatusUrl);
         loopService.saveOrUpdateLoop(loop);
     }
 
@@ -157,13 +160,29 @@ public class LoopOperation {
      * @return The state based on policy response
      * @throws ParseException The parse exception
      */
-    public String analysePolicyResponse(int statusCode) throws ParseException {
+    public String analysePolicyResponse(int statusCode) {
         if (statusCode == 200) {
             return TempLoopState.SUBMITTED.toString();
         } else if (statusCode == 404) {
             return TempLoopState.NOT_SUBMITTED.toString();
         }
         return TempLoopState.IN_ERROR.toString();
+    }
+
+    /**
+     * Get the name of the first Operational policy.
+     *
+     * @param loop The closed loop
+     * @return The name of the first operational policy
+     */
+    public String getOperationalPolicyName(Loop loop) {
+        Set<OperationalPolicy> opSet = (Set<OperationalPolicy>)loop.getOperationalPolicies();
+        Iterator<OperationalPolicy> iterator = opSet.iterator();
+        while (iterator.hasNext()) {
+            OperationalPolicy policy = iterator.next();
+            return policy.getName();
+        }
+        return null;
     }
 
     /**
@@ -189,13 +208,13 @@ public class LoopOperation {
             String status = (String) jsonObj.get("status");
 
             // status = processing/successded/failed
-            if (status == "successed") {
-                if (opType == "install") {
+            if (status.equals("succeeded")) {
+                if (opType.equals("install")) {
                     return TempLoopState.DEPLOYED.toString();
-                } else if (status == "successed") {
+                } else if (opType.equals("uninstall")) {
                     return TempLoopState.NOT_DEPLOYED.toString();
                 }
-            } else if (status == "processing") {
+            } else if (status.equals("processing")) {
                 return TempLoopState.PROCESSING.toString();
             }
         } else if (statusCode == 404) {
@@ -205,13 +224,14 @@ public class LoopOperation {
     }
 
     /**
-     * Get the status of the closed loop based on the response from Policy and DCAE.
+     * Update the status of the closed loop based on the response from Policy and DCAE.
      *
+     * @param loop The closed loop
      * @param policyState The state get from Policy
      * @param dcaeState The state get from DCAE
      * @throws ParseException The parse exception
      */
-    public LoopState updateLoopStatus(TempLoopState policyState, TempLoopState dcaeState) {
+    public LoopState updateLoopStatus(Loop loop, TempLoopState policyState, TempLoopState dcaeState) {
         LoopState clState = LoopState.IN_ERROR;
         if (policyState == TempLoopState.SUBMITTED) {
             if (dcaeState == TempLoopState.DEPLOYED) {
@@ -226,6 +246,8 @@ public class LoopOperation {
                 clState = LoopState.DESIGN;
             }
         }
+        loop.setLastComputedState(clState);
+        loopService.saveOrUpdateLoop(loop);
         return clState;
     }
 
