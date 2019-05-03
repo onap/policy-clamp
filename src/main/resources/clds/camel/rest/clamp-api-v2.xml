@@ -286,7 +286,7 @@
 							loggingLevel="ERROR"
 							message="STOP request failed for loop: $${header.loopName}" />
 						<to
-							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('STOP request failed','ERROR',${exchangeProperty[loopObject]})" />
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('STOP request failed, Error reported: ${exception}','ERROR',${exchangeProperty[loopObject]})" />
 					</doCatch>
 				</doTry>
 			</route>
@@ -331,7 +331,7 @@
 							loggingLevel="ERROR"
 							message="START request failed for loop: ${header.loopName}" />
 						<to
-							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('START request failed','INFO',${exchangeProperty[loopObject]})" />
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('START request failed, Error reported: ${exception}','INFO',${exchangeProperty[loopObject]})" />
 					</doCatch>
 				</doTry>
 			</route>
@@ -439,7 +439,7 @@
 							loggingLevel="ERROR"
 							message="SUBMIT request failed for loop: ${header.loopName}" />
 						<to
-							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('SUBMIT request failed','ERROR',${exchangeProperty[loopObject]})" />
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('SUBMIT request failed, Error reported: ${exception}','ERROR',${exchangeProperty[loopObject]})" />
 					</doCatch>
 				</doTry>
 			</route>
@@ -521,7 +521,7 @@
 							loggingLevel="ERROR"
 							message="DELETE request failed for loop: ${header.loopName}" />
 						<to
-							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DELETE request failed','ERROR',${exchangeProperty[loopObject]})" />
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DELETE request failed, Error reported: ${exception}','ERROR',${exchangeProperty[loopObject]})" />
 					</doCatch>
 				</doTry>
 			</route>

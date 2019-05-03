@@ -478,8 +478,7 @@
 					<constant>false</constant>
 				</handled>
 				<setProperty propertyName="logMessage">
-					<simple>${exchangeProperty[policyName]} PDP Group removal status
-					</simple>
+					<simple>PDP Group removal, Error reported: ${exception}</simple>
 				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doCatch>
@@ -500,7 +499,8 @@
 
 	<route id="dump-loop-log-http-response">
 		<from uri="direct:dump-loop-log-http-response" />
+		<log loggingLevel="INFO" message="${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}" />
 		<to
-			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog(${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText},'INFO',${exchangeProperty[loopObject]})" />
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO',${exchangeProperty[loopObject]})" />
 	</route>
 </routes>

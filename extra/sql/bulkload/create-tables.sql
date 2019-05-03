@@ -9,7 +9,7 @@
        id bigint not null,
         log_instant datetime(6) not null,
         log_type varchar(255) not null,
-        message varchar(255) not null,
+        message MEDIUMTEXT not null,
         loop_id varchar(255) not null,
         primary key (id)
     ) engine=InnoDB;
