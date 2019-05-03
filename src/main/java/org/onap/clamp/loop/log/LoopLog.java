@@ -69,7 +69,7 @@ public class LoopLog implements Serializable {
     private LogType logType;
 
     @Expose
-    @Column(name = "message", nullable = false)
+    @Column(name = "message", columnDefinition = "MEDIUMTEXT", nullable = false)
     private String message;
 
     @ManyToOne(fetch = FetchType.LAZY)
