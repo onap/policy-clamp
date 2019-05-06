@@ -206,7 +206,7 @@ public class OperationalPolicy implements Serializable, Policy {
             for (Entry<String, JsonElement> guardElem : guardsList.getAsJsonObject().entrySet()) {
                 JsonObject guard = new JsonObject();
                 guard.addProperty("policy-id", guardElem.getKey());
-                guard.add("contents", guardElem.getValue());
+                guard.add("content", guardElem.getValue());
                 result.put(guardElem.getKey(), new GsonBuilder().create().toJson(guard));
             }
         }

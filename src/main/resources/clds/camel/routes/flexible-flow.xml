@@ -133,7 +133,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to create microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies"></log>
 			<toD
-				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
+				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
@@ -178,7 +178,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to delete microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0"></log>
 			<toD
-				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
+				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
 
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
@@ -228,7 +228,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to create operational policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies"></log>
 			<toD
-				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
+				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
@@ -273,7 +273,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to delete operational policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicy].getName()}/versions/1.0.0"></log>
 			<toD
-				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicy].getName()}/versions/1.0.0?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
+				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicy].getName()}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
@@ -322,7 +322,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to create guard policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies"></log>
 			<toD
-				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
+				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
@@ -366,7 +366,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to delete guard policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${exchangeProperty[guardPolicy].getKey()}/versions/1.0.0"></log>
 			<toD
-				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${exchangeProperty[guardPolicy].getKey()}/versions/1.0.0?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
+				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${exchangeProperty[guardPolicy].getKey()}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}" />
 
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
@@ -415,7 +415,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps"></log>
 			<toD
-				uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+				uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
@@ -465,7 +465,7 @@
 					loggingLevel="INFO"
 					message="Endpoint to delete policy from PDP Group: {{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0"></log>
 				<toD
-					uri="{{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+					uri="{{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 				<setProperty propertyName="logMessage">
 					<simple>${exchangeProperty[policyName]} PDP Group removal status
 					</simple>
@@ -532,7 +532,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to deploy closed loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[deploymentId]}"></log>
 			<toD
-				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[deploymentId]}?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[RaiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
+				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[deploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[RaiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
 			<to
 				uri="bean:org.onap.clamp.loop.LoopOperation?method=updateLoopInfo(*,${exchangeProperty[loopObject]},${exchangeProperty[deploymentId]})" />
 			<doFinally>
@@ -582,7 +582,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to undeploy closed loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}"></log>
 			<toD
-				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[RaiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
+				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[RaiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
 			<to
 				uri="bean:org.onap.clamp.loop.LoopOperation?method=updateLoopInfo(*,${exchangeProperty[loopObject]},null)" />
 			<doFinally>
@@ -627,7 +627,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to query from Policy DPD: {{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed"></log>
 			<toD
-				uri="{{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+				uri="{{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
@@ -684,7 +684,7 @@
 						loggingLevel="INFO"
 						message="Endpoint to query Closed Loop status: ${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}"></log>
 					<toD
-						uri="${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
+						uri="${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
 					<doFinally>
 						<to uri="direct:reset-raise-http-exception-flag" />
 						<to
