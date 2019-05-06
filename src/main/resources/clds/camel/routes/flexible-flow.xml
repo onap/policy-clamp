@@ -465,7 +465,7 @@
 					loggingLevel="INFO"
 					message="Endpoint to delete policy from PDP Group: {{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0"></log>
 				<toD
-					uri="{{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+					uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 				<setProperty propertyName="logMessage">
 					<simple>${exchangeProperty[policyName]} PDP Group removal status
 					</simple>
@@ -625,9 +625,9 @@
 			</setHeader>
 			<log
 				loggingLevel="INFO"
-				message="Endpoint to query from Policy DPD: {{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed"></log>
+				message="Endpoint to query from Policy DPD: {{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed"></log>
 			<toD
-				uri="{{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+				uri="{{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
