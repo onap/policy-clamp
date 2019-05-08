@@ -601,7 +601,7 @@
 		<doTry>
 			<log
 				loggingLevel="INFO"
-				message="Query Closed Loop status from policy DPD: ${exchangeProperty[loopObject].getName()}" />
+				message="Query Closed Loop status from policy PDP: ${exchangeProperty[loopObject].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Query operational policies to PDP group')" />
 			<setProperty propertyName="operationalPolicyName">
@@ -625,9 +625,9 @@
 			</setHeader>
 			<log
 				loggingLevel="INFO"
-				message="Endpoint to query from Policy DPD: {{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed"></log>
+				message="Endpoint to query from Policy PDP: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed"></log>
 			<toD
-				uri="{{clamp.config.policy.pap.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicyName]}/versions/deployed?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to

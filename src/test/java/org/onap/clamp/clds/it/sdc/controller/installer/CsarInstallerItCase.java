@@ -179,10 +179,9 @@ public class CsarInstallerItCase {
             ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca-2.json"),
             StandardCharsets.UTF_8), cldsModel2.getPropText(), true);
         CldsModel cldsModel3 = verifyClosedLoopModelLoadedInDb(csar, "tca_3.yaml");
-        JSONAssert.assertEquals(
-            IOUtils.toString(ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca.json"),
-                StandardCharsets.UTF_8),
-            cldsModel3.getPropText(), true);
+        JSONAssert.assertEquals(IOUtils.toString(
+            ResourceFileUtil.getResourceAsStream("example/sdc/blueprint-dcae/prop-text-for-tca-3.json"),
+            StandardCharsets.UTF_8), cldsModel3.getPropText(), true);
     }
 
     private CldsModel verifyClosedLoopModelLoadedInDb(CsarHandler csar, String artifactName)

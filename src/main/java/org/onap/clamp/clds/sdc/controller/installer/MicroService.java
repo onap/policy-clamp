@@ -29,16 +29,14 @@ import java.util.Objects;
 public class MicroService {
     private final String name;
     private final String modelType;
-    private final String blueprintName;
     private final String inputFrom;
     private String mappedNameJpa;
 
-    public MicroService(String name, String modelType, String inputFrom, String mappedNameJpa, String blueprintName) {
+    public MicroService(String name, String modelType, String inputFrom, String mappedNameJpa) {
         this.name = name;
         this.inputFrom = inputFrom;
         this.mappedNameJpa = mappedNameJpa;
-        this.modelType =  modelType;
-        this.blueprintName = blueprintName;
+        this.modelType = modelType;
     }
 
     public String getName() {
@@ -53,15 +51,10 @@ public class MicroService {
         return inputFrom;
     }
 
-    public String getBlueprintName() {
-        return blueprintName;
-    }
-
     @Override
     public String toString() {
         return "MicroService{" + "name='" + name + '\'' + ", modelType='" + modelType + '\'' + ", inputFrom='"
-                + inputFrom + '\'' + ", mappedNameJpa='" + mappedNameJpa + '\'' + ", blueprintName='"
-                + blueprintName + '\'' + '}';
+            + inputFrom + '\'' + ", mappedNameJpa='" + mappedNameJpa + '\'' + '}';
     }
 
     public String getMappedNameJpa() {
@@ -81,11 +74,12 @@ public class MicroService {
             return false;
         }
         MicroService that = (MicroService) o;
-        return name.equals(that.name) && modelType.equals(that.modelType) && inputFrom.equals(that.inputFrom) && mappedNameJpa.equals(that.mappedNameJpa) && blueprintName.equals(that.blueprintName);
+        return name.equals(that.name) && modelType.equals(that.modelType) && inputFrom.equals(that.inputFrom)
+            && mappedNameJpa.equals(that.mappedNameJpa);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, modelType, inputFrom, mappedNameJpa, blueprintName);
+        return Objects.hash(name, modelType, inputFrom, mappedNameJpa);
     }
 }

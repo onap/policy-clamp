@@ -29,6 +29,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -61,12 +62,12 @@ public class BlueprintParser {
     public Set<MicroService> getMicroServices(String blueprintString) {
         Set<MicroService> microServices = new HashSet<>();
         JsonObject jsonObject = BlueprintParser.convertToJson(blueprintString);
-        JsonObject results = jsonObject.get(NODE_TEMPLATES).getAsJsonObject();
+        JsonObject nodeTemplateList = jsonObject.get(NODE_TEMPLATES).getAsJsonObject();
 
-        for (Entry<String, JsonElement> entry : results.entrySet()) {
+        for (Entry<String, JsonElement> entry : nodeTemplateList.entrySet()) {
             JsonObject nodeTemplate = entry.getValue().getAsJsonObject();
             if (nodeTemplate.get(TYPE).getAsString().contains(DCAE_NODES)) {
-                MicroService microService = getNodeRepresentation(entry);
+                MicroService microService = getNodeRepresentation(entry, nodeTemplateList);
                 microServices.add(microService);
             }
         }
@@ -89,7 +90,7 @@ public class BlueprintParser {
         }
         String msName = theBiggestMicroServiceKey.toLowerCase().contains(HOLMES_PREFIX) ? HOLMES : TCA;
         return Collections
-            .singletonList(new MicroService(msName, "onap.policies.monitoring.cdap.tca.hi.lo.app", "", "", ""));
+            .singletonList(new MicroService(msName, "onap.policies.monitoring.cdap.tca.hi.lo.app", "", ""));
     }
 
     String getName(Entry<String, JsonElement> entry) {
@@ -118,8 +119,22 @@ public class BlueprintParser {
         return "";
     }
 
-    String getModelType(Entry<String, JsonElement> entry) {
+    String findModelTypeInTargetArray(JsonArray jsonArray, JsonObject nodeTemplateList) {
+        for (JsonElement elem : jsonArray) {
+            String modelType = getModelType(
+                new AbstractMap.SimpleEntry<String, JsonElement>(elem.getAsJsonObject().get(TARGET).getAsString(),
+                    nodeTemplateList.get(elem.getAsJsonObject().get(TARGET).getAsString()).getAsJsonObject()),
+                nodeTemplateList);
+            if (!modelType.isEmpty()) {
+                return modelType;
+            }
+        }
+        return "";
+    }
+
+    String getModelType(Entry<String, JsonElement> entry, JsonObject nodeTemplateList) {
         JsonObject ob = entry.getValue().getAsJsonObject();
+        // Search first in this node template
         if (ob.has(PROPERTIES)) {
             JsonObject properties = ob.get(PROPERTIES).getAsJsonObject();
             if (properties.has(POLICYID)) {
@@ -129,19 +144,18 @@ public class BlueprintParser {
                 }
             }
         }
+        // Then it's may be a relationship
+        if (ob.has(RELATIONSHIPS)) {
+            return findModelTypeInTargetArray(ob.get(RELATIONSHIPS).getAsJsonArray(), nodeTemplateList);
+        }
         return "";
     }
 
-    String getBlueprintName(Entry<String, JsonElement> entry) {
-        return entry.getKey();
-    }
-
-    MicroService getNodeRepresentation(Entry<String, JsonElement> entry) {
+    MicroService getNodeRepresentation(Entry<String, JsonElement> entry, JsonObject nodeTemplateList) {
         String name = getName(entry);
         String getInputFrom = getInput(entry);
-        String modelType = getModelType(entry);
-        String blueprintName = getBlueprintName(entry);
-        return new MicroService(name, modelType, getInputFrom, "", blueprintName);
+        String modelType = getModelType(entry, nodeTemplateList);
+        return new MicroService(name, modelType, getInputFrom, "");
     }
 
     private String getTarget(JsonObject elementObject) {

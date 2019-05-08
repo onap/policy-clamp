@@ -38,10 +38,10 @@ public class ChainGeneratorTest {
 
     @Test
     public void getChainOfMicroServicesTest() {
-        MicroService ms1 = new MicroService(FIRST_APPP, "", "", "", "");
-        MicroService ms2 = new MicroService(SECOND_APPP, "", FIRST_APPP, "", "");
-        MicroService ms3 = new MicroService(THIRD_APPP, "", SECOND_APPP, "", "");
-        MicroService ms4 = new MicroService(FOURTH_APPP, "", THIRD_APPP, "", "");
+        MicroService ms1 = new MicroService(FIRST_APPP, "", "", "");
+        MicroService ms2 = new MicroService(SECOND_APPP, "", FIRST_APPP, "");
+        MicroService ms3 = new MicroService(THIRD_APPP, "", SECOND_APPP, "");
+        MicroService ms4 = new MicroService(FOURTH_APPP, "", THIRD_APPP, "");
 
         List<MicroService> expectedList = Arrays.asList(ms1, ms2, ms3, ms4);
         Set<MicroService> inputSet = new HashSet<>(expectedList);
@@ -52,10 +52,10 @@ public class ChainGeneratorTest {
 
     @Test
     public void getChainOfMicroServicesTwiceNoInputTest() {
-        MicroService ms1 = new MicroService(FIRST_APPP, "", "", "", "");
-        MicroService ms2 = new MicroService(SECOND_APPP, "", "", "", "");
-        MicroService ms3 = new MicroService(THIRD_APPP, "", SECOND_APPP, "", "");
-        MicroService ms4 = new MicroService(FOURTH_APPP, "", FIRST_APPP, "", "");
+        MicroService ms1 = new MicroService(FIRST_APPP, "", "", "");
+        MicroService ms2 = new MicroService(SECOND_APPP, "", "", "");
+        MicroService ms3 = new MicroService(THIRD_APPP, "", SECOND_APPP, "");
+        MicroService ms4 = new MicroService(FOURTH_APPP, "", FIRST_APPP, "");
 
         Set<MicroService> inputSet = new HashSet<>(Arrays.asList(ms1, ms2, ms3, ms4));
         List<MicroService> actualList = new ChainGenerator().getChainOfMicroServices(inputSet);
@@ -64,10 +64,10 @@ public class ChainGeneratorTest {
 
     @Test
     public void getChainOfMicroServicesBranchingTest() {
-        MicroService ms1 = new MicroService(FIRST_APPP, "", "", "", "");
-        MicroService ms2 = new MicroService(SECOND_APPP, "", FIRST_APPP, "", "");
-        MicroService ms3 = new MicroService(THIRD_APPP, "", FIRST_APPP, "", "");
-        MicroService ms4 = new MicroService(FOURTH_APPP, "", FIRST_APPP, "", "");
+        MicroService ms1 = new MicroService(FIRST_APPP, "", "", "");
+        MicroService ms2 = new MicroService(SECOND_APPP, "", FIRST_APPP, "");
+        MicroService ms3 = new MicroService(THIRD_APPP, "", FIRST_APPP, "");
+        MicroService ms4 = new MicroService(FOURTH_APPP, "", FIRST_APPP, "");
 
         Set<MicroService> inputSet = new HashSet<>(Arrays.asList(ms1, ms2, ms3, ms4));
         List<MicroService> actualList = new ChainGenerator().getChainOfMicroServices(inputSet);
