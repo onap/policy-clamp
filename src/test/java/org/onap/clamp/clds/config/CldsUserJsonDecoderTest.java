@@ -5,6 +5,8 @@
  * Copyright (C) 2017 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -25,9 +27,10 @@
 package org.onap.clamp.clds.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
+import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
+
 
 public class CldsUserJsonDecoderTest {
 
@@ -92,4 +95,12 @@ public class CldsUserJsonDecoderTest {
         assertThat(user.getPassword()).isEqualTo(password);
         assertThat(user.getPermissionsString()).isEqualTo(incompletePermissionsArray);
     }
+
+    @Test(expected = CldsUsersException.class)
+    public void shouldThrowCldsUsersException() {
+        //when
+        CldsUserJsonDecoder
+                .decodeJson(this.getClass().getResourceAsStream("/clds/clds-parse-exception.json"));
+    }
+
 }
