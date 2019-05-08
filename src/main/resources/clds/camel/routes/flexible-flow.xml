@@ -413,9 +413,9 @@
 			</setHeader>
 			<log
 				loggingLevel="INFO"
-				message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps"></log>
+				message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies"></log>
 			<toD
-				uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
+				uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}" />
 
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
