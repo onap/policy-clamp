@@ -56,8 +56,8 @@ public class ClampGraphBuilderTest {
     @Test
     public void clampGraphBuilderCompleteChainTest() {
         String collector = "VES";
-        MicroService ms1 = new MicroService("ms1", "", "", "ms1_jpa_id", "");
-        MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id", "");
+        MicroService ms1 = new MicroService("ms1", "", "", "ms1_jpa_id");
+        MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id");
 
         String policy = "OperationalPolicy";
         List<MicroService> microServices = Arrays.asList(ms1, ms2);
@@ -76,8 +76,8 @@ public class ClampGraphBuilderTest {
     @Test(expected = InvalidStateException.class)
     public void clampGraphBuilderNoPolicyGivenTest() {
         String collector = "VES";
-        MicroService ms1 = new MicroService("ms1", "", "", "ms1_jpa_id", "");
-        MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id", "");
+        MicroService ms1 = new MicroService("ms1", "", "", "ms1_jpa_id");
+        MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id");
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
         clampGraphBuilder.collector(collector).addMicroService(ms1).addMicroService(ms2).build();

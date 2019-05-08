@@ -51,6 +51,7 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
@@ -206,6 +207,17 @@ public class CsarInstallerItCase {
         assertThat(loop.getModelPropertiesJson().get("resourceDetails")).isNotNull();
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"),
             JsonUtils.GSON.toJson(loop.getModelPropertiesJson()), true);
+        assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
+
+        loop = loopsRepo
+            .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))
+            .get();
+        assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
+
+        loop = loopsRepo
+            .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))
+            .get();
+        assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
     }
 
 }
