@@ -497,11 +497,6 @@
 				message="Deploy the closed loop: ${exchangeProperty[loopObject].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Deploy closed loop')" />
-			<simple>${exchangeProperty[loopObject].getOperationalPolicies()}
-			</simple>
-			<setProperty propertyName="operationalPolicy">
-				<simple>${body}</simple>
-			</setProperty>
 			<setBody>
 				<method ref="org.onap.clamp.loop.LoopOperation"
 					method="getDeployPayload(${exchangeProperty[loopObject]})" />
