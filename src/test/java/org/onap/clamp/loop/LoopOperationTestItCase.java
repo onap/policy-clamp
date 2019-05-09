@@ -55,15 +55,12 @@ public class LoopOperationTestItCase {
     LoopService loopService;
 
     private Loop createTestLoop() {
-        String yaml = "imports:\n"
-            + "  - \"http://www.getcloudify.org/spec/cloudify/3.4/types.yaml\"\n"
-            + "node_templates:\n"
-            + "  docker_service_host:\n"
-            + "    type: dcae.nodes.SelectedDockerHost";
+        String yaml = "imports:\n" + "  - \"http://www.getcloudify.org/spec/cloudify/3.4/types.yaml\"\n"
+            + "node_templates:\n" + "  docker_service_host:\n" + "    type: dcae.nodes.SelectedDockerHost";
 
         Loop loopTest = new Loop("ControlLoopTest", yaml, "<xml></xml>");
-        loopTest.setGlobalPropertiesJson(new Gson().fromJson("{\"dcaeDeployParameters\":"
-                + "{\"policy_id\": \"name\"}}", JsonObject.class));
+        loopTest.setGlobalPropertiesJson(
+            new Gson().fromJson("{\"dcaeDeployParameters\":" + "{\"policy_id\": \"name\"}}", JsonObject.class));
         loopTest.setLastComputedState(LoopState.DESIGN);
         loopTest.setDcaeDeploymentId("123456789");
         loopTest.setDcaeDeploymentStatusUrl("http4://localhost:8085");
@@ -71,13 +68,12 @@ public class LoopOperationTestItCase {
 
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", "",
             "tosca_definitions_version: tosca_simple_yaml_1_0_0", true,
-             gson.fromJson("{\"configtype\":\"json\"}", JsonObject.class), new HashSet<>());
+            gson.fromJson("{\"configtype\":\"json\"}", JsonObject.class), new HashSet<>());
         microServicePolicy.setProperties(new Gson().fromJson("{\"param1\":\"value1\"}", JsonObject.class));
 
         loopTest.addMicroServicePolicy(microServicePolicy);
         return loopTest;
     }
-
 
     @Test
     public void testAnalysePolicyResponse() {
@@ -102,7 +98,7 @@ public class LoopOperationTestItCase {
         assertThat(opName1).isNull();
 
         OperationalPolicy opPolicy1 = new OperationalPolicy("OperationalPolicyTest1", null,
-                gson.fromJson("{\"type\":\"Operational\"}", JsonObject.class));
+            gson.fromJson("{\"type\":\"Operational\"}", JsonObject.class));
         loop.addOperationalPolicy(opPolicy1);
         String opName2 = loopOp.getOperationalPolicyName(loop);
         assertThat(opName2).isEqualTo("OperationalPolicyTest1");
@@ -212,7 +208,7 @@ public class LoopOperationTestItCase {
         loopOp.updateLoopInfo(camelExchange, loop, "testNewId");
 
         Loop newLoop = loopService.getLoop(loop.getName());
-        String newDeployId =  newLoop.getDcaeDeploymentId();
+        String newDeployId = newLoop.getDcaeDeploymentId();
         String newDeploymentStatusUrl = newLoop.getDcaeDeploymentStatusUrl();
 
         assertThat(newDeployId).isEqualTo("testNewId");
@@ -228,11 +224,12 @@ public class LoopOperationTestItCase {
 
         loop.setDcaeDeploymentId(null);
         String deploymentId2 = loopOp.getDeploymentId(loop);
-        assertThat(deploymentId2).isEqualTo("closedLoop_ControlLoopTest_deploymentId");
+        assertThat(deploymentId2).startsWith("CLAMP_");
 
         loop.setDcaeDeploymentId("");
         String deploymentId3 = loopOp.getDeploymentId(loop);
-        assertThat(deploymentId3).isEqualTo("closedLoop_ControlLoopTest_deploymentId");
+        assertThat(deploymentId3).startsWith("CLAMP_");
+        assertThat(deploymentId3).isNotEqualTo(deploymentId2);
     }
 
     @Test

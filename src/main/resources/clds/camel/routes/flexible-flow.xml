@@ -489,8 +489,8 @@
 			</doFinally>
 		</doTry>
 	</route>
-	<route id="deploy-closedloop">
-		<from uri="direct:deploy-closedloop" />
+	<route id="deploy-loop">
+		<from uri="direct:deploy-loop" />
 		<doTry>
 			<log
 				loggingLevel="INFO"
@@ -535,19 +535,19 @@
 				<to
 					uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 				<setProperty propertyName="logMessage">
-					<simple>Deploy closed loop status</simple>
+					<simple>Deploy closed loop status (id:${exchangeProperty[deploymentId]})</simple>
 				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
 	</route>
 
-	<route id="undeploy-closedloop">
-		<from uri="direct:undeploy-closedloop" />
+	<route id="undeploy-loop">
+		<from uri="direct:undeploy-loop" />
 		<doTry>
 			<log
 				loggingLevel="INFO"
-				message="UNdeploy the closed loop: ${exchangeProperty[loopObject].getName()} : ${exchangeProperty[loopObject].getDcaeDeploymentId()}" />
+				message="Undeploy the closed loop: ${exchangeProperty[loopObject].getName()} : ${exchangeProperty[loopObject].getDcaeDeploymentId()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Undeploy closed loop')" />
 

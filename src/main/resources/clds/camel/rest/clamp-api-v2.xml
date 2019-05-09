@@ -216,7 +216,7 @@
 							<simple> ${exchangeProperty[policyStatus]} == 'SUBMITTED' and
 								${exchangeProperty[dcaeStatus]} == 'NOT_DEPLOYED'
 							</simple>
-							<to uri="direct:deploy-closedloop" />
+							<to uri="direct:deploy-loop" />
 						</when>
 						<otherwise>
 							<log
@@ -268,7 +268,7 @@
 						<when>
 							<simple> ${exchangeProperty[dcaeStatus]} == 'DEPLOYED'
 							</simple>
-							<to uri="direct:undeploy-closedloop" />
+							<to uri="direct:undeploy-loop" />
 						</when>
 						<otherwise>
 							<log

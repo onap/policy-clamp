@@ -30,6 +30,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -52,8 +53,7 @@ public class LoopOperation {
     private static final String DCAE_STATUS_FIELD = "status";
     private static final String DCAE_SERVICETYPE_ID = "serviceTypeId";
     private static final String DCAE_INPUTS = "inputs";
-    private static final String DCAE_DEPLOYMENT_PREFIX = "closedLoop_";
-    private static final String DCAE_DEPLOYMENT_SUFIX = "_deploymentId";
+    private static final String DCAE_DEPLOYMENT_PREFIX = "CLAMP_";
     private static final String DEPLOYMENT_PARA = "dcaeDeployParameters";
     private final LoopService loopService;
 
@@ -63,8 +63,11 @@ public class LoopOperation {
 
     /**
      * The constructor.
-     * @param loopService The loop service
-     * @param refProp The clamp properties
+     *
+     * @param loopService
+     *        The loop service
+     * @param refProp
+     *        The clamp properties
      */
     @Autowired
     public LoopOperation(LoopService loopService) {
@@ -74,9 +77,11 @@ public class LoopOperation {
     /**
      * Get the payload used to send the deploy closed loop request.
      *
-     * @param loop The loop
+     * @param loop
+     *        The loop
      * @return The payload used to send deploy closed loop request
-     * @throws IOException IOException
+     * @throws IOException
+     *         IOException
      */
     public String getDeployPayload(Loop loop) throws IOException {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
@@ -98,9 +103,11 @@ public class LoopOperation {
     /**
      * Get the deployment id.
      *
-     * @param loop The loop
+     * @param loop
+     *        The loop
      * @return The deployment id
-     * @throws IOException IOException
+     * @throws IOException
+     *         IOException
      */
     public String getDeploymentId(Loop loop) {
         // Set the deploymentId if not present yet
@@ -109,7 +116,7 @@ public class LoopOperation {
         if (loop.getDcaeDeploymentId() != null && !loop.getDcaeDeploymentId().isEmpty()) {
             deploymentId = loop.getDcaeDeploymentId();
         } else {
-            deploymentId = DCAE_DEPLOYMENT_PREFIX + loop.getName() + DCAE_DEPLOYMENT_SUFIX;
+            deploymentId = DCAE_DEPLOYMENT_PREFIX + UUID.randomUUID();
         }
         return deploymentId;
     }
@@ -117,10 +124,14 @@ public class LoopOperation {
     /**
      * Update the loop info.
      *
-     * @param camelExchange The camel exchange
-     * @param loop The loop
-     * @param deploymentId The deployment id
-     * @throws ParseException The parse exception
+     * @param camelExchange
+     *        The camel exchange
+     * @param loop
+     *        The loop
+     * @param deploymentId
+     *        The deployment id
+     * @throws ParseException
+     *         The parse exception
      */
     public void updateLoopInfo(Exchange camelExchange, Loop loop, String deploymentId) throws ParseException {
         Message in = camelExchange.getIn();
@@ -133,8 +144,9 @@ public class LoopOperation {
         JSONObject linksObj = (JSONObject) jsonObj.get(DCAE_LINK_FIELD);
         String statusUrl = (String) linksObj.get(DCAE_STATUS_FIELD);
 
-        // use http4 instead of http, because camel http4 component is used to do the http call
-        String newStatusUrl = statusUrl.replaceAll("http:", "http4:");
+        // use http4 instead of http, because camel http4 component is used to do the
+        // http call
+        String newStatusUrl = statusUrl.replaceAll("http:", "http4:").replaceAll("https:", "https4:");
 
         loop.setDcaeDeploymentId(deploymentId);
         loop.setDcaeDeploymentStatusUrl(newStatusUrl);
@@ -144,9 +156,11 @@ public class LoopOperation {
     /**
      * Get the Closed Loop status based on the reply from Policy.
      *
-     * @param statusCode The status code
+     * @param statusCode
+     *        The status code
      * @return The state based on policy response
-     * @throws ParseException The parse exception
+     * @throws ParseException
+     *         The parse exception
      */
     public String analysePolicyResponse(int statusCode) {
         if (statusCode == 200) {
@@ -160,11 +174,12 @@ public class LoopOperation {
     /**
      * Get the name of the first Operational policy.
      *
-     * @param loop The closed loop
+     * @param loop
+     *        The closed loop
      * @return The name of the first operational policy
      */
     public String getOperationalPolicyName(Loop loop) {
-        Set<OperationalPolicy> opSet = (Set<OperationalPolicy>)loop.getOperationalPolicies();
+        Set<OperationalPolicy> opSet = loop.getOperationalPolicies();
         Iterator<OperationalPolicy> iterator = opSet.iterator();
         while (iterator.hasNext()) {
             OperationalPolicy policy = iterator.next();
@@ -176,9 +191,11 @@ public class LoopOperation {
     /**
      * Get the Closed Loop status based on the reply from DCAE.
      *
-     * @param camelExchange The camel exchange
+     * @param camelExchange
+     *        The camel exchange
      * @return The state based on DCAE response
-     * @throws ParseException The parse exception
+     * @throws ParseException
+     *         The parse exception
      */
     public String analyseDcaeResponse(Exchange camelExchange, Integer statusCode) throws ParseException {
         if (statusCode == null) {
@@ -212,12 +229,17 @@ public class LoopOperation {
     }
 
     /**
-     * Update the status of the closed loop based on the response from Policy and DCAE.
+     * Update the status of the closed loop based on the response from Policy and
+     * DCAE.
      *
-     * @param loop The closed loop
-     * @param policyState The state get from Policy
-     * @param dcaeState The state get from DCAE
-     * @throws ParseException The parse exception
+     * @param loop
+     *        The closed loop
+     * @param policyState
+     *        The state get from Policy
+     * @param dcaeState
+     *        The state get from DCAE
+     * @throws ParseException
+     *         The parse exception
      */
     public LoopState updateLoopStatus(Loop loop, TempLoopState policyState, TempLoopState dcaeState) {
         LoopState clState = LoopState.IN_ERROR;
