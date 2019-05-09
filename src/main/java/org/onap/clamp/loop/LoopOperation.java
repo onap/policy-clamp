@@ -25,17 +25,10 @@ package org.onap.clamp.loop;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.camel.Exchange;
@@ -43,11 +36,9 @@ import org.apache.camel.Message;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * Closed loop operations.
@@ -59,13 +50,12 @@ public class LoopOperation {
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getMetricsLogger();
     private static final String DCAE_LINK_FIELD = "links";
     private static final String DCAE_STATUS_FIELD = "status";
-    private static final String DCAE_DEPLOYMENT_TEMPLATE = "dcae.deployment.template";
     private static final String DCAE_SERVICETYPE_ID = "serviceTypeId";
     private static final String DCAE_INPUTS = "inputs";
     private static final String DCAE_DEPLOYMENT_PREFIX = "closedLoop_";
     private static final String DCAE_DEPLOYMENT_SUFIX = "_deploymentId";
+    private static final String DEPLOYMENT_PARA = "dcaeDeployParameters";
     private final LoopService loopService;
-    private final ClampProperties refProp;
 
     public enum TempLoopState {
         NOT_SUBMITTED, SUBMITTED, DEPLOYED, NOT_DEPLOYED, PROCESSING, IN_ERROR;
@@ -77,9 +67,8 @@ public class LoopOperation {
      * @param refProp The clamp properties
      */
     @Autowired
-    public LoopOperation(LoopService loopService, ClampProperties refProp) {
+    public LoopOperation(LoopService loopService) {
         this.loopService = loopService;
-        this.refProp = refProp;
     }
 
     /**
@@ -90,16 +79,15 @@ public class LoopOperation {
      * @throws IOException IOException
      */
     public String getDeployPayload(Loop loop) throws IOException {
-        Yaml yaml = new Yaml();
-        Map<String, Object> yamlMap = yaml.load(loop.getBlueprint());
-        JsonObject bluePrint = wrapSnakeObject(yamlMap).getAsJsonObject();
+        JsonObject globalProp = loop.getGlobalPropertiesJson();
+        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARA);
 
         String serviceTypeId = loop.getDcaeBlueprintId();
 
-        JsonObject rootObject = refProp.getJsonTemplate(DCAE_DEPLOYMENT_TEMPLATE).getAsJsonObject();
+        JsonObject rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
-        if (bluePrint != null) {
-            rootObject.add(DCAE_INPUTS, bluePrint);
+        if (deploymentProp != null) {
+            rootObject.add(DCAE_INPUTS, deploymentProp);
         }
         String apiBodyString = rootObject.toString();
         logger.info("Dcae api Body String - " + apiBodyString);
@@ -249,49 +237,6 @@ public class LoopOperation {
         loop.setLastComputedState(clState);
         loopService.saveOrUpdateLoop(loop);
         return clState;
-    }
-
-    private JsonElement wrapSnakeObject(Object obj) {
-        // NULL => JsonNull
-        if (obj == null) {
-            return JsonNull.INSTANCE;
-        }
-
-        // Collection => JsonArray
-        if (obj instanceof Collection) {
-            JsonArray array = new JsonArray();
-            for (Object childObj : (Collection<?>) obj) {
-                array.add(wrapSnakeObject(childObj));
-            }
-            return array;
-        }
-
-        // Array => JsonArray
-        if (obj.getClass().isArray()) {
-            JsonArray array = new JsonArray();
-
-            int length = Array.getLength(array);
-            for (int i = 0; i < length; i++) {
-                array.add(wrapSnakeObject(Array.get(array, i)));
-            }
-            return array;
-        }
-
-        // Map => JsonObject
-        if (obj instanceof Map) {
-            Map<?, ?> map = (Map<?, ?>) obj;
-
-            JsonObject jsonObject = new JsonObject();
-            for (final Map.Entry<?, ?> entry : map.entrySet()) {
-                final String name = String.valueOf(entry.getKey());
-                final Object value = entry.getValue();
-                jsonObject.add(name, wrapSnakeObject(value));
-            }
-            return jsonObject;
-        }
-
-        // otherwise take it as a string
-        return new JsonPrimitive(String.valueOf(obj));
     }
 
 }
