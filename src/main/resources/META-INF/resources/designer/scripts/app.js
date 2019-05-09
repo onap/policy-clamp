@@ -505,17 +505,18 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    cldsModelService.processAction(uiAction, modelName).then(function(pars) {
 			    console.log("cldsPerformAction: pars=" + pars);
-			    $rootScope.refreshLoopLog();
+			    cldsModelService.getModel(modelName).then(function(pars) {
+			    	$rootScope.refreshLoopLog();
+			    }, function(data) {
+			    });
 		    }, function(data) {
-
 		    });
 	    };
 	    $scope.refreshStatus = function() {
 		    var modelName = selected_model;
 		    console.log("refreStatus modelName=" + modelName);
-		    cldsModelService.getModel(modelName).then(function(pars) {
+		    cldsModelService.refreshStatus(modelName).then(function(pars) {
 			    console.log("refreStatus: pars=" + pars);
-			    cldsModelService.processRefresh();
 		    }, function(data) {
 
 		    });
@@ -566,9 +567,13 @@ function($scope, $rootScope, $timeout, dialogs) {
 		        + selected_model);
 		    cldsModelService.toggleDeploy(uiAction, selected_model).then(
 		    function(pars) {
+			    cldsModelService.getModel(selected_model).then(function(pars) {
+			    	$rootScope.refreshLoopLog();
+			    }, function(data) {
+			    });
 		    }, function(data) {
-
 		    });
+		    
 	    }
 	    $scope.ToscaModelWindow = function (tosca_model) {
 

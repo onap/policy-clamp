@@ -606,8 +606,6 @@
 					<to
 						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Get Status request successfully executed','INFO',${exchangeProperty[loopObject]})" />
 					<to
-						uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
-					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
 						<exception>java.lang.Exception</exception>
@@ -622,6 +620,10 @@
 						<to
 							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Get Status request failed','ERROR',${exchangeProperty[loopObject]})" />
 					</doCatch>
+					<doFinally>
+						<to
+							uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+					</doFinally>
 				</doTry>
 			</route>
 		</get>
