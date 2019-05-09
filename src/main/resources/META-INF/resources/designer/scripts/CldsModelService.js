@@ -51,10 +51,10 @@ app
 					def.resolve(data);
 					alertService.alertMessage("Action Successful: " + svcAction, 1)
 					// update deploymentID, lastUpdatedStatus
-					setLastUpdatedStatus(data.lastUpdatedStatus);
+					setLastComputedState(data.lastComputedState);
 					setDeploymentStatusURL(data.dcaeDeploymentStatusUrl);
 					setDeploymentID(data.dcaeDeploymentId);
-					setStatus();
+					setStatus(data.lastComputedState);
 					enableDisableMenuOptions();
 			}).error(
 				function(data) {
@@ -70,6 +70,7 @@ app
 		    var svcUrl = "/restservices/clds/v2/loop/" + modelName;
 		    $http.get(svcUrl).success(function(data) {
 		    	cl_props = data;
+		    	setStatus(data.lastComputedState);
 			    def.resolve(data);
 		    }).error(function(data) {
 			    def.reject("Open Model not successful");
@@ -100,11 +101,9 @@ app
 					def.resolve(data);
 					alertService.alertMessage("Action Successful: " + svcAction, 1)
 					// update deploymentID, lastUpdatedStatus
-					setLastUpdatedStatus(data.lastUpdatedStatus);
+					setLastComputedState(data.lastComputedState);
 					setDeploymentStatusURL(data.dcaeDeploymentStatusUrl);
 					setDeploymentID(data.dcaeDeploymentId);
-					setStatus();
-					enableDisableMenuOptions();
 			}).error(
 				function(data) {
 					def.resolve(data);
@@ -139,23 +138,30 @@ app
 	    this.processActionResponse = function(modelName) {
 	    	// populate control name (prefix and uuid here)
 	    	$("#loop_name").text(getLoopName());
-		    setStatus();
 		    manageCLImage(modelName);
 		    enableDisableMenuOptions();
 	    };
-	    this.processRefresh = function() {
-		    setStatus();
+	    this.refreshStatus = function(modelName) {
+		    var def = $q.defer();
+		    var sets = [];
+		    var svcUrl = "/restservices/clds/v2/loop/getstatus/" + modelName;
+		    $http.get(svcUrl).success(function(data) {
+		    	setStatus(data.lastComputedState);
+			    def.resolve(data);
+		    }).error(function(data) {
+			    def.reject("Refresh Status not successful");
+		    });
+		    return def.promise;
 		    enableDisableMenuOptions();
 	    }
-	    function setStatus() {
-		    var status = getLastUpdatedStatus();
+	    function setStatus(status) {
 		    // apply color to status
 		    var statusColor = 'white';
 		    if (status.trim() === "DESIGN") {
 			    statusColor = 'gray'
 		    } else if (status.trim() === "DISTRIBUTED") {
 			    statusColor = 'blue'
-		    } else if (status.trim() === "ACTIVE") {
+		    } else if (status.trim() === "SUBMITTED") {
 			    statusColor = 'green'
 		    } else if (status.trim() === "STOPPED") {
 			    statusColor = 'red'
@@ -180,7 +186,6 @@ app
 		    '<span id="status_clds" style="position: absolute;  left: 61%;top: 151px; font-size:20px;">Status: '
 		    + statusMsg + '</span>');
 	    }
-	    
 	    function manageCLImage(modelName) {
 	    	getModelImage(modelName).then(function(pars) {
 		    	var svg = pars;
@@ -200,8 +205,6 @@ app
 	    }
 	    enableDisableMenuOptions = function() {
 		    enableDefaultMenu();
-		    //var status = getStatus();
-	    	//enableActionMenu(status);
 	    	enableAllActionMenu();
 	    }
 	    getModelImage = function(modelName) {

@@ -94,7 +94,7 @@ function getLastUpdatedStatus() {
     return cl_props["lastComputedState"];
 }
 
-function setLastUpdatedStatus(status) {
+function setLastComputedState(status) {
     cl_props["lastComputedState"] =  status;
 }
 
