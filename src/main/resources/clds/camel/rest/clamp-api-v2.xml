@@ -266,14 +266,14 @@
 					<to uri="direct:get-status-from-dcae" />
 					<choice>
 						<when>
-							<simple> ${exchangeProperty[dcaeStatus]} == 'DEPLOYED'
+							<simple> ${exchangeProperty[dcaeStatus]} == 'DEPLOYED' or ${exchangeProperty[dcaeStatus]} == 'IN_ERROR' or ${exchangeProperty[dcaeStatus]} == 'PROCESSING'
 							</simple>
 							<to uri="direct:undeploy-loop" />
 						</when>
 						<otherwise>
 							<log
 								loggingLevel="INFO"
-								message="Closed Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be undeployed when in state DEPLOYED" />
+								message="Closed Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be undeployed when in state DEPLOYED/IN_ERROR/PROCESSING" />
 							<to
 								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Closed Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be deployed when in state DEPLOYED','ERROR',${exchangeProperty[loopObject]})" />
 						</otherwise>
