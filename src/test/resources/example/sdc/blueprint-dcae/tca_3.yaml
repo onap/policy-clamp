@@ -51,6 +51,9 @@ inputs:
     type: string
     description: Kubernetes node port on which CDAPgui is exposed
     default: "32012"
+  policy_model_id:
+    type: string
+    default: "onap.policies.monitoring.cdap.tca.hi.lo.app"
 
 node_templates:
   tca_k8s:
@@ -150,4 +153,5 @@ node_templates:
     properties:
       policy_id:
            get_input: policy_id
-           policy_type_id: onap.policies.monitoring.cdap.tca.hi.lo.app
+      policy_model_id: 
+           get_input: policy_model_id

@@ -53,21 +53,23 @@ public class BlueprintParser {
     private static final String TYPE = "type";
     private static final String PROPERTIES = "properties";
     private static final String NAME = "name";
-    private static final String POLICYID = "policy_id";
-    private static final String POLICY_TYPEID = "policy_type_id";
+    private static final String INPUT = "inputs";
+    private static final String GET_INPUT = "get_input";
+    private static final String POLICY_MODELID = "policy_model_id";
     private static final String RELATIONSHIPS = "relationships";
     private static final String CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM = "clamp_node.relationships.gets_input_from";
     private static final String TARGET = "target";
 
     public Set<MicroService> getMicroServices(String blueprintString) {
         Set<MicroService> microServices = new HashSet<>();
-        JsonObject jsonObject = BlueprintParser.convertToJson(blueprintString);
-        JsonObject nodeTemplateList = jsonObject.get(NODE_TEMPLATES).getAsJsonObject();
+        JsonObject blueprintJson = BlueprintParser.convertToJson(blueprintString);
+        JsonObject nodeTemplateList = blueprintJson.get(NODE_TEMPLATES).getAsJsonObject();
+        JsonObject inputList = blueprintJson.get(INPUT).getAsJsonObject();
 
         for (Entry<String, JsonElement> entry : nodeTemplateList.entrySet()) {
             JsonObject nodeTemplate = entry.getValue().getAsJsonObject();
             if (nodeTemplate.get(TYPE).getAsString().contains(DCAE_NODES)) {
-                MicroService microService = getNodeRepresentation(entry, nodeTemplateList);
+                MicroService microService = getNodeRepresentation(entry, nodeTemplateList, inputList);
                 microServices.add(microService);
             }
         }
@@ -119,12 +121,12 @@ public class BlueprintParser {
         return "";
     }
 
-    String findModelTypeInTargetArray(JsonArray jsonArray, JsonObject nodeTemplateList) {
+    String findModelTypeInTargetArray(JsonArray jsonArray, JsonObject nodeTemplateList, JsonObject inputList) {
         for (JsonElement elem : jsonArray) {
             String modelType = getModelType(
                 new AbstractMap.SimpleEntry<String, JsonElement>(elem.getAsJsonObject().get(TARGET).getAsString(),
                     nodeTemplateList.get(elem.getAsJsonObject().get(TARGET).getAsString()).getAsJsonObject()),
-                nodeTemplateList);
+                nodeTemplateList, inputList);
             if (!modelType.isEmpty()) {
                 return modelType;
             }
@@ -132,29 +134,34 @@ public class BlueprintParser {
         return "";
     }
 
-    String getModelType(Entry<String, JsonElement> entry, JsonObject nodeTemplateList) {
+    String getModelType(Entry<String, JsonElement> entry, JsonObject nodeTemplateList, JsonObject inputList) {
         JsonObject ob = entry.getValue().getAsJsonObject();
         // Search first in this node template
         if (ob.has(PROPERTIES)) {
             JsonObject properties = ob.get(PROPERTIES).getAsJsonObject();
-            if (properties.has(POLICYID)) {
-                JsonObject policyIdObj = properties.get(POLICYID).getAsJsonObject();
-                if (policyIdObj.has(POLICY_TYPEID)) {
-                    return policyIdObj.get(POLICY_TYPEID).getAsString();
+            if (properties.has(POLICY_MODELID)) {
+                if (properties.get(POLICY_MODELID).isJsonObject()) {
+                    // it's a blueprint parameter
+                    return inputList.get(properties.get(POLICY_MODELID).getAsJsonObject().get(GET_INPUT).getAsString())
+                        .getAsJsonObject().get("default").getAsString();
+                } else {
+                    // It's a direct value
+                    return properties.get(POLICY_MODELID).getAsString();
                 }
             }
         }
-        // Then it's may be a relationship
+        // Or it's may be defined in a relationship
         if (ob.has(RELATIONSHIPS)) {
-            return findModelTypeInTargetArray(ob.get(RELATIONSHIPS).getAsJsonArray(), nodeTemplateList);
+            return findModelTypeInTargetArray(ob.get(RELATIONSHIPS).getAsJsonArray(), nodeTemplateList, inputList);
         }
         return "";
     }
 
-    MicroService getNodeRepresentation(Entry<String, JsonElement> entry, JsonObject nodeTemplateList) {
+    MicroService getNodeRepresentation(Entry<String, JsonElement> entry, JsonObject nodeTemplateList,
+        JsonObject inputList) {
         String name = getName(entry);
         String getInputFrom = getInput(entry);
-        String modelType = getModelType(entry, nodeTemplateList);
+        String modelType = getModelType(entry, nodeTemplateList, inputList);
         return new MicroService(name, modelType, getInputFrom, "");
     }
 

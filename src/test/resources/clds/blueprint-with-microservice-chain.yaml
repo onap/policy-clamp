@@ -31,7 +31,7 @@ node_templates:
       service_component_name_override: second_app
       image: { get_input: second_app_docker_image }
       policy_id:
-        policy_type_id: type2
+      policy_model_id: "type2"
     interfaces:
       cloudify.interfaces.lifecycle:
         start:
@@ -56,7 +56,7 @@ node_templates:
       image: { get_input: first_app_docker_image }
       container_port: 6565
       policy_id:
-        policy_type_id: type1
+      policy_model_id: "type1"
     interfaces:
       cloudify.interfaces.lifecycle:
         start:
@@ -81,7 +81,7 @@ node_templates:
       image: { get_input: third_app_docker_image }
       container_port: 443
       policy_id:
-        policy_type_id: type3
+      policy_model_id: "type3"
     interfaces:
       cloudify.interfaces.lifecycle:
         start:
