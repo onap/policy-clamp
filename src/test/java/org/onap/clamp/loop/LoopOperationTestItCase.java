@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.Application;
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.loop.LoopOperation.TempLoopState;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -55,9 +54,6 @@ public class LoopOperationTestItCase {
     @Autowired
     LoopService loopService;
 
-    @Autowired
-    ClampProperties property;
-
     private Loop createTestLoop() {
         String yaml = "imports:\n"
             + "  - \"http://www.getcloudify.org/spec/cloudify/3.4/types.yaml\"\n"
@@ -66,7 +62,8 @@ public class LoopOperationTestItCase {
             + "    type: dcae.nodes.SelectedDockerHost";
 
         Loop loopTest = new Loop("ControlLoopTest", yaml, "<xml></xml>");
-        loopTest.setGlobalPropertiesJson(new Gson().fromJson("{\"testname\":\"testvalue\"}", JsonObject.class));
+        loopTest.setGlobalPropertiesJson(new Gson().fromJson("{\"dcaeDeployParameters\":"
+                + "{\"policy_id\": \"name\"}}", JsonObject.class));
         loopTest.setLastComputedState(LoopState.DESIGN);
         loopTest.setDcaeDeploymentId("123456789");
         loopTest.setDcaeDeploymentStatusUrl("http4://localhost:8085");
@@ -84,7 +81,7 @@ public class LoopOperationTestItCase {
 
     @Test
     public void testAnalysePolicyResponse() {
-        LoopOperation loopOp = new LoopOperation(loopService, property);
+        LoopOperation loopOp = new LoopOperation(loopService);
         String status1 = loopOp.analysePolicyResponse(200);
         String status2 = loopOp.analysePolicyResponse(404);
         String status3 = loopOp.analysePolicyResponse(500);
@@ -99,7 +96,7 @@ public class LoopOperationTestItCase {
 
     @Test
     public void testGetOperationalPolicyName() {
-        LoopOperation loopOp = new LoopOperation(loopService, property);
+        LoopOperation loopOp = new LoopOperation(loopService);
         Loop loop = this.createTestLoop();
         String opName1 = loopOp.getOperationalPolicyName(loop);
         assertThat(opName1).isNull();
@@ -113,7 +110,7 @@ public class LoopOperationTestItCase {
 
     @Test
     public void testAnalyseDcaeResponse() throws ParseException {
-        LoopOperation loopOp = new LoopOperation(loopService, property);
+        LoopOperation loopOp = new LoopOperation(loopService);
         String dcaeStatus1 = loopOp.analyseDcaeResponse(null, null);
         assertThat(dcaeStatus1).isEqualTo("NOT_DEPLOYED");
 
@@ -159,7 +156,7 @@ public class LoopOperationTestItCase {
 
     @Test
     public void testUpdateLoopStatus() {
-        LoopOperation loopOp = new LoopOperation(loopService, property);
+        LoopOperation loopOp = new LoopOperation(loopService);
         Loop loop = this.createTestLoop();
         loopService.saveOrUpdateLoop(loop);
         LoopState newState1 = loopOp.updateLoopStatus(loop, TempLoopState.SUBMITTED, TempLoopState.DEPLOYED);
@@ -211,7 +208,7 @@ public class LoopOperationTestItCase {
         Mockito.when(mockMessage.getBody(String.class))
             .thenReturn("{\"links\":{\"status\":\"http://testhost/dcae-operationstatus\",\"test2\":\"test2\"}}");
 
-        LoopOperation loopOp = new LoopOperation(loopService, property);
+        LoopOperation loopOp = new LoopOperation(loopService);
         loopOp.updateLoopInfo(camelExchange, loop, "testNewId");
 
         Loop newLoop = loopService.getLoop(loop.getName());
@@ -225,7 +222,7 @@ public class LoopOperationTestItCase {
     @Test
     public void testGetDeploymentId() {
         Loop loop = this.createTestLoop();
-        LoopOperation loopOp = new LoopOperation(loopService, property);
+        LoopOperation loopOp = new LoopOperation(loopService);
         String deploymentId1 = loopOp.getDeploymentId(loop);
         assertThat(deploymentId1).isEqualTo("123456789");
 
@@ -241,10 +238,10 @@ public class LoopOperationTestItCase {
     @Test
     public void testGetDeployPayload() throws IOException {
         Loop loop = this.createTestLoop();
-        LoopOperation loopOp = new LoopOperation(loopService, property);
+        LoopOperation loopOp = new LoopOperation(loopService);
         String deploymentPayload = loopOp.getDeployPayload(loop);
 
-        String expectedPayload = "{\"serviceTypeId\":\"UUID-blueprint\",\"inputs\":{\"imports\":[\"http://www.getcloudify.org/spec/cloudify/3.4/types.yaml\"],\"node_templates\":{\"docker_service_host\":{\"type\":\"dcae.nodes.SelectedDockerHost\"}}}}";
+        String expectedPayload = "{\"serviceTypeId\":\"UUID-blueprint\",\"inputs\":{\"policy_id\":\"name\"}}";
         assertThat(deploymentPayload).isEqualTo(expectedPayload);
     }
 }
