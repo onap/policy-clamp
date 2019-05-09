@@ -144,12 +144,13 @@ public class LoopOperation {
         JSONObject linksObj = (JSONObject) jsonObj.get(DCAE_LINK_FIELD);
         String statusUrl = (String) linksObj.get(DCAE_STATUS_FIELD);
 
-        // use http4 instead of http, because camel http4 component is used to do the
-        // http call
-        String newStatusUrl = statusUrl.replaceAll("http:", "http4:").replaceAll("https:", "https4:");
-
-        loop.setDcaeDeploymentId(deploymentId);
-        loop.setDcaeDeploymentStatusUrl(newStatusUrl);
+        if (deploymentId == null) {
+            loop.setDcaeDeploymentId(null);
+            loop.setDcaeDeploymentStatusUrl(null);
+        } else {
+            loop.setDcaeDeploymentId(deploymentId);
+            loop.setDcaeDeploymentStatusUrl(statusUrl.replaceAll("http:", "http4:").replaceAll("https:", "https4:"));
+        }
         loopService.saveOrUpdateLoop(loop);
     }
 
