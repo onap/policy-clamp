@@ -40,7 +40,8 @@
 				"cbs_host": "config-binding-service.dcae.svc.cluster.local",
 				"cbs_port": "10000",
 				"external_port": "32012",
-				"policy_id": "AUTO_GENERATED_POLICY_ID_AT_SUBMIT"
+				"policy_id": "AUTO_GENERATED_POLICY_ID_AT_SUBMIT",
+				"policy_model_id": "onap.policies.monitoring.cdap.tca.hi.lo.app"
 			}
 		}
 	]

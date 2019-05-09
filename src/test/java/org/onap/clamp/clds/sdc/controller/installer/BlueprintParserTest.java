@@ -144,7 +144,7 @@ public class BlueprintParserTest {
 
         MicroService expected = new MicroService(SECOND_APPP, MODEL_TYPE1, FIRST_APPP, "");
         Entry<String, JsonElement> entry = jsonObject.entrySet().iterator().next();
-        MicroService actual = new BlueprintParser().getNodeRepresentation(entry, jsonObject);
+        MicroService actual = new BlueprintParser().getNodeRepresentation(entry, jsonObject, null);
 
         Assert.assertEquals(expected, actual);
     }
