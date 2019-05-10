@@ -179,7 +179,6 @@ app
 		    console.log("load properties to op policy");
 		    // Set the header
 		    $.each($('#operationalPolicyHeaderForm').find('.form-control'), function() {
-
 			    $(this).val(allPolicies['operational_policy']['controlLoop'][this.id]);
 		    });
 		    // Set the sub-policies
