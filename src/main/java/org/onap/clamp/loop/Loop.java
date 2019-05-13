@@ -45,6 +45,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -114,6 +115,7 @@ public class Loop implements Serializable {
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "loop")
+    @OrderBy("log_instant DESC")
     private Set<LoopLog> loopLogs = new HashSet<>();
 
     public Loop() {
