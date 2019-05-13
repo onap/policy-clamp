@@ -8,7 +8,7 @@
 				<removeHeaders pattern="*" />
 				<doTry>
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get All ClosedLoop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET ALL Loop')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
 					<to
@@ -36,7 +36,7 @@
 					excludePattern="loopName" />
 				<doTry>
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get Closed Loop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Loop')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
 					<to
@@ -201,11 +201,17 @@
 					pattern="*"
 					excludePattern="loopName" />
 				<doTry>
+					<log
+						loggingLevel="INFO"
+						message="DCAE DEPLOY request for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'DEPLOY the closed loop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'DCAE DEPLOY request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DCAE DEPLOY request','INFO',${exchangeProperty[loopObject]})" />
+					
 					<to uri="direct:get-status-from-policy" />
 					<to uri="direct:get-status-from-dcae" />
 					<log
@@ -221,9 +227,9 @@
 						<otherwise>
 							<log
 								loggingLevel="INFO"
-								message="Closed Loop is in state ${exchangeProperty[policyStatus]}, it can only be deployed when in state SUBMIT" />
+								message="Loop is in state ${exchangeProperty[policyStatus]}, it can only be deployed when in state SUBMIT" />
 							<to
-								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Closed Loop is in state ${exchangeProperty[policyStatus]}, it can only be deployed when in state SUBMIT','ERROR',${exchangeProperty[loopObject]})" />
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Loop is in state ${exchangeProperty[policyStatus]}, it can only be deployed when in state SUBMIT','ERROR',${exchangeProperty[loopObject]})" />
 						</otherwise>
 					</choice>
 					<log
@@ -258,11 +264,16 @@
 					pattern="*"
 					excludePattern="loopName" />
 				<doTry>
+					<log
+						loggingLevel="INFO"
+						message="DCAE UNDEPLOY request for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Undeploy the closed loop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'DCAE UNDEPLOY request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DCAE UNDEPLOY request','INFO',${exchangeProperty[loopObject]})" />
 					<to uri="direct:get-status-from-dcae" />
 					<choice>
 						<when>
@@ -273,9 +284,9 @@
 						<otherwise>
 							<log
 								loggingLevel="INFO"
-								message="Closed Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be undeployed when in state DEPLOYED/IN_ERROR/PROCESSING" />
+								message="Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be undeployed when in state DEPLOYED/IN_ERROR/PROCESSING" />
 							<to
-								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Closed Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be deployed when in state DEPLOYED','ERROR',${exchangeProperty[loopObject]})" />
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be deployed when in state DEPLOYED','ERROR',${exchangeProperty[loopObject]})" />
 						</otherwise>
 					</choice>
 					<log
@@ -312,12 +323,15 @@
 				<doTry>
 					<log
 						loggingLevel="INFO"
-						message="Receive STOP request for loop: ${header.loopName}" />
+						message="STOP request for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'Stop the closed loop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'STOP request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('STOP request','INFO',${exchangeProperty[loopObject]})" />
+					
 					<to uri="direct:remove-all-policy-from-active-pdp-group" />
 					<log
 						loggingLevel="INFO"
@@ -353,13 +367,15 @@
 				<doTry>
 					<log
 						loggingLevel="INFO"
-						message="Receive RESTART request for loop: ${header.loopName}" />
+						message="RESTART request for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'Restart the closed loop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'RESTART request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
 
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('RESTART request','INFO',${exchangeProperty[loopObject]})" />
 
 					<to uri="direct:add-all-to-active-pdp-group" />
 					<log
@@ -396,14 +412,14 @@
 				<doTry>
 					<log
 						loggingLevel="INFO"
-						message="Receive SUBMIT request for loop: ${header.loopName}" />
+						message="POLICY SUBMIT request for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Submit the closed loop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'POLICY SUBMIT request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
 					<to
-						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive SUBMIT request','INFO',${exchangeProperty[loopObject]})" />
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('POLICY SUBMIT request','INFO',${exchangeProperty[loopObject]})" />
 					<setProperty propertyName="raiseHttpExceptionFlag">
 						<simple resultType="java.lang.Boolean">false</simple>
 					</setProperty>
@@ -499,14 +515,14 @@
 				<doTry>
 					<log
 						loggingLevel="INFO"
-						message="Receive DELETE request for loop: ${header.loopName}" />
+						message="DELETE request for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'Delete the closed loop')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'DELETE request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
 					<to
-						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive DELETE request','INFO',${exchangeProperty[loopObject]})" />
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DELETE request','INFO',${exchangeProperty[loopObject]})" />
 					<to uri="direct:remove-all-policy-from-active-pdp-group" />
 					<split>
 						<simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
@@ -584,14 +600,14 @@
 				<doTry>
 					<log
 						loggingLevel="INFO"
-						message="Get current status for loop: ${header.loopName}" />
+						message="GET STATUS request for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get the closed loop status')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET STATUS request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
 					<to uri="direct:load-loop" />
 					<to
-						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Receive GET STATUS request','INFO',${exchangeProperty[loopObject]})" />
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET STATUS request','INFO',${exchangeProperty[loopObject]})" />
 					<setProperty propertyName="raiseHttpExceptionFlag">
 						<simple resultType="java.lang.Boolean">false</simple>
 					</setProperty>
