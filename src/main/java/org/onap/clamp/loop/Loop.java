@@ -115,7 +115,7 @@ public class Loop implements Serializable {
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "loop")
-    @OrderBy("log_instant DESC")
+    @OrderBy("id DESC")
     private Set<LoopLog> loopLogs = new HashSet<>();
 
     public Loop() {

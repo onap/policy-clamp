@@ -494,9 +494,9 @@
 		<doTry>
 			<log
 				loggingLevel="INFO"
-				message="Deploy the closed loop: ${exchangeProperty[loopObject].getName()}" />
+				message="Deploying the loop: ${exchangeProperty[loopObject].getName()}" />
 			<to
-				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Deploy closed loop')" />
+				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Deploying the loop')" />
 			<setBody>
 				<method ref="org.onap.clamp.loop.LoopOperation"
 					method="getDeployPayload(${exchangeProperty[loopObject]})" />
@@ -525,9 +525,9 @@
 			</setHeader>
 			<log
 				loggingLevel="INFO"
-				message="Endpoint to deploy closed loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[deploymentId]}"></log>
+				message="Endpoint to deploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[deploymentId]}"></log>
 			<toD
-				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[deploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[RaiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
+				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[deploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
 			<to
 				uri="bean:org.onap.clamp.loop.LoopOperation?method=updateLoopInfo(*,${exchangeProperty[loopObject]},${exchangeProperty[deploymentId]})" />
 			<doFinally>
@@ -535,7 +535,7 @@
 				<to
 					uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 				<setProperty propertyName="logMessage">
-					<simple>Deploy closed loop status (id:${exchangeProperty[deploymentId]})</simple>
+					<simple>DEPLOY loop status (id:${exchangeProperty[deploymentId]})</simple>
 				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
@@ -547,9 +547,9 @@
 		<doTry>
 			<log
 				loggingLevel="INFO"
-				message="Undeploy the closed loop: ${exchangeProperty[loopObject].getName()} : ${exchangeProperty[loopObject].getDcaeDeploymentId()}" />
+				message="Undeploying the loop: ${exchangeProperty[loopObject].getName()} : ${exchangeProperty[loopObject].getDcaeDeploymentId()}" />
 			<to
-				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Undeploy closed loop')" />
+				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Undeploying the loop')" />
 
 			<setBody>
 				<simple>{\"serviceTypeId\": \"${exchangeProperty[loopObject].getDcaeBlueprintId()}\"}
@@ -575,9 +575,9 @@
 			</setHeader>
 			<log
 				loggingLevel="INFO"
-				message="Endpoint to undeploy closed loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}"></log>
+				message="Endpoint to undeploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}"></log>
 			<toD
-				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[RaiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
+				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}" />
 			<to
 				uri="bean:org.onap.clamp.loop.LoopOperation?method=updateLoopInfo(*,${exchangeProperty[loopObject]},null)" />
 			<doFinally>
@@ -585,7 +585,7 @@
 				<to
 					uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 				<setProperty propertyName="logMessage">
-					<simple>Undeploy closed loop status</simple>
+					<simple>UNDEPLOY loop status</simple>
 				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
@@ -628,7 +628,7 @@
 				<to
 					uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 				<setProperty propertyName="logMessage">
-					<simple>Query closed loop from Policy status</simple>
+					<simple>Policy deployment status</simple>
 				</setProperty>
 				<setProperty propertyName="policyStatus">
 					<method ref="org.onap.clamp.loop.LoopOperation"
@@ -685,7 +685,7 @@
 						<to
 							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
 						<setProperty propertyName="logMessage">
-							<simple>Query closed loop from DCAE status</simple>
+							<simple>DCAE deployment status</simple>
 						</setProperty>
 						<setProperty propertyName="dcaeStatus">
 							<method ref="org.onap.clamp.loop.LoopOperation"
