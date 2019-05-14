@@ -190,11 +190,15 @@ app
 				    $("#formId" + formNum + " .policyProperties").find("#" + opPolicyPropValue.id).val(
 				    allPolicies['operational_policy']['policies'][opPolicyElemIndex][opPolicyPropValue.id]);
 			    });
+
+			    // Initial TargetResourceId options
+			    initTargetResourceIdOptions(allPolicies['operational_policy']['policies'][opPolicyElemIndex]['target']['type'], formNum);
 			    $.each($('.policyTarget').find('.form-control'), function(opPolicyTargetPropIndex, opPolicyTargetPropValue) {
 
 				    $("#formId" + formNum + " .policyTarget").find("#" + opPolicyTargetPropValue.id).val(
 				    allPolicies['operational_policy']['policies'][opPolicyElemIndex]['target'][opPolicyTargetPropValue.id]);
 			    });
+
 			    // update the current tab label
 			    $("#go_properties_tab" + formNum).text(
 			    allPolicies['operational_policy']['policies'][opPolicyElemIndex]['id']);
@@ -216,30 +220,20 @@ app
 			    });
 		    });
 	    }
-	    $scope.initTargetResourceId = function(event) {
-	    	var formNum = $(event.target).closest('.formId').attr('id').substring(6);
-	    	
-		    var type = $(event.target).val();
+	    function initTargetResourceIdOptions (targetType, formNum) {
 		    var recipe = $("#formId" + formNum + "#recipe").val();
-		    $("#formId" + formNum + " #modelName").val("");
-		    $("#formId" + formNum + " #modelInvariantId").val("");
-		    $("#formId" + formNum + " #modelVersionId").val("");
-		    $("#formId" + formNum + " #modelVersion").val("");
-		    $("#formId" + formNum + " #modelCustomizationId").val("");
 		    $("#formId" + formNum + " #resourceId").empty();
 		    $("#formId" + formNum + " #resourceId").append($('<option></option>').val("").html("-- choose an option --"));
-		    if (type == "VM" || type == "" || type == "VNF") {
-			    $("#formId" + formNum + " #metadata *").prop('disabled', true);
-		    }
+
 		    var resourceVnf = getResourceDetailsVfProperty();
-		    if (type == "VNF" && (null !== resourceVnf || undefined !== resourceVnf)) {
+		    if (targetType == "VNF" && (null !== resourceVnf || undefined !== resourceVnf)) {
 			    for ( var prop in resourceVnf) {
 				    var name = resourceVnf[prop]["name"];
 				    $("#formId" + formNum + " #resourceId").append($('<option></option>').val(name).html(name));
 			    }
 		    }
 		    var resourceVFModule = getResourceDetailsVfModuleProperty();
-		    if (type == "VFModule" && (null !== resourceVFModule || undefined !== resourceVFModule)) {
+		    if (targetType == "VFModule" && (null !== resourceVFModule || undefined !== resourceVFModule)) {
 			    if (recipe == 'VF Module Create' || recipe == 'VF Module Delete') {
 				    for ( var prop in resourceVFModule) {
 					    if (resourceVFModule[prop]["isBase"] == false) {
@@ -253,13 +247,26 @@ app
 			    }
 		    }
 	    }
+
+	    function initTargetModelAttributes (formNum) {
+		    $("#formId" + formNum + " #modelName").val("");
+		    $("#formId" + formNum + " #modelInvariantId").val("");
+		    $("#formId" + formNum + " #modelVersionId").val("");
+		    $("#formId" + formNum + " #modelVersion").val("");
+		    $("#formId" + formNum + " #modelCustomizationId").val("");
+	    }
+
+	    $scope.initTargetResourceId = function(event) {
+	    	var formNum = $(event.target).closest('.formId').attr('id').substring(6);
+	    	initTargetModelAttributes(formNum);
+		    var type = $(event.target).val();
+		    initTargetResourceIdOptions(type, formNum);
+	    }
+
 	    $scope.changeTargetResourceId = function(event) {
 		    var formNum = $(event.target).closest('.formId').attr('id').substring(6);
-		    $("#formId" + formNum +" #modelName").val("");
-		    $("#formId" + formNum +" #modelInvariantId").val("");
-		    $("#formId" + formNum +" #modelVersionId").val("");
-		    $("#formId" + formNum +" #modelVersion").val("");
-		    $("#formId" + formNum +" #modelCustomizationId").val("");
+		    initTargetModelAttributes(formNum);
+
 		    var resourceVFModule = getResourceDetailsVfModuleProperty();
 		    var type = $("#formId" + formNum +" #type").val();
 		    var recipe = $("#formId" + formNum +" #recipe").val();
