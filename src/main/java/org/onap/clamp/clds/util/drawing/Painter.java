@@ -64,7 +64,7 @@ public class Painter {
 
         adjustGraphics2DProperties();
 
-        Point origin = new Point(0, rectHeight / 2);
+        Point origin = new Point(1, rectHeight / 2);
         ImageBuilder ib = new ImageBuilder(g2d, documentBuilder, origin, baseLength, rectHeight);
 
         doTheActualDrawing(collector, microServices, policy, ib);

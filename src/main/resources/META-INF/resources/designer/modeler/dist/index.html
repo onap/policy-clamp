@@ -20,6 +20,11 @@
   ===================================================================
   
   -->
+<style>
+.ERROR{color: red;}
+.WARNING{color: orange;}
+.INFO{color: green;}
+</style>
 
 <html>
 <head>
@@ -43,9 +48,12 @@
 			</div>
 		</div>
 
-		<div class="canvas" id="js-canvas" style="margin-top: 100px">
+		<div class="canvas" id="js-canvas" style="margin-top: 100px; margin-left: 20px;">
+			<div id="loop-content">
+			</div>
+		
 			<label for="loop-log-div" class="col-sm-4 control-label">Loop Logs</label>
-			<div id="loop-log-div" style="border: 2px solid gray;height: 20vh">
+			<div id="loop-log-div" style="border: 2px solid gray;height: 20vh; margin-right: 40px;">
 				<div id="loop-log-table-scroll" style="width: 100%;height: 87%;overflow: auto;margin-top: 20px;">
 					<table id="loop-log-table" style="width: 100%">
 						<thead>
@@ -57,15 +65,16 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="log in loop_logs" ng-class="{reverse: reverse}">
-								<td>{{log.logInstant}}</td>
-								<td>{{log.logType}}</td>
-								<td>{{log.message}}</td>
+								<td width="20%">{{log.logInstant}}</td>
+								<td width="10%" ng-class="log.logType">{{log.logType}}</td>
+								<td width="70">{{log.message}}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
+
 
 	</div>
 </body>
