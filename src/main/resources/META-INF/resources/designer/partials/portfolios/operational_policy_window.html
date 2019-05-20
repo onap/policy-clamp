@@ -58,6 +58,16 @@ label {
 	margin-bottom: 0px;
 }
 
+.withnote {
+	margin-bottom: 0px;
+}
+
+.note {
+	font-size:10px;
+	margin-left: 250px;
+	font-weight: normal;
+}
+
 #policyTable {
 	cursor: pointer;
 	width: 100%;
@@ -365,7 +375,7 @@ label {
 						<label for="guardPolicyType" class="col-sm-4 control-label">
 							Guard Policy Type</label> <select class="form-control"
 							name="guardPolicyType" id="guardPolicyType"
-							ng-change="changeGuardPolicyType()" ng-model="guardType">
+							ng-click="changeGuardPolicyType()" ng-model="guardType">
 							<option value="GUARD_MIN_MAX">MinMax</option>
 							<option value="GUARD_YAML">FrequencyLimiter</option>
 						</select>
@@ -374,11 +384,14 @@ label {
 				<form class="guardProperties" class="form-horizontal"
 					title="Guard policy associated" style="border: 2px dotted gray;">
 
-					<div class="form-group clearfix">
+					<div class="form-group clearfix withnote">
 						<label class="col-sm-4 control-label" for="id">Guard Policy ID</label>
 						<div class="col-sm-8">
-							<input type="text" class="form-control" name="id" id="id" />
+							<input type="text" class="form-control" name="id" id="id" ng-blur="changeGuardId()" ng-model="id"/>
 						</div>
+					</div>
+					<div>
+						<label class="form-group note">Note: Prefix will be added to Guard Policy ID automatically based on Guard Policy Type</label>
 					</div>
 					<div class="form-group clearfix">
 						<label class="col-sm-4 control-label" for="recipe">Recipe</label>
@@ -428,6 +441,7 @@ label {
 						<div class="col-sm-8">
 							<input class="form-control" name="limit" id="limit" />
 						</div>
+						<label for="timeUnits" class="col-sm-4 control-label">Time Units</label>
 						<div class="col-sm-8">
 							<select class="form-control" name="timeUnits"
 								id="timeUnits">
@@ -438,13 +452,11 @@ label {
 								<option value="week">week</option>
 								<option value="month">month</option>
 								<option value="year">year</option>
-
-							</select> <label for="timeWindow" class="col-sm-4 control-label">Time
-								Window</label>
+							</select> 
 						</div>
+						<label for="timeWindow" class="col-sm-4 control-label">Time	Window</label>
 						<div class="col-sm-8">
-							<input class="form-control" name="timeWindow"
-								id="timeWindow" />
+							<input class="form-control" name="timeWindow" id="timeWindow" />
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -452,13 +464,13 @@ label {
 							Guard Active Start</label>
 						<div class="col-sm-8">
 							<input class="form-control" name="guardActiveStart"
-								id="guardActiveStart" />
+								id="guardActiveStart"  value="00:00:00Z"/>
 						</div>
 						<label for="guardActiveEnd" class="col-sm-4 control-label">
 							Guard Active End</label>
 						<div class="col-sm-8">
 							<input class="form-control" name="guardActiveEnd"
-								id="guardActiveEnd" />
+								id="guardActiveEnd" value="00:00:01Z"/>
 						</div>
 					</div>
 
