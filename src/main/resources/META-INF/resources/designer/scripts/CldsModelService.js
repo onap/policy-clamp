@@ -191,7 +191,7 @@ app
 		    	var svg = pars;
 			    if ($("#svgContainer").length > 0)
 				    $("#svgContainer").remove();
-			    $("#js-canvas").append(
+			    $("#loop-content").append(
 			    "<span id=\"svgContainer\">" + svg + "</span>");
 			    $("#svgContainer svg").attr('width', '100%');
 			    $("#svgContainer svg").attr('height', '100%');
