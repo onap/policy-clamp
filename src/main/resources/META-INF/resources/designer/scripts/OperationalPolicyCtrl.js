@@ -214,11 +214,23 @@ app
 						    $("#formId" + formNum + " .guardProperties").find("#" + guardPropElemValue.id).val(
 						    guardElemValue[guardPropElemValue.id]);
 					    });
+					    iniGuardPolicyType(guardElemId, formNum);
 					    // And finally enable the flag
 					    $("#formId" + formNum + " #enableGuardPolicy").prop("checked", true);
 				    }
 			    });
 		    });
+	    }
+	    function iniGuardPolicyType (guardPolicyId, formNum) {
+		    if(guardPolicyId.indexOf('guard.minmax.') !== -1) {
+				$("#formId" + formNum + " #minMaxGuardPolicyDiv").show();
+				$("#formId" + formNum + " #frequencyLimiterGuardPolicyDiv").hide();
+				$("#formId" + formNum + " #guardPolicyType").val("GUARD_MIN_MAX");
+		    } else if (guardPolicyId.indexOf('guard.frequency.') !== -1) {
+		    	$("#formId" + formNum + " #minMaxGuardPolicyDiv").hide();
+			    $("#formId" + formNum + " #frequencyLimiterGuardPolicyDiv").show();
+			    $("#formId" + formNum + " #guardPolicyType").val("GUARD_YAML");
+		    }
 	    }
 	    function initTargetResourceIdOptions (targetType, formNum) {
 		    var recipe = $("#formId" + formNum + "#recipe").val();
@@ -263,6 +275,30 @@ app
 		    initTargetResourceIdOptions(type, formNum);
 	    }
 
+	    $scope.changeGuardId = function(formItemActive) {
+		    if (formItemActive === undefined) {
+			    formItemActive = searchActiveFormId();
+			    if (formItemActive === undefined) {
+			    	return;
+			    }
+		    }
+		    var oldValue = $("#" + formItemActive.id + " .guardProperties #id").val();
+		    // remove old prefix
+		    if(oldValue.indexOf('guard.minmax.') !== -1) {
+		    	oldValue = oldValue.substr(oldValue.indexOf('guard.minmax.') + 13);
+		    } else if (oldValue.indexOf('guard.frequency.') !== -1) {
+		    	oldValue = oldValue.substr(oldValue.indexOf('guard.frequency.') + 16);
+		    }
+
+		    var prefix = "guard.";
+		    if ($("#" + formItemActive.id + " #guardPolicyType").val() === "GUARD_MIN_MAX") {
+		    	prefix = prefix + "minmax.";
+		    } else if ($("#" + formItemActive.id + " #guardPolicyType").val() === "GUARD_YAML") {
+		    	prefix = prefix + "frequency.";
+		    }
+		    $("#" + formItemActive.id + " .guardProperties #id").val(prefix+oldValue);
+	    }
+
 	    $scope.changeTargetResourceId = function(event) {
 		    var formNum = $(event.target).closest('.formId').attr('id').substring(6);
 		    initTargetModelAttributes(formNum);
@@ -298,6 +334,7 @@ app
 			    $("#" + formItemActive.id + " #minMaxGuardPolicyDiv").hide();
 			    $("#" + formItemActive.id + " #frequencyLimiterGuardPolicyDiv").show();
 		    }
+		    $scope.changeGuardId(formItemActive);
 	    }
 	    $scope.initPolicySelect = function() {
 
