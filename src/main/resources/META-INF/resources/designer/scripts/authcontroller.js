@@ -34,7 +34,6 @@ angular.module('clds-app').controller(
 function($scope, $rootScope, $window, $resource, $http, $location, $cookies) {
 	console.log("//////////AuthenticateCtrl");
 	$scope.getInclude = function() {
-		console.log("getInclude011111111");
 		var invalidUser = $window.localStorage.getItem("invalidUser");
 		var isAuth = $window.localStorage.getItem("isAuth");
 		if (invalidUser == 'true')
