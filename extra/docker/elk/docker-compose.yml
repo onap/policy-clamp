@@ -48,6 +48,8 @@ services:
       - elasticsearch
     volumes:
       - ../../../src/main/docker/kibana/saved-objects/:/saved-objects/
+      - ../../../src/main/docker/kibana/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ../../../src/main/docker/kibana/conf/keystore:/usr/share/kibana/config/keystore
     networks:
       es_net:
 
