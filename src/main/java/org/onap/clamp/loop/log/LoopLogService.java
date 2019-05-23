@@ -38,7 +38,11 @@ public class LoopLogService {
     }
 
     public void addLog(String message, String logType, Loop loop) {
-        repository.save(new LoopLog(message, LogType.valueOf(logType), loop));
+        this.addLogForComponent(message, logType, "CLAMP", loop);
+    }
+
+    public void addLogForComponent(String message, String logType, String component, Loop loop) {
+        loop.addLog(repository.save(new LoopLog(message, LogType.valueOf(logType), component, loop)));
     }
 
     public boolean isExisting(Long logId) {

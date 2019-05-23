@@ -127,10 +127,28 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             with open(cached_file_content, 'w') as f:
                 f.write(jsonGenerated)
         return True
-     elif self.path.startswith("/dcae-operationstatus") and http_type == "GET":
+     elif self.path.startswith("/dcae-operationstatus/install") and http_type == "GET":
         if not _file_available:
-            print "self.path start with /dcae-operationstatus, generating response json..."
-            jsonGenerated =  "{\"operationType\": \"operationType1\", \"status\": \"succeeded\"}"
+            print "self.path start with /dcae-operationstatus/install, generating response json..."
+            jsonGenerated =  "{\"operationType\": \"install\", \"status\": \"succeeded\"}"
+            print "jsonGenerated: " + jsonGenerated
+    
+            try:
+                os.makedirs(cached_file_folder, 0777)
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise
+                print(cached_file_folder+" already exists")
+    
+            with open(cached_file_header, 'w') as f:
+                f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+            with open(cached_file_content, 'w') as f:
+                f.write(jsonGenerated)
+        return True
+     elif self.path.startswith("/dcae-operationstatus/uninstall") and http_type == "GET":
+        if not _file_available:
+            print "self.path start with /dcae-operationstatus/uninstall, generating response json..."
+            jsonGenerated =  "{\"operationType\": \"uninstall\", \"status\": \"succeeded\"}"
             print "jsonGenerated: " + jsonGenerated
     
             try:
@@ -157,20 +175,31 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
             with open(cached_file_content, 'w') as f:
                 f.write(jsonGenerated)
-        return True;
-     elif self.path.startswith("/dcae-deployments/") and (http_type == "PUT" or http_type == "DELETE"):
-        if not _file_available:
-            print "self.path start with /dcae-deployments/, generating response json..."
-            #jsondata = json.loads(self.data_string)
-            jsonGenerated = "{\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus\",\"test2\":\"test2\"}}"
-            print "jsonGenerated: " + jsonGenerated
-    
-            os.makedirs(cached_file_folder, 0777)
-            with open(cached_file_header, 'w') as f:
-                f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
-            with open(cached_file_content, 'w') as f:
-                f.write(jsonGenerated)
         return True
+     elif self.path.startswith("/dcae-deployments/") and http_type == "PUT":
+            print "self.path start with /dcae-deployments/ DEPLOY, generating response json..."
+            #jsondata = json.loads(self.data_string)
+            jsonGenerated = "{\"operationType\":\"install\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/install\"}}"
+            print "jsonGenerated: " + jsonGenerated
+            if not os.path.exists(cached_file_folder):
+                os.makedirs(cached_file_folder, 0777)
+            with open(cached_file_header, 'w+') as f:
+                f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+            with open(cached_file_content, 'w+') as f:
+                f.write(jsonGenerated)
+        	return True
+     elif self.path.startswith("/dcae-deployments/") and http_type == "DELETE":
+            print "self.path start with /dcae-deployments/ UNDEPLOY, generating response json..."
+            #jsondata = json.loads(self.data_string)
+            jsonGenerated = "{\"operationType\":\"uninstall\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/uninstall\"}}"
+            print "jsonGenerated: " + jsonGenerated
+            if not os.path.exists(cached_file_folder):
+                os.makedirs(cached_file_folder, 0777)
+            with open(cached_file_header, 'w+') as f:
+                f.write("{\"Content-Length\": \"" + str(len(jsonGenerated)) + "\", \"Content-Type\": \"application/json\"}")
+            with open(cached_file_content, 'w+') as f:
+                f.write(jsonGenerated)
+            return True
      elif (self.path.startswith("/pdp/api/") and (http_type == "PUT" or http_type == "DELETE")) or (self.path.startswith("/pdp/api/policyEngineImport") and http_type == "POST"):
         print "self.path start with /pdp/api/, copying body to response ..."
         if not os.path.exists(cached_file_folder):
@@ -180,7 +209,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         with open(cached_file_content, 'w+') as f:
             f.write(self.data_string)
         return True
-     elif self.path.startswith("/policy/api/v1/policyTypes/") and http_type == "POST":
+     elif self.path.startswith("/policy/api/v1/policytypes/") and http_type == "POST":
         print "self.path start with POST new policy API /pdp/api/, copying body to response ..."
         if not os.path.exists(cached_file_folder):
             os.makedirs(cached_file_folder, 0777)
@@ -189,8 +218,18 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         with open(cached_file_content, 'w+') as f:
             f.write(self.data_string)
         return True
-     elif self.path.startswith("/policy/api/v1/policyTypes/") and http_type == "DELETE":
+     elif self.path.startswith("/policy/api/v1/policytypes/") and http_type == "DELETE":
         print "self.path start with DELETE new policy API /policy/api/v1/policyTypes/ ..."
+        if not os.path.exists(cached_file_folder):
+            os.makedirs(cached_file_folder, 0777)
+    
+        with open(cached_file_header, 'w+') as f:
+                f.write("{\"Content-Length\": \"" + str(len("")) + "\", \"Content-Type\": \""+str("")+"\"}")
+        with open(cached_file_content, 'w+') as f:
+                f.write(self.data_string)
+        return True
+     elif self.path.startswith("/policy/pap/v1/pdps/policies") and http_type == "POST":
+        print "self.path start with POST new policy API /policy/pap/v1/pdps/ ..."
         if not os.path.exists(cached_file_folder):
             os.makedirs(cached_file_folder, 0777)
     

@@ -59,15 +59,17 @@
 						<thead>
 							<tr>
 								<th><span align="left" class="text">Date</span></th>
-								<th><span align="center" class="text">Type</span></th>
+								<th><span align="left" class="text">Type</span></th>
+								<th><span align="left" class="text">Component</span></th>
 								<th><span align="right" class="text">Log</span></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="log in loop_logs" ng-class="{reverse: reverse}">
-								<td width="20%">{{log.logInstant}}</td>
+								<td width="10%">{{log.logInstant}}</td>
 								<td width="10%" ng-class="log.logType">{{log.logType}}</td>
-								<td width="70">{{log.message}}</td>
+								<td width="10%">{{log.logComponent}}</td>
+								<td width="70%">{{log.message}}</td>
 							</tr>
 						</tbody>
 					</table>

@@ -23,18 +23,16 @@
 
 package org.onap.clamp.loop;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -47,14 +45,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
+import org.onap.clamp.loop.components.external.DcaeComponent;
+import org.onap.clamp.loop.components.external.ExternalComponent;
+import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -68,9 +69,6 @@ public class Loop implements Serializable {
      * The serial version id.
      */
     private static final long serialVersionUID = -286522707701388642L;
-
-    @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(Loop.class);
 
     @Id
     @Expose
@@ -111,6 +109,10 @@ public class Loop implements Serializable {
     private LoopState lastComputedState;
 
     @Expose
+    @Transient
+    private final Map<String, ExternalComponent> components = new HashMap<>();
+
+    @Expose
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "loop")
     private Set<OperationalPolicy> operationalPolicies = new HashSet<>();
 
@@ -121,10 +123,16 @@ public class Loop implements Serializable {
 
     @Expose
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "loop")
-    @OrderBy("id DESC")
-    private Set<LoopLog> loopLogs = new HashSet<>();
+    @SortNatural
+    private SortedSet<LoopLog> loopLogs = new TreeSet<>();
+
+    private void initializeExternalComponents() {
+        this.addComponent(new PolicyComponent());
+        this.addComponent(new DcaeComponent());
+    }
 
     public Loop() {
+        initializeExternalComponents();
     }
 
     /**
@@ -136,6 +144,7 @@ public class Loop implements Serializable {
         this.blueprint = blueprint;
         this.lastComputedState = LoopState.DESIGN;
         this.globalPropertiesJson = new JsonObject();
+        initializeExternalComponents();
     }
 
     public String getName() {
@@ -214,7 +223,7 @@ public class Loop implements Serializable {
         return loopLogs;
     }
 
-    void setLoopLogs(Set<LoopLog> loopLogs) {
+    void setLoopLogs(SortedSet<LoopLog> loopLogs) {
         this.loopLogs = loopLogs;
     }
 
@@ -228,9 +237,9 @@ public class Loop implements Serializable {
         microServicePolicy.getUsedByLoops().add(this);
     }
 
-    void addLog(LoopLog log) {
-        loopLogs.add(log);
+    public void addLog(LoopLog log) {
         log.setLoop(this);
+        this.loopLogs.add(log);
     }
 
     public String getDcaeBlueprintId() {
@@ -247,6 +256,18 @@ public class Loop implements Serializable {
 
     void setModelPropertiesJson(JsonObject modelPropertiesJson) {
         this.modelPropertiesJson = modelPropertiesJson;
+    }
+
+    public Map<String, ExternalComponent> getComponents() {
+        return components;
+    }
+
+    public ExternalComponent getComponent(String componentName) {
+        return this.components.get(componentName);
+    }
+
+    public void addComponent(ExternalComponent component) {
+        this.components.put(component.getComponentName(), component);
     }
 
     /**
@@ -267,47 +288,6 @@ public class Loop implements Serializable {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
             .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));
         return buffer.toString().replace('.', '_').replaceAll(" ", "");
-    }
-
-    /**
-     * Generates the Json that must be sent to policy to add all policies to Active
-     * PDP group.
-     *
-     * @return The json, payload to send
-     */
-    public String createPoliciesPayloadPdpGroup() {
-        JsonObject jsonObject = new JsonObject();
-        JsonArray jsonArray = new JsonArray();
-        jsonObject.add("policies", jsonArray);
-
-        for (String policyName : this.listPolicyNamesPdpGroup()) {
-            JsonObject policyNode = new JsonObject();
-            jsonArray.add(policyNode);
-            policyNode.addProperty("policy-id", policyName);
-        }
-        String payload = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
-        logger.info("PdpGroup policy payload: " + payload);
-        return payload;
-    }
-
-    /**
-     * Generates the list of policy names that must be send/remove to/from active
-     * PDP group.
-     *
-     * @return A list of policy names
-     */
-    public List<String> listPolicyNamesPdpGroup() {
-        List<String> policyNamesList = new ArrayList<>();
-        for (OperationalPolicy opPolicy : this.getOperationalPolicies()) {
-            policyNamesList.add(opPolicy.getName());
-            for (String guardName : opPolicy.createGuardPolicyPayloads().keySet()) {
-                policyNamesList.add(guardName);
-            }
-        }
-        for (MicroServicePolicy microServicePolicy : this.getMicroServicePolicies()) {
-            policyNamesList.add(microServicePolicy.getName());
-        }
-        return policyNamesList;
     }
 
     @Override

@@ -91,30 +91,6 @@ function getMsUI(type) {
     return null;
 }
 
-function getLastUpdatedStatus() {
-    return cl_props["lastComputedState"];
-}
-
-function setLastComputedState(status) {
-    cl_props["lastComputedState"] =  status;
-}
-
-function getDeploymentID() {
-    return cl_props["dcaeDeploymentId"];
-}
-
-function setDeploymentID(deploymentId) {
-    cl_props["dcaeDeploymentId"] = deploymentId;
-}
-
-function getDeploymentStatusURL() {
-    return cl_props["dcaeDeploymentStatusUrl"];
-}
-
-function setDeploymentStatusURL(deploymentStatusURL) {
-    cl_props["dcaeDeploymentStatusUrl"] = deploymentStatusURL;
-}
-
 function getResourceDetailsVfProperty() {
 	return cl_props["modelPropertiesJson"]["resourceDetails"]["VF"];
 }
@@ -127,4 +103,8 @@ function getLoopLogsArray() {
 	return cl_props.loopLogs;
 }
 
-module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getLastUpdatedStatus,getDeploymentID,getDeploymentStatusURL,getResourceDetailsVfProperty,getResourceDetailsVfModuleProperty };
+function getComponentStates() {
+	return cl_props.components;
+}
+
+module.exports = { getOperationalPolicyProperty,getGlobalProperty,getMsProperty,getMsUI,getResourceDetailsVfProperty,getResourceDetailsVfModuleProperty };

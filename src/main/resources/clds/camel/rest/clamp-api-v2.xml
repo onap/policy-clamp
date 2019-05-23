@@ -193,7 +193,7 @@
 			</route>
 		</post>
 		<put
-			uri="/v2/loop/deployLoop/{loopName}"
+			uri="/v2/loop/deploy/{loopName}"
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
@@ -212,27 +212,8 @@
 					<to
 						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DCAE DEPLOY request','INFO',${exchangeProperty[loopObject]})" />
 					
-					<to uri="direct:get-status-from-policy" />
-					<to uri="direct:get-status-from-dcae" />
-					<log
-						loggingLevel="INFO"
-						message="Policy deployment status: ${exchangeProperty[policyStatus]}"></log>
-					<choice>
-						<when>
-							<simple> ${exchangeProperty[policyStatus]} == 'SUBMITTED' and
-								${exchangeProperty[dcaeStatus]} == 'NOT_DEPLOYED'
-							</simple>
-							<to uri="direct:deploy-loop" />
-						</when>
-						<otherwise>
-							<log
-								loggingLevel="INFO"
-								message="POLICY status ${exchangeProperty[policyStatus]}/DCAE status ${exchangeProperty[dcaeStatus]}, DCAE deployment will be started anyway" />
-							<to
-								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('POLICY status ${exchangeProperty[policyStatus]}/DCAE status ${exchangeProperty[dcaeStatus]}, DCAE deployment will be started anyway','ERROR',${exchangeProperty[loopObject]})" />
-							<to uri="direct:deploy-loop" />
-						</otherwise>
-					</choice>
+					<to uri="direct:deploy-loop" />
+
 					<log
 						loggingLevel="INFO"
 						message="DEPLOY request successfully executed for loop: ${header.loopName}" />
@@ -257,7 +238,7 @@
 			</route>
 		</put>
 		<put
-			uri="/v2/loop/undeployLoop/{loopName}"
+			uri="/v2/loop/undeploy/{loopName}"
 			outType="org.onap.clamp.loop.Loop"
 			produces="application/json">
 			<route>
@@ -275,21 +256,8 @@
 					<to uri="direct:load-loop" />
 					<to
 						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DCAE UNDEPLOY request','INFO',${exchangeProperty[loopObject]})" />
-					<to uri="direct:get-status-from-dcae" />
-					<choice>
-						<when>
-							<simple> ${exchangeProperty[dcaeStatus]} == 'DEPLOYED' or ${exchangeProperty[dcaeStatus]} == 'IN_ERROR' or ${exchangeProperty[dcaeStatus]} == 'PROCESSING'
-							</simple>
 							<to uri="direct:undeploy-loop" />
-						</when>
-						<otherwise>
-							<log
-								loggingLevel="INFO"
-								message="Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be undeployed when in state DEPLOYED/IN_ERROR/PROCESSING" />
-							<to
-								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Loop is in state ${exchangeProperty[dcaeStatus]}, it can only be deployed when in state DEPLOYED','ERROR',${exchangeProperty[loopObject]})" />
-						</otherwise>
-					</choice>
+
 					<log
 						loggingLevel="INFO"
 						message="UNDEPLOY request successfully executed for loop: ${header.loopName}" />
@@ -524,6 +492,7 @@
 					<to uri="direct:load-loop" />
 					<to
 						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('DELETE request','INFO',${exchangeProperty[loopObject]})" />
+					<to uri="direct:undeploy-loop" />
 					<to uri="direct:remove-all-policy-from-active-pdp-group" />
 					<split>
 						<simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
@@ -609,20 +578,16 @@
 					<to uri="direct:load-loop" />
 					<to
 						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET STATUS request','INFO',${exchangeProperty[loopObject]})" />
-					<setProperty propertyName="raiseHttpExceptionFlag">
-						<simple resultType="java.lang.Boolean">false</simple>
-					</setProperty>
-					<to uri="direct:get-status-from-policy" />
-					<to uri="direct:get-status-from-dcae" />
-					<to
-						uri="bean:org.onap.clamp.loop.LoopOperation?method=updateLoopStatus(${exchangeProperty[loopObject]},${exchangeProperty[policyStatus]}, ${exchangeProperty[dcaeStatus]})" />
-					<log
-						loggingLevel="INFO"
-						message="Get Status request successfully executed. The new state is: ${body}" />
+					<doTry>
+						<to uri="direct:update-policy-status-for-loop" />
+						<to uri="direct:update-dcae-status-for-loop" />
+						<to uri="direct:update-loop-state" />
+
 					<to
 						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Get Status request successfully executed','INFO',${exchangeProperty[loopObject]})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+					</doTry>
 					<doCatch>
 						<exception>java.lang.Exception</exception>
 						<handled>
@@ -637,8 +602,9 @@
 							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Get Status request failed, Error reported: ${exception}','ERROR',${exchangeProperty[loopObject]})" />
 					</doCatch>
 					<doFinally>
-						<to
-							uri="bean:org.onap.clamp.loop.LoopController?method=getLoop(${header.loopName})" />
+						<setBody>
+							<simple>${exchangeProperty[loopObject]}</simple>
+						</setBody>
 					</doFinally>
 				</doTry>
 			</route>

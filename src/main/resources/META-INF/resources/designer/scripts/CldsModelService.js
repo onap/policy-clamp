@@ -41,32 +41,8 @@ app
 				ToscaModelWindow();
 			}
 		}
-		this.toggleDeploy = function(uiAction, modelName) {
-			var svcAction = uiAction.toLowerCase();
-			var deployUrl = "/restservices/clds/v2/loop/" + svcAction + "Loop/" + modelName;
-			var def = $q.defer();
-			var sets = [];
-			$http.put(deployUrl).success(
-				function(data) {
-					def.resolve(data);
-					alertService.alertMessage("Action Successful: " + svcAction, 1)
-					// update deploymentID, lastUpdatedStatus
-					setLastComputedState(data.lastComputedState);
-					setDeploymentStatusURL(data.dcaeDeploymentStatusUrl);
-					setDeploymentID(data.dcaeDeploymentId);
-					setStatus(data.lastComputedState);
-					enableDisableMenuOptions();
-			}).error(
-				function(data) {
-					def.resolve(data);
-					alertService.alertMessage("Action Failure: " + svcAction, 2);
-					def.reject(svcAction + " not successful");
-			});
-			return def.promise;
-		}
 		this.getModel = function(modelName) {
 		    var def = $q.defer();
-		    var sets = [];
 		    var svcUrl = "/restservices/clds/v2/loop/" + modelName;
 		    $http.get(svcUrl).success(function(data) {
 		    	cl_props = data;
@@ -79,7 +55,6 @@ app
 	    };
 	    this.getSavedModel = function() {
 		    var def = $q.defer();
-		    var sets = [];
 		    var svcUrl = "/restservices/clds/v2/loop/getAllNames";
 		    $http.get(svcUrl).success(function(data) {
 
@@ -92,7 +67,6 @@ app
 	    };
 	    this.processAction = function(uiAction, modelName) {
 		    var def = $q.defer();
-		    var sets = [];
 		    var svcAction = uiAction.toLowerCase();
 		    var svcUrl = "/restservices/clds/v2/loop/" + svcAction + "/" + modelName;
 
@@ -100,10 +74,6 @@ app
 				function(data) {
 					def.resolve(data);
 					alertService.alertMessage("Action Successful: " + svcAction, 1)
-					// update deploymentID, lastUpdatedStatus
-					setLastComputedState(data.lastComputedState);
-					setDeploymentStatusURL(data.dcaeDeploymentStatusUrl);
-					setDeploymentID(data.dcaeDeploymentId);
 			}).error(
 				function(data) {
 					def.resolve(data);
@@ -116,7 +86,6 @@ app
 	    this.manageAction = function(modelName, typeId, typeName) {
 
 		    var def = $q.defer();
-		    var sets = [];
 		    var config = {
 		        url : "/restservices/clds/v1/clds/getDispatcherInfo",
 		        method : "GET",
@@ -143,37 +112,34 @@ app
 	    };
 	    this.refreshStatus = function(modelName) {
 		    var def = $q.defer();
-		    var sets = [];
 		    var svcUrl = "/restservices/clds/v2/loop/getstatus/" + modelName;
 		    $http.get(svcUrl).success(function(data) {
+		    	cl_props = data;
 		    	setStatus(data.lastComputedState);
 			    def.resolve(data);
 		    }).error(function(data) {
 			    def.reject("Refresh Status not successful");
 		    });
 		    return def.promise;
-		    enableDisableMenuOptions();
 	    }
 	    function setStatus(status) {
 		    // apply color to status
 		    var statusColor = 'white';
 		    if (status.trim() === "DESIGN") {
 			    statusColor = 'gray'
-		    } else if (status.trim() === "DISTRIBUTED") {
-			    statusColor = 'blue'
 		    } else if (status.trim() === "SUBMITTED") {
+			    statusColor = 'blue'
+		    } else if (status.trim() === "DEPLOYED") {
+			    statusColor = 'blue'
+		    } else if (status.trim() === "RUNNING") {
 			    statusColor = 'green'
 		    } else if (status.trim() === "STOPPED") {
-			    statusColor = 'red'
-		    } else if (status.trim() === "DELETING") {
-			    statusColor = 'pink'
-		    } else if (status.trim() === "ERROR") {
 			    statusColor = 'orange'
-		    } else if (status.trim() === "UNKNOWN") {
-			    statusColor = 'blue'
-		    } else {
-			    statusColor = null;
-		    }
+		    } else if (status.trim() === "IN_ERROR") {
+			    statusColor = 'red'
+		    } else if (status.trim() === "WAITING") {
+			    statusColor = 'greenyellow'
+		    } 
 		    var statusMsg = '<span style="background-color:'
 		    + statusColor
 		    + ';-moz-border-radius: 50px;  -webkit-border-radius: 50px;  border-radius: 50px;">&nbsp;&nbsp;&nbsp;'
@@ -185,6 +151,22 @@ app
 		    .append(
 		    '<span id="status_clds" style="position: absolute;  left: 61%;top: 151px; font-size:20px;">Status: '
 		    + statusMsg + '</span>');
+		    
+		    var statusTable = '<table id="status_components_table" style="width:100%"><tr><th><span align="left" class="text">Component</span></th><th><span align="center" class="text">State</span></th><th><span align="right" class="text">Description</span></th></tr>';
+		    
+		    $.each(cl_props['components'], function(componentIndex, componentValue) {
+	           statusTable+='<tr><td>'+componentIndex+'</td>';
+	           statusTable+='<td>'+componentValue['componentState']['stateName']+'</td>';
+	           statusTable+='<td>'+componentValue['componentState']['description']+'</td></tr>';
+		    });
+		    statusTable+= '</table>';
+		    if ($("#status_components").length >= 1)
+			    $("#status_components").remove();
+		    $("#activity_modeler")
+		    .append(
+		    '<span id="status_components" style="position: absolute;  left: 61%;top: 191px; font-size:10px;">'
+		    + statusTable + '</span>');
+		    
 	    }
 	    function manageCLImage(modelName) {
 	    	getModelImage(modelName).then(function(pars) {
@@ -203,13 +185,12 @@ app
 			}, function(data) {
 			});
 	    }
-	    enableDisableMenuOptions = function() {
+	    function enableDisableMenuOptions () {
 		    enableDefaultMenu();
 	    	enableAllActionMenu();
 	    }
-	    getModelImage = function(modelName) {
+	    function getModelImage(modelName) {
 		    var def = $q.defer();
-		    var sets = [];
 		    var svcUrl = "/restservices/clds/v2/loop/svgRepresentation/" + modelName;
 		    $http.get(svcUrl).success(function(data) {
 			    def.resolve(data);

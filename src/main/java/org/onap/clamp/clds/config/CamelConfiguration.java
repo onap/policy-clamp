@@ -63,13 +63,13 @@ public class CamelConfiguration extends RouteBuilder {
 
     private void configureDefaultSslProperties() {
         if (env.getProperty("server.ssl.trust-store") != null) {
-            URL storeResource = CamelConfiguration.class
+            URL storeResource = Thread.currentThread().getContextClassLoader()
                 .getResource(env.getProperty("server.ssl.trust-store").replaceAll("classpath:", ""));
             System.setProperty("javax.net.ssl.trustStore", storeResource.getPath());
             System.setProperty("javax.net.ssl.trustStorePassword", env.getProperty("server.ssl.trust-store-password"));
             System.setProperty("javax.net.ssl.trustStoreType", "jks");
             System.setProperty("ssl.TrustManagerFactory.algorithm", "PKIX");
-            storeResource = CamelConfiguration.class
+            storeResource = Thread.currentThread().getContextClassLoader()
                 .getResource(env.getProperty("server.ssl.key-store").replaceAll("classpath:", ""));
             System.setProperty("javax.net.ssl.keyStore", storeResource.getPath());
             System.setProperty("javax.net.ssl.keyStorePassword", env.getProperty("server.ssl.key-store-password"));
@@ -82,7 +82,7 @@ public class CamelConfiguration extends RouteBuilder {
         if (env.getProperty("server.ssl.trust-store") != null) {
             KeyStore truststore = KeyStore.getInstance("JKS");
             truststore.load(
-                getClass().getClassLoader()
+                Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(env.getProperty("server.ssl.trust-store").replaceAll("classpath:", "")),
                 env.getProperty("server.ssl.trust-store-password").toCharArray());
 
@@ -118,6 +118,7 @@ public class CamelConfiguration extends RouteBuilder {
             .apiContextPath("api-doc").apiVendorExtension(true).apiProperty("api.title", "Clamp Rest API")
             .apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
             .apiProperty("base.path", "/restservices/clds/");
+
         // camelContext.setTracing(true);
 
         configureDefaultSslProperties();

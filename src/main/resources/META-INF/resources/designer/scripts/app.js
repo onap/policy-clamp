@@ -388,7 +388,7 @@ function($scope, $rootScope, $timeout, dialogs) {
 	    };
 	    $scope.propertyExplorerErrorMessage = function(msg) {
 
-		    var dlg = dialogs.notify('Error', msg);
+		    dialogs.notify('Error', msg);
 	    }
 	    $scope.activityModelling = function() {
 
@@ -505,7 +505,8 @@ function($scope, $rootScope, $timeout, dialogs) {
 
 		    cldsModelService.processAction(uiAction, modelName).then(function(pars) {
 			    console.log("cldsPerformAction: pars=" + pars);
-			    cldsModelService.getModel(modelName).then(function(pars) {
+			    cldsModelService.refreshStatus(modelName).then(function(pars) {
+			    	console.log("refreshStatus: pars=" + pars);
 			    	$rootScope.refreshLoopLog();
 			    }, function(data) {
 			    });
@@ -514,9 +515,10 @@ function($scope, $rootScope, $timeout, dialogs) {
 	    };
 	    $scope.refreshStatus = function() {
 		    var modelName = selected_model;
-		    console.log("refreStatus modelName=" + modelName);
+		    console.log("refreshStatus modelName=" + modelName);
 		    cldsModelService.refreshStatus(modelName).then(function(pars) {
-			    console.log("refreStatus: pars=" + pars);
+		    	console.log("refreshStatus: pars=" + pars);
+		    	$rootScope.refreshLoopLog();
 		    }, function(data) {
 
 		    });
@@ -547,7 +549,7 @@ function($scope, $rootScope, $timeout, dialogs) {
 			    'Are you sure you want to deploy the closed loop?');
 			    confirm.result.then(function() {
 
-				    cldsToggleDeploy("deploy");
+			    	$scope.cldsPerformAction("deploy");
 			    });
 		    });
 	    };
@@ -557,24 +559,12 @@ function($scope, $rootScope, $timeout, dialogs) {
 		    + uiAction.toLowerCase() + ' the closed loop?');
 		    dlg.result.then(function(btn) {
 
-			    cldsToggleDeploy(uiAction.toLowerCase());
+		    	$scope.cldsPerformAction(uiAction.toLowerCase());
 		    }, function(btn) {
 
 		    });
 	    };
-	    function cldsToggleDeploy(uiAction) {
-		    console.log("cldsPerformAction: " + uiAction + " modelName="
-		        + selected_model);
-		    cldsModelService.toggleDeploy(uiAction, selected_model).then(
-		    function(pars) {
-			    cldsModelService.getModel(selected_model).then(function(pars) {
-			    	$rootScope.refreshLoopLog();
-			    }, function(data) {
-			    });
-		    }, function(data) {
-		    });
-		    
-	    }
+
 	    $scope.ToscaModelWindow = function (tosca_model) {
 
 	    	var dlg = dialogs.create('partials/portfolios/tosca_model_properties.html','ToscaModelCtrl',{closable:true,draggable:true},{size:'lg',keyboard: true,backdrop: 'static',windowClass: 'my-class'});

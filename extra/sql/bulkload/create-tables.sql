@@ -7,6 +7,7 @@
 
     create table loop_logs (
        id bigint not null,
+        log_component varchar(255) not null,
         log_instant datetime(6) not null,
         log_type varchar(255) not null,
         message MEDIUMTEXT not null,

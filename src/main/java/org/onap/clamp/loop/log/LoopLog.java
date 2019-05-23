@@ -52,7 +52,7 @@ import org.onap.clamp.loop.Loop;
  */
 @Entity
 @Table(name = "loop_logs")
-public class LoopLog implements Serializable {
+public class LoopLog implements Serializable, Comparable<LoopLog> {
     /**
      * The serial version ID.
      */
@@ -69,6 +69,10 @@ public class LoopLog implements Serializable {
     private LogType logType;
 
     @Expose
+    @Column(name = "log_component", nullable = false)
+    private String logComponent;
+
+    @Expose
     @Column(name = "message", columnDefinition = "MEDIUMTEXT", nullable = false)
     private String message;
 
@@ -83,10 +87,11 @@ public class LoopLog implements Serializable {
     public LoopLog() {
     }
 
-    public LoopLog(String message, LogType logType, Loop loop) {
+    public LoopLog(String message, LogType logType, String logComponent, Loop loop) {
         this.message = message;
         this.logType = logType;
         this.loop = loop;
+        this.logComponent = logComponent;
     }
 
     public Long getId() {
@@ -129,6 +134,14 @@ public class LoopLog implements Serializable {
         this.logInstant = logInstant.truncatedTo(ChronoUnit.SECONDS);
     }
 
+    public String getLogComponent() {
+        return logComponent;
+    }
+
+    public void setLogComponent(String logComponent) {
+        this.logComponent = logComponent;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -157,6 +170,20 @@ public class LoopLog implements Serializable {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(LoopLog arg0) {
+        // Reverse it, so that by default we have the latest
+        if (getId() == null) {
+            return 1;
+        }
+        if (arg0.getId() == null) {
+            return -1;
+        }
+
+        return arg0.getId().compareTo(this.getId());
+
     }
 
 }

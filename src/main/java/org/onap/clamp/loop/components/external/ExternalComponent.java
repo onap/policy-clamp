@@ -1,9 +1,8 @@
-
 /*-
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,34 +21,41 @@
  *
  */
 
-package org.onap.clamp.clds.model.dcae;
+package org.onap.clamp.loop.components.external;
 
 import com.google.gson.annotations.Expose;
 
+import org.apache.camel.Exchange;
+
 /**
- * This class maps the DCAE inventory answer to a nice pojo.
+ *
+ * SHould be abstract but Gson can't instantiate it if it's an abstract
+ *
  */
-public class DcaeInventoryResponse {
-
+public class ExternalComponent {
     @Expose
-    private String typeName;
+    private ExternalComponentState componentState;
 
-    @Expose
-    private String typeId;
-
-    public String getTypeName() {
-        return typeName;
+    public void setState(ExternalComponentState newState) {
+        this.componentState = newState;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public ExternalComponentState getState() {
+        return this.componentState;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public String getComponentName() {
+        return null;
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public ExternalComponentState computeState(Exchange camelExchange) {
+        return new ExternalComponentState("INIT", "no desc");
+    }
+
+    public ExternalComponent(ExternalComponentState initialState) {
+        setState(initialState);
+    }
+
+    public ExternalComponent() {
     }
 }
