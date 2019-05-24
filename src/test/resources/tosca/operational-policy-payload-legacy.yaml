@@ -1,0 +1,23 @@
+controlLoop: {controlLoopName: control loop, version: 2.0.0, trigger_policy: new1,
+  timeout: '30', abatement: 'true'}
+policies:
+- id: new1
+  recipe: Rebuild
+  retry: '10'
+  timeout: '20'
+  actor: SO
+  payload: test
+  success: new2
+  failure: new2
+  failure_timeout: new2
+  failure_retries: new2
+  failure_exception: new2
+  failure_guard: new2
+  target: {type: VFC, resourceTargetId: test}
+- id: new2
+  recipe: Migrate
+  retry: '30'
+  timeout: '40'
+  actor: SDNC
+  payload: test
+  target: {type: VFC, resourceTargetId: test}

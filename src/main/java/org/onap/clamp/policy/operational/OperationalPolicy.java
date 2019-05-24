@@ -183,13 +183,20 @@ public class OperationalPolicy implements Serializable, Policy {
         return (new Yaml()).dump(jsonMap);
     }
 
+    public String createPolicyPayloadYamlLegacy() {
+        Gson gson = new GsonBuilder().create();
+        Map<?, ?> jsonMap = gson.fromJson(gson.toJson(this.configurationsJson.get("operational_policy")), Map.class);
+        return (new Yaml()).dump(jsonMap);
+    }
+
     @Override
     public String createPolicyPayload() throws UnsupportedEncodingException {
 
         // Now the Yaml payload must be injected in a json ...
         JsonObject payload = new JsonObject();
         payload.addProperty("policy-id", this.getName());
-        payload.addProperty("content", URLEncoder.encode(createPolicyPayloadYaml(), StandardCharsets.UTF_8.toString()));
+        payload.addProperty("content",
+            URLEncoder.encode(createPolicyPayloadYamlLegacy(), StandardCharsets.UTF_8.toString()));
         return new GsonBuilder().setPrettyPrinting().create().toJson(payload);
     }
 

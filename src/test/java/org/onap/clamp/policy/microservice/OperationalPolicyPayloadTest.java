@@ -45,6 +45,8 @@ public class OperationalPolicyPayloadTest {
         OperationalPolicy policy = new OperationalPolicy("testPolicy", null, jsonConfig);
         assertThat(policy.createPolicyPayloadYaml())
             .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload.yaml"));
+        assertThat(policy.createPolicyPayloadYamlLegacy())
+            .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload-legacy.yaml"));
         assertThat(policy.createPolicyPayload())
             .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload.json"));
     }
