@@ -4,28 +4,39 @@ topology_template:
   - testPolicy:
       type: onap.policies.controlloop.Operational
       version: 1.0.0
-      metadata: {policy-id: testPolicy}
+      metadata:
+        policy-id: testPolicy
       properties:
-        controlLoop: {controlLoopName: control loop, version: 2.0.0, trigger_policy: new1,
-          timeout: '30', abatement: 'true'}
+        controlLoop:
+          controlLoopName: control loop
+          version: 2.0.0
+          trigger_policy: new1
+          timeout: '30'
+          abatement: 'true'
         policies:
         - id: new1
           recipe: Rebuild
           retry: '10'
           timeout: '20'
           actor: SO
-          payload: test
+          payload:
+            requestParameters: '{"usePreload":true,"userParams":[]}'
+            configurationParameters: '[{"ip-addr":"$.vf-module-topology.vf-module-parameters.param[10].value","oam-ip-addr":"$.vf-module-topology.vf-module-parameters.param[15].value","enabled":"$.vf-module-topology.vf-module-parameters.param[22].value"}]'
           success: new2
           failure: new2
           failure_timeout: new2
           failure_retries: new2
           failure_exception: new2
           failure_guard: new2
-          target: {type: VFC, resourceTargetId: test}
+          target:
+            type: VFC
+            resourceTargetId: test
         - id: new2
           recipe: Migrate
           retry: '30'
           timeout: '40'
           actor: SDNC
-          payload: test
-          target: {type: VFC, resourceTargetId: test}
+          payload: ''
+          target:
+            type: VFC
+            resourceTargetId: test

@@ -23,6 +23,8 @@
 
 package org.onap.clamp.policy.operational;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -45,6 +47,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -52,6 +55,7 @@ import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.Policy;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 @Entity
@@ -62,6 +66,9 @@ public class OperationalPolicy implements Serializable, Policy {
      * The serial version ID.
      */
     private static final long serialVersionUID = 6117076450841538255L;
+
+    @Transient
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicy.class);
 
     @Id
     @Expose
@@ -176,28 +183,33 @@ public class OperationalPolicy implements Serializable, Policy {
         operationalPolicyDetails.add("metadata", metadata);
         metadata.addProperty("policy-id", this.name);
 
-        operationalPolicyDetails.add("properties", this.configurationsJson.get("operational_policy"));
+        operationalPolicyDetails.add("properties", LegacyOperationalPolicy
+            .reworkPayloadAttributes(this.configurationsJson.get("operational_policy").deepCopy()));
 
         Gson gson = new GsonBuilder().create();
+
         Map<?, ?> jsonMap = gson.fromJson(gson.toJson(policyPayloadResult), Map.class);
-        return (new Yaml()).dump(jsonMap);
-    }
 
-    public String createPolicyPayloadYamlLegacy() {
-        Gson gson = new GsonBuilder().create();
-        Map<?, ?> jsonMap = gson.fromJson(gson.toJson(this.configurationsJson.get("operational_policy")), Map.class);
-        return (new Yaml()).dump(jsonMap);
+        DumperOptions options = new DumperOptions();
+        options.setIndent(2);
+        options.setPrettyFlow(true);
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+
+        return (new Yaml(options)).dump(jsonMap);
     }
 
     @Override
     public String createPolicyPayload() throws UnsupportedEncodingException {
 
-        // Now the Yaml payload must be injected in a json ...
+        // Now using the legacy payload fo Dublin
         JsonObject payload = new JsonObject();
         payload.addProperty("policy-id", this.getName());
-        payload.addProperty("content",
-            URLEncoder.encode(createPolicyPayloadYamlLegacy(), StandardCharsets.UTF_8.toString()));
-        return new GsonBuilder().setPrettyPrinting().create().toJson(payload);
+        payload.addProperty("content", URLEncoder.encode(
+            LegacyOperationalPolicy.createPolicyPayloadYamlLegacy(this.configurationsJson.get("operational_policy")),
+            StandardCharsets.UTF_8.toString()));
+        String opPayload = new GsonBuilder().setPrettyPrinting().create().toJson(payload);
+        logger.info("Operational policy payload: " + opPayload);
+        return opPayload;
     }
 
     /**
@@ -217,6 +229,7 @@ public class OperationalPolicy implements Serializable, Policy {
                 result.put(guardElem.getKey(), new GsonBuilder().create().toJson(guard));
             }
         }
+        logger.info("Guard policy payload: " + result);
         return result;
     }
 

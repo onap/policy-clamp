@@ -23,6 +23,8 @@
 
 package org.onap.clamp.loop;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -47,6 +49,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -65,6 +68,9 @@ public class Loop implements Serializable {
      * The serial version id.
      */
     private static final long serialVersionUID = -286522707701388642L;
+
+    @Transient
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(Loop.class);
 
     @Id
     @Expose
@@ -279,7 +285,9 @@ public class Loop implements Serializable {
             jsonArray.add(policyNode);
             policyNode.addProperty("policy-id", policyName);
         }
-        return new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+        String payload = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+        logger.info("PdpGroup policy payload: " + payload);
+        return payload;
     }
 
     /**

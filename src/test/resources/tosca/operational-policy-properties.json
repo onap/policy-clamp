@@ -42,7 +42,7 @@
 				"retry": "10",
 				"timeout": "20",
 				"actor": "SO",
-				"payload": "test",
+				"payload": "requestParameters: '{\"usePreload\":true,\"userParams\":[]}'\r\nconfigurationParameters: '[{\"ip-addr\":\"$.vf-module-topology.vf-module-parameters.param[10].value\",\"oam-ip-addr\":\"$.vf-module-topology.vf-module-parameters.param[15].value\",\"enabled\":\"$.vf-module-topology.vf-module-parameters.param[22].value\"}]'",
 				"success": "new2",
 				"failure": "new2",
 				"failure_timeout": "new2",
@@ -60,7 +60,7 @@
 				"retry": "30",
 				"timeout": "40",
 				"actor": "SDNC",
-				"payload": "test",
+				"payload": "",
 				"target": {
 					"type": "VFC",
 					"resourceTargetId": "test"

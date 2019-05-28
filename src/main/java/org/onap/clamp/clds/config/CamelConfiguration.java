@@ -118,8 +118,7 @@ public class CamelConfiguration extends RouteBuilder {
             .apiContextPath("api-doc").apiVendorExtension(true).apiProperty("api.title", "Clamp Rest API")
             .apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
             .apiProperty("base.path", "/restservices/clds/");
-        // .apiProperty("cors", "true");
-        camelContext.setTracing(true);
+        // camelContext.setTracing(true);
 
         configureDefaultSslProperties();
         registerTrustStore();

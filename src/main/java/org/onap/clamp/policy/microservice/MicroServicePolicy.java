@@ -23,6 +23,8 @@
 
 package org.onap.clamp.policy.microservice;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -40,6 +42,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -60,6 +63,9 @@ public class MicroServicePolicy implements Serializable, Policy {
      * The serial version ID.
      */
     private static final long serialVersionUID = 6271238288583332616L;
+
+    @Transient
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(MicroServicePolicy.class);
 
     @Expose
     @Id
@@ -271,7 +277,9 @@ public class MicroServicePolicy implements Serializable, Policy {
         JsonObject policyProperties = new JsonObject();
         policyDetails.add("properties", policyProperties);
         policyProperties.add(this.getMicroServicePropertyNameFromTosca(toscaJson), this.getProperties());
-        return new GsonBuilder().setPrettyPrinting().create().toJson(policyPayloadResult);
+        String policyPayload = new GsonBuilder().setPrettyPrinting().create().toJson(policyPayloadResult);
+        logger.info("Micro service policy payload: " + policyPayload);
+        return policyPayload;
     }
 
 }

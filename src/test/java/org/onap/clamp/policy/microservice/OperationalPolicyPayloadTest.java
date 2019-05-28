@@ -33,6 +33,7 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.policy.operational.LegacyOperationalPolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -43,12 +44,20 @@ public class OperationalPolicyPayloadTest {
         JsonObject jsonConfig = new GsonBuilder().create().fromJson(
             ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), JsonObject.class);
         OperationalPolicy policy = new OperationalPolicy("testPolicy", null, jsonConfig);
+
         assertThat(policy.createPolicyPayloadYaml())
             .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload.yaml"));
-        assertThat(policy.createPolicyPayloadYamlLegacy())
-            .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload-legacy.yaml"));
+
         assertThat(policy.createPolicyPayload())
             .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload.json"));
+    }
+
+    @Test
+    public void testLegacyOperationalPolicyPayloadConstruction() throws IOException {
+        JsonObject jsonConfig = new GsonBuilder().create().fromJson(
+            ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), JsonObject.class);
+        assertThat(LegacyOperationalPolicy.createPolicyPayloadYamlLegacy(jsonConfig.get("operational_policy")))
+            .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload-legacy.yaml"));
     }
 
     @Test
