@@ -245,7 +245,7 @@ app
 			    }
 		    }
 		    var resourceVFModule = getResourceDetailsVfModuleProperty();
-		    if (targetType == "VFModule" && (null !== resourceVFModule || undefined !== resourceVFModule)) {
+		    if (targetType == "VFMODULE" && (null !== resourceVFModule || undefined !== resourceVFModule)) {
 			    if (recipe == 'VF Module Create' || recipe == 'VF Module Delete') {
 				    for ( var prop in resourceVFModule) {
 					    if (resourceVFModule[prop]["isBase"] == false) {
@@ -306,7 +306,7 @@ app
 		    var resourceVFModule = getResourceDetailsVfModuleProperty();
 		    var type = $("#formId" + formNum +" #type").val();
 		    var recipe = $("#formId" + formNum +" #recipe").val();
-		    if (type == "VFModule" && (null !== resourceVFModule || undefined !== resourceVFModule)
+		    if (type == "VFMODULE" && (null !== resourceVFModule || undefined !== resourceVFModule)
 		    && (recipe == 'VF Module Create' || recipe == 'VF Module Delete')) {
 			    for ( var prop in resourceVFModule) {
 				    if (prop ==  $(event.target).val()) {

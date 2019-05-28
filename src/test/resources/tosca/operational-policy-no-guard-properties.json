@@ -22,7 +22,7 @@
 				"failure_guard": "",
 				"target": {
 					"type": "VM",
-					"resourceId": "",
+					"resourceID": "",
 					"modelInvariantId": "",
 					"modelVersionId": "",
 					"modelName": "",
