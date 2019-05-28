@@ -12,10 +12,12 @@ update the loop with new parameters during runtime, as well as suspending and
 restarting it.
 
 It interacts with other systems to deploy and execute the control loop. For
-example, it gets the control loop blueprint from SDC - DCAE-DS.
+example, it extracts the control loop blueprint and Policy Model(Model Driven Control Loop) 
+from CSAR distributed by SDC/DCAE-DS.
 It requests from DCAE the instantiation of microservices
 to manage the control loop flow.  Furthermore, it creates and updates multiple
-policies in the Policy Engine that define the closed loop flow.
+policies (for DCAE mS configuration and actual Control Operations) in the Policy Engine 
+that define the closed loop flow.
 
 |clamp-flow|
 
