@@ -1,9 +1,51 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright (c) 2017-2018 AT&T Intellectual Property.  All rights reserved.
+.. Copyright (c) 2017-2019 AT&T Intellectual Property.  All rights reserved.
 
 Release Notes
 =============
+
+Version: 3.0.5
+--------------
+
+:Release Date: 2019-05-06
+
+**New Features**
+
+The Dublin release is the fourth release of the Control Loop Automation Management Platform (CLAMP).
+
+The main goal of the Dublin release was to:
+
+    - Stabilize Platform maturity by stabilizing CLAMP maturity matrix see `Wiki <https://wiki.onap.org/display/DW/Dublin+Release+Platform+Maturity>`_.
+    - CLAMP supports of Policy-model based Configuration Policy
+    - CLAMP supports new Policy Engine direct Rest API (no longer based on jar provided by Policy Engine)
+    - CLAMP main Core/UI have been reworked, removal of security issues reported by Nexus IQ.
+
+**Bug Fixes**
+
+	- The full list of implemented user stories and epics is available on `DUBLIN RELEASE <https://jira.onap.org/projects/CLAMP/versions/10427>`_
+	  This includes the list of bugs that were fixed during the course of this release.
+
+**Known Issues**
+
+    - `CLAMP-384 <https://jira.onap.org/browse/CLAMP-384>`_ Loop State in UI is not reflecting the current state
+
+**Security Notes**
+
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release. 
+The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=64003444>`_.
+
+Quick Links:
+ 	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
+
+ 	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
+
+ 	- `Project Vulnerability Review Table for CLAMP <https://wiki.onap.org/pages/viewpage.action?pageId=64003444>`_
+
+**Upgrade Notes**
+
+    New Docker Containers are available.
+
 
 Version: 3.0.4 - maintenance release
 ------------------------------------
