@@ -234,14 +234,14 @@ app
 	    }
 	    function initTargetResourceIdOptions (targetType, formNum) {
 		    var recipe = $("#formId" + formNum + "#recipe").val();
-		    $("#formId" + formNum + " #resourceId").empty();
-		    $("#formId" + formNum + " #resourceId").append($('<option></option>').val("").html("-- choose an option --"));
+		    $("#formId" + formNum + " #resourceID").empty();
+		    $("#formId" + formNum + " #resourceID").append($('<option></option>').val("").html("-- choose an option --"));
 
 		    var resourceVnf = getResourceDetailsVfProperty();
 		    if (targetType == "VNF" && (null !== resourceVnf || undefined !== resourceVnf)) {
 			    for ( var prop in resourceVnf) {
 				    var name = resourceVnf[prop]["name"];
-				    $("#formId" + formNum + " #resourceId").append($('<option></option>').val(name).html(name));
+				    $("#formId" + formNum + " #resourceID").append($('<option></option>').val(name).html(name));
 			    }
 		    }
 		    var resourceVFModule = getResourceDetailsVfModuleProperty();
@@ -249,12 +249,12 @@ app
 			    if (recipe == 'VF Module Create' || recipe == 'VF Module Delete') {
 				    for ( var prop in resourceVFModule) {
 					    if (resourceVFModule[prop]["isBase"] == false) {
-						    $("#formId" + formNum + " #resourceId").append($('<option></option>').val(resourceVFModule[prop]["vfModuleModelName"]).html(resourceVFModule[prop]["vfModuleModelName"]));
+						    $("#formId" + formNum + " #resourceID").append($('<option></option>').val(resourceVFModule[prop]["vfModuleModelName"]).html(resourceVFModule[prop]["vfModuleModelName"]));
 					    }
 				    }
 			    } else {
 				    for ( var prop in resourceVFModule) {
-					    $("#formId" + formNum + " #resourceId").append($('<option></option>').val(resourceVFModule[prop]["vfModuleModelName"]).html(resourceVFModule[prop]["vfModuleModelName"]));
+					    $("#formId" + formNum + " #resourceID").append($('<option></option>').val(resourceVFModule[prop]["vfModuleModelName"]).html(resourceVFModule[prop]["vfModuleModelName"]));
 				    }
 			    }
 		    }
