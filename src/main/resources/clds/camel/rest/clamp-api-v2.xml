@@ -227,9 +227,10 @@
 						<otherwise>
 							<log
 								loggingLevel="INFO"
-								message="Loop is in state ${exchangeProperty[policyStatus]}, it can only be deployed when in state SUBMIT" />
+								message="POLICY status ${exchangeProperty[policyStatus]}/DCAE status ${exchangeProperty[dcaeStatus]}, DCAE deployment will be started anyway" />
 							<to
-								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Loop is in state ${exchangeProperty[policyStatus]}, it can only be deployed when in state SUBMIT','ERROR',${exchangeProperty[loopObject]})" />
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('POLICY status ${exchangeProperty[policyStatus]}/DCAE status ${exchangeProperty[dcaeStatus]}, DCAE deployment will be started anyway','ERROR',${exchangeProperty[loopObject]})" />
+							<to uri="direct:deploy-loop" />
 						</otherwise>
 					</choice>
 					<log
