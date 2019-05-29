@@ -2,7 +2,7 @@
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
 
-CLAMP - Closed Loop Automation Management Platform
+CLAMP - Control Loop Automation Management Platform
 ==================================================
 .. High level architecture, design, and packaging information for release planning and delivery.
 

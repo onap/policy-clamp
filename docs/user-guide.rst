@@ -2,29 +2,29 @@
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright (c) 2017-2018 AT&T Intellectual Property.  All rights reserved.
 
-Closed loop in CLAMP
--------------------------
-There is 2 closed loop levels in CLAMP:
+Control loop in CLAMP
+---------------------
+There is 2 control loop levels in CLAMP:
 
-- Closed loop template: This is created from the DCAE blueprint (designed in the DCAE designer), and distributed by SDC to CLAMP.
-- Closed loop instance: Based on the template, it represents a physical closed loop in the platform related to a service and a VNF.
+- Control loop template: This is created from the DCAE blueprint (designed in the DCAE designer), and distributed by SDC to CLAMP.
+- Control loop instance: Based on the template, it represents a physical control loop in the platform related to a service and a VNF.
     This is created in CLAMP when receiving the SDC notification, as this one is related to a specific service/vnf.
 
-There is no way to design a closed loop from scratch in CLAMP, you can only configure it and manage its life-cycle.
+There is no way to design a control loop from scratch in CLAMP, you can only configure it and manage its life-cycle.
 For more info on how to design the service in SDC, check this: https://wiki.onap.org/display/DW/CLAMP+videos#CLAMPvideos-DesignpartinSDC
 
-There is a specific menu to open distributed closed loops in CLAMP UI. 
+There is a specific menu to open distributed control loops in CLAMP UI. 
 
 |clamp-open-menu|
 
-Please note that the option "Create CL" can be used to create a closed loop from the template distributed by SDC, you can therefore instantiate it for another service/vnf 
+Please note that the option "Create CL" can be used to create a control loop from the template distributed by SDC, you can therefore instantiate it for another service/vnf 
 
 Once you click on "Open CL", this dialog box is shown
 
 |clamp-open-box|
 
-Once the distributed closed loop has been chosen, the closed loop is shown to the user.
-From this view user can start configure empty closed loop using **Closed loop modeller**.
+Once the distributed control loop has been chosen, the control loop is shown to the user.
+From this view user can start configure empty control loop using **Closed loop modeller**.
 
 |clamp-opened-closed-loop|
 
@@ -40,9 +40,9 @@ Closed loop modeler has 3 main parts:
 #. Loop logs
     Table with log data of opened loop
 
-Closed Loop properties
-----------------------
-In Dublin release this view shows what are deployment parameters or Closed Loop.
+Control Loop properties
+-----------------------
+In Dublin release this view shows what are deployment parameters or control Loop.
 To open it from *Closed Loop* menu select *Properties CL*
 
 |clamp-menu-prop|
@@ -54,11 +54,11 @@ It's not recommended to edit this JSON. Each of this parameters should be availa
 |clamp-prop-box|
 
 Operational and Guard policy properties
------------------------------
+---------------------------------------
 Operational policy is a parametrized drools (in Dublin) rule with logic performing action on resource.
 User can't chose his own rule. Clamp always tries to create operational policy that bases on rule bind with **ClosedLoopControlName** attribute available in Policy dictionary.
 
-There is only one operational policy per closed loop. More about operational policies can be found here `Control Loop Operational Policy <https://wiki.onap.org/display/DW/Control+Loop+Operational+Policy>`_.
+There is only one operational policy per control loop. More about operational policies can be found here `Control Loop Operational Policy <https://wiki.onap.org/display/DW/Control+Loop+Operational+Policy>`_.
 
 Guard policy is policy securing operational policy calls. It defines a set of constraints that have to be matched before running operational policy.
 More about guard policies can be found here `Creating and Using Guard Policies <https://docs.onap.org/en/dublin/submodules/policy/engine.git/docs/platform/guardpolicy.html>`_.
@@ -100,13 +100,13 @@ After clicking microservice box Clamp opens popup dialog. Example popup dialog f
 |clamp-config-policy-tca2|
 
 
-Saving Closed loop
-------------------
+Saving Control loop
+-------------------
 Policies are saved localy in Clamp after each configuration change
 
 
-Submitting the Closed loop to policy
-------------------------------------
+Submitting the Control loop to policy
+-------------------------------------
 In the "Manage Menu", the submit action can be used to send the configuration to policy engine.
 
 
@@ -119,8 +119,8 @@ If everything is successful, this changes the status to "Submitted". Clamp shoul
 After Policies are submitted they should be visible in Policy PAP component.
 Please check  `Policy GUI <https://docs.onap.org/en/dublin/submodules/policy/engine.git/docs/platform/policygui.html>`_
 
-Deploy/undeploy the Closed loop to DCAE 
----------------------------------------
+Deploy/undeploy the Control Loop to DCAE 
+-----------------------------------------
 Once sent to policy engine, Clamp can ask to DCAE to deploy the micro service
 
 |clamp-deploy|
@@ -130,7 +130,7 @@ The policy_id is automatically generated by Clamp in the previous steps.
 
 |clamp-deploy-params|
 
-Once deployed on DCAE the status Closed loop status goes to ACTIVE, it can then be Undeployed/Stopped or even Updated (this is to push new policies on policy engine)
+Once deployed on DCAE the status Control loop status goes to ACTIVE, it can then be Undeployed/Stopped or even Updated (this is to push new policies on policy engine)
 
 |clamp-undeploy|
 
