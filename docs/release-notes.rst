@@ -34,6 +34,8 @@ The main goal of the Dublin release was to:
 
 *Fixed Security Issues*
 
+    - `OJSI-128 <https://jira.onap.org/browse/OJSI-128>`_ In default deployment CLAMP (clamp) exposes HTTP port 30258 outside of cluster.
+
 *Known Security Issues*
 
 *Known Vulnerabilities in Used Modules*
