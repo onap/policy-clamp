@@ -32,7 +32,13 @@ The main goal of the Dublin release was to:
 
 **Security Notes**
 
-CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release. 
+*Fixed Security Issues*
+
+*Known Security Issues*
+
+*Known Vulnerabilities in Used Modules*
+
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release.
 The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=64003444>`_.
 
 Quick Links:
@@ -75,7 +81,7 @@ none
 none
 
 **Known Issues**
-one documentation issue was fixed, this issue does not require a new docker image: 
+one documentation issue was fixed, this issue does not require a new docker image:
     - `CLAMP-257 <https://jira.onap.org/browse/CLAMP-257>`_ User Manual for CLAMP : nothing on readthedocs.
 
 Version: 3.0.3
@@ -108,7 +114,7 @@ The main goal of the Casablanca release was to:
 
 **Security Notes**
 
-CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release. 
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release.
 The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=42598587>`_.
 
 Quick Links:
@@ -173,9 +179,9 @@ CLAMP code has been formally scanned during build time using NexusIQ and all Cri
 
 Quick Links:
  	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
- 	
+
  	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
- 	
+
  	- `Project Vulnerability Review Table for CLAMP <https://wiki.onap.org/pages/viewpage.action?pageId=25440749>`_
 
 **Upgrade Notes**
