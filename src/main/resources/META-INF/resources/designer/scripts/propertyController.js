@@ -22,10 +22,11 @@
  */
 
 function updateMsProperties(type, newMsProperties) {
-    var newMsProperties = JSON.parse(JSON.stringify(cl_props["microServicePolicies"]));
-    for (p in newMsProperties) {
-        if (newMsProperties[p]["name"] == type) {
-        	cl_props["microServicePolicies"][p] = newMsProperties;
+    if (newMsProperties["name"] == type) {
+        for (p in cl_props["microServicePolicies"]) {
+            if (cl_props["microServicePolicies"][p]["name"] == type) {
+                cl_props["microServicePolicies"][p] = newMsProperties;
+            }
         }
     }
 }
