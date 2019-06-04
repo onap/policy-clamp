@@ -36,6 +36,7 @@ public class ImageBuilder {
     public static final int POLICY_LINE_RATIO = 2;
     public static final int COLLECTOR_LINE_RATIO = 6;
     public static final float MS_LINE_TO_HEIGHT_RATIO = 0.75f;
+    public static final float ARROW_TO_BASELINE_RATIO = 0.75f;
 
     private Point currentPoint;
     private final int baseLength;
@@ -68,7 +69,7 @@ public class ImageBuilder {
 
     ImageBuilder arrow() {
         String dataElementId = "Arrow-" + UUID.randomUUID().toString();
-        Point to = new Point(currentPoint.x + baseLength, currentPoint.y);
+        Point to = new Point(currentPoint.x + (int)(baseLength*ARROW_TO_BASELINE_RATIO), currentPoint.y);
         AwtUtils.drawArrow(g2d, currentPoint, to, LINE_THICKNESS);
         documentBuilder.pushChangestoDocument(g2d, dataElementId);
         currentPoint = to;
