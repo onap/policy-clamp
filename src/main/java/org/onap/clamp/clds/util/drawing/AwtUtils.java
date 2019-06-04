@@ -40,6 +40,7 @@ public class AwtUtils {
     private static final int FONT_STYLE = Font.PLAIN;
     private static final String FONT_FACE = "SansSerif";
     private static final Color TRANSPARENT = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+    private  static final int TEXT_PADDING = 5;
 
     private AwtUtils() {
     }
@@ -51,7 +52,7 @@ public class AwtUtils {
         g2d.setColor(TRANSPARENT);
         g2d.fill(rect);
         g2d.setColor(oldColor);
-        addText(g2d, text, point.x + width / 2, point.y + height / 2);
+        addText(g2d, text, rect);
     }
 
     static void drawArrow(Graphics2D g2d, Point from, Point to, int lineThickness) {
@@ -61,17 +62,30 @@ public class AwtUtils {
         g2d.fillPolygon(new int[]{x2 - ARROW_W, x2 - ARROW_W, x2}, new int[]{to.y - ARROW_H, to.y + ARROW_H, to.y}, 3);
     }
 
-    private static void addText(Graphics2D g2d, String text, int abs, int ord) {
+    private static void addText(Graphics2D g2d, String text, Rectangle rect) {
+        int textBoundingBoxLimit = rect.width - 2* TEXT_PADDING;
         Font font = new Font(FONT_FACE, FONT_STYLE, FONT_SIZE);
-        g2d.setFont(font);
-
-        FontMetrics fm1 = g2d.getFontMetrics();
-        int w1 = fm1.stringWidth(text);
-        int x1 = abs - (w1 / 2);
+        font = scaleFontToFit(text, textBoundingBoxLimit, g2d, font);
+        Font oldFont = g2d.getFont();
 
         g2d.setFont(font);
         g2d.setColor(Color.BLACK);
-        g2d.drawString(text, x1, ord);
+        FontMetrics fm1 = g2d.getFontMetrics();
+        float x1 = rect.x + (float)(rect.width - fm1.stringWidth(text)) / 2;
+        float y1 = rect.y + (float)(rect.height - fm1.getHeight()) / 2 + fm1.getAscent();
+        g2d.drawString(text, x1, y1);
+
+        g2d.setFont(oldFont);
+    }
+
+    private static Font scaleFontToFit(String text, int width, Graphics2D g2d, Font pFont) {
+        float fontSize = pFont.getSize();
+        float fWidth = g2d.getFontMetrics(pFont).stringWidth(text);
+        if(fWidth <= width) {
+            return pFont;
+        }
+        fontSize = ((float)width / fWidth) * fontSize;
+        return pFont.deriveFont(fontSize);
     }
 
 }

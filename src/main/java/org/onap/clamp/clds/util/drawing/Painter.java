@@ -43,6 +43,7 @@ public class Painter {
     private static final int THICK_LINE = 4;
     private static final double RECT_RATIO = 3.0 / 2.0;
     private static final int CIRCLE_RADIUS = 17;
+    private static final int MINIMUM_BASE_LENGTH = 120;
 
     /**
      * Constructor to create instance of Painter.
@@ -60,6 +61,9 @@ public class Painter {
         int numOfRectangles = 2 + microServices.size();
         int numOfArrows = numOfRectangles + 1;
         int baseLength = (canvasSize - 2 * CIRCLE_RADIUS) / (numOfArrows + numOfRectangles);
+        if(baseLength < MINIMUM_BASE_LENGTH) {
+            baseLength = MINIMUM_BASE_LENGTH;
+        }
         int rectHeight = (int) (baseLength / RECT_RATIO);
 
         adjustGraphics2DProperties();
