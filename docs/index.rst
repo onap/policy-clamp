@@ -3,7 +3,7 @@
 .. Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
 
 CLAMP - Control Loop Automation Management Platform
-==================================================
+===================================================
 .. High level architecture, design, and packaging information for release planning and delivery.
 
 .. include:: architecture.rst
