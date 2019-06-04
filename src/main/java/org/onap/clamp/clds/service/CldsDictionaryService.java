@@ -60,47 +60,73 @@ public class CldsDictionaryService extends SecureServiceBase {
 
 
     @PostConstruct
-    private final void initConstruct() {
+    private void initConstruct() {
         permissionReadTosca = SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance, "read");
         permissionUpdateTosca = SecureServicePermission.create(cldsPermissionTypeTosca, cldsPermissionInstance,
                 "update");
     }
 
     /**
-     * REST Service that creates or Updates a Dictionary.
-     * 
+     * REST Service that creates a Dictionary.
+     *
      * @param dictionaryName dictionary name
-     * @param cldsDictionary clds dictionary
      * @return CldsDictionary that was created in DB.
      */
+    public CldsDictionary createDictionary(String dictionaryName) {
+        CldsDictionary cldsDictionary = new CldsDictionary();
+        cldsDictionary.setDictionaryName(dictionaryName);
+        cldsDictionary.save(cldsDictionary.getDictionaryName(), cldsDao, getUserId());
+        return cldsDictionary;
+    }
+
+    /**
+     * REST Service that creates or Updates a Dictionary.
+     * Used in clds-services.xml
+     *
+     * @param cldsDictionary clds dictionary
+     * @return ResponseEntity with CldsDictionary that was created in DB.
+     */
     public ResponseEntity<CldsDictionary> createOrUpdateDictionary(String dictionaryName,
-            CldsDictionary cldsDictionary) {
-        final Date startTime = new Date();
+                                                                   CldsDictionary cldsDictionary) {
+
+        Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsDictionaryService: createOrUpdateDictionary", getPrincipalName());
         // TODO revisit based on new permissions
         isAuthorized(permissionUpdateTosca);
+
         if (cldsDictionary == null) {
-            cldsDictionary = new CldsDictionary();
-            cldsDictionary.setDictionaryName(dictionaryName);
+
+            cldsDictionary = createDictionary(dictionaryName);
+        } else {
+
+            if (cldsDictionary.getDictionaryName() == null) {
+                cldsDictionary.setDictionaryName(dictionaryName);
+            }
+
+            cldsDictionary.save(cldsDictionary.getDictionaryName(), cldsDao, getUserId());
         }
-        cldsDictionary.save(dictionaryName, cldsDao, getUserId());
-        auditLogInfo("createOrUpdateDictionary", startTime);
+
+        LoggingUtils.setTimeContext(startTime, new Date());
+        LoggingUtils.setResponseContext("0", "createOrUpdateDictionary success", this.getClass().getName());
+        auditLogger.info("createOrUpdateDictionary completed");
+
         return new ResponseEntity<>(cldsDictionary, HttpStatus.OK);
     }
 
     /**
      * REST Service that creates or Updates a Dictionary Elements for dictionary
      * in DB.
-     * 
+     *
      * @param dictionaryName dictionary name
      * @param dictionaryItem dictionary item
      * @return CldsDictionaryItem A dictionary items that was created or updated
      *         in DB
      */
     public ResponseEntity<CldsDictionaryItem> createOrUpdateDictionaryElements(String dictionaryName,
-            CldsDictionaryItem dictionaryItem) {
+                                                                               CldsDictionaryItem dictionaryItem) {
         final Date startTime = new Date();
-        LoggingUtils.setRequestContext("CldsDictionaryService: createOrUpdateDictionaryElements", getPrincipalName());
+        LoggingUtils.setRequestContext("CldsDictionaryService: createOrUpdateDictionaryElements",
+            getPrincipalName());
         // TODO revisit based on new permissions
         isAuthorized(permissionUpdateTosca);
         dictionaryItem.save(dictionaryName, cldsDao, getUserId());
@@ -110,7 +136,7 @@ public class CldsDictionaryService extends SecureServiceBase {
 
     /**
      * Rest Service that retrieves all CLDS dictionary in DB.
-     * 
+     *
      * @return CldsDictionary List List of CldsDictionary available in DB
      */
     public ResponseEntity<List<CldsDictionary>> getAllDictionaryNames() {
@@ -126,7 +152,7 @@ public class CldsDictionaryService extends SecureServiceBase {
     /**
      * Rest Service that retrieves all CLDS dictionary items in DB for a give
      * dictionary name.
-     * 
+     *
      * @param dictionaryName dictionary name
      * @return CldsDictionaryItem list List of CLDS Dictionary items for a given
      *         dictionary name
