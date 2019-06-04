@@ -38,6 +38,12 @@ public class PrincipalUtils {
     private static SecurityContext securityContext = SecurityContextHolder.getContext();
 
     /**
+     * Private constructor to avoid creating instances of util class.
+     */
+    private PrincipalUtils(){
+    }
+
+    /**
      * Get the Full name.
      *
      * @return The user name
