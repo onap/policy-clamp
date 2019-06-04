@@ -352,7 +352,7 @@ public class CldsDao {
     }
 
     /**
-     * Helper method to setup the base template properties
+     * Helper method to setup the base template properties.
      *
      * @param template
      *  the template
@@ -474,7 +474,7 @@ public class CldsDao {
     }
 
     /**
-     * Helper method to setup the event prop to the CldsEvent class
+     * Helper method to setup the event prop to the CldsEvent class.
      *
      * @param event
      *  the clds event
@@ -742,12 +742,13 @@ public class CldsDao {
         String dictElementShortName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionaryItem> dictionaryItems = new ArrayList<>();
-        String dictionarySql = new StringBuilder("SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, " +
-                "de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, " +
-                "de.modified_by, de.timestamp FROM dictionary_elements de, " +
-                "dictionary d WHERE de.dictionary_id = d.dictionary_id")
+        String dictionarySql = new StringBuilder("SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, "
+                + "de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, "
+                + "de.modified_by, de.timestamp FROM dictionary_elements de, "
+                + "dictionary d WHERE de.dictionary_id = d.dictionary_id")
                 .append((dictionaryId != null) ? (" AND d.dictionary_id = '" + dictionaryId + "'") : "")
-                .append((dictElementShortName != null) ? (" AND de.dict_element_short_name = '" + dictElementShortName + "'") : "")
+                .append((dictElementShortName != null) ? (" AND de.dict_element_short_name = '" + dictElementShortName
+                        + "'") : "")
                 .append((dictionaryName != null) ? (" AND dictionary_name = '" + dictionaryName + "'") : "").toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
@@ -780,8 +781,8 @@ public class CldsDao {
      */
     public Map<String, String> getDictionaryElementsByType(String dictionaryElementType) {
         Map<String, String> dictionaryItems = new HashMap<>();
-        String dictionarySql = new StringBuilder("SELECT dict_element_name, dict_element_short_name " +
-                "FROM dictionary_elements WHERE dict_element_type = '")
+        String dictionarySql = new StringBuilder("SELECT dict_element_name, dict_element_short_name "
+                + "FROM dictionary_elements WHERE dict_element_type = '")
                 .append(dictionaryElementType).append("'").toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
