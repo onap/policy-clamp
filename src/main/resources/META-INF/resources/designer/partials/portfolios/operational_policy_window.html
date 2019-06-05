@@ -165,12 +165,12 @@ label {
 				<form class="policyProperties" class="form-horizontal"
 					style="border: 2px dotted gray;"
 					title="Operational Policy Properties">
-
 					<div class="form-group clearfix">
 						<label class="col-sm-4 control-label" for="id">ID</label>
 						<div class="col-sm-8">
-							<input type="text" class="form-control" name="id" id="id"
+							<input type="text" class="form-control"  name="id" id="id" ng-model="duplicated" ng-init="duplicated = false"
 								ng-keyup="updateTabLabel($event)" />
+							<span >ID must be unique</span>
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -247,6 +247,7 @@ label {
 								ng-options="policy for policy in policy_ids track by policy">
 								<option value="">-- choose an option --</option>
 								</select>
+
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -481,7 +482,7 @@ label {
 	</div>
 
 	<div attribute-test="policywindowpropertiesf" class="modal-footer">
-		<button id="savePropsBtn" class="btn btn-primary">Close</button>
+		<button id="savePropsBtn" class="btn btn-primary" ng-disabled="duplicated">Close</button>
 		<button ng-click="close(true)" id="close_button"
 			class="btn btn-primary">Cancel</button>
 	</div>
