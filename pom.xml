@@ -61,12 +61,9 @@
 				<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 				<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-				<project.scm.id>git-server</project.scm.id>
-				<java.version>1.8</java.version>
-
 				<eelf.core.version>1.0.0</eelf.core.version>
-				<camel.version>2.23.2</camel.version>
-				<springboot.version>2.1.4.RELEASE</springboot.version>
+				<camel.version>2.24.0</camel.version>
+				<springboot.version>2.1.5.RELEASE</springboot.version>
 
 				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 				<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -89,7 +86,7 @@
 				<docker.skip.tag>true</docker.skip.tag>
 				<skip.staging.artifacts>false</skip.staging.artifacts>
 				<python.http.proxy.param/>
-				<tomcat.version>9.0.16</tomcat.version>
+				<tomcat.version>9.0.20</tomcat.version>
 		</properties>
 
 		<profiles>

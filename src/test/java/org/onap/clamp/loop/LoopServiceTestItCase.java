@@ -296,7 +296,7 @@ public class LoopServiceTestItCase {
         saveTestLoopToDb();
         // Add log
         Loop loop = loopsRepository.findById(EXAMPLE_LOOP_NAME).orElse(null);
-        loop.addLog(new LoopLog("test", LogType.INFO, loop));
+        loop.addLog(new LoopLog("test", LogType.INFO, "CLAMP", loop));
         loop = loopService.saveOrUpdateLoop(loop);
         // Add op policy
         OperationalPolicy operationalPolicy = new OperationalPolicy("opPolicy", null,

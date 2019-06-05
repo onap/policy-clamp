@@ -1,0 +1,187 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+	<route id="deploy-loop">
+		<from uri="direct:deploy-loop" />
+		<doTry>
+			<log
+				loggingLevel="INFO"
+				message="Deploying the loop: ${exchangeProperty[loopObject].getName()}" />
+			<to
+				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Deploying the loop')" />
+			<setBody>
+				<method
+					ref="org.onap.clamp.loop.components.external.DcaeComponent"
+					method="getDeployPayload(${exchangeProperty[loopObject]})" />
+			</setBody>
+			<setProperty propertyName="dcaeDeploymentId">
+				<method
+					ref="org.onap.clamp.loop.components.external.DcaeComponent"
+					method="generateDeploymentId()" />
+			</setProperty>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>PUT</constant>
+			</setHeader>
+			<setHeader headerName="Content-Type">
+				<constant>application/json</constant>
+			</setHeader>
+			<setHeader headerName="X-ONAP-RequestID">
+				<simple>${exchangeProperty[X-ONAP-RequestID]}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-InvocationID">
+				<simple>${exchangeProperty[X-ONAP-InvocationID]}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-PartnerName">
+				<simple>${exchangeProperty[X-ONAP-PartnerName]}
+				</simple>
+			</setHeader>
+			<log
+				loggingLevel="INFO"
+				message="Endpoint to deploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}"></log>
+			<toD
+				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionsPerRoute=3" />
+			<convertBodyTo type="java.lang.String" />
+			<setProperty propertyName="dcaeResponse">
+				<method
+					ref="org.onap.clamp.loop.components.external.DcaeComponent"
+					method="convertDcaeResponse(${body})" />
+			</setProperty>
+			<setProperty propertyName="dcaeStatusUrl">
+				<method
+					ref="org.onap.clamp.loop.components.external.DcaeComponent"
+					method="getStatusUrl(${exchangeProperty[dcaeResponse]})" />
+			</setProperty>
+			<to
+				uri="bean:org.onap.clamp.loop.LoopService?method=updateDcaeDeploymentFields(${exchangeProperty[loopObject]},${exchangeProperty[dcaeDeploymentId]},${exchangeProperty[dcaeStatusUrl]})" />
+			<doFinally>
+				<to uri="direct:reset-raise-http-exception-flag" />
+				<to
+					uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+				<setProperty propertyName="logMessage">
+					<simple>DEPLOY loop status
+						(Dep-id:${exchangeProperty[dcaeDeploymentId]},
+						StatusUrl:${exchangeProperty[dcaeStatusUrl]})
+					</simple>
+				</setProperty>
+				<to uri="direct:dump-loop-log-http-response" />
+			</doFinally>
+		</doTry>
+	</route>
+
+	<route id="undeploy-loop">
+		<from uri="direct:undeploy-loop" />
+		<log
+			loggingLevel="INFO"
+			message="Undeploying the loop: ${exchangeProperty[loopObject].getName()} : ${exchangeProperty[loopObject].getDcaeDeploymentId()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Undeploying the loop')" />
+		<choice>
+			<when>
+				<simple>${exchangeProperty[loopObject].getDcaeDeploymentId()}
+					!= null
+				</simple>
+				<doTry>
+					<setBody>
+						<method
+							ref="org.onap.clamp.loop.components.external.DcaeComponent"
+							method="getUndeployPayload(${exchangeProperty[loopObject]})" />
+					</setBody>
+					<setHeader headerName="CamelHttpMethod">
+						<constant>DELETE</constant>
+					</setHeader>
+					<setHeader headerName="Content-Type">
+						<constant>application/json</constant>
+					</setHeader>
+
+					<setHeader headerName="X-ONAP-RequestID">
+						<simple>${exchangeProperty[X-ONAP-RequestID]}
+						</simple>
+					</setHeader>
+					<setHeader headerName="X-ONAP-InvocationID">
+						<simple>${exchangeProperty[X-ONAP-InvocationID]}
+						</simple>
+					</setHeader>
+					<setHeader headerName="X-ONAP-PartnerName">
+						<simple>${exchangeProperty[X-ONAP-PartnerName]}
+						</simple>
+					</setHeader>
+					<log
+						loggingLevel="INFO"
+						message="Endpoint to undeploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}"></log>
+					<toD
+						uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionsPerRoute=3" />
+					<convertBodyTo type="java.lang.String" />
+					<setProperty propertyName="dcaeResponse">
+						<method
+							ref="org.onap.clamp.loop.components.external.DcaeComponent"
+							method="convertDcaeResponse(${body})" />
+					</setProperty>
+					<setProperty propertyName="dcaeStatusUrl">
+						<method
+							ref="org.onap.clamp.loop.components.external.DcaeComponent"
+							method="getStatusUrl(${exchangeProperty[dcaeResponse]})" />
+					</setProperty>
+					<to
+						uri="bean:org.onap.clamp.loop.LoopService?method=updateDcaeDeploymentFields(${exchangeProperty[loopObject]},${exchangeProperty[loopObject].getDcaeDeploymentId()},${exchangeProperty[dcaeStatusUrl]})" />
+					<doFinally>
+						<to uri="direct:reset-raise-http-exception-flag" />
+						<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+						<setProperty propertyName="logMessage">
+							<simple>UNDEPLOY loop status</simple>
+						</setProperty>
+						<to uri="direct:dump-loop-log-http-response" />
+					</doFinally>
+				</doTry>
+			</when>
+			<otherwise>
+				<log
+					loggingLevel="WARNING"
+					message="Cannot Undeploy for the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !" />
+				<to
+					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Cannot Undeploy for the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !','WARNING',${exchangeProperty[loopObject]})" />
+
+			</otherwise>
+		</choice>
+	</route>
+	<route id="get-dcae-deployment-status">
+		<from uri="direct:get-dcae-deployment-status" />
+		<log
+			loggingLevel="INFO"
+			message="Getting DCAE deployment status for loop: ${exchangeProperty[loopObject].getName()}" />
+		<to
+			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Getting Deployment status')" />
+		<doTry>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>GET</constant>
+			</setHeader>
+			<setHeader headerName="X-ONAP-RequestID">
+				<simple>${exchangeProperty[X-ONAP-RequestID]}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-InvocationID">
+				<simple>${exchangeProperty[X-ONAP-InvocationID]}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-PartnerName">
+				<simple>${exchangeProperty[X-ONAP-PartnerName]}
+				</simple>
+			</setHeader>
+			<log
+				loggingLevel="INFO"
+				message="Endpoint to query Closed Loop status: ${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}"></log>
+			<toD
+				uri="${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionsPerRoute=3" />
+			<doFinally>
+				<to uri="direct:reset-raise-http-exception-flag" />
+				<to
+					uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+				<setProperty propertyName="logMessage">
+					<simple>DCAE deployment status</simple>
+				</setProperty>
+				<to uri="direct:dump-loop-log-http-response" />
+			</doFinally>
+		</doTry>
+
+	</route>
+</routes>

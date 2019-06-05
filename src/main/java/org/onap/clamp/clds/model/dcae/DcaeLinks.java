@@ -1,9 +1,8 @@
-
 /*-
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,30 +25,36 @@ package org.onap.clamp.clds.model.dcae;
 
 import com.google.gson.annotations.Expose;
 
-/**
- * This class maps the DCAE inventory answer to a nice pojo.
- */
-public class DcaeInventoryResponse {
-
+public class DcaeLinks {
     @Expose
-    private String typeName;
-
+    private String self;
     @Expose
-    private String typeId;
+    private String status;
+    @Expose
+    private String uninstall;
 
-    public String getTypeName() {
-        return typeName;
+    public String getSelf() {
+        return self;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setSelf(String self) {
+        this.self = self;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public void setStatus(String status) {
+        this.status = status;
     }
+
+    public String getUninstall() {
+        return uninstall;
+    }
+
+    public void setUninstall(String uninstall) {
+        this.uninstall = uninstall;
+    }
+
 }

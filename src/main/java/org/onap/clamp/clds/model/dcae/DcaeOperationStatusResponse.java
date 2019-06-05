@@ -1,9 +1,8 @@
-
 /*-
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,29 +26,63 @@ package org.onap.clamp.clds.model.dcae;
 import com.google.gson.annotations.Expose;
 
 /**
- * This class maps the DCAE inventory answer to a nice pojo.
+ * This class maps the DCAE deployment handler response to a nice pojo.
  */
-public class DcaeInventoryResponse {
+public class DcaeOperationStatusResponse {
 
     @Expose
-    private String typeName;
+    private String operationType;
 
     @Expose
-    private String typeId;
+    private String status;
 
-    public String getTypeName() {
-        return typeName;
+    @Expose
+    private String requestId;
+
+    @Expose
+    private String error;
+
+    @Expose
+    private DcaeLinks links;
+
+    public String getOperationType() {
+        return operationType;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 
-    public String getTypeId() {
-        return typeId;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public void setStatus(String status) {
+        this.status = status;
     }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public DcaeLinks getLinks() {
+        return links;
+    }
+
+    public void setLinks(DcaeLinks links) {
+        this.links = links;
+    }
+
 }

@@ -30,16 +30,4 @@ describe('Property controller tests', function() {
 	test('getMsUINotExist', () => {
 		  expect(propertyController.getMsUI("test")).toEqual(null);
 	});
-
-	test('getLastUpdatedStatus', () => {
-		  expect(propertyController.getLastUpdatedStatus()).toEqual('DESIGN');
-	});
-
-	test('getDeploymentID', () => {
-		  expect(propertyController.getDeploymentID()).toEqual('testId');
-	});
-
-	test('getDeploymentStatusURL', () => {
-		  expect(propertyController.getDeploymentStatusURL()).toEqual('testUrl');
-	});
 });

@@ -1,0 +1,17 @@
+<routes xmlns="http://camel.apache.org/schema/spring">
+	<route id="reset-raise-http-exception-flag">
+		<from uri="direct:reset-raise-http-exception-flag" />
+		<setProperty propertyName="raiseHttpExceptionFlag">
+			<simple resultType="java.lang.Boolean">true</simple>
+		</setProperty>
+	</route>
+
+	<route id="dump-loop-log-http-response">
+		<from uri="direct:dump-loop-log-http-response" />
+		<log
+			loggingLevel="INFO"
+			message="${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}" />
+		<to
+			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO',${exchangeProperty[loopObject]})" />
+	</route>
+</routes>

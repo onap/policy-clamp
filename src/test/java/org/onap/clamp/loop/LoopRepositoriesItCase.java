@@ -92,7 +92,7 @@ public class LoopRepositoriesItCase {
     }
 
     private LoopLog getLoopLog(LogType type, String message, Loop loop) {
-        return new LoopLog(message, type, loop);
+        return new LoopLog(message, type, "CLAMP", loop);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class LoopRepositoriesItCase {
         // Now set the ID in the previous model so that we can compare the objects
         loopLog.setId(((LoopLog) loopInDb.getLoopLogs().toArray()[0]).getId());
 
-        assertThat(loopInDb).isEqualToComparingFieldByField(loopTest);
+        assertThat(loopInDb).isEqualToIgnoringGivenFields(loopTest, "components");
         assertThat(loopRepository.existsById(loopTest.getName())).isEqualTo(true);
         assertThat(operationalPolicyService.isExisting(opPolicy.getName())).isEqualTo(true);
         assertThat(microServicePolicyService.isExisting(microServicePolicy.getName())).isEqualTo(true);
@@ -124,7 +124,7 @@ public class LoopRepositoriesItCase {
 
         // Now attempt to read from database
         Loop loopInDbRetrieved = loopRepository.findById(loopTest.getName()).get();
-        assertThat(loopInDbRetrieved).isEqualToComparingFieldByField(loopTest);
+        assertThat(loopInDbRetrieved).isEqualToIgnoringGivenFields(loopTest, "components");
         assertThat((LoopLog) loopInDbRetrieved.getLoopLogs().toArray()[0]).isEqualToComparingFieldByField(loopLog);
         assertThat((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0])
             .isEqualToComparingFieldByField(opPolicy);

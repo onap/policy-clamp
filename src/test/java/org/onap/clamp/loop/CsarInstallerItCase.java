@@ -27,7 +27,6 @@
 package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,6 +64,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -223,7 +223,8 @@ public class CsarInstallerItCase {
 
     @Test(expected = SdcArtifactInstallerException.class)
     @Transactional
-    public void shouldThrowSdcArtifactInstallerException() throws SdcArtifactInstallerException, SdcToscaParserException, IOException, InterruptedException, PolicyModelException {
+    public void shouldThrowSdcArtifactInstallerException() throws SdcArtifactInstallerException,
+        SdcToscaParserException, IOException, InterruptedException, PolicyModelException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
         Mockito.when(csarHandler.getMapOfBlueprints()).thenThrow(IOException.class);

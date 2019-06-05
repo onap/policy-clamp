@@ -29,15 +29,21 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
 
 import org.apache.catalina.connector.Connector;
 import org.onap.clamp.clds.model.properties.Holmes;
 import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.ClampVersioning;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -51,6 +57,7 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -82,6 +89,9 @@ public class Application extends SpringBootServletInitializer {
     @Value("${server.ssl.key-store:none}")
     private String sslKeystoreFile;
 
+    @Autowired
+    private Environment env;
+
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(Application.class);
@@ -102,14 +112,15 @@ public class Application extends SpringBootServletInitializer {
      * This method is used to declare the camel servlet.
      *
      * @return A servlet bean
-     * @throws IOException IO Exception
+     * @throws IOException
+     *         IO Exception
      */
     @Bean
     public ServletRegistrationBean camelServletRegistrationBean() throws IOException {
-        eelfLogger.info(ResourceFileUtil.getResourceAsString("boot-message.txt") + "(v"
-            + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator"));
-        ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(),
-            "/restservices/clds/*");
+        eelfLogger.info(
+            ResourceFileUtil.getResourceAsString("boot-message.txt") + "(v" + ClampVersioning.getCldsVersionFromProps()
+                + ")" + System.getProperty("line.separator") + getSslExpirationDate());
+        ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(), "/restservices/clds/*");
         registration.setName("CamelServlet");
         return registration;
     }
@@ -135,9 +146,8 @@ public class Application extends SpringBootServletInitializer {
 
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
-            eelfLogger.warn(
-                "HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
-                  + " (Connector disabled)");
+            eelfLogger.warn("HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
+                + " (Connector disabled)");
             return null;
         }
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
@@ -146,5 +156,34 @@ public class Application extends SpringBootServletInitializer {
         connector.setPort(Integer.parseInt(httpRedirectedPort));
         connector.setRedirectPort(redirectSecuredPort);
         return connector;
+    }
+
+    private String getSslExpirationDate() throws IOException {
+        StringBuilder result = new StringBuilder("   :: SSL Certificates ::     ");
+        try {
+            if (env.getProperty("server.ssl.key-store") != null) {
+
+                KeyStore keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
+                keystore.load(
+                    ResourceFileUtil
+                        .getResourceAsStream(env.getProperty("server.ssl.key-store").replaceAll("classpath:", "")),
+                    env.getProperty("server.ssl.key-store-password").toCharArray());
+                Enumeration<String> aliases = keystore.aliases();
+                while (aliases.hasMoreElements()) {
+                    String alias = aliases.nextElement();
+                    if ("X.509".equals(keystore.getCertificate(alias).getType())) {
+                        result.append("* " + alias + " expires "
+                            + ((X509Certificate) keystore.getCertificate(alias)).getNotAfter()
+                            + System.getProperty("line.separator"));
+                    }
+                }
+            } else {
+                result.append("* NONE HAS been configured");
+            }
+        } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
+            eelfLogger.warn("SSL certificate access error ", e);
+
+        }
+        return result.toString();
     }
 }

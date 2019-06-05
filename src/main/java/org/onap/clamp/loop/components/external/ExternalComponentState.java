@@ -1,9 +1,8 @@
-
 /*-
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,34 +21,41 @@
  *
  */
 
-package org.onap.clamp.clds.model.dcae;
+package org.onap.clamp.loop.components.external;
 
 import com.google.gson.annotations.Expose;
 
 /**
- * This class maps the DCAE inventory answer to a nice pojo.
+ * This is a transient state reflecting the deployment status of a component. It
+ * can be Policy, DCAE, or whatever... This is object is generic. Clamp is now
+ * stateless, so it triggers the different components at runtime, the status per
+ * component is stored here.
+ *
  */
-public class DcaeInventoryResponse {
-
+public class ExternalComponentState {
     @Expose
-    private String typeName;
-
+    private String stateName;
     @Expose
-    private String typeId;
+    private String description;
 
-    public String getTypeName() {
-        return typeName;
+    public ExternalComponentState(String stateName, String description) {
+        this.stateName = stateName;
+        this.description = description;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public ExternalComponentState() {
     }
 
-    public String getTypeId() {
-        return typeId;
+    public String getStateName() {
+        return stateName;
     }
 
-    public void setTypeId(String typeId) {
-        this.typeId = typeId;
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String toString() {
+        return stateName;
     }
 }

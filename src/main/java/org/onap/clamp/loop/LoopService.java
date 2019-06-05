@@ -71,6 +71,17 @@ public class LoopService {
         loopsRepository.deleteById(loopName);
     }
 
+    public void updateDcaeDeploymentFields(Loop loop, String deploymentId, String deploymentUrl) {
+        loop.setDcaeDeploymentId(deploymentId);
+        loop.setDcaeDeploymentStatusUrl(deploymentUrl);
+        loopsRepository.save(loop);
+    }
+
+    public void updateLoopState(Loop loop, String newState) {
+        loop.setLastComputedState(LoopState.valueOf(newState));
+        loopsRepository.save(loop);
+    }
+
     Loop updateAndSaveOperationalPolicies(String loopName, List<OperationalPolicy> newOperationalPolicies) {
         Loop loop = findClosedLoopByName(loopName);
         Set<OperationalPolicy> newPolicies = operationalPolicyService.updatePolicies(loop, newOperationalPolicies);
@@ -93,9 +104,7 @@ public class LoopService {
 
     MicroServicePolicy updateMicroservicePolicy(String loopName, MicroServicePolicy newMicroservicePolicy) {
         Loop loop = findClosedLoopByName(loopName);
-        MicroServicePolicy newPolicies = microservicePolicyService.getAndUpdateMicroServicePolicy(loop,
-            newMicroservicePolicy);
-        return newPolicies;
+        return microservicePolicyService.getAndUpdateMicroServicePolicy(loop, newMicroservicePolicy);
     }
 
     private Loop findClosedLoopByName(String loopName) {
