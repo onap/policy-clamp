@@ -39,6 +39,8 @@ app
 	    $scope.number = 0;
 	    $scope.clname = "";
 	    $scope.guard_ids = [];
+	    $scope.duplicated = false;
+
 	    function getAllFormId() {
 
 		    return Array.from(document.getElementsByClassName("formId"));
@@ -400,15 +402,22 @@ app
 		    $($("#formId" + formNum + " #actor")[1]).val($(event.target).val());
 	    }
 	    // When we change the name of a policy
-	    $scope.updateTabLabel = function(event) {
+		$scope.updateTabLabel = function (event) {
 
-		    // update policy id structure
-		    var formNum = $(event.target).closest('.formId').attr('id').substring(6);
-		    $scope.policy_ids.splice($scope.policy_ids.indexOf($("#formId" + formNum + " #id").val()), 1);
-		    $scope.policy_ids.push($(event.target).val());
-		    // Update the tab now
-		    $("#go_properties_tab" + formNum).text($(event.target).val());
-	    }
+			// update policy id structure
+			var formNum = $(event.target).closest('.formId').attr('id').substring(6);
+			var policyId = $(event.target).val();
+			if ($scope.policy_ids.includes(policyId)) {
+				console.log("Duplicated ID, cannot proceed");
+				$scope.duplicated = true;
+			} else {
+				$scope.duplicated = false;
+				$scope.policy_ids.splice($scope.policy_ids.indexOf($("#formId" + formNum + " #id").val()), 1);
+				$scope.policy_ids.push($(event.target).val());
+				// Update the tab now
+				$("#go_properties_tab" + formNum).text($(event.target).val());
+			}
+		};
 	    $scope.close = function() {
 
 		    console.log("close");
