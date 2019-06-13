@@ -39,7 +39,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to deploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}"></log>
 			<toD
-				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionsPerRoute=3" />
+				uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
 			<convertBodyTo type="java.lang.String" />
 			<setProperty propertyName="dcaeResponse">
 				<method
@@ -109,7 +109,7 @@
 						loggingLevel="INFO"
 						message="Endpoint to undeploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}"></log>
 					<toD
-						uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionsPerRoute=3" />
+						uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
 					<convertBodyTo type="java.lang.String" />
 					<setProperty propertyName="dcaeResponse">
 						<method
@@ -171,7 +171,7 @@
 				loggingLevel="INFO"
 				message="Endpoint to query Closed Loop status: ${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}"></log>
 			<toD
-				uri="${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;httpClient.connectTimeout=10000&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionsPerRoute=3" />
+				uri="${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to

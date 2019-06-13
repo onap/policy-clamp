@@ -219,7 +219,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
             f.write(self.data_string)
         return True
      elif self.path.startswith("/policy/api/v1/policytypes/") and http_type == "DELETE":
-        print "self.path start with DELETE new policy API /policy/api/v1/policyTypes/ ..."
+        print "self.path start with DELETE new policy API /policy/api/v1/policytypes/ ..."
         if not os.path.exists(cached_file_folder):
             os.makedirs(cached_file_folder, 0777)
     
@@ -232,7 +232,6 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         print "self.path start with POST new policy API /policy/pap/v1/pdps/ ..."
         if not os.path.exists(cached_file_folder):
             os.makedirs(cached_file_folder, 0777)
-    
         with open(cached_file_header, 'w+') as f:
                 f.write("{\"Content-Length\": \"" + str(len("")) + "\", \"Content-Type\": \""+str("")+"\"}")
         with open(cached_file_content, 'w+') as f:
@@ -280,7 +279,9 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
             if not HOST:
                 self.send_response(404)
-                return "404 Not found"
+                self.end_headers()
+                self.wfile.write('404 Not found, no remote HOST specified on the emulator !!!')
+                return "404 Not found, no remote HOST specified on the emulator !!!"
 
             url = '%s%s' % (HOST, self.path)
             response = requests.get(url, auth=AUTH, headers=HEADERS, stream=True)
@@ -293,6 +294,8 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 print('Status code : %s' % (response.status_code,))
                 print('Content : %s' % (response.content,))
                 self.send_response(response.status_code)
+                self.end_headers()
+                self.wfile.write('404 Not found, nothing found on the remote server !!!')
                 return response.content
         else:
             print("Request for data currently present in cache: %s" % (cached_file_folder,))
@@ -331,7 +334,9 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         
             if not HOST:
                 self.send_response(404)
-                return "404 Not found"
+                self.end_headers()
+                self.wfile.write('404 Not found, no remote HOST specified on the emulator !!!')
+                return "404 Not found, no remote HOST specified on the emulator !!!"
 
             print("Request for data currently not present in cache: %s" % (cached_file_folder,))
 
@@ -347,6 +352,8 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 print('Status code : %s' % (response.status_code,))
                 print('Content : %s' % (response.content,))
                 self.send_response(response.status_code)
+                self.end_headers()
+                self.wfile.write('404 Not found, nothing found on the remote server !!!')
                 return response.content
         else:
             print("Request for data present in cache: %s" % (cached_file_folder,))
@@ -378,7 +385,9 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         if not _file_available:
             if not HOST:
                 self.send_response(404)
-                return "404 Not found"
+                self.end_headers()
+                self.wfile.write('404 Not found, no remote HOST specified on the emulator !!!')
+                return "404 Not found, no remote HOST specified on the emulator !!!"
 
             print("Request for data currently not present in cache: %s" % (cached_file_folder,))
 
@@ -394,6 +403,8 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 print('Status code : %s' % (response.status_code,))
                 print('Content : %s' % (response.content,))
                 self.send_response(response.status_code)
+                self.end_headers()
+                self.wfile.write('404 Not found, nothing found on the remote server !!!')
                 return response.content
         else:
             print("Request for data present in cache: %s" % (cached_file_folder,))
@@ -428,7 +439,9 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         if not _file_available:
             if not HOST:
                 self.send_response(404)
-                return "404 Not found"
+                self.end_headers()
+                self.wfile.write('404 Not found, no remote HOST specified on the emulator !!!')
+                return "404 Not found, no remote HOST specified on the emulator !!!"
 
             print("Request for data currently not present in cache: %s" % (cached_file_folder,))
 
@@ -444,6 +457,8 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 print('Status code : %s' % (response.status_code,))
                 print('Content : %s' % (response.content,))
                 self.send_response(response.status_code)
+                self.end_headers()
+                self.wfile.write('404 Not found, nothing found on the remote server !!!')
                 return response.content
         else:
             print("Request for data present in cache: %s" % (cached_file_folder,))
