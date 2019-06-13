@@ -27,12 +27,12 @@
 		<version>4.1.0-SNAPSHOT</version>
 		<name>clamp</name>
 
-<!--  -->
-<!-- 		<parent> -->
-<!-- 				<groupId>org.onap.oparent</groupId> -->
-<!-- 				<artifactId>oparent</artifactId> -->
-<!-- 				<version>1.2.3</version> -->
-<!-- 		</parent> -->
+
+		<parent>
+				<groupId>org.onap.oparent</groupId>
+				<artifactId>oparent</artifactId>
+				<version>2.0.0</version>
+		</parent>
 
 		<description>
            This project build the ONAP CLAMP JAR that contains CLAMP back-end code and its UI part.
@@ -918,19 +918,6 @@
 										</execution>
 								</executions>
 						</plugin>
-						<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-								<artifactId>nexus-staging-maven-plugin</artifactId>
-								<version>1.6.7</version>
-								<extensions>true</extensions>
-								<configuration>
-										<nexusUrl>https://nexus.onap.org</nexusUrl>
-										<stagingProfileId>176c31dfe190a</stagingProfileId>
-										<serverId>ecomp-staging</serverId>
-										<skipNexusStagingDeployMojo>${skip.staging.artifacts}</skipNexusStagingDeployMojo>
-								</configuration>
-						</plugin>
-
 						<plugin>
 								<groupId>org.apache.maven.plugins</groupId>
 								<artifactId>maven-surefire-plugin</artifactId>
