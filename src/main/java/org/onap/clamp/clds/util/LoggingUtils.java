@@ -28,6 +28,7 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -114,7 +115,7 @@ public class LoggingUtils {
      */
     public static void setResponseContext(String code, String description, String className) {
         MDC.put("ResponseCode", code);
-        MDC.put("StatusCode", code.equals("0") ? "COMPLETE" : "ERROR");
+        MDC.put("StatusCode", "0".equals(code) ? "COMPLETE" : "ERROR");
         MDC.put("ResponseDescription", description != null ? description : "");
         MDC.put("ClassName", className != null ? className : "");
     }
@@ -166,8 +167,6 @@ public class LoggingUtils {
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateFormat;
     }
-
-
 
     /*********************************************************************************************
      * Method for ONAP Application Logging Specification v1.2
@@ -256,7 +255,7 @@ public class LoggingUtils {
     public String getProperties(String name) {
         return MDC.get(name);
     }
-    
+
     /**
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
@@ -267,24 +266,7 @@ public class LoggingUtils {
      * @return The HTTP url connection
      */
     public HttpURLConnection invoke(final HttpURLConnection con, String targetEntity, String targetServiceName) {
-        final String invocationId = UUID.randomUUID().toString();
-
-        // Set standard HTTP headers on (southbound request) builder.
-        con.setRequestProperty(ONAPLogConstants.Headers.REQUEST_ID,
-            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
-        con.setRequestProperty(ONAPLogConstants.Headers.INVOCATION_ID,
-            invocationId);
-        con.setRequestProperty(ONAPLogConstants.Headers.PARTNER_NAME,
-            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
-
-        invokeContext(targetEntity, targetServiceName, invocationId);
-
-        // Log INVOKE*, with the invocationID as the message body.
-        // (We didn't really want this kind of behavior in the standard,
-        // but is it worse than new, single-message MDC?)
-        this.mlogger.info(ONAPLogConstants.Markers.INVOKE);
-        this.mlogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
-        return con;
+        return this.invokeGeneric(con, targetEntity, targetServiceName);
     }
 
     /**
@@ -316,24 +298,7 @@ public class LoggingUtils {
      * @return The HTTPS url connection
      */
     public HttpsURLConnection invokeHttps(final HttpsURLConnection con, String targetEntity, String targetServiceName) {
-        final String invocationId = UUID.randomUUID().toString();
-
-        // Set standard HTTP headers on (southbound request) builder.
-        con.setRequestProperty(ONAPLogConstants.Headers.REQUEST_ID,
-            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
-        con.setRequestProperty(ONAPLogConstants.Headers.INVOCATION_ID,
-            invocationId);
-        con.setRequestProperty(ONAPLogConstants.Headers.PARTNER_NAME,
-            defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
-
-        invokeContext(targetEntity, targetServiceName, invocationId);
-
-        // Log INVOKE*, with the invocationID as the message body.
-        // (We didn't really want this kind of behavior in the standard,
-        // but is it worse than new, single-message MDC?)
-        this.mlogger.info(ONAPLogConstants.Markers.INVOKE);
-        this.mlogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
-        return con;
+        return this.invokeGeneric(con, targetEntity, targetServiceName);
     }
 
     /**
@@ -409,5 +374,26 @@ public class LoggingUtils {
         MDC.remove(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME);
         MDC.remove(ONAPLogConstants.MDCs.INVOCATIONID_OUT);
         MDC.remove(ONAPLogConstants.MDCs.INVOKE_TIMESTAMP);
+    }
+
+    private <T extends URLConnection> T invokeGeneric(final T con, String targetEntity, String targetServiceName) {
+        final String invocationId = UUID.randomUUID().toString();
+
+        // Set standard HTTP headers on (southbound request) builder.
+        con.setRequestProperty(ONAPLogConstants.Headers.REQUEST_ID,
+                defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.REQUEST_ID)));
+        con.setRequestProperty(ONAPLogConstants.Headers.INVOCATION_ID,
+                invocationId);
+        con.setRequestProperty(ONAPLogConstants.Headers.PARTNER_NAME,
+                defaultToEmpty(MDC.get(ONAPLogConstants.MDCs.PARTNER_NAME)));
+
+        invokeContext(targetEntity, targetServiceName, invocationId);
+
+        // Log INVOKE*, with the invocationID as the message body.
+        // (We didn't really want this kind of behavior in the standard,
+        // but is it worse than new, single-message MDC?)
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE);
+        this.mlogger.info(ONAPLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
+        return con;
     }
 }

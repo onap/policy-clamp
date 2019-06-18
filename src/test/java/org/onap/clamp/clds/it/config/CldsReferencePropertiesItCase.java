@@ -55,10 +55,10 @@ public class CldsReferencePropertiesItCase {
      */
     @Test
     public void testGetStringValue() {
-        assertEquals(refProp.getStringValue("policy.onap.name"), "DCAE");
-        assertEquals(refProp.getStringValue("policy.ms.policyNamePrefix", ""), "Config_MS_");
-        assertEquals(refProp.getStringValue("policy.ms.policyNamePrefix", "testos"), "Config_MS_");
-        assertEquals(refProp.getStringValue("policy.ms", "policyNamePrefix"), "Config_MS_");
+        assertEquals("DCAE", refProp.getStringValue("policy.onap.name"));
+        assertEquals("Config_MS_", refProp.getStringValue("policy.ms.policyNamePrefix", ""));
+        assertEquals("Config_MS_", refProp.getStringValue("policy.ms.policyNamePrefix", "testos"));
+        assertEquals("Config_MS_", refProp.getStringValue("policy.ms", "policyNamePrefix"));
         assertNull(refProp.getStringValue("does.not.exist"));
     }
 
@@ -70,7 +70,7 @@ public class CldsReferencePropertiesItCase {
         //then
         assertNotNull(root);
         assertTrue(root.isJsonObject());
-        assertEquals(root.getAsJsonObject().get("DC1").getAsString(), "Data Center 1");
+        assertEquals("Data Center 1", root.getAsJsonObject().get("DC1").getAsString());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class CldsReferencePropertiesItCase {
         //then
         assertNotNull(root);
         assertTrue(root.isJsonObject());
-        assertEquals(root.getAsJsonObject().get("DC1").getAsString(), "Data Center 1");
+        assertEquals("Data Center 1", root.getAsJsonObject().get("DC1").getAsString());
     }
 
     @Test
@@ -112,9 +112,9 @@ public class CldsReferencePropertiesItCase {
     @Test
     public void testGetStringList() {
         List<String> profileList = refProp.getStringList("policy.pdpUrl1", ",");
-        assertTrue(profileList.size() == 3);
+        assertEquals(3, profileList.size());
         assertTrue(profileList.get(0).trim().startsWith("http://localhost:"));
-        assertTrue(profileList.get(1).trim().equals("testpdp"));
-        assertTrue(profileList.get(2).trim().equals("alpha123"));
+        assertEquals("testpdp", profileList.get(1).trim());
+        assertEquals("alpha123", profileList.get(2).trim());
     }
 }
