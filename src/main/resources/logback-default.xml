@@ -40,7 +40,7 @@
 			<level>INFO</level>
 		</filter>
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{1024} - %msg%n
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{1024} - %msg%n
 			</pattern>
 		</encoder>
 	</appender>
@@ -76,7 +76,7 @@
 		<file>${logDirectory}/debug.log</file>
 		<append>true</append>
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{1024} - %msg%n
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{1024} - %msg%n
 			</pattern>
 		</encoder>
 		<rollingPolicy
