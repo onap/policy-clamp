@@ -5,6 +5,8 @@
  * Copyright (C) 2019 Nokia. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -54,7 +56,20 @@ public class XmlToolsTest {
         Assert.assertNull(doc.getDoctype());
     }
 
-
+    /**
+     * Method to parse String into XmlDocument.
+     *
+     * @param res
+     *        String to parse
+     * @return
+     *        XmlDocument
+     * @throws ParserConfigurationException
+     *         In case of issues with parse the document
+     * @throws SAXException
+     *         In case of bad format of res
+     * @throws IOException
+     *         In case of issues creating the document
+     */
     public static Document parseStringToXmlDocument(String res)
         throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

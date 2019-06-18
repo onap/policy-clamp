@@ -5,6 +5,8 @@
  * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -53,9 +55,9 @@ public class CldsDictionaryService extends SecureServiceBase {
 
     @Autowired
     private CldsDao                 cldsDao;
-    
+
     private LoggingUtils util = new LoggingUtils(logger);
-    
+
 
     @PostConstruct
     private final void initConstruct() {
@@ -73,7 +75,7 @@ public class CldsDictionaryService extends SecureServiceBase {
      */
     public ResponseEntity<CldsDictionary> createOrUpdateDictionary(String dictionaryName,
             CldsDictionary cldsDictionary) {
-        Date startTime = new Date();
+        final Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsDictionaryService: createOrUpdateDictionary", getPrincipalName());
         // TODO revisit based on new permissions
         isAuthorized(permissionUpdateTosca);
@@ -82,9 +84,7 @@ public class CldsDictionaryService extends SecureServiceBase {
             cldsDictionary.setDictionaryName(dictionaryName);
         }
         cldsDictionary.save(dictionaryName, cldsDao, getUserId());
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "createOrUpdateDictionary success", this.getClass().getName());
-        auditLogger.info("createOrUpdateDictionary completed");
+        auditLogInfo("createOrUpdateDictionary", startTime);
         return new ResponseEntity<>(cldsDictionary, HttpStatus.OK);
     }
 
@@ -99,14 +99,12 @@ public class CldsDictionaryService extends SecureServiceBase {
      */
     public ResponseEntity<CldsDictionaryItem> createOrUpdateDictionaryElements(String dictionaryName,
             CldsDictionaryItem dictionaryItem) {
-        Date startTime = new Date();
+        final Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsDictionaryService: createOrUpdateDictionaryElements", getPrincipalName());
         // TODO revisit based on new permissions
         isAuthorized(permissionUpdateTosca);
         dictionaryItem.save(dictionaryName, cldsDao, getUserId());
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "createOrUpdateDictionaryElements success", this.getClass().getName());
-        auditLogger.info("createOrUpdateDictionaryElements completed");
+        auditLogInfo("createOrUpdateDictionaryElements", startTime);
         return new ResponseEntity<>(dictionaryItem, HttpStatus.OK);
     }
 
@@ -116,14 +114,12 @@ public class CldsDictionaryService extends SecureServiceBase {
      * @return CldsDictionary List List of CldsDictionary available in DB
      */
     public ResponseEntity<List<CldsDictionary>> getAllDictionaryNames() {
-        Date startTime = new Date();
+        final Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsDictionaryService: getAllDictionaryNames", getPrincipalName());
         // TODO revisit based on new permissions
         isAuthorized(permissionReadTosca);
         List<CldsDictionary> dictionaries = cldsDao.getDictionary(null, null);
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "getAllDictionaryNames success", this.getClass().getName());
-        auditLogger.info("getAllDictionaryNames completed");
+        auditLogInfo("getAllDictionaryNames", startTime);
         return new ResponseEntity<>(dictionaries, HttpStatus.OK);
     }
 
@@ -136,14 +132,12 @@ public class CldsDictionaryService extends SecureServiceBase {
      *         dictionary name
      */
     public ResponseEntity<List<CldsDictionaryItem>> getDictionaryElementsByName(String dictionaryName) {
-        Date startTime = new Date();
+        final Date startTime = new Date();
         LoggingUtils.setRequestContext("CldsDictionaryService: getDictionaryElementsByName", getPrincipalName());
         // TODO revisit based on new permissions
         isAuthorized(permissionReadTosca);
         List<CldsDictionaryItem> dictionaryItems = cldsDao.getDictionaryElements(dictionaryName, null, null);
-        LoggingUtils.setTimeContext(startTime, new Date());
-        LoggingUtils.setResponseContext("0", "getAllDictionaryNames success", this.getClass().getName());
-        auditLogger.info("getAllDictionaryNames completed");
+        auditLogInfo("getDictionaryElementsByName", startTime);
         return new ResponseEntity<>(dictionaryItems, HttpStatus.OK);
     }
 

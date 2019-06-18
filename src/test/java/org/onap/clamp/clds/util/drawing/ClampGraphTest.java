@@ -46,7 +46,7 @@ public class ClampGraphTest {
     private DocumentBuilder mockDocumentBuilder;
 
     @Test
-    public void getAsSVGTest() throws IOException, ParserConfigurationException, SAXException {
+    public void getAsSvgTest() throws IOException, ParserConfigurationException, SAXException {
         String expected = ResourceFileUtil.getResourceAsString("clds/util/file.xml");
         Document document = XmlToolsTest.parseStringToXmlDocument(expected);
 
@@ -57,7 +57,7 @@ public class ClampGraphTest {
     }
 
     @Test
-    public void getAsSVGLazyTest() throws IOException, ParserConfigurationException, SAXException {
+    public void getAsSvgLazyTest() throws IOException, ParserConfigurationException, SAXException {
         String expected = ResourceFileUtil.getResourceAsString("clds/util/file.xml");
         Document document = XmlToolsTest.parseStringToXmlDocument(expected);
 

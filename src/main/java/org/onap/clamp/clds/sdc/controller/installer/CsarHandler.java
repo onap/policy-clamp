@@ -86,8 +86,8 @@ public class CsarHandler {
         return clampCsarPath + "/" + controllerName + "/" + artifactElement.getArtifactName();
     }
 
-    private IArtifactInfo searchForUniqueCsar(INotificationData iNotif) throws CsarHandlerException {
-        List<IArtifactInfo> serviceArtifacts = iNotif.getServiceArtifacts();
+    private IArtifactInfo searchForUniqueCsar(INotificationData notificationData) throws CsarHandlerException {
+        List<IArtifactInfo> serviceArtifacts = notificationData.getServiceArtifacts();
         for (IArtifactInfo artifact : serviceArtifacts) {
             if (artifact.getArtifactType().equals(CSAR_TYPE)) {
                 return artifact;

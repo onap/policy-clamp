@@ -75,7 +75,7 @@ public class MicroService {
         }
         MicroService that = (MicroService) o;
         return name.equals(that.name) && modelType.equals(that.modelType) && inputFrom.equals(that.inputFrom)
-            && mappedNameJpa.equals(that.mappedNameJpa);
+                && mappedNameJpa.equals(that.mappedNameJpa);
     }
 
     @Override

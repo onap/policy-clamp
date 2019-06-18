@@ -101,7 +101,8 @@ public class CldsReferencePropertiesItCase {
      */
     @Test
     public void testGetFileContent() throws IOException {
-        String location = "{\n\t\"DC1\": \"Data Center 1\",\n\t\"DC2\": \"Data Center 2\",\n\t\"DC3\": \"Data Center 3\"\n}\n";
+        String location = "{\n\t\"DC1\": \"Data Center 1\","
+                + "\n\t\"DC2\": \"Data Center 2\",\n\t\"DC3\": \"Data Center 3\"\n}\n";
         String content = refProp.getFileContent("ui.location.default");
         assertEquals(location, content);
         // Test composite key

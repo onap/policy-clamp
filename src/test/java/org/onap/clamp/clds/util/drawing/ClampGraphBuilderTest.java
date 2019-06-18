@@ -5,6 +5,8 @@
  * Copyright (C) 2019 Nokia. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -60,7 +62,7 @@ public class ClampGraphBuilderTest {
         MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id");
 
         String policy = "OperationalPolicy";
-        List<MicroService> microServices = Arrays.asList(ms1, ms2);
+        final List<MicroService> microServices = Arrays.asList(ms1, ms2);
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
         clampGraphBuilder.collector(collector).addMicroService(ms1).addMicroService(ms2).policy(policy).build();

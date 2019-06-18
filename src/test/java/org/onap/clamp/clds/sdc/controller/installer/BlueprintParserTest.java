@@ -5,6 +5,8 @@
  * Copyright (C) 2019 Nokia Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
+ * Modifications Copyright (c) 2019 Samsung
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,6 +22,7 @@
  * ===================================================================
  *
  */
+
 package org.onap.clamp.clds.sdc.controller.installer;
 
 import com.google.gson.Gson;
@@ -60,6 +63,12 @@ public class BlueprintParserTest {
     private static JsonObject jsonObjectBlueprintWithoutProperties;
     private static JsonObject jsonObjectBlueprintWithoutRelationships;
 
+    /**
+     * Method to load Blueprints before all test.
+     *
+     * @throws IOException
+     *         In case of issues when opening the files
+     */
     @BeforeClass
     public static void loadBlueprints() throws IOException {
         microServiceTheWholeBlueprintValid = ResourceFileUtil
@@ -73,12 +82,13 @@ public class BlueprintParserTest {
             .getResourceAsString("clds/single-microservice-fragment-without-name.yaml");
         String microServiceBlueprintWithoutProperties = ResourceFileUtil
             .getResourceAsString("clds/single-microservice-fragment-without-properties.yaml");
-        String microServiceBlueprintWithoutRelationships = ResourceFileUtil
-            .getResourceAsString("clds/single-microservice-fragment-without-relationships.yaml");
 
         jsonObjectBlueprintValid = yamlToJson(microServiceBlueprintValid);
         jsonObjectBlueprintWithoutName = yamlToJson(microServiceBlueprintWithoutName);
         jsonObjectBlueprintWithoutProperties = yamlToJson(microServiceBlueprintWithoutProperties);
+
+        String microServiceBlueprintWithoutRelationships = ResourceFileUtil
+                .getResourceAsString("clds/single-microservice-fragment-without-relationships.yaml");
         jsonObjectBlueprintWithoutRelationships = yamlToJson(microServiceBlueprintWithoutRelationships);
 
     }
@@ -162,11 +172,11 @@ public class BlueprintParserTest {
     }
 
     @Test
-    public void fallBackToOneMicroServiceTCATest() {
-        MicroService tcaMS = new MicroService(BlueprintParser.TCA, "onap.policies.monitoring.cdap.tca.hi.lo.app", "",
-            "");
 
-        List<MicroService> expected = Collections.singletonList(tcaMS);
+    public void fallBackToOneMicroServiceTcaTest() {
+        MicroService tcaMs = new MicroService(BlueprintParser.TCA,
+                "onap.policies.monitoring.cdap.tca.hi.lo.app", "", "");
+        List<MicroService> expected = Collections.singletonList(tcaMs);
         List<MicroService> actual = new BlueprintParser().fallbackToOneMicroService(microServiceBlueprintOldStyleTCA);
 
         Assert.assertEquals(expected, actual);
@@ -174,10 +184,10 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceHolmesTest() {
-        MicroService holmesMS = new MicroService(BlueprintParser.HOLMES, "onap.policies.monitoring.cdap.tca.hi.lo.app",
-            "", "");
+        MicroService holmesMs = new MicroService(BlueprintParser.HOLMES,
+                "onap.policies.monitoring.cdap.tca.hi.lo.app", "", "");
 
-        List<MicroService> expected = Collections.singletonList(holmesMS);
+        List<MicroService> expected = Collections.singletonList(holmesMs);
         List<MicroService> actual = new BlueprintParser()
             .fallbackToOneMicroService(microServiceBlueprintOldStyleHolmes);
 

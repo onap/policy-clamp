@@ -38,7 +38,6 @@ import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcDownloadException;
-import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
@@ -348,8 +347,8 @@ public class SdcSingleController {
         return downloadResult;
     }
 
-    private void sendSdcNotification(NotificationType notificationType, String artifactUrl, String consumerID,
-                                     String distributionID, DistributionStatusEnum status, String errorReason,
+    private void sendSdcNotification(NotificationType notificationType, String artifactUrl, String consumerId,
+                                     String distributionId, DistributionStatusEnum status, String errorReason,
                                      long timestamp) {
         String event = "Sending " + notificationType.name() + "(" + status.name() + ")"
                 + " notification to SDC for artifact:" + artifactUrl;
@@ -359,7 +358,7 @@ public class SdcSingleController {
         logger.info(event);
         String action = "";
         try {
-            IDistributionStatusMessage message = new DistributionStatusMessage(artifactUrl, consumerID, distributionID,
+            IDistributionStatusMessage message = new DistributionStatusMessage(artifactUrl, consumerId, distributionId,
                     status, timestamp);
             switch (notificationType) {
                 case DOWNLOAD:
