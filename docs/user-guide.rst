@@ -74,13 +74,35 @@ Once clicked, it's possible to configure operational policy. Policy can have chi
 3. Specifies whether policy is abated
 4. Unique id for Control Loop.
 5. Button for creating child/parent policies
+    Child/parent policies are policies that depend on one another under certain circumstances (check point 12.)
 6. Unique id of Policy. (Clamp internal)
 7. Recipe/Operation triggered on controller/orchestrator
-8. Maximum count of retries
+    This recipe will be used by policy drools PDP when sending request to controller/orchestrator.
+    E.g. in case of *Health-Check* is selected here and *APPC* as actor PDP will trigger APPC LCM API triggering health-check operation.
+
+    List of options is predefined in Clamp code and can't be modified.
+    Possible options:
+        * Restart
+        * Rebuild
+        * Migrate
+        * Health-Check
+        * ModifyConfig
+        * VF Module Create
+        * VF Module Delete
+        * Reroute
+8. Maximum amount of retries that policy takes when triggering action
 9. Timeout for this operational policy
 10. Actor used to perform action. (Orchestrator/Controller)
+     Actor that will be used by drools PDP to perform action.
+     Possible options:
+        * APPC
+        * SO
+        * VFC
+        * SDNC
+        * SDNR
 11. Payload required by actor to perform an action
-12. Set of fields with policies called under certain conditions. E.g. when health-check receives timeout failure restart could be called.
+12. Set of fields describing child/parend policies dependency.
+     E.g. when health-check receives timeout failure restart could be called.
 13. Set of fields specifying resource. On this resource Operational Policy should perform an action
 14. Checkbox enabling/disabling guard policy for this operational policy
 15. Guard Policy type (frequency limited or min max)
