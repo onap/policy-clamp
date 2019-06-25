@@ -20,11 +20,24 @@
  * ===================================================================
  * 
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ClampHeader from './ClampHeader'; 
 
-ReactDOM.render(
-	<ClampHeader />,
-	document.getElementById('root')
-)
+import React from 'react';
+import './index.css';
+
+class ClampLogo extends React.Component {
+	render() {
+		return (
+			<div className="col-md-4 col-lg-4">
+				<img className="image_style" alt="" src={require('./images/logo_onap_2017.png')}
+				height="50px"
+				width="234px"/>
+				<div className="navbar-brand logo">
+					&nbsp;&nbsp;
+					<b>CLAMP</b>
+				</div>
+			</div>
+		);
+	}
+}
+
+export default ClampLogo;

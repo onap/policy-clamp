@@ -20,11 +20,23 @@
  * ===================================================================
  * 
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ClampHeader from './ClampHeader'; 
 
-ReactDOM.render(
-	<ClampHeader />,
-	document.getElementById('root')
-)
+import React from 'react';
+import ClampLogo from './ClampLogo';
+import UserBar from './UserBar';
+import MenuBar from './MenuBar';
+import './index.css';
+
+class ClampHeader extends React.Component {
+	render() {
+		return (
+			<div >
+
+<MenuBar />
+			<UserBar />
+			</div>
+		);
+	}
+}
+
+export default ClampHeader;

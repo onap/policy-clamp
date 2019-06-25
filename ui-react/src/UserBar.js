@@ -21,10 +21,16 @@
  * 
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import ClampHeader from './ClampHeader'; 
+import './index.css';
 
-ReactDOM.render(
-	<ClampHeader />,
-	document.getElementById('root')
-)
+class UserBar extends React.Component {
+	render () {
+		const user = this.props.user;
+		return (
+			<div className="user_name">Hello:{user}
+			</div>
+		);
+	}
+}
+
+export default UserBar;
