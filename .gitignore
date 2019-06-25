@@ -5,6 +5,8 @@ target
 .buildpath
 .idea
 *.iml
+ui-react/node_modules
+ui-react/build
 **/logs/
 **/.evosuite/
 **/debug-logs/

@@ -1,0 +1,50 @@
+.nav {
+	margin-left: 2px; 
+	margin-right: 2px;
+}
+.navbar-brand {
+  float: left;
+  height: 50px;
+  padding: 15px 15px;
+  font-size: 18px;
+  line-height: 20px;
+}
+.rowC {
+	display: flex;
+	flex-direction:row;
+}
+.logo {
+	font-family: 'Trebuchet MS', cursive;
+	font-size: 20px;
+	font-weight: 500;
+	text-align: center;
+}
+.image_style {
+	display: inline-block; 
+	float: left;
+}
+.dummy {
+	float: right; 
+	padding-right: 50px;
+}
+.user_name {
+	display: block;
+	float: left;
+	font-family: 'Trebuchet MS', cursive;
+	font-size: 15px;
+	font-weight: 500;
+	height: 50px;
+	text-align: right;
+}
+
+.ClampHeader {
+	margin-left: 2px; 
+	margin-right: 2px;
+}
+
+.col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12 {
+    float: left;
+  }
+  .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+    float: left;
+  }

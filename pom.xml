@@ -1025,8 +1025,8 @@
 														</run>
 												</image>
 												<image>
-														<name>onap/clamp</name>
-														<alias>onap-clamp</alias>
+														<name>onap/clamp-backend</name>
+														<alias>onap-clamp-backend</alias>
 														<run>
 															<skip>true</skip>
 														</run>
@@ -1039,10 +1039,32 @@
 																</tags>
 																<!-- A relative path is looked up in ${project.basedir}/src/main/docker
 																		by default -->
-																<dockerFile>Dockerfile</dockerFile>
+																<dockerFile>backend/Dockerfile</dockerFile>
 																<assembly>
-																		<descriptor>assembly/clamp-files.xml</descriptor>
-																		<name>onap-clamp</name>
+																		<descriptor>backend/backend-files.xml</descriptor>
+																		<name>onap-clamp-backend</name>
+																</assembly>
+														</build>
+												</image>
+												<image>
+														<name>onap/clamp-frontend</name>
+														<alias>onap-clamp-frontend</alias>
+														<run>
+															<skip>true</skip>
+														</run>
+														<build>
+																<cleanup>true</cleanup>
+																<tags>
+																		<tag>latest</tag>
+																		<tag>${project.docker.latesttagtimestamp.version}</tag>
+																		<tag>${project.docker.latesttag.version}</tag>
+																</tags>
+																<!-- A relative path is looked up in ${project.basedir}/src/main/docker
+																		by default -->
+																<dockerFile>frontend/Dockerfile</dockerFile>
+																<assembly>
+																		<descriptor>frontend/frontend-files.xml</descriptor>
+																		<name>onap-clamp-frontend</name>
 																</assembly>
 														</build>
 												</image>
@@ -1059,7 +1081,7 @@
 																		<tag>${project.docker.latesttagtimestamp.version}</tag>
 																		<tag>${project.docker.latesttag.version}</tag>
 																</tags>
-																<dockerFile>logstash/Dockerfile.logstash</dockerFile>
+																<dockerFile>logstash/Dockerfile</dockerFile>
 														</build>
 												</image>
 												<image>
@@ -1075,7 +1097,7 @@
 																		<tag>${project.docker.latesttagtimestamp.version}</tag>
 																		<tag>${project.docker.latesttag.version}</tag>
 																</tags>
-																<dockerFile>kibana/Dockerfile.kibana</dockerFile>
+																<dockerFile>kibana/Dockerfile</dockerFile>
 														</build>
 												</image>
 										</images>
