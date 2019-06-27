@@ -21,10 +21,21 @@
  *
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Clamp from './Clamp';
+import ClosedLoopViewHeader from './ClosedLoopViewHeader';
+import ClosedLoopViewBody from './ClosedLoopViewBody';
+import './css/index.css';
 
-ReactDOM.render(
-	<Clamp />,
-	document.getElementById('root')
-)
+ class ClosedLoopView extends React.Component {
+ 	render() {
+ 		return (
+      <div className="container-fluid cldsmodelling">
+      		<div className="cl_panel">
+            <ClosedLoopViewHeader />
+            <ClosedLoopViewBody />
+          </div>
+      </div>
+ 		);
+ 	}
+ }
+
+ export default ClosedLoopView;

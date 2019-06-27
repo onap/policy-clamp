@@ -20,11 +20,21 @@
  * ===================================================================
  *
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Clamp from './Clamp';
 
-ReactDOM.render(
-	<Clamp />,
-	document.getElementById('root')
-)
+import React from 'react';
+import ClampHeader from './ClampHeader';
+import ClosedLoopView from './ClosedLoopView';
+
+
+class Clamp extends React.Component {
+	render() {
+		return (
+			<div>
+				<ClampHeader />
+				<ClosedLoopView />
+			</div>
+		);
+	}
+}
+
+export default Clamp;

@@ -21,10 +21,15 @@
  *
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Clamp from './Clamp';
+import './css/index.css';
 
-ReactDOM.render(
-	<Clamp />,
-	document.getElementById('root')
-)
+class ClosedLoopViewSVG extends React.Component {
+  render() {
+    return (
+        <div id="loop_content">
+        </div>
+    );
+  }
+}
+
+export default ClosedLoopViewSVG;

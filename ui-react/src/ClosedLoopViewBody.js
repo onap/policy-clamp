@@ -21,10 +21,50 @@
  *
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Clamp from './Clamp';
+import ClosedLoopSVG from './ClosedLoopSVG';
+import ClosedLoopLogs from './ClosedLoopLogs';
+import ClosedLoopStatus from './ClosedLoopStatus';
+import './css/index.css';
 
-ReactDOM.render(
-	<Clamp />,
-	document.getElementById('root')
-)
+ class ClosedLoopViewBody extends React.Component {
+
+   constructor(props) {
+      super(props);
+      this.state = {
+         disableDiv: false
+      };
+      this.disableDiv = this.disableDiv.bind(this);
+      this.enableDiv = this.enableDiv.bind(this);
+    }
+
+    disableDiv() {
+      this.setState({
+         disableDiv:true
+      });
+    }
+
+    enableDiv() {
+      this.setState({
+         disableDiv:false
+      });
+    }
+
+
+   render() {
+     var divStyle = {
+      display:this.state.disableDiv?'block':'none'
+    };
+   	return (
+        <div id="paletteDiv" className="cl_view_body" style={divStyle}>
+          <div id="js-canvas" className="js_canvas">
+            <ClosedLoopSVG />
+            <ClosedLoopLogs />
+          </div>
+          <ClosedLoopStatus />
+        </div>
+   	);
+   }
+ }
+
+
+ export default ClosedLoopViewBody;

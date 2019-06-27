@@ -20,11 +20,21 @@
  * ===================================================================
  *
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Clamp from './Clamp';
 
-ReactDOM.render(
-	<Clamp />,
-	document.getElementById('root')
-)
+import React from 'react';
+import Navbar from 'react-bootstrap/Navbar';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+
+class ClampLogoImg extends React.Component {
+	render() {
+		return (
+			<Navbar.Brand>
+			  <img alt="" src={require('./images/logo_onap_2017.png')}
+				  height="50px" width="234px"
+				  className="d-inline-block align-top"/>
+		  </Navbar.Brand>
+		);
+	}
+}
+
+export default ClampLogoImg;
