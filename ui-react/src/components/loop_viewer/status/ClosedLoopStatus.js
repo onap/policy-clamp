@@ -22,9 +22,9 @@
 */
 import React from 'react';
 import Table from 'react-bootstrap/Table';
-import './css/index.css';
+import './ClosedLoopStatus.css';
 
-class ClosedLoopStatus extends React.Component {
+export default class ClosedLoopStatus extends React.Component {
   render() {
   	return (
       <div>
@@ -53,4 +53,3 @@ class ClosedLoopStatus extends React.Component {
   }
 }
 
-export default ClosedLoopStatus;

@@ -1,0 +1,19 @@
+
+.status_title{
+	position: absolute;
+	left: 61%;
+	top: 151px;
+	font-size:20px;
+}
+.status{
+	background-color: gray;
+	-moz-border-radius: 50px;
+	-webkit-border-radius: 50px;
+	border-radius: 50px;
+}
+.status_table {
+	position: absolute;
+	left: 61%;
+	top: 191px;
+	font-size:10px;
+}

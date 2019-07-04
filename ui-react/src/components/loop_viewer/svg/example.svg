@@ -1,0 +1,13 @@
+<svg width="400" height="200">
+  <defs>
+    <filter id="MyFilter" filterUnits="userSpaceOnUse" x="0" y="0" width="200" height="120">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"/>
+    </filter>
+  </defs>
+  <rect x="1" y="1" width="198" height="118" fill="#cccccc" />
+  <g filter="url(#MyFilter)">
+    <path fill="none" stroke="#D90000" stroke-width="10" d="M50,90 C0,90 0,30 50,30 L150,30 C200,30 200,90 150,90 z" />
+    <text fill="#FFFFFF" stroke="black" font-size="45" font-family="Verdana" x="52" y="76">SVG</text>
+  </g>
+  Sorry, your browser does not support inline SVG.  
+</svg>

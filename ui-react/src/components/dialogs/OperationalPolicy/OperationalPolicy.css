@@ -1,0 +1,73 @@
+.disabled {
+	background-color: #dddd;
+}
+
+label {
+	text-align: right;
+	vertical-align: middle;
+}
+
+.leftPolicyPanel {
+	padding: 0 10px 0 0;
+}
+
+.idError {
+	color: red;
+	padding: 50px 0px;
+	text-align: center;
+	display: none;
+}
+
+.policyPanel {
+	background-color: #f5f5f5;
+	padding: 15px 5px 0 5px;
+}
+
+.form-group.clearfix {
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+}
+
+label {
+	margin-bottom: 0px;
+}
+
+.withnote {
+	margin-bottom: 0px;
+}
+
+.note {
+	font-size:10px;
+	margin-left: 250px;
+	font-weight: normal;
+}
+
+#policyTable {
+	cursor: pointer;
+	width: 100%;
+}
+
+#policyTable tr {
+	border-bottom: 1px solid #ddd;
+	border-collapse: collapse;
+	text-align: left;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#policyTable td {
+	padding: 8px 10px;
+}
+
+#policyTable tr.highlight {
+	background-color: #f5f5f5;
+	font-weight: bold;
+	font-size: 13px;
+}
+
+#policyTableHolder {
+	height: 200px;
+	width: 100%;
+	overflow: auto;
+}

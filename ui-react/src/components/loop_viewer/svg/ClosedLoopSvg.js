@@ -20,21 +20,24 @@
  * ===================================================================
  *
  */
-
 import React from 'react';
-import Navbar from 'react-bootstrap/Navbar';
-import 'bootstrap-css-only/css/bootstrap.min.css';
+import styled from 'styled-components';
+import { ReactComponent as SvgExample } from './example.svg';
+const LoopViewSvgDivStyle = styled.div`
 
-class ClampLogoImg extends React.Component {
-	render() {
-		return (
-			<Navbar.Brand>
-			  <img alt="" src={require('./images/logo_onap_2017.png')}
-				  height="50px" width="234px"
-				  className="d-inline-block align-top"/>
-		  </Navbar.Brand>
-		);
-	}
+	overflow: hidden;
+	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
+	border: 1px solid transparent;
+	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+`
+
+export default class ClosedLoopViewSvg extends React.Component {
+  render() {
+    return (
+    	<LoopViewSvgDivStyle id="loop_svg">
+    		<SvgExample />
+    	</LoopViewSvgDivStyle>
+    );
+  }
 }
 
-export default ClampLogoImg;

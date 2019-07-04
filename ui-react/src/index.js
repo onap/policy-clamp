@@ -22,9 +22,10 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Clamp from './Clamp';
+import OnapClamp from './OnapClamp';
+
 
 ReactDOM.render(
-	<Clamp />,
+	<OnapClamp/>,
 	document.getElementById('root')
 )
