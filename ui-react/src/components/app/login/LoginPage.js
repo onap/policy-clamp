@@ -21,29 +21,28 @@
  *
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-import { Route, Switch, BrowserRouter } from 'react-router-dom'
-import OnapClamp from './OnapClamp';
-import NotFound from './components/app/NotFound';
-import LoginPage from './components/app/login/LoginPage';
-import LoginFailedPage from './components/app/login/LoginFailedPage';
-import BasicAuthLogin from './components/app/login/BasicAuthLogin';
-import LoginRoute from './components/route/LoginRoute';
+import LoopService from '../../backend_communication/LoopService';
 
-
-const routing = (
-  <BrowserRouter>
-    <div>
-      <Switch>
-        <LoginRoute exact path="/" component={OnapClamp} />
-        <Route path="/basicAuthLogin" component={BasicAuthLogin} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/loginFailed" component={LoginFailedPage} />
-        <Route component={NotFound} />
-      </Switch>
-		</div>
-  </BrowserRouter>
-)
-
-ReactDOM.render(routing, document.getElementById('root'))
+export default class LoginPage extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log('LoginPage')
+        LoopService.login().then(
+                user => {
+                    const { from } = { from: { pathname: "/" } };
+                    this.props.history.push(from);
+                },
+                error => {
+                  const { from } = { from: { pathname: "/" } };
+                  this.props.history.push(from);
+                  console.log ("Certification login failed");
+                }
+            );
+    }
+    render() {
+      return (
+        <div>
+  			</div>);
+}
+}

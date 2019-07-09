@@ -20,30 +20,16 @@
  * ===================================================================
  *
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-import { Route, Switch, BrowserRouter } from 'react-router-dom'
-import OnapClamp from './OnapClamp';
-import NotFound from './components/app/NotFound';
-import LoginPage from './components/app/login/LoginPage';
-import LoginFailedPage from './components/app/login/LoginFailedPage';
-import BasicAuthLogin from './components/app/login/BasicAuthLogin';
-import LoginRoute from './components/route/LoginRoute';
+import React from 'react'
 
 
-const routing = (
-  <BrowserRouter>
-    <div>
-      <Switch>
-        <LoginRoute exact path="/" component={OnapClamp} />
-        <Route path="/basicAuthLogin" component={BasicAuthLogin} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/loginFailed" component={LoginFailedPage} />
-        <Route component={NotFound} />
-      </Switch>
-		</div>
-  </BrowserRouter>
-)
-
-ReactDOM.render(routing, document.getElementById('root'))
+export default class LoginFailedPage extends React.Component {
+	render () {
+		return (
+      		<div id='main'>
+      			<div class="divRow"><b>Login Failed!</b></div>
+      			<div class="divRow">Please cick <a href="/">here</a> to go back to the main page.</div>
+      		</div>
+		);
+	}
+}

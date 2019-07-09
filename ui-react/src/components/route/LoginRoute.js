@@ -21,29 +21,16 @@
  *
  */
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { Route, Redirect } from 'react-router-dom';
 
-import { Route, Switch, BrowserRouter } from 'react-router-dom'
-import OnapClamp from './OnapClamp';
-import NotFound from './components/app/NotFound';
-import LoginPage from './components/app/login/LoginPage';
-import LoginFailedPage from './components/app/login/LoginFailedPage';
-import BasicAuthLogin from './components/app/login/BasicAuthLogin';
-import LoginRoute from './components/route/LoginRoute';
-
-
-const routing = (
-  <BrowserRouter>
-    <div>
-      <Switch>
-        <LoginRoute exact path="/" component={OnapClamp} />
-        <Route path="/basicAuthLogin" component={BasicAuthLogin} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/loginFailed" component={LoginFailedPage} />
-        <Route component={NotFound} />
-      </Switch>
-		</div>
-  </BrowserRouter>
+const LoginRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={props => (
+        localStorage.getItem('user')
+            ? <Component {...props} />
+            : localStorage.getItem('tryBasicAuth')
+                ? <Redirect to={{ pathname: '/basicAuthLogin', state: { from: props.location } }} />
+                : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+    )} />
 )
 
-ReactDOM.render(routing, document.getElementById('root'))
+export default LoginRoute;

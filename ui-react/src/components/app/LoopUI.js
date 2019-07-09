@@ -70,8 +70,7 @@ const LoopViewLoopNameSpanStyle = styled.span`
 `
 
 export default class LoopUI extends React.Component {
-	
-	user = "testuser";
+
 	loopName="Empty (NO loop loaded yet)";
 		
 	renderMenuNavBar() {
@@ -83,7 +82,7 @@ export default class LoopUI extends React.Component {
 	renderUserLoggedNavBar() {
 		return (
 			<Navbar.Text>
-				Signed in as: <a href="login">{this.user}</a>
+				Signed in as: <a href="login">{localStorage.getItem('user')}</a>
 			</Navbar.Text>
 		);
 	}

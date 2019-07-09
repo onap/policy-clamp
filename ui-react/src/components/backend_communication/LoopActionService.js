@@ -20,30 +20,37 @@
  * ===================================================================
  *
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
+const clActionService = {
+    submit
+};
 
-import { Route, Switch, BrowserRouter } from 'react-router-dom'
-import OnapClamp from './OnapClamp';
-import NotFound from './components/app/NotFound';
-import LoginPage from './components/app/login/LoginPage';
-import LoginFailedPage from './components/app/login/LoginFailedPage';
-import BasicAuthLogin from './components/app/login/BasicAuthLogin';
-import LoginRoute from './components/route/LoginRoute';
+function submit(uiAction) {
+    const cl_name = "";
+    console.log("clActionServices perform action: " + uiAction + " closedloopName="
+		    + cl_name);
+    const svcAction = uiAction.toLowerCase();
+		const svcUrl = "/restservices/clds/v2/loop/" + svcAction + "/" + cl_name;
+
+    let options = {
+        method: 'GET'
+    };
+    return sendRequest (svcUrl, svcAction, options);
+}
 
 
-const routing = (
-  <BrowserRouter>
-    <div>
-      <Switch>
-        <LoginRoute exact path="/" component={OnapClamp} />
-        <Route path="/basicAuthLogin" component={BasicAuthLogin} />
-        <Route path="/login" component={LoginPage} />
-        <Route path="/loginFailed" component={LoginFailedPage} />
-        <Route component={NotFound} />
-      </Switch>
-		</div>
-  </BrowserRouter>
-)
 
-ReactDOM.render(routing, document.getElementById('root'))
+function sendRequest (svcUrl, svcAction) {
+  fetch(svcUrl, options)
+    .then(
+      response => {
+        alertService.alertMessage("Action Successful: " + svcAction, 1)
+    }).error( error => {
+        alertService.alertMessage("Action Failure: " + svcAction, 2);
+        return Promise.reject(error);
+    });
+
+      return response.json();
+    });
+}
+
+export default clActionService;

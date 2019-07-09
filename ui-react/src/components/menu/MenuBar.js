@@ -36,6 +36,13 @@ const StyledNavDropdownItem = styled(NavDropdown.Item)`
 
 export default class MenuBar extends React.Component {
 	
+	openEmailConsole() {
+		console.log("contactUs");
+		var link = "mailto:onap-discuss@lists.onap.org?subject=CLAMP&body=Please "
+			+ "send us suggestions or feature enhancements or defect. If possible, please send us the steps to replicate any defect.";
+		window.location.href = link;
+	};
+
 	render () {
 	   return (
 		  <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
@@ -56,8 +63,8 @@ export default class MenuBar extends React.Component {
 						<StyledNavDropdownItem href="#action/3.1">Refresh Status</StyledNavDropdownItem>
 					</NavDropdown>
 				<NavDropdown title="Help" id="basic-nav-dropdown">
-					<StyledNavDropdownItem href="#action/3.1">Wiki</StyledNavDropdownItem>
-					<StyledNavDropdownItem href="#action/3.2">Contact Us</StyledNavDropdownItem>
+					<NavDropdown.Item onClick={()=> window.open("https://wiki.onap.org/", "_blank")}>Wiki</NavDropdown.Item>
+					<NavDropdown.Item onClick={()=> this.openEmailConsole()}>Contact Us</NavDropdown.Item>
 					<StyledNavDropdownItem href="#action/3.3">User Info</StyledNavDropdownItem>
 				</NavDropdown>
 		  </Navbar.Collapse>
