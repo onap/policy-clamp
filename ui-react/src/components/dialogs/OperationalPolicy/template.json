@@ -1,0 +1,52 @@
+{
+	"operationalPolicies": [
+		{
+			"name": "OPERATIONAL_LOOP_NAME",
+			"configurationsJson": {
+				"guard_policies": {
+					"guard.minmax.new": {
+						"recipe": "",
+						"clname": "LOOP_NAME",
+						"actor": "",
+						"targets": "",
+						"min": "",
+						"max": "",
+						"limit": "",
+						"timeUnits": "",
+						"timeWindow": "",
+						"guardActiveStart": "00:00:00Z",
+						"guardActiveEnd": "00:00:01Z"
+					}
+				},
+				"operational_policy": {
+					"controlLoop": {
+						"trigger_policy": "new",
+						"timeout": "0",
+						"abatement": "false",
+						"controlLoopName": "LOOP_h2NMX_v1_0_ResourceInstanceName1_tca"
+					},
+					"policies": [
+						{
+							"id": "new",
+							"recipe": "",
+							"retry": "0",
+							"timeout": "0",
+							"actor": "",
+							"payload": "",
+							"success": "",
+							"failure": "",
+							"failure_timeout": "",
+							"failure_retries": "",
+							"failure_exception": "",
+							"failure_guard": "",
+							"target": {
+								"type": "VM",
+								"resourceID": ""
+							}
+						}
+					]
+				}
+			}
+		}
+	]
+}

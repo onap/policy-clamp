@@ -31,14 +31,15 @@ import { GlobalClampStyle } from '../../theme/globalStyle.js';
 import ClosedLoopSvg from '../loop_viewer/svg/ClosedLoopSvg';
 import ClosedLoopLogs from '../loop_viewer/logs/ClosedLoopLogs';
 import ClosedLoopStatus from '../loop_viewer/status/ClosedLoopStatus';
+import UserService from '../backend_communication/UserService';
 
-const ProjectNameStyle = styled.a`
+const ProjectNameStyled = styled.a`
 	vertical-align: middle;
 	padding-left: 30px;
 	font-size: 30px;
 
 `
-const LoopViewDivStyle = styled.div`
+const LoopViewDivStyled = styled.div`
 	height: 90vh;
 	overflow: hidden;
 	margin-left: 10px;
@@ -50,52 +51,69 @@ const LoopViewDivStyle = styled.div`
 	border-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
 `
 
-const LoopViewHeaderDivStyle = styled.div`
+const LoopViewHeaderDivStyled = styled.div`
 	background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
 	padding: 10px 10px;
 	color: ${props => props.theme.loopViewerHeaderFontColor};
 `
 
-const LoopViewBodyDivStyle = styled.div`
+const LoopViewBodyDivStyled = styled.div`
 	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
 	padding: 10px 10px;
 	color: ${props => (props.theme.loopViewerHeaderFontColor)};
 	height: 95%;
 `
 
-const LoopViewLoopNameSpanStyle = styled.span`
+const LoopViewLoopNameSpanStyled = styled.span`
 	font-weight: bold;
 	color: ${props => (props.theme.loopViewerHeaderFontColor)};
 	background-color: ${props => (props.theme.loopViewerHeaderBackgroundColor)};
 `
 
 export default class LoopUI extends React.Component {
+	state = {
+		userName: null,
+		loopName: "Empty (NO loop loaded yet)",
+	};
 
-	loopName="Empty (NO loop loaded yet)";
+	constructor() {
+		super();
+		this.getUser = this.getUser.bind(this);
+	}
+
+ 	componentDidMount() {
+		 this.getUser();
+	 }
+
+	getUser() {
+		UserService.LOGIN().then(user => {
+			this.setState({userName:user})
+		});
+	}
 		
 	renderMenuNavBar() {
 		return (
 			<MenuBar />
 		);
 	}
-	
+
 	renderUserLoggedNavBar() {
 		return (
 			<Navbar.Text>
-				Signed in as: <a href="login">{localStorage.getItem('user')}</a>
+				Signed in as: <a href="/login">{this.state.userName}</a>
 			</Navbar.Text>
 		);
 	}
-	
+
 	renderLogoNavBar() {
 		return (
 			<Navbar.Brand>
 				<img height="50px" width="234px" src={logo} alt=""/>
-				<ProjectNameStyle>CLAMP</ProjectNameStyle>
+				<ProjectNameStyled>CLAMP</ProjectNameStyled>
 			</Navbar.Brand>
 		);
 	}
-	
+
 	renderNavBar() {
 		return (
 		<Navbar expand="lg">
@@ -108,34 +126,34 @@ export default class LoopUI extends React.Component {
 	
 	renderLoopViewHeader() {
 		return (
-			<LoopViewHeaderDivStyle>
-				Loop Viewer - <LoopViewLoopNameSpanStyle id="loop_name">{this.loopName}</LoopViewLoopNameSpanStyle> 
-			</LoopViewHeaderDivStyle>
+			<LoopViewHeaderDivStyled>
+				Loop Viewer - <LoopViewLoopNameSpanStyled id="loop_name">{this.state.loopName}</LoopViewLoopNameSpanStyled> 
+			</LoopViewHeaderDivStyled>
 		);
 	}
 	
 	renderLoopViewBody() {
 		return (
-			<LoopViewBodyDivStyle>
+			<LoopViewBodyDivStyled>
 				<ClosedLoopSvg />
 				<ClosedLoopLogs />
 				<ClosedLoopStatus />
-			</LoopViewBodyDivStyle>
+			</LoopViewBodyDivStyled>
 		);
 	}
 	
 	renderLoopViewer() {
 		return (
-			<LoopViewDivStyle>
+			<LoopViewDivStyled>
 					{this.renderLoopViewHeader()}
 					{this.renderLoopViewBody()}
-			</LoopViewDivStyle>
+			</LoopViewDivStyled>
 	 		);
 	}
 	
 	render() {
 		return (
-				<div>
+			<div id="main_div">
 				 	<GlobalClampStyle />
 					{this.renderNavBar()}
 					{this.renderLoopViewer()}

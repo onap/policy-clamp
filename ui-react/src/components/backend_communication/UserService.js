@@ -20,29 +20,31 @@
  * ===================================================================
  *
  */
-import React from 'react';
 
-import LoopService from '../../backend_communication/LoopService';
+export default class UserService {
 
-export default class LoginPage extends React.Component {
-    constructor(props) {
-        super(props);
-        console.log('LoginPage')
-        LoopService.login().then(
-                user => {
-                    const { from } = { from: { pathname: "/" } };
-                    this.props.history.push(from);
-                },
-                error => {
-                  const { from } = { from: { pathname: "/" } };
-                  this.props.history.push(from);
-                  console.log ("Certification login failed");
-                }
-            );
-    }
-    render() {
-      return (
-        <div>
-  			</div>);
+	static LOGIN() {
+		return fetch('/restservices/clds/v1/user/getUser', {
+				method: 'GET',
+				credentials: 'include',
+			})
+		.then(function (response) {
+			if (response.ok) {
+				console.log("getUser response received: ", response.status);
+				return response.text();
+			} else {
+				console.error("getUser failed with status code: ",response.status);
+				return "Anonymous";
+			}
+		})
+		.then(function (data) {
+			console.log ("User connected:",data)
+			return data;
+		})
+		.catch(function(error) {
+			console.error("getUser error received",error);
+			return "Anonymous";
+		});
+	}
 }
-}
+

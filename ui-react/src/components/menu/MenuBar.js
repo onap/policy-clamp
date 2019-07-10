@@ -35,13 +35,6 @@ const StyledNavDropdownItem = styled(NavDropdown.Item)`
 `;
 
 export default class MenuBar extends React.Component {
-	
-	openEmailConsole() {
-		console.log("contactUs");
-		var link = "mailto:onap-discuss@lists.onap.org?subject=CLAMP&body=Please "
-			+ "send us suggestions or feature enhancements or defect. If possible, please send us the steps to replicate any defect.";
-		window.location.href = link;
-	};
 
 	render () {
 	   return (
@@ -52,7 +45,7 @@ export default class MenuBar extends React.Component {
 		        <StyledNavDropdownItem href="#action/3.3">Close Model</StyledNavDropdownItem>
 		      </NavDropdown>
 					<NavDropdown title="Manage" id="basic-nav-dropdown">
-						<StyledNavDropdownItem href="#action/3.1">Submit</StyledNavDropdownItem>
+						<StyledNavDropdownItem href="/operationalPolicyModal">Submit</StyledNavDropdownItem>
 						<StyledNavDropdownItem href="#action/3.2">Stop</StyledNavDropdownItem>
 						<StyledNavDropdownItem href="#action/3.3">Restart</StyledNavDropdownItem>
 						<StyledNavDropdownItem href="#action/3.3">Delete</StyledNavDropdownItem>
@@ -63,14 +56,12 @@ export default class MenuBar extends React.Component {
 						<StyledNavDropdownItem href="#action/3.1">Refresh Status</StyledNavDropdownItem>
 					</NavDropdown>
 				<NavDropdown title="Help" id="basic-nav-dropdown">
-					<NavDropdown.Item onClick={()=> window.open("https://wiki.onap.org/", "_blank")}>Wiki</NavDropdown.Item>
-					<NavDropdown.Item onClick={()=> this.openEmailConsole()}>Contact Us</NavDropdown.Item>
+					<StyledNavDropdownItem href="https://wiki.onap.org/" target="_blank">Wiki</StyledNavDropdownItem>
+					<StyledNavDropdownItem href="mailto:onap-discuss@lists.onap.org?subject=CLAMP&body=Please send us suggestions or feature enhancements or defect. If possible, please send us the steps to replicate any defect.">Contact Us</StyledNavDropdownItem>
 					<StyledNavDropdownItem href="#action/3.3">User Info</StyledNavDropdownItem>
 				</NavDropdown>
 		  </Navbar.Collapse>
-
-
-    );
+	   );
   }
 }
 

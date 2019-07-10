@@ -20,95 +20,95 @@
  * ===================================================================
  * 
  */
-class LoopCache
-{
-	constructor(loopJson) {
-		this.loopJsonCache=loopJson;
+class LoopCache {
+	constructor() {
+		//this.loopJsonCache=loopJson;
+		this.loopJsonCache = require('./example.json'); //(with path)
 	}
-	
+
 	updateMsProperties(type, newMsProperties) {
-	    if (newMsProperties["name"] == type) {
-	        for (p in this.loopJsonCache["microServicePolicies"]) {
-	            if (this.loopJsonCache["microServicePolicies"][p]["name"] == type) {
-	                this.loopJsonCache["microServicePolicies"][p] = newMsProperties;
-	            }
-	        }
-	    }
+		if (newMsProperties["name"] == type) {
+			for (var policy in this.loopJsonCache["microServicePolicies"]) {
+				if (this.loopJsonCache["microServicePolicies"][policy]["name"] == type) {
+					this.loopJsonCache["microServicePolicies"][policy] = newMsProperties;
+				}
+			}
+		}
 	}
-	
-	 updateGlobalProperties(newGlobalProperties) {
-	    this.loopJsonCache["globalPropertiesJson"] = newGlobalProperties;
+
+	updateGlobalProperties(newGlobalProperties) {
+		this.loopJsonCache["globalPropertiesJson"] = newGlobalProperties;
 	}
-	
-	 updateOpPolicyProperties(newOpProperties) {	
-	   this.loopJsonCache["operationalPolicies"] = newOpProperties;
+
+	updateOpPolicyProperties(newOpProperties) {
+		this.loopJsonCache["operationalPolicies"] = newOpProperties;
 	}
-	
-	 getLoopName() {
-	    return this.loopJsonCache["name"];
+
+	getLoopName() {
+		return this.loopJsonCache["name"];
 	}
-	
-	 getOperationalPolicyProperty() {
-	    return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]["0"]["configurationsJson"]));
+
+	getOperationalPolicyProperty() {
+		return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]["0"]["configurationsJson"]));
 	}
-	
-	 getOperationalPolicies() {
-	    return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]));
+
+	getOperationalPolicies() {
+		return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]));
 	}
-	
-	 getGlobalProperty() {
-	    return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]));
+
+	getGlobalProperty() {
+		return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]));
 	}
-	
-	 getDeploymentProperties() {
-	    return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]["dcaeDeployParameters"]));
+
+	getDeploymentProperties() {
+		return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]["dcaeDeployParameters"]));
 	}
-	
-	 getMsJson(type) {
-	    var msProperties = this.loopJsonCache["microServicePolicies"];
-	    for (p in msProperties) {
-	        if (msProperties[p]["name"] == type) {
-	           return JSON.parse(JSON.stringify(msProperties[p]));
-	        }
-	    }
-	    return null;
+
+	getMsJson(type) {
+		var msProperties = this.loopJsonCache["microServicePolicies"];
+		for (var policy in msProperties) {
+			if (msProperties[policy]["name"] == type) {
+				return JSON.parse(JSON.stringify(msProperties[policy]));
+			}
+		}
+		return null;
 	}
-	
-	 getMsProperty(type) {
-	    var msProperties = this.loopJsonCache["microServicePolicies"];
-	    for (p in msProperties) {
-	        if (msProperties[p]["name"] == type) {
-	        	if (msProperties[p]["properties"] !== null && msProperties[p]["properties"] !== undefined) {
-	        		return JSON.parse(JSON.stringify(msProperties[p]["properties"]));
-	        	}
-	        }
-	    }
-	    return null;
+
+	getMsProperty(type) {
+		var msProperties = this.loopJsonCache["microServicePolicies"];
+		for (var policy in msProperties) {
+			if (msProperties[policy]["name"] == type) {
+				if (msProperties[policy]["properties"] !== null && msProperties[policy]["properties"] !== undefined) {
+					return JSON.parse(JSON.stringify(msProperties[policy]["properties"]));
+				}
+			}
+		}
+		return null;
 	}
-	
-	 getMsUI(type) {
-	    var msProperties = this.loopJsonCache["microServicePolicies"];
-	    for (p in msProperties) {
-	        if (msProperties[p]["name"] == type) {
-	        	return JSON.parse(JSON.stringify(msProperties[p]["jsonRepresentation"]));
-	        }
-	    }
-	    return null;
+
+	getMsUI(type) {
+		var msProperties = this.loopJsonCache["microServicePolicies"];
+		for (var policy in msProperties) {
+			if (msProperties[policy]["name"] == type) {
+				return JSON.parse(JSON.stringify(msProperties[policy]["jsonRepresentation"]));
+			}
+		}
+		return null;
 	}
-	
-	 getResourceDetailsVfProperty() {
+
+	getResourceDetailsVfProperty() {
 		return this.loopJsonCache["modelPropertiesJson"]["resourceDetails"]["VF"];
 	}
-	
-	 getResourceDetailsVfModuleProperty() {
+
+	getResourceDetailsVfModuleProperty() {
 		return this.loopJsonCache["modelPropertiesJson"]["resourceDetails"]["VFModule"];
 	}
-	
-	 getLoopLogsArray() {
+
+	getLoopLogsArray() {
 		return this.loopJsonCache.loopLogs;
 	}
-	
-	 getComponentStates() {
+
+	getComponentStates() {
 		return this.loopJsonCache.components;
 	}
 

@@ -20,37 +20,35 @@
  * ===================================================================
  *
  */
-const clActionService = {
-    submit
+const loopActionService = {
+	submit
 };
 
+
 function submit(uiAction) {
-    const cl_name = "";
-    console.log("clActionServices perform action: " + uiAction + " closedloopName="
-		    + cl_name);
-    const svcAction = uiAction.toLowerCase();
-		const svcUrl = "/restservices/clds/v2/loop/" + svcAction + "/" + cl_name;
+	const cl_name = "";
+	console.log("clActionServices perform action: " + uiAction + " closedloopName="
+		+ cl_name);
+	const svcAction = uiAction.toLowerCase();
+	const svcUrl = "/restservices/clds/v2/loop/" + svcAction + "/" + cl_name;
 
-    let options = {
-        method: 'GET'
-    };
-    return sendRequest (svcUrl, svcAction, options);
+	let options = {
+		method: 'GET'
+	};
+	return sendRequest(svcUrl, svcAction, options);
 }
 
+function sendRequest(svcUrl, svcAction) {
+	fetch(svcUrl, options)
+		.then(
+			response => {
+				alertService.alertMessage("Action Successful: " + svcAction, 1)
+			}).error(error => {
+				alertService.alertMessage("Action Failure: " + svcAction, 2);
+				return Promise.reject(error);
+			});
 
+	return response.json();
+};
 
-function sendRequest (svcUrl, svcAction) {
-  fetch(svcUrl, options)
-    .then(
-      response => {
-        alertService.alertMessage("Action Successful: " + svcAction, 1)
-    }).error( error => {
-        alertService.alertMessage("Action Failure: " + svcAction, 2);
-        return Promise.reject(error);
-    });
-
-      return response.json();
-    });
-}
-
-export default clActionService;
+export default loopActionService;
