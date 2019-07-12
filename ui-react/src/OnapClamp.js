@@ -22,7 +22,7 @@
  */
 
 import React from 'react';
-import LoopUI from './components/app/LoopUI'
+import LoopUI from './LoopUI'
 import { ThemeProvider } from 'styled-components';
 import { DefaultClampTheme } from './theme/globalStyle.js';
 

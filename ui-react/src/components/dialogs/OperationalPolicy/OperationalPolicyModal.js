@@ -24,7 +24,7 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import LoopCache from '../../backend_communication/LoopCache'
+import { LOOP_CACHE } from '../../../api/LoopCache'
 import './OperationalPolicy.css'
 import styled from 'styled-components';
 
@@ -36,8 +36,6 @@ export default class OperationalPolicyModal extends React.Component {
 
 	constructor(props, context) {
 		super(props, context);
-
-		this.loopCache = new LoopCache();
 
 		this.handleClose = this.handleClose.bind(this);
 		this.initPolicySelect = this.initPolicySelect.bind(this);
@@ -59,7 +57,7 @@ export default class OperationalPolicyModal extends React.Component {
 
 	initPolicySelect() {
 		if (this.allPolicies['operational_policy'] === undefined || this.allPolicies['operational_policy'] === null) {
-			this.allPolicies = this.loopCache.getOperationalPolicyProperty();
+			this.allPolicies = LOOP_CACHE.getOperationalPolicyProperty();
 		}
 		// Provision all policies ID first
 		if (this.policyIds.length == 0 && this.allPolicies['operational_policy'] != undefined) {
@@ -197,7 +195,7 @@ export default class OperationalPolicyModal extends React.Component {
 										<label className="col-sm-4 control-label" htmlFor="clname">ControlLoopName</label>
 										<div className="col-sm-8">
 											<input type="text" className="form-control" name="controlLoopName"
-												readOnly="readonly" id="clname" value={this.loopCache.getLoopName()} />
+												readOnly="readonly" id="clname" value={LOOP_CACHE.getLoopName()} />
 										</div>
 									</div>
 								</form>

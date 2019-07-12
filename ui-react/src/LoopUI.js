@@ -23,15 +23,15 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import MenuBar from '../menu/MenuBar';
+import MenuBar from './components/menu/MenuBar';
 import Navbar from 'react-bootstrap/Navbar';
 import logo from './logo.png';
-import { GlobalClampStyle } from '../../theme/globalStyle.js';
+import { GlobalClampStyle } from './theme/globalStyle.js';
 
-import ClosedLoopSvg from '../loop_viewer/svg/ClosedLoopSvg';
-import ClosedLoopLogs from '../loop_viewer/logs/ClosedLoopLogs';
-import ClosedLoopStatus from '../loop_viewer/status/ClosedLoopStatus';
-import UserService from '../backend_communication/UserService';
+import ClosedLoopSvg from './components/loop_viewer/svg/ClosedLoopSvg';
+import ClosedLoopLogs from './components/loop_viewer/logs/ClosedLoopLogs';
+import ClosedLoopStatus from './components/loop_viewer/status/ClosedLoopStatus';
+import UserService from './api/UserService';
 
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
@@ -80,7 +80,7 @@ export default class LoopUI extends React.Component {
 		super();
 		this.getUser = this.getUser.bind(this);
 	}
-
+	
  	componentDidMount() {
 		 this.getUser();
 	 }

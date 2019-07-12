@@ -20,10 +20,13 @@
  * ===================================================================
  * 
  */
+
 class LoopCache {
-	constructor() {
-		//this.loopJsonCache=loopJson;
-		this.loopJsonCache = require('./example.json'); //(with path)
+	loopJsonCache;
+
+	constructor(loopJson) {
+		this.loopJsonCache=loopJson;
+		//LoopCache.SET_LOOP_JSON_CACHE(require('./example.json');
 	}
 
 	updateMsProperties(type, newMsProperties) {
@@ -112,5 +115,15 @@ class LoopCache {
 		return this.loopJsonCache.components;
 	}
 
+	get getLoopJsonCache() {
+		return this.loopJsonCache;
+	}
+
+	set setLoopJsonCache(newJson) {
+		this.loopJsonCache = newJson;
+	}
 }
+
+export const LOOP_CACHE = new LoopCache(require('./example.json'));
+
 export default LoopCache;
