@@ -22,7 +22,6 @@
  */
 import React from 'react';
 import Table from 'react-bootstrap/Table';
-import './ClosedLoopLogs.css';
 
 export default class ClosedLoopViewLogs extends React.Component {
   render() {

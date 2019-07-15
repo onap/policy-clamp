@@ -60,7 +60,7 @@ export default class OperationalPolicyModal extends React.Component {
 			this.allPolicies = LOOP_CACHE.getOperationalPolicyProperty();
 		}
 		// Provision all policies ID first
-		if (this.policyIds.length == 0 && this.allPolicies['operational_policy'] != undefined) {
+		if (this.policyIds.length === 0 && this.allPolicies['operational_policy'] !== undefined) {
 
 			for (let i = 0; i < this.allPolicies['operational_policy']['policies'].length; i++) {
 				this.policyIds.push(this.allPolicies['operational_policy']['policies'][i]['id']);
@@ -536,7 +536,7 @@ export default class OperationalPolicyModal extends React.Component {
 							</span>
 						</div>
 					</div>
-		
+
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={this.handleClose}>

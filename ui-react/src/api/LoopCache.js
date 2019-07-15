@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 class LoopCache {
@@ -30,9 +30,9 @@ class LoopCache {
 	}
 
 	updateMsProperties(type, newMsProperties) {
-		if (newMsProperties["name"] == type) {
+		if (newMsProperties["name"] === type) {
 			for (var policy in this.loopJsonCache["microServicePolicies"]) {
-				if (this.loopJsonCache["microServicePolicies"][policy]["name"] == type) {
+				if (this.loopJsonCache["microServicePolicies"][policy]["name"] === type) {
 					this.loopJsonCache["microServicePolicies"][policy] = newMsProperties;
 				}
 			}
@@ -70,7 +70,7 @@ class LoopCache {
 	getMsJson(type) {
 		var msProperties = this.loopJsonCache["microServicePolicies"];
 		for (var policy in msProperties) {
-			if (msProperties[policy]["name"] == type) {
+			if (msProperties[policy]["name"] === type) {
 				return JSON.parse(JSON.stringify(msProperties[policy]));
 			}
 		}
@@ -80,7 +80,7 @@ class LoopCache {
 	getMsProperty(type) {
 		var msProperties = this.loopJsonCache["microServicePolicies"];
 		for (var policy in msProperties) {
-			if (msProperties[policy]["name"] == type) {
+			if (msProperties[policy]["name"] === type) {
 				if (msProperties[policy]["properties"] !== null && msProperties[policy]["properties"] !== undefined) {
 					return JSON.parse(JSON.stringify(msProperties[policy]["properties"]));
 				}
@@ -92,7 +92,7 @@ class LoopCache {
 	getMsUI(type) {
 		var msProperties = this.loopJsonCache["microServicePolicies"];
 		for (var policy in msProperties) {
-			if (msProperties[policy]["name"] == type) {
+			if (msProperties[policy]["name"] === type) {
 				return JSON.parse(JSON.stringify(msProperties[policy]["jsonRepresentation"]));
 			}
 		}

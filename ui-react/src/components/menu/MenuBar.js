@@ -40,7 +40,7 @@ export default class MenuBar extends React.Component {
 	   return (
 		  <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
 		      <NavDropdown title="Closed Loop" id="basic-nav-dropdown">
-		        <StyledNavDropdownItem href="#action/3.1">Open CL</StyledNavDropdownItem>
+		        <StyledNavDropdownItem href="/openLoop">Open CL</StyledNavDropdownItem>
 		        <StyledNavDropdownItem href="#action/3.2">Properties CL</StyledNavDropdownItem>
 		        <StyledNavDropdownItem href="#action/3.3">Close Model</StyledNavDropdownItem>
 		      </NavDropdown>
@@ -64,4 +64,3 @@ export default class MenuBar extends React.Component {
 	   );
   }
 }
-
