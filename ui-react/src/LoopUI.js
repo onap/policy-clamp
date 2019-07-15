@@ -28,10 +28,16 @@ import Navbar from 'react-bootstrap/Navbar';
 import logo from './logo.png';
 import { GlobalClampStyle } from './theme/globalStyle.js';
 
-import ClosedLoopSvg from './components/loop_viewer/svg/ClosedLoopSvg';
-import ClosedLoopLogs from './components/loop_viewer/logs/ClosedLoopLogs';
-import ClosedLoopStatus from './components/loop_viewer/status/ClosedLoopStatus';
+import LoopSvg from './components/loop_viewer/svg/LoopSvg';
+import LoopLogs from './components/loop_viewer/logs/LoopLogs';
+import LoopStatus from './components/loop_viewer/status/LoopStatus';
 import UserService from './api/UserService';
+import LoopCache from './api/LoopCache';
+
+import { Route } from 'react-router-dom'
+import OpenLoopModal from './components/dialogs/OpenLoop/OpenLoopModal';
+import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
+import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
 
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
@@ -71,26 +77,29 @@ const LoopViewLoopNameSpanStyled = styled.span`
 `
 
 export default class LoopUI extends React.Component {
+
 	state = {
 		userName: null,
 		loopName: "Empty (NO loop loaded yet)",
+		loopCache: new LoopCache({}),
 	};
 
 	constructor() {
 		super();
 		this.getUser = this.getUser.bind(this);
+		this.updateLoopCache = this.updateLoopCache.bind(this);
 	}
-	
- 	componentDidMount() {
-		 this.getUser();
-	 }
+
+	componentDidMount() {
+		this.getUser();
+	}
 
 	getUser() {
-		UserService.LOGIN().then(user => {
-			this.setState({userName:user})
+		UserService.login().then(user => {
+			this.setState({ userName: user })
 		});
 	}
-		
+
 	renderMenuNavBar() {
 		return (
 			<MenuBar />
@@ -108,7 +117,7 @@ export default class LoopUI extends React.Component {
 	renderLogoNavBar() {
 		return (
 			<Navbar.Brand>
-				<img height="50px" width="234px" src={logo} alt=""/>
+				<img height="50px" width="234px" src={logo} alt="" />
 				<ProjectNameStyled>CLAMP</ProjectNameStyled>
 			</Navbar.Brand>
 		);
@@ -116,48 +125,56 @@ export default class LoopUI extends React.Component {
 
 	renderNavBar() {
 		return (
-		<Navbar expand="lg">
-			{this.renderLogoNavBar()}
-			{this.renderMenuNavBar()}
-			{this.renderUserLoggedNavBar()}
-		</Navbar>
-	);
+			<Navbar expand="lg">
+				{this.renderLogoNavBar()}
+				{this.renderMenuNavBar()}
+				{this.renderUserLoggedNavBar()}
+			</Navbar>
+		);
 	}
-	
+
 	renderLoopViewHeader() {
 		return (
 			<LoopViewHeaderDivStyled>
-				Loop Viewer - <LoopViewLoopNameSpanStyled id="loop_name">{this.state.loopName}</LoopViewLoopNameSpanStyled> 
+				Loop Viewer - <LoopViewLoopNameSpanStyled id="loop_name">{this.state.loopName}</LoopViewLoopNameSpanStyled>
 			</LoopViewHeaderDivStyled>
 		);
 	}
-	
+
 	renderLoopViewBody() {
 		return (
 			<LoopViewBodyDivStyled>
-				<ClosedLoopSvg />
-				<ClosedLoopLogs />
-				<ClosedLoopStatus />
+				<LoopSvg loopCache={this.state.loopCache} />
+				<LoopLogs />
+				<LoopStatus />
 			</LoopViewBodyDivStyled>
 		);
 	}
-	
+
 	renderLoopViewer() {
 		return (
 			<LoopViewDivStyled>
-					{this.renderLoopViewHeader()}
-					{this.renderLoopViewBody()}
+				{this.renderLoopViewHeader()}
+				{this.renderLoopViewBody()}
 			</LoopViewDivStyled>
-	 		);
+		);
 	}
-	
+
+	updateLoopCache(loopJson) {
+		this.setState({ loopCache: new LoopCache(loopJson) });
+	}
+
 	render() {
 		return (
 			<div id="main_div">
-				 	<GlobalClampStyle />
-					{this.renderNavBar()}
-					{this.renderLoopViewer()}
-				</div>
+				<GlobalClampStyle />
+				{this.renderNavBar()}
+				{this.renderLoopViewer()}
+				<Route path="/operationalPolicyModal"
+					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.state.loopCache} />)} />
+				<Route path="/configurationPolicyModal" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.state.loopCache} />)} />
+				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} updateLoopCacheFunction={this.updateLoopCache} />)} />
+			</div>
 		);
 	}
 }

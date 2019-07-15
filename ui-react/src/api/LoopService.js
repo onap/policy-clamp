@@ -22,55 +22,62 @@
 
 export default class LoopService {
 	static getLoopNames() {
-		const url = '/restservices/clds/v2/loop/getAllNames';
-		const options = {
-			method: 'GET'
-		};
-		return fetch(url,options)
-		.then(function (response) {
-			if (response.ok) {
-				console.log("GetLoopNames response received: ", response.status);
-				return response.json();
-			} else {
-				let errorMsg = "GetLoopNames failed with status code: " + response.status;
-				console.error(errorMsg);
-				return Promise.reject(errorMsg);
-			}
-		})
-		.then(function (data) {
-			return data;
-		})
-		.catch(function(error) {
-			console.error("GetLoopNames error received",error);
-			return Promise.reject(error);
-		});
+		return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'include', })
+			.then(function (response) {
+				console.debug("GetLoopNames response received: ", response.status);
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error("GetLoopNames query failed");
+					return {};
+				}
+			})
+			.catch(function (error) {
+				console.error("GetLoopNames error received", error);
+				return {};
+			});
 	}
 
 	static getLoop(loopName) {
-		const url = '/restservices/clds/v2/loop/' + loopName;
-		const options = {
+		return fetch('/restservices/clds/v2/loop/' + loopName, {
 			method: 'GET',
 			headers: {
 				"Content-Type": "application/json"
-			}
-		};
-		return fetch(url,options)
-		.then(function (response) {
-			if (response.ok) {
-				console.log("GetLoop response received: ", response.status);
-				return response.json();
-			} else {
-				let errorMsg = "GetLoop failed with status code: " + response.status;
-				console.error(errorMsg);
-				return Promise.reject(errorMsg);
-			}
+			},
+			credentials: 'include',
 		})
-		.then(function (data) {
-			return data;
+			.then(function (response) {
+				console.debug("GetLoop response received: ", response.status);
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error("GetLoop query failed");
+					return {};
+				}
+			})
+			.catch(function (error) {
+				console.error("GetLoop error received", error);
+				return {};
+			});
+	}
+
+	static getSvg(loopName) {
+		return fetch('/restservices/clds/v2/loop/svgRepresentation/' + loopName, {
+			method: 'GET',
+			credentials: 'include',
 		})
-		.catch(function(error) {
-			console.error("GetLoop error received",error);
-			return Promise.reject(error);
-		});
+			.then(function (response) {
+				console.debug("svgRepresentation response received: ", response.status);
+				if (response.ok) {
+					return response.text();
+				} else {
+					console.error("svgRepresentation query failed");
+					return "";
+				}
+			})
+			.catch(function (error) {
+				console.error("svgRepresentation error received", error);
+				return "";
+			});
 	}
 }

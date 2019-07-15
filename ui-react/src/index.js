@@ -24,14 +24,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import OnapClamp from './OnapClamp';
 import { Route, BrowserRouter } from 'react-router-dom'
-import LoopModal from './components/dialogs/LoopModal';
-import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
+
 
 const routing = (
 	<BrowserRouter >
-		<OnapClamp />
-		<Route path="/operationalPolicyModal" render={() => <OperationalPolicyModal />} />
-		<Route path="/openLoop" component={ LoopModal } />
+		<Route path="/" component={OnapClamp}/>
 	</BrowserRouter>
 );
 

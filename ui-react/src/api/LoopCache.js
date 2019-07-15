@@ -21,15 +21,14 @@
  *
  */
 
-class LoopCache {
+export default class LoopCache {
 	loopJsonCache;
 
 	constructor(loopJson) {
 		this.loopJsonCache=loopJson;
-		//LoopCache.SET_LOOP_JSON_CACHE(require('./example.json');
 	}
 
-	updateMsProperties(type, newMsProperties) {
+	updateMicroServiceProperties(type, newMsProperties) {
 		if (newMsProperties["name"] === type) {
 			for (var policy in this.loopJsonCache["microServicePolicies"]) {
 				if (this.loopJsonCache["microServicePolicies"][policy]["name"] === type) {
@@ -43,7 +42,7 @@ class LoopCache {
 		this.loopJsonCache["globalPropertiesJson"] = newGlobalProperties;
 	}
 
-	updateOpPolicyProperties(newOpProperties) {
+	updateOperationalPolicyProperties(newOpProperties) {
 		this.loopJsonCache["operationalPolicies"] = newOpProperties;
 	}
 
@@ -51,7 +50,7 @@ class LoopCache {
 		return this.loopJsonCache["name"];
 	}
 
-	getOperationalPolicyProperty() {
+	getOperationalPolicyConfigurationJson() {
 		return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]["0"]["configurationsJson"]));
 	}
 
@@ -59,15 +58,15 @@ class LoopCache {
 		return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]));
 	}
 
-	getGlobalProperty() {
+	getGlobalProperties() {
 		return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]));
 	}
 
-	getDeploymentProperties() {
+	getDcaeDeploymentProperties() {
 		return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]["dcaeDeployParameters"]));
 	}
 
-	getMsJson(type) {
+	getMicroServicesJsonForType(type) {
 		var msProperties = this.loopJsonCache["microServicePolicies"];
 		for (var policy in msProperties) {
 			if (msProperties[policy]["name"] === type) {
@@ -77,7 +76,7 @@ class LoopCache {
 		return null;
 	}
 
-	getMsProperty(type) {
+	getMicroServiceProperties(type) {
 		var msProperties = this.loopJsonCache["microServicePolicies"];
 		for (var policy in msProperties) {
 			if (msProperties[policy]["name"] === type) {
@@ -89,7 +88,7 @@ class LoopCache {
 		return null;
 	}
 
-	getMsUI(type) {
+	getMicroServiceJsonRepresentationForType(type) {
 		var msProperties = this.loopJsonCache["microServicePolicies"];
 		for (var policy in msProperties) {
 			if (msProperties[policy]["name"] === type) {
@@ -114,16 +113,4 @@ class LoopCache {
 	getComponentStates() {
 		return this.loopJsonCache.components;
 	}
-
-	get getLoopJsonCache() {
-		return this.loopJsonCache;
-	}
-
-	set setLoopJsonCache(newJson) {
-		this.loopJsonCache = newJson;
-	}
 }
-
-export const LOOP_CACHE = new LoopCache(require('./example.json'));
-
-export default LoopCache;

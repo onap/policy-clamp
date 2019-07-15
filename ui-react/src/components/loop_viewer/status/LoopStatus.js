@@ -22,9 +22,9 @@
 */
 import React from 'react';
 import Table from 'react-bootstrap/Table';
-import './ClosedLoopStatus.css';
+import './LoopStatus.css';
 
-export default class ClosedLoopStatus extends React.Component {
+export default class LoopStatus extends React.Component {
   render() {
   	return (
       <div>

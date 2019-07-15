@@ -20,24 +20,58 @@
  * ===================================================================
  *
  */
-import React from 'react';
-import styled from 'styled-components';
-import { ReactComponent as SvgExample } from './example.svg';
-const LoopViewSvgDivStyle = styled.div`
 
-	overflow: hidden;
-	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
-	border: 1px solid transparent;
-	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+import React from 'react'
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import { LOOP_CACHE } from '../../../api/LoopCache'
+import styled from 'styled-components';
+
+const ModalStyled = styled(Modal)`
+	background-color: transparent;
 `
 
-export default class ClosedLoopViewSvg extends React.Component {
-  render() {
-    return (
-    	<LoopViewSvgDivStyle id="loop_svg">
-    		<SvgExample />
-    	</LoopViewSvgDivStyle>
-    );
-  }
-}
+export default class ConfigurationPolicyModal extends React.Component {
 
+	constructor(props, context) {
+		super(props, context);
+
+		this.handleClose = this.handleClose.bind(this);
+
+		this.state = {
+			show: true,
+		};
+
+	}
+
+	handleClose() {
+		this.setState({ show: false });
+		this.props.history.push('/')
+	}
+
+
+
+	render() {
+		return (
+			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose}>
+				<Modal.Header closeButton>
+					<Modal.Title>Configuration policies</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+
+
+
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={this.handleClose}>
+						Close
+	            </Button>
+					<Button variant="primary" onClick={this.handleClose}>
+						Save Changes
+	            </Button>
+				</Modal.Footer>
+			</ModalStyled>
+
+		);
+	}
+}

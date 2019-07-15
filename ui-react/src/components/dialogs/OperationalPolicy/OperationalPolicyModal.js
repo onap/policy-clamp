@@ -24,7 +24,6 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { LOOP_CACHE } from '../../../api/LoopCache'
 import './OperationalPolicy.css'
 import styled from 'styled-components';
 
@@ -34,30 +33,30 @@ const ModalStyled = styled(Modal)`
 
 export default class OperationalPolicyModal extends React.Component {
 
+	state = {
+		show: true,
+		loopCache: this.props.loopCache,
+	};
+
+	allPolicies = [];
+	policyIds = [];
+
 	constructor(props, context) {
 		super(props, context);
 
 		this.handleClose = this.handleClose.bind(this);
 		this.initPolicySelect = this.initPolicySelect.bind(this);
-
-		this.allPolicies = [];
-		this.policyIds = [];
-
 		this.initPolicySelect();
-
-		this.state = {
-			show: true,
-		};
-
 	}
 
 	handleClose() {
 		this.setState({ show: false });
+		this.props.history.push('/')
 	}
 
 	initPolicySelect() {
 		if (this.allPolicies['operational_policy'] === undefined || this.allPolicies['operational_policy'] === null) {
-			this.allPolicies = LOOP_CACHE.getOperationalPolicyProperty();
+			this.allPolicies = this.state.loopCache.getOperationalPolicyConfigurationJson();
 		}
 		// Provision all policies ID first
 		if (this.policyIds.length === 0 && this.allPolicies['operational_policy'] !== undefined) {
@@ -94,7 +93,7 @@ export default class OperationalPolicyModal extends React.Component {
 	}
 
 	// When we change the name of a policy
-	isDuplicatedId (event) {
+	isDuplicatedId(event) {
 		// update policy id structure
 		var formNum = document.getElementById(event.target).closest('.formId').attr('id').substring(6);
 		var policyId = document.getElementById(event.target).val();
@@ -111,51 +110,51 @@ export default class OperationalPolicyModal extends React.Component {
 	}
 
 	configureComponents() {
-		    console.log("Load properties to op policy");
-		    // Set the header
-		    document.getElementsByClassName('form-control').forEach(function() {
-			    this.val(this.allPolicies['operational_policy']['controlLoop'][this.id]);
-		    });
-		    // Set the sub-policies
-		    this.allPolicies['operational_policy']['policies'].forEach(function(opPolicyElemIndex, opPolicyElemValue) {
+		console.log("Load properties to op policy");
+		// Set the header
+		document.getElementsByClassName('form-control').forEach(function () {
+			this.val(this.allPolicies['operational_policy']['controlLoop'][this.id]);
+		});
+		// Set the sub-policies
+		this.allPolicies['operational_policy']['policies'].forEach(function (opPolicyElemIndex, opPolicyElemValue) {
 
-/*			    var formNum = add_one_more();
-			    forEach(document.getElementsByClassName('policyProperties').find('.form-control'), function(opPolicyPropIndex, opPolicyPropValue) {
-
-				    $("#formId" + formNum + " .policyProperties").find("#" + opPolicyPropValue.id).val(
-				    allPolicies['operational_policy']['policies'][opPolicyElemIndex][opPolicyPropValue.id]);
-			    });
-
-			    // Initial TargetResourceId options
-			    initTargetResourceIdOptions(allPolicies['operational_policy']['policies'][opPolicyElemIndex]['target']['type'], formNum);
-			    $.each($('.policyTarget').find('.form-control'), function(opPolicyTargetPropIndex, opPolicyTargetPropValue) {
-
-				    $("#formId" + formNum + " .policyTarget").find("#" + opPolicyTargetPropValue.id).val(
-				    allPolicies['operational_policy']['policies'][opPolicyElemIndex]['target'][opPolicyTargetPropValue.id]);
-			    });
-
-			    // update the current tab label
-			    $("#go_properties_tab" + formNum).text(
-			    allPolicies['operational_policy']['policies'][opPolicyElemIndex]['id']);
-			    // Check if there is a guard set for it
-			    $.each(allPolicies['guard_policies'], function(guardElemId, guardElemValue) {
-
-				    if (guardElemValue.recipe === $($("#formId" + formNum + " #recipe")[0]).val()) {
-					    // Found one, set all guard prop
-					    $.each($('.guardProperties').find('.form-control'), function(guardPropElemIndex,
-					                                                                 guardPropElemValue) {
-
-						    guardElemValue['id'] = guardElemId;
-						    $("#formId" + formNum + " .guardProperties").find("#" + guardPropElemValue.id).val(
-						    guardElemValue[guardPropElemValue.id]);
-					    });
-					    iniGuardPolicyType(guardElemId, formNum);
-					    // And finally enable the flag
-					    $("#formId" + formNum + " #enableGuardPolicy").prop("checked", true);
-				    }
-			    });*/
-			});
-	    }
+			/*			    var formNum = add_one_more();
+							forEach(document.getElementsByClassName('policyProperties').find('.form-control'), function(opPolicyPropIndex, opPolicyPropValue) {
+			
+								$("#formId" + formNum + " .policyProperties").find("#" + opPolicyPropValue.id).val(
+								allPolicies['operational_policy']['policies'][opPolicyElemIndex][opPolicyPropValue.id]);
+							});
+			
+							// Initial TargetResourceId options
+							initTargetResourceIdOptions(allPolicies['operational_policy']['policies'][opPolicyElemIndex]['target']['type'], formNum);
+							$.each($('.policyTarget').find('.form-control'), function(opPolicyTargetPropIndex, opPolicyTargetPropValue) {
+			
+								$("#formId" + formNum + " .policyTarget").find("#" + opPolicyTargetPropValue.id).val(
+								allPolicies['operational_policy']['policies'][opPolicyElemIndex]['target'][opPolicyTargetPropValue.id]);
+							});
+			
+							// update the current tab label
+							$("#go_properties_tab" + formNum).text(
+							allPolicies['operational_policy']['policies'][opPolicyElemIndex]['id']);
+							// Check if there is a guard set for it
+							$.each(allPolicies['guard_policies'], function(guardElemId, guardElemValue) {
+			
+								if (guardElemValue.recipe === $($("#formId" + formNum + " #recipe")[0]).val()) {
+									// Found one, set all guard prop
+									$.each($('.guardProperties').find('.form-control'), function(guardPropElemIndex,
+																								 guardPropElemValue) {
+			
+										guardElemValue['id'] = guardElemId;
+										$("#formId" + formNum + " .guardProperties").find("#" + guardPropElemValue.id).val(
+										guardElemValue[guardPropElemValue.id]);
+									});
+									iniGuardPolicyType(guardElemId, formNum);
+									// And finally enable the flag
+									$("#formId" + formNum + " #enableGuardPolicy").prop("checked", true);
+								}
+							});*/
+		});
+	}
 
 	render() {
 		return (
@@ -195,7 +194,7 @@ export default class OperationalPolicyModal extends React.Component {
 										<label className="col-sm-4 control-label" htmlFor="clname">ControlLoopName</label>
 										<div className="col-sm-8">
 											<input type="text" className="form-control" name="controlLoopName"
-												readOnly="readonly" id="clname" value={LOOP_CACHE.getLoopName()} />
+												readOnly="readonly" id="clname" value={this.state.loopCache.getLoopName()} />
 										</div>
 									</div>
 								</form>
@@ -225,7 +224,7 @@ export default class OperationalPolicyModal extends React.Component {
 										<label className="col-sm-4 control-label" htmlFor="id">ID</label>
 										<div className="col-sm-8">
 											<input type="text" className="form-control" name="id" id="id"
-										onKeyUp="updateTabLabel($event)" />
+												onKeyUp="updateTabLabel($event)" />
 											<span >ID must be unique</span>
 										</div>
 									</div>

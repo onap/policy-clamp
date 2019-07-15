@@ -22,28 +22,29 @@
  */
 
 export default class UserService {
-
-	static LOGIN() {
+	static notLoggedUserName='Anonymous';
+	static login() {
 		return fetch('/restservices/clds/v1/user/getUser', {
 				method: 'GET',
 				credentials: 'include',
 			})
 		.then(function (response) {
+			console.debug("getUser response received, status code:", response.status);
 			if (response.ok) {
-				console.log("getUser response received: ", response.status);
 				return response.text();
 			} else {
-				console.error("getUser failed with status code: ",response.status);
-				return "Anonymous";
+				console.error("getUser response is nok");
+				return UserService.notLoggedUserName;
 			}
 		})
 		.then(function (data) {
-			console.log ("User connected:",data)
+			console.info ("User connected:",data)
 			return data;
 		})
 		.catch(function(error) {
-			console.error("getUser error received",error);
-			return "Anonymous";
+			console.warn("getUser error received, user set to: ",UserService.notLoggedUserName);
+			console.error("getUser error:",error);
+			return UserService.notLoggedUserName;
 		});
 	}
 }

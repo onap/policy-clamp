@@ -29,8 +29,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import FormCheck from 'react-bootstrap/FormCheck'
 import styled from 'styled-components';
-import LoopService from '../../api/LoopService';
-import LoopCache from '../../api/LoopCache';
+import LoopService from '../../../api/LoopService';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
@@ -39,46 +38,56 @@ const CheckBoxStyled = styled(FormCheck.Input)`
 	margin-left:3rem;
 `
 
-export default class LoopModal extends React.Component {
+export default class OpenLoopModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 
 		this.getLoopNames = this.getLoopNames.bind(this);
-		this.openModel = this.openModel.bind(this);
+		this.handleOpen = this.handleOpen.bind(this);
+		this.getModel = this.getModel.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.handleDropdownListChange = this.handleDropdownListChange.bind(this);
 		this.state = {
 			show: true,
 			chosenLoopName: '',
-			loopNames:[]
+			loopNames: []
 		};
 	}
+
 	componentDidMount() {
-		 this.getLoopNames();
-	 }
+		this.getLoopNames();
+	}
+
 	handleClose() {
 		this.setState({ show: false });
-			this.props.history.push('/');
+		this.props.history.push('/');
 	}
+
 	handleDropdownListChange(e) {
-		this.setState({ chosenLoopName: e.value});
+		this.setState({ chosenLoopName: e.value });
 	}
+
 	getLoopNames() {
 		LoopService.getLoopNames().then(loopNames => {
-			const loopOptions = loopNames.map((loopName) => { return {label: loopName,  value: loopName}});
-			this.setState({loopNames:loopOptions})
+			const loopOptions = loopNames.map((loopName) => { return { label: loopName, value: loopName } });
+			this.setState({ loopNames: loopOptions })
 		});
 	}
-	openModel() {
+
+	getModel() {
+		LoopService.getLoop(this.state.chosenLoopName).then(loop => {
+			console.debug("Settingloop cache with json");
+			this.props.updateLoopCacheFunction(loop);
+		});
+	}
+
+	handleOpen() {
+		console.info("Loop " + this.state.chosenLoopName + " is chosen");
 		this.setState({ show: false });
 		this.props.history.push('/');
-		// Open selected model
-		console.log("Loop " + this.state.chosenLoopName + " is chosen");
-		LoopService.getLoop(this.state.chosenLoopName).then(loop => {
-			console.log("Initialize the loop cache");
-			new LoopCache(loop);
-		});
+		this.getModel();
 	}
+
 	render() {
 		return (
 			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose}>
@@ -89,19 +98,19 @@ export default class LoopModal extends React.Component {
 					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Model Name</Form.Label>
 						<Col sm="10">
-							<Select onChange={this.handleDropdownListChange} options={ this.state.loopNames } />
+							<Select onChange={this.handleDropdownListChange} options={this.state.loopNames} />
 						</Col>
 					</Form.Group>
 					<Form.Group controlId="formBasicChecbox">
-	 					<Form.Check>
+						<Form.Check>
 							<FormCheck.Label>Read Only</FormCheck.Label>
 							<CheckBoxStyled type="checkbox" />
 						</Form.Check>
- 					</Form.Group>
+					</Form.Group>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" type="null" onClick={this.handleClose}>Cacel</Button>
-					<Button variant="primary" type="submit" onClick={this.openModel}>OK</Button>
+					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
+					<Button variant="primary" type="submit" onClick={this.handleOpen}>OK</Button>
 				</Modal.Footer>
 			</ModalStyled>
 

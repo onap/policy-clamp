@@ -58,6 +58,14 @@ export const GlobalClampStyle = createGlobalStyle`
   	color: ${props => props.theme.fontNormal};
     background-color: ${props => (props.theme.backgroundColor)};
   }
+  
+  svg {
+  	padding: 10px;
+	overflow: hidden;
+	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
+	width: 100%;
+	height: 100%;
+  }
 `
 
 export const DefaultClampTheme = {
