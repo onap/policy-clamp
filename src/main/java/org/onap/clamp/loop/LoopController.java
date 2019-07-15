@@ -116,12 +116,13 @@ public class LoopController {
 
     /**
      * Get the SVG representation of the loop
-     * 
+     *
      * @param loopName
      *        The loop name
      * @return The SVG representation
      */
     public String getSVGRepresentation(String loopName) {
-        return loopService.getLoop(loopName).getSvgRepresentation();
+        Loop loop = loopService.getLoop(loopName);
+        return loop != null ? loop.getSvgRepresentation() : null;
     }
 }
