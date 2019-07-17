@@ -72,8 +72,10 @@ export default class ConfigurationPolicyModal extends React.Component {
 		JSONEditor.defaults.options.disable_array_delete_all_rows = false;
 		JSONEditor.defaults.options.show_errors = 'always';
 
-		this.state.jsonEditor = new JSONEditor(document.getElementById("editor"),
-			{ schema: toscaModel.schema, startval: editorData });
+		this.setState({
+			jsonEditor: new JSONEditor(document.getElementById("editor"),
+				{ schema: toscaModel.schema, startval: editorData })
+		})
 
 	}
 

@@ -217,7 +217,7 @@ export default class OperationalPolicyModal extends React.Component {
 							</div>
 
 							<span id="formSpan" style={{ display: 'none' }}>
-								<form className="policyProperties" className="form-horizontal"
+								<form className="policyProperties form-horizontal"
 									style={{ border: '2px dotted gray' }}
 									title="Operational Policy Properties">
 									<div className="form-group clearfix">
@@ -350,7 +350,7 @@ export default class OperationalPolicyModal extends React.Component {
 										</div>
 									</div>
 								</form>
-								<form className="policyTarget" className="form-horizontal"
+								<form className="policyTarget form-horizontal"
 									title="Operational Policy Target" style={{ border: '2px dotted gray' }}>
 									<div className="form-group clearfix">
 										<label htmlFor="type" className="col-sm-4 control-label"> Target
@@ -437,7 +437,7 @@ export default class OperationalPolicyModal extends React.Component {
 										</select>
 									</div>
 								</div>
-								<form className="guardProperties" className="form-horizontal"
+								<form className="guardProperties form-horizontal"
 									title="Guard policy associated" style={{ border: '2px dotted gray' }}>
 
 									<div className="form-group clearfix withnote">

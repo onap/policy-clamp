@@ -23,7 +23,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from "react-router";
-import LoopCache from '../../../api/LoopCache'
 import LoopService from '../../../api/LoopService'
 
 const LoopViewSvgDivStyled = styled.div`
@@ -57,13 +56,13 @@ class LoopViewSvg extends React.Component {
 	}
 
 	componentWillReceiveProps(newProps) {
-		this.state.loopCache = newProps.loopCache;
+		this.setState({ loopCache: newProps.loopCache });
 		this.getSvg();
 	}
 
 	getSvg() {
 		LoopService.getSvg(this.state.loopCache.getLoopName()).then(svgXml => {
-			if (svgXml.length != 0) {
+			if (svgXml.length !== 0) {
 				this.setState({ svgContent: svgXml })
 			} else {
 				this.setState({ svgContent: LoopViewSvg.emptySvg })
