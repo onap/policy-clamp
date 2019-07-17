@@ -42,7 +42,7 @@ export default class MenuBar extends React.Component {
 		      <NavDropdown title="Closed Loop" id="basic-nav-dropdown">
 		        <StyledNavDropdownItem href="/openLoop">Open CL</StyledNavDropdownItem>
 		        <StyledNavDropdownItem href="#action/3.2">Properties CL</StyledNavDropdownItem>
-		        <StyledNavDropdownItem href="#action/3.3">Close Model</StyledNavDropdownItem>
+		        <StyledNavDropdownItem href="/closeLoop">Close Model</StyledNavDropdownItem>
 		      </NavDropdown>
 					<NavDropdown title="Manage" id="basic-nav-dropdown">
 						<StyledNavDropdownItem href="/operationalPolicyModal">Submit</StyledNavDropdownItem>

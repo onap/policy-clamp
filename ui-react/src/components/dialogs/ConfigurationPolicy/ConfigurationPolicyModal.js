@@ -24,8 +24,9 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { LOOP_CACHE } from '../../../api/LoopCache'
 import styled from 'styled-components';
+
+import JSONEditor from '@json-editor/json-editor';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
@@ -33,15 +34,16 @@ const ModalStyled = styled(Modal)`
 
 export default class ConfigurationPolicyModal extends React.Component {
 
+	state = {
+		show: true,
+		loopCache: this.props.loopCache,
+		jsonEditor: null,
+	};
+
 	constructor(props, context) {
 		super(props, context);
-
 		this.handleClose = this.handleClose.bind(this);
-
-		this.state = {
-			show: true,
-		};
-
+		this.renderJsonEditor = this.renderJsonEditor.bind(this);
 	}
 
 	handleClose() {
@@ -49,7 +51,31 @@ export default class ConfigurationPolicyModal extends React.Component {
 		this.props.history.push('/')
 	}
 
+	componentDidMount() {
+		this.renderJsonEditor();
+	}
 
+	renderJsonEditor() {
+		var toscaModel = this.state.loopCache.getMicroServiceJsonRepresentationForType("TCA_Jbv1z_v1_0_ResourceInstanceName1_tca");
+		if (toscaModel == null) {
+			return;
+		}
+		var editorData = this.state.loopCache.getMicroServiceProperties("TCA_Jbv1z_v1_0_ResourceInstanceName1_tca");
+
+		JSONEditor.defaults.options.theme = 'bootstrap4';
+		//JSONEditor.defaults.options.iconlib = 'bootstrap2';
+		JSONEditor.defaults.options.object_layout = 'grid';
+		JSONEditor.defaults.options.disable_properties = true;
+		JSONEditor.defaults.options.disable_edit_json = false;
+		JSONEditor.defaults.options.disable_array_reorder = true;
+		JSONEditor.defaults.options.disable_array_delete_last_row = true;
+		JSONEditor.defaults.options.disable_array_delete_all_rows = false;
+		JSONEditor.defaults.options.show_errors = 'always';
+
+		this.state.jsonEditor = new JSONEditor(document.getElementById("editor"),
+			{ schema: toscaModel.schema, startval: editorData });
+
+	}
 
 	render() {
 		return (
@@ -58,8 +84,7 @@ export default class ConfigurationPolicyModal extends React.Component {
 					<Modal.Title>Configuration policies</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-
-
+					<div id="editor" />
 
 				</Modal.Body>
 				<Modal.Footer>

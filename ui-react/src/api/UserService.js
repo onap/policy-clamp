@@ -26,7 +26,7 @@ export default class UserService {
 	static login() {
 		return fetch('/restservices/clds/v1/user/getUser', {
 				method: 'GET',
-				credentials: 'include',
+				credentials: 'same-origin',
 			})
 		.then(function (response) {
 			console.debug("getUser response received, status code:", response.status);

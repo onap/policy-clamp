@@ -61,10 +61,6 @@ class LoopViewSvg extends React.Component {
 		this.getSvg();
 	}
 
-	componentDidMount() {
-		this.getSvg();
-	}
-
 	getSvg() {
 		LoopService.getSvg(this.state.loopCache.getLoopName()).then(svgXml => {
 			if (svgXml.length != 0) {

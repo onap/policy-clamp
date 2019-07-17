@@ -34,7 +34,7 @@ import LoopStatus from './components/loop_viewer/status/LoopStatus';
 import UserService from './api/UserService';
 import LoopCache from './api/LoopCache';
 
-import { Route } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 import OpenLoopModal from './components/dialogs/OpenLoop/OpenLoopModal';
 import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
 import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
@@ -78,9 +78,11 @@ const LoopViewLoopNameSpanStyled = styled.span`
 
 export default class LoopUI extends React.Component {
 
+	static defaultLoopName="Empty (NO loop loaded yet)";
+
 	state = {
 		userName: null,
-		loopName: "Empty (NO loop loaded yet)",
+		loopName: LoopUI.defaultLoopName,
 		loopCache: new LoopCache({}),
 	};
 
@@ -90,7 +92,7 @@ export default class LoopUI extends React.Component {
 		this.updateLoopCache = this.updateLoopCache.bind(this);
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.getUser();
 	}
 
@@ -162,6 +164,7 @@ export default class LoopUI extends React.Component {
 
 	updateLoopCache(loopJson) {
 		this.setState({ loopCache: new LoopCache(loopJson) });
+		this.setState({ loopName: this.state.loopCache.getLoopName() });
 	}
 
 	render() {
@@ -174,6 +177,7 @@ export default class LoopUI extends React.Component {
 					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.state.loopCache} />)} />
 				<Route path="/configurationPolicyModal" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.state.loopCache} />)} />
 				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} updateLoopCacheFunction={this.updateLoopCache} />)} />
+				<Route path="/closeLoop" render={(routeProps) => (<Redirect to='/'/>)} />
 			</div>
 		);
 	}
