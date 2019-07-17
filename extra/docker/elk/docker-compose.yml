@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.2
+    image: onap/clamp-dashboard-elasticsearch:latest
     ports:
       - 9200:9200
     networks:
@@ -36,6 +36,8 @@ services:
       - notification_topic=POLICY-CL-MGT
       - request_topic=APPC-CL
       - elasticsearch_base_url=elasticsearch
+      - "LOGSTASH_USR=logstash"
+      - "LOGSTASH_PWD=logstash"
 
   kibana:
     image: onap/clamp-dashboard-kibana:latest

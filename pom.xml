@@ -1069,6 +1069,22 @@
 														</build>
 												</image>
 												<image>
+														<name>onap/clamp-dashboard-elasticsearch</name>
+														<alias>onap-clamp-dashboard-elasticsearch</alias>
+														<run>
+															<skip>true</skip>
+														</run>
+														<build>
+																<cleanup>true</cleanup>
+																<tags>
+																		<tag>latest</tag>
+																		<tag>${project.docker.latesttagtimestamp.version}</tag>
+																		<tag>${project.docker.latesttag.version}</tag>
+																</tags>
+																<dockerFile>elasticsearch/Dockerfile</dockerFile>
+														</build>
+												</image>
+												<image>
 														<name>onap/clamp-dashboard-logstash</name>
 														<alias>onap-clamp-dashboard-logstash</alias>
 														<run>
