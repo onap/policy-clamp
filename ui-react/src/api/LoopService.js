@@ -22,7 +22,7 @@
 
 export default class LoopService {
 	static getLoopNames() {
-		return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'include', })
+		return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin', })
 			.then(function (response) {
 				console.debug("GetLoopNames response received: ", response.status);
 				if (response.ok) {
@@ -44,7 +44,7 @@ export default class LoopService {
 			headers: {
 				"Content-Type": "application/json"
 			},
-			credentials: 'include',
+			credentials: 'same-origin',
 		})
 			.then(function (response) {
 				console.debug("GetLoop response received: ", response.status);
@@ -64,7 +64,7 @@ export default class LoopService {
 	static getSvg(loopName) {
 		return fetch('/restservices/clds/v2/loop/svgRepresentation/' + loopName, {
 			method: 'GET',
-			credentials: 'include',
+			credentials: 'same-origin',			
 		})
 			.then(function (response) {
 				console.debug("svgRepresentation response received: ", response.status);

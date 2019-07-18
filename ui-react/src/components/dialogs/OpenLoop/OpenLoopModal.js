@@ -54,7 +54,7 @@ export default class OpenLoopModal extends React.Component {
 		};
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.getLoopNames();
 	}
 
