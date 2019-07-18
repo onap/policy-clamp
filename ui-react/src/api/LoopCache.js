@@ -29,13 +29,11 @@ export default class LoopCache {
 	}
 
 	updateMicroServiceProperties(type, newMsProperties) {
-		if (newMsProperties["name"] === type) {
 			for (var policy in this.loopJsonCache["microServicePolicies"]) {
 				if (this.loopJsonCache["microServicePolicies"][policy]["name"] === type) {
-					this.loopJsonCache["microServicePolicies"][policy] = newMsProperties;
+					this.loopJsonCache["microServicePolicies"][policy]["properties"] = newMsProperties;
 				}
 			}
-		}
 	}
 
 	updateGlobalProperties(newGlobalProperties) {
@@ -51,49 +49,47 @@ export default class LoopCache {
 	}
 
 	getOperationalPolicyConfigurationJson() {
-		return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]["0"]["configurationsJson"]));
+		return this.loopJsonCache["operationalPolicies"]["0"]["configurationsJson"];
 	}
 
 	getOperationalPolicies() {
-		return JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]));
+		return this.loopJsonCache["operationalPolicies"];
 	}
 
 	getGlobalProperties() {
-		return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]));
+		return this.loopJsonCache["globalPropertiesJson"];
 	}
 
 	getDcaeDeploymentProperties() {
-		return JSON.parse(JSON.stringify(this.loopJsonCache["globalPropertiesJson"]["dcaeDeployParameters"]));
+		return this.loopJsonCache["globalPropertiesJson"]["dcaeDeployParameters"];
 	}
 
-	getMicroServicesJsonForType(type) {
-		var msProperties = this.loopJsonCache["microServicePolicies"];
+	getMicroServicePolicies() {
+		return this.loopJsonCache["microServicePolicies"];
+	}
+
+	getMicroServiceForName(name) {
+		var msProperties=this.getMicroServicePolicies();
 		for (var policy in msProperties) {
-			if (msProperties[policy]["name"] === type) {
-				return JSON.parse(JSON.stringify(msProperties[policy]));
+			if (msProperties[policy]["name"] === name) {
+				return msProperties[policy];
 			}
 		}
 		return null;
 	}
 
-	getMicroServiceProperties(type) {
-		var msProperties = this.loopJsonCache["microServicePolicies"];
-		for (var policy in msProperties) {
-			if (msProperties[policy]["name"] === type) {
-				if (msProperties[policy]["properties"] !== null && msProperties[policy]["properties"] !== undefined) {
-					return JSON.parse(JSON.stringify(msProperties[policy]["properties"]));
-				}
-			}
+	getMicroServicePropertiesForName(name) {
+		var msConfig = this.getMicroServiceForName(name);
+		if (msConfig !== null) {
+			return msConfig["properties"];
 		}
 		return null;
 	}
 
-	getMicroServiceJsonRepresentationForType(type) {
-		var msProperties = this.loopJsonCache["microServicePolicies"];
-		for (var policy in msProperties) {
-			if (msProperties[policy]["name"] === type) {
-				return JSON.parse(JSON.stringify(msProperties[policy]["jsonRepresentation"]));
-			}
+	getMicroServiceJsonRepresentationForName(name) {
+		var msConfig = this.getMicroServiceForName(name);
+		if (msConfig !== null) {
+			return msConfig["jsonRepresentation"];
 		}
 		return null;
 	}

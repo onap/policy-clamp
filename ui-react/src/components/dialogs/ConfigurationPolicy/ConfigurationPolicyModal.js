@@ -25,7 +25,7 @@ import React from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
-
+import LoopService from '../../../api/LoopService';
 import JSONEditor from '@json-editor/json-editor';
 
 const ModalStyled = styled(Modal)`
@@ -38,17 +38,38 @@ export default class ConfigurationPolicyModal extends React.Component {
 		show: true,
 		loopCache: this.props.loopCache,
 		jsonEditor: null,
+		componentName: "",
 	};
 
 	constructor(props, context) {
 		super(props, context);
 		this.handleClose = this.handleClose.bind(this);
+		this.handleSave = this.handleSave.bind(this);
 		this.renderJsonEditor = this.renderJsonEditor.bind(this);
+		this.state.componentName = props.match.params.componentName;
+	}
+
+	handleSave() {
+
+		var errors = this.state.jsonEditor.validate();
+		var editorData = this.state.jsonEditor.getValue();
+
+		if (errors.length !== 0) {
+			console.error("Errors detected during config policy data validation ", errors);
+		}
+		else {
+			console.info("NO validation errors found in config policy data");
+			this.state.loopCache.updateMicroServiceProperties(this.state.componentName, editorData[0]);
+			LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.componentName));
+		}
+
+		this.setState({ show: false });
+		this.props.history.push('/');
 	}
 
 	handleClose() {
 		this.setState({ show: false });
-		this.props.history.push('/')
+		this.props.history.push('/');
 	}
 
 	componentDidMount() {
@@ -56,11 +77,12 @@ export default class ConfigurationPolicyModal extends React.Component {
 	}
 
 	renderJsonEditor() {
-		var toscaModel = this.state.loopCache.getMicroServiceJsonRepresentationForType("TCA_Jbv1z_v1_0_ResourceInstanceName1_tca");
+		console.debug("Rendering ConfigurationPolicyModal ", this.state.componentName);
+		var toscaModel = this.state.loopCache.getMicroServiceJsonRepresentationForName(this.state.componentName);
 		if (toscaModel == null) {
 			return;
 		}
-		var editorData = this.state.loopCache.getMicroServiceProperties("TCA_Jbv1z_v1_0_ResourceInstanceName1_tca");
+		var editorData = this.state.loopCache.getMicroServicePropertiesForName(this.state.componentName);
 
 		JSONEditor.defaults.options.theme = 'bootstrap4';
 		//JSONEditor.defaults.options.iconlib = 'bootstrap2';
@@ -76,7 +98,6 @@ export default class ConfigurationPolicyModal extends React.Component {
 			jsonEditor: new JSONEditor(document.getElementById("editor"),
 				{ schema: toscaModel.schema, startval: editorData })
 		})
-
 	}
 
 	render() {
@@ -93,7 +114,7 @@ export default class ConfigurationPolicyModal extends React.Component {
 					<Button variant="secondary" onClick={this.handleClose}>
 						Close
 	            </Button>
-					<Button variant="primary" onClick={this.handleClose}>
+					<Button variant="primary" onClick={this.handleSave}>
 						Save Changes
 	            </Button>
 				</Modal.Footer>
