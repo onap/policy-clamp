@@ -22,8 +22,10 @@
  */
 import React from 'react';
 import styled from 'styled-components';
+import LoopCache from '../../../api/LoopCache';
 import { withRouter } from "react-router";
-import LoopService from '../../../api/LoopService'
+import LoopService from '../../../api/LoopService';
+import LoopComponentConverter from './LoopComponentConverter';
 
 const LoopViewSvgDivStyled = styled.div`
 	overflow: hidden;
@@ -36,19 +38,20 @@ const LoopViewSvgDivStyled = styled.div`
 class LoopViewSvg extends React.Component {
 
 	static emptySvg = "<svg><text x=\"20\" y=\"40\">No LOOP (SVG)</text></svg>";
-	static operationalPolicyDataElementId = "OperationalPolicy";
-
 
 	state = {
 		svgContent: LoopViewSvg.emptySvg,
-		loopCache: this.props.loopCache,
+		loopCache: new LoopCache({}),
+		componentModalMapping: new Map([]),
 	}
 
 	constructor(props) {
 		super(props);
-		this.state.loopCache = props.loopCache;
 		this.handleSvgClick = this.handleSvgClick.bind(this);
 		this.getSvg = this.getSvg.bind(this);
+		this.state.loopCache = props.loopCache;
+		this.state.componentModalMapping = LoopComponentConverter.buildMapOfComponents(props.loopCache);
+		this.getSvg(props.loopCache.getLoopName());
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -56,31 +59,31 @@ class LoopViewSvg extends React.Component {
 	}
 
 	componentWillReceiveProps(newProps) {
-		this.setState({ loopCache: newProps.loopCache });
-		this.getSvg();
+		this.setState({
+			loopCache: newProps.loopCache,
+			componentModalMapping: LoopComponentConverter.buildMapOfComponents(newProps.loopCache),
+
+		});
+		this.getSvg(newProps.loopCache.getLoopName());
 	}
 
-	getSvg() {
-		LoopService.getSvg(this.state.loopCache.getLoopName()).then(svgXml => {
-			if (svgXml.length !== 0) {
-				this.setState({ svgContent: svgXml })
-			} else {
-				this.setState({ svgContent: LoopViewSvg.emptySvg })
-			}
-		});
+	getSvg(loopName) {
+		if (typeof loopName !== "undefined") {
+			LoopService.getSvg(loopName).then(svgXml => {
+				if (svgXml.length !== 0) {
+					this.setState({ svgContent: svgXml })
+				} else {
+					this.setState({ svgContent: LoopViewSvg.emptySvg })
+				}
+			});
+		}
 	}
 
 	handleSvgClick(event) {
 		console.debug("svg click event received");
 		var elementName = event.target.parentNode.parentNode.parentNode.getAttribute('data-element-id');
 		console.info("SVG element clicked", elementName);
-		if (typeof elementName === "undefined" || elementName === "VES") {
-			return;
-		} else if (elementName === LoopViewSvg.operationalPolicyDataElementId) {
-			this.props.history.push('/operationalPolicyModal');
-		} else {
-			this.props.history.push('/configurationPolicyModal');
-		}
+		this.props.history.push(this.state.componentModalMapping.get(elementName));
 	}
 
 	render() {
