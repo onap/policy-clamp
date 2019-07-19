@@ -147,7 +147,7 @@ export default class LoopUI extends React.Component {
 		return (
 			<LoopViewBodyDivStyled>
 				<LoopSvg loopCache={this.state.loopCache} />
-				<LoopLogs />
+				<LoopLogs loopCache={this.state.loopCache} />
 				<LoopStatus />
 			</LoopViewBodyDivStyled>
 		);

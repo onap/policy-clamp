@@ -8,7 +8,6 @@ target
 ui-react/node_modules
 ui-react/build
 **/package-lock.json
-**/logs/
 **/.evosuite/
 **/debug-logs/
 *.log
