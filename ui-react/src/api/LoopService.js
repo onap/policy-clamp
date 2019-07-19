@@ -42,7 +42,7 @@ export default class LoopService {
 		return fetch('/restservices/clds/v2/loop/' + loopName, {
 			method: 'GET',
 			headers: {
-				"Content-Type": "application/json"
+				"Content-Type": "application/json",
 			},
 			credentials: 'same-origin',
 		})
@@ -64,7 +64,7 @@ export default class LoopService {
 	static getSvg(loopName) {
 		return fetch('/restservices/clds/v2/loop/svgRepresentation/' + loopName, {
 			method: 'GET',
-			credentials: 'same-origin',			
+			credentials: 'same-origin',
 		})
 			.then(function (response) {
 				console.debug("svgRepresentation response received: ", response.status);
@@ -77,6 +77,30 @@ export default class LoopService {
 			})
 			.catch(function (error) {
 				console.error("svgRepresentation error received", error);
+				return "";
+			});
+	}
+
+	static setMicroServiceProperties(loopName, jsonData) {
+		return fetch('/restservices/clds/v2/loop/updateMicroservicePolicy/' + loopName, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(jsonData),
+		})
+			.then(function (response) {
+				console.debug("updateMicroservicePolicy response received: ", response.status);
+				if (response.ok) {
+					return response.text();
+				} else {
+					console.error("updateMicroservicePolicy query failed");
+					return "";
+				}
+			})
+			.catch(function (error) {
+				console.error("updateMicroservicePolicy error received", error);
 				return "";
 			});
 	}
