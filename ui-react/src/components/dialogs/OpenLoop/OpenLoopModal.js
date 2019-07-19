@@ -110,7 +110,7 @@ export default class OpenLoopModal extends React.Component {
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
-					<Button variant="primary" type="submit" onClick={this.handleOpen}>OK</Button>
+					<Button variant="primary" type="submit" onClick={this.handleOpen}>Open</Button>
 				</Modal.Footer>
 			</ModalStyled>
 
