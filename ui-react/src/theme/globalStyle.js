@@ -56,13 +56,12 @@ export const GlobalClampStyle = createGlobalStyle`
     font-size: ${props => props.theme.fontSize};
   	border-radius: 4px;
   	color: ${props => props.theme.fontNormal};
-    background-color: ${props => (props.theme.backgroundColor)};
+	background-color: ${props => (props.theme.backgroundColor)};
+	margin-top: 1px;
   }
-  
+
   svg {
-  	padding: 10px;
 	overflow: hidden;
-	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
 	width: 100%;
 	height: 100%;
   }
@@ -75,13 +74,13 @@ export const DefaultClampTheme = {
 	fontDark: '#888888',
 	fontHighlight: '#ffff00',
 	fontNormal: 'black',
-	
+
 	backgroundColor: '#eeeeee',
 	fontFamily: 'Arial, Sans-serif',
 	fontSize: '15px',
-	
-  	loopViewerBackgroundColor: 'white',
-  	loopViewerFontColor: 'yellow',
-  	loopViewerHeaderBackgroundColor: '#337ab7',
-  	loopViewerHeaderFontColor: 'white',
+
+	loopViewerBackgroundColor: 'white',
+	loopViewerFontColor: 'yellow',
+	loopViewerHeaderBackgroundColor: '#337ab7',
+	loopViewerHeaderFontColor: 'white',
 };

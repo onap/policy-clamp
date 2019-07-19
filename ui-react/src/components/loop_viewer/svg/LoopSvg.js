@@ -32,7 +32,10 @@ const LoopViewSvgDivStyled = styled.div`
 	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
 	border: 1px solid;
 	border-color: ${props => (props.theme.loopViewerHeaderColor)};
-	height: 50%;
+	margin-left: auto;
+	margin-right:auto;
+	text-align: center;
+
 `
 
 class LoopViewSvg extends React.Component {
@@ -88,7 +91,7 @@ class LoopViewSvg extends React.Component {
 
 	render() {
 		return (
-			<LoopViewSvgDivStyled id="loop_svg" dangerouslySetInnerHTML={{ __html: this.state.svgContent }} onClick={this.handleSvgClick}>
+			<LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.svgContent }} onClick={this.handleSvgClick}>
 
 			</LoopViewSvgDivStyled>
 		);

@@ -22,34 +22,84 @@
 */
 import React from 'react';
 import Table from 'react-bootstrap/Table';
-import './LoopStatus.css';
+import styled from 'styled-components';
+import LoopCache from '../../../api/LoopCache';
+
+const LoopStatusViewDivStyled = styled.div`
+	background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
+	padding: 10px 10px;
+	color: ${props => props.theme.loopViewerHeaderFontColor};
+`
+
+const TableStyled = styled(Table)`
+    overflow: auto;
+`
+
+const TableRow = ({ statusRow }) => (
+	<tr>
+		<td>{statusRow.componentName}</td>
+		<td>{statusRow.stateName}</td>
+		<td>{statusRow.description}</td>
+	</tr>
+
+)
 
 export default class LoopStatus extends React.Component {
-  render() {
-  	return (
-      <div>
-        <span id="status_clds" className="status_title">Status:
-          <span className="status">&nbsp;&nbsp;&nbsp;TestStatus&nbsp;&nbsp;&nbsp;</span>
-        </span>
+	state = {
+		loopCache: new LoopCache({}),
+	}
 
-        <div className="status_table">
-          <Table striped hover>
-            <thead>
-                <tr>
-                  <th><span align="left" className="text">ComponentState</span></th>
-                  <th><span align="left" className="text">Description</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="row_30_per">long test State</td>
-                  <td className="row_70_per">test description very very very long description</td>
-                </tr>
-              </tbody>
-            </Table>
-          </div>
-      </div>
-  	);
-  }
+	constructor(props) {
+		super(props);
+		this.renderStatus = this.renderStatus.bind(this);
+		this.state.loopCache = props.loopCache;
+	}
+
+
+	renderStatus() {
+		if (this.state.loopCache.getComponentStates() != null) {
+			return Object.keys(this.state.loopCache.getComponentStates()).map((key) => {
+				console.debug("Adding status for: ",key);
+				var res={}
+				res[key]=this.state.loopCache.getComponentStates()[key];
+				return (<TableRow statusRow={{'componentName':key,'stateName':this.state.loopCache.getComponentStates()[key].componentState.stateName,'description':this.state.loopCache.getComponentStates()[key].componentState.description}} />)
+			})
+
+		}
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return this.state.loopCache !== nextState.loopCache;
+	}
+
+	componentWillReceiveProps(newProps) {
+		this.setState({
+			loopCache: newProps.loopCache,
+		});
+	}
+
+	render() {
+		return (
+			<LoopStatusViewDivStyled>
+				<label>Loop Status: {this.state.loopCache.getComputedState()}
+				</label>
+
+				<div >
+					<TableStyled striped hover variant responsive>
+						<thead>
+							<tr>
+								<th><span align="left">Component Name</span></th>
+								<th><span align="left">Component State</span></th>
+								<th><span align="right">Description</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.renderStatus()}
+						</tbody>
+					</TableStyled>
+				</div>
+			</LoopStatusViewDivStyled>
+		);
+	}
 }
 

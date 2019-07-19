@@ -106,6 +106,10 @@ export default class LoopCache {
 		return this.loopJsonCache.loopLogs;
 	}
 
+	getComputedState() {
+		return this.loopJsonCache.lastComputedState;
+	}
+
 	getComponentStates() {
 		return this.loopJsonCache.components;
 	}

@@ -25,6 +25,15 @@ import Table from 'react-bootstrap/Table';
 import LoopCache from '../../../api/LoopCache';
 import styled from 'styled-components';
 
+const LoopLogsHeaderDivStyled = styled.div`
+	background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
+	padding: 10px 10px;
+	color: ${props => props.theme.loopViewerHeaderFontColor};
+`
+const TableStyled = styled(Table)`
+    
+    overflow: auto;
+`
 const TableRow = ({ logRow }) => (
 	<tr>
 		<td>{logRow.logInstant}</td>
@@ -35,13 +44,6 @@ const TableRow = ({ logRow }) => (
 
 )
 
-const LoopLogsHeaderDivStyled = styled.div`
-	background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
-	padding: 10px 10px;
-	color: ${props => props.theme.loopViewerHeaderFontColor};
-	overflow: auto;
-`
-
 export default class LoopLogs extends React.Component {
 
 	state = {
@@ -50,7 +52,7 @@ export default class LoopLogs extends React.Component {
 	constructor(props) {
 		super(props);
 		this.renderLogs = this.renderLogs.bind(this);
-		this.state.loopCache=props.loopCache;
+		this.state.loopCache = props.loopCache;
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -65,17 +67,17 @@ export default class LoopLogs extends React.Component {
 
 	renderLogs() {
 		if (this.state.loopCache.getLoopLogsArray() != null) {
-		return (
-			this.state.loopCache.getLoopLogsArray().map(row => <TableRow logRow={row} />)
-		)
-	} 
+			return (
+				this.state.loopCache.getLoopLogsArray().map(row => <TableRow logRow={row} />)
+			)
+		}
 	}
 
 	render() {
 		return (
 			<LoopLogsHeaderDivStyled>
 				<label>Loop Logs</label>
-				<Table striped hover bordeless variant responsive>
+				<TableStyled striped hover variant responsive>
 					<thead>
 						<tr>
 							<th><span align="left">Date</span></th>
@@ -87,7 +89,7 @@ export default class LoopLogs extends React.Component {
 					<tbody>
 						{this.renderLogs()}
 					</tbody>
-				</Table>
+				</TableStyled>
 			</LoopLogsHeaderDivStyled>
 
 		);

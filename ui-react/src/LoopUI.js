@@ -46,7 +46,7 @@ const ProjectNameStyled = styled.a`
 
 `
 const LoopViewDivStyled = styled.div`
-	height: 90vh;
+	height: 100%;
 	overflow: hidden;
 	margin-left: 10px;
 	margin-right: 10px;
@@ -138,7 +138,7 @@ export default class LoopUI extends React.Component {
 	renderLoopViewHeader() {
 		return (
 			<LoopViewHeaderDivStyled>
-				Loop Viewer - <LoopViewLoopNameSpanStyled id="loop_name">{this.state.loopName}</LoopViewLoopNameSpanStyled>
+				Loop Viewer - {this.state.loopName}
 			</LoopViewHeaderDivStyled>
 		);
 	}
@@ -147,8 +147,8 @@ export default class LoopUI extends React.Component {
 		return (
 			<LoopViewBodyDivStyled>
 				<LoopSvg loopCache={this.state.loopCache} />
+				<LoopStatus loopCache={this.state.loopCache}/>
 				<LoopLogs loopCache={this.state.loopCache} />
-				<LoopStatus />
 			</LoopViewBodyDivStyled>
 		);
 	}
