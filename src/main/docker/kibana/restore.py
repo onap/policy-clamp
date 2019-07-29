@@ -53,7 +53,7 @@ def parse_args(args):
                               (','.join(OBJECT_TYPES[:-1]), OBJECT_TYPES[-1])
                              )
                        )
-    parser.add_argument('-H', '--kibana-host', default='http://localhost:5601',
+    parser.add_argument('-H', '--kibana-host', default='https://localhost:5601',
                         help='Kibana endpoint.')
     parser.add_argument('-f', '--force', action='store_const',
                         const=True, default=False,
@@ -98,7 +98,7 @@ def main():
             logger.info('Restoring %s id:%s (overwrite:%s)', obj_type, obj_id, args.force)
             url = "%s/api/saved_objects/%s/%s" % (args.kibana_host.rstrip("/"), obj_type, obj_id)
             params = {'overwrite': True} if args.force else {}
-            post_object_req = requests.post(url,
+            post_object_req = requests.post(url, auth=('admin', 'admin'), verify=False,
                                             headers={'content-type': 'application/json',
                                                      'kbn-xsrf': 'True'},
                                             params=params,
