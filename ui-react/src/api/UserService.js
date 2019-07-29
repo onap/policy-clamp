@@ -47,5 +47,26 @@ export default class UserService {
 			return UserService.notLoggedUserName;
 		});
 	}
-}
 
+	static getUserInfo() {
+		return fetch('/restservices/clds/v1/clds/cldsInfo', {
+				method: 'GET',
+				credentials: 'same-origin',
+			})
+		.then(function (response) {
+			console.debug("getUserInfo response received, status code:", response.status);
+			if (response.ok) {
+				return response.json();
+			}
+		})
+		.then(function (data) {
+			console.info ("User info received:",data)
+			return data;
+		})
+		.catch(function(error) {
+			console.warn("getUserInfo error received, user set to: ",UserService.notLoggedUserName);
+			console.error("getUserInfo error:",error);
+			return;
+		});
+	}
+}

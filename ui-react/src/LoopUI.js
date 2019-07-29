@@ -38,6 +38,8 @@ import { Route, Redirect } from 'react-router-dom'
 import OpenLoopModal from './components/dialogs/OpenLoop/OpenLoopModal';
 import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
 import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
+import LoopProperties from './components/dialogs/LoopProperties';
+import UserInfo from './components/dialogs/UserInfo';
 
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
@@ -104,7 +106,7 @@ export default class LoopUI extends React.Component {
 
 	renderMenuNavBar() {
 		return (
-			<MenuBar />
+			<MenuBar loopCache={this.state.loopCache}/>
 		);
 	}
 
@@ -153,6 +155,10 @@ export default class LoopUI extends React.Component {
 		);
 	}
 
+	getLoopCache() {
+		return this.state.loopCache;
+
+	}
 	renderLoopViewer() {
 		return (
 			<LoopViewDivStyled>
@@ -177,6 +183,8 @@ export default class LoopUI extends React.Component {
 					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.state.loopCache} />)} />
 				<Route path="/configurationPolicyModal/:componentName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.state.loopCache} />)} />
 				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} updateLoopCacheFunction={this.updateLoopCache} />)} />
+				<Route path="/loopProperties" render={(routeProps) => (<LoopProperties {...routeProps} loopCache={this.getLoopCache()} />)} />
+				<Route path="/userInfo" render={(routeProps) => (<UserInfo {...routeProps} />)} />
 				<Route path="/closeLoop" render={(routeProps) => (<Redirect to='/'/>)} />
 			</div>
 		);
