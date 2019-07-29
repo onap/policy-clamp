@@ -104,4 +104,28 @@ export default class LoopService {
 				return "";
 			});
 	}
+
+	static updateGlobalProperties(loopName, jsonData) {
+		return fetch('/restservices/clds/v2/loop/updateGlobalProperties/' + loopName, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(jsonData),
+		})
+			.then(function (response) {
+				console.debug("updateGlobalProperties response received: ", response.status);
+				if (response.ok) {
+					return response.text();
+				} else {
+					console.error("updateGlobalProperties query failed");
+					return "";
+				}
+			})
+			.catch(function (error) {
+				console.error("updateGlobalProperties error received", error);
+				return "";
+			});
+	}
 }

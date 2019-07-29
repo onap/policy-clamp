@@ -35,13 +35,12 @@ const StyledNavDropdownItem = styled(NavDropdown.Item)`
 `;
 
 export default class MenuBar extends React.Component {
-
 	render () {
 	   return (
 		  <Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
 		      <NavDropdown title="Closed Loop" id="basic-nav-dropdown">
 		        <StyledNavDropdownItem href="/openLoop">Open CL</StyledNavDropdownItem>
-		        <StyledNavDropdownItem href="#action/3.2">Properties CL</StyledNavDropdownItem>
+		        <StyledNavDropdownItem href="/loopProperties">Properties CL</StyledNavDropdownItem>
 		        <StyledNavDropdownItem href="/closeLoop">Close Model</StyledNavDropdownItem>
 		      </NavDropdown>
 					<NavDropdown title="Manage" id="basic-nav-dropdown">
