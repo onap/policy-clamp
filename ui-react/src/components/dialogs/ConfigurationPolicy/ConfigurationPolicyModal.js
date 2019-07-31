@@ -38,7 +38,7 @@ export default class ConfigurationPolicyModal extends React.Component {
 		show: true,
 		loopCache: this.props.loopCache,
 		jsonEditor: null,
-		componentName: "",
+		componentName: this.props.match.params.componentName,
 	};
 
 	constructor(props, context) {
@@ -46,7 +46,7 @@ export default class ConfigurationPolicyModal extends React.Component {
 		this.handleClose = this.handleClose.bind(this);
 		this.handleSave = this.handleSave.bind(this);
 		this.renderJsonEditor = this.renderJsonEditor.bind(this);
-		this.state.componentName = props.match.params.componentName;
+		//this.state.componentName = props.match.params.componentName;
 	}
 
 	handleSave() {

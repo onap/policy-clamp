@@ -33,78 +33,77 @@ const ModalStyled = styled(Modal)`
 
 export default class LoopProperties extends React.Component {
 
-	formProps = {dcaeDeployParameters: {
-			"location_id": "",
-			"service_id": "",
-			"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
-	}};
+	state = {
+		show: true,
+		loopCache: this.props.loopCache,
+	};
 
 	constructor(props, context) {
 		super(props, context);
 
 		this.handleClose = this.handleClose.bind(this);
-		this.handleChange = this.handleChange.bind(this);
-		this.saveProperties =  this.saveProperties.bind(this);
-		this.initialValues = this.initialValues.bind(this);
-		this.state = {
-			show: true,
-			loopName: 'LOOP_h2NMX_v1_0_ResourceInstanceName1_tca',
-			form: this.formProps
-		};
+		this.handleSave = this.handleSave.bind(this);
+		this.renderDcaeParameters = this.renderDcaeParameters.bind(this);
+		this.renderAllParameters = this.renderAllParameters.bind(this);
+		this.getDcaeParameters = this.getDcaeParameters.bind(this);
+	}
+
+	componentWillReceiveProps(newProps) {
+		this.setState({
+			loopCache: newProps.loopCache,
+		});
+	}
+
+	handleClose() {
+		this.props.history.push('/');
+	}
+
+	handleSave(event) {
+		// translate the deploymentParameter into jsonFormat at submit time
 
 	}
-	initialValues() {
-			const updatedForm = this.state.form;
-			Object.keys(updatedForm).forEach((key) => {
-			if (key === 'dcaeDeployParameters') {
-				updatedForm[key] = JSON.stringify(this.state.form[key]);
-			} else {
-				updatedForm[key] = this.state.form[key];
-			}
-			this.setState({ form: updatedForm });
-		});
+
+	saveAllProperties() {
+
 	}
-	handleClose() {
-			this.props.history.push('/');
+
+	renderAllParameters() {
+		return (<Modal.Body>
+			<Form>
+				{this.renderDcaeParameters()}
+			</Form>
+		</Modal.Body>
+		);
 	}
-	handleChange(e) {
-			const formUpdated =  this.state.form;
-			formUpdated[e.target.name] = e.target.value;
-			this.setState({ form: formUpdated });
-   };
-	saveProperties(event) {
-		// translate the deploymentParameter into jsonFormat at submit time
-		const updatedForm = this.state.form;
-		Object.keys(updatedForm).forEach((key) => {
-			if (key === 'dcaeDeployParameters') {
-				try {
-				  let value = JSON.parse(updatedForm[key]);
-					updatedForm[key] = value;
-					// save Properties
-					this.setState( {form: updatedForm} );
-					LoopService.updateGlobalProperties(this.state.loopName, this.state.form);
-					this.props.history.push('/');
-				} catch (error) {
-				  alert("Deployment Parameters is not in good Json format. Please correct it.");
-				}
-			}
-		});
+
+	getDcaeParameters() {
+		if (typeof (this.state.loopCache.getGlobalProperties()) !== "undefined") {
+			return JSON.stringify(this.state.loopCache.getGlobalProperties()["dcaeDeployParameters"]);
+		} else {
+			return "";
+		}
+		
 	}
+
+	renderDcaeParameters() {
+		return (
+			<Form.Group >
+				<Form.Label>Deploy Parameters</Form.Label>
+				<Form.Control as="textarea" rows="3" name="dcaeDeployParameters">{this.getDcaeParameters()}</Form.Control>
+			</Form.Group>
+		);
+	}
+
 	render() {
 		return (
-			<ModalStyled size="lg"  show={this.state.show} onHide={this.handleClose} onEntered={this.initialValues}>
+			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose} >
 				<Modal.Header closeButton>
 					<Modal.Title>Model Properties</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
-					<Form.Group controlId="exampleForm.ControlTextarea1">
-					<Form.Label>Deploy Parameters</Form.Label>
-					<Form.Control as="textarea" rows="3" name="dcaeDeployParameters" onChange={this.handleChange} defaultValue={this.state.form["dcaeDeployParameters"]}/>
-					</Form.Group>
-				</Modal.Body>
+					{this.renderAllParameters()}
 				<Modal.Footer>
-					<Button variant="secondary" type="null" onClick={this.handleClose}>Cacel</Button>
-					<Button variant="primary" type="submit" onClick={this.saveProperties}>Save</Button>
+					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
+					<Button variant="primary" type="submit" onClick={this.handleSave}>Save Changes</Button>
 				</Modal.Footer>
 			</ModalStyled>
 		);
