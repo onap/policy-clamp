@@ -40,6 +40,7 @@ import OperationalPolicyModal from './components/dialogs/OperationalPolicy/Opera
 import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
 import LoopProperties from './components/dialogs/LoopProperties';
 import UserInfo from './components/dialogs/UserInfo';
+import LoopService from './api/LoopService';
 
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
@@ -72,12 +73,6 @@ const LoopViewBodyDivStyled = styled.div`
 	height: 95%;
 `
 
-const LoopViewLoopNameSpanStyled = styled.span`
-	font-weight: bold;
-	color: ${props => (props.theme.loopViewerHeaderFontColor)};
-	background-color: ${props => (props.theme.loopViewerHeaderBackgroundColor)};
-`
-
 export default class LoopUI extends React.Component {
 
 	static defaultLoopName="Empty (NO loop loaded yet)";
@@ -92,6 +87,7 @@ export default class LoopUI extends React.Component {
 		super();
 		this.getUser = this.getUser.bind(this);
 		this.updateLoopCache = this.updateLoopCache.bind(this);
+		this.loadLoop = this.loadLoop.bind(this);
 	}
 
 	componentWillMount() {
@@ -171,16 +167,24 @@ export default class LoopUI extends React.Component {
 	updateLoopCache(loopJson) {
 		this.setState({ loopCache: new LoopCache(loopJson) });
 		this.setState({ loopName: this.state.loopCache.getLoopName() });
+		console.info(this.state.loopName+" loop loaded successfully");
+	}
+	
+	loadLoop(loopName) {
+		LoopService.getLoop(loopName).then(loop => {
+			console.debug("Updating loopCache");
+			this.updateLoopCache(loop);
+		});
 	}
 
 	render() {
 		return (
 				<div id="main_div">
 				<Route path="/operationalPolicyModal"
-					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} />)} />
-				<Route path="/configurationPolicyModal/:componentName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} />)} />
-				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} updateLoopCacheFunction={this.updateLoopCache} />)} />
-				<Route path="/loopProperties" render={(routeProps) => (<LoopProperties {...routeProps} loopCache={this.getLoopCache()} />)} />
+					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
+				<Route path="/configurationPolicyModal/:componentName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
+				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
+				<Route path="/loopProperties" render={(routeProps) => (<LoopProperties {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/userInfo" render={(routeProps) => (<UserInfo {...routeProps} />)} />
 				<Route path="/closeLoop" render={(routeProps) => (<Redirect to='/'/>)} />
 					<GlobalClampStyle />

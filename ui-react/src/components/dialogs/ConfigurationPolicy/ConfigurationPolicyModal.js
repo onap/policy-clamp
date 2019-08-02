@@ -46,25 +46,26 @@ export default class ConfigurationPolicyModal extends React.Component {
 		this.handleClose = this.handleClose.bind(this);
 		this.handleSave = this.handleSave.bind(this);
 		this.renderJsonEditor = this.renderJsonEditor.bind(this);
-		//this.state.componentName = props.match.params.componentName;
 	}
 
 	handleSave() {
-
 		var errors = this.state.jsonEditor.validate();
 		var editorData = this.state.jsonEditor.getValue();
 
 		if (errors.length !== 0) {
 			console.error("Errors detected during config policy data validation ", errors);
+			this.setState({ show: false });
+			this.props.history.push('/');
 		}
 		else {
 			console.info("NO validation errors found in config policy data");
 			this.state.loopCache.updateMicroServiceProperties(this.state.componentName, editorData[0]);
-			LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.componentName));
+			LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.componentName)).then(resp => {
+				this.setState({ show: false });
+				this.props.history.push('/');
+				this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+			});
 		}
-
-		this.setState({ show: false });
-		this.props.history.push('/');
 	}
 
 	handleClose() {

@@ -36,6 +36,7 @@ export default class LoopProperties extends React.Component {
 	state = {
 		show: true,
 		loopCache: this.props.loopCache,
+		temporaryPropertiesJson: JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties())),
 	};
 
 	constructor(props, context) {
@@ -43,6 +44,8 @@ export default class LoopProperties extends React.Component {
 
 		this.handleClose = this.handleClose.bind(this);
 		this.handleSave = this.handleSave.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		
 		this.renderDcaeParameters = this.renderDcaeParameters.bind(this);
 		this.renderAllParameters = this.renderAllParameters.bind(this);
 		this.getDcaeParameters = this.getDcaeParameters.bind(this);
@@ -51,6 +54,8 @@ export default class LoopProperties extends React.Component {
 	componentWillReceiveProps(newProps) {
 		this.setState({
 			loopCache: newProps.loopCache,
+			temporaryPropertiesJson: JSON.parse(JSON.stringify(newProps.loopCache.getGlobalProperties())),
+			
 		});
 	}
 
@@ -59,12 +64,15 @@ export default class LoopProperties extends React.Component {
 	}
 
 	handleSave(event) {
-		// translate the deploymentParameter into jsonFormat at submit time
-
+		LoopService.updateGlobalProperties(this.state.loopCache.getLoopName(), this.state.temporaryPropertiesJson).then(resp => {
+			this.setState({ show: false });
+			this.props.history.push('/');
+			this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+		});
 	}
 
-	saveAllProperties() {
-
+	handleChange(event) {
+		this.setState({temporaryPropertiesJson:{[event.target.name]: JSON.parse(event.target.value)}});
 	}
 
 	renderAllParameters() {
@@ -77,8 +85,8 @@ export default class LoopProperties extends React.Component {
 	}
 
 	getDcaeParameters() {
-		if (typeof (this.state.loopCache.getGlobalProperties()) !== "undefined") {
-			return JSON.stringify(this.state.loopCache.getGlobalProperties()["dcaeDeployParameters"]);
+		if (typeof (this.state.temporaryPropertiesJson) !== "undefined") {
+			return JSON.stringify(this.state.temporaryPropertiesJson["dcaeDeployParameters"]);
 		} else {
 			return "";
 		}
@@ -89,7 +97,7 @@ export default class LoopProperties extends React.Component {
 		return (
 			<Form.Group >
 				<Form.Label>Deploy Parameters</Form.Label>
-				<Form.Control as="textarea" rows="3" name="dcaeDeployParameters">{this.getDcaeParameters()}</Form.Control>
+				<Form.Control as="textarea" rows="3" name="dcaeDeployParameters" onChange={this.handleChange} defaultValue={this.getDcaeParameters()}></Form.Control>
 			</Form.Group>
 		);
 	}
