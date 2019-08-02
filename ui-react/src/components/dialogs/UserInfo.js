@@ -153,7 +153,7 @@ export default class UserInfo extends React.Component {
 					</Form.Group>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" type="null" onClick={this.handleClose}>Cacel</Button>
+					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
 				</Modal.Footer>
 			</ModalStyled>
 		);

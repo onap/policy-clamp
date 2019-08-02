@@ -27,7 +27,7 @@ import { Route, BrowserRouter } from 'react-router-dom'
 
 
 const routing = (
-	<BrowserRouter >
+	<BrowserRouter forceRefresh={false}>
 		<Route path="/" component={OnapClamp}/>
 	</BrowserRouter>
 );
