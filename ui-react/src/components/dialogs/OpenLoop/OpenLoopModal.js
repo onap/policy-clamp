@@ -44,7 +44,6 @@ export default class OpenLoopModal extends React.Component {
 
 		this.getLoopNames = this.getLoopNames.bind(this);
 		this.handleOpen = this.handleOpen.bind(this);
-		this.getModel = this.getModel.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.handleDropdownListChange = this.handleDropdownListChange.bind(this);
 		this.state = {
@@ -74,18 +73,11 @@ export default class OpenLoopModal extends React.Component {
 		});
 	}
 
-	getModel() {
-		LoopService.getLoop(this.state.chosenLoopName).then(loop => {
-			console.debug("Settingloop cache with json");
-			this.props.updateLoopCacheFunction(loop);
-		});
-	}
-
 	handleOpen() {
 		console.info("Loop " + this.state.chosenLoopName + " is chosen");
 		this.setState({ show: false });
 		this.props.history.push('/');
-		this.getModel();
+		this.props.loadLoopFunction(this.state.chosenLoopName);
 	}
 
 	render() {
