@@ -18,196 +18,196 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model;
 
+import com.google.gson.annotations.Expose;
+
 import javax.ws.rs.NotFoundException;
 
 import org.onap.clamp.clds.dao.CldsDao;
-
-import com.google.gson.annotations.Expose;
 
 /**
  * Represent a CLDS Model.
  */
 public class CldsTemplate {
 
-	public static final String STATUS_DESIGN = "DESIGN";
-	public static final String STATUS_ACTIVE = "ACTIVE";
-	public static final String STATUS_STOPPED = "STOPPED";
-	public static final String STATUS_DELETING = "DELETING";
-	// manual intervention required
-	public static final String STATUS_ERROR = "ERROR";
-	public static final String STATUS_UNKNOWN = "UNKNOWN";
+    public static final String STATUS_DESIGN = "DESIGN";
+    public static final String STATUS_ACTIVE = "ACTIVE";
+    public static final String STATUS_STOPPED = "STOPPED";
+    public static final String STATUS_DELETING = "DELETING";
+    // manual intervention required
+    public static final String STATUS_ERROR = "ERROR";
+    public static final String STATUS_UNKNOWN = "UNKNOWN";
 
-	@Expose
-	private String id;
-	@Expose
-	private String name;
-	@Expose
-	private String controlNamePrefix;
-	@Expose
-	private String controlNameUuid;
-	@Expose
-	private String bpmnId;
-	@Expose
-	private String bpmnUserid;
-	@Expose
-	private String bpmnText;
-	@Expose
-	private String imageId;
-	@Expose
-	private String imageUserid;
-	@Expose
-	private String imageText;
-	@Expose
-	private String propId;
-	@Expose
-	private String propUserid;
-	@Expose
-	private String propText;
-	@Expose
-	private boolean userAuthorizedToUpdate;
+    @Expose
+    private String id;
+    @Expose
+    private String name;
+    @Expose
+    private String controlNamePrefix;
+    @Expose
+    private String controlNameUuid;
+    @Expose
+    private String bpmnId;
+    @Expose
+    private String bpmnUserid;
+    @Expose
+    private String bpmnText;
+    @Expose
+    private String imageId;
+    @Expose
+    private String imageUserid;
+    @Expose
+    private String imageText;
+    @Expose
+    private String propId;
+    @Expose
+    private String propUserid;
+    @Expose
+    private String propText;
+    @Expose
+    private boolean userAuthorizedToUpdate;
 
-	/**
-	 * Save template to DB.
-	 *
-	 * @param cldsDao The cldsDao
-	 * @param userid  The user Id
-	 */
-	public void save(CldsDao cldsDao, String userid) {
-		cldsDao.setTemplate(this, userid);
-	}
+    /**
+     * Save template to DB.
+     *
+     * @param cldsDao The cldsDao
+     * @param userid  The user Id
+     */
+    public void save(CldsDao cldsDao, String userid) {
+        cldsDao.setTemplate(this, userid);
+    }
 
-	/**
-	 * Retrieve from DB.
-	 *
-	 * @param cldsDao      The cldsDao
-	 * @param name         The template name to retrieve
-	 * @param okIfNotFound The flag indicating whether exception will be returned in
-	 *                     case nothing is found
-	 * @return Clds template from DB
-	 */
-	public static CldsTemplate retrieve(CldsDao cldsDao, String name, boolean okIfNotFound) {
-		// get from db
-		CldsTemplate template = cldsDao.getTemplate(name);
-		if (template.getId() == null && !okIfNotFound) {
-			throw new NotFoundException();
-		}
-		return template;
-	}
+    /**
+     * Retrieve from DB.
+     *
+     * @param cldsDao      The cldsDao
+     * @param name         The template name to retrieve
+     * @param okIfNotFound The flag indicating whether exception will be returned in
+     *                     case nothing is found
+     * @return Clds template from DB
+     */
+    public static CldsTemplate retrieve(CldsDao cldsDao, String name, boolean okIfNotFound) {
+        // get from db
+        CldsTemplate template = cldsDao.getTemplate(name);
+        if (template.getId() == null && !okIfNotFound) {
+            throw new NotFoundException();
+        }
+        return template;
+    }
 
-	public String getBpmnUserid() {
-		return bpmnUserid;
-	}
+    public String getBpmnUserid() {
+        return bpmnUserid;
+    }
 
-	public void setBpmnUserid(String bpmnUserid) {
-		this.bpmnUserid = bpmnUserid;
-	}
+    public void setBpmnUserid(String bpmnUserid) {
+        this.bpmnUserid = bpmnUserid;
+    }
 
-	public String getBpmnText() {
-		return bpmnText;
-	}
+    public String getBpmnText() {
+        return bpmnText;
+    }
 
-	public void setBpmnText(String bpmnText) {
-		this.bpmnText = bpmnText;
-	}
+    public void setBpmnText(String bpmnText) {
+        this.bpmnText = bpmnText;
+    }
 
-	public String getImageUserid() {
-		return imageUserid;
-	}
+    public String getImageUserid() {
+        return imageUserid;
+    }
 
-	public void setImageUserid(String imageUserid) {
-		this.imageUserid = imageUserid;
-	}
+    public void setImageUserid(String imageUserid) {
+        this.imageUserid = imageUserid;
+    }
 
-	public String getImageText() {
-		return imageText;
-	}
+    public String getImageText() {
+        return imageText;
+    }
 
-	public void setImageText(String imageText) {
-		this.imageText = imageText;
-	}
+    public void setImageText(String imageText) {
+        this.imageText = imageText;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getControlNamePrefix() {
-		return controlNamePrefix;
-	}
+    public String getControlNamePrefix() {
+        return controlNamePrefix;
+    }
 
-	public void setControlNamePrefix(String controlNamePrefix) {
-		this.controlNamePrefix = controlNamePrefix;
-	}
+    public void setControlNamePrefix(String controlNamePrefix) {
+        this.controlNamePrefix = controlNamePrefix;
+    }
 
-	public String getControlNameUuid() {
-		return controlNameUuid;
-	}
+    public String getControlNameUuid() {
+        return controlNameUuid;
+    }
 
-	public void setControlNameUuid(String controlNameUuid) {
-		this.controlNameUuid = controlNameUuid;
-	}
+    public void setControlNameUuid(String controlNameUuid) {
+        this.controlNameUuid = controlNameUuid;
+    }
 
-	public String getPropId() {
-		return propId;
-	}
+    public String getPropId() {
+        return propId;
+    }
 
-	public void setPropId(String propId) {
-		this.propId = propId;
-	}
+    public void setPropId(String propId) {
+        this.propId = propId;
+    }
 
-	public String getPropUserid() {
-		return propUserid;
-	}
+    public String getPropUserid() {
+        return propUserid;
+    }
 
-	public void setPropUserid(String propUserid) {
-		this.propUserid = propUserid;
-	}
+    public void setPropUserid(String propUserid) {
+        this.propUserid = propUserid;
+    }
 
-	public String getPropText() {
-		return propText;
-	}
+    public String getPropText() {
+        return propText;
+    }
 
-	public void setPropText(String propText) {
-		this.propText = propText;
-	}
+    public void setPropText(String propText) {
+        this.propText = propText;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getBpmnId() {
-		return bpmnId;
-	}
+    public String getBpmnId() {
+        return bpmnId;
+    }
 
-	public void setBpmnId(String bpmnId) {
-		this.bpmnId = bpmnId;
-	}
+    public void setBpmnId(String bpmnId) {
+        this.bpmnId = bpmnId;
+    }
 
-	public String getImageId() {
-		return imageId;
-	}
+    public String getImageId() {
+        return imageId;
+    }
 
-	public void setImageId(String imageId) {
-		this.imageId = imageId;
-	}
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
 
-	public boolean isUserAuthorizedToUpdate() {
-		return userAuthorizedToUpdate;
-	}
+    public boolean isUserAuthorizedToUpdate() {
+        return userAuthorizedToUpdate;
+    }
 
-	public void setUserAuthorizedToUpdate(boolean userAuthorizedToUpdate) {
-		this.userAuthorizedToUpdate = userAuthorizedToUpdate;
-	}
+    public void setUserAuthorizedToUpdate(boolean userAuthorizedToUpdate) {
+        this.userAuthorizedToUpdate = userAuthorizedToUpdate;
+    }
 }

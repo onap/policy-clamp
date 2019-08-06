@@ -18,7 +18,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.clamp.clds.model;
@@ -77,8 +77,8 @@ public class CldsServiceData implements Serializable {
     }
 
     /**
-     * Filter out any VFs that the user is not authorized for. Use the
-     * CldsService to determine if the user is authorized for a VF.
+     * Filter out any VFs that the user is not authorized for. Use the CldsService
+     * to determine if the user is authorized for a VF.
      *
      * @param svc The clds service
      */
