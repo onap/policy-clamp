@@ -21,20 +21,12 @@
  *
  */
 import React from 'react';
+import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
-
-const StyledNavDropdownItem = styled(NavDropdown.Item)`
-	color: ${props => props.theme.menuFontColor};
-	background-color: ${props => props.theme.menuBackgroundColor};
-	:hover {
-			background-color: ${props => props.theme.menuHighlightedBackgroundColor};
-			color:  ${props => props.theme.menuHighlightedFontColor};
-	}
-`;
 
 const StyledLink = styled(Link)`
 	color: ${props => props.theme.menuColor};
@@ -53,31 +45,41 @@ const StyledLink = styled(Link)`
 			color:  ${props => props.theme.loopViewerHeaderFontColor};
 	}
 `;
-
+const StyledNavLink = styled(Nav.Link)`
+	color: ${props => props.theme.menuColor};
+	background-color: ${props => props.theme.menuBackgroundColor};
+  font-weight: normal;
+	padding: .25rem 1.5rem;
+	:hover {
+			background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
+			color:  ${props => props.theme.loopViewerHeaderFontColor}
+	}
+`;
 export default class MenuBar extends React.Component {
+
 	render () {
 		return (
-				<Navbar.Collapse id="basic-navbar-nav" className="justify-content-center">
-					<NavDropdown title="Closed Loop" id="basic-nav-dropdown">
-						<StyledNavDropdownItem as={StyledLink} to="/openLoop">Open CL</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="/loopProperties">Properties CL</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="/closeLoop">Close Model</StyledNavDropdownItem>
+				<Navbar.Collapse>
+					<NavDropdown title="Closed Loop">
+							<NavDropdown.Item as={StyledLink} to="/openLoop">Open CL</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/loopProperties">Properties CL</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/closeLoop">Close Model</NavDropdown.Item>
 					</NavDropdown>
-					<NavDropdown title="Manage" id="basic-nav-dropdown">
-						<StyledNavDropdownItem as={StyledLink} to="/operationalPolicyModal">Submit</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="#action/3.2">Stop</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="#action/3.3">Restart</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="#action/3.3">Delete</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="#action/3.3">Deploy</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="#action/3.3">UnDeploy</StyledNavDropdownItem>
+					<NavDropdown title="Manage">
+							<NavDropdown.Item as={StyledLink} to="/submit">Submit</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/stop">Stop</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/restart">Restart</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/delete">Delete</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/deploy">Deploy</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/undeploy">UnDeploy</NavDropdown.Item>
 					</NavDropdown>
-					<NavDropdown title="View" id="basic-nav-dropdown">
-						<StyledNavDropdownItem as={StyledLink} to="#action/3.1">Refresh Status</StyledNavDropdownItem>
+					<NavDropdown title="View">
+							<NavDropdown.Item as={StyledLink} to="/refreshStatus">Refresh Status</NavDropdown.Item>
 					</NavDropdown>
-					<NavDropdown title="Help" id="basic-nav-dropdown">
-						<StyledNavDropdownItem href="https://wiki.onap.org/" target="_blank">Wiki</StyledNavDropdownItem>
-						<StyledNavDropdownItem href="mailto:onap-discuss@lists.onap.org?subject=CLAMP&body=Please send us suggestions or feature enhancements or defect. If possible, please send us the steps to replicate any defect.">Contact Us</StyledNavDropdownItem>
-						<StyledNavDropdownItem as={StyledLink} to="/userInfo">User Info</StyledNavDropdownItem>
+					<NavDropdown title="Help">
+							<StyledNavLink href="https://wiki.onap.org/" target="_blank">Wiki</StyledNavLink>
+							<StyledNavLink href="mailto:onap-discuss@lists.onap.org?subject=CLAMP&body=Please send us suggestions or feature enhancements or defect. If possible, please send us the steps to replicate any defect.">Contact Us</StyledNavLink>
+							<NavDropdown.Item as={StyledLink} to="/userInfo">User Info</NavDropdown.Item>
 					</NavDropdown>
 				</Navbar.Collapse>
 		);
