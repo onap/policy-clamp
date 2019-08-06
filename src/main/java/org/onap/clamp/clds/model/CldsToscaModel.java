@@ -31,11 +31,16 @@ import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 
+import com.google.gson.annotations.Expose;
+
 public class CldsToscaModel extends CldsToscaModelRevision {
 
+	@Expose
     private String id;
-    private String policyType;
-    private String toscaModelName;
+	@Expose
+	private String policyType;
+	@Expose
+	private String toscaModelName;
 
     /**
      * Construct.

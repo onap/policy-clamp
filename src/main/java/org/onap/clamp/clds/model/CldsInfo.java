@@ -23,79 +23,88 @@
 
 package org.onap.clamp.clds.model;
 
+import com.google.gson.annotations.Expose;
+
 public class CldsInfo {
+	@Expose
+	private String userName;
+	@Expose
+	private String cldsVersion;
+	@Expose
+	private boolean permissionReadCl;
+	@Expose
+	private boolean permissionUpdateCl;
+	@Expose
+	private boolean permissionReadTemplate;
+	@Expose
+	private boolean permissionUpdateTemplate;
+	@Expose
+	private boolean permissionReadTosca;
+	@Expose
+	private boolean permissionUpdateTosca;
 
-    private String userName;
-    private String cldsVersion;
-    private boolean permissionReadCl;
-    private boolean permissionUpdateCl;
-    private boolean permissionReadTemplate;
-    private boolean permissionUpdateTemplate;
-    private boolean permissionReadTosca;
-    private boolean permissionUpdateTosca;
+	public String getUserName() {
+		return userName;
+	}
 
-    public String getUserName() {
-        return userName;
-    }
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+	public String getCldsVersion() {
+		return cldsVersion;
+	}
 
-    public String getCldsVersion() {
-        return cldsVersion;
-    }
+	public void setCldsVersion(String cldsVersion) {
+		this.cldsVersion = cldsVersion;
+	}
 
-    public void setCldsVersion(String cldsVersion) {
-        this.cldsVersion = cldsVersion;
-    }
+	public boolean isPermissionReadCl() {
+		return permissionReadCl;
+	}
 
-    public boolean isPermissionReadCl() {
-        return permissionReadCl;
-    }
+	public void setPermissionReadCl(boolean permissionReadCl) {
+		this.permissionReadCl = permissionReadCl;
+	}
 
-    public void setPermissionReadCl(boolean permissionReadCl) {
-        this.permissionReadCl = permissionReadCl;
-    }
+	public boolean isPermissionUpdateCl() {
+		return permissionUpdateCl;
+	}
 
-    public boolean isPermissionUpdateCl() {
-        return permissionUpdateCl;
-    }
+	public void setPermissionUpdateCl(boolean permissionUpdateCl) {
+		this.permissionUpdateCl = permissionUpdateCl;
+	}
 
-    public void setPermissionUpdateCl(boolean permissionUpdateCl) {
-        this.permissionUpdateCl = permissionUpdateCl;
-    }
+	public boolean isPermissionReadTemplate() {
+		return permissionReadTemplate;
+	}
 
-    public boolean isPermissionReadTemplate() {
-        return permissionReadTemplate;
-    }
+	public void setPermissionReadTemplate(boolean permissionReadTemplate) {
+		this.permissionReadTemplate = permissionReadTemplate;
+	}
 
-    public void setPermissionReadTemplate(boolean permissionReadTemplate) {
-        this.permissionReadTemplate = permissionReadTemplate;
-    }
+	public boolean isPermissionUpdateTemplate() {
+		return permissionUpdateTemplate;
+	}
 
-    public boolean isPermissionUpdateTemplate() {
-        return permissionUpdateTemplate;
-    }
+	public void setPermissionUpdateTemplate(boolean permissionUpdateTemplate) {
+		this.permissionUpdateTemplate = permissionUpdateTemplate;
+	}
 
-    public void setPermissionUpdateTemplate(boolean permissionUpdateTemplate) {
-        this.permissionUpdateTemplate = permissionUpdateTemplate;
-    }
+	public boolean isPermissionReadTosca() {
+		return permissionReadTosca;
+	}
 
-    public boolean isPermissionReadTosca() {
-        return permissionReadTosca;
-    }
+	public void setPermissionReadTosca(boolean permissionReadTosca) {
+		this.permissionReadTosca = permissionReadTosca;
+	}
 
-    public void setPermissionReadTosca(boolean permissionReadTosca) {
-        this.permissionReadTosca = permissionReadTosca;
-    }
+	public boolean isPermissionUpdateTosca() {
+		return permissionUpdateTosca;
+	}
 
-    public boolean isPermissionUpdateTosca() {
-        return permissionUpdateTosca;
-    }
-
-    public void setPermissionUpdateTosca(boolean permissionUpdateTosca) {
-        this.permissionUpdateTosca = permissionUpdateTosca;
-    }
+	public void setPermissionUpdateTosca(boolean permissionUpdateTosca) {
+		this.permissionUpdateTosca = permissionUpdateTosca;
+	}
 
 }
