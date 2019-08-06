@@ -23,39 +23,43 @@
 
 package org.onap.clamp.clds.model;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * ValueItem used for value lists.
  */
 public class ValueItem {
-    private String value;
+	@Expose
+	private String value;
 
-    /**
-     * Instantiate using value.
-     *
-     * @param value The value
-     */
-    public ValueItem(String value) {
-        this.value = value;
-    }
+	/**
+	 * Instantiate using value.
+	 *
+	 * @param value The value
+	 */
+	public ValueItem(String value) {
+		this.value = value;
+	}
 
-    public ValueItem() {
-    }
+	public ValueItem() {
+	}
 
-    /**
-     * Get the value.
-     * @return the value
-     */
-    public String getValue() {
-        return value;
-    }
+	/**
+	 * Get the value.
+	 * 
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
 
-    /**
-     * Set the value.
-     * @param value
-     *            the value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
-    }
+	/**
+	 * Set the value.
+	 * 
+	 * @param value the value to set
+	 */
+	public void setValue(String value) {
+		this.value = value;
+	}
 
 }

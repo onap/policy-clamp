@@ -28,146 +28,161 @@ import java.util.List;
 
 import org.onap.clamp.clds.dao.CldsDao;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Represents a CLDS Dictionary.
  */
 
 public class CldsDictionary {
 
-    private String dictionaryId;
-    private String dictionaryName;
-    private String createdBy;
-    private String updatedBy;
-    private String lastUpdatedDate;
-    private List<CldsDictionaryItem> cldsDictionaryItems = new ArrayList<>();
+	@Expose
+	private String dictionaryId;
+	@Expose
+	private String dictionaryName;
 
-    /**
-     * Creates or updates dictionary item for a dictionary in DB.
-     *
-     * @param dictionaryName The dictionary name
-     * @param cldsDao The CldsDao
-     * @param userId The user ID
-     */
-    public void save(String dictionaryName, CldsDao cldsDao, String userId) {
-        List<CldsDictionary> list = cldsDao.getDictionary(this.getDictionaryId(), dictionaryName);
-        if (list != null && !list.isEmpty()) {
-            CldsDictionary cldsDictionary = list.stream().findFirst().get();
-            if (!cldsDictionary.getDictionaryName().equalsIgnoreCase(this.getDictionaryName())) {
-                cldsDao.updateDictionary(cldsDictionary.getDictionaryId(), this, userId);
-                this.setCreatedBy(cldsDictionary.getCreatedBy());
-            } else {
-                this.setDictionaryId(cldsDictionary.getDictionaryId());
-                this.setCreatedBy(cldsDictionary.getCreatedBy());
-                this.setUpdatedBy(cldsDictionary.getUpdatedBy());
-                this.setLastUpdatedDate(cldsDictionary.getLastUpdatedDate());
-            }
-        } else {
-            this.setCreatedBy(userId);
-            this.setUpdatedBy(userId);
-            cldsDao.insDictionary(this);
-        }
-    }
+	@Expose
+	private String createdBy;
+	@Expose
+	private String updatedBy;
+	@Expose
+	private String lastUpdatedDate;
+	@Expose
+	private List<CldsDictionaryItem> cldsDictionaryItems = new ArrayList<>();
 
-    /**
-     * Get the dictionary ID.
-     * @return the dictionaryId
-     */
-    public String getDictionaryId() {
-        return dictionaryId;
-    }
+	/**
+	 * Creates or updates dictionary item for a dictionary in DB.
+	 *
+	 * @param dictionaryName The dictionary name
+	 * @param cldsDao        The CldsDao
+	 * @param userId         The user ID
+	 */
+	public void save(String dictionaryName, CldsDao cldsDao, String userId) {
+		List<CldsDictionary> list = cldsDao.getDictionary(this.getDictionaryId(), dictionaryName);
+		if (list != null && !list.isEmpty()) {
+			CldsDictionary cldsDictionary = list.stream().findFirst().get();
+			if (!cldsDictionary.getDictionaryName().equalsIgnoreCase(this.getDictionaryName())) {
+				cldsDao.updateDictionary(cldsDictionary.getDictionaryId(), this, userId);
+				this.setCreatedBy(cldsDictionary.getCreatedBy());
+			} else {
+				this.setDictionaryId(cldsDictionary.getDictionaryId());
+				this.setCreatedBy(cldsDictionary.getCreatedBy());
+				this.setUpdatedBy(cldsDictionary.getUpdatedBy());
+				this.setLastUpdatedDate(cldsDictionary.getLastUpdatedDate());
+			}
+		} else {
+			this.setCreatedBy(userId);
+			this.setUpdatedBy(userId);
+			cldsDao.insDictionary(this);
+		}
+	}
 
-    /**
-     * Set the dictionary Id.
-     * @param dictionaryId
-     *        the dictionaryId to set
-     */
-    public void setDictionaryId(String dictionaryId) {
-        this.dictionaryId = dictionaryId;
-    }
+	/**
+	 * Get the dictionary ID.
+	 * 
+	 * @return the dictionaryId
+	 */
+	public String getDictionaryId() {
+		return dictionaryId;
+	}
 
-    /**
-     * Get the dictionary name.
-     * @return the dictionaryName
-     */
-    public String getDictionaryName() {
-        return dictionaryName;
-    }
+	/**
+	 * Set the dictionary Id.
+	 * 
+	 * @param dictionaryId the dictionaryId to set
+	 */
+	public void setDictionaryId(String dictionaryId) {
+		this.dictionaryId = dictionaryId;
+	}
 
-    /**
-     * Set the dictionary name.
-     * @param dictionaryName
-     *        the dictionaryName to set
-     */
-    public void setDictionaryName(String dictionaryName) {
-        this.dictionaryName = dictionaryName;
-    }
+	/**
+	 * Get the dictionary name.
+	 * 
+	 * @return the dictionaryName
+	 */
+	public String getDictionaryName() {
+		return dictionaryName;
+	}
 
-    /**
-     * Get the createdBy info.
-     * @return the createdBy
-     */
-    public String getCreatedBy() {
-        return createdBy;
-    }
+	/**
+	 * Set the dictionary name.
+	 * 
+	 * @param dictionaryName the dictionaryName to set
+	 */
+	public void setDictionaryName(String dictionaryName) {
+		this.dictionaryName = dictionaryName;
+	}
 
-    /**
-     * Set the createdBy info.
-     * @param createdBy
-     *        the createdBy to set
-     */
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
+	/**
+	 * Get the createdBy info.
+	 * 
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
 
-    /**
-     * Get the updatedBy info.
-     * @return the updatedBy
-     */
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
+	/**
+	 * Set the createdBy info.
+	 * 
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
 
-    /**
-     * Set the updatedBy info.
-     * @param updatedby
-     *        the updatedBy to set
-     */
-    public void setUpdatedBy(String updatedby) {
-        updatedBy = updatedby;
-    }
+	/**
+	 * Get the updatedBy info.
+	 * 
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
 
-    /**
-     * Get the last updated date.
-     * @return the lastUpdatedDate
-     */
-    public String getLastUpdatedDate() {
-        return lastUpdatedDate;
-    }
+	/**
+	 * Set the updatedBy info.
+	 * 
+	 * @param updatedby the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedby) {
+		updatedBy = updatedby;
+	}
 
-    /**
-     * Set the last updated date.
-     * @param lastUpdatedDate
-     *        the lastUpdatedDate to set
-     */
-    public void setLastUpdatedDate(String lastUpdatedDate) {
-        this.lastUpdatedDate = lastUpdatedDate;
-    }
+	/**
+	 * Get the last updated date.
+	 * 
+	 * @return the lastUpdatedDate
+	 */
+	public String getLastUpdatedDate() {
+		return lastUpdatedDate;
+	}
 
-    /**
-     * Get all the dictionary items.
-     * @return the cldsDictionaryItems
-     */
-    public List<CldsDictionaryItem> getCldsDictionaryItems() {
-        return cldsDictionaryItems;
-    }
+	/**
+	 * Set the last updated date.
+	 * 
+	 * @param lastUpdatedDate the lastUpdatedDate to set
+	 */
+	public void setLastUpdatedDate(String lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
 
-    /**
-     * Set the whole dictionary items.
-     * @param cldsDictionaryItems
-     *        the cldsDictionaryItems to set
-     */
-    public void setCldsDictionaryItems(List<CldsDictionaryItem> cldsDictionaryItems) {
-        this.cldsDictionaryItems = cldsDictionaryItems;
-    }
+	/**
+	 * Get all the dictionary items.
+	 * 
+	 * @return the cldsDictionaryItems
+	 */
+	public List<CldsDictionaryItem> getCldsDictionaryItems() {
+		return cldsDictionaryItems;
+	}
+
+	/**
+	 * Set the whole dictionary items.
+	 * 
+	 * @param cldsDictionaryItems the cldsDictionaryItems to set
+	 */
+	public void setCldsDictionaryItems(List<CldsDictionaryItem> cldsDictionaryItems) {
+		this.cldsDictionaryItems = cldsDictionaryItems;
+	}
 
 }
