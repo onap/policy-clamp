@@ -23,6 +23,8 @@
 
 package org.onap.clamp.clds.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,16 +33,14 @@ import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 
-import com.google.gson.annotations.Expose;
-
 public class CldsToscaModel extends CldsToscaModelRevision {
 
-	@Expose
+    @Expose
     private String id;
-	@Expose
-	private String policyType;
-	@Expose
-	private String toscaModelName;
+    @Expose
+    private String policyType;
+    @Expose
+    private String toscaModelName;
 
     /**
      * Construct.
@@ -52,7 +52,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
      * Creates or updates Tosca Model to DB.
      *
      * @param cldsDao The cldsDao
-     * @param userId The user Id
+     * @param userId  The user Id
      */
     public CldsToscaModel save(CldsDao cldsDao, ClampProperties refProp, PolicyClient policyClient, String userId) {
         CldsToscaModel cldsToscaModel = null;
@@ -90,6 +90,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
 
     /**
      * Get the Id.
+     *
      * @return the id
      */
     public String getId() {
@@ -98,8 +99,8 @@ public class CldsToscaModel extends CldsToscaModelRevision {
 
     /**
      * Set the id.
-     * @param id
-     *        the id to set
+     *
+     * @param id the id to set
      */
     public void setId(String id) {
         this.id = id;
@@ -107,6 +108,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
 
     /**
      * Get the policy type.
+     *
      * @return the policyType
      */
     public String getPolicyType() {
@@ -115,8 +117,8 @@ public class CldsToscaModel extends CldsToscaModelRevision {
 
     /**
      * Set the policy type.
-     * @param policyType
-     *        the policyType to set
+     *
+     * @param policyType the policyType to set
      */
     public void setPolicyType(String policyType) {
         this.policyType = policyType;
@@ -124,6 +126,7 @@ public class CldsToscaModel extends CldsToscaModelRevision {
 
     /**
      * Get the tosca model name.
+     *
      * @return the toscaModelName
      */
     public String getToscaModelName() {
@@ -132,8 +135,8 @@ public class CldsToscaModel extends CldsToscaModelRevision {
 
     /**
      * Set the tosca model name.
-     * @param toscaModelName
-     *        the toscaModelName to set
+     *
+     * @param toscaModelName the toscaModelName to set
      */
     public void setToscaModelName(String toscaModelName) {
         this.toscaModelName = toscaModelName;
