@@ -41,9 +41,9 @@ import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/C
 import LoopProperties from './components/dialogs/LoopProperties';
 import UserInfo from './components/dialogs/UserInfo';
 import LoopService from './api/LoopService';
-import PerformAction from './components/menu/PerformActions';
-import RefreshStatus from './components/menu/RefreshStatus';
-import DeployLoop from './components/menu/DeployLoop';
+import PerformAction from './components/dialogs/PerformActions';
+import RefreshStatus from './components/dialogs/RefreshStatus';
+import DeployLoop from './components/dialogs/DeployLoop';
 
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
@@ -185,6 +185,7 @@ export default class LoopUI extends React.Component {
 		this.setState({ loopCache: new LoopCache({}), loopName: LoopUI.defaultLoopName });
 		this.props.history.push('/');
 	}
+	
  render() {
 		return (
 				<div id="main_div">

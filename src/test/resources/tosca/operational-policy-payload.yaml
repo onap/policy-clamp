@@ -8,35 +8,45 @@ topology_template:
         policy-id: testPolicy
       properties:
         controlLoop:
-          controlLoopName: control loop
-          version: 2.0.0
-          trigger_policy: new1
-          timeout: '30'
-          abatement: 'true'
+          timeout: '0'
+          abatement: 'True'
+          trigger_policy: policy1
+          controlLoopName: LOOP_ASJOy_v1_0_ResourceInstanceName1_tca
         policies:
-        - id: new1
-          recipe: Rebuild
-          retry: '10'
-          timeout: '20'
-          actor: SO
+        - id: policy1
+          recipe: Restart
+          retry: '0'
+          timeout: '0'
+          actor: APPC
           payload:
             requestParameters: '{"usePreload":true,"userParams":[]}'
             configurationParameters: '[{"ip-addr":"$.vf-module-topology.vf-module-parameters.param[10].value","oam-ip-addr":"$.vf-module-topology.vf-module-parameters.param[15].value","enabled":"$.vf-module-topology.vf-module-parameters.param[22].value"}]'
-          success: new2
-          failure: new2
-          failure_timeout: new2
-          failure_retries: new2
-          failure_exception: new2
-          failure_guard: new2
+          success: final_success
+          failure: policy2
+          failure_timeout: final_failure_timeout
+          failure_retries: final_failure_retries
+          failure_exception: final_failure_exception
+          failure_guard: final_failure_guard
           target:
-            type: VFC
-            resourceTargetId: test
-        - id: new2
-          recipe: Migrate
-          retry: '30'
-          timeout: '40'
-          actor: SDNC
+            type: VNF
+            resourceID: vLoadBalancerMS
+        - id: policy2
+          recipe: VF Module Create
+          retry: '0'
+          timeout: '0'
+          actor: SO
           payload: ''
+          success: final_success
+          failure: final_failure
+          failure_timeout: final_failure_timeout
+          failure_retries: final_failure_retries
+          failure_exception: final_failure_exception
+          failure_guard: final_failure_guard
           target:
-            type: VFC
-            resourceTargetId: test
+            type: VFMODULE
+            resourceID: Vloadbalancerms..vpkg..module-1
+            modelInvariantId: ca052563-eb92-4b5b-ad41-9111768ce043
+            modelVersionId: 1e725ccc-b823-4f67-82b9-4f4367070dbc
+            modelName: Vloadbalancerms..vpkg..module-1
+            modelVersion: '1'
+            modelCustomizationId: 1bffdc31-a37d-4dee-b65c-dde623a76e52

@@ -65,6 +65,19 @@ export const GlobalClampStyle = createGlobalStyle`
 	width: 100%;
 	height: 100%;
   }
+  
+  button {
+  	background-color: ${props => (props.theme.loopViewerHeaderBackgroundColor)};
+  	border: 1px;
+  	color: white;
+  	padding: 15px 32px;
+  	text-align: center;
+  	text-decoration: none;
+  	display: inline-block;
+  	font-size: ${props => props.theme.fontSize};
+  	font-family: ${props => props.theme.fontFamily};
+
+  }
 `
 
 export const DefaultClampTheme = {

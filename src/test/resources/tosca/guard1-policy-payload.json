@@ -1,16 +1,13 @@
 {
-	"policy-id": "guard1",
+	"policy-id": "guard.minmax.new",
 	"content": {
-		"recipe": "Rebuild",
-		"actor": "SO",
-		"clname": "testloop",
+		"actor": "APPC",
+		"recipe": "Restart",
 		"targets": ".*",
-		"min": "3",
-		"max": "7",
-		"limit": "",
-		"timeUnits": "",
-		"timeWindow": "",
-		"guardActiveStart": "00:00:01-05:00",
-		"guardActiveEnd": "23:59:01-05:00"
+		"clname": "LOOP_ASJOy_v1_0_ResourceInstanceName1_tca",
+		"guardActiveStart": "00:00:00Z",
+		"guardActiveEnd": "10:00:00Z",
+		"min": "0",
+		"max": "1"
 	}
 }

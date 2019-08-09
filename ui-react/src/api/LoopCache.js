@@ -51,6 +51,10 @@ export default class LoopCache {
 	getOperationalPolicyConfigurationJson() {
 		return this.loopJsonCache["operationalPolicies"]["0"]["configurationsJson"];
 	}
+	
+	getOperationalPolicyJsonSchema() {
+		return this.loopJsonCache["operationalPolicySchema"];
+	}
 
 	getOperationalPolicies() {
 		return this.loopJsonCache["operationalPolicies"];

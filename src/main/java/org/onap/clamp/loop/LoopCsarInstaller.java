@@ -99,10 +99,10 @@ public class LoopCsarInstaller implements CsarInstaller {
         boolean alreadyInstalled = true;
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
             alreadyInstalled = alreadyInstalled
-                && loopRepository.existsById(Loop.generateLoopName(csar.getSdcNotification().getServiceName(),
-                    csar.getSdcNotification().getServiceVersion(),
-                    blueprint.getValue().getResourceAttached().getResourceInstanceName(),
-                    blueprint.getValue().getBlueprintArtifactName()));
+                    && loopRepository.existsById(Loop.generateLoopName(csar.getSdcNotification().getServiceName(),
+                            csar.getSdcNotification().getServiceVersion(),
+                            blueprint.getValue().getResourceAttached().getResourceInstanceName(),
+                            blueprint.getValue().getBlueprintArtifactName()));
         }
         return alreadyInstalled;
     }
@@ -110,7 +110,7 @@ public class LoopCsarInstaller implements CsarInstaller {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void installTheCsar(CsarHandler csar)
-        throws SdcArtifactInstallerException, InterruptedException, PolicyModelException {
+            throws SdcArtifactInstallerException, InterruptedException, PolicyModelException {
         try {
             logger.info("Installing the CSAR " + csar.getFilePath());
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
@@ -126,53 +126,53 @@ public class LoopCsarInstaller implements CsarInstaller {
     }
 
     private Loop createLoopFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact)
-        throws IOException, ParseException, InterruptedException {
+            throws IOException, ParseException, InterruptedException {
         Loop newLoop = new Loop();
         newLoop.setBlueprint(blueprintArtifact.getDcaeBlueprint());
         newLoop.setName(Loop.generateLoopName(csar.getSdcNotification().getServiceName(),
-            csar.getSdcNotification().getServiceVersion(),
-            blueprintArtifact.getResourceAttached().getResourceInstanceName(),
-            blueprintArtifact.getBlueprintArtifactName()));
+                csar.getSdcNotification().getServiceVersion(),
+                blueprintArtifact.getResourceAttached().getResourceInstanceName(),
+                blueprintArtifact.getBlueprintArtifactName()));
         newLoop.setLastComputedState(LoopState.DESIGN);
 
         List<MicroService> microServicesChain = chainGenerator
-            .getChainOfMicroServices(blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()));
+                .getChainOfMicroServices(blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()));
         if (microServicesChain.isEmpty()) {
             microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
         }
-
-        newLoop
-            .setMicroServicePolicies(createMicroServicePolicies(microServicesChain, csar, blueprintArtifact, newLoop));
+        newLoop.setModelPropertiesJson(createModelPropertiesJson(csar));
+        newLoop.setMicroServicePolicies(
+                createMicroServicePolicies(microServicesChain, csar, blueprintArtifact, newLoop));
         newLoop.setOperationalPolicies(createOperationalPolicies(csar, blueprintArtifact, newLoop));
 
         newLoop.setSvgRepresentation(svgFacade.getSvgImage(microServicesChain));
         newLoop.setGlobalPropertiesJson(createGlobalPropertiesJson(blueprintArtifact, newLoop));
-        newLoop.setModelPropertiesJson(createModelPropertiesJson(csar));
+
         DcaeInventoryResponse dcaeResponse = queryDcaeToGetServiceTypeId(blueprintArtifact);
         newLoop.setDcaeBlueprintId(dcaeResponse.getTypeId());
         return newLoop;
     }
 
     private HashSet<OperationalPolicy> createOperationalPolicies(CsarHandler csar, BlueprintArtifact blueprintArtifact,
-        Loop newLoop) {
+            Loop newLoop) {
         return new HashSet<>(Arrays.asList(new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL",
-            csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
-            blueprintArtifact.getResourceAttached().getResourceInstanceName(),
-            blueprintArtifact.getBlueprintArtifactName()), newLoop, new JsonObject())));
+                csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
+                blueprintArtifact.getResourceAttached().getResourceInstanceName(),
+                blueprintArtifact.getBlueprintArtifactName()), newLoop, new JsonObject())));
     }
 
     private HashSet<MicroServicePolicy> createMicroServicePolicies(List<MicroService> microServicesChain,
-        CsarHandler csar, BlueprintArtifact blueprintArtifact, Loop newLoop) throws IOException {
+            CsarHandler csar, BlueprintArtifact blueprintArtifact, Loop newLoop) throws IOException {
         HashSet<MicroServicePolicy> newSet = new HashSet<>();
 
         for (MicroService microService : microServicesChain) {
             MicroServicePolicy microServicePolicy = new MicroServicePolicy(
-                Policy.generatePolicyName(microService.getName(), csar.getSdcNotification().getServiceName(),
-                    csar.getSdcNotification().getServiceVersion(),
-                    blueprintArtifact.getResourceAttached().getResourceInstanceName(),
-                    blueprintArtifact.getBlueprintArtifactName()),
-                microService.getModelType(), csar.getPolicyModelYaml().orElse(""), false,
-                new HashSet<>(Arrays.asList(newLoop)));
+                    Policy.generatePolicyName(microService.getName(), csar.getSdcNotification().getServiceName(),
+                            csar.getSdcNotification().getServiceVersion(),
+                            blueprintArtifact.getResourceAttached().getResourceInstanceName(),
+                            blueprintArtifact.getBlueprintArtifactName()),
+                    microService.getModelType(), csar.getPolicyModelYaml().orElse(""), false,
+                    new HashSet<>(Arrays.asList(newLoop)));
 
             newSet.add(microServicePolicy);
             microService.setMappedNameJpa(microServicePolicy.getName());
@@ -191,8 +191,8 @@ public class LoopCsarInstaller implements CsarInstaller {
         // Loop on all Groups defined in the service (VFModule entries type:
         // org.openecomp.groups.VfModule)
         for (IEntityDetails entity : csar.getSdcCsarHelper().getEntity(
-            EntityQuery.newBuilder(EntityTemplateType.GROUP).build(),
-            TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE).build(), false)) {
+                EntityQuery.newBuilder(EntityTemplateType.GROUP).build(),
+                TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE).build(), false)) {
             // Get all metadata info
             JsonObject allVfProps = (JsonObject) JsonUtils.GSON.toJsonTree(entity.getMetadata().getAllProperties());
             vfModuleProps.add(entity.getMetadata().getAllProperties().get("vfModuleModelName"), allVfProps);
@@ -200,7 +200,7 @@ public class LoopCsarInstaller implements CsarInstaller {
             // volume_group, etc ... fields under the VFmodule name
             for (Entry<String, Property> additionalProp : entity.getProperties().entrySet()) {
                 allVfProps.add(additionalProp.getValue().getName(),
-                    JsonUtils.GSON.toJsonTree(additionalProp.getValue().getValue()));
+                        JsonUtils.GSON.toJsonTree(additionalProp.getValue().getValue()));
             }
         }
         return vfModuleProps;
@@ -214,7 +214,7 @@ public class LoopCsarInstaller implements CsarInstaller {
             // For each type, get the metadata of each nodetemplate
             for (NodeTemplate nodeTemplate : csar.getSdcCsarHelper().getServiceNodeTemplateBySdcType(type)) {
                 resourcesPropByType.add(nodeTemplate.getName(),
-                    JsonUtils.GSON.toJsonTree(nodeTemplate.getMetaData().getAllProperties()));
+                        JsonUtils.GSON.toJsonTree(nodeTemplate.getMetaData().getAllProperties()));
             }
             resourcesProp.add(type.getValue(), resourcesPropByType);
         }
@@ -225,7 +225,7 @@ public class LoopCsarInstaller implements CsarInstaller {
         JsonObject modelProperties = new JsonObject();
         // Add service details
         modelProperties.add("serviceDetails", JsonUtils.GSON.fromJson(
-            JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class));
+                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class));
         // Add properties details for each type, VfModule, VF, VFC, ....
         JsonObject resourcesProp = createServicePropertiesByType(csar);
         resourcesProp.add("VFModule", createVfModuleProperties(csar));
@@ -237,7 +237,7 @@ public class LoopCsarInstaller implements CsarInstaller {
         JsonObject node = new JsonObject();
         Yaml yaml = new Yaml();
         Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
-            .load(blueprintArtifact.getDcaeBlueprint())).get("inputs"));
+                .load(blueprintArtifact.getDcaeBlueprint())).get("inputs"));
         inputsNodes.entrySet().stream().filter(e -> !e.getKey().contains("policy_id")).forEach(elem -> {
             Object defaultValue = ((Map<String, Object>) elem.getValue()).get("default");
             if (defaultValue != null) {
@@ -258,10 +258,10 @@ public class LoopCsarInstaller implements CsarInstaller {
      * @return The DcaeInventoryResponse object containing the dcae values
      */
     private DcaeInventoryResponse queryDcaeToGetServiceTypeId(BlueprintArtifact blueprintArtifact)
-        throws IOException, ParseException, InterruptedException {
+            throws IOException, ParseException, InterruptedException {
         return dcaeInventoryService.getDcaeInformation(blueprintArtifact.getBlueprintArtifactName(),
-            blueprintArtifact.getBlueprintInvariantServiceUuid(),
-            blueprintArtifact.getResourceAttached().getResourceInvariantUUID());
+                blueprintArtifact.getBlueprintInvariantServiceUuid(),
+                blueprintArtifact.getResourceAttached().getResourceInvariantUUID());
     }
 
     private void addPropertyToNode(JsonObject node, String key, Object value) {

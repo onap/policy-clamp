@@ -20,19 +20,33 @@
  * ===================================================================
  *
  */
-import React from 'react';
-import ReactDOM from 'react-dom';
-import OnapClamp from './OnapClamp';
-import { Route, BrowserRouter } from 'react-router-dom'
 
+package org.onap.clamp.policy.operational;
 
-const routing = (
-	<BrowserRouter forceRefresh={false}>
-		<Route path="/" component={OnapClamp}/>
-	</BrowserRouter>
-);
+import static org.assertj.core.api.Assertions.assertThat;
 
-export var mainClamp = ReactDOM.render(
-	routing,
-	document.getElementById('root')
-)
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import java.io.IOException;
+
+import org.junit.Test;
+import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.skyscreamer.jsonassert.JSONAssert;
+
+public class OperationalPolicyRepresentationBuilderTest {
+
+    @Test
+    public void testOperationalPolicyPayloadConstruction() throws IOException {
+        JsonObject jsonModel = new GsonBuilder().create()
+                .fromJson(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"), JsonObject.class);
+
+        JsonObject jsonSchema = OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(jsonModel);
+
+        assertThat(jsonSchema).isNotNull();
+
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/operational-policy-json-schema.json"),
+                new GsonBuilder().create().toJson(jsonSchema), false);
+    }
+
+}

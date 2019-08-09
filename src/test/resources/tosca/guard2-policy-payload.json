@@ -1,16 +1,14 @@
 {
-	"policy-id": "guard2",
+	"policy-id": "guard.frequency.new",
 	"content": {
-		"recipe": "Migrate",
-		"actor": "SO",
-		"clname": "testloop",
+		"actor": "APPC",
+		"recipe": "Rebuild",
 		"targets": ".*",
-		"min": "1",
-		"max": "2",
-		"limit": "",
-		"timeUnits": "",
-		"timeWindow": "",
-		"guardActiveStart": "00:00:01-05:00",
-		"guardActiveEnd": "23:59:01-05:00"
+		"clname": "LOOP_ASJOy_v1_0_ResourceInstanceName1_tca",
+		"guardActiveStart": "00:00:00Z",
+		"guardActiveEnd": "10:00:00Z",
+		"limit": "1",
+		"timeWindow": "2",
+		"timeUnits": "minute"
 	}
 }

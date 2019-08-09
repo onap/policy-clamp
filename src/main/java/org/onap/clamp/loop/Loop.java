@@ -23,9 +23,13 @@
 
 package org.onap.clamp.loop;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,6 +63,7 @@ import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.onap.clamp.policy.operational.OperationalPolicyRepresentationBuilder;
 
 @Entity
 @Table(name = "loops")
@@ -69,6 +74,9 @@ public class Loop implements Serializable {
      * The serial version id.
      */
     private static final long serialVersionUID = -286522707701388642L;
+
+    @Transient
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(Loop.class);
 
     @Id
     @Expose
@@ -89,6 +97,11 @@ public class Loop implements Serializable {
 
     @Column(columnDefinition = "MEDIUMTEXT", name = "svg_representation")
     private String svgRepresentation;
+
+    @Expose
+    @Type(type = "json")
+    @Column(columnDefinition = "json", name = "operational_policy_schema")
+    private JsonObject operationalPolicySchema;
 
     @Expose
     @Type(type = "json")
@@ -131,6 +144,9 @@ public class Loop implements Serializable {
         this.addComponent(new DcaeComponent());
     }
 
+    /**
+     * Public constructor.
+     */
     public Loop() {
         initializeExternalComponents();
     }
@@ -256,6 +272,13 @@ public class Loop implements Serializable {
 
     void setModelPropertiesJson(JsonObject modelPropertiesJson) {
         this.modelPropertiesJson = modelPropertiesJson;
+        try {
+            this.operationalPolicySchema = OperationalPolicyRepresentationBuilder
+                    .generateOperationalPolicySchema(this.getModelPropertiesJson());
+        } catch (JsonSyntaxException | IOException | NullPointerException e) {
+            logger.error("Unable to generate the operational policy Schema ... ", e);
+            this.operationalPolicySchema = new JsonObject();
+        }
     }
 
     public Map<String, ExternalComponent> getComponents() {
@@ -273,20 +296,16 @@ public class Loop implements Serializable {
     /**
      * Generate the loop name.
      *
-     * @param serviceName
-     *        The service name
-     * @param serviceVersion
-     *        The service version
-     * @param resourceName
-     *        The resource name
-     * @param blueprintFileName
-     *        The blueprint file name
+     * @param serviceName       The service name
+     * @param serviceVersion    The service version
+     * @param resourceName      The resource name
+     * @param blueprintFileName The blueprint file name
      * @return The generated loop name
      */
     static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
-        String blueprintFilename) {
+            String blueprintFilename) {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
-            .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));
+                .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));
         return buffer.toString().replace('.', '_').replaceAll(" ", "");
     }
 

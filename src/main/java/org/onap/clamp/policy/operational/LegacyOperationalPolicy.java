@@ -25,6 +25,7 @@ package org.onap.clamp.policy.operational;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +34,15 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import org.onap.clamp.loop.Loop;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.ScalarStyle;
 import org.yaml.snakeyaml.Yaml;
 
 /**
- *
  * This class contains the code required to support the sending of Legacy
  * operational payload to policy engine. This will probably disappear in El
  * Alto.
- *
  */
 public class LegacyOperationalPolicy {
 
@@ -76,6 +76,13 @@ public class LegacyOperationalPolicy {
         return jsonElement;
     }
 
+    /**
+     * This method rework the payload attribute (yaml) that is normally wrapped in a
+     * string when coming from the UI.
+     * 
+     * @param policyJson The operational policy json config
+     * @return The same object reference but modified
+     */
     public static JsonElement reworkPayloadAttributes(JsonElement policyJson) {
         for (JsonElement policy : policyJson.getAsJsonObject().get("policies").getAsJsonArray()) {
             JsonElement payloadElem = policy.getAsJsonObject().get("payload");
@@ -135,9 +142,15 @@ public class LegacyOperationalPolicy {
         return mapResult;
     }
 
+    /**
+     * This method transforms the configuration json to a Yaml format.
+     * 
+     * @param operationalPolicyJsonElement The operational policy json config
+     * @return The Yaml as string
+     */
     public static String createPolicyPayloadYamlLegacy(JsonElement operationalPolicyJsonElement) {
         JsonElement opPolicy = fulfillPoliciesTreeField(
-            removeAllQuotes(reworkPayloadAttributes(operationalPolicyJsonElement.getAsJsonObject().deepCopy())));
+                removeAllQuotes(reworkPayloadAttributes(operationalPolicyJsonElement.getAsJsonObject().deepCopy())));
         Map<?, ?> jsonMap = createMap(opPolicy);
         DumperOptions options = new DumperOptions();
         options.setDefaultScalarStyle(ScalarStyle.PLAIN);
@@ -146,5 +159,23 @@ public class LegacyOperationalPolicy {
         // Policy can't support { } in the yaml
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         return (new Yaml(options)).dump(jsonMap);
+    }
+
+    /**
+     * This method load mandatory field in the operational policy configuration
+     * JSON.
+     * 
+     * @param configurationsJson The operational policy JSON
+     * @param loop               The parent loop object
+     */
+    public static void preloadConfiguration(JsonObject configurationsJson, Loop loop) {
+        if (configurationsJson.entrySet().isEmpty()) {
+            JsonObject controlLoopName = new JsonObject();
+            controlLoopName.addProperty("controlLoopName",
+                    loop != null ? loop.getName() : "Empty (NO loop loaded yet)");
+            JsonObject controlLoop = new JsonObject();
+            controlLoop.add("controlLoop", controlLoopName);
+            configurationsJson.add("operational_policy", controlLoop);
+        }
     }
 }

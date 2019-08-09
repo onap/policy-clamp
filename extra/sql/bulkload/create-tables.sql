@@ -24,6 +24,7 @@
         global_properties_json json,
         last_computed_state varchar(255) not null,
         model_properties_json json,
+        operational_policy_schema json not null,
         svg_representation MEDIUMTEXT,
         primary key (name)
     ) engine=InnoDB;

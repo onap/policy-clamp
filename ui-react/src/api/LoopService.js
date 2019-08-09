@@ -104,6 +104,30 @@ export default class LoopService {
 				return "";
 			});
 	}
+	
+	static setOperationalPolicyProperties(loopName, jsonData) {
+		return fetch('/restservices/clds/v2/loop/updateOperationalPolicies/' + loopName, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(jsonData),
+		})
+			.then(function (response) {
+				console.debug("updateOperationalPolicies response received: ", response.status);
+				if (response.ok) {
+					return response.text();
+				} else {
+					console.error("updateOperationalPolicies query failed");
+					return "";
+				}
+			})
+			.catch(function (error) {
+				console.error("updateOperationalPolicies error received", error);
+				return "";
+			});
+	}
 
 	static updateGlobalProperties(loopName, jsonData) {
 		return fetch('/restservices/clds/v2/loop/updateGlobalProperties/' + loopName, {
