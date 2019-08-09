@@ -5,10 +5,58 @@
 Release Notes
 =============
 
-Version: 4.0.3
+Version: 4.1.0
 --------------
 
-:Release Date: 2019-05-06
+:Release Date: 2019-08-19
+
+**New Features**
+
+The El Alto-Early Drop release is the fifth release of the Control Loop Automation Management Platform (CLAMP).
+
+The main goal of the El Alto-Early Drop release was to:
+
+    - _.Fix a maximum a security issues, especially the angular related issues by moving to React.
+
+**Bug Fixes**
+
+	- The full list of implemented user stories and epics is available on `CLAMP R5 - Early Drop RELEASE <https://wiki.onap.org/display/DW/CLAMP+R5+-+Early+Drop>`_
+	  This includes the list of bugs that were fixed during the course of this release.
+
+**Known Issues**
+
+    - `CLAMP-384 <https://jira.onap.org/browse/CLAMP-384>`_ Loop State in UI is not reflecting the current state
+
+**Security Notes**
+
+*Fixed Security Issues*
+
+    - `OJSI-166 <https://jira.onap.org/browse/OJSI-166>`_ Port 30290 exposes unprotected service outside of cluster.
+
+*Known Security Issues*
+
+*Known Vulnerabilities in Used Modules*
+
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release.
+The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=68540334>`_.
+
+Quick Links:
+ 	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
+
+ 	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
+
+ 	- `Project Vulnerability Review Table for CLAMP <https://wiki.onap.org/pages/viewpage.action?pageId=68540334>`_
+
+**Upgrade Notes**
+
+    New Docker Containers are available.
+
+
+
+Version: 4.0.5
+--------------
+
+:Release Date: 2019-06-06
 
 **New Features**
 
