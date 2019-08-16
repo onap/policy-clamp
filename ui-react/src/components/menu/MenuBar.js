@@ -24,6 +24,7 @@ import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import LoopUI from '../../LoopUI';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom'
@@ -56,25 +57,37 @@ const StyledNavLink = styled(Nav.Link)`
 	}
 `;
 export default class MenuBar extends React.Component {
+	state = {
+		loopName: this.props.loopName,
+		disabled: true
+	};
+
+	componentWillReceiveProps(newProps) {
+		if (newProps.loopName !== LoopUI.defaultLoopName) {
+			this.setState({ disabled: false });
+		} else {
+			this.setState({ disabled: true });
+		}
+	}
 
 	render () {
 		return (
 				<Navbar.Collapse>
 					<NavDropdown title="Closed Loop">
 							<NavDropdown.Item as={StyledLink} to="/openLoop">Open CL</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/loopProperties">Properties CL</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/closeLoop">Close Model</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties CL</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close Model</NavDropdown.Item>
 					</NavDropdown>
 					<NavDropdown title="Manage">
-							<NavDropdown.Item as={StyledLink} to="/submit">Submit</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/stop">Stop</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/restart">Restart</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/delete">Delete</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/deploy">Deploy</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/undeploy">UnDeploy</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/submit" disabled={this.state.disabled}>Submit</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/stop" disabled={this.state.disabled}>Stop</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/restart" disabled={this.state.disabled}>Restart</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/delete" disabled={this.state.disabled}>Delete</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/deploy" disabled={this.state.disabled}>Deploy</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/undeploy" disabled={this.state.disabled}>UnDeploy</NavDropdown.Item>
 					</NavDropdown>
 					<NavDropdown title="View">
-							<NavDropdown.Item as={StyledLink} to="/refreshStatus">Refresh Status</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/refreshStatus" disabled={this.state.disabled}>Refresh Status</NavDropdown.Item>
 					</NavDropdown>
 					<NavDropdown title="Help">
 							<StyledNavLink href="https://wiki.onap.org/" target="_blank">Wiki</StyledNavLink>

@@ -30,7 +30,6 @@ import LoopService from '../../api/LoopService';
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
-
 export default class LoopProperties extends React.Component {
 
 	state = {
@@ -45,7 +44,7 @@ export default class LoopProperties extends React.Component {
 		this.handleClose = this.handleClose.bind(this);
 		this.handleSave = this.handleSave.bind(this);
 		this.handleChange = this.handleChange.bind(this);
-		
+
 		this.renderDcaeParameters = this.renderDcaeParameters.bind(this);
 		this.renderAllParameters = this.renderAllParameters.bind(this);
 		this.getDcaeParameters = this.getDcaeParameters.bind(this);
@@ -55,7 +54,7 @@ export default class LoopProperties extends React.Component {
 		this.setState({
 			loopCache: newProps.loopCache,
 			temporaryPropertiesJson: JSON.parse(JSON.stringify(newProps.loopCache.getGlobalProperties())),
-			
+
 		});
 	}
 
@@ -90,7 +89,7 @@ export default class LoopProperties extends React.Component {
 		} else {
 			return "";
 		}
-		
+
 	}
 
 	renderDcaeParameters() {

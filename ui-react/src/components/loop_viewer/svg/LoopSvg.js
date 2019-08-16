@@ -61,13 +61,14 @@ class LoopViewSvg extends React.Component {
 		return this.state.svgContent !== nextState.svgContent;
 	}
 
-	componentWillReceiveProps(newProps) {
-		this.setState({
-			loopCache: newProps.loopCache,
-			componentModalMapping: LoopComponentConverter.buildMapOfComponents(newProps.loopCache),
-
-		});
-		this.getSvg(newProps.loopCache.getLoopName());
+	componentWillReceiveProps(newProps) {	
+		if (this.state.loopCache !== newProps.loopCache) {
+			this.setState({
+				loopCache: newProps.loopCache,
+				componentModalMapping: LoopComponentConverter.buildMapOfComponents(newProps.loopCache),
+			});
+			this.getSvg(newProps.loopCache.getLoopName());
+		}
 	}
 
 	getSvg(loopName) {
@@ -79,6 +80,8 @@ class LoopViewSvg extends React.Component {
 					this.setState({ svgContent: LoopViewSvg.emptySvg })
 				}
 			});
+		} else {
+			this.setState({ svgContent: LoopViewSvg.emptySvg })
 		}
 	}
 

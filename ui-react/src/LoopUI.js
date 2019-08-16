@@ -34,7 +34,7 @@ import LoopStatus from './components/loop_viewer/status/LoopStatus';
 import UserService from './api/UserService';
 import LoopCache from './api/LoopCache';
 
-import { Route, Redirect } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import OpenLoopModal from './components/dialogs/OpenLoop/OpenLoopModal';
 import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
 import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
@@ -43,6 +43,7 @@ import UserInfo from './components/dialogs/UserInfo';
 import LoopService from './api/LoopService';
 import PerformAction from './components/menu/PerformActions';
 import RefreshStatus from './components/menu/RefreshStatus';
+import DeployLoop from './components/menu/DeployLoop';
 
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
@@ -90,6 +91,7 @@ export default class LoopUI extends React.Component {
 		this.getUser = this.getUser.bind(this);
 		this.updateLoopCache = this.updateLoopCache.bind(this);
 		this.loadLoop = this.loadLoop.bind(this);
+		this.closeLoop = this.closeLoop.bind(this);
 	}
 
 	componentWillMount() {
@@ -104,7 +106,7 @@ export default class LoopUI extends React.Component {
 
 	renderMenuNavBar() {
 		return (
-			<MenuBar/>
+			<MenuBar loopName={this.state.loopName}/>
 		);
 	}
 
@@ -168,8 +170,7 @@ export default class LoopUI extends React.Component {
 	}
 
 	updateLoopCache(loopJson) {
-		this.setState({ loopCache: new LoopCache(loopJson) });
-		this.setState({ loopName: this.state.loopCache.getLoopName() });
+		this.setState({ loopCache: new LoopCache(loopJson), loopName: this.state.loopCache.getLoopName() });
 		console.info(this.state.loopName+" loop loaded successfully");
 	}
 
@@ -180,7 +181,11 @@ export default class LoopUI extends React.Component {
 		});
 	}
 
-	render() {
+	closeLoop() {
+		this.setState({ loopCache: new LoopCache({}), loopName: LoopUI.defaultLoopName });
+		this.props.history.push('/');
+	}
+ render() {
 		return (
 				<div id="main_div">
 				<Route path="/operationalPolicyModal"
@@ -189,12 +194,13 @@ export default class LoopUI extends React.Component {
 				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
 				<Route path="/loopProperties" render={(routeProps) => (<LoopProperties {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/userInfo" render={(routeProps) => (<UserInfo {...routeProps} />)} />
-				<Route path="/closeLoop" render={(routeProps) => (<Redirect to='/'/>)} />
+				<Route path="/closeLoop" render={this.closeLoop} />
 				<Route path="/submit" render={(routeProps) => (<PerformAction {...routeProps} loopAction="submit" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 				<Route path="/stop" render={(routeProps) => (<PerformAction {...routeProps} loopAction="stop" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 				<Route path="/restart" render={(routeProps) => (<PerformAction {...routeProps} loopAction="restart" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 				<Route path="/delete" render={(routeProps) => (<PerformAction {...routeProps} loopAction="delete" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 				<Route path="/undeploy" render={(routeProps) => (<PerformAction {...routeProps} loopAction="undeploy" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
+				<Route path="/deploy" render={(routeProps) => (<DeployLoop {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 				<Route path="/refreshStatus" render={(routeProps) => (<RefreshStatus {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 					<GlobalClampStyle />
 					{this.renderNavBar()}
