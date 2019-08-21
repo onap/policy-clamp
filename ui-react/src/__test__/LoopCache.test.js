@@ -77,7 +77,7 @@ describe('Verify LoopCache functions', () => {
       expect(loopCache.getDcaeDeploymentProperties()).toStrictEqual(deploymentProp);
     });
 
-    it('getMicroServicesJsonForType', () => {
+    it('getMicroServiceForName', () => {
       const msJson = {
           "name": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca",
           "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
@@ -89,7 +89,7 @@ describe('Verify LoopCache functions', () => {
       expect(loopCache.getMicroServicesJsonForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca_2")).toBeNull();
     });
 
-    it('getMicroServiceProperties', () => {
+    it('getMicroServicePropertiesForName', () => {
       const msProp = {"domain": "measurementsForVfScaling"};
       expect(loopCache.getMicroServiceProperties("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msProp);
       expect(loopCache.getMicroServiceProperties("TCA_h2NMX_v1_0_ResourceInstanceName1_tca_2")).toBeNull();
@@ -100,7 +100,7 @@ describe('Verify LoopCache functions', () => {
       expect(loopCache.getMicroServiceJsonRepresentationForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJsonRepresentation);
     });
 
-    it('getMicroServiceJsonRepresentationForType', () => {
+    it('getMicroServiceJsonRepresentationForName', () => {
       const msJsonRepresentation = {"schema": {}};
       expect(loopCache.getMicroServiceJsonRepresentationForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJsonRepresentation);
     });

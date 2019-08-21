@@ -1,17 +1,29 @@
 {
-  "name": "clamp-ui",
-  "version": "0.0.1",
-  "description": "ONAP Clamp Designer UI",
+  "name": "onap-clamp-ui",
+  "version": "4.1.0-SNAPSHOT",
+  "description": "ONAP Clamp Loop Designer UI",
+  "author": "ONAP Clamp Team",
+  "license": "Apache-2.0",
+  "homepage": "wiki.onap.org",
+  "publishConfig": {
+    "registry": "https://nexus3.onap.org/repository/npm.snapshot/"
+  },
   "main": "index.js",
   "proxy": "http://localhost:8080",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --env=jsdom --watchAll=false",
+    "eject": "react-scripts eject",
+    "publish": "npm run publish"
   },
-  "author": "ONAP Clamp Team",
-  "license": "Apache-2.0",
+  "files": [
+    "src/*.js",
+    "src/*.png",
+    "src/api",
+    "src/components",
+    "src/theme"
+  ],
   "dependencies": {
     "@json-editor/json-editor": "1.4.0-beta.0",
     "react": "16.8.0",

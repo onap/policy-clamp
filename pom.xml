@@ -3,7 +3,7 @@
   ============LICENSE_START=======================================================
   ONAP CLAMP
   ================================================================================
-  Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+  Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
                               reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,6 +87,8 @@
 				<skip.staging.artifacts>false</skip.staging.artifacts>
 				<python.http.proxy.param/>
 				<tomcat.version>9.0.20</tomcat.version>
+				<ui.react.src>ui-react</ui.react.src>
+				<npm.publish.url>https://nexus3.onap.org/repository/npm.snapshot/</npm.publish.url>
 		</properties>
 
 		<profiles>
@@ -700,11 +702,15 @@
 								</includes>
 						</resource>
 						<resource>
-								<directory>src/main/docker</directory>
-								<includes>
-										<include>**/*</include>
-								</includes>
-								<filtering>true</filtering>
+							<directory>${ui.react.src}</directory>
+							<includes>
+								<include>src/**</include>
+								<include>public/**</include>
+								<include>package.json</include>
+								<include>package-lock.json</include>
+							</includes>
+							<filtering>false</filtering>
+							<targetPath>${project.build.directory}/${ui.react.src}</targetPath>
 						</resource>
 				</resources>
 
@@ -1218,18 +1224,16 @@
 						<artifactId>frontend-maven-plugin</artifactId>
 						<version>1.6</version>
 						<configuration>
-							<installDirectory>${project.build.directory}/clamp-ui</installDirectory>
-							<workingDirectory>${project.build.directory}/clamp-ui</workingDirectory>
-							<skip>${maven.test.skip}</skip>
+							<installDirectory>${project.build.directory}/${ui.react.src}</installDirectory>
+							<workingDirectory>${project.build.directory}/${ui.react.src}</workingDirectory>
 						</configuration>
-
 						<executions>
 							<execution>
 								<id>install_node_and_npm</id>
 								<goals>
 									<goal>install-node-and-npm</goal>
 								</goals>
-								<phase>test</phase>
+								<phase>generate-sources</phase>
 								<configuration>
 									<nodeVersion>v8.11.1</nodeVersion>
 									<npmVersion>5.6.0</npmVersion>
@@ -1240,7 +1244,7 @@
 								<goals>
 									<goal>npm</goal>
 								</goals>
-								<phase>test</phase>
+								<phase>compile</phase>
 								<configuration>
 									<arguments>install</arguments>
 								</configuration>
@@ -1252,10 +1256,19 @@
 								</goals>
 								<phase>test</phase>
 								<configuration>
-									<arguments>run-script test:coverage</arguments>
+									<arguments>run-script test</arguments>
 								</configuration>
 							</execution>
-
+								<execution>
+									<id>npm_publish</id>
+									<goals>
+										<goal>npm</goal>
+									</goals>
+									<phase>deploy</phase>
+									<configuration>
+										<arguments>publish --registry ${npm.publish.url}</arguments>
+									</configuration>
+								</execution>
 						</executions>
 					</plugin>
 				</plugins>
