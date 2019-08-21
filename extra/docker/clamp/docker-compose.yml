@@ -13,7 +13,7 @@ services:
       - "3306:3306"
 
   clamp:
-    image: onap/clamp
+    image: onap/clamp-backend
     volumes:
       - "./config/:/opt/clamp/config:rw"
     depends_on:
