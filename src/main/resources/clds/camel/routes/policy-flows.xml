@@ -3,8 +3,7 @@
 	<route id="get-policy">
 		<from uri="direct:get-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Getting Policy: ${exchangeProperty[policyName]}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Get Policy')" />
@@ -23,8 +22,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to get policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/1.0.0/policies/${exchangeProperty[policyName]}/versions/1.0.0"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/1.0.0/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -37,6 +35,9 @@
 						Policy status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -45,8 +46,7 @@
 	<route id="get-deployment-policy">
 		<from uri="direct:get-deployment-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Getting the policy deployment in PDP: ${exchangeProperty[policyName]}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policy deployment in PDP')" />
@@ -65,8 +65,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to get policy deployment status: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/1.0.0/policies/${exchangeProperty[policyName]}/versions/deployed"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/1.0.0/policies/${exchangeProperty[policyName]}/versions/deployed?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -79,6 +78,9 @@
 						status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -86,8 +88,7 @@
 	<route id="create-micro-service-policy">
 		<from uri="direct:create-micro-service-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Creating Micro Service Policy: ${exchangeProperty[microServicePolicy].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Micro Service Policy')" />
@@ -113,8 +114,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to create microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -127,6 +127,9 @@
 						status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -135,8 +138,7 @@
 	<route id="delete-micro-service-policy">
 		<from uri="direct:delete-micro-service-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Deleting Micro Service Policy: ${exchangeProperty[microServicePolicy].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Micro Service Policy')" />
@@ -158,8 +160,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to delete microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -173,6 +174,9 @@
 						status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -181,8 +185,7 @@
 	<route id="create-operational-policy">
 		<from uri="direct:create-operational-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Creating Operational Policy: ${exchangeProperty[operationalPolicy].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Operational Policy')" />
@@ -208,8 +211,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to create operational policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -222,6 +224,9 @@
 						status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -230,8 +235,7 @@
 	<route id="delete-operational-policy">
 		<from uri="direct:delete-operational-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Deleting Operational Policy: ${exchangeProperty[operationalPolicy].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Operational Policy')" />
@@ -253,8 +257,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to delete operational policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicy].getName()}/versions/1"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Operational/versions/1.0.0/policies/${exchangeProperty[operationalPolicy].getName()}/versions/1?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -267,6 +270,9 @@
 						status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -275,8 +281,7 @@
 	<route id="create-guard-policy">
 		<from uri="direct:create-guard-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Creating Guard Policy: ${exchangeProperty[guardPolicy].getKey()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Guard Policy')" />
@@ -302,8 +307,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to create guard policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -315,6 +319,9 @@
 					<simple>${exchangeProperty[guardPolicy].getKey()} creation status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -323,8 +330,7 @@
 	<route id="delete-guard-policy">
 		<from uri="direct:delete-guard-policy" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Deleting Guard Policy: ${exchangeProperty[guardPolicy].getKey()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Guard Policy')" />
@@ -346,8 +352,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to delete guard policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${exchangeProperty[guardPolicy].getKey()}/versions/1"></log>
 			<toD
 				uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/onap.policies.controlloop.Guard/versions/1.0.0/policies/${exchangeProperty[guardPolicy].getKey()}/versions/1?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -360,6 +365,9 @@
 					<simple>${exchangeProperty[guardPolicy].getKey()} removal status
 					</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -368,8 +376,7 @@
 	<route id="add-all-to-active-pdp-group">
 		<from uri="direct:add-all-to-active-pdp-group" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Adding loop policies to PDP Group: ${exchangeProperty[loopObject].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Add policies to PDP group')" />
@@ -395,8 +402,7 @@
 				<simple>${exchangeProperty[X-ONAP-PartnerName]}
 				</simple>
 			</setHeader>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies"></log>
 			<toD
 				uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
@@ -408,6 +414,9 @@
 				<setProperty propertyName="logMessage">
 					<simple>PDP Group push ALL status</simple>
 				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
+				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doFinally>
 		</doTry>
@@ -416,8 +425,7 @@
 	<route id="remove-all-policy-from-active-pdp-group">
 		<from uri="direct:remove-all-policy-from-active-pdp-group" />
 		<doTry>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Removing policies from active PDP group for loop: ${exchangeProperty[loopObject].getName()}" />
 			<to
 				uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Removing policies PDP group')" />
@@ -445,14 +453,16 @@
 					<simple>${exchangeProperty[X-ONAP-PartnerName]}
 					</simple>
 				</setHeader>
-				<log
-					loggingLevel="INFO"
+				<log loggingLevel="INFO"
 					message="Endpoint to delete policy from PDP Group: {{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0"></log>
 				<toD
 					uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
 				<setProperty propertyName="logMessage">
 					<simple>${exchangeProperty[policyName]} PDP Group removal status
 					</simple>
+				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
 				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</split>
@@ -463,6 +473,9 @@
 				</handled>
 				<setProperty propertyName="logMessage">
 					<simple>PDP Group removal, Error reported: ${exception}</simple>
+				</setProperty>
+				<setProperty propertyName="logComponent">
+					<simple>POLICY</simple>
 				</setProperty>
 				<to uri="direct:dump-loop-log-http-response" />
 			</doCatch>
