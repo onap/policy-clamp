@@ -41,6 +41,9 @@
 			<setProperty propertyName="policyType">
 				<simple>${body.getModelType()}</simple>
 			</setProperty>
+			<setProperty propertyName="policyVersion">
+				<simple>1.0.0</simple>
+			</setProperty>
 			<setBody>
 				<constant>null</constant>
 			</setBody>
@@ -58,6 +61,9 @@
 			</setProperty>
 			<setProperty propertyName="policyType">
 				<simple>onap.policies.controlloop.Operational</simple>
+			</setProperty>
+			<setProperty propertyName="policyVersion">
+				<simple>1</simple>
 			</setProperty>
 			<setProperty propertyName="operationalPolicy">
 				<simple>${body}</simple>
@@ -78,6 +84,9 @@
 				</setProperty>
 				<setProperty propertyName="policyType">
 					<simple>onap.policies.controlloop.Guard</simple>
+				</setProperty>
+				<setProperty propertyName="policyVersion">
+					<simple>1</simple>
 				</setProperty>
 				<setBody>
 					<constant>null</constant>
