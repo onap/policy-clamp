@@ -1,5 +1,36 @@
 
 <routes xmlns="http://camel.apache.org/schema/spring">
+	<route id="verify-one-policy">
+		<from uri="direct:verify-one-policy" />
+		<setProperty propertyName="raiseHttpExceptionFlag">
+			<simple resultType="java.lang.Boolean">false</simple>
+		</setProperty>
+		<to uri="direct:get-policy" />
+		<when>
+			<simple> ${header.CamelHttpResponseCode} != 200 </simple>
+			<setProperty propertyName="policyFound">
+				<simple resultType="java.lang.Boolean">false</simple>
+			</setProperty>
+			<log loggingLevel="WARN"
+				message="At least one policy has not been found on policy engine: ${exchangeProperty[policyName]}" />
+		</when>
+		<setProperty propertyName="raiseHttpExceptionFlag">
+			<simple resultType="java.lang.Boolean">false</simple>
+		</setProperty>
+		<to uri="direct:get-deployment-policy" />
+		<when>
+			<simple> ${header.CamelHttpResponseCode} != 200 </simple>
+			<setProperty propertyName="policyDeployed">
+				<simple resultType="java.lang.Boolean">false</simple>
+			</setProperty>
+			<log loggingLevel="WARN"
+				message="At least one policy has not been deployed on policy engine: ${exchangeProperty[policyName]}" />
+		</when>
+		<setProperty propertyName="newPolicyState">
+			<simple>${exchangeProperty[policyComponent].computeState(*)}</simple>
+		</setProperty>
+	</route>
+
 	<route id="get-policy">
 		<from uri="direct:get-policy" />
 		<doTry>

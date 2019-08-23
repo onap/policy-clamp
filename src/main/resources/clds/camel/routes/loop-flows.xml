@@ -5,9 +5,7 @@
 			<simple>${header.loopName}</simple>
 		</setBody>
 		<setProperty propertyName="loopObject">
-			<method
-				ref="org.onap.clamp.loop.LoopService"
-				method="getLoop" />
+			<method ref="org.onap.clamp.loop.LoopService" method="getLoop" />
 		</setProperty>
 
 		<when>
@@ -15,26 +13,24 @@
 			<setHeader headerName="CamelHttpResponseCode">
 				<constant>404</constant>
 			</setHeader>
-			<log
-				loggingLevel="WARNING"
-				message="Loop not found in database: ${body}" />
+			<log loggingLevel="WARN" message="Loop not found in database: ${body}" />
 			<stop />
 		</when>
 	</route>
+
 	<route id="update-policy-status-for-loop">
 		<from uri="direct:update-policy-status-for-loop" />
-		<setProperty propertyName="atLeastOnePolicyNotFound">
-			<simple resultType="java.lang.Boolean">false</simple>
-		</setProperty>
-		<setProperty propertyName="atLeastOnePolicyNotDeployed">
-			<simple resultType="java.lang.Boolean">false</simple>
-		</setProperty>
 		<setProperty propertyName="policyComponent">
 			<simple>${exchangeProperty[loopObject].getComponent('POLICY')}
 			</simple>
 		</setProperty>
-		<log
-			loggingLevel="INFO"
+		<setProperty propertyName="policyFound">
+			<simple resultType="java.lang.Boolean">true</simple>
+		</setProperty>
+		<setProperty propertyName="policyDeployed">
+			<simple resultType="java.lang.Boolean">true</simple>
+		</setProperty>
+		<log loggingLevel="INFO"
 			message="Processing all MICRO-SERVICES policies defined in loop ${exchangeProperty[loopObject].getName()}" />
 		<split>
 			<simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
@@ -48,29 +44,11 @@
 			<setBody>
 				<constant>null</constant>
 			</setBody>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Processing Micro Service Policy: ${exchangeProperty[policyName]} of type ${exchangeProperty[policyType]}" />
-			<setProperty propertyName="raiseHttpExceptionFlag">
-				<simple resultType="java.lang.Boolean">false</simple>
-			</setProperty>
-			<to uri="direct:get-policy" />
-			<when>
-				<simple> ${header.CamelHttpResponseCode} != 200 </simple>
-				<setProperty propertyName="atLeastOnePolicyNotFound">
-					<simple resultType="java.lang.Boolean">true</simple>
-				</setProperty>
-			</when>
-			<to uri="direct:get-deployment-policy" />
-			<when>
-				<simple> ${header.CamelHttpResponseCode} != 200 </simple>
-				<setProperty propertyName="atLeastOnePolicyNotDeployed">
-					<simple resultType="java.lang.Boolean">true</simple>
-				</setProperty>
-			</when>
+			<to uri="direct:verify-one-policy" />
 		</split>
-		<log
-			loggingLevel="INFO"
+		<log loggingLevel="INFO"
 			message="Processing all OPERATIONAL policies defined in loop ${exchangeProperty[loopObject].getName()}" />
 		<split>
 			<simple>${exchangeProperty[loopObject].getOperationalPolicies()}
@@ -87,29 +65,10 @@
 			<setBody>
 				<constant>null</constant>
 			</setBody>
-			<log
-				loggingLevel="INFO"
+			<log loggingLevel="INFO"
 				message="Processing Micro Service Policy: ${exchangeProperty[policyName]} of type ${exchangeProperty[policyType]}" />
-			<setProperty propertyName="raiseHttpExceptionFlag">
-				<simple resultType="java.lang.Boolean">false</simple>
-			</setProperty>
-			<to uri="direct:get-policy" />
-			<when>
-				<simple> ${header.CamelHttpResponseCode} != 200 </simple>
-				<setProperty propertyName="atLeastOnePolicyNotFound">
-					<simple resultType="java.lang.Boolean">true</simple>
-				</setProperty>
-			</when>
-			<to uri="direct:get-deployment-policy" />
-			<when>
-				<simple> ${header.CamelHttpResponseCode} != 200 </simple>
-				<setProperty propertyName="atLeastOnePolicyNotDeployed">
-					<simple resultType="java.lang.Boolean">true</simple>
-				</setProperty>
-			</when>
-
-			<log
-				loggingLevel="INFO"
+			<to uri="direct:verify-one-policy" />
+			<log loggingLevel="INFO"
 				message="Processing all GUARD policies defined in loop ${exchangeProperty[loopObject].getName()}" />
 			<split>
 				<simple>${exchangeProperty[operationalPolicy].createGuardPolicyPayloads().entrySet()}
@@ -123,42 +82,23 @@
 				<setBody>
 					<constant>null</constant>
 				</setBody>
-				<log
-					loggingLevel="INFO"
+				<log loggingLevel="INFO"
 					message="Processing Guard Policy: ${exchangeProperty[policyName]} of type ${exchangeProperty[policyType]}" />
-				<setProperty propertyName="raiseHttpExceptionFlag">
-					<simple resultType="java.lang.Boolean">false</simple>
-				</setProperty>
-				<to uri="direct:get-policy" />
-				<when>
-					<simple> ${header.CamelHttpResponseCode} != 200 </simple>
-					<setProperty propertyName="atLeastOnePolicyNotFound">
-						<simple resultType="java.lang.Boolean">true</simple>
-					</setProperty>
-				</when>
-				<to uri="direct:get-deployment-policy" />
-				<when>
-					<simple> ${header.CamelHttpResponseCode} != 200 </simple>
-					<setProperty propertyName="atLeastOnePolicyNotDeployed">
-						<simple resultType="java.lang.Boolean">true</simple>
-					</setProperty>
-				</when>
+				<to uri="direct:verify-one-policy" />
 			</split>
 		</split>
 		<setProperty propertyName="policyState">
-			<simple> ${exchangeProperty[policyComponent].computeState(*)}
+			<simple> ${exchangeProperty[policyComponent].getState()}
 			</simple>
 		</setProperty>
-		<log
-			loggingLevel="INFO"
+		<log loggingLevel="INFO"
 			message="Policy state set to: ${exchangeProperty[policyState].getStateName()}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('Policy state set to: ${exchangeProperty[policyState].getStateName()}','INFO','POLICY',${exchangeProperty[loopObject]})" />
 	</route>
 	<route id="update-dcae-status-for-loop">
 		<from uri="direct:update-dcae-status-for-loop" />
-		<log
-			loggingLevel="INFO"
+		<log loggingLevel="INFO"
 			message="Updating DCAE status for loop: ${exchangeProperty[loopObject].getName()}" />
 		<setProperty propertyName="dcaeComponent">
 			<simple>${exchangeProperty[loopObject].getComponent('DCAE')}</simple>
@@ -175,8 +115,7 @@
 				<simple> ${header.CamelHttpResponseCode} == 200 </simple>
 				<convertBodyTo type="java.lang.String" />
 				<setProperty propertyName="dcaeResponse">
-					<method
-						ref="org.onap.clamp.loop.components.external.DcaeComponent"
+					<method ref="org.onap.clamp.loop.components.external.DcaeComponent"
 						method="convertDcaeResponse(${body})" />
 				</setProperty>
 			</when>
@@ -186,8 +125,7 @@
 			<simple> ${exchangeProperty[dcaeComponent].computeState(*)}
 			</simple>
 		</setProperty>
-		<log
-			loggingLevel="INFO"
+		<log loggingLevel="INFO"
 			message="DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - DCAE message: ${exchangeProperty[dcaeResponse].getError()}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[loopObject]})" />
@@ -195,53 +133,78 @@
 	</route>
 	<route id="direct:update-loop-state">
 		<from uri="direct:update-loop-state" />
-		<log
-			loggingLevel="INFO"
+		<log loggingLevel="INFO"
 			message="Updating status for loop: ${exchangeProperty[loopObject].getName()}" />
 		<choice>
 			<when>
-				 <simple>${exchangeProperty['dcaeState'].getStateName()} == 'BLUEPRINT_DEPLOYED' and ${exchangeProperty['policyState'].getStateName()} == 'NOT_SENT'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
+					'BLUEPRINT_DEPLOYED' and ${exchangeProperty['policyState'].getStateName()}
+					== 'NOT_SENT'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'DESIGN')" />
 			</when>
 			<when>
-				 <simple>${exchangeProperty['dcaeState'].getStateName()} == 'IN_ERROR' or ${exchangeProperty['dcaeState'].getStateName()} == 'MICROSERVICE_INSTALLATION_FAILED'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} == 'IN_ERROR' or
+					${exchangeProperty['dcaeState'].getStateName()} ==
+					'MICROSERVICE_INSTALLATION_FAILED'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'IN_ERROR')" />
 			</when>
 			<when>
-				<simple>${exchangeProperty['dcaeState'].getStateName()} == 'MICROSERVICE_UNINSTALLATION_FAILED' or ${exchangeProperty['policyState'].getStateName()} == 'IN_ERROR'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
+					'MICROSERVICE_UNINSTALLATION_FAILED' or
+					${exchangeProperty['policyState'].getStateName()} == 'IN_ERROR'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'IN_ERROR')" />
 			</when>
 			<when>
-				 <simple>${exchangeProperty['dcaeState'].getStateName()} == 'MICROSERVICE_INSTALLED_SUCCESSFULLY' and ${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
+					'MICROSERVICE_INSTALLED_SUCCESSFULLY' and
+					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'RUNNING')" />
 			</when>
 			<when>
-				 <simple>${exchangeProperty['dcaeState'].getStateName()} == 'MICROSERVICE_INSTALLED_SUCCESSFULLY' and ${exchangeProperty['policyState'].getStateName()} == 'SENT'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
+					'MICROSERVICE_INSTALLED_SUCCESSFULLY' and
+					${exchangeProperty['policyState'].getStateName()} == 'SENT'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'STOPPED')" />
 			</when>
 			<when>
-				 <simple>${exchangeProperty['dcaeState'].getStateName()} == 'BLUEPRINT_DEPLOYED' or ${exchangeProperty['dcaeState'].getStateName()} == 'MICROSERVICE_UNINSTALLED_SUCCESSFULLY' and ${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
+					'BLUEPRINT_DEPLOYED' or ${exchangeProperty['dcaeState'].getStateName()} ==
+					'MICROSERVICE_UNINSTALLED_SUCCESSFULLY' and
+					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'SUBMITTED')" />
 			</when>
 			<when>
-				 <simple>${exchangeProperty['dcaeState'].getStateName()} == 'PROCESSING_MICROSERVICE_INSTALLATION' or ${exchangeProperty['dcaeState'].getStateName()} == 'PROCESSING_MICROSERVICE_UNINSTALLATION' and ${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
+					'PROCESSING_MICROSERVICE_INSTALLATION' or
+					${exchangeProperty['dcaeState'].getStateName()} ==
+					'PROCESSING_MICROSERVICE_UNINSTALLATION' and
+					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'WAITING')" />
 			</when>
 			<when>
-				 <simple>${exchangeProperty['dcaeState'].getStateName()} == 'MICROSERVICE_INSTALLED_SUCCESSFULLY' and ${exchangeProperty['policyState'].getStateName()} != 'NOT_SENT'</simple>
+				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
+					'MICROSERVICE_INSTALLED_SUCCESSFULLY' and
+					${exchangeProperty['policyState'].getStateName()} != 'NOT_SENT'
+				</simple>
 				<to
 					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'DEPLOYED')" />
 			</when>
 		</choice>
-		<log
-			loggingLevel="INFO"
+		<log loggingLevel="INFO"
 			message="New loop state is: ${exchangeProperty[loopObject].getLastComputedState().toString()}" />
 		<to
 			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('New loop state is: ${exchangeProperty[loopObject].getLastComputedState().toString()}','INFO',${exchangeProperty[loopObject]})" />

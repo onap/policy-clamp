@@ -28,9 +28,7 @@ import com.google.gson.annotations.Expose;
 import org.apache.camel.Exchange;
 
 /**
- *
- * SHould be abstract but Gson can't instantiate it if it's an abstract
- *
+ * Should be abstract but Gson can't instantiate it if it's an abstract.
  */
 public class ExternalComponent {
     @Expose
@@ -49,7 +47,7 @@ public class ExternalComponent {
     }
 
     public ExternalComponentState computeState(Exchange camelExchange) {
-        return new ExternalComponentState("INIT", "no desc");
+        return new ExternalComponentState("INIT", "no desc", 0);
     }
 
     public ExternalComponent(ExternalComponentState initialState) {

@@ -54,7 +54,7 @@ public class LoopToJsonTest {
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
-        String dcaeId, String dcaeUrl, String dcaeBlueprintId) {
+            String dcaeId, String dcaeUrl, String dcaeBlueprintId) {
         Loop loop = new Loop(name, blueprint, svgRepresentation);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
@@ -65,9 +65,9 @@ public class LoopToJsonTest {
     }
 
     private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
-        String policyTosca, String jsonProperties, boolean shared) {
+            String policyTosca, String jsonProperties, boolean shared) {
         MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
-            gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
+                gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
         microService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
 
         return microService;
@@ -82,13 +82,13 @@ public class LoopToJsonTest {
     @Test
     public void loopGsonTest() throws IOException {
         Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
-            "123456789", "https://dcaetest.org", "UUID-blueprint");
+                "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy(
-            ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
+                ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
         MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
-            "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
-            "{\"param1\":\"value1\"}", true);
+                "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+                "{\"param1\":\"value1\"}", true);
         loopTest.addMicroServicePolicy(microServicePolicy);
         LoopLog loopLog = getLoopLog(LogType.INFO, "test message", loopTest);
         loopTest.addLog(loopLog);
@@ -99,11 +99,11 @@ public class LoopToJsonTest {
         Loop loopTestDeserialized = JsonUtils.GSON_JPA_MODEL.fromJson(jsonSerialized, Loop.class);
         assertNotNull(loopTestDeserialized);
         assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest, "svgRepresentation", "blueprint",
-            "components");
+                "components");
         assertThat(loopTestDeserialized.getComponent("DCAE").getState())
-            .isEqualToComparingFieldByField(loopTest.getComponent("DCAE").getState());
-        assertThat(loopTestDeserialized.getComponent("POLICY").getState())
-            .isEqualToComparingFieldByField(loopTest.getComponent("POLICY").getState());
+                .isEqualToComparingFieldByField(loopTest.getComponent("DCAE").getState());
+        assertThat(loopTestDeserialized.getComponent("POLICY").getState()).isEqualToComparingOnlyGivenFields(
+                loopTest.getComponent("POLICY").getState(), "stateName", "description");
         // svg and blueprint not exposed so wont be deserialized
         assertThat(loopTestDeserialized.getBlueprint()).isEqualTo(null);
         assertThat(loopTestDeserialized.getSvgRepresentation()).isEqualTo(null);
@@ -112,22 +112,22 @@ public class LoopToJsonTest {
         assertThat(loopTestDeserialized.getMicroServicePolicies()).containsExactly(microServicePolicy);
         assertThat(loopTestDeserialized.getLoopLogs()).containsExactly(loopLog);
         assertThat((LoopLog) loopTestDeserialized.getLoopLogs().toArray()[0]).isEqualToIgnoringGivenFields(loopLog,
-            "loop");
+                "loop");
     }
 
     @Test
     public void createPoliciesPayloadPdpGroupTest() throws IOException {
         Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
-            "123456789", "https://dcaetest.org", "UUID-blueprint");
+                "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy(
-            ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
+                ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
         MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
-            "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
-            "{\"param1\":\"value1\"}", true);
+                "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+                "{\"param1\":\"value1\"}", true);
         loopTest.addMicroServicePolicy(microServicePolicy);
 
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/pdp-group-policy-payload.json"),
-            PolicyComponent.createPoliciesPayloadPdpGroup(loopTest), false);
+                PolicyComponent.createPoliciesPayloadPdpGroup(loopTest), false);
     }
 }

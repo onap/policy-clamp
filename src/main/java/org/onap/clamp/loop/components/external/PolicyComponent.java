@@ -44,17 +44,22 @@ public class PolicyComponent extends ExternalComponent {
     @Transient
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyComponent.class);
 
-    public static final ExternalComponentState NOT_SENT = new ExternalComponentState("NOT_SENT",
-        "The policies defined have NOT yet been created on the policy engine");
-    public static final ExternalComponentState SENT = new ExternalComponentState("SENT",
-        "The policies defined have been created but NOT deployed on the policy engine");
-    public static final ExternalComponentState SENT_AND_DEPLOYED = new ExternalComponentState("SENT_AND_DEPLOYED",
-        "The policies defined have been created and deployed on the policy engine");
     public static final ExternalComponentState IN_ERROR = new ExternalComponentState("IN_ERROR",
-        "There was an error during the sending to policy, the policy engine may be corrupted or inconsistent");
+            "There was an error during the sending to policy, the policy engine may be corrupted or inconsistent", 100);
+    public static final ExternalComponentState NOT_SENT = new ExternalComponentState("NOT_SENT",
+            "The policies defined have NOT yet been created on the policy engine", 90);
+    public static final ExternalComponentState SENT = new ExternalComponentState("SENT",
+            "The policies defined have been created but NOT deployed on the policy engine", 50);
+    public static final ExternalComponentState SENT_AND_DEPLOYED = new ExternalComponentState("SENT_AND_DEPLOYED",
+            "The policies defined have been created and deployed on the policy engine", 10);
 
     public PolicyComponent() {
-        super(NOT_SENT);
+        /*
+         * We assume it's good by default as we will receive the state for each policy
+         * on by one, each time we increase the level we can't decrease it anymore.
+         * That's why it starts with the lowest one SENT_AND_DEPLOYED.
+         */
+        super(SENT_AND_DEPLOYED);
     }
 
     @Override
@@ -103,21 +108,38 @@ public class PolicyComponent extends ExternalComponent {
         return policyNamesList;
     }
 
+    private static ExternalComponentState findNewState(boolean found, boolean deployed) {
+
+        ExternalComponentState newState = NOT_SENT;
+        if (found && deployed) {
+            newState = SENT_AND_DEPLOYED;
+        } else if (found) {
+            newState = SENT;
+        } else if (deployed) {
+            newState = IN_ERROR;
+        }
+        return newState;
+    }
+
+    private static ExternalComponentState mergeStates(ExternalComponentState oldState,
+            ExternalComponentState newState) {
+        return (oldState.compareTo(newState) < 0) ? newState : oldState;
+    }
+
+    /**
+     * This is a method that expect the results of the queries getPolicy and
+     * getPolicyDeployed for a unique policy (op,guard, config, etc ...). It
+     * re-computes the global policy state for each policy results given. Therefore
+     * this method is called multiple times from the camel route and must be reset
+     * for a new global policy state retrieval. The state to compute the global
+     * policy state is stored in this class.
+     * 
+     */
     @Override
     public ExternalComponentState computeState(Exchange camelExchange) {
-        boolean oneNotFound = (boolean) camelExchange.getIn().getExchange().getProperty("atLeastOnePolicyNotFound");
-        boolean oneNotDeployed = (boolean) camelExchange.getIn().getExchange()
-            .getProperty("atLeastOnePolicyNotDeployed");
-
-        if (oneNotFound && oneNotDeployed) {
-            this.setState(NOT_SENT);
-        } else if (!oneNotFound && oneNotDeployed) {
-            this.setState(SENT);
-        } else if (!oneNotFound && !oneNotDeployed) {
-            this.setState(SENT_AND_DEPLOYED);
-        } else {
-            this.setState(IN_ERROR);
-        }
+        this.setState(mergeStates(this.getState(),
+                findNewState((boolean) camelExchange.getIn().getExchange().getProperty("policyFound"),
+                        (boolean) camelExchange.getIn().getExchange().getProperty("policyDeployed"))));
         return this.getState();
     }
 }

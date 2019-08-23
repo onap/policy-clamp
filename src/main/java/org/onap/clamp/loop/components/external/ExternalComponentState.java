@@ -29,18 +29,26 @@ import com.google.gson.annotations.Expose;
  * This is a transient state reflecting the deployment status of a component. It
  * can be Policy, DCAE, or whatever... This is object is generic. Clamp is now
  * stateless, so it triggers the different components at runtime, the status per
- * component is stored here.
+ * component is stored here. The state level is used to re-compute the global
+ * state when multiple sub states are required for that computation (generally
+ * provided sequentially to the method computeState from the camel routes.
  *
  */
-public class ExternalComponentState {
+public class ExternalComponentState implements Comparable<ExternalComponentState> {
     @Expose
     private String stateName;
     @Expose
     private String description;
+    private int stateLevel;
 
-    public ExternalComponentState(String stateName, String description) {
+    public ExternalComponentState(String stateName, String description, int level) {
         this.stateName = stateName;
         this.description = description;
+        this.stateLevel = level;
+    }
+
+    public ExternalComponentState(String stateName, String description) {
+        this(stateName, description, 0);
     }
 
     public ExternalComponentState() {
@@ -58,4 +66,50 @@ public class ExternalComponentState {
     public String toString() {
         return stateName;
     }
+
+    public int getLevel() {
+        return stateLevel;
+    }
+
+    public void setLevel(int priority) {
+        this.stateLevel = priority;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((stateName == null) ? 0 : stateName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ExternalComponentState other = (ExternalComponentState) obj;
+        if (stateName == null) {
+            if (other.stateName != null)
+                return false;
+        } else if (!stateName.equals(other.stateName))
+            return false;
+        return true;
+    }
+
+    /**
+     * This method compares this object by using the level of them.
+     * 
+     * @param stateToCompare The state to compare to the current object
+     * @return If the one given in input has a higher level than the current object
+     *         it returns -1, 1 otherwise and 0 if equals.
+     */
+    @Override
+    public int compareTo(ExternalComponentState stateToCompare) {
+        return Integer.compare(this.getLevel(), stateToCompare.getLevel());
+    }
+
 }
