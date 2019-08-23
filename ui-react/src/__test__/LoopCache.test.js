@@ -85,24 +85,19 @@ describe('Verify LoopCache functions', () => {
           "shared": false,
           "jsonRepresentation": {"schema": {}}
       };
-      expect(loopCache.getMicroServicesJsonForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJson);
-      expect(loopCache.getMicroServicesJsonForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca_2")).toBeNull();
+      expect(loopCache.getMicroServiceForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJson);
+      expect(loopCache.getMicroServiceForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca_2")).toBeNull();
     });
 
     it('getMicroServicePropertiesForName', () => {
       const msProp = {"domain": "measurementsForVfScaling"};
-      expect(loopCache.getMicroServiceProperties("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msProp);
-      expect(loopCache.getMicroServiceProperties("TCA_h2NMX_v1_0_ResourceInstanceName1_tca_2")).toBeNull();
-    });
-
-    it('getMicroServiceJsonRepresentationForType', () => {
-      const msJsonRepresentation = {"schema": {}};
-      expect(loopCache.getMicroServiceJsonRepresentationForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJsonRepresentation);
+      expect(loopCache.getMicroServicePropertiesForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msProp);
+      expect(loopCache.getMicroServicePropertiesForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca_2")).toBeNull();
     });
 
     it('getMicroServiceJsonRepresentationForName', () => {
       const msJsonRepresentation = {"schema": {}};
-      expect(loopCache.getMicroServiceJsonRepresentationForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJsonRepresentation);
+      expect(loopCache.getMicroServiceJsonRepresentationForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJsonRepresentation);
     });
 
     it('getResourceDetailsVfProperty', () => {
@@ -204,14 +199,8 @@ describe('Verify LoopCache functions', () => {
     });
 
     it('updateMicroServiceProperties', () => {
-      const newMsPolicy = {
-          "name": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca",
-          "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
-          "properties": {"domain": "measurementsForVfScalingNew"},
-          "shared": true,
-          "jsonRepresentation": {"schema": {}}
-      };;
-      loopCache.updateMicroServiceProperties("TCA_h2NMX_v1_0_ResourceInstanceName1_tca", newMsPolicy);
-      expect(loopCache.getMicroServicesJsonForType("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(newMsPolicy);
+      const newMsPolicyProperties = {"domain": "measurementsForVfScalingNew"};
+      loopCache.updateMicroServiceProperties("TCA_h2NMX_v1_0_ResourceInstanceName1_tca", newMsPolicyProperties);
+      expect(loopCache.getMicroServicePropertiesForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(newMsPolicyProperties);
     });
  });

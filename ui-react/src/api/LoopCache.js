@@ -28,9 +28,9 @@ export default class LoopCache {
 		this.loopJsonCache=loopJson;
 	}
 
-	updateMicroServiceProperties(type, newMsProperties) {
+	updateMicroServiceProperties(name, newMsProperties) {
 			for (var policy in this.loopJsonCache["microServicePolicies"]) {
-				if (this.loopJsonCache["microServicePolicies"][policy]["name"] === type) {
+				if (this.loopJsonCache["microServicePolicies"][policy]["name"] === name) {
 					this.loopJsonCache["microServicePolicies"][policy]["properties"] = newMsProperties;
 				}
 			}
