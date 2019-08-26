@@ -39,7 +39,6 @@ export default class UserInfo extends React.Component {
 		super(props, context);
 
 		this.handleClose = this.handleClose.bind(this);
-		this.initialValues = this.initialValues.bind(this);
 		this.renderReadTemplatePermission = this.renderReadTemplatePermission.bind(this);
 		this.renderReadModelPermission = this.renderReadModelPermission.bind(this);
 		this.renderReadToscaPermission = this.renderReadToscaPermission.bind(this);
@@ -49,23 +48,15 @@ export default class UserInfo extends React.Component {
 		this.renderUserName = this.renderUserName.bind(this);
 		this.state = {
 			show: true,
-			userInfo: {permissionReadTemplate: true,
-						permissionReadCl: true,
-						permissionReadTosca: true,
-						permissionUpdateCl: true,
-						permissionUpdateTemplate: true,
-						permissionUpdateTosca: true,
-						userName: 'admin',
-						cldsVersion: '1.0.0'
-						}
+			userInfo: {}
 		};
-
 	}
-	initialValues() {
+	componentWillMount() {
 		UserService.getUserInfo().then(userInfo => {
 			this.setState({ userInfo: userInfo })
 		});
 	}
+
 	handleClose() {
 			this.props.history.push('/');
 	}
@@ -127,7 +118,7 @@ export default class UserInfo extends React.Component {
 	}
 	render() {
 		return (
-			<ModalStyled size="lg"  show={this.state.show} onHide={this.handleClose} onEntered={this.initialValues}>
+			<ModalStyled size="lg"  show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>User Info</Modal.Title>
 				</Modal.Header>

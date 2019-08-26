@@ -75,8 +75,10 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) {
         try {
             http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
-            .authenticated().anyRequest().permitAll().and().logout().and().sessionManagement().maximumSessions(1)
-            .and().invalidSessionUrl("/designer/timeout.html");
+                    .authenticated().anyRequest().permitAll().and().logout()
+                    .logoutUrl("/restservices/clds/v1/user/logout").logoutSuccessUrl("/index.html")
+                    .invalidateHttpSession(true).deleteCookies("JSESSIONID").and().sessionManagement()
+                    .maximumSessions(1);
 
         } catch (Exception e) {
             logger.error(SETUP_WEB_USERS_EXCEPTION_MSG, e);
@@ -105,7 +107,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
             }
             for (CldsUser user : usersList) {
                 auth.inMemoryAuthentication().withUser(user.getUser()).password(user.getPassword())
-                .authorities(user.getPermissionsString()).and().passwordEncoder(passwordEncoder);
+                        .authorities(user.getPermissionsString()).and().passwordEncoder(passwordEncoder);
             }
         } catch (Exception e) {
             logger.error(SETUP_WEB_USERS_EXCEPTION_MSG, e);
@@ -118,8 +120,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
      * CldsUser.
      *
      * @return The array of CldsUser
-     * @throws IOException
-     *         In case of the file is not found
+     * @throws IOException In case of the file is not found
      */
     private CldsUser[] loadUsers() throws IOException {
         logger.info("Load from clds-users.properties");
@@ -134,7 +135,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
             return new BCryptPasswordEncoder(cldsBcryptEncoderStrength);
         } else {
             throw new CldsConfigException(
-                "Invalid clamp.config.security.encoder value. 'bcrypt' is the only option at this time.");
+                    "Invalid clamp.config.security.encoder value. 'bcrypt' is the only option at this time.");
         }
     }
 }

@@ -23,13 +23,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import OnapClamp from './OnapClamp';
-import { Route, BrowserRouter } from 'react-router-dom'
+import { Route, MemoryRouter } from 'react-router-dom'
 
 
 const routing = (
-	<BrowserRouter forceRefresh={false}>
+	<MemoryRouter forceRefresh={false}>
 		<Route path="/" component={OnapClamp}/>
-	</BrowserRouter>
+	</MemoryRouter>
 );
 
 export var mainClamp = ReactDOM.render(

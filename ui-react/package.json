@@ -1,6 +1,6 @@
 {
   "name": "onap-clamp-ui",
-  "version": "4.1.0-SNAPSHOT",
+  "version": "4.1.1-SNAPSHOT",
   "description": "ONAP Clamp Loop Designer UI",
   "author": "ONAP Clamp Team",
   "license": "Apache-2.0",
@@ -9,7 +9,7 @@
     "registry": "https://nexus3.onap.org/repository/npm.snapshot/"
   },
   "main": "index.js",
-  "proxy": "https://localhost:8080",
+  "proxy": "https://localhost:8443",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

@@ -106,6 +106,7 @@ export default class LoopUI extends React.Component {
 	constructor() {
 		super();
 		this.getUser = this.getUser.bind(this);
+		this.logout = this.logout.bind(this);
 		this.updateLoopCache = this.updateLoopCache.bind(this);
 		this.loadLoop = this.loadLoop.bind(this);
 		this.closeLoop = this.closeLoop.bind(this);
@@ -119,6 +120,14 @@ export default class LoopUI extends React.Component {
 		UserService.login().then(user => {
 			this.setState({ userName: user })
 		});
+	}
+	
+	logout() {
+		UserService.logout().then(user => {
+			this.setState({ userName: user });
+			window.location.reload();
+		});
+		
 	}
 
 	renderMenuNavBar() {
@@ -205,8 +214,8 @@ export default class LoopUI extends React.Component {
 		this.setState({ loopCache: new LoopCache({}), loopName: LoopUI.defaultLoopName });
 		this.props.history.push('/');
 	}
-	
- render() {
+
+	render() {
 		return (
 				<StyledMainDiv id="main_div">
 				<Route path="/operationalPolicyModal"
@@ -223,7 +232,8 @@ export default class LoopUI extends React.Component {
 				<Route path="/undeploy" render={(routeProps) => (<PerformAction {...routeProps} loopAction="undeploy" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 				<Route path="/deploy" render={(routeProps) => (<DeployLoop {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
 				<Route path="/refreshStatus" render={(routeProps) => (<RefreshStatus {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache}/>)} />
-					<GlobalClampStyle />
+				<Route path="/logout" render={this.logout} />
+				<GlobalClampStyle />
 					{this.renderNavBar()}
 					{this.renderLoopViewer()}
 				</StyledMainDiv>
