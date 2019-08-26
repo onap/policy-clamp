@@ -24,60 +24,50 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalClampStyle = createGlobalStyle`
-  body {
-    padding: 0;
-    margin: 0;
-    font-family: ${props => props.theme.fontFamily};
-    font-size: ${props => props.theme.fontSize};
-    font-weight: normal;
-    color: ${props => props.theme.fontNormal};
-    background-color: ${props => props.theme.backgroundColor};
-  }
+	body {
+		padding: 0;
+		margin: 0;
+		font-family: ${props => props.theme.fontFamily};
+		font-size: ${props => props.theme.fontSize};
+		font-weight: normal;
+	}
 
- span {
-	font-family: ${props => props.theme.fontFamily};
-    font-size: ${props => props.theme.fontSize};
-    font-weight: bold;
-    color: ${props => props.theme.fontNormal};
-    background-color: ${props => props.theme.backgroundColor};
-  }
-  
-  a {
-	font-family: ${props => props.theme.fontFamily};
-    font-size: ${props => props.theme.fontSize};
-    font-weight: bold;
-    color: ${props => props.theme.fontNormal};
-    background-color: ${props => props.theme.backgroundColor};
+	span {
+		font-family: ${props => props.theme.fontFamily};
+		font-size: ${props => props.theme.fontSize};
+		font-weight: bold;
+	}
 
-  }
-  
-  div {
-  	font-family: ${props => props.theme.fontFamily};
-    font-size: ${props => props.theme.fontSize};
-  	border-radius: 4px;
-  	color: ${props => props.theme.fontNormal};
-	background-color: ${props => (props.theme.backgroundColor)};
-	margin-top: 1px;
-  }
+	a {
+		font-family: ${props => props.theme.fontFamily};
+		font-size: ${props => props.theme.fontSize};
+		font-weight: bold;
+	}
 
-  svg {
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
-  }
-  
-  button {
-  	background-color: ${props => (props.theme.loopViewerHeaderBackgroundColor)};
-  	border: 1px;
-  	color: white;
-  	padding: 15px 32px;
-  	text-align: center;
-  	text-decoration: none;
-  	display: inline-block;
-  	font-size: ${props => props.theme.fontSize};
-  	font-family: ${props => props.theme.fontFamily};
+	div {
+		font-family: ${props => props.theme.fontFamily};
+		font-size: ${props => props.theme.fontSize};
+		border-radius: 4px;
+		margin-top: 1px;
+	}
 
-  }
+	svg {
+		overflow: hidden;
+		width: 100%;
+		height: 100%;
+	}
+
+	label {
+		font-family: ${props => props.theme.fontFamily};
+		font-size: ${props => props.theme.fontSize};
+		font-weight: bold;
+	}
+
+	button {
+		font-family: ${props => props.theme.fontFamily};
+		font-size: ${props => props.theme.fontSize};
+		font-weight: bold;
+	}
 `
 
 export const DefaultClampTheme = {
@@ -90,7 +80,7 @@ export const DefaultClampTheme = {
 
 	backgroundColor: '#eeeeee',
 	fontFamily: 'Arial, Sans-serif',
-	fontSize: '15px',
+	fontSize: '16px',
 
 	loopViewerBackgroundColor: 'white',
 	loopViewerFontColor: 'yellow',

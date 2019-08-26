@@ -45,12 +45,29 @@ import PerformAction from './components/dialogs/PerformActions';
 import RefreshStatus from './components/dialogs/RefreshStatus';
 import DeployLoop from './components/dialogs/DeployLoop';
 
+import { Link } from 'react-router-dom';
+
+const StyledMainDiv = styled.div`
+	background-color: ${props => props.theme.backgroundColor};
+`
+
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
 	padding-left: 30px;
-	font-size: 30px;
-
+	font-size: 36px;
+	font-weight: bold;
 `
+
+const StyledRouterLink = styled(Link)`
+	color: ${props => props.theme.menuFontColor};
+	background-color: ${props => props.theme.backgroundColor};
+`
+
+const StyledLoginInfo = styled.a`
+	color: ${props => props.theme.menuFontColor};
+	background-color: ${props => props.theme.backgroundColor};
+`
+
 const LoopViewDivStyled = styled.div`
 	height: 100%;
 	overflow: hidden;
@@ -113,7 +130,9 @@ export default class LoopUI extends React.Component {
 	renderUserLoggedNavBar() {
 		return (
 			<Navbar.Text>
-				Signed in as: <a href="/login">{this.state.userName}</a>
+			<StyledLoginInfo>Signed in as: </StyledLoginInfo>
+				<StyledRouterLink to="/userInfo">{this.state.userName}</StyledRouterLink>
+				<StyledRouterLink to="/logout/"> (logout)</StyledRouterLink>
 			</Navbar.Text>
 		);
 	}
@@ -129,8 +148,9 @@ export default class LoopUI extends React.Component {
 
 	renderNavBar() {
 		return (
-			<Navbar expand="lg">
+			<Navbar >
 				{this.renderLogoNavBar()}
+				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
 				{this.renderMenuNavBar()}
 				{this.renderUserLoggedNavBar()}
 			</Navbar>
@@ -188,7 +208,7 @@ export default class LoopUI extends React.Component {
 	
  render() {
 		return (
-				<div id="main_div">
+				<StyledMainDiv id="main_div">
 				<Route path="/operationalPolicyModal"
 					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/configurationPolicyModal/:componentName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
@@ -206,7 +226,7 @@ export default class LoopUI extends React.Component {
 					<GlobalClampStyle />
 					{this.renderNavBar()}
 					{this.renderLoopViewer()}
-				</div>
+				</StyledMainDiv>
 		);
 	}
 }

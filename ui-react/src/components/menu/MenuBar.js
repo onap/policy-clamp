@@ -27,10 +27,10 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import LoopUI from '../../LoopUI';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 const StyledLink = styled(Link)`
-	color: ${props => props.theme.menuColor};
+	color: ${props => props.theme.menuFontColor};
 	background-color: ${props => props.theme.menuBackgroundColor};
 	font-weight: normal;
 	display: block;
@@ -41,21 +41,34 @@ const StyledLink = styled(Link)`
 	white-space: nowrap;
 	border: 0;
 	:hover {
-			text-decoration: none;
-			background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
-			color:  ${props => props.theme.loopViewerHeaderFontColor};
+		text-decoration: none;
+		background-color: ${props => props.theme.menuHighlightedBackgroundColor};
+		color:  ${props => props.theme.menuHighlightedFontColor};
 	}
 `;
 const StyledNavLink = styled(Nav.Link)`
-	color: ${props => props.theme.menuColor};
+	color: ${props => props.theme.menuFontColor};
 	background-color: ${props => props.theme.menuBackgroundColor};
-  font-weight: normal;
+	font-weight: normal;
 	padding: .25rem 1.5rem;
 	:hover {
-			background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
-			color:  ${props => props.theme.loopViewerHeaderFontColor}
+		background-color: ${props => props.theme.menuHighlightedBackgroundColor};
+		color:  ${props => props.theme.menuHighlightedFontColor};
 	}
 `;
+
+const StyledNavDropdown = styled(NavDropdown)`
+	color: ${props => props.theme.menuFontColor};
+	& .dropdown-toggle {
+	color: ${props => props.theme.menuFontColor};
+	background-color: ${props => props.theme.backgroundColor};
+	font-weight: normal;
+		:hover {
+				font-weight: bold;
+		}
+	}
+`;
+
 export default class MenuBar extends React.Component {
 	state = {
 		loopName: this.props.loopName,
@@ -72,28 +85,29 @@ export default class MenuBar extends React.Component {
 
 	render () {
 		return (
+
 				<Navbar.Collapse>
-					<NavDropdown title="Closed Loop">
+					<StyledNavDropdown title="Closed Loop">
 							<NavDropdown.Item as={StyledLink} to="/openLoop">Open CL</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties CL</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close Model</NavDropdown.Item>
-					</NavDropdown>
-					<NavDropdown title="Manage">
+					</StyledNavDropdown>
+					<StyledNavDropdown title="Manage">
 							<NavDropdown.Item as={StyledLink} to="/submit" disabled={this.state.disabled}>Submit</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/stop" disabled={this.state.disabled}>Stop</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/restart" disabled={this.state.disabled}>Restart</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/delete" disabled={this.state.disabled}>Delete</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/deploy" disabled={this.state.disabled}>Deploy</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/undeploy" disabled={this.state.disabled}>UnDeploy</NavDropdown.Item>
-					</NavDropdown>
-					<NavDropdown title="View">
+					</StyledNavDropdown>
+					<StyledNavDropdown title="View">
 							<NavDropdown.Item as={StyledLink} to="/refreshStatus" disabled={this.state.disabled}>Refresh Status</NavDropdown.Item>
-					</NavDropdown>
-					<NavDropdown title="Help">
+					</StyledNavDropdown>
+					<StyledNavDropdown title="Help">
 							<StyledNavLink href="https://wiki.onap.org/" target="_blank">Wiki</StyledNavLink>
 							<StyledNavLink href="mailto:onap-discuss@lists.onap.org?subject=CLAMP&body=Please send us suggestions or feature enhancements or defect. If possible, please send us the steps to replicate any defect.">Contact Us</StyledNavLink>
 							<NavDropdown.Item as={StyledLink} to="/userInfo">User Info</NavDropdown.Item>
-					</NavDropdown>
+					</StyledNavDropdown>
 				</Navbar.Collapse>
 		);
 	}

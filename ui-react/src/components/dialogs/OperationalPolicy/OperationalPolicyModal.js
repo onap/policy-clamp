@@ -78,7 +78,6 @@ export default class OperationalPolicyModal extends React.Component {
 
 	setDefaultJsonEditorOptions() {
 		JSONEditor.defaults.options.theme = 'bootstrap4';
-		// JSONEditor.defaults.options.iconlib = 'bootstrap2';
 
 		JSONEditor.defaults.options.object_layout = 'grid';
 		JSONEditor.defaults.options.disable_properties = true;
@@ -89,7 +88,6 @@ export default class OperationalPolicyModal extends React.Component {
 		JSONEditor.defaults.options.array_controls_top=true;
 		JSONEditor.defaults.options.show_errors = 'always';
 		JSONEditor.defaults.options.keep_oneof_values=false;
-		JSONEditor.defaults.options.ajax=true;
 		JSONEditor.defaults.options.collapsed=true;
 		//JSONEditor.defaults.options.template = 'default';
 	}
