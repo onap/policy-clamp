@@ -64,11 +64,10 @@ tsc:
           link: 'https://lists.onap.org/g/ONAP-TSC/message/3311'
         - type: 'Addition'
           name: 'Adam Krysiak'
-          link: 'https://lists.onap.org/g/ONAP-TSC/message/3311'
+          link: 'https://lists.onap.org/g/ONAP-TSC/message/4178'
         - type: 'Removal'
           name: 'Pierre Close'
           link: 'https://lists.onap.org/g/ONAP-TSC/message/4581'
         - type: 'Removal'
           name: 'Wang Xinyuan1'
           link: 'https://lists.onap.org/g/ONAP-TSC/message/4581'
-
