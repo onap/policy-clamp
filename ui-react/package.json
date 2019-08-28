@@ -4,14 +4,13 @@
   "description": "ONAP Clamp Loop Designer UI",
   "author": "ONAP Clamp Team",
   "license": "Apache-2.0",
-  "homepage": "wiki.onap.org",
   "publishConfig": {
     "registry": "https://nexus3.onap.org/repository/npm.snapshot/"
   },
   "main": "index.js",
   "proxy": "https://localhost:8443",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom --watchAll=false",
     "eject": "react-scripts eject",

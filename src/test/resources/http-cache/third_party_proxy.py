@@ -43,7 +43,7 @@ parser.add_argument("--temp",     "-t", default=tempfile.mkdtemp(), type=str, he
 parser.add_argument("--proxy"         , type=str, help="Url of the  Act as a proxy. If not set, this script only uses the cache and will return a 404 if files aren't found")
 parser.add_argument("--port",     "-P", type=int, default="8081", help="Port on which the proxy should listen to")
 parser.add_argument("--verbose",  "-v", type=bool, help="Print more information in case of error")
-parser.add_argument("--proxyaddress","-a", type=str, help="Address of this proxy, generally either third_party_proxy:8085 or localhost:8085 depending if started with docker-compose or not")
+parser.add_argument("--proxyaddress","-a", type=str, help="Address of this proxy, generally either third-party-proxy:8085 or localhost:8085 depending if started with docker-compose or not")
 options = parser.parse_args()
 
 
