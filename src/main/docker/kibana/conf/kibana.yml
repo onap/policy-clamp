@@ -10,7 +10,7 @@ server.ssl.certificate: /usr/share/kibana/config/keystore/org.onap.clamp.crt.pem
 
 ## Search Guard
 #
-xpack.security.enabled: false
+#xpack.security.enabled: false
 elasticsearch.username: kibanaserver
 elasticsearch.password: kibanaserver
 

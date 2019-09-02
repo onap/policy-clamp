@@ -18,8 +18,8 @@ discovery.type: single-node
 ## X-Pack settings
 ## see https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html
 #
-xpack.license.self_generated.type: basic
-xpack.security.enabled: false
+#xpack.license.self_generated.type: basic
+#xpack.security.enabled: false
 
 ## Search Guard
 #

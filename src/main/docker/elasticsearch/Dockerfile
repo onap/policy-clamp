@@ -1,5 +1,5 @@
 # https://github.com/elastic/elasticsearch-docker
-FROM docker.elastic.co/elasticsearch/elasticsearch:6.6.2
+FROM docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.2
 
 COPY config/sg/ config/sg/
 COPY config/ config/
