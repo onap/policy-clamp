@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify OpenLoopModal Test the render method 1`] = `
+<Styled(Bootstrap(Modal))
+  onHide={[Function]}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Open Model
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
+      controlId="formPlaintextEmail"
+    >
+      <FormLabel
+        column={true}
+        sm="2"
+        srOnly={false}
+      >
+        Model Name
+      </FormLabel>
+      <Col
+        sm="10"
+      >
+        <StateManager
+          defaultInputValue=""
+          defaultMenuIsOpen={false}
+          defaultValue={null}
+          onChange={[Function]}
+          options={Array []}
+        />
+      </Col>
+    </FormGroup>
+    <FormGroup
+      controlId="formBasicChecbox"
+    >
+      <FormCheck
+        disabled={false}
+        inline={false}
+        isInvalid={false}
+        isValid={false}
+        title=""
+        type="checkbox"
+      >
+        <FormCheckLabel
+          type="checkbox"
+        >
+          Read Only
+        </FormCheckLabel>
+        <Styled(FormCheckInput)
+          type="checkbox"
+        />
+      </FormCheck>
+    </FormGroup>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="null"
+      variant="secondary"
+    >
+      Cancel
+    </Button>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+      variant="primary"
+    >
+      Open
+    </Button>
+  </ModalFooter>
+</Styled(Bootstrap(Modal))>
+`;

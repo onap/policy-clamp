@@ -22,11 +22,21 @@
  */
 import React from 'react';
 import { shallow } from 'enzyme';
-import OpenLoopModal from '../components/dialogs/OpenLoop/OpenLoopModal';
+import OpenLoopModal from './OpenLoopModal';
 
 describe('Verify OpenLoopModal', () => {
 
+  beforeEach(() => {
+      fetch.resetMocks()
+  })
+
   it('Test the render method', () => {
+    fetch.mockResponseOnce(JSON.stringify([
+        "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca",
+        "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3",
+        "LOOP_gmtAS_v1_0_ResourceInstanceName2_tca_2"
+      ]))
+      
     const component = shallow(<OpenLoopModal/>);
     expect(component).toMatchSnapshot();
   });

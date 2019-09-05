@@ -20,7 +20,6 @@
  * ===================================================================
  *
  */
-import React from 'react';
 import LoopCache from '../api/LoopCache';
 
 const json = require('./LoopCache_mokeLoopJsonCache.json');
