@@ -22,7 +22,7 @@
 
 export default class LoopService {
 	static getLoopNames() {
-		return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin', })
+		return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin' })
 			.then(function (response) {
 				console.debug("GetLoopNames response received: ", response.status);
 				if (response.ok) {
@@ -42,9 +42,9 @@ export default class LoopService {
 		return fetch('/restservices/clds/v2/loop/' + loopName, {
 			method: 'GET',
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			credentials: 'same-origin',
+			credentials: 'same-origin'
 		})
 			.then(function (response) {
 				console.debug("GetLoop response received: ", response.status);
@@ -64,7 +64,7 @@ export default class LoopService {
 	static getSvg(loopName) {
 		return fetch('/restservices/clds/v2/loop/svgRepresentation/' + loopName, {
 			method: 'GET',
-			credentials: 'same-origin',
+			credentials: 'same-origin'
 		})
 			.then(function (response) {
 				console.debug("svgRepresentation response received: ", response.status);
@@ -86,9 +86,9 @@ export default class LoopService {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(jsonData),
+			body: JSON.stringify(jsonData)
 		})
 			.then(function (response) {
 				console.debug("updateMicroservicePolicy response received: ", response.status);
@@ -110,9 +110,9 @@ export default class LoopService {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(jsonData),
+			body: JSON.stringify(jsonData)
 		})
 			.then(function (response) {
 				console.debug("updateOperationalPolicies response received: ", response.status);
@@ -134,9 +134,9 @@ export default class LoopService {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {
-				"Content-Type": "application/json",
+				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(jsonData),
+			body: JSON.stringify(jsonData)
 		})
 			.then(function (response) {
 				console.debug("updateGlobalProperties response received: ", response.status);

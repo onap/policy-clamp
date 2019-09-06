@@ -26,7 +26,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.onap.clamp</groupId>
 	<artifactId>clds</artifactId>
-	<version>4.1.1-SNAPSHOT</version>
+	<version>4.1.2-SNAPSHOT</version>
 	<name>clamp</name>
 
 
@@ -93,7 +93,7 @@
 		<!-- Enable language to disable javascript analysis -->
 		<!-- <sonar.language>java</sonar.language> -->
 		<!-- Parameters for Javascript coverage -->
-		<sonar.sources>src/main,${project.build.directory}/${ui.react.src}</sonar.sources>
+		<sonar.sources>src/main,${project.build.directory}/${ui.react.src}/src</sonar.sources>
 		<sonar.javascript.lcov.reportPaths>${project.build.directory}/${ui.react.src}/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
 
 		<sonar.exclusions>src/main/resources/**</sonar.exclusions>

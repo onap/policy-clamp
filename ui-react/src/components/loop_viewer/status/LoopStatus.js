@@ -46,7 +46,7 @@ const TableRow = ({ statusRow }) => (
 
 export default class LoopStatus extends React.Component {
 	state = {
-		loopCache: new LoopCache({}),
+		loopCache: new LoopCache({})
 	}
 
 	constructor(props) {
@@ -74,7 +74,7 @@ export default class LoopStatus extends React.Component {
 
 	componentWillReceiveProps(newProps) {
 		this.setState({
-			loopCache: newProps.loopCache,
+			loopCache: newProps.loopCache
 		});
 	}
 

@@ -28,7 +28,7 @@ export default class LoopActionService{
 		const svcAction = uiAction.toLowerCase();
  		return fetch("/restservices/clds/v2/loop/" + svcAction + "/" + cl_name, {
  				method: 'PUT',
- 				credentials: 'same-origin',
+ 				credentials: 'same-origin'
  			})
  		.then(function (response) {
  			if (response.ok) {
@@ -53,7 +53,7 @@ export default class LoopActionService{
 
 		return fetch("/restservices/clds/v2/loop/getstatus/" + cl_name, {
 			method: 'GET',
-			credentials: 'same-origin',
+			credentials: 'same-origin'
 		})
 		.then(function (response) {
 			if (response.ok) {

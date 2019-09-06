@@ -26,7 +26,7 @@ export default class UserService {
 	static login() {
 		return fetch('/restservices/clds/v1/user/getUser', {
 				method: 'GET',
-				credentials: 'same-origin',
+				credentials: 'same-origin'
 			})
 		.then(function (response) {
 			console.debug("getUser response received, status code:", response.status);
@@ -51,7 +51,7 @@ export default class UserService {
 	static logout() {
 		return fetch('/restservices/clds/v1/user/logout', {
 			method: 'POST',
-			credentials: 'same-origin',
+			credentials: 'same-origin'
 		})
 		.then(function (response) {
 			console.debug("logout response received, status code:", response.status);
@@ -76,7 +76,7 @@ export default class UserService {
 	static getUserInfo() {
 		return fetch('/restservices/clds/v1/clds/cldsInfo', {
 				method: 'GET',
-				credentials: 'same-origin',
+				credentials: 'same-origin'
 			})
 		.then(function (response) {
 			console.debug("getUserInfo response received, status code:", response.status);

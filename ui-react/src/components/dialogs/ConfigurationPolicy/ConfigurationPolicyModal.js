@@ -38,7 +38,7 @@ export default class ConfigurationPolicyModal extends React.Component {
 		show: true,
 		loopCache: this.props.loopCache,
 		jsonEditor: null,
-		componentName: this.props.match.params.componentName,
+		componentName: this.props.match.params.componentName
 	};
 
 	constructor(props, context) {

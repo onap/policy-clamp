@@ -37,7 +37,7 @@ export default class OperationalPolicyModal extends React.Component {
 	state = {
 		show: true,
 		loopCache: this.props.loopCache,
-		jsonEditor: null,
+		jsonEditor: null
 	};
 
 	constructor(props, context) {

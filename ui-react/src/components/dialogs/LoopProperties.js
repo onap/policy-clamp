@@ -35,7 +35,7 @@ export default class LoopProperties extends React.Component {
 	state = {
 		show: true,
 		loopCache: this.props.loopCache,
-		temporaryPropertiesJson: JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties())),
+		temporaryPropertiesJson: JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties()))
 	};
 
 	constructor(props, context) {
@@ -53,8 +53,7 @@ export default class LoopProperties extends React.Component {
 	componentWillReceiveProps(newProps) {
 		this.setState({
 			loopCache: newProps.loopCache,
-			temporaryPropertiesJson: JSON.parse(JSON.stringify(newProps.loopCache.getGlobalProperties())),
-
+			temporaryPropertiesJson: JSON.parse(JSON.stringify(newProps.loopCache.getGlobalProperties()))
 		});
 	}
 
