@@ -112,6 +112,12 @@ public class LegacyOperationalPolicy {
             replacePropertiesIfEmpty(policy, "failure_retries", "final_failure_retries");
             replacePropertiesIfEmpty(policy, "failure_exception", "final_failure_exception");
             replacePropertiesIfEmpty(policy, "failure_guard", "final_failure_guard");
+            // Again special case for payload, should remove it if it's there but empty
+            // otherwise policy crashes
+            JsonElement payloadElem = policy.getAsJsonObject().get("payload");
+            if (payloadElem != null && payloadElem.isJsonPrimitive() && payloadElem.getAsString().isEmpty()) {
+                policy.getAsJsonObject().remove("payload");
+            }
         }
         return policyJson;
     }

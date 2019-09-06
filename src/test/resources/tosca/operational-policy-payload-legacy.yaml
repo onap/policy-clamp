@@ -28,7 +28,6 @@ policies:
   failure_retries: final_failure_retries
   failure_timeout: final_failure_timeout
   id: policy2
-  payload: ''
   recipe: VF Module Create
   retry: 0
   success: final_success
