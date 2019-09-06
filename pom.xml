@@ -96,7 +96,7 @@
 		<sonar.sources>src/main,${project.build.directory}/${ui.react.src}</sonar.sources>
 		<sonar.javascript.lcov.reportPaths>${project.build.directory}/${ui.react.src}/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
 
-		<sonar.exclusions>src/main/resources/**,**/clamp-ui/designer/lib/*</sonar.exclusions>
+		<sonar.exclusions>src/main/resources/**</sonar.exclusions>
 
 		<docker.push.registry>localhost:5000</docker.push.registry>
 		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>

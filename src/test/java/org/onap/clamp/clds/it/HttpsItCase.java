@@ -76,12 +76,12 @@ public class HttpsItCase {
 
                 @Override
                 public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType)
-                    throws java.security.cert.CertificateException {
+                        throws java.security.cert.CertificateException {
                 }
 
                 @Override
                 public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType)
-                    throws java.security.cert.CertificateException {
+                        throws java.security.cert.CertificateException {
                 }
 
                 @Override
@@ -89,9 +89,7 @@ public class HttpsItCase {
                     return null;
                 }
             };
-            ctx.init(null, new TrustManager[] {
-                tm
-            }, null);
+            ctx.init(null, new TrustManager[] { tm }, null);
             SSLContext.setDefault(ctx);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -109,13 +107,13 @@ public class HttpsItCase {
             }
         });
         template.setRequestFactory(factory);
-        ResponseEntity<String> entity = template
-            .getForEntity("http://localhost:" + this.httpPort + "/designer/index.html", String.class);
+        ResponseEntity<String> entity = template.getForEntity("http://localhost:" + this.httpPort + "/swagger.html",
+                String.class);
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
         ResponseEntity<String> httpsEntity = template
-            .getForEntity("https://localhost:" + this.httpsPort + "/designer/index.html", String.class);
+                .getForEntity("https://localhost:" + this.httpsPort + "/swagger.html", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(httpsEntity.getBody()).contains("CLDS");
+        assertThat(httpsEntity.getBody()).contains("Clamp Rest API");
     }
 
     @Test
@@ -130,11 +128,11 @@ public class HttpsItCase {
         });
         template.setRequestFactory(factory);
         ResponseEntity<String> httpsEntity = template
-            .getForEntity("https://localhost:" + this.httpsPort + "/restservices/clds/api-doc", String.class);
+                .getForEntity("https://localhost:" + this.httpsPort + "/restservices/clds/api-doc", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpsEntity.getBody()).contains("swagger");
-        FileUtils.writeStringToFile(
-                new File("docs/swagger/swagger.json"), httpsEntity.getBody(), Charset.defaultCharset());
+        FileUtils.writeStringToFile(new File("docs/swagger/swagger.json"), httpsEntity.getBody(),
+                Charset.defaultCharset());
     }
 
     /**
@@ -151,7 +149,7 @@ public class HttpsItCase {
 
         @Override
         protected void prepareConnection(final HttpURLConnection connection, final String httpMethod)
-            throws IOException {
+                throws IOException {
             if (connection instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) connection).setHostnameVerifier(this.verifier);
             }

@@ -24,4 +24,4 @@
 ###
 
 cd ../../target/ui-react
-./node/npm start
+node/npm start

@@ -69,23 +69,21 @@ public class HttpConnectionManagerItCase {
     @Autowired
     HttpConnectionManager httpConnectionManager;
 
-    private static TrustManager[] trustAllCerts = new TrustManager[]{
-        new X509TrustManager() {
+    private static TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 
-            @Override
-            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-            }
+        @Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
         }
-    };
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+        }
+    } };
 
     private void enableSslNoCheck() throws NoSuchAlgorithmException, KeyManagementException {
         SSLContext sc = SSLContext.getInstance("SSL");
@@ -109,8 +107,8 @@ public class HttpConnectionManagerItCase {
 
     @Test
     public void testHttpGet() throws Exception {
-        String response = httpConnectionManager
-                .doHttpRequest("http://localhost:" + this.httpPort + "/designer/index.html", "GET", null, null, "DCAE", null, null);
+        String response = httpConnectionManager.doHttpRequest("http://localhost:" + this.httpPort + "/swagger.html",
+                "GET", null, null, "DCAE", null, null);
         assertNotNull(response);
         // Should be a redirection so 302, so empty
         assertTrue(response.isEmpty());
@@ -118,8 +116,8 @@ public class HttpConnectionManagerItCase {
 
     @Test
     public void testHttpsGet() throws Exception {
-        String response = httpConnectionManager
-                .doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index.html", "GET", null, null, "DCAE", null, null);
+        String response = httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/swagger.html",
+                "GET", null, null, "DCAE", null, null);
         assertNotNull(response);
         // Should contain something
         assertTrue(!response.isEmpty());
@@ -127,22 +125,22 @@ public class HttpConnectionManagerItCase {
 
     @Test(expected = BadRequestException.class)
     public void testHttpsGet404() throws IOException {
-        httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html", "GET",
-                null, null, "DCAE", null, null);
+        httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/swaggerx.html", "GET", null, null,
+                "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpsPost404() throws IOException {
-        httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/designer/index1.html", "POST",
-                "", "application/json", "DCAE", null, null);
+        httpConnectionManager.doHttpRequest("https://localhost:" + this.httpsPort + "/swaggerx.html", "POST", "",
+                "application/json", "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }
 
     @Test(expected = BadRequestException.class)
     public void testHttpException() throws IOException {
-        httpConnectionManager.doHttpRequest("http://localhost:" + this.httpsPort + "/designer/index.html", "GET",
-                null, null, "DCAE", null, null);
+        httpConnectionManager.doHttpRequest("http://localhost:" + this.httpsPort + "/swagger.html", "GET", null, null,
+                "DCAE", null, null);
         fail("Should have raised an BadRequestException");
     }
 }
