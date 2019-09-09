@@ -35,32 +35,20 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.NotFoundException;
-import javax.xml.transform.TransformerException;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.dao.CldsDao;
-import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsInfo;
-import org.onap.clamp.clds.model.CldsModel;
-import org.onap.clamp.clds.model.CldsMonitoringDetails;
-import org.onap.clamp.clds.model.CldsTemplate;
-import org.onap.clamp.clds.model.DcaeEvent;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -93,8 +81,7 @@ public class CldsServiceItCase {
     /**
      * Setup the variable before the tests execution.
      *
-     * @throws IOException
-     *         In case of issues when opening the files
+     * @throws IOException In case of issues when opening the files
      */
     @Before
     public void setupBefore() throws IOException {
@@ -153,128 +140,5 @@ public class CldsServiceItCase {
         in.close();
         assertEquals(cldsInfo.getCldsVersion(), prop.getProperty("clds.version"));
         assertEquals(cldsInfo.getUserName(), "admin");
-    }
-
-    @Test
-    public void testGetCldsDetails() throws IOException {
-        List<CldsMonitoringDetails> cldsMonitoringDetailsList = cldsService.getCldsDetails();
-        assertNotNull(cldsMonitoringDetailsList);
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void testCompleteFlow() throws TransformerException, ParseException {
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        cldsService.setSecurityContext(securityContext);
-        // Add the template first
-        CldsTemplate newTemplate = new CldsTemplate();
-        String randomNameTemplate = RandomStringUtils.randomAlphanumeric(5);
-        newTemplate.setName(randomNameTemplate);
-        newTemplate.setBpmnText(bpmnText);
-        newTemplate.setImageText(imageText);
-        // Save the template in DB
-        cldsDao.setTemplate(newTemplate, "user");
-        // Test if it's well there
-        CldsTemplate newTemplateRead = cldsDao.getTemplate(randomNameTemplate);
-        assertEquals(bpmnText, newTemplateRead.getBpmnText());
-        assertEquals(imageText, newTemplateRead.getImageText());
-        // Save the model
-        String randomNameModel = RandomStringUtils.randomAlphanumeric(5);
-        CldsModel newModel = new CldsModel();
-        newModel.setName(randomNameModel);
-        newModel.setBpmnText(bpmnText);
-        newModel.setImageText(imageText);
-        newModel.setPropText(bpmnPropText);
-        newModel.setControlNamePrefix("ClosedLoop-");
-        newModel.setTemplateName(randomNameTemplate);
-        newModel.setTemplateId(newTemplate.getId());
-        newModel.setDocText(docText);
-        // Test the PutModel method
-
-        cldsService.putModel(randomNameModel, newModel);
-
-        assertEquals(bpmnText, cldsService.getBpmnXml(randomNameModel));
-        assertEquals(imageText, cldsService.getImageXml(randomNameModel));
-
-        // Verify whether it has been added properly or not
-        assertNotNull(cldsDao.getModel(randomNameModel));
-
-        CldsModel model = cldsService.getModel(randomNameModel);
-        // Verify with GetModel
-        assertEquals(model.getTemplateName(), randomNameTemplate);
-        assertEquals(model.getName(), randomNameModel);
-
-        assertTrue(cldsService.getModelNames().size() >= 1);
-
-        // Should fail
-        ResponseEntity<?> responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_SUBMIT,
-            randomNameModel, "false", cldsService.getModel(randomNameModel));
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertNotNull(responseEntity.getBody());
-        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
-        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(cldsService.getModel(randomNameModel).getStatus()));
-
-        responseEntity = cldsService.deployModel(randomNameModel, cldsService.getModel(randomNameModel));
-        assertNotNull(responseEntity);
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertNotNull(responseEntity.getBody());
-        assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
-        assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
-
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_STOP, randomNameModel, "false",
-            cldsService.getModel(randomNameModel));
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertNotNull(responseEntity.getBody());
-        assertTrue(CldsModel.STATUS_STOPPED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
-        assertTrue(CldsModel.STATUS_STOPPED.equals(cldsService.getModel(randomNameModel).getStatus()));
-
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_RESTART, randomNameModel, "false",
-            cldsService.getModel(randomNameModel));
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertNotNull(responseEntity.getBody());
-        assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
-        assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
-
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_UPDATE, randomNameModel, "false",
-            cldsService.getModel(randomNameModel));
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertNotNull(responseEntity.getBody());
-        assertTrue(CldsModel.STATUS_ACTIVE.equals(((CldsModel) responseEntity.getBody()).getStatus()));
-        assertTrue(CldsModel.STATUS_ACTIVE.equals(cldsService.getModel(randomNameModel).getStatus()));
-
-        responseEntity = cldsService.unDeployModel(randomNameModel, cldsService.getModel(randomNameModel));
-        assertNotNull(responseEntity);
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertNotNull(responseEntity.getBody());
-        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(((CldsModel) responseEntity.getBody()).getStatus()));
-        assertTrue(CldsModel.STATUS_DISTRIBUTED.equals(cldsService.getModel(randomNameModel).getStatus()));
-
-        responseEntity = cldsService.putModelAndProcessAction(CldsEvent.ACTION_DELETE, randomNameModel, "false",
-            cldsService.getModel(randomNameModel));
-        assertNotNull(responseEntity);
-        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertNotNull(responseEntity.getBody());
-        // This will raise an exception
-        cldsService.getModel(randomNameModel);
-    }
-
-    @Test
-    public void testDcaePost() {
-        DcaeEvent dcaeEvent = new DcaeEvent();
-        dcaeEvent.setArtifactName("ClosedLoop_with-enough-characters_TestArtifact.yml");
-        dcaeEvent.setEvent(DcaeEvent.EVENT_CREATED);
-        dcaeEvent.setResourceUUID("1");
-        dcaeEvent.setServiceUUID("2");
-        assertEquals(cldsService.postDcaeEvent("false", dcaeEvent),
-            "event=created serviceUUID=2 resourceUUID=1 artifactName="
-                + "ClosedLoop_with-enough-characters_TestArtifact.yml instance count=0 isTest=false");
-    }
-
-    @Test
-    public void testGetSdcProperties() throws IOException {
-        JSONAssert.assertEquals(
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/sdc-properties-global.json"),
-            cldsService.getSdcProperties(), true);
     }
 }

@@ -42,7 +42,6 @@ import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
 import org.onap.clamp.clds.model.CldsModelInstance;
 import org.onap.clamp.clds.model.CldsModelProp;
-import org.onap.clamp.clds.model.CldsMonitoringDetails;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.model.CldsToscaModel;
 import org.onap.clamp.clds.model.ValueItem;
@@ -95,8 +94,7 @@ public class CldsDao {
     /**
      * When dataSource is provided, instantiate spring jdbc objects.
      *
-     * @param dataSource
-     *        the data source
+     * @param dataSource the data source
      */
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplateObject = new JdbcTemplate(dataSource);
@@ -112,7 +110,7 @@ public class CldsDao {
         this.procDeleteModel = new SimpleJdbcCall(dataSource).withProcedureName("del_model");
         this.procInsertToscaModel = new SimpleJdbcCall(dataSource).withProcedureName("set_tosca_model");
         this.procInsertNewToscaModelVersion = new SimpleJdbcCall(dataSource)
-            .withProcedureName("set_new_tosca_model_version");
+                .withProcedureName("set_new_tosca_model_version");
         this.procInsertDictionary = new SimpleJdbcCall(dataSource).withProcedureName("set_dictionary");
         this.procInsertDictionaryElement = new SimpleJdbcCall(dataSource).withProcedureName("set_dictionary_elements");
     }
@@ -120,8 +118,7 @@ public class CldsDao {
     /**
      * Get a model from the database given the model name.
      *
-     * @param modelName
-     *        the model name
+     * @param modelName the model name
      * @return the model
      */
     public CldsModel getModel(String modelName) {
@@ -133,7 +130,7 @@ public class CldsDao {
         CldsModel model = new CldsModel();
         model.setName(modelName);
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName)
-            .addValue(V_CONTROL_NAME_UUID, controlNameUuid);
+                .addValue(V_CONTROL_NAME_UUID, controlNameUuid);
         Map<String, Object> out = logSqlExecution(procGetModel, in);
         populateModelProperties(model, out);
         return model;
@@ -142,8 +139,7 @@ public class CldsDao {
     /**
      * Get a model from the database given the controlNameUuid.
      *
-     * @param controlNameUuid
-     *        the control name uuid
+     * @param controlNameUuid the control name uuid
      * @return the model by uuid
      */
     public CldsModel getModelByUuid(String controlNameUuid) {
@@ -153,8 +149,7 @@ public class CldsDao {
     /**
      * Get a model and template information from the database given the model name.
      *
-     * @param modelName
-     *        the model name
+     * @param modelName the model name
      * @return model model template
      */
 
@@ -186,21 +181,19 @@ public class CldsDao {
      * Update model in the database using parameter values and return updated model
      * object.
      *
-     * @param model
-     *        the model
-     * @param userid
-     *        the userid
+     * @param model  the model
+     * @param userid the userid
      * @return model
      */
     public CldsModel setModel(CldsModel model, String userid) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", model.getName())
-            .addValue("v_template_id", model.getTemplateId()).addValue("v_user_id", userid)
-            .addValue("v_model_prop_text", model.getPropText())
-            .addValue("v_model_blueprint_text", model.getBlueprintText())
-            .addValue("v_service_type_id", model.getTypeId()).addValue("v_deployment_id", model.getDeploymentId())
-            .addValue("v_deployment_status_url", model.getDeploymentStatusUrl())
-            .addValue(V_CONTROL_NAME_PREFIX, model.getControlNamePrefix())
-            .addValue(V_CONTROL_NAME_UUID, model.getControlNameUuid());
+                .addValue("v_template_id", model.getTemplateId()).addValue("v_user_id", userid)
+                .addValue("v_model_prop_text", model.getPropText())
+                .addValue("v_model_blueprint_text", model.getBlueprintText())
+                .addValue("v_service_type_id", model.getTypeId()).addValue("v_deployment_id", model.getDeploymentId())
+                .addValue("v_deployment_status_url", model.getDeploymentStatusUrl())
+                .addValue(V_CONTROL_NAME_PREFIX, model.getControlNamePrefix())
+                .addValue(V_CONTROL_NAME_UUID, model.getControlNameUuid());
         Map<String, Object> out = logSqlExecution(procSetModel, in);
         model.setControlNamePrefix((String) out.get(V_CONTROL_NAME_PREFIX));
         model.setControlNameUuid((String) out.get(V_CONTROL_NAME_UUID));
@@ -213,10 +206,8 @@ public class CldsDao {
      * Inserts new modelInstance in the database using parameter values and return
      * updated model object.
      *
-     * @param model
-     *        the model
-     * @param modelInstancesList
-     *        the model instances list
+     * @param model              the model
+     * @param modelInstancesList the model instances list
      */
     public void insModelInstance(CldsModel model, List<CldsModelInstance> modelInstancesList) {
         // Delete all existing model instances for given controlNameUUID
@@ -230,9 +221,9 @@ public class CldsDao {
                 logger.debug("v_vm_name={}", currModelInstance.getVmName());
                 logger.debug("v_location={}", currModelInstance.getLocation());
                 SqlParameterSource in = new MapSqlParameterSource()
-                    .addValue(V_CONTROL_NAME_UUID, model.getControlNameUuid())
-                    .addValue("v_vm_name", currModelInstance.getVmName())
-                    .addValue("v_location", currModelInstance.getLocation());
+                        .addValue(V_CONTROL_NAME_UUID, model.getControlNameUuid())
+                        .addValue("v_vm_name", currModelInstance.getVmName())
+                        .addValue("v_location", currModelInstance.getLocation());
                 Map<String, Object> out = logSqlExecution(procInsModelInstance, in);
                 model.setId((String) (out.get("v_model_id")));
                 CldsModelInstance modelInstance = new CldsModelInstance();
@@ -248,23 +239,19 @@ public class CldsDao {
      * Insert an event in the database - require either modelName or
      * controlNamePrefix/controlNameUuid.
      *
-     * @param modelName
-     *        the model name
-     * @param controlNamePrefix
-     *        the control name prefix
-     * @param controlNameUuid
-     *        the control name uuid
-     * @param cldsEvent
-     *        the clds event
+     * @param modelName         the model name
+     * @param controlNamePrefix the control name prefix
+     * @param controlNameUuid   the control name uuid
+     * @param cldsEvent         the clds event
      * @return clds event
      */
     public CldsEvent insEvent(String modelName, String controlNamePrefix, String controlNameUuid, CldsEvent cldsEvent) {
         CldsEvent event = new CldsEvent();
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName)
-            .addValue(V_CONTROL_NAME_PREFIX, controlNamePrefix).addValue(V_CONTROL_NAME_UUID, controlNameUuid)
-            .addValue("v_user_id", cldsEvent.getUserid()).addValue("v_action_cd", cldsEvent.getActionCd())
-            .addValue("v_action_state_cd", cldsEvent.getActionStateCd())
-            .addValue("v_process_instance_id", cldsEvent.getProcessInstanceId());
+                .addValue(V_CONTROL_NAME_PREFIX, controlNamePrefix).addValue(V_CONTROL_NAME_UUID, controlNameUuid)
+                .addValue("v_user_id", cldsEvent.getUserid()).addValue("v_action_cd", cldsEvent.getActionCd())
+                .addValue("v_action_state_cd", cldsEvent.getActionStateCd())
+                .addValue("v_process_instance_id", cldsEvent.getProcessInstanceId());
         Map<String, Object> out = logSqlExecution(procInsEvent, in);
         event.setId((String) (out.get("v_event_id")));
         return event;
@@ -279,14 +266,12 @@ public class CldsDao {
     /**
      * Update event with process instance id.
      *
-     * @param eventId
-     *        the event id
-     * @param processInstanceId
-     *        the process instance id
+     * @param eventId           the event id
+     * @param processInstanceId the process instance id
      */
     public void updEvent(String eventId, String processInstanceId) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_event_id", eventId)
-            .addValue("v_process_instance_id", processInstanceId);
+                .addValue("v_process_instance_id", processInstanceId);
         logSqlExecution(procUpdEvent, in);
     }
 
@@ -304,16 +289,14 @@ public class CldsDao {
      * Update template in the database using parameter values and return updated
      * template object.
      *
-     * @param template
-     *        the template
-     * @param userid
-     *        the userid
+     * @param template the template
+     * @param userid   the userid
      */
     public void setTemplate(CldsTemplate template, String userid) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_template_name", template.getName())
-            .addValue("v_user_id", userid).addValue("v_template_bpmn_text", template.getBpmnText())
-            .addValue("v_template_image_text", template.getImageText())
-            .addValue("v_template_doc_text", template.getPropText());
+                .addValue("v_user_id", userid).addValue("v_template_bpmn_text", template.getBpmnText())
+                .addValue("v_template_image_text", template.getImageText())
+                .addValue("v_template_doc_text", template.getPropText());
 
         // properties to setup the template is return from the logSqlExecution method
         setTemplateBaseProp(template, logSqlExecution(procSetTemplate, in));
@@ -332,8 +315,7 @@ public class CldsDao {
     /**
      * Get a template from the database given the model name.
      *
-     * @param templateName
-     *        the template name
+     * @param templateName the template name
      * @return model template
      */
     public CldsTemplate getTemplate(String templateName) {
@@ -354,10 +336,8 @@ public class CldsDao {
     /**
      * Helper method to setup the base template properties.
      *
-     * @param template
-     *  the template
-     * @param prop
-     *  collection with the properties
+     * @param template the template
+     * @param prop     collection with the properties
      */
     private void setTemplateBaseProp(CldsTemplate template, Map prop) {
         template.setId((String) prop.get("v_template_id"));
@@ -393,8 +373,8 @@ public class CldsDao {
     public List<CldsModelProp> getDeployedModelProperties() {
         List<CldsModelProp> cldsModelPropList = new ArrayList<>();
         String modelsSql = "select m.model_id, m.model_name, mp.model_prop_id, mp.model_prop_text FROM model m, "
-            + "model_properties mp, event e "
-            + "WHERE m.model_prop_id = mp.model_prop_id and m.event_id = e.event_id and e.action_cd = 'DEPLOY'";
+                + "model_properties mp, event e "
+                + "WHERE m.model_prop_id = mp.model_prop_id and m.event_id = e.event_id and e.action_cd = 'DEPLOY'";
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
         CldsModelProp cldsModelProp = null;
         for (Map<String, Object> row : rows) {
@@ -409,46 +389,9 @@ public class CldsDao {
     }
 
     /**
-     * Method to get deployed/active models with model properties.
-     *
-     * @return list of CLDS-Monitoring-Details: CLOSELOOP_NAME | Close loop name
-     *         used in the CLDS application (prefix: ClosedLoop- + unique ClosedLoop
-     *         ID) MODEL_NAME | Model Name in CLDS application SERVICE_TYPE_ID |
-     *         TypeId returned from the DCAE application when the ClosedLoop is
-     *         submitted (DCAEServiceTypeRequest generated in DCAE application).
-     *         DEPLOYMENT_ID | Id generated when the ClosedLoop is deployed in DCAE.
-     *         TEMPLATE_NAME | Template used to generate the ClosedLoop model.
-     *         ACTION_CD | Current state of the ClosedLoop in CLDS application.
-     */
-    public List<CldsMonitoringDetails> getCldsMonitoringDetails() {
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        List<CldsMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<>();
-        String modelsSql = "SELECT CONCAT(M.CONTROL_NAME_PREFIX, M.CONTROL_NAME_UUID) AS CLOSELOOP_NAME , "
-            + "M.MODEL_NAME, M.SERVICE_TYPE_ID, M.DEPLOYMENT_ID, T.TEMPLATE_NAME, E.ACTION_CD, E.USER_ID, E.TIMESTAMP "
-            + "FROM MODEL M, TEMPLATE T, EVENT E " + "WHERE M.TEMPLATE_ID = T.TEMPLATE_ID AND M.EVENT_ID = E.EVENT_ID "
-            + "ORDER BY ACTION_CD";
-        List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(modelsSql);
-        CldsMonitoringDetails cldsMonitoringDetails = null;
-        for (Map<String, Object> row : rows) {
-            cldsMonitoringDetails = new CldsMonitoringDetails();
-            cldsMonitoringDetails.setCloseloopName((String) row.get("CLOSELOOP_NAME"));
-            cldsMonitoringDetails.setModelName((String) row.get("MODEL_NAME"));
-            cldsMonitoringDetails.setServiceTypeId((String) row.get("SERVICE_TYPE_ID"));
-            cldsMonitoringDetails.setDeploymentId((String) row.get("DEPLOYMENT_ID"));
-            cldsMonitoringDetails.setTemplateName((String) row.get("TEMPLATE_NAME"));
-            cldsMonitoringDetails.setAction((String) row.get("ACTION_CD"));
-            cldsMonitoringDetails.setUserid((String) row.get("USER_ID"));
-            cldsMonitoringDetails.setTimestamp(sdf.format(row.get("TIMESTAMP")));
-            cldsMonitoringDetailsList.add(cldsMonitoringDetails);
-        }
-        return cldsMonitoringDetailsList;
-    }
-
-    /**
      * Method to delete model from database.
      *
-     * @param modelName
-     *        the model name
+     * @param modelName the model name
      */
     public void deleteModel(String modelName) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_model_name", modelName);
@@ -476,10 +419,8 @@ public class CldsDao {
     /**
      * Helper method to setup the event prop to the CldsEvent class.
      *
-     * @param event
-     *  the clds event
-     * @param prop
-     *  collection with the configuration
+     * @param event the clds event
+     * @param prop  collection with the configuration
      */
     private void setEventProp(CldsEvent event, Map prop) {
         event.setId((String) prop.get("v_event_id"));
@@ -501,8 +442,7 @@ public class CldsDao {
     /**
      * Method to retrieve a tosca models by Policy Type from database.
      *
-     * @param policyType
-     *        the policy type
+     * @param policyType the policy type
      * @return List of CldsToscaModel
      */
     public List<CldsToscaModel> getToscaModelByPolicyType(String policyType) {
@@ -512,8 +452,7 @@ public class CldsDao {
     /**
      * Method to retrieve a tosca models by toscaModelName, version from database.
      *
-     * @param toscaModelName
-     *        the tosca model name
+     * @param toscaModelName the tosca model name
      * @return List of CldsToscaModel
      */
     public List<CldsToscaModel> getToscaModelByName(String toscaModelName) {
@@ -528,13 +467,13 @@ public class CldsDao {
 
         String toscaModelSql = new StringBuilder("SELECT tm.tosca_model_name, tm.tosca_model_id, tm.policy_type, "
                 + "tmr.tosca_model_revision_id, tmr.tosca_model_json, tmr.version, tmr.user_id, tmr.createdTimestamp,"
-                + "tmr.lastUpdatedTimestamp").append(toscaModelName != null ? (", tmr.tosca_model_yaml") : "")
-                .append(" FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id")
-                .append(toscaModelName != null ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : "")
-                .append(policyType != null ? (" AND tm.policy_type = '" + policyType + "'") : "")
-                .append(" AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id"
-                + "=st.tosca_model_id)")
-                .toString();
+                + "tmr.lastUpdatedTimestamp").append(toscaModelName != null ? (", tmr.tosca_model_yaml") : "").append(
+                        " FROM tosca_model tm, tosca_model_revision tmr WHERE tm.tosca_model_id = tmr.tosca_model_id")
+                        .append(toscaModelName != null ? (" AND tm.tosca_model_name = '" + toscaModelName + "'") : "")
+                        .append(policyType != null ? (" AND tm.policy_type = '" + policyType + "'") : "")
+                        .append(" AND tmr.version = (select max(version) from tosca_model_revision st where tmr.tosca_model_id"
+                                + "=st.tosca_model_id)")
+                        .toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(toscaModelSql);
 
@@ -562,17 +501,15 @@ public class CldsDao {
     /**
      * Method to upload a new version of Tosca Model Yaml in Database.
      *
-     * @param cldsToscaModel
-     *        the clds tosca model
-     * @param userId
-     *        the user id
+     * @param cldsToscaModel the clds tosca model
+     * @param userId         the user id
      * @return CldsToscaModel clds tosca model
      */
     public CldsToscaModel updateToscaModelWithNewVersion(CldsToscaModel cldsToscaModel, String userId) {
         SqlParameterSource in = new MapSqlParameterSource().addValue("v_tosca_model_id", cldsToscaModel.getId())
-            .addValue("v_version", cldsToscaModel.getVersion())
-            .addValue("v_tosca_model_yaml", cldsToscaModel.getToscaModelYaml())
-            .addValue("v_tosca_model_json", cldsToscaModel.getToscaModelJson()).addValue("v_user_id", userId);
+                .addValue("v_version", cldsToscaModel.getVersion())
+                .addValue("v_tosca_model_yaml", cldsToscaModel.getToscaModelYaml())
+                .addValue("v_tosca_model_json", cldsToscaModel.getToscaModelJson()).addValue("v_user_id", userId);
         Map<String, Object> out = logSqlExecution(procInsertNewToscaModelVersion, in);
         cldsToscaModel.setRevisionId((String) out.get("v_revision_id"));
         return cldsToscaModel;
@@ -581,19 +518,17 @@ public class CldsDao {
     /**
      * Method to upload a new Tosca model Yaml in DB. Default version is 1.0
      *
-     * @param cldsToscaModel
-     *        the clds tosca model
-     * @param userId
-     *        the user id
+     * @param cldsToscaModel the clds tosca model
+     * @param userId         the user id
      * @return CldsToscaModel clds tosca model
      */
     public CldsToscaModel insToscaModel(CldsToscaModel cldsToscaModel, String userId) {
         SqlParameterSource in = new MapSqlParameterSource()
-            .addValue("v_tosca_model_name", cldsToscaModel.getToscaModelName())
-            .addValue("v_policy_type", cldsToscaModel.getPolicyType())
-            .addValue("v_tosca_model_yaml", cldsToscaModel.getToscaModelYaml())
-            .addValue("v_tosca_model_json", cldsToscaModel.getToscaModelJson())
-            .addValue("v_version", cldsToscaModel.getVersion()).addValue("v_user_id", userId);
+                .addValue("v_tosca_model_name", cldsToscaModel.getToscaModelName())
+                .addValue("v_policy_type", cldsToscaModel.getPolicyType())
+                .addValue("v_tosca_model_yaml", cldsToscaModel.getToscaModelYaml())
+                .addValue("v_tosca_model_json", cldsToscaModel.getToscaModelJson())
+                .addValue("v_version", cldsToscaModel.getVersion()).addValue("v_user_id", userId);
         Map<String, Object> out = logSqlExecution(procInsertToscaModel, in);
         cldsToscaModel.setId((String) (out.get("v_tosca_model_id")));
         cldsToscaModel.setRevisionId((String) (out.get("v_revision_id")));
@@ -604,13 +539,12 @@ public class CldsDao {
     /**
      * Method to insert a new Dictionary in Database.
      *
-     * @param cldsDictionary
-     *        the clds dictionary
+     * @param cldsDictionary the clds dictionary
      */
     public void insDictionary(CldsDictionary cldsDictionary) {
         SqlParameterSource in = new MapSqlParameterSource()
-            .addValue("v_dictionary_name", cldsDictionary.getDictionaryName())
-            .addValue("v_user_id", cldsDictionary.getCreatedBy());
+                .addValue("v_dictionary_name", cldsDictionary.getDictionaryName())
+                .addValue("v_user_id", cldsDictionary.getCreatedBy());
         Map<String, Object> out = logSqlExecution(procInsertDictionary, in);
         cldsDictionary.setDictionaryId((String) out.get("v_dictionary_id"));
     }
@@ -618,20 +552,15 @@ public class CldsDao {
     /**
      * Method to update Dictionary with new info in Database.
      *
-     * @param dictionaryId
-     *        the dictionary id
-     * @param cldsDictionary
-     *        the clds dictionary
-     * @param userId
-     *        the user id
+     * @param dictionaryId   the dictionary id
+     * @param cldsDictionary the clds dictionary
+     * @param userId         the user id
      */
     public void updateDictionary(String dictionaryId, CldsDictionary cldsDictionary, String userId) {
 
         String dictionarySql = new StringBuilder("UPDATE dictionary SET dictionary_name = '")
-                .append(cldsDictionary.getDictionaryName())
-                .append("', modified_by = '").append(userId)
-                .append("'WHERE dictionary_id = '").append(dictionaryId).append("'")
-                .toString();
+                .append(cldsDictionary.getDictionaryName()).append("', modified_by = '").append(userId)
+                .append("'WHERE dictionary_id = '").append(dictionaryId).append("'").toString();
         jdbcTemplateObject.update(dictionarySql);
         cldsDictionary.setUpdatedBy(userId);
     }
@@ -639,10 +568,8 @@ public class CldsDao {
     /**
      * Method to get list of Dictionaries from the Database.
      *
-     * @param dictionaryId
-     *        the dictionary id
-     * @param dictionaryName
-     *        the dictionary name
+     * @param dictionaryId   the dictionary id
+     * @param dictionaryName the dictionary name
      * @return dictionary
      */
     public List<CldsDictionary> getDictionary(String dictionaryId, String dictionaryName) {
@@ -660,9 +587,9 @@ public class CldsDao {
         } else {
             whereFilter = "";
         }
-        String dictionarySql = new StringBuilder("SELECT dictionary_id, dictionary_name, created_by, "
-                + "modified_by, timestamp FROM dictionary")
-                .append(whereFilter).toString();
+        String dictionarySql = new StringBuilder(
+                "SELECT dictionary_id, dictionary_name, created_by, " + "modified_by, timestamp FROM dictionary")
+                        .append(whereFilter).toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
 
@@ -683,18 +610,16 @@ public class CldsDao {
     /**
      * Method to insert a new Dictionary Element for given dictionary in Database.
      *
-     * @param cldsDictionaryItem
-     *        the clds dictionary item
-     * @param userId
-     *        the user id
+     * @param cldsDictionaryItem the clds dictionary item
+     * @param userId             the user id
      */
     public void insDictionarElements(CldsDictionaryItem cldsDictionaryItem, String userId) {
         SqlParameterSource in = new MapSqlParameterSource()
-            .addValue("v_dictionary_id", cldsDictionaryItem.getDictionaryId())
-            .addValue("v_dict_element_name", cldsDictionaryItem.getDictElementName())
-            .addValue("v_dict_element_short_name", cldsDictionaryItem.getDictElementShortName())
-            .addValue("v_dict_element_description", cldsDictionaryItem.getDictElementDesc())
-            .addValue("v_dict_element_type", cldsDictionaryItem.getDictElementType()).addValue("v_user_id", userId);
+                .addValue("v_dictionary_id", cldsDictionaryItem.getDictionaryId())
+                .addValue("v_dict_element_name", cldsDictionaryItem.getDictElementName())
+                .addValue("v_dict_element_short_name", cldsDictionaryItem.getDictElementShortName())
+                .addValue("v_dict_element_description", cldsDictionaryItem.getDictElementDesc())
+                .addValue("v_dict_element_type", cldsDictionaryItem.getDictElementType()).addValue("v_user_id", userId);
         Map<String, Object> out = logSqlExecution(procInsertDictionaryElement, in);
         cldsDictionaryItem.setDictElementId((String) out.get("v_dict_element_id"));
     }
@@ -703,25 +628,19 @@ public class CldsDao {
      * Method to update Dictionary Elements with new info for a given dictionary in
      * Database.
      *
-     * @param dictionaryElementId
-     *        the dictionary element id
-     * @param cldsDictionaryItem
-     *        the clds dictionary item
-     * @param userId
-     *        the user id
+     * @param dictionaryElementId the dictionary element id
+     * @param cldsDictionaryItem  the clds dictionary item
+     * @param userId              the user id
      */
     public void updateDictionaryElements(String dictionaryElementId, CldsDictionaryItem cldsDictionaryItem,
-        String userId) {
+            String userId) {
 
         String dictionarySql = new StringBuilder().append("UPDATE dictionary_elements SET dict_element_name = '")
-                .append(cldsDictionaryItem.getDictElementName())
-                .append("', dict_element_short_name = '").append(cldsDictionaryItem.getDictElementShortName())
-                .append("', dict_element_description= '").append(cldsDictionaryItem.getDictElementDesc())
-                .append("', dict_element_type = '").append(cldsDictionaryItem.getDictElementType())
-                .append("', modified_by = '").append(userId).append("'")
-                .append(" WHERE dict_element_id = '")
-                .append(dictionaryElementId).append("'")
-                .toString();
+                .append(cldsDictionaryItem.getDictElementName()).append("', dict_element_short_name = '")
+                .append(cldsDictionaryItem.getDictElementShortName()).append("', dict_element_description= '")
+                .append(cldsDictionaryItem.getDictElementDesc()).append("', dict_element_type = '")
+                .append(cldsDictionaryItem.getDictElementType()).append("', modified_by = '").append(userId).append("'")
+                .append(" WHERE dict_element_id = '").append(dictionaryElementId).append("'").toString();
         jdbcTemplateObject.update(dictionarySql);
         cldsDictionaryItem.setUpdatedBy(userId);
     }
@@ -730,26 +649,25 @@ public class CldsDao {
      * Method to get list of all dictionary elements for a given dictionary in the
      * Database.
      *
-     * @param dictionaryName
-     *        the dictionary name
-     * @param dictionaryId
-     *        the dictionary id
-     * @param dictElementShortName
-     *        the dict element short name
+     * @param dictionaryName       the dictionary name
+     * @param dictionaryId         the dictionary id
+     * @param dictElementShortName the dict element short name
      * @return dictionary elements
      */
     public List<CldsDictionaryItem> getDictionaryElements(String dictionaryName, String dictionaryId,
-        String dictElementShortName) {
+            String dictElementShortName) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         List<CldsDictionaryItem> dictionaryItems = new ArrayList<>();
         String dictionarySql = new StringBuilder("SELECT de.dict_element_id, de.dictionary_id, de.dict_element_name, "
                 + "de.dict_element_short_name, de.dict_element_description, de.dict_element_type, de.created_by, "
                 + "de.modified_by, de.timestamp FROM dictionary_elements de, "
                 + "dictionary d WHERE de.dictionary_id = d.dictionary_id")
-                .append((dictionaryId != null) ? (" AND d.dictionary_id = '" + dictionaryId + "'") : "")
-                .append((dictElementShortName != null) ? (" AND de.dict_element_short_name = '" + dictElementShortName
-                        + "'") : "")
-                .append((dictionaryName != null) ? (" AND dictionary_name = '" + dictionaryName + "'") : "").toString();
+                        .append((dictionaryId != null) ? (" AND d.dictionary_id = '" + dictionaryId + "'") : "")
+                        .append((dictElementShortName != null)
+                                ? (" AND de.dict_element_short_name = '" + dictElementShortName + "'")
+                                : "")
+                        .append((dictionaryName != null) ? (" AND dictionary_name = '" + dictionaryName + "'") : "")
+                        .toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
 
@@ -775,22 +693,21 @@ public class CldsDao {
      * Method to get Map of all dictionary elements with key as dictionary short
      * name and value as the full name.
      *
-     * @param dictionaryElementType
-     *        the dictionary element type
+     * @param dictionaryElementType the dictionary element type
      * @return Map of dictionary elements as key value pair
      */
     public Map<String, String> getDictionaryElementsByType(String dictionaryElementType) {
         Map<String, String> dictionaryItems = new HashMap<>();
         String dictionarySql = new StringBuilder("SELECT dict_element_name, dict_element_short_name "
-                + "FROM dictionary_elements WHERE dict_element_type = '")
-                .append(dictionaryElementType).append("'").toString();
+                + "FROM dictionary_elements WHERE dict_element_type = '").append(dictionaryElementType).append("'")
+                        .toString();
 
         List<Map<String, Object>> rows = jdbcTemplateObject.queryForList(dictionarySql);
 
         if (rows != null) {
             rows.forEach(row -> {
                 dictionaryItems.put(((String) row.get("dict_element_short_name")),
-                    ((String) row.get("dict_element_name")));
+                        ((String) row.get("dict_element_name")));
             });
         }
         return dictionaryItems;

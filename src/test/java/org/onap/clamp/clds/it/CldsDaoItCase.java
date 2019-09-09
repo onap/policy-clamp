@@ -24,14 +24,11 @@
 package org.onap.clamp.clds.it;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.ws.rs.NotFoundException;
 
@@ -42,7 +39,6 @@ import org.junit.runner.RunWith;
 import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsEvent;
 import org.onap.clamp.clds.model.CldsModel;
-import org.onap.clamp.clds.model.CldsMonitoringDetails;
 import org.onap.clamp.clds.model.CldsTemplate;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +63,7 @@ public class CldsDaoItCase {
     /**
      * Setup the variable before the tests execution.
      *
-     * @throws IOException
-     *         In case of issues when opening the files
+     * @throws IOException In case of issues when opening the files
      */
     @Before
     public void setupBefore() throws IOException {
@@ -144,17 +139,7 @@ public class CldsDaoItCase {
         newModel.setTemplateId(newTemplate.getId());
         newModel.setDocText(newTemplate.getPropText());
         CldsEvent.insEvent(cldsDao, newModel, "user", CldsEvent.ACTION_RESTART, CldsEvent.ACTION_STATE_COMPLETED,
-            "process-instance-id");
-    }
-
-    @Test
-    public void testGetCldsMonitoringDetails() {
-        List<CldsMonitoringDetails> cldsMonitoringDetailsList = new ArrayList<CldsMonitoringDetails>();
-        cldsMonitoringDetailsList = cldsDao.getCldsMonitoringDetails();
-        cldsMonitoringDetailsList.forEach(clName -> {
-            logger.info(clName.getCloseloopName());
-            assertNotNull(clName.getCloseloopName());
-        });
+                "process-instance-id");
     }
 
 }

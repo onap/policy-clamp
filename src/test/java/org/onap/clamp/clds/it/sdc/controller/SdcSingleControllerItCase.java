@@ -27,11 +27,13 @@ package org.onap.clamp.clds.it.sdc.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -104,45 +106,48 @@ public class SdcSingleControllerItCase {
      */
     @Before
     public void init() {
-        sdcSingleController = new SdcSingleController(clampProp, csarInstaller,
-            SdcSingleControllerConfigurationTest.loadControllerConfiguration("clds/sdc-controller-config-TLS.json",
-                "sdc-controller1"),
-            null) {
+        sdcSingleController = new SdcSingleController(clampProp, csarInstaller, SdcSingleControllerConfigurationTest
+                .loadControllerConfiguration("clds/sdc-controller-config-TLS.json", "sdc-controller1"), null) {
         };
     }
 
     @Test
     public void testTreatNotification() {
-        //when
+        // when
         sdcSingleController.treatNotification(buildFakeSdcNotification());
-        //then
+        // then
         Assertions.assertThat(sdcSingleController.getNbOfNotificationsOngoing()).isEqualTo(0);
     }
 
     @Test
     public void testCloseSdc() throws SdcControllerException {
-        //when
+        // when
         sdcSingleController.closeSdc();
-        //then
+        // then
         assertThat(sdcSingleController.getControllerStatus()).isEqualTo(SdcSingleControllerStatus.STOPPED);
     }
 
     @Test
-    public void testActivateCallback() throws  InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException, ClassNotFoundException {
-        //given
-        MDCAdapter mdcAdapter = MDC.getMDCAdapter();
-        Class<?> innerClass = Class.forName("org.onap.clamp.clds.sdc.controller.SdcSingleController$SdcNotificationCallBack");
-        Constructor<?> constructor = innerClass.getDeclaredConstructor(SdcSingleController.class, SdcSingleController.class);
+    public void testActivateCallback() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException,
+            InstantiationException, ClassNotFoundException {
+        // given
+
+        Class<?> innerClass = Class
+                .forName("org.onap.clamp.clds.sdc.controller.SdcSingleController$SdcNotificationCallBack");
+        Constructor<?> constructor = innerClass.getDeclaredConstructor(SdcSingleController.class,
+                SdcSingleController.class);
         constructor.setAccessible(true);
-        Object child = constructor.newInstance(sdcSingleController,sdcSingleController);
-        Method method = child.getClass().getDeclaredMethod("activateCallback",INotificationData.class);
+        Object child = constructor.newInstance(sdcSingleController, sdcSingleController);
+        Method method = child.getClass().getDeclaredMethod("activateCallback", INotificationData.class);
         method.setAccessible(true);
-        //when
-        method.invoke(child,buildFakeSdcNotification());
-        //then
+        MDCAdapter mdcAdapter = MDC.getMDCAdapter();
+        // when
+        method.invoke(child, buildFakeSdcNotification());
+        // then
         assertThat(mdcAdapter.get("ResponseCode")).isEqualTo("0");
         assertThat(mdcAdapter.get("StatusCode")).isEqualTo("COMPLETE");
-        assertThat(mdcAdapter.get("ResponseDescription")).isEqualTo("SDC Notification received and processed successfully");
+        assertThat(mdcAdapter.get("ResponseDescription"))
+                .isEqualTo("SDC Notification received and processed successfully");
         assertThat(mdcAdapter.get("ClassName")).isEqualTo(child.getClass().getName());
     }
 }

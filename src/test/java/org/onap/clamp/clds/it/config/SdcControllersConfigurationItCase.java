@@ -45,7 +45,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller")
+@ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller-new")
 public class SdcControllersConfigurationItCase {
 
     @Autowired
@@ -60,7 +60,7 @@ public class SdcControllersConfigurationItCase {
     public void testGetAllDefinedControllers() throws IOException {
         loadFile("classpath:/clds/sdc-controllers-config.json");
         Map<String, SdcSingleControllerConfiguration> mapResult = sdcControllersConfiguration
-            .getAllDefinedControllers();
+                .getAllDefinedControllers();
         assertTrue(mapResult.size() == 2);
         assertEquals("sdc-controller1", mapResult.get("sdc-controller1").getSdcControllerName());
         assertEquals("sdc-controller2", mapResult.get("sdc-controller2").getSdcControllerName());
@@ -69,10 +69,10 @@ public class SdcControllersConfigurationItCase {
     @Test
     public void testGetSdcSingleControllerConfiguration() throws IOException {
         loadFile("classpath:/clds/sdc-controllers-config.json");
-        assertEquals("sdc-controller1",
-            sdcControllersConfiguration.getSdcSingleControllerConfiguration("sdc-controller1").getSdcControllerName());
-        assertEquals("sdc-controller2",
-            sdcControllersConfiguration.getSdcSingleControllerConfiguration("sdc-controller2").getSdcControllerName());
+        assertEquals("sdc-controller1", sdcControllersConfiguration
+                .getSdcSingleControllerConfiguration("sdc-controller1").getSdcControllerName());
+        assertEquals("sdc-controller2", sdcControllersConfiguration
+                .getSdcSingleControllerConfiguration("sdc-controller2").getSdcControllerName());
     }
 
     @Test(expected = JsonSyntaxException.class)

@@ -44,7 +44,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 /**
- * Create CLDS Event.
+ * Verify user has right permissions.
  */
 @Component
 public class AuthorizationController {
