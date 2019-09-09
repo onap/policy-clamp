@@ -626,6 +626,11 @@
 			<artifactId>guava</artifactId>
 			<version>27.0-jre</version>
 		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.13</version>
+		</dependency>
 		<!-- Remove the MYSQL connector and replace it by Mariadb -->
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
