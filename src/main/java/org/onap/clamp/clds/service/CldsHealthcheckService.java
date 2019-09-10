@@ -34,7 +34,6 @@ import org.onap.clamp.loop.LoopController;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 /**
@@ -54,36 +53,28 @@ public class CldsHealthcheckService {
      *
      * @return CldsHealthCheck class containing healthcheck info
      */
-    public ResponseEntity<CldsHealthCheck> gethealthcheck() {
+    public CldsHealthCheck gethealthcheck() {
         CldsHealthCheck cldsHealthCheck = new CldsHealthCheck();
         Date startTime = new Date();
         LoggingUtils util = new LoggingUtils(logger);
         LoggingUtils.setRequestContext("CldsService: GET healthcheck", "Clamp-Health-Check");
         LoggingUtils.setTimeContext(startTime, new Date());
-        boolean healthcheckFailed = false;
         try {
             loopController.getLoopNames();
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("UP");
             cldsHealthCheck.setDescription("OK");
             LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
+            util.exiting("200", "Healthcheck success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
         } catch (Exception e) {
-            healthcheckFailed = true;
             logger.error("CLAMP application Heath check failed", e);
             LoggingUtils.setResponseContext("999", "Get healthcheck failed", this.getClass().getName());
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("DOWN");
             cldsHealthCheck.setDescription("NOT-OK");
-        }
-        // audit log
-        LoggingUtils.setTimeContext(startTime, new Date());
-        if (healthcheckFailed) {
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Healthcheck failed", Level.INFO,
                     ONAPLogConstants.ResponseStatus.ERROR);
-            return new ResponseEntity<>(cldsHealthCheck, HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-            util.exiting("200", "Healthcheck failed", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
-            return new ResponseEntity<>(cldsHealthCheck, HttpStatus.OK);
         }
+        return cldsHealthCheck;
     }
 }

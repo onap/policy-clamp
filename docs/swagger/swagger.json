@@ -4,7 +4,7 @@
     "version" : "4.1.2-SNAPSHOT",
     "title" : "Clamp Rest API"
   },
-  "host" : "localhost:40147",
+  "host" : "localhost:36829",
   "basePath" : "/restservices/clds/",
   "schemes" : [ "http" ],
   "paths" : {
@@ -419,11 +419,11 @@
         "asString" : {
           "type" : "string"
         },
-        "asBoolean" : {
-          "type" : "boolean"
-        },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
+        },
+        "asBoolean" : {
+          "type" : "boolean"
         },
         "asDouble" : {
           "type" : "number",
@@ -464,23 +464,23 @@
         "asJsonPrimitive" : {
           "$ref" : "#/definitions/JsonPrimitive"
         },
-        "jsonObject" : {
-          "type" : "boolean"
-        },
-        "jsonNull" : {
-          "type" : "boolean"
-        },
-        "jsonArray" : {
-          "type" : "boolean"
-        },
         "jsonPrimitive" : {
           "type" : "boolean"
         },
         "asJsonArray" : {
           "$ref" : "#/definitions/JsonArray"
         },
+        "jsonObject" : {
+          "type" : "boolean"
+        },
+        "jsonNull" : {
+          "type" : "boolean"
+        },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"
+        },
+        "jsonArray" : {
+          "type" : "boolean"
         }
       },
       "x-className" : {
@@ -529,11 +529,11 @@
         "asString" : {
           "type" : "string"
         },
-        "asBoolean" : {
-          "type" : "boolean"
-        },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
+        },
+        "asBoolean" : {
+          "type" : "boolean"
         },
         "asDouble" : {
           "type" : "number",
@@ -577,23 +577,23 @@
         "asJsonPrimitive" : {
           "$ref" : "#/definitions/JsonPrimitive"
         },
-        "jsonObject" : {
-          "type" : "boolean"
-        },
-        "jsonNull" : {
-          "type" : "boolean"
-        },
-        "jsonArray" : {
-          "type" : "boolean"
-        },
         "jsonPrimitive" : {
           "type" : "boolean"
         },
         "asJsonArray" : {
           "$ref" : "#/definitions/JsonArray"
         },
+        "jsonObject" : {
+          "type" : "boolean"
+        },
+        "jsonNull" : {
+          "type" : "boolean"
+        },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"
+        },
+        "jsonArray" : {
+          "type" : "boolean"
         }
       }
     },
@@ -643,29 +643,29 @@
         "asString" : {
           "type" : "string"
         },
-        "jsonObject" : {
-          "type" : "boolean"
-        },
-        "jsonNull" : {
-          "type" : "boolean"
-        },
-        "jsonArray" : {
-          "type" : "boolean"
-        },
-        "asBoolean" : {
-          "type" : "boolean"
-        },
         "jsonPrimitive" : {
           "type" : "boolean"
         },
         "asJsonArray" : {
           "$ref" : "#/definitions/JsonArray"
         },
-        "asJsonNull" : {
-          "$ref" : "#/definitions/JsonNull"
+        "jsonObject" : {
+          "type" : "boolean"
         },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
+        },
+        "jsonNull" : {
+          "type" : "boolean"
+        },
+        "asJsonNull" : {
+          "$ref" : "#/definitions/JsonNull"
+        },
+        "jsonArray" : {
+          "type" : "boolean"
+        },
+        "asBoolean" : {
+          "type" : "boolean"
         },
         "asDouble" : {
           "type" : "number",
@@ -761,29 +761,29 @@
         "asString" : {
           "type" : "string"
         },
-        "jsonObject" : {
-          "type" : "boolean"
-        },
-        "jsonNull" : {
-          "type" : "boolean"
-        },
-        "jsonArray" : {
-          "type" : "boolean"
-        },
-        "asBoolean" : {
-          "type" : "boolean"
-        },
         "jsonPrimitive" : {
           "type" : "boolean"
         },
         "asJsonArray" : {
           "$ref" : "#/definitions/JsonArray"
         },
-        "asJsonNull" : {
-          "$ref" : "#/definitions/JsonNull"
+        "jsonObject" : {
+          "type" : "boolean"
         },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
+        },
+        "jsonNull" : {
+          "type" : "boolean"
+        },
+        "asJsonNull" : {
+          "$ref" : "#/definitions/JsonNull"
+        },
+        "jsonArray" : {
+          "type" : "boolean"
+        },
+        "asBoolean" : {
+          "type" : "boolean"
         },
         "asDouble" : {
           "type" : "number",

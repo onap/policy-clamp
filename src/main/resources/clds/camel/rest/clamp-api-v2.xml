@@ -68,7 +68,7 @@
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
 					<to
-						uri="bean:org.onap.clamp.loop.LoopController?method=getSVGRepresentation(${header.loopName})" />
+						uri="bean:org.onap.clamp.loop.LoopController?method=getSvgRepresentation(${header.loopName})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
