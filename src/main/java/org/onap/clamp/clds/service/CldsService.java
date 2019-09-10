@@ -28,18 +28,12 @@ package org.onap.clamp.clds.service;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.camel.Produce;
-import org.onap.clamp.clds.camel.CamelProxy;
 import org.onap.clamp.clds.model.CldsInfo;
-import org.onap.clamp.clds.model.sdc.SdcServiceInfo;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.ONAPLogConstants;
 import org.slf4j.event.Level;
@@ -52,14 +46,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CldsService extends SecureServiceBase {
-
-    /**
-     * The constant LIST_OF_SDC_SERVICE_INFO_TYPE.
-     */
-    public static final Type LIST_OF_SDC_SERVICE_INFO_TYPE = new TypeToken<List<SdcServiceInfo>>() {
-    }.getType();
-    @Produce(uri = "direct:processSubmit")
-    private CamelProxy camelProxy;
     /**
      * The constant securityLogger.
      */

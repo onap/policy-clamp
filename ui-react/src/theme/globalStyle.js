@@ -90,5 +90,5 @@ export const DefaultClampTheme = {
 	menuBackgroundColor: 'white',
 	menuFontColor: 'black',
 	menuHighlightedBackgroundColor: '#337ab7',
-	menuHighlightedFontColor: 'white',
+	menuHighlightedFontColor: 'white'
 };
