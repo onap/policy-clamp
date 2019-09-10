@@ -25,10 +25,6 @@ package org.onap.clamp.clds.model;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.List;
-
-import org.onap.clamp.clds.dao.CldsDao;
-
 /**
  * Represents a CLDS Dictionary Item.
  */
@@ -52,34 +48,6 @@ public class CldsDictionaryItem {
     private String updatedBy;
     @Expose
     private String lastUpdatedDate;
-
-    /**
-     * Save the dictionary item.
-     *
-     * @param dictionaryName The name of the dictionary
-     * @param cldsDao        The cldsDao
-     * @param userId         The user id
-     */
-    public void save(String dictionaryName, CldsDao cldsDao, String userId) {
-        // Check if dictionary exists.
-        List<CldsDictionary> list = cldsDao.getDictionary(this.getDictionaryId(), dictionaryName);
-        if (list != null && !list.isEmpty()) {
-            // Dictionary found. We can add or update the dictionary element
-            CldsDictionary cldsDictionary = list.stream().findFirst().get();
-            List<CldsDictionaryItem> dictionaryItems = cldsDao.getDictionaryElements(dictionaryName,
-                    cldsDictionary.getDictionaryId(), this.getDictElementShortName());
-            if (dictionaryItems != null && !dictionaryItems.isEmpty()) {
-                CldsDictionaryItem item = dictionaryItems.stream().findFirst().get();
-                cldsDao.updateDictionaryElements(item.getDictElementId(), this, userId);
-                this.setCreatedBy(item.getCreatedBy());
-
-            } else {
-                this.setCreatedBy(userId);
-                this.setUpdatedBy(userId);
-                cldsDao.insDictionarElements(this, userId);
-            }
-        }
-    }
 
     /**
      * Get the dictionary element id.

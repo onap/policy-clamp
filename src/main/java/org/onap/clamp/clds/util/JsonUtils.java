@@ -41,7 +41,6 @@ import java.util.Spliterators;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.onap.clamp.clds.model.properties.AbstractModelElement;
 import org.onap.clamp.clds.service.SecureServicePermission;
 import org.onap.clamp.clds.service.SecureServicePermissionDeserializer;
 import org.onap.clamp.dao.model.gson.converter.InstantDeserializer;
@@ -52,17 +51,17 @@ import org.onap.clamp.dao.model.gson.converter.InstantSerializer;
  */
 public class JsonUtils {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(AbstractModelElement.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(JsonUtils.class);
     private static final String LOG_ELEMENT_NOT_FOUND = "Value '{}' for key 'name' not found in JSON";
     private static final String LOG_ELEMENT_NOT_FOUND_IN_JSON = "Value '{}' for key 'name' not found in JSON {}";
 
     public static final Gson GSON = new GsonBuilder()
-        .registerTypeAdapter(SecureServicePermission.class, new SecureServicePermissionDeserializer()).create();
+            .registerTypeAdapter(SecureServicePermission.class, new SecureServicePermissionDeserializer()).create();
 
     public static final Gson GSON_JPA_MODEL = new GsonBuilder()
-        .registerTypeAdapter(Instant.class, new InstantSerializer())
-        .registerTypeAdapter(Instant.class, new InstantDeserializer()).setPrettyPrinting()
-        .excludeFieldsWithoutExposeAnnotation().create();
+            .registerTypeAdapter(Instant.class, new InstantSerializer())
+            .registerTypeAdapter(Instant.class, new InstantDeserializer()).setPrettyPrinting()
+            .excludeFieldsWithoutExposeAnnotation().create();
 
     private JsonUtils() {
     }
@@ -73,7 +72,7 @@ public class JsonUtils {
      */
     public static String getStringValueByName(JsonElement jsonElement, String name) {
         String value = extractJsonValueFromElement(jsonElement, name).map(JsonUtils::extractStringValueFromElement)
-            .orElse(null);
+                .orElse(null);
         if (value == null) {
             if (logger.isDebugEnabled()) {
                 logger.debug(LOG_ELEMENT_NOT_FOUND_IN_JSON, name, jsonElement.toString());
@@ -90,7 +89,7 @@ public class JsonUtils {
      */
     public static List<String> getStringValuesByName(JsonElement jsonElement, String name) {
         List<String> values = extractJsonValueFromElement(jsonElement, name)
-            .map(JsonUtils::extractStringValuesFromElement).orElse(new ArrayList<>());
+                .map(JsonUtils::extractStringValuesFromElement).orElse(new ArrayList<>());
         if (values.isEmpty()) {
             if (logger.isDebugEnabled()) {
                 logger.debug(LOG_ELEMENT_NOT_FOUND_IN_JSON, name, jsonElement.toString());
@@ -116,7 +115,7 @@ public class JsonUtils {
      */
     public static JsonObject getJsonObjectByName(JsonElement jsonElement, String name) {
         JsonObject jsonObject = extractJsonValueFromElement(jsonElement, name).map(JsonElement::getAsJsonObject)
-            .orElse(null);
+                .orElse(null);
         if (jsonObject == null) {
             logger.warn(LOG_ELEMENT_NOT_FOUND, name);
         } else {
@@ -147,7 +146,7 @@ public class JsonUtils {
 
     private static boolean hasMatchingParameterName(String name, JsonElement element) {
         return element.isJsonObject() && element.getAsJsonObject().has("name")
-            && name.equals(element.getAsJsonObject().get("name").getAsString());
+                && name.equals(element.getAsJsonObject().get("name").getAsString());
     }
 
     private static String extractStringValueFromElement(JsonElement element) {
@@ -163,10 +162,10 @@ public class JsonUtils {
     private static List<String> extractStringValuesFromElement(JsonElement element) {
         if (element.isJsonArray()) {
             return StreamSupport
-                .stream(Spliterators.spliteratorUnknownSize(element.getAsJsonArray().iterator(), Spliterator.ORDERED),
-                    false)
-                .filter(JsonElement::isJsonPrimitive).map(JsonElement::getAsJsonPrimitive)
-                .filter(JsonPrimitive::isString).map(JsonPrimitive::getAsString).collect(Collectors.toList());
+                    .stream(Spliterators.spliteratorUnknownSize(element.getAsJsonArray().iterator(),
+                            Spliterator.ORDERED), false)
+                    .filter(JsonElement::isJsonPrimitive).map(JsonElement::getAsJsonPrimitive)
+                    .filter(JsonPrimitive::isString).map(JsonPrimitive::getAsString).collect(Collectors.toList());
         } else {
             String value = extractStringValueFromElement(element);
             return Lists.newArrayList(value);

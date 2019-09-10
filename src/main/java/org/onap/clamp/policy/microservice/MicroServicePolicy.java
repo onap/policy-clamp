@@ -104,25 +104,20 @@ public class MicroServicePolicy implements Serializable, Policy {
      * The constructor that create the json representation from the policyTosca
      * using the ToscaYamlToJsonConvertor.
      *
-     * @param name
-     *        The name of the MicroService
-     * @param modelType
-     *        The model type of the MicroService
-     * @param policyTosca
-     *        The policy Tosca of the MicroService
-     * @param shared
-     *        The flag indicate whether the MicroService is shared
-     * @param usedByLoops
-     *        The list of loops that uses this MicroService
+     * @param name        The name of the MicroService
+     * @param modelType   The model type of the MicroService
+     * @param policyTosca The policy Tosca of the MicroService
+     * @param shared      The flag indicate whether the MicroService is shared
+     * @param usedByLoops The list of loops that uses this MicroService
      */
     public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared,
-        Set<Loop> usedByLoops) {
+            Set<Loop> usedByLoops) {
         this.name = name;
         this.modelType = modelType;
         this.policyTosca = policyTosca;
         this.shared = shared;
         this.jsonRepresentation = JsonUtils.GSON_JPA_MODEL
-            .fromJson(new ToscaYamlToJsonConvertor(null).parseToscaYaml(policyTosca), JsonObject.class);
+                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyTosca), JsonObject.class);
         this.usedByLoops = usedByLoops;
     }
 
@@ -136,21 +131,16 @@ public class MicroServicePolicy implements Serializable, Policy {
      * The constructor that does not make use of ToscaYamlToJsonConvertor but take
      * the jsonRepresentation instead.
      *
-     * @param name
-     *        The name of the MicroService
-     * @param modelType
-     *        The model type of the MicroService
-     * @param policyTosca
-     *        The policy Tosca of the MicroService
-     * @param shared
-     *        The flag indicate whether the MicroService is shared
-     * @param jsonRepresentation
-     *        The UI representation in json format
-     * @param usedByLoops
-     *        The list of loops that uses this MicroService
+     * @param name               The name of the MicroService
+     * @param modelType          The model type of the MicroService
+     * @param policyTosca        The policy Tosca of the MicroService
+     * @param shared             The flag indicate whether the MicroService is
+     *                           shared
+     * @param jsonRepresentation The UI representation in json format
+     * @param usedByLoops        The list of loops that uses this MicroService
      */
     public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared,
-        JsonObject jsonRepresentation, Set<Loop> usedByLoops) {
+            JsonObject jsonRepresentation, Set<Loop> usedByLoops) {
         this.name = name;
         this.modelType = modelType;
         this.policyTosca = policyTosca;
@@ -245,7 +235,7 @@ public class MicroServicePolicy implements Serializable, Policy {
 
     private String getMicroServicePropertyNameFromTosca(JsonObject object) {
         return object.getAsJsonObject("policy_types").getAsJsonObject(this.modelType).getAsJsonObject("properties")
-            .keySet().toArray(new String[1])[0];
+                .keySet().toArray(new String[1])[0];
     }
 
     @Override

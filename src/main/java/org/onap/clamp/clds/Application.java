@@ -37,8 +37,6 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
 import org.apache.catalina.connector.Connector;
-import org.onap.clamp.clds.model.properties.Holmes;
-import org.onap.clamp.clds.model.properties.ModelProperties;
 import org.onap.clamp.clds.util.ClampVersioning;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +63,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @ComponentScan(basePackages = { "org.onap.clamp" })
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, SecurityAutoConfiguration.class,
-    UserDetailsServiceAutoConfiguration.class })
+        UserDetailsServiceAutoConfiguration.class })
 @EnableJpaRepositories(basePackages = { "org.onap.clamp" })
 @EntityScan(basePackages = { "org.onap.clamp" })
 @EnableTransactionManagement
@@ -98,28 +96,21 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        // This is to initialize some Onap Clamp components
-        initializeComponents();
         // Start the Spring application
         SpringApplication.run(Application.class, args);
-    }
-
-    private static void initializeComponents() {
-        ModelProperties.registerModelElement(Holmes.class, Holmes.getType());
     }
 
     /**
      * This method is used to declare the camel servlet.
      *
      * @return A servlet bean
-     * @throws IOException
-     *         IO Exception
+     * @throws IOException IO Exception
      */
     @Bean
     public ServletRegistrationBean camelServletRegistrationBean() throws IOException {
-        eelfLogger.info(
-            ResourceFileUtil.getResourceAsString("boot-message.txt") + "(v" + ClampVersioning.getCldsVersionFromProps()
-                + ")" + System.getProperty("line.separator") + getSslExpirationDate());
+        eelfLogger.info(ResourceFileUtil.getResourceAsString("boot-message.txt") + "(v"
+                + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator")
+                + getSslExpirationDate());
         ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(), "/restservices/clds/*");
         registration.setName("CamelServlet");
         return registration;
@@ -147,7 +138,7 @@ public class Application extends SpringBootServletInitializer {
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
             eelfLogger.warn("HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
-                + " (Connector disabled)");
+                    + " (Connector disabled)");
             return null;
         }
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
@@ -165,16 +156,16 @@ public class Application extends SpringBootServletInitializer {
 
                 KeyStore keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
                 keystore.load(
-                    ResourceFileUtil
-                        .getResourceAsStream(env.getProperty("server.ssl.key-store").replaceAll("classpath:", "")),
-                    env.getProperty("server.ssl.key-store-password").toCharArray());
+                        ResourceFileUtil.getResourceAsStream(
+                                env.getProperty("server.ssl.key-store").replaceAll("classpath:", "")),
+                        env.getProperty("server.ssl.key-store-password").toCharArray());
                 Enumeration<String> aliases = keystore.aliases();
                 while (aliases.hasMoreElements()) {
                     String alias = aliases.nextElement();
                     if ("X.509".equals(keystore.getCertificate(alias).getType())) {
                         result.append("* " + alias + " expires "
-                            + ((X509Certificate) keystore.getCertificate(alias)).getNotAfter()
-                            + System.getProperty("line.separator"));
+                                + ((X509Certificate) keystore.getCertificate(alias)).getNotAfter()
+                                + System.getProperty("line.separator"));
                     }
                 }
             } else {

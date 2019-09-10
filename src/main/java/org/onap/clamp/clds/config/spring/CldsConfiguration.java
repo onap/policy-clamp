@@ -24,11 +24,9 @@
 package org.onap.clamp.clds.config.spring;
 
 import javax.sql.DataSource;
-import javax.xml.transform.TransformerConfigurationException;
 
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.EncodedPasswordBasicDataSource;
-import org.onap.clamp.clds.transform.XslTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -62,12 +60,5 @@ public class CldsConfiguration {
         PropertiesFactoryBean bean = new PropertiesFactoryBean();
         bean.setLocation(appContext.getResource(refProp.getStringValue("files.systemProperties")));
         return bean;
-    }
-
-    @Bean(name = "cldsBpmnTransformer")
-    public XslTransformer getCldsBpmnXslTransformer() throws TransformerConfigurationException {
-        XslTransformer xslTransformer = new XslTransformer();
-        xslTransformer.setXslResourceName("xsl/clds-bpmn-transformer.xsl");
-        return xslTransformer;
     }
 }

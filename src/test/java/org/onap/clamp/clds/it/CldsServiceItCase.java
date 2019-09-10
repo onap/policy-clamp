@@ -41,7 +41,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
-import org.onap.clamp.clds.dao.CldsDao;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -72,8 +71,6 @@ public class CldsServiceItCase {
     private String bpmnPropText;
     private String docText;
 
-    @Autowired
-    private CldsDao cldsDao;
     private Authentication authentication;
     private List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
     private LoggingUtils util;

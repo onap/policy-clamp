@@ -43,11 +43,11 @@ public class ToscaYamlToJsonConvertorTest {
     @Test
     public final void testParseToscaYaml() throws IOException {
         String toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml");
-        ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor(null);
+        ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
 
         String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml);
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json.json"),
-            parsedJsonSchema, true);
+                parsedJsonSchema, true);
     }
 }

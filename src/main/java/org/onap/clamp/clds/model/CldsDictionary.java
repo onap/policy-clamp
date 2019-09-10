@@ -23,12 +23,10 @@
 
 package org.onap.clamp.clds.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.onap.clamp.clds.dao.CldsDao;
-
-import com.google.gson.annotations.Expose;
 
 /**
  * Represents a CLDS Dictionary.
@@ -49,33 +47,6 @@ public class CldsDictionary {
     private String lastUpdatedDate;
     @Expose
     private List<CldsDictionaryItem> cldsDictionaryItems = new ArrayList<>();
-
-    /**
-     * Creates or updates dictionary item for a dictionary in DB.
-     *
-     * @param dictionaryName The dictionary name
-     * @param cldsDao        The CldsDao
-     * @param userId         The user ID
-     */
-    public void save(String dictionaryName, CldsDao cldsDao, String userId) {
-        List<CldsDictionary> list = cldsDao.getDictionary(this.getDictionaryId(), dictionaryName);
-        if (list != null && !list.isEmpty()) {
-            CldsDictionary cldsDictionary = list.stream().findFirst().get();
-            if (!cldsDictionary.getDictionaryName().equalsIgnoreCase(this.getDictionaryName())) {
-                cldsDao.updateDictionary(cldsDictionary.getDictionaryId(), this, userId);
-                this.setCreatedBy(cldsDictionary.getCreatedBy());
-            } else {
-                this.setDictionaryId(cldsDictionary.getDictionaryId());
-                this.setCreatedBy(cldsDictionary.getCreatedBy());
-                this.setUpdatedBy(cldsDictionary.getUpdatedBy());
-                this.setLastUpdatedDate(cldsDictionary.getLastUpdatedDate());
-            }
-        } else {
-            this.setCreatedBy(userId);
-            this.setUpdatedBy(userId);
-            cldsDao.insDictionary(this);
-        }
-    }
 
     /**
      * Get the dictionary ID.

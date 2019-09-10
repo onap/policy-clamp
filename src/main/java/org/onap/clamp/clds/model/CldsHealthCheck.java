@@ -23,9 +23,15 @@
 
 package org.onap.clamp.clds.model;
 
-public class CldsHealthCheck {
+import com.google.gson.annotations.Expose;
 
+public class CldsHealthCheck {
+    @Expose
     private String healthCheckComponent;
+    @Expose
+    private String healthCheckStatus;
+    @Expose
+    private String description;
 
     public String getHealthCheckComponent() {
         return healthCheckComponent;
@@ -34,9 +40,6 @@ public class CldsHealthCheck {
     public void setHealthCheckComponent(String healthCheckComponent) {
         this.healthCheckComponent = healthCheckComponent;
     }
-
-    private String healthCheckStatus;
-    private String description;
 
     public String getDescription() {
         return description;
