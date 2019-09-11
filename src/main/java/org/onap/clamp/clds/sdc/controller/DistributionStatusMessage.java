@@ -28,9 +28,9 @@ import org.onap.sdc.utils.DistributionStatusEnum;
 
 public class DistributionStatusMessage implements IDistributionStatusMessage {
 
-    private String artifactURL;
-    private String consumerID;
-    private String distributionID;
+    private String artifactUrl;
+    private String consumerId;
+    private String distributionId;
     private DistributionStatusEnum distributionStatus;
     private long timestamp;
 
@@ -50,26 +50,26 @@ public class DistributionStatusMessage implements IDistributionStatusMessage {
      */
     public DistributionStatusMessage(final String artifactUrl, final String consumerId, final String distributionId,
             final DistributionStatusEnum distributionStatusEnum, final long timestamp) {
-        this.artifactURL = artifactUrl;
-        this.consumerID = consumerId;
-        this.distributionID = distributionId;
+        this.artifactUrl = artifactUrl;
+        this.consumerId = consumerId;
+        this.distributionId = distributionId;
         this.distributionStatus = distributionStatusEnum;
         this.timestamp = timestamp;
     }
 
     @Override
     public String getArtifactURL() {
-        return artifactURL;
+        return artifactUrl;
     }
 
     @Override
     public String getConsumerID() {
-        return consumerID;
+        return consumerId;
     }
 
     @Override
     public String getDistributionID() {
-        return distributionID;
+        return distributionId;
     }
 
     @Override

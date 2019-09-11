@@ -155,16 +155,14 @@ public class LegacyOperationalPolicy {
      * @return The Yaml as string
      */
     public static String createPolicyPayloadYamlLegacy(JsonElement operationalPolicyJsonElement) {
-        JsonElement opPolicy = fulfillPoliciesTreeField(
-                removeAllQuotes(reworkPayloadAttributes(operationalPolicyJsonElement.getAsJsonObject().deepCopy())));
-        Map<?, ?> jsonMap = createMap(opPolicy);
         DumperOptions options = new DumperOptions();
         options.setDefaultScalarStyle(ScalarStyle.PLAIN);
         options.setIndent(2);
         options.setPrettyFlow(true);
         // Policy can't support { } in the yaml
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        return (new Yaml(options)).dump(jsonMap);
+        return (new Yaml(options)).dump(createMap(fulfillPoliciesTreeField(
+                removeAllQuotes(reworkPayloadAttributes(operationalPolicyJsonElement.getAsJsonObject().deepCopy())))));
     }
 
     /**

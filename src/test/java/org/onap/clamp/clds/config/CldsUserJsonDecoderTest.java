@@ -27,43 +27,37 @@
 package org.onap.clamp.clds.config;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.service.CldsUser;
-
 
 public class CldsUserJsonDecoderTest {
 
     private String user1 = "admin1";
     private String user2 = "admin2";
     private String password = "5f4dcc3b5aa765d61d8327deb882cf99";
-    private String[] normalPermissionsArray = {
-        "permission-type-cl|dev|read", "permission-type-cl|dev|update", "permission-type-cl-manage|dev|*",
-        "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
-        "permission-type-template|dev|update"
-    };
-    private String[] incompletePermissionsArray = {
-        "permission-type-cl|dev|*", "permission-type-cl|dev|*", "permission-type-cl-manage|dev|*",
-        "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
-        "permission-type-template|dev|update"
-    };
+    private String[] normalPermissionsArray = { "permission-type-cl|dev|read", "permission-type-cl|dev|update",
+        "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
+        "permission-type-template|dev|update" };
+    private String[] incompletePermissionsArray = { "permission-type-cl|dev|*", "permission-type-cl|dev|*",
+        "permission-type-cl-manage|dev|*", "permission-type-filter-vf|dev|*", "permission-type-template|dev|read",
+        "permission-type-template|dev|update" };
 
     @Test
     public void testDecodingDoubleUsers() {
 
-        //when
+        // when
         CldsUser[] usersArray = CldsUserJsonDecoder
-            .decodeJson(CldsUserJsonDecoderTest.class.getResourceAsStream("/clds/clds-users-two-users.json"));
+                .decodeJson(CldsUserJsonDecoderTest.class.getResourceAsStream("/clds/clds-users-two-users.json"));
 
-        //then
+        // then
         assertThat(usersArray).hasSize(2);
-        assertThat(usersArray[0])
-            .extracting(CldsUser::getUser, CldsUser::getPassword, CldsUser::getPermissionsString)
-            .containsExactly(user1, password, normalPermissionsArray);
+        assertThat(usersArray[0]).extracting(CldsUser::getUser, CldsUser::getPassword, CldsUser::getPermissionsString)
+                .containsExactly(user1, password, normalPermissionsArray);
 
-        assertThat(usersArray[1])
-            .extracting(CldsUser::getUser, CldsUser::getPassword, CldsUser::getPermissionsString)
-            .containsExactly(user2, password, normalPermissionsArray);
+        assertThat(usersArray[1]).extracting(CldsUser::getUser, CldsUser::getPassword, CldsUser::getPermissionsString)
+                .containsExactly(user2, password, normalPermissionsArray);
 
     }
 
@@ -73,7 +67,7 @@ public class CldsUserJsonDecoderTest {
         CldsUser[] usersArray = CldsUserJsonDecoder
                 .decodeJson(this.getClass().getResourceAsStream("/clds/clds-users-no-permission.json"));
 
-        //then
+        // then
         assertThat(usersArray).hasSize(1);
         CldsUser user = usersArray[0];
         assertThat(user.getUser()).isEqualTo(user1);
@@ -84,11 +78,11 @@ public class CldsUserJsonDecoderTest {
     @Test
     public void testDecodingIncompletePermissions() {
 
-        //when
+        // when
         CldsUser[] usersArray = CldsUserJsonDecoder
                 .decodeJson(this.getClass().getResourceAsStream("/clds/clds-users-incomplete-permissions.json"));
 
-        //then
+        // then
         assertThat(usersArray).hasSize(1);
         CldsUser user = usersArray[0];
         assertThat(user.getUser()).isEqualTo(user1);
@@ -98,9 +92,8 @@ public class CldsUserJsonDecoderTest {
 
     @Test(expected = CldsUsersException.class)
     public void shouldThrowCldsUsersException() {
-        //when
-        CldsUserJsonDecoder
-                .decodeJson(this.getClass().getResourceAsStream("/clds/clds-parse-exception.json"));
+        // when
+        CldsUserJsonDecoder.decodeJson(this.getClass().getResourceAsStream("/clds/clds-parse-exception.json"));
     }
 
 }

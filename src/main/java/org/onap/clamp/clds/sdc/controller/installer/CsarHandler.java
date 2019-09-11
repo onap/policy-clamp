@@ -75,6 +75,9 @@ public class CsarHandler {
     public static final String DATA_DEFINITION_NAME_SUFFIX = "Definitions/data.yml";
     public static final String DATA_DEFINITION_KEY = "data_types:";
 
+    /**
+     * Constructor for CsarHandler taking sdc notification in input.
+     */
     public CsarHandler(INotificationData data, String controller, String clampCsarPath) throws CsarHandlerException {
         this.sdcNotification = data;
         this.controllerName = controller;
@@ -96,8 +99,16 @@ public class CsarHandler {
         throw new CsarHandlerException("Unable to find a CSAR in the Sdc Notification");
     }
 
+    /**
+     * This saves the notification to disk and database.
+     * 
+     * @param resultArtifact The artifact to install
+     * @throws SdcArtifactInstallerException In case of issues with the installation
+     * @throws SdcToscaParserException       In case of issues with the parsing of
+     *                                       the CSAR
+     */
     public synchronized void save(IDistributionClientDownloadResult resultArtifact)
-        throws SdcArtifactInstallerException, SdcToscaParserException {
+            throws SdcArtifactInstallerException, SdcToscaParserException {
         try {
             logger.info("Writing CSAR file to: " + csarFilePath + " UUID " + artifactElement.getArtifactUUID() + ")");
             Path path = Paths.get(csarFilePath);
@@ -110,12 +121,12 @@ public class CsarHandler {
             this.loadDcaeBlueprint();
         } catch (IOException e) {
             throw new SdcArtifactInstallerException(
-                "Exception caught when trying to write the CSAR on the file system to " + csarFilePath, e);
+                    "Exception caught when trying to write the CSAR on the file system to " + csarFilePath, e);
         }
     }
 
     private IResourceInstance searchForResourceByInstanceName(String blueprintResourceInstanceName)
-        throws SdcArtifactInstallerException {
+            throws SdcArtifactInstallerException {
         for (IResourceInstance resource : this.sdcNotification.getResources()) {
             String filteredString = resource.getResourceInstanceName().replaceAll("-", "");
             filteredString = filteredString.replaceAll(" ", "");
@@ -124,7 +135,7 @@ public class CsarHandler {
             }
         }
         throw new SdcArtifactInstallerException("Error when searching for " + blueprintResourceInstanceName
-            + " as ResourceInstanceName in Sdc notification and did not find it");
+                + " as ResourceInstanceName in Sdc notification and did not find it");
     }
 
     private void loadDcaeBlueprint() throws IOException, SdcArtifactInstallerException {
@@ -135,19 +146,20 @@ public class CsarHandler {
                 if (!entry.isDirectory() && entry.getName().contains(BLUEPRINT_TYPE)) {
                     BlueprintArtifact blueprintArtifact = new BlueprintArtifact();
                     blueprintArtifact.setBlueprintArtifactName(
-                        entry.getName().substring(entry.getName().lastIndexOf('/') + 1, entry.getName().length()));
+                            entry.getName().substring(entry.getName().lastIndexOf('/') + 1, entry.getName().length()));
                     blueprintArtifact
-                        .setBlueprintInvariantServiceUuid(this.getSdcNotification().getServiceInvariantUUID());
+                            .setBlueprintInvariantServiceUuid(this.getSdcNotification().getServiceInvariantUUID());
                     try (InputStream stream = zipFile.getInputStream(entry)) {
                         blueprintArtifact.setDcaeBlueprint(IOUtils.toString(stream, StandardCharsets.UTF_8));
                     }
                     blueprintArtifact.setResourceAttached(searchForResourceByInstanceName(entry.getName().substring(
-                        entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX) + RESOURCE_INSTANCE_NAME_PREFIX.length(),
-                        entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX))));
+                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_PREFIX)
+                                    + RESOURCE_INSTANCE_NAME_PREFIX.length(),
+                            entry.getName().indexOf(RESOURCE_INSTANCE_NAME_SUFFIX))));
                     this.mapOfBlueprints.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
                     logger.info("Found a blueprint entry in the CSAR " + blueprintArtifact.getBlueprintArtifactName()
-                        + " for resource instance Name "
-                        + blueprintArtifact.getResourceAttached().getResourceInstanceName());
+                            + " for resource instance Name "
+                            + blueprintArtifact.getResourceAttached().getResourceInstanceName());
                 }
             }
             logger.info(this.mapOfBlueprints.size() + " blueprint(s) will be converted to closed loop");
@@ -179,7 +191,9 @@ public class CsarHandler {
     }
 
     /**
-     * Get the whole policy model Yaml. It combines the content of policies.yaml and data.yaml.
+     * Get the whole policy model Yaml. It combines the content of policies.yaml and
+     * data.yaml.
+     * 
      * @return The whole policy model yaml
      * @throws IOException The IO Exception
      */

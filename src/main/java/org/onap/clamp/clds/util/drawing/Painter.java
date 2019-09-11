@@ -48,7 +48,7 @@ public class Painter {
     /**
      * Constructor to create instance of Painter.
      *
-     * @param svgGraphics2D svg graphics
+     * @param svgGraphics2D   svg graphics
      * @param documentBuilder document builder
      */
     public Painter(SVGGraphics2D svgGraphics2D, DocumentBuilder documentBuilder) {
@@ -61,7 +61,7 @@ public class Painter {
         int numOfRectangles = 2 + microServices.size();
         int numOfArrows = numOfRectangles + 1;
         int baseLength = (canvasSize - 2 * CIRCLE_RADIUS) / (numOfArrows + numOfRectangles);
-        if(baseLength < MINIMUM_BASE_LENGTH) {
+        if (baseLength < MINIMUM_BASE_LENGTH) {
             baseLength = MINIMUM_BASE_LENGTH;
         }
         int rectHeight = (int) (baseLength / RECT_RATIO);
@@ -77,7 +77,7 @@ public class Painter {
     }
 
     private void doTheActualDrawing(String collector, List<MicroService> microServices, String policy,
-        ImageBuilder ib) {
+            ImageBuilder ib) {
         ib.circle("start-circle", SLIM_LINE).arrow().rectangle(collector, RectTypes.COLECTOR, collector);
 
         for (MicroService ms : microServices) {

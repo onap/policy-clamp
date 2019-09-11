@@ -29,7 +29,7 @@ import java.util.Date;
 
 import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.clds.util.ONAPLogConstants;
+import org.onap.clamp.clds.util.OnapLogConstants;
 import org.onap.clamp.loop.LoopController;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class CldsHealthcheckService {
             cldsHealthCheck.setHealthCheckStatus("UP");
             cldsHealthCheck.setDescription("OK");
             LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
-            util.exiting("200", "Healthcheck success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+            util.exiting("200", "Healthcheck success", Level.INFO, OnapLogConstants.ResponseStatus.COMPLETED);
         } catch (Exception e) {
             logger.error("CLAMP application Heath check failed", e);
             LoggingUtils.setResponseContext("999", "Get healthcheck failed", this.getClass().getName());
@@ -73,7 +73,7 @@ public class CldsHealthcheckService {
             cldsHealthCheck.setHealthCheckStatus("DOWN");
             cldsHealthCheck.setDescription("NOT-OK");
             util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Healthcheck failed", Level.INFO,
-                    ONAPLogConstants.ResponseStatus.ERROR);
+                    OnapLogConstants.ResponseStatus.ERROR);
         }
         return cldsHealthCheck;
     }

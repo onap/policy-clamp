@@ -55,13 +55,11 @@ public final class ResourceFileUtil {
      * Return resource as a String.
      */
     public static String getResourceAsString(String name) throws IOException {
-        InputStream is = getResourceAsStream(name);
-        Scanner scanner = new Scanner(is);
-        Scanner delimitedScanner = scanner.useDelimiter("\\A");
-        String text = delimitedScanner.hasNext() ? delimitedScanner.next() : "";
-        delimitedScanner.close();
-        scanner.close();
-        is.close();
-        return text;
+        try (InputStream is = getResourceAsStream(name)) {
+            try (Scanner scanner = new Scanner(is)) {
+                Scanner delimitedScanner = scanner.useDelimiter("\\A");
+                return delimitedScanner.hasNext() ? delimitedScanner.next() : "";
+            }
+        }
     }
 }

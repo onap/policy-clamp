@@ -30,10 +30,9 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.util.Date;
 
-import org.onap.clamp.clds.exception.NotAuthorizedException;
-
 import org.apache.camel.Exchange;
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.clds.exception.NotAuthorizedException;
 import org.onap.clamp.clds.service.SecureServiceBase;
 import org.onap.clamp.clds.service.SecureServicePermission;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -49,9 +48,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationController {
 
-    protected static final EELFLogger logger          = EELFManager.getInstance().getLogger(SecureServiceBase.class);
-    protected static final EELFLogger auditLogger     = EELFManager.getInstance().getMetricsLogger();
-    protected static final EELFLogger securityLogger  = EELFManager.getInstance().getSecurityLogger();
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SecureServiceBase.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getMetricsLogger();
+    protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
 
     // By default we'll set it to a default handler
     @Autowired
@@ -61,23 +60,19 @@ public class AuthorizationController {
     private static final String PERM_INSTANCE = "security.permission.instance";
 
     /**
-     * Insert authorize the api based on the permission
+     * Insert authorize the api based on the permission.
      *
-     * @param camelExchange
-     *        The Camel Exchange object containing the properties
-     * @param typeVar
-     *        The type of the permissions
-     * @param instanceVar
-     *        The instance of the permissions. e.g. dev
-     * @param action
-     *        The action of the permissions. e.g. read
+     * @param camelExchange The Camel Exchange object containing the properties
+     * @param typeVar       The type of the permissions
+     * @param instanceVar   The instance of the permissions. e.g. dev
+     * @param action        The action of the permissions. e.g. read
      */
     public void authorize(Exchange camelExchange, String typeVar, String instanceVar, String action) {
         String type = refProp.getStringValue(PERM_PREFIX + typeVar);
         String instance = refProp.getStringValue(PERM_INSTANCE);
 
         if (null == type || type.isEmpty()) {
-            //authorization is turned off, since the permission is not defined
+            // authorization is turned off, since the permission is not defined
             return;
         }
         if (null != instanceVar && !instanceVar.isEmpty()) {
@@ -90,7 +85,7 @@ public class AuthorizationController {
         LoggingUtils.setTimeContext(startTime, new Date());
         securityLogger.debug("checking if {} has permission: {}", principalName, perm);
 
-        if (!isUserPermitted(perm)){
+        if (!isUserPermitted(perm)) {
             String msg = principalName + " does not have permission: " + perm;
             LoggingUtils.setErrorContext("100", "Authorization Error");
             securityLogger.warn(msg);
@@ -98,14 +93,20 @@ public class AuthorizationController {
         }
     }
 
+    /**
+     * Insert authorize the api based on the permission.
+     * 
+     * @param inPermission Security permission in input
+     * @return True if user is permitted
+     */
     public boolean isUserPermitted(SecureServicePermission inPermission) {
 
         String principalName = PrincipalUtils.getPrincipalName();
         // check if the user has the permission key or the permission key with a
-        // combination of  all instance and/or all action.
+        // combination of all instance and/or all action.
         if (hasRole(inPermission.getKey()) || hasRole(inPermission.getKeyAllInstance())) {
-            auditLogger.info("{} authorized because user has permission with * for instance: {}",
-                    principalName, inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for instance: {}", principalName,
+                    inPermission.getKey());
             return true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
@@ -114,8 +115,8 @@ public class AuthorizationController {
                     principalName, inPermission.getKey());
             return true;
         } else if (hasRole(inPermission.getKeyAllAction())) {
-            auditLogger.info("{} authorized because user has permission with * for action: {}",
-                    principalName, inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for action: {}", principalName,
+                    inPermission.getKey());
             return true;
         } else {
             return false;

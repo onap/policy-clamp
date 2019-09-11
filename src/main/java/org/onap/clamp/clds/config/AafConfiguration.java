@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("clamp-aaf-authentication")
-public class AAFConfiguration {
+public class AafConfiguration {
 
     /**
      * Method to return clamp cadi filter.

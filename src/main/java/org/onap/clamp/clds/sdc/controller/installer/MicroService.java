@@ -32,6 +32,14 @@ public class MicroService {
     private final String inputFrom;
     private String mappedNameJpa;
 
+    /**
+     * The Micro service constructor.
+     * 
+     * @param name          The name in String
+     * @param modelType     The model type
+     * @param inputFrom     Comes from (single chained)
+     * @param mappedNameJpa Name in database
+     */
     public MicroService(String name, String modelType, String inputFrom, String mappedNameJpa) {
         this.name = name;
         this.inputFrom = inputFrom;
@@ -54,7 +62,7 @@ public class MicroService {
     @Override
     public String toString() {
         return "MicroService{" + "name='" + name + '\'' + ", modelType='" + modelType + '\'' + ", inputFrom='"
-            + inputFrom + '\'' + ", mappedNameJpa='" + mappedNameJpa + '\'' + '}';
+                + inputFrom + '\'' + ", mappedNameJpa='" + mappedNameJpa + '\'' + '}';
     }
 
     public String getMappedNameJpa() {
@@ -66,14 +74,14 @@ public class MicroService {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        MicroService that = (MicroService) o;
+        MicroService that = (MicroService) obj;
         return name.equals(that.name) && modelType.equals(that.modelType) && inputFrom.equals(that.inputFrom)
                 && mappedNameJpa.equals(that.mappedNameJpa);
     }

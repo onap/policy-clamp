@@ -30,7 +30,7 @@ import java.util.Date;
 import javax.ws.rs.NotAuthorizedException;
 
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.clds.util.ONAPLogConstants;
+import org.onap.clamp.clds.util.OnapLogConstants;
 import org.slf4j.event.Level;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -213,7 +213,7 @@ public abstract class SecureServiceBase {
         LoggingUtils.setTimeContext(startTime, new Date());
         auditLogger.info(actionDescription + " completed");
         util.exiting("200", actionDescription + " success", Level.INFO,
-            ONAPLogConstants.ResponseStatus.COMPLETED);
+            OnapLogConstants.ResponseStatus.COMPLETED);
     }
 
     protected void auditLogInfo(String actionDescription, Date startTime) {

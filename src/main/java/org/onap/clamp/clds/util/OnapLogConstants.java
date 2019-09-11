@@ -26,7 +26,7 @@ package org.onap.clamp.clds.util;
 /**
  * Constants for standard ONAP headers, MDCs, etc.
  */
-public final class ONAPLogConstants {
+public final class OnapLogConstants {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -37,7 +37,7 @@ public final class ONAPLogConstants {
     /**
      * Hide and forbid construction.
      */
-    private ONAPLogConstants() {
+    private OnapLogConstants() {
         throw new UnsupportedOperationException();
     }
 
@@ -73,7 +73,7 @@ public final class ONAPLogConstants {
     /**
      * MDC name constants.
      */
-    public static final class MDCs {
+    public static final class Mdcs {
 
         // Tracing. ////////////////////////////////////////////////////////////
 
@@ -146,7 +146,7 @@ public final class ONAPLogConstants {
         /**
          * Hide and forbid construction.
          */
-        private MDCs() {
+        private Mdcs() {
             throw new UnsupportedOperationException();
         }
     }

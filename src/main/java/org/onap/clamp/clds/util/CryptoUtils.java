@@ -65,12 +65,12 @@ public final class CryptoUtils {
      * Definition of encryption algorithm.
      */
     private static final String ALGORITHM = "AES";
-    
+
     /**
-     * AES Encryption Key environment variable for external configuration
+     * AES Encryption Key environment variable for external configuration.
      */
     private static final String AES_ENCRYPTION_KEY = "AES_ENCRYPTION_KEY";
-    
+
     /**
      * Detailed definition of encryption algorithm.
      */
@@ -99,13 +99,11 @@ public final class CryptoUtils {
     /**
      * Encrypt a value based on the Clamp Encryption Key.
      * 
-     * @param value
-     *            The value to encrypt
+     * @param value The value to encrypt
      * @return The encrypted string
-     * @throws GeneralSecurityException
-     *             In case of issue with the encryption
-     * @throws UnsupportedEncodingException
-     *             In case of issue with the charset conversion
+     * @throws GeneralSecurityException     In case of issue with the encryption
+     * @throws UnsupportedEncodingException In case of issue with the charset
+     *                                      conversion
      */
     public static String encrypt(String value) throws GeneralSecurityException {
         Cipher cipher = Cipher.getInstance(ALGORITHM_DETAILS, "SunJCE");
@@ -119,14 +117,11 @@ public final class CryptoUtils {
     /**
      * Decrypt a value based on the Clamp Encryption Key.
      * 
-     * @param message
-     *            The encrypted string that must be decrypted using the Clamp
-     *            Encryption Key
+     * @param message The encrypted string that must be decrypted using the Clamp
+     *                Encryption Key
      * @return The String decrypted
-     * @throws GeneralSecurityException
-     *             In case of issue with the encryption
-     * @throws DecoderException
-     *             In case of issue to decode the HexString
+     * @throws GeneralSecurityException In case of issue with the encryption
+     * @throws DecoderException         In case of issue to decode the HexString
      */
     public static String decrypt(String message) throws GeneralSecurityException, DecoderException {
         byte[] encryptedMessage = Hex.decodeHex(message.toCharArray());
@@ -141,11 +136,9 @@ public final class CryptoUtils {
     /**
      * Method used to generate the SecretKeySpec from a Base64 String.
      * 
-     * @param keyString
-     *            The key as a string in Base 64
+     * @param keyString The key as a string in Base 64
      * @return The SecretKeySpec created
-     * @throws DecoderException
-     *             In case of issues with the decoding of Base64
+     * @throws DecoderException In case of issues with the decoding of Base64
      */
     private static SecretKeySpec getSecretKeySpec(String keyString) throws DecoderException {
         byte[] key = Hex.decodeHex(keyString.toCharArray());
@@ -155,8 +148,7 @@ public final class CryptoUtils {
     /**
      * Reads SecretKeySpec from file specified by propertiesFileName.
      *
-     * @param propertiesFileName
-     *            File name with properties
+     * @param propertiesFileName File name with properties
      * @return SecretKeySpec secret key spec read from propertiesFileName
      */
     private static SecretKeySpec readSecretKeySpec(String propertiesFileName) {
@@ -165,7 +157,7 @@ public final class CryptoUtils {
             // Workaround fix to make encryption key configurable
             // System environment variable takes precedence for over clds/key.properties
             String encryptionKey = System.getenv(AES_ENCRYPTION_KEY);
-            if(encryptionKey != null && encryptionKey.trim().length() > 0) {
+            if (encryptionKey != null && encryptionKey.trim().length() > 0) {
                 return getSecretKeySpec(encryptionKey);
             } else {
                 props.load(ResourceFileUtil.getResourceAsStream(propertiesFileName));

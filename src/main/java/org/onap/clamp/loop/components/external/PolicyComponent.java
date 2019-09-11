@@ -53,6 +53,9 @@ public class PolicyComponent extends ExternalComponent {
     public static final ExternalComponentState SENT_AND_DEPLOYED = new ExternalComponentState("SENT_AND_DEPLOYED",
             "The policies defined have been created and deployed on the policy engine", 10);
 
+    /**
+     * Default constructor.
+     */
     public PolicyComponent() {
         /*
          * We assume it's good by default as we will receive the state for each policy

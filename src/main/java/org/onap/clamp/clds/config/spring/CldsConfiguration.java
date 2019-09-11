@@ -55,6 +55,11 @@ public class CldsConfiguration {
         return new EncodedPasswordBasicDataSource();
     }
 
+    /**
+     * This loads the file system.properties.
+     * 
+     * @return
+     */
     @Bean(name = "mapper")
     public PropertiesFactoryBean mapper() {
         PropertiesFactoryBean bean = new PropertiesFactoryBean();

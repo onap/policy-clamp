@@ -41,6 +41,14 @@ public class ExternalComponentState implements Comparable<ExternalComponentState
     private String description;
     private int stateLevel;
 
+    /**
+     * Constructor taking stateName, description and its level.
+     * 
+     * @param stateName   The stateName in string
+     * @param description The description in string
+     * @param level       The level, higher value has higher priority and can't be
+     *                    down-graded
+     */
     public ExternalComponentState(String stateName, String description, int level) {
         this.stateName = stateName;
         this.description = description;
@@ -85,18 +93,23 @@ public class ExternalComponentState implements Comparable<ExternalComponentState
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ExternalComponentState other = (ExternalComponentState) obj;
         if (stateName == null) {
-            if (other.stateName != null)
+            if (other.stateName != null) {
                 return false;
-        } else if (!stateName.equals(other.stateName))
+            }
+        } else if (!stateName.equals(other.stateName)) {
             return false;
+        }
         return true;
     }
 

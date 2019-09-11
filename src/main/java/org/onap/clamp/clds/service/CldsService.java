@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.clds.util.ONAPLogConstants;
+import org.onap.clamp.clds.util.OnapLogConstants;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,6 +46,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CldsService extends SecureServiceBase {
+
     /**
      * The constant securityLogger.
      */
@@ -138,7 +139,7 @@ public class CldsService extends SecureServiceBase {
         // audit log
         LoggingUtils.setTimeContext(startTime, new Date());
         securityLogger.info("GET cldsInfo completed");
-        util.exiting("200", "Get cldsInfo success", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+        util.exiting("200", "Get cldsInfo success", Level.INFO, OnapLogConstants.ResponseStatus.COMPLETED);
         return cldsInfo;
     }
 

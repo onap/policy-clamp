@@ -28,32 +28,22 @@ import java.util.Map;
 
 public class PermissionTestDefaultHelper extends PermissionTestHelper {
 
-    private static final String[] ALL_ACTION = new String[] {"*"};
-    private static final String[] READ_UPDATE_ACTION = new String[] {"read", "update"};
+    private static final String[] ALL_ACTION = new String[] { "*" };
+    private static final String[] READ_UPDATE_ACTION = new String[] { "read", "update" };
 
     private static final String DEV_INSTANCE = "dev";
     private static final String TEST_INSTANCE = "test";
 
-    private static final Map<String, Map> defaultPermission = ImmutableMap.of(
-            "permission-type-cl", ImmutableMap.of(
-                DEV_INSTANCE, ALL_ACTION),
-            "permission-type-cl-event", ImmutableMap.of(
-                DEV_INSTANCE, ALL_ACTION,
-                TEST_INSTANCE, READ_UPDATE_ACTION),
-            "permission-type-cl-manage", ImmutableMap.of(
-                DEV_INSTANCE, ALL_ACTION,
-                TEST_INSTANCE, READ_UPDATE_ACTION),
-            "permission-type-filter-vf", ImmutableMap.of(
-                DEV_INSTANCE, ALL_ACTION,
-                TEST_INSTANCE, READ_UPDATE_ACTION),
-            "permission-type-template", ImmutableMap.of(
-                DEV_INSTANCE, ALL_ACTION,
-                TEST_INSTANCE, READ_UPDATE_ACTION)
-    );
+    private static final Map<String, Map<?, ?>> defaultPermission = ImmutableMap.of("permission-type-cl",
+            ImmutableMap.of(DEV_INSTANCE, ALL_ACTION), "permission-type-cl-event",
+            ImmutableMap.of(DEV_INSTANCE, ALL_ACTION, TEST_INSTANCE, READ_UPDATE_ACTION), "permission-type-cl-manage",
+            ImmutableMap.of(DEV_INSTANCE, ALL_ACTION, TEST_INSTANCE, READ_UPDATE_ACTION), "permission-type-filter-vf",
+            ImmutableMap.of(DEV_INSTANCE, ALL_ACTION, TEST_INSTANCE, READ_UPDATE_ACTION), "permission-type-template",
+            ImmutableMap.of(DEV_INSTANCE, ALL_ACTION, TEST_INSTANCE, READ_UPDATE_ACTION));
 
     /**
-     * Permission test default helper constructor.
-     * This class setup the default permission in the parent PermissionTestHelper class.
+     * Permission test default helper constructor. This class setup the default
+     * permission in the parent PermissionTestHelper class.
      */
     public PermissionTestDefaultHelper() {
         super(defaultPermission);

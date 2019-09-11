@@ -40,27 +40,27 @@ public class DcaeComponent extends ExternalComponent {
     private static final String DCAE_INPUTS = "inputs";
 
     public static final ExternalComponentState BLUEPRINT_DEPLOYED = new ExternalComponentState("BLUEPRINT_DEPLOYED",
-        "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop");
+            "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop");
     public static final ExternalComponentState PROCESSING_MICROSERVICE_INSTALLATION = new ExternalComponentState(
-        "PROCESSING_MICROSERVICE_INSTALLATION",
-        "Clamp has requested DCAE to install the microservices defined in the DCAE blueprint and it's currently processing the request");
+            "PROCESSING_MICROSERVICE_INSTALLATION", "Clamp has requested DCAE to install the microservices "
+                    + "defined in the DCAE blueprint and it's currently processing the request");
     public static final ExternalComponentState MICROSERVICE_INSTALLATION_FAILED = new ExternalComponentState(
-        "MICROSERVICE_INSTALLATION_FAILED",
-        "Clamp has requested DCAE to install the microservices defined in the DCAE blueprint and it failed");
+            "MICROSERVICE_INSTALLATION_FAILED",
+            "Clamp has requested DCAE to install the microservices defined in the DCAE blueprint and it failed");
     public static final ExternalComponentState MICROSERVICE_INSTALLED_SUCCESSFULLY = new ExternalComponentState(
-        "MICROSERVICE_INSTALLED_SUCCESSFULLY",
-        "Clamp has requested DCAE to install the DCAE blueprint and it has been installed successfully");
+            "MICROSERVICE_INSTALLED_SUCCESSFULLY",
+            "Clamp has requested DCAE to install the DCAE blueprint and it has been installed successfully");
     public static final ExternalComponentState PROCESSING_MICROSERVICE_UNINSTALLATION = new ExternalComponentState(
-        "PROCESSING_MICROSERVICE_UNINSTALLATION",
-        "Clamp has requested DCAE to uninstall the microservices defined in the DCAE blueprint and it's currently processing the request");
+            "PROCESSING_MICROSERVICE_UNINSTALLATION", "Clamp has requested DCAE to uninstall the microservices "
+                    + "defined in the DCAE blueprint and it's currently processing the request");
     public static final ExternalComponentState MICROSERVICE_UNINSTALLATION_FAILED = new ExternalComponentState(
-        "MICROSERVICE_UNINSTALLATION_FAILED",
-        "Clamp has requested DCAE to uninstall the microservices defined in the DCAE blueprint and it failed");
+            "MICROSERVICE_UNINSTALLATION_FAILED",
+            "Clamp has requested DCAE to uninstall the microservices defined in the DCAE blueprint and it failed");
     public static final ExternalComponentState MICROSERVICE_UNINSTALLED_SUCCESSFULLY = new ExternalComponentState(
-        "MICROSERVICE_UNINSTALLED_SUCCESSFULLY",
-        "Clamp has requested DCAE to uninstall the DCAE blueprint and it has been uninstalled successfully");
+            "MICROSERVICE_UNINSTALLED_SUCCESSFULLY",
+            "Clamp has requested DCAE to uninstall the DCAE blueprint and it has been uninstalled successfully");
     public static final ExternalComponentState IN_ERROR = new ExternalComponentState("IN_ERROR",
-        "There was an error during the request done to DCAE, look at the logs or try again");
+            "There was an error during the request done to DCAE, look at the logs or try again");
 
     public DcaeComponent() {
         super(BLUEPRINT_DEPLOYED);
@@ -71,6 +71,12 @@ public class DcaeComponent extends ExternalComponent {
         return "DCAE";
     }
 
+    /**
+     * Convert the json response to a DcaeOperationStatusResponse.
+     * 
+     * @param responseBody The DCAE response Json paylaod
+     * @return The dcae object provisioned
+     */
     public static DcaeOperationStatusResponse convertDcaeResponse(String responseBody) {
         if (responseBody != null && !responseBody.isEmpty()) {
             return JsonUtils.GSON_JPA_MODEL.fromJson(responseBody, DcaeOperationStatusResponse.class);
@@ -80,7 +86,7 @@ public class DcaeComponent extends ExternalComponent {
     }
 
     /**
-     * Generate the deployment id, it's random
+     * Generate the deployment id, it's random.
      *
      * @return The deployment id
      */
@@ -89,9 +95,10 @@ public class DcaeComponent extends ExternalComponent {
     }
 
     /**
-     * This method prepare the url returned by DCAE to check the status if fine.
+     * This method prepare the url returned by DCAE to check the status if fine. It
+     * extracts it from the dcaeResponse.
      *
-     * @param statusUrl
+     * @param dcaeResponse The dcae response object
      * @return the Right Url modified if needed
      */
     public static String getStatusUrl(DcaeOperationStatusResponse dcaeResponse) {
@@ -101,8 +108,7 @@ public class DcaeComponent extends ExternalComponent {
     /**
      * Return the deploy payload for DCAE.
      *
-     * @param loop
-     *        The loop object
+     * @param loop The loop object
      * @return The payload used to send deploy closed loop request
      */
     public static String getDeployPayload(Loop loop) {
@@ -122,8 +128,7 @@ public class DcaeComponent extends ExternalComponent {
     /**
      * Return the uninstallation payload for DCAE.
      *
-     * @param loop
-     *        The loop object
+     * @param loop The loop object
      * @return The payload in string (json)
      */
     public static String getUndeployPayload(Loop loop) {
@@ -136,7 +141,7 @@ public class DcaeComponent extends ExternalComponent {
     public ExternalComponentState computeState(Exchange camelExchange) {
 
         DcaeOperationStatusResponse dcaeResponse = (DcaeOperationStatusResponse) camelExchange.getIn().getExchange()
-            .getProperty("dcaeResponse");
+                .getProperty("dcaeResponse");
 
         if (dcaeResponse == null) {
             setState(BLUEPRINT_DEPLOYED);
@@ -147,10 +152,10 @@ public class DcaeComponent extends ExternalComponent {
         } else if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus().equals("failed")) {
             setState(MICROSERVICE_INSTALLATION_FAILED);
         } else if (dcaeResponse.getOperationType().equals("uninstall")
-            && dcaeResponse.getStatus().equals("succeeded")) {
+                && dcaeResponse.getStatus().equals("succeeded")) {
             setState(MICROSERVICE_UNINSTALLED_SUCCESSFULLY);
         } else if (dcaeResponse.getOperationType().equals("uninstall")
-            && dcaeResponse.getStatus().equals("processing")) {
+                && dcaeResponse.getStatus().equals("processing")) {
             setState(PROCESSING_MICROSERVICE_UNINSTALLATION);
         } else if (dcaeResponse.getOperationType().equals("uninstall") && dcaeResponse.getStatus().equals("failed")) {
             setState(MICROSERVICE_UNINSTALLATION_FAILED);

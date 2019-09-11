@@ -158,6 +158,11 @@ public class OperationalPolicy implements Serializable, Policy {
         return true;
     }
 
+    /**
+     * Create policy Yaml from json defined here.
+     * 
+     * @return A string containing Yaml
+     */
     public String createPolicyPayloadYaml() {
         JsonObject policyPayloadResult = new JsonObject();
 
@@ -184,21 +189,17 @@ public class OperationalPolicy implements Serializable, Policy {
         operationalPolicyDetails.add("properties", LegacyOperationalPolicy
                 .reworkPayloadAttributes(this.configurationsJson.get("operational_policy").deepCopy()));
 
-        Gson gson = new GsonBuilder().create();
-
-        Map<?, ?> jsonMap = gson.fromJson(gson.toJson(policyPayloadResult), Map.class);
-
         DumperOptions options = new DumperOptions();
         options.setIndent(2);
         options.setPrettyFlow(true);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        Gson gson = new GsonBuilder().create();
 
-        return (new Yaml(options)).dump(jsonMap);
+        return (new Yaml(options)).dump(gson.fromJson(gson.toJson(policyPayloadResult), Map.class));
     }
 
     @Override
     public String createPolicyPayload() throws UnsupportedEncodingException {
-
         // Now using the legacy payload fo Dublin
         JsonObject payload = new JsonObject();
         payload.addProperty("policy-id", this.getName());

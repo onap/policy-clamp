@@ -34,15 +34,21 @@ import org.w3c.dom.Document;
 
 @Component
 public class SvgFacade {
+    /**
+     * Generate the SVG images from the microservice Chain.
+     * 
+     * @param microServicesChain THe chain of microservices
+     * @return A String containing the SVG
+     */
     public String getSvgImage(List<MicroService> microServicesChain) {
         SVGGraphics2D svgGraphics2D = new SVGGraphics2D(XmlTools.createEmptySvgDocument());
         Document document = XmlTools.createEmptySvgDocument();
         DocumentBuilder dp = new DocumentBuilder(document, svgGraphics2D.getDOMFactory());
-        Painter p = new Painter(svgGraphics2D, dp);
-        ClampGraphBuilder cgp = new ClampGraphBuilder(p).collector("VES");
+        Painter painter = new Painter(svgGraphics2D, dp);
+        ClampGraphBuilder cgp = new ClampGraphBuilder(painter).collector("VES");
         cgp.addAllMicroServices(microServicesChain);
         ClampGraph cg = cgp.policy("OperationalPolicy").build();
-        return cg.getAsSVG();
+        return cg.getAsSvg();
     }
 
 }

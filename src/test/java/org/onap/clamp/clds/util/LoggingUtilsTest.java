@@ -21,10 +21,10 @@
 
 package org.onap.clamp.clds.util;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -58,7 +58,7 @@ public class LoggingUtilsTest {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(LoggingUtilsTest.class);
 
-    private static final String SERVICE_NAME =  "LogginUtilsTest: Test Entering method";
+    private static final String SERVICE_NAME = "LogginUtilsTest: Test Entering method";
 
     private LoggingUtils util;
 
@@ -72,8 +72,6 @@ public class LoggingUtilsTest {
         // given
         final String userName = "test";
 
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-
         UserDetails userDetails = Mockito.mock(UserDetails.class);
         Mockito.when(userDetails.getUsername()).thenReturn(userName);
 
@@ -84,34 +82,29 @@ public class LoggingUtilsTest {
         Mockito.when(securityContext.getAuthentication()).thenReturn(localAuth);
         SecurityContextHolder.setContext(securityContext);
 
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         // when
         util.entering(request, SERVICE_NAME);
 
         // then
-        String[] keys = { ONAPLogConstants.MDCs.PARTNER_NAME,
-                ONAPLogConstants.MDCs.ENTRY_TIMESTAMP,
-                ONAPLogConstants.MDCs.REQUEST_ID,
-                ONAPLogConstants.MDCs.INVOCATION_ID,
-                ONAPLogConstants.MDCs.CLIENT_IP_ADDRESS,
-                ONAPLogConstants.MDCs.SERVER_FQDN,
-                ONAPLogConstants.MDCs.INSTANCE_UUID,
-                ONAPLogConstants.MDCs.SERVICE_NAME
-        };
+        String[] keys = { OnapLogConstants.Mdcs.PARTNER_NAME, OnapLogConstants.Mdcs.ENTRY_TIMESTAMP,
+                            OnapLogConstants.Mdcs.REQUEST_ID, OnapLogConstants.Mdcs.INVOCATION_ID,
+                            OnapLogConstants.Mdcs.CLIENT_IP_ADDRESS, OnapLogConstants.Mdcs.SERVER_FQDN,
+                            OnapLogConstants.Mdcs.INSTANCE_UUID, OnapLogConstants.Mdcs.SERVICE_NAME };
         Map<String, String> mdc = MDC.getMDCAdapter().getCopyOfContextMap();
 
         assertTrue(checkMapKeys(mdc, keys));
-        assertEquals(userName,
-               mdc.get(ONAPLogConstants.MDCs.PARTNER_NAME));
+        assertEquals(userName, mdc.get(OnapLogConstants.Mdcs.PARTNER_NAME));
     }
 
     @Test
     public void testExistingLoggingUtils() {
         // given
-        MDC.put(ONAPLogConstants.MDCs.ENTRY_TIMESTAMP,
+        MDC.put(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP,
                 ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT));
 
         // when
-        util.exiting("200", SERVICE_NAME, Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+        util.exiting("200", SERVICE_NAME, Level.INFO, OnapLogConstants.ResponseStatus.COMPLETED);
 
         // then
         Map<String, String> mdc = MDC.getMDCAdapter().getCopyOfContextMap();
@@ -130,16 +123,13 @@ public class LoggingUtilsTest {
 
         // then
         assertNotNull(secureConnection);
-        String[] keys = {ONAPLogConstants.MDCs.TARGET_ENTITY,
-                ONAPLogConstants.MDCs.TARGET_SERVICE_NAME,
-                ONAPLogConstants.MDCs.INVOCATIONID_OUT,
-                ONAPLogConstants.MDCs.INVOKE_TIMESTAMP
-        };
+        String[] keys = { OnapLogConstants.Mdcs.TARGET_ENTITY, OnapLogConstants.Mdcs.TARGET_SERVICE_NAME,
+                            OnapLogConstants.Mdcs.INVOCATIONID_OUT, OnapLogConstants.Mdcs.INVOKE_TIMESTAMP };
         Map<String, String> mdc = MDC.getMDCAdapter().getCopyOfContextMap();
 
         assertTrue(checkMapKeys(mdc, keys));
-        assertEquals(targetEntity, mdc.get(ONAPLogConstants.MDCs.TARGET_ENTITY));
-        assertEquals(targetServiceName, mdc.get(ONAPLogConstants.MDCs.TARGET_SERVICE_NAME));
+        assertEquals(targetEntity, mdc.get(OnapLogConstants.Mdcs.TARGET_ENTITY));
+        assertEquals(targetServiceName, mdc.get(OnapLogConstants.Mdcs.TARGET_SERVICE_NAME));
     }
 
     private boolean checkMapKeys(Map map, String[] keys) {

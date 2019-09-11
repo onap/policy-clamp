@@ -87,6 +87,15 @@ public class LoopLog implements Serializable, Comparable<LoopLog> {
     public LoopLog() {
     }
 
+    /**
+     * Constructor For LoopLog taking message and logtype, logComponent and loop
+     * reference.
+     * 
+     * @param message      The message as string
+     * @param logType      Type like INFO, WARN, DEBUG
+     * @param logComponent A String with DCAE, POLICY, CLAMP ,etc...
+     * @param loop         The loop object that this log is about
+     */
     public LoopLog(String message, LogType logType, String logComponent, Loop loop) {
         this.message = message;
         this.logType = logType;

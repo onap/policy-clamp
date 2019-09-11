@@ -52,7 +52,7 @@ public class ClampGraphTest {
 
         when(mockDocumentBuilder.getGroupingDocument()).thenReturn(document);
 
-        String actual = new ClampGraph(mockDocumentBuilder).getAsSVG();
+        String actual = new ClampGraph(mockDocumentBuilder).getAsSvg();
         Assert.assertEquals(expected.trim(), actual.trim());
     }
 
@@ -64,10 +64,10 @@ public class ClampGraphTest {
         when(mockDocumentBuilder.getGroupingDocument()).thenReturn(document);
         ClampGraph cg = new ClampGraph(mockDocumentBuilder);
 
-        String actualFirst = cg.getAsSVG();
+        String actualFirst = cg.getAsSvg();
         verify(mockDocumentBuilder, times(1)).getGroupingDocument();
 
-        String actualSecond = cg.getAsSVG();
+        String actualSecond = cg.getAsSvg();
         verifyNoMoreInteractions(mockDocumentBuilder);
 
         Assert.assertEquals(expected.trim(), actualFirst.trim());

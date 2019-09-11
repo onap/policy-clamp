@@ -29,6 +29,7 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.util.UUID;
+
 import org.apache.batik.svggen.SVGGraphics2D;
 
 public class ImageBuilder {
@@ -47,8 +48,8 @@ public class ImageBuilder {
     private static final int LINE_THICKNESS = 2;
     private static final int CIRCLE_RADIUS = 17;
 
-    ImageBuilder(SVGGraphics2D svgGraphics2D, DocumentBuilder documentBuilder,
-            Point startingPoint, int baseLength, int rectHeight) {
+    ImageBuilder(SVGGraphics2D svgGraphics2D, DocumentBuilder documentBuilder, Point startingPoint, int baseLength,
+            int rectHeight) {
         this.g2d = svgGraphics2D;
         this.documentBuilder = documentBuilder;
         this.currentPoint = new Point(startingPoint);
@@ -69,7 +70,7 @@ public class ImageBuilder {
 
     ImageBuilder arrow() {
         String dataElementId = "Arrow-" + UUID.randomUUID().toString();
-        Point to = new Point(currentPoint.x + (int)(baseLength*ARROW_TO_BASELINE_RATIO), currentPoint.y);
+        Point to = new Point(currentPoint.x + (int) (baseLength * ARROW_TO_BASELINE_RATIO), currentPoint.y);
         AwtUtils.drawArrow(g2d, currentPoint, to, LINE_THICKNESS);
         documentBuilder.pushChangestoDocument(g2d, dataElementId);
         currentPoint = to;
@@ -77,16 +78,15 @@ public class ImageBuilder {
     }
 
     ImageBuilder circle(String dataElementId, int lineThickness) {
-        Point to = new Point(currentPoint.x + 2 * CIRCLE_RADIUS, currentPoint.y);
-        Shape circleStart =
-            new Ellipse2D.Double(currentPoint.x, currentPoint.y - CIRCLE_RADIUS,
-                2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS);
+        Shape circleStart = new Ellipse2D.Double(currentPoint.x, currentPoint.y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS,
+                2 * CIRCLE_RADIUS);
 
         Stroke oldStroke = g2d.getStroke();
         g2d.setStroke(new BasicStroke(lineThickness));
         g2d.draw(circleStart);
         g2d.setStroke(oldStroke);
         documentBuilder.pushChangestoDocument(g2d, dataElementId);
+        Point to = new Point(currentPoint.x + 2 * CIRCLE_RADIUS, currentPoint.y);
         currentPoint = to;
         return this;
     }
@@ -107,17 +107,18 @@ public class ImageBuilder {
             case POLICY:
                 drawDiagonalLineForPolicy(point, width, height);
                 break;
+            default:
         }
     }
 
     private void drawVerticalLineForCollector(Point point, int width, int height) {
         g2d.drawLine(point.x + width / COLLECTOR_LINE_RATIO, point.y, point.x + width / COLLECTOR_LINE_RATIO,
-                     point.y + height);
+                point.y + height);
     }
 
     private void drawHorizontalLineForMicroService(Point point, int width, int height) {
-        int y = calculateMsHorizontalLineYCoordinate(point,height);
-        g2d.drawLine(point.x, y, point.x + width, y);
+        int pointY = calculateMsHorizontalLineYCoordinate(point, height);
+        g2d.drawLine(point.x, pointY, point.x + width, pointY);
     }
 
     private void drawDiagonalLineForPolicy(Point point, int width, int height) {
@@ -125,13 +126,13 @@ public class ImageBuilder {
     }
 
     private int calculateMsHorizontalLineYCoordinate(Point point, int height) {
-        return (int)(point.y * height * MS_LINE_TO_HEIGHT_RATIO);
+        return (int) (point.y * height * MS_LINE_TO_HEIGHT_RATIO);
     }
 
     private Point coordinatesForRectangle(Point from, Point next) {
-        int x = from.x;
-        int y = from.y - next.y + LINE_THICKNESS / 2;
-        return new Point(x,y);
+        int pointX = from.x;
+        int pointY = from.y - next.y + LINE_THICKNESS / 2;
+        return new Point(pointX, pointY);
     }
 
 }

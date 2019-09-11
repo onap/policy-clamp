@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.camel.Exchange;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.clds.util.ONAPLogConstants;
+import org.onap.clamp.clds.util.OnapLogConstants;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,18 +57,18 @@ public class FlowLogOperation {
      */
     public void startLog(Exchange exchange, String serviceDesc) {
         util.entering(request, serviceDesc);
-        exchange.setProperty(ONAPLogConstants.Headers.REQUEST_ID, util.getProperties(ONAPLogConstants.MDCs.REQUEST_ID));
-        exchange.setProperty(ONAPLogConstants.Headers.INVOCATION_ID,
-            util.getProperties(ONAPLogConstants.MDCs.INVOCATION_ID));
-        exchange.setProperty(ONAPLogConstants.Headers.PARTNER_NAME,
-            util.getProperties(ONAPLogConstants.MDCs.PARTNER_NAME));
+        exchange.setProperty(OnapLogConstants.Headers.REQUEST_ID, util.getProperties(OnapLogConstants.Mdcs.REQUEST_ID));
+        exchange.setProperty(OnapLogConstants.Headers.INVOCATION_ID,
+            util.getProperties(OnapLogConstants.Mdcs.INVOCATION_ID));
+        exchange.setProperty(OnapLogConstants.Headers.PARTNER_NAME,
+            util.getProperties(OnapLogConstants.Mdcs.PARTNER_NAME));
     }
 
     /**
      * Generate the exiting log.
      */
     public void endLog() {
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, ONAPLogConstants.ResponseStatus.COMPLETED);
+        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, OnapLogConstants.ResponseStatus.COMPLETED);
     }
 
     /**
@@ -76,7 +76,7 @@ public class FlowLogOperation {
      */
     public void errorLog() {
         util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Failed", Level.INFO,
-            ONAPLogConstants.ResponseStatus.ERROR);
+            OnapLogConstants.ResponseStatus.ERROR);
     }
 
     /**

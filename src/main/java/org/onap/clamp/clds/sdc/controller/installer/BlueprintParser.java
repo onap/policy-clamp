@@ -60,6 +60,12 @@ public class BlueprintParser {
     private static final String CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM = "clamp_node.relationships.gets_input_from";
     private static final String TARGET = "target";
 
+    /**
+     * Get all micro services from blueprint.
+     * 
+     * @param blueprintString the blueprint in a String
+     * @return A set of MircoService
+     */
     public Set<MicroService> getMicroServices(String blueprintString) {
         Set<MicroService> microServices = new HashSet<>();
         JsonObject blueprintJson = BlueprintParser.convertToJson(blueprintString);
@@ -77,6 +83,12 @@ public class BlueprintParser {
         return microServices;
     }
 
+    /**
+     * Does a fallback to TCA or Holmes.
+     * 
+     * @param blueprintString the blueprint in a String
+     * @return The list of microservices
+     */
     public List<MicroService> fallbackToOneMicroService(String blueprintString) {
         JsonObject jsonObject = BlueprintParser.convertToJson(blueprintString);
         JsonObject results = jsonObject.get(NODE_TEMPLATES).getAsJsonObject();
@@ -92,7 +104,7 @@ public class BlueprintParser {
         }
         String msName = theBiggestMicroServiceKey.toLowerCase().contains(HOLMES_PREFIX) ? HOLMES : TCA;
         return Collections
-            .singletonList(new MicroService(msName, "onap.policies.monitoring.cdap.tca.hi.lo.app", "", ""));
+                .singletonList(new MicroService(msName, "onap.policies.monitoring.cdap.tca.hi.lo.app", "", ""));
     }
 
     String getName(Entry<String, JsonElement> entry) {
@@ -124,9 +136,9 @@ public class BlueprintParser {
     String findModelTypeInTargetArray(JsonArray jsonArray, JsonObject nodeTemplateList, JsonObject inputList) {
         for (JsonElement elem : jsonArray) {
             String modelType = getModelType(
-                new AbstractMap.SimpleEntry<String, JsonElement>(elem.getAsJsonObject().get(TARGET).getAsString(),
-                    nodeTemplateList.get(elem.getAsJsonObject().get(TARGET).getAsString()).getAsJsonObject()),
-                nodeTemplateList, inputList);
+                    new AbstractMap.SimpleEntry<String, JsonElement>(elem.getAsJsonObject().get(TARGET).getAsString(),
+                            nodeTemplateList.get(elem.getAsJsonObject().get(TARGET).getAsString()).getAsJsonObject()),
+                    nodeTemplateList, inputList);
             if (!modelType.isEmpty()) {
                 return modelType;
             }
@@ -143,7 +155,7 @@ public class BlueprintParser {
                 if (properties.get(POLICY_MODELID).isJsonObject()) {
                     // it's a blueprint parameter
                     return inputList.get(properties.get(POLICY_MODELID).getAsJsonObject().get(GET_INPUT).getAsString())
-                        .getAsJsonObject().get("default").getAsString();
+                            .getAsJsonObject().get("default").getAsString();
                 } else {
                     // It's a direct value
                     return properties.get(POLICY_MODELID).getAsString();
@@ -158,7 +170,7 @@ public class BlueprintParser {
     }
 
     MicroService getNodeRepresentation(Entry<String, JsonElement> entry, JsonObject nodeTemplateList,
-        JsonObject inputList) {
+            JsonObject inputList) {
         String name = getName(entry);
         String getInputFrom = getInput(entry);
         String modelType = getModelType(entry, nodeTemplateList, inputList);
@@ -167,7 +179,7 @@ public class BlueprintParser {
 
     private String getTarget(JsonObject elementObject) {
         if (elementObject.has(TYPE) && elementObject.has(TARGET)
-            && elementObject.get(TYPE).getAsString().equals(CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM)) {
+                && elementObject.get(TYPE).getAsString().equals(CLAMP_NODE_RELATIONSHIPS_GETS_INPUT_FROM)) {
             return elementObject.get(TARGET).getAsString();
         }
         return "";

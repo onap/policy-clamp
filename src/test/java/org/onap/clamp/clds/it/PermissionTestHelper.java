@@ -36,14 +36,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 public class PermissionTestHelper {
 
     private static final String securityPrefix = CONFIG_PREFIX + PERM_PREFIX;
-    private final Map<String, Map> permission;
+    private final Map<String, Map<?, ?>> permission;
     private static final List<GrantedAuthority> authList = new LinkedList<>();
 
     /**
-     * Permission Test Helper constructor
-     * Generate authList base on general permission collection
+     * Permission Test Helper constructor. Generate authList base on general
+     * permission collection.
      */
-    public PermissionTestHelper(Map<String, Map> permission) {
+    public PermissionTestHelper(Map<String, Map<?, ?>> permission) {
         this.permission = permission;
         this.createAuthList();
     }

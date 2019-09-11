@@ -36,6 +36,12 @@ public class ChainGenerator {
     ChainGenerator() {
     }
 
+    /**
+     * Get list of microservices chain.
+     * 
+     * @param input A set of microservices
+     * @return The list of microservice chained
+     */
     public List<MicroService> getChainOfMicroServices(Set<MicroService> input) {
         LinkedList<MicroService> returnList = new LinkedList<>();
         if (preValidate(input)) {
@@ -52,7 +58,7 @@ public class ChainGenerator {
 
     private boolean preValidate(Set<MicroService> input) {
         List<MicroService> noInputs = input.stream().filter(ms -> "".equals(ms.getInputFrom()))
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
         return noInputs.size() == 1;
     }
 
@@ -68,7 +74,7 @@ public class ChainGenerator {
     }
 
     private void insertNodeTemplateIntoChain(MicroService microServicetoInsert,
-        LinkedList<MicroService> chainOfMicroServices) {
+            LinkedList<MicroService> chainOfMicroServices) {
         int insertIndex = 0;
         for (int i = 0; i < chainOfMicroServices.size(); i++) {
             MicroService current = chainOfMicroServices.get(i);
