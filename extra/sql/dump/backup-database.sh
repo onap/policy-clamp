@@ -4,7 +4,7 @@
 # ============LICENSE_START=======================================================
 # ONAP CLAMP
 # ================================================================================
-# Copyright (C) 2017 AT&T Intellectual Property. All rights
+# Copyright (C) 2019 AT&T Intellectual Property. All rights
 #                             reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,4 @@
 # 
 ###
 
-cd /docker-entrypoint-initdb.d/bulkload
-mysql -uroot -p$MYSQL_ROOT_PASSWORD -f < create-db.sql
-## New model creation 
-mysql -uroot -p$MYSQL_ROOT_PASSWORD -f cldsdb4 < create-tables.sql
+mysqldump -uroot -p$MYSQL_ROOT_PASSWORD -v --extended-insert=FALSE --databases cldsdb4 > $1

@@ -23,5 +23,4 @@
 # 
 ###
 
-cd ../../target/ui-react
-node/npm start --scripts-prepend-node-path
+docker-compose -f ../docker/clamp/docker-compose.yml up -d third-party-proxy

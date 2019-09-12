@@ -23,5 +23,4 @@
 # 
 ###
 
-cd ../../target/ui-react
-node/npm start --scripts-prepend-node-path
+mysql -uroot -p$MYSQL_ROOT_PASSWORD -v -f cldsdb4 < /docker-entrypoint-initdb.d/dump/test-data.sql

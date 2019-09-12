@@ -4,7 +4,7 @@
 # ============LICENSE_START=======================================================
 # ONAP CLAMP
 # ================================================================================
-# Copyright (C) 2019 AT&T Intellectual Property. All rights
+# Copyright (C) 2017 AT&T Intellectual Property. All rights
 #                             reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,5 +23,6 @@
 # 
 ###
 
-cd ../../target/ui-react
-node/npm start --scripts-prepend-node-path
+mysql -uroot -p$MYSQL_ROOT_PASSWORD -f < /docker-entrypoint-initdb.d/bulkload/create-db.sql
+## New model creation 
+mysql -uroot -p$MYSQL_ROOT_PASSWORD -f cldsdb4 < /docker-entrypoint-initdb.d/bulkload/create-tables.sql

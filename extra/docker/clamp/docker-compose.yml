@@ -12,7 +12,7 @@ services:
     volumes:
       - "/var/lib/mysql"
       - "../mariadb/conf1:/etc/mysql/conf.d:ro"
-      - "../../sql/:/docker-entrypoint-initdb.d:ro"
+      - "../../sql/:/docker-entrypoint-initdb.d:rw"
     environment:
       - MYSQL_ROOT_PASSWORD=strong_pitchou
     ports:

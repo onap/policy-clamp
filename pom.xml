@@ -999,13 +999,16 @@
 								<hostname>mariadb</hostname>
 								<volumes>
 									<bind>
-										<volume>${project.basedir}/extra/sql/:/docker-entrypoint-initdb.d</volume>
+										<volume>${project.basedir}/extra/sql/:/docker-entrypoint-initdb.d:rw</volume>
 										<volume>${project.basedir}/extra/docker/mariadb/conf1:/etc/mysql/conf.d</volume>
 									</bind>
 								</volumes>
 								<wait>
 									<log>socket: '/var/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution</log>
 									<time>600000</time>
+									<exec>
+										<preStop>/docker-entrypoint-initdb.d/dump/backup-data-only.sh</preStop>
+									</exec>
 								</wait>
 								<ports>
 									<port>${docker.mariadb.port.host}:3306</port>
