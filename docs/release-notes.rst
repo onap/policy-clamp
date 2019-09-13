@@ -5,6 +5,50 @@
 Release Notes
 =============
 
+Version: 4.1.2
+--------------
+
+:Release Date: 2019-09-16
+
+**New Features**
+
+The El Alto release is the sixth release of the Control Loop Automation Management Platform (CLAMP).
+
+The main goal of the El Alto release was to:
+
+    - _.Fix a maximum a security issues, especially the angular related issues by moving to React.
+
+**Bug Fixes**
+
+	- The full list of implemented user stories and epics is available on `El Alto CLAMP user stories done <https://wiki.onap.org/display/DW/El+Alto+CLAMP+user+stories+done>`_
+	  This includes the list of bugs that were fixed during the course of this release.
+
+**Known Issues**
+
+
+**Security Notes**
+
+*Fixed Security Issues*
+
+*Known Security Issues*
+
+*Known Vulnerabilities in Used Modules*
+
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release.
+The CLAMP open Critical security vulnerabilities and their risk assessment have been documented as part of the `project <https://wiki.onap.org/pages/viewpage.action?pageId=68540334>`_.
+
+Quick Links:
+ 	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
+
+ 	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
+
+ 	- `Project Vulnerability Review Table for CLAMP <https://wiki.onap.org/pages/viewpage.action?pageId=68540334>`_
+
+**Upgrade Notes**
+
+    New Docker Containers are available.
+
+
 Version: 4.1.0
 --------------
 
