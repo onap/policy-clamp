@@ -1,0 +1,14 @@
+distribution_type: 'container'
+container_release_tag: '4.1.2'
+project: 'clamp'
+log_dir: 'clamp-maven-docker-stage-master/121/'
+ref: 9fb87912f025e85b26c238d286d87e0e1c9c767a
+containers:
+    - name: 'clamp-backend'
+      version: '4.1-STAGING-20190916T192828Z'
+    - name: 'clamp-frontend'
+      version: '4.1-STAGING-20190916T192828Z'
+    - name: 'clamp-dashboard-logstash'
+      version: '4.1-STAGING-20190916T192828Z'
+    - name: 'clamp-dashboard-kibana'
+      version: '4.1-STAGING-20190916T192828Z'
