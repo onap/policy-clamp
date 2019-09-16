@@ -972,7 +972,6 @@
 						</configuration>
 					</execution>
 				</executions>
-
 			</plugin>
 			<plugin>
 				<groupId>io.fabric8</groupId>
@@ -1096,6 +1095,7 @@
 								<skip>true</skip>
 							</run>
 							<build>
+								<skip>true</skip>
 								<cleanup>true</cleanup>
 								<tags>
 									<tag>latest</tag>
