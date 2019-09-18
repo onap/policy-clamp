@@ -112,18 +112,20 @@ There are one datasource for Clamp. By default, it will try to connect to the lo
 .. code-block:: json
 
     {
-        "spring.datasource.cldsdb.url": "jdbc:mariadb://anotherDB.onap.org:3306/cldsdb4?verifyServerCertificate=false&useSSL=false&requireSSL=false&autoReconnect=true",
-        "spring.datasource.cldsdb.username": "admin",
-        "spring.datasource.cldsdb.password": "password",
-
-        "clamp.config.dcae.inventory.url": "http://dcaegen2.host:8080",
-        "clamp.config.dcae.dispatcher.url": "http://dcaegen2.host:8188",
-        "clamp.config.policy.pdpUrl1": "https://policy-pdp.host:9091/pdp/ , testpdp, alpha123",
-        "clamp.config.policy.pdpUrl2": "https://policy-pdp.host:9091/pdp/ , testpdp, alpha123",
-        "clamp.config.policy.papUrl": "https://policy-pap.host:8443/pap/ , testpap, alpha123",
-        "clamp.config.policy.clientKey": "5CE79532B3A2CB4D132FC0C04BF916A7",
-        "clamp.config.files.sdcController":"file:/opt/clamp/config/sdc-controllers-config.json",
-        "clamp.config.cadi.aafLocateUrl": "https://aaf-locate.onap:8095",
+        "spring.datasource.cldsdb.url": "jdbc:mariadb:sequential://clampdb.{{ include "common.namespace" . }}:3306/cldsdb4?autoReconnect=true&connectTimeout=10000&socketTimeout=10000&retriesAllDown=3",
+        "clamp.config.files.sdcController": "file:/opt/clamp/sdc-controllers-config.json",
+        "clamp.config.dcae.inventory.url": "https://inventory.{{ include "common.namespace" . }}:8080",
+        "clamp.config.dcae.dispatcher.url": "https4://deployment-handler.{{ include "common.namespace" . }}:8443",
+        "clamp.config.dcae.deployment.url": "https4://deployment-handler.{{ include "common.namespace" . }}:8443",
+        "clamp.config.dcae.deployment.userName": "none",
+        "clamp.config.dcae.deployment.password": "none",
+        "clamp.config.policy.api.url": "https4://policy-api.{{ include "common.namespace" . }}:6969",
+        "clamp.config.policy.api.userName": "healthcheck",
+        "clamp.config.policy.api.password": "zb!XztG34",
+        "clamp.config.policy.pap.url": "https4://policy-pap.{{ include "common.namespace" . }}:6969",
+        "clamp.config.policy.pap.userName": "healthcheck",
+        "clamp.config.policy.pap.password": "zb!XztG34",
+        "clamp.config.cadi.aafLocateUrl": "https://aaf-locate.{{ include "common.namespace" . }}:8095",
         "com.att.eelf.logging.path": "/opt/clamp",
         "com.att.eelf.logging.file": "logback.xml"
     }
@@ -174,9 +176,9 @@ If the sdcAddress is not specified or not available (connection failure) the mes
 Administration
 --------------
 
-A user can access CLAMP UI at the following URL : https://localhost:8443/designer/index.html.
+A user can access CLAMP UI at the following URL : https://localhost:443/designer/index.html.
 (in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
-For OOM, the URL is https://<host-ip>:30258/designer/index.html
+For OOM, the URL is https://<host-ip>:30258
 
 .. code-block:: html
    - Without AAF, the credentials are
@@ -186,6 +188,13 @@ For OOM, the URL is https://<host-ip>:30258/designer/index.html
    - With AAF enabled, the certificate p12 must be added to the browser
      ca path: src/main/resources/clds/aaf/org.onap.clamp.p12, password "China in the Spring"
      Or get it from this page : https://wiki.onap.org/display/DW/Control+Loop+Flows+and+Models+for+Casablanca
+
+A user can access the Control-Loop DashBoard (ELK stack based) at the following URL : https://localhost:5601 .
+(in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
+For OOM, the URL is https://<host-ip>:30290. Since El Alto release, User access is protected using the Search Guard plugin, community Edition!,
+for Kibana and ElasticSearch. The initial users and credentials provided by the Search Guard plugins are used by default.
+(take a look at the files in the ElasticSearch docker image located in the folder: /usr/share/elasticsearch/config/sg/, 
+especially the file "sg_internal_users.yml").
 
 Human Interfaces
 ----------------
