@@ -8,7 +8,7 @@ Release Notes
 Version: 4.1.2
 --------------
 
-:Release Date: 2019-09-16
+:Release Date: 2019-09-18
 
 **New Features**
 
@@ -24,6 +24,8 @@ The main goal of the El Alto release was to:
 	  This includes the list of bugs that were fixed during the course of this release.
 
 **Known Issues**
+
+    - `CLAMP-506 <https://jira.onap.org/browse/CLAMP-506>`_ Elastic Search Clamp image cannot be built anymore(SearchGuard DMCA issue)
 
 
 **Security Notes**
