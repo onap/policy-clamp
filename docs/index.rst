@@ -135,38 +135,39 @@ SDC-Controllers config
 This file is a JSON that must be specified to Spring config, here is an example:
 
 .. code-block:: json
- {
-  "sdc-connections":{
-    "sdc-controller1":{
-        "user": "clamp",
-        "consumerGroup": "consumerGroup1",
-        "consumerId": "consumerId1",
-        "environmentName": "AUTO",
-        "sdcAddress": "localhost:8443",
-        "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
-        "pollingInterval":30,
-        "pollingTimeout":30,
-        "activateServerTLSAuth":"false",
-        "keyStorePassword":"",
-        "keyStorePath":"",
-        "messageBusAddresses":["dmaaphost.com"]
-    },
-    "sdc-controller2":{
-        "user": "clamp",
-        "consumerGroup": "consumerGroup1",
-        "consumerId": "consumerId1",
-        "environmentName": "AUTO",
-        "sdcAddress": "localhost:8443",
-        "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
-        "pollingInterval":30,
-        "pollingTimeout":30,
-        "activateServerTLSAuth":"false",
-        "keyStorePassword":"",
-        "keyStorePath":"",
-        "messageBusAddresses":["dmaaphost.com"]
+
+    {
+     "sdc-connections":{
+       "sdc-controller1":{
+           "user": "clamp",
+           "consumerGroup": "consumerGroup1",
+           "consumerId": "consumerId1",
+           "environmentName": "AUTO",
+           "sdcAddress": "localhost:8443",
+           "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
+           "pollingInterval":30,
+           "pollingTimeout":30,
+           "activateServerTLSAuth":"false",
+           "keyStorePassword":"",
+           "keyStorePath":"",
+           "messageBusAddresses":["dmaaphost.com"]
+       },
+       "sdc-controller2":{
+           "user": "clamp",
+           "consumerGroup": "consumerGroup1",
+           "consumerId": "consumerId1",
+           "environmentName": "AUTO",
+           "sdcAddress": "localhost:8443",
+           "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
+           "pollingInterval":30,
+           "pollingTimeout":30,
+           "activateServerTLSAuth":"false",
+           "keyStorePassword":"",
+           "keyStorePath":"",
+           "messageBusAddresses":["dmaaphost.com"]
+       }
+     }
     }
-  }
- }
 
 Multiple controllers can be configured so that Clamp is able to receive the notifications from different SDC servers.
 Each Clamp existing in a cluster should have different consumerGroup and consumerId so that they can each consume the SDC notification.
@@ -181,6 +182,7 @@ A user can access CLAMP UI at the following URL : https://localhost:443/designer
 For OOM, the URL is https://<host-ip>:30258
 
 .. code-block:: html
+
    - Without AAF, the credentials are
      Default username : admin
      Default password : password
