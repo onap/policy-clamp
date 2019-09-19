@@ -32,7 +32,11 @@
 # Reason is that we currently parse the config file into a elasticsearch settings object which cannot cope with dots in keys.
 # Workaround: Just configure something like '?kibana' instead of '.kibana' or 'my?index' instead of 'my.index'
 # This limitation will likely removed with Search Guard 6
-
+#
+# Some SearchGuard functionality is licensed under Apache-2.0, while other functionality is non-free;
+# see https://github.com/floragunncom/search-guard. The functionality enabled in this configuration
+# file only include those that are licensed under Apache-2.0. Please use care and review SearchGuard's
+# license details before enabling any additional features here.
 
 # Allows everything, but no changes to searchguard configuration index
 sg_all_access:

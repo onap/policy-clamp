@@ -47,6 +47,12 @@
 
 # Authz
 #   noop
+#
+# Some SearchGuard functionality is licensed under Apache-2.0, while other functionality is non-free;
+# see https://github.com/floragunncom/search-guard. The functionality enabled in this configuration
+# file only include those that are licensed under Apache-2.0. Please use care and review SearchGuard's
+# license details before enabling any additional features here.
+
 
 searchguard:
   dynamic:
