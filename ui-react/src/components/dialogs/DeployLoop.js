@@ -58,7 +58,7 @@ export default class DeployLoop extends React.Component {
 	handleClose(){
 		this.props.history.push('/');
 	}
-	handleSave(e) {
+	handleSave() {
 		const loopName = this.props.loopCache.getLoopName();
 		// save the global propserties
 		LoopService.updateGlobalProperties(loopName, this.state.temporaryPropertiesJson).then(resp => {
