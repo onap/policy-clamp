@@ -1,0 +1,63 @@
+{
+    "schema": {
+        "uniqueItems": "true",
+        "format": "tabs-top",
+        "type": "array",
+        "title": "Properties with constraints",
+        "items": {
+            "type": "object",
+            "title": "Properties with constraints",
+            "required": [
+                "cpus",
+                "memSize"
+            ],
+            "properties": {
+                "appPassword": {
+                    "propertyOrder": 1004,
+                    "minLength": 6,
+                    "title": "application password",
+                    "type": "string",
+                    "maxLength": 10
+                },
+                "cost": {
+                    "exclusiveMaximum": 100.5,
+                    "propertyOrder": 1005,
+                    "type": "integer",
+                    "exclusiveMinimum": 50.5
+                },
+                "keylength": {
+                    "propertyOrder": 1007,
+                    "type": "integer",
+                    "enum": [
+                        128,
+                        256
+                    ]
+                },
+                "cpus": {
+                    "propertyOrder": 1001,
+                    "default": 1,
+                    "minLength": 1,
+                    "type": "string",
+                    "maxLength": 4
+                },
+                "ports": {
+                    "propertyOrder": 1002,
+                    "maximum": 9010,
+                    "type": "integer",
+                    "minimum": 9000
+                },
+                "memSize": {
+                    "propertyOrder": 1003,
+                    "maximum": 10,
+                    "title": "memory size",
+                    "type": "integer",
+                    "minimum": 2
+                },
+                "algorithm": {
+                    "propertyOrder": 1006,
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

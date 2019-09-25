@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2018 AT&T Intellectual Property. All rights
  *                             reserved.
+ * Modifications Copyright (C) 2019 Huawei Technologies Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +38,7 @@ public class ToscaYamlToJsonConvertorTest {
      * This Test validates TOSCA yaml to JSON Schema conversion based on JSON Editor
      * Schema.
      *
-     * @throws IOException
-     *
+     * @throws IOException In case of issue when opening the tosca yaml file and converted json file
      */
     @Test
     public final void testParseToscaYaml() throws IOException {
@@ -49,5 +49,40 @@ public class ToscaYamlToJsonConvertorTest {
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json.json"),
                 parsedJsonSchema, true);
+    }
+
+    /**
+     * This Test validates TOSCA yaml with constraints to JSON Schema conversion based on JSON Editor
+     * Schema.
+     *
+     * @throws IOException In case of issue when opening the tosca yaml file and converted json file
+     */
+    @Test
+    public final void testParseToscaYamlWithConstraints() throws IOException {
+        String toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tosca-with-constraints.yaml");
+        ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
+
+        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml);
+        assertNotNull(parsedJsonSchema);
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-constraints" +
+                                                                             ".json"),
+                                parsedJsonSchema, true);
+    }
+
+    /**
+     * This Test validates TOSCA yaml with different datatypes to JSON Schema conversion based on JSON Editor
+     * Schema.
+     *
+     * @throws IOException In case of issue when opening the tosca yaml file and converted json file
+     */
+    @Test
+    public final void testParseToscaYamlWithTypes() throws IOException {
+        String toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tosca-with-datatypes.yaml");
+        ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
+
+        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml);
+        assertNotNull(parsedJsonSchema);
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-datatypes.json"),
+                                parsedJsonSchema, true);
     }
 }
