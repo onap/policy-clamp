@@ -1,0 +1,54 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+policy_types:
+    onap.policies.Monitoring:
+        derived_from: tosca.policies.Root
+        description: a base policy type for all policies that governs monitoring provisioning
+    onap.policies.monitoring.example.app:
+        derived_from: onap.policies.Monitoring
+        version: 1.0.0
+        properties:
+            example_policy:
+                type: map
+                description: Properties with constraints
+                entry_schema:
+                    type: onap.datatypes.monitoring.example_policy
+data_types:
+    onap.datatypes.monitoring.example_policy:
+        derived_from: tosca.datatypes.Root
+        properties:
+            cpus:
+                type: string
+                required: true
+                default: 1
+                constraints:
+                  - in_range: [ 1, 4 ] 
+            ports:
+                type: integer
+                constraints:
+                  - in_range: [ 9000, 9010 ]
+            memSize:
+                type: integer
+                required: true
+                description: memory size
+                constraints:
+                  - greater_or_equal: 2
+                  - less_or_equal: 10
+            appPassword:
+                type: string
+                description: application password
+                constraints:
+                    - min_length: 6
+                    - max_length: 10
+            cost:
+                type: float
+                constraints:
+                    - less_than: 100.50
+                    - greater_than: 50.50
+            algorithm: 
+                type: string
+                constraints:
+                    - equal: aes
+            keylength:
+                type: integer
+                constraints:
+                    - valid_values: [ 128, 256 ]
