@@ -77,8 +77,22 @@ export default class OperationalPolicyModal extends React.Component {
 	}
 
 	setDefaultJsonEditorOptions() {
-		JSONEditor.defaults.options.theme = 'bootstrap4';
-
+		JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
+			getTab: function(text,tabId) {
+				var liel = document.createElement('li');
+				liel.classList.add('nav-item');
+				var ael = document.createElement("a");
+				ael.classList.add("nav-link");
+				ael.setAttribute("style",'padding:10px;max-width:160px;');
+				ael.setAttribute("href", "#" + tabId);
+				ael.setAttribute('data-toggle', 'tab');
+				text.setAttribute("style",'word-wrap:break-word;');
+				ael.appendChild(text);
+				liel.appendChild(ael);
+				return liel;
+			}
+		});
+		JSONEditor.defaults.options.theme = 'myBootstrap4';
 		JSONEditor.defaults.options.object_layout = 'grid';
 		JSONEditor.defaults.options.disable_properties = true;
 		JSONEditor.defaults.options.disable_edit_json = false;
