@@ -54,5 +54,7 @@ public class CldsInfoProviderTest {
         assertThat(cldsInfo.isPermissionReadTemplate()).isTrue();
         assertThat(cldsInfo.isPermissionUpdateCl()).isTrue();
         assertThat(cldsInfo.isPermissionUpdateTemplate()).isTrue();
+        assertThat(cldsInfo.isPermissionReadTosca()).isTrue();
+        assertThat(cldsInfo.isPermissionUpdateTosca()).isTrue();
     }
 }
