@@ -27,19 +27,57 @@ import OpenLoopModal from './OpenLoopModal';
 describe('Verify OpenLoopModal', () => {
 
   beforeEach(() => {
-      fetch.resetMocks()
-  })
-
-  it('Test the render method', () => {
-    fetch.mockResponseOnce(JSON.stringify([
+      fetch.resetMocks();
+          fetch.mockResponseOnce(JSON.stringify([
         "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca",
         "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3",
         "LOOP_gmtAS_v1_0_ResourceInstanceName2_tca_2"
-      ]))
+      ]));
+  })
+  
+    it('Test the render method', () => {
       
     const component = shallow(<OpenLoopModal/>);
     expect(component).toMatchSnapshot();
   });
 
+  it('Onchange event', () => {
+    const event = {value: 'LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3'};
+    const component = shallow(<OpenLoopModal/>);
+	const forms = component.find('StateManager');
+
+    component.find('StateManager').simulate('change', event);
+    component.update();
+    expect(component.state('chosenLoopName')).toEqual("LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3");
+  });
+
+  it('Test handleClose', () => {
+    const historyMock = { push: jest.fn() }; 
+    const handleClose = jest.spyOn(OpenLoopModal.prototype,'handleClose');
+    const component = shallow(<OpenLoopModal history={historyMock} />)
+
+    component.find('[variant="secondary"]').prop('onClick')();
+
+    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(false);
+    expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
+    
+    handleClose.mockClear();
+  });
+
+    it('Test handleSubmit', () => {
+    const historyMock = { push: jest.fn() };
+    const loadLoopFunction = jest.fn();  
+    const handleOpen = jest.spyOn(OpenLoopModal.prototype,'handleOpen');
+    const component = shallow(<OpenLoopModal history={historyMock} loadLoopFunction={loadLoopFunction}/>)
+
+    component.find('[variant="primary"]').prop('onClick')();
+
+    expect(handleOpen).toHaveBeenCalledTimes(1);
+    expect(component.state('show')).toEqual(false);
+    expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
+    
+    handleOpen.mockClear();
+  });
 
 });
