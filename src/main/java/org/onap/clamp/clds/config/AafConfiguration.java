@@ -60,7 +60,6 @@ public class AafConfiguration {
         registration.addUrlPatterns("/restservices/clds/v1/dictionary/*");
         registration.addUrlPatterns("/restservices/clds/v1/user/*");
         registration.addUrlPatterns("/restservices/clds/v2/loop/*");
-        //registration.addUrlPatterns("*");
         registration.setName("cadiFilter");
         registration.setOrder(0);
         return registration;

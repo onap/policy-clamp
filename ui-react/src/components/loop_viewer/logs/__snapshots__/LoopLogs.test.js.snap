@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify LoopLogs Test the render method 1`] = `
+<styled.div>
+  <label>
+    Loop Logs
+  </label>
+  <Styled(Bootstrap(Table))
+    hover={true}
+    responsive={true}
+    striped={true}
+    variant={true}
+  >
+    <thead>
+      <tr>
+        <th>
+          <span
+            align="left"
+          >
+            Date
+          </span>
+        </th>
+        <th>
+          <span
+            align="left"
+          >
+            Type
+          </span>
+        </th>
+        <th>
+          <span
+            align="left"
+          >
+            Component
+          </span>
+        </th>
+        <th>
+          <span
+            align="right"
+          >
+            Log
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <TableRow
+        logRow={
+          Object {
+            "id": 1,
+            "logComponent": "CLAMP",
+            "logInstant": "2019-07-08T09:44:37Z",
+            "logType": "INFO",
+            "message": "Operational and Guard policies UPDATED",
+          }
+        }
+      />
+    </tbody>
+  </Styled(Bootstrap(Table))>
+</styled.div>
+`;

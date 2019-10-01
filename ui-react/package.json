@@ -63,8 +63,15 @@
 		"coverageReporters": [
 			"lcov"
 		],
-		"setupFiles": ["./src/setupTests.js"],
-		"snapshotSerializers": ["enzyme-to-json/serializer"]
+		"moduleNameMapper": {
+		"\\.(css|png)$": "identity-obj-proxy"
+		},
+		"setupFiles": [
+			"./src/setupTests.js"
+		],
+		"snapshotSerializers": [
+			"enzyme-to-json/serializer"
+		]
 	},
 	"babel": {
 		"presets": [
