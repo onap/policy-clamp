@@ -22,60 +22,21 @@
  */
 import React from 'react';
 import { shallow } from 'enzyme';
-import DeployLoop from './DeployLoop';
+import PerformActions from './PerformActions';
 import LoopCache from '../../api/LoopCache';
 import LoopActionService from '../../api/LoopActionService';
-import LoopService from '../../api/LoopService';
 
-describe('Verify DeployLoop', () => {
+describe('Verify PerformActions', () => {
+
 	const loopCache = new LoopCache({
-		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
-		"globalPropertiesJson": {
-			"dcaeDeployParameters": {
-				"location_id": "",
-				"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
-			}
-		}
+		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca"
 	});
 
-	it('Test the render method', () => {
-		const component = shallow(
-			<DeployLoop loopCache={loopCache}/>
-		)
-
-	expect(component).toMatchSnapshot();
-	});
-	
-	it('Test handleClose', () => {
-		const historyMock = { push: jest.fn() };
-		const handleClose = jest.spyOn(DeployLoop.prototype,'handleClose');
-		const component = shallow(<DeployLoop history={historyMock} loopCache={loopCache}/>)
-
-		component.find('[variant="secondary"]').prop('onClick')();
-
-		expect(handleClose).toHaveBeenCalledTimes(1);
-		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-	});
-
-	it('Test handleSave successful', async () => {
+	it('Test the render method action failed', async () => {
 		const flushPromises = () => new Promise(setImmediate);
 		const historyMock = { push: jest.fn() };
 		const updateLoopFunction = jest.fn();
-		const handleSave = jest.spyOn(DeployLoop.prototype,'handleSave');
-		LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				text: () => "OK"
-			});
-		});
-		LoopActionService.performAction = jest.fn().mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				json: () => {}
-			});
-		});
+		
 		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
 				ok: true,
@@ -85,27 +46,43 @@ describe('Verify DeployLoop', () => {
 		});
 		const jsdomAlert = window.alert;
 		window.alert = () => {};
-		const component = shallow(<DeployLoop history={historyMock} 
-						loopCache={loopCache} updateLoopFunction={updateLoopFunction} />)
-
-		component.find('[variant="primary"]').prop('onClick')();
+		const component = shallow(<PerformActions loopCache={loopCache} 
+					loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} />)
 		await flushPromises();
 		component.update();
 
-		expect(handleSave).toHaveBeenCalledTimes(1);
-		expect(component.state('show')).toEqual(false);
 		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
 		window.alert = jsdomAlert;
-		handleSave.mockClear();
 	});
 
-	it('Onchange event', () => {
-		const event = { target: { name: "location_id", value: "testLocation"} };
-		const component = shallow(<DeployLoop loopCache={loopCache}/>);
-		const forms = component.find('StateManager');
+	it('Test the render method action successful', async () => {
+		const flushPromises = () => new Promise(setImmediate);
+		const historyMock = { push: jest.fn() };
+		const updateLoopFunction = jest.fn();
 
-		component.find('[name="location_id"]').simulate('change', event);
+		LoopActionService.performAction = jest.fn().mockImplementation(() => {
+			return Promise.resolve({
+				ok: true,
+				status: 200,
+				json: () => {}
+			});
+		});		
+		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
+			return Promise.resolve({
+				ok: true,
+				status: 200,
+				json: () => {}
+			});
+		});
+		const jsdomAlert = window.alert;
+		window.alert = () => {};
+		const component = shallow(<PerformActions loopCache={loopCache} 
+						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} />)
+		await flushPromises();
 		component.update();
-		expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.location_id).toEqual("testLocation");
+
+		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+		window.alert = jsdomAlert;
 	});
+
 });

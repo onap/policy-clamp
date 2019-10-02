@@ -34,9 +34,9 @@ describe('Verify OpenLoopModal', () => {
         "LOOP_gmtAS_v1_0_ResourceInstanceName2_tca_2"
       ]));
   })
-  
+
     it('Test the render method', () => {
-      
+
     const component = shallow(<OpenLoopModal/>);
     expect(component).toMatchSnapshot();
   });
@@ -44,7 +44,6 @@ describe('Verify OpenLoopModal', () => {
   it('Onchange event', () => {
     const event = {value: 'LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3'};
     const component = shallow(<OpenLoopModal/>);
-	const forms = component.find('StateManager');
 
     component.find('StateManager').simulate('change', event);
     component.update();
@@ -60,7 +59,7 @@ describe('Verify OpenLoopModal', () => {
 
     expect(handleClose).toHaveBeenCalledTimes(1);
     expect(component.state('show')).toEqual(false);
-    expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
+    expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
     
     handleClose.mockClear();
   });
@@ -75,8 +74,8 @@ describe('Verify OpenLoopModal', () => {
 
     expect(handleOpen).toHaveBeenCalledTimes(1);
     expect(component.state('show')).toEqual(false);
-    expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
-    
+    expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+
     handleOpen.mockClear();
   });
 
