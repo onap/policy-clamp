@@ -26,13 +26,21 @@ package org.onap.clamp.clds.filter;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.StandardCopyOption;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.onap.aaf.cadi.config.Config;
 import org.onap.aaf.cadi.filter.CadiFilter;
@@ -92,11 +100,15 @@ public class ClampCadiFilter extends CadiFilter {
     private String cadiX509Issuers;
 
     private void checkIfNullProperty(String key, String value) {
-        /* When value is null, so not defined in application.properties
-           set nothing in System properties */
+        /*
+         * When value is null, so not defined in application.properties set nothing in
+         * System properties
+         */
         if (value != null) {
-            /* Ensure that any properties already defined in System.prop by JVM params
-                won't be overwritten by Spring application.properties values */
+            /*
+             * Ensure that any properties already defined in System.prop by JVM params won't
+             * be overwritten by Spring application.properties values
+             */
             System.setProperty(key, System.getProperty(key, value));
         }
     }
@@ -124,6 +136,25 @@ public class ClampCadiFilter extends CadiFilter {
         checkIfNullProperty(Config.CADI_TRUSTSTORE_PASSWORD, trustStorePass);
 
         super.init(filterConfig);
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        try {
+            String certHeader = ((HttpServletRequest) request).getHeader("X-SSL-Cert");
+            if (certHeader != null) {
+
+                CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+                X509Certificate cert = (X509Certificate) certificateFactory
+                        .generateCertificate(new ByteArrayInputStream(certHeader.getBytes()));
+                request.setAttribute("javax.servlet.request.X509Certificate", cert);
+
+            }
+        } catch (CertificateException e) {
+            logger.error("Unable to inject the X.509 certificate", e);
+        }
+        super.doFilter(request, response, chain);
     }
 
     private String convertSpringToPath(String fileName) {
