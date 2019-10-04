@@ -30,6 +30,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.StandardCopyOption;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -142,7 +144,8 @@ public class ClampCadiFilter extends CadiFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         try {
-            String certHeader = ((HttpServletRequest) request).getHeader("X-SSL-Cert");
+            String certHeader = URLDecoder.decode(((HttpServletRequest) request).getHeader("X-SSL-Cert"),
+                    StandardCharsets.UTF_8.toString());
             if (certHeader != null) {
 
                 CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
