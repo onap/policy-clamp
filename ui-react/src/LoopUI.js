@@ -199,7 +199,8 @@ export default class LoopUI extends React.Component {
 	}
 
 	updateLoopCache(loopJson) {
-		this.setState({ loopCache: new LoopCache(loopJson), loopName: this.state.loopCache.getLoopName() });
+		this.setState({ loopCache: new LoopCache(loopJson) });
+		this.setState({ loopName: this.state.loopCache.getLoopName() });
 		console.info(this.state.loopName+" loop loaded successfully");
 	}
 
