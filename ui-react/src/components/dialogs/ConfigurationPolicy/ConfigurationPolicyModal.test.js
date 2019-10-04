@@ -29,13 +29,13 @@ import LoopCache from '../../../api/LoopCache';
 describe('Verify DeployLoop', () => {
     beforeEach(() => {
         fetch.resetMocks();
-		fetch.mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				text: () => "OK"
-			});
-		});
+        fetch.mockImplementation(() => {
+            return Promise.resolve({
+                ok: true,
+                status: 200,
+                text: () => "OK"
+            });
+        });
     })
     const loopCache = new LoopCache({
             "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
@@ -59,7 +59,7 @@ describe('Verify DeployLoop', () => {
 
       expect(handleClose).toHaveBeenCalledTimes(1);
       expect(component.state('show')).toEqual(false);
-      expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
+      expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
     });
 
     it('Test handleSave', async () => {
@@ -74,6 +74,6 @@ describe('Verify DeployLoop', () => {
         expect(handleSave).toHaveBeenCalledTimes(1);
         expect(component.state('show')).toEqual(false);
         expect(component.state('componentName')).toEqual("TCA_h2NMX_v1_0_ResourceInstanceName1_tca");
-        expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
+        expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
     });
 });

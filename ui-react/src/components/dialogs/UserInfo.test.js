@@ -35,7 +35,7 @@ describe('Verify UserInfo', () => {
 				json: () => {
 					return Promise.resolve({
 						"userName": "test",
-						"cldsVersion": "1.0.0",
+						"cldsVersion": "1.0.0"
 					});
 			}});
 		});

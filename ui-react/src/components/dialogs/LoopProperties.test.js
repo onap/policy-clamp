@@ -24,6 +24,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import LoopProperties from './LoopProperties';
 import LoopCache from '../../api/LoopCache';
+import LoopService from '../../api/LoopService';
 
 describe('Verify LoopProperties', () => {
 	const loopCache = new LoopCache({
@@ -57,5 +58,51 @@ describe('Verify LoopProperties', () => {
 	expect(component.state('show')).toEqual(true);
 
 	expect(component).toMatchSnapshot();
+	});
+
+	it('Test handleClose', () => {
+		const historyMock = { push: jest.fn() };
+		const handleClose = jest.spyOn(LoopProperties.prototype,'handleClose');
+		const component = shallow(<LoopProperties history={historyMock} loopCache={loopCache}/>)
+
+		component.find('[variant="secondary"]').prop('onClick')();
+
+		expect(handleClose).toHaveBeenCalledTimes(1);
+		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+	});
+
+	it('Test handleSave successful', async () => {
+		const flushPromises = () => new Promise(setImmediate);
+		const historyMock = { push: jest.fn() };
+		const loadLoopFunction = jest.fn();
+		const handleSave = jest.spyOn(LoopProperties.prototype,'handleSave');
+		LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
+			return Promise.resolve({
+				ok: true,
+				status: 200,
+				text: () => "OK"
+			});
+		});
+
+		const component = shallow(<LoopProperties history={historyMock} 
+						loopCache={loopCache} loadLoopFunction={loadLoopFunction} />)
+
+		component.find('[variant="primary"]').prop('onClick')();
+		await flushPromises();
+		component.update();
+
+		expect(handleSave).toHaveBeenCalledTimes(1);
+		expect(component.state('show')).toEqual(false);
+		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+	});
+
+	it('Onchange event', () => {
+		const event = {target:{name:"dcaeDeployParameters", value:"{\"location_id\": \"testLocation\",\"policy_id\": \"TCA_h2NMX_v1_0_ResourceInstanceName1_tca\"}"}};
+		const component = shallow(<LoopProperties loopCache={loopCache}/>);
+
+		component.find('FormControl').simulate('change', event);
+		component.update();
+
+		expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.location_id).toEqual("testLocation");
 	});
 });

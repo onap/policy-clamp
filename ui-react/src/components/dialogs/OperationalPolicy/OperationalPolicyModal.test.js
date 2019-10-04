@@ -28,13 +28,13 @@ import LoopCache from '../../../api/LoopCache';
 describe('Verify OperationalPolicyModal', () => {
     beforeEach(() => {
         fetch.resetMocks();
-		fetch.mockImplementation(() => {
-			return Promise.resolve({
-				ok: true,
-				status: 200,
-				text: () => "OK"
-			});
-		});
+        fetch.mockImplementation(() => {
+            return Promise.resolve({
+                ok: true,
+                status: 200,
+                text: () => "OK"
+            });
+        });
     })
     const loopCache = new LoopCache({
             "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
@@ -52,7 +52,7 @@ describe('Verify OperationalPolicyModal', () => {
     });
     const historyMock = { push: jest.fn() };
     const flushPromises = () => new Promise(setImmediate);
-	
+
     it('Test handleClose', () => {
       const handleClose = jest.spyOn(OperationalPolicyModal.prototype,'handleClose');
       const component = mount(<OperationalPolicyModal history={historyMock} loopCache={loopCache}/>)
@@ -61,13 +61,14 @@ describe('Verify OperationalPolicyModal', () => {
 
       expect(handleClose).toHaveBeenCalledTimes(1);
       expect(component.state('show')).toEqual(false);
-      expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
+      expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
     });
 
     it('Test handleSave', async () => {
         const loadLoopFunction = jest.fn();
         const handleSave = jest.spyOn(OperationalPolicyModal.prototype,'handleSave');
-        const component = mount(<OperationalPolicyModal history={historyMock} loopCache={loopCache} loadLoopFunction={loadLoopFunction} />)
+        const component = mount(<OperationalPolicyModal history={historyMock} 
+                          loopCache={loopCache} loadLoopFunction={loadLoopFunction} />)
 
         component.find('[variant="primary"]').prop('onClick')();
         await flushPromises();
@@ -75,6 +76,6 @@ describe('Verify OperationalPolicyModal', () => {
 
         expect(handleSave).toHaveBeenCalledTimes(1);
         expect(component.state('show')).toEqual(false);
-        expect(historyMock.push.mock.calls[0]).toEqual([ '/', ]);
+        expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
     });
 });
