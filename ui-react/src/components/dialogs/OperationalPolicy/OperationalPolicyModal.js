@@ -54,7 +54,7 @@ export default class OperationalPolicyModal extends React.Component {
 
 		if (errors.length !== 0) {
 			console.error("Errors detected during config policy data validation ", errors);
-			alert(errors);
+			this.props.showAlert(errors);
 		}
 		else {
 			console.info("NO validation errors found in config policy data");

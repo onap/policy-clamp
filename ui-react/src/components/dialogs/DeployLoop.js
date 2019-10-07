@@ -64,14 +64,13 @@ export default class DeployLoop extends React.Component {
 		LoopService.updateGlobalProperties(loopName, this.state.temporaryPropertiesJson).then(resp => {
 			this.setState({ show: false });
 
-			console.log("Perform action: deploy");
 			LoopActionService.performAction(loopName, "deploy").then(pars => {
-				alert("Action deploy successfully performed");
+				this.props.showAlert("Action deploy successfully performed");
 				// refresh status and update loop logs
 				this.refreshStatus(loopName);
 			})
 			.catch(error => {
-				alert("Action deploy failed");
+				this.props.showAlert("Action deploy failed");
 				// refresh status and update loop logs
 				this.refreshStatus(loopName);
 			});
@@ -84,7 +83,7 @@ export default class DeployLoop extends React.Component {
 			this.props.history.push('/');
 		})
 		.catch(error => {
-			alert("Refresh status failed");
+			this.props.showAlert("Refresh status failed");
 			this.props.history.push('/');
 		});
 	}

@@ -50,14 +50,14 @@ export default class PerformActions extends React.Component {
 	componentDidMount() {
 		const action = this.state.loopAction;
 		const loopName = this.state.loopName;
-		console.log("Perform action:" + action);
+
 		LoopActionService.performAction(loopName, action).then(pars => {
-			alert("Action " + action + " successfully performed");
+			this.props.showAlert("Action " + action + " successfully performed");
 			// refresh status and update loop logs
 			this.refreshStatus(loopName);
 		})
 		.catch(error => {
-			alert("Action " + action + " failed");
+			this.props.showAlert("Action " + action + " failed");
 			// refresh status and update loop logs
 			this.refreshStatus(loopName);
 		});

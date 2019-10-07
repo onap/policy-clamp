@@ -22,7 +22,7 @@
  */
 import React from 'react';
 import LoopActionService from '../../api/LoopActionService';
-import Spinner from 'react-bootstrap/Spinner'
+import Spinner from 'react-bootstrap/Spinner';
 import styled from 'styled-components';
 
 const StyledSpinnerDiv = styled.div`
@@ -42,15 +42,14 @@ export default class RefreshStatus extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log("Refresh status for: " + this.state.loopName);
 		// refresh status and update loop logs
 		LoopActionService.refreshStatus(this.state.loopName).then(data => {
-			alert("Status successfully refreshed")
+			this.props.showAlert("Status successfully refreshed");
 			this.props.updateLoopFunction(data);
 			this.props.history.push('/');
 		})
 		.catch(error => {
-			alert("Status refreshing failed");
+			this.props.showAlert("Status refreshing failed");
 			this.props.history.push('/');
 		});
 	}

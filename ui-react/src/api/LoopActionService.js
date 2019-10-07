@@ -24,7 +24,7 @@
 export default class LoopActionService{
 
 	static performAction(cl_name, uiAction) {
-		console.log("LoopActionService perform action: " + uiAction + " closedloopName=" + cl_name);
+		console.info("LoopActionService perform action: " + uiAction + " closedloopName=" + cl_name);
 		const svcAction = uiAction.toLowerCase();
  		return fetch("/restservices/clds/v2/loop/" + svcAction + "/" + cl_name, {
  				method: 'PUT',
@@ -38,18 +38,18 @@ export default class LoopActionService{
  			}
  		})
  		.then(function (data) {
-			alert("Action Successful: " + uiAction);
+			console.info("Action Successful: " + uiAction);
  			return data;
  		})
  		.catch(function(error) {
- 			console.log("Action Failure: " + uiAction);
+ 			console.info("Action Failure: " + uiAction);
  			return Promise.reject(error);
  		});
  	}
 
 
 	static refreshStatus(cl_name) {
-		console.log("Refresh the status for closedloopName=" + cl_name);
+		console.info("Refresh the status for closedloopName=" + cl_name);
 
 		return fetch("/restservices/clds/v2/loop/getstatus/" + cl_name, {
 			method: 'GET',

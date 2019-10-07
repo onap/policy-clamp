@@ -36,6 +36,7 @@ describe('Verify PerformActions', () => {
 		const flushPromises = () => new Promise(setImmediate);
 		const historyMock = { push: jest.fn() };
 		const updateLoopFunction = jest.fn();
+		const showAlert = jest.fn();
 		
 		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
@@ -44,21 +45,19 @@ describe('Verify PerformActions', () => {
 				json: () => {}
 			});
 		});
-		const jsdomAlert = window.alert;
-		window.alert = () => {};
 		const component = shallow(<PerformActions loopCache={loopCache} 
-					loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} />)
+					loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showAlert={showAlert} />)
 		await flushPromises();
 		component.update();
 
 		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-		window.alert = jsdomAlert;
 	});
 
 	it('Test the render method action successful', async () => {
 		const flushPromises = () => new Promise(setImmediate);
 		const historyMock = { push: jest.fn() };
 		const updateLoopFunction = jest.fn();
+		const showAlert = jest.fn();
 
 		LoopActionService.performAction = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
@@ -74,15 +73,12 @@ describe('Verify PerformActions', () => {
 				json: () => {}
 			});
 		});
-		const jsdomAlert = window.alert;
-		window.alert = () => {};
 		const component = shallow(<PerformActions loopCache={loopCache} 
-						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} />)
+						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showAlert={showAlert} />)
 		await flushPromises();
 		component.update();
 
 		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
-		window.alert = jsdomAlert;
 	});
 
 });
