@@ -30,6 +30,9 @@ import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.util.Date;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.builder.ExchangeBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -38,7 +41,6 @@ import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.util.HttpConnectionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +50,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DcaeInventoryServices {
 
+    @Autowired
+    CamelContext camelContext;
+
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeInventoryServices.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
@@ -55,15 +60,13 @@ public class DcaeInventoryServices {
     public static final String DCAE_INVENTORY_RETRY_INTERVAL = "dcae.intentory.retry.interval";
     public static final String DCAE_INVENTORY_RETRY_LIMIT = "dcae.intentory.retry.limit";
     private final ClampProperties refProp;
-    private final HttpConnectionManager httpConnectionManager;
 
     /**
      * Constructor.
      */
     @Autowired
-    public DcaeInventoryServices(ClampProperties refProp, HttpConnectionManager httpConnectionManager) {
+    public DcaeInventoryServices(ClampProperties refProp) {
         this.refProp = refProp;
-        this.httpConnectionManager = httpConnectionManager;
     }
 
     private int getTotalCountFromDcaeInventoryResponse(String responseStr) throws ParseException {
@@ -96,19 +99,7 @@ public class DcaeInventoryServices {
     public DcaeInventoryResponse getDcaeInformation(String artifactName, String serviceUuid, String resourceUuid)
             throws IOException, ParseException, InterruptedException {
         LoggingUtils.setTargetContext("DCAE", "getDcaeInformation");
-        String queryString = "?asdcResourceId=" + resourceUuid + "&asdcServiceId=" + serviceUuid + "&typeName="
-                + artifactName;
-        String fullUrl = refProp.getStringValue(DCAE_INVENTORY_URL) + "/dcae-service-types" + queryString;
-        logger.info("Dcae Inventory Service full url - " + fullUrl);
-        DcaeInventoryResponse response = queryDcaeInventory(fullUrl);
-        LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
-        Date startTime = new Date();
-        LoggingUtils.setTimeContext(startTime, new Date());
-        return response;
-    }
 
-    private DcaeInventoryResponse queryDcaeInventory(String fullUrl)
-            throws IOException, InterruptedException, ParseException {
         int retryInterval = 0;
         int retryLimit = 1;
         if (refProp.getStringValue(DCAE_INVENTORY_RETRY_LIMIT) != null) {
@@ -118,18 +109,31 @@ public class DcaeInventoryServices {
             retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
         }
         for (int i = 0; i < retryLimit; i++) {
+            Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext)
+                    .withProperty("blueprintResourceId", resourceUuid).withProperty("blueprintServiceId", serviceUuid)
+                    .withProperty("blueprintName", artifactName).build();
             metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
-            String response = httpConnectionManager.doHttpRequest(fullUrl, "GET", null, null, "DCAE", null, null);
-            int totalCount = getTotalCountFromDcaeInventoryResponse(response);
-            metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
-            if (totalCount > 0) {
-                logger.info("getDcaeInformation, answer from DCAE inventory:" + response);
-                return getItemsFromDcaeInventoryResponse(response);
+
+            Exchange exchangeResponse = camelContext.createProducerTemplate()
+                    .send("direct:get-dcae-blueprint-inventory", myCamelExchange);
+
+            if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
+                String dcaeResponse = (String) exchangeResponse.getIn().getBody();
+                int totalCount = getTotalCountFromDcaeInventoryResponse(dcaeResponse);
+                metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
+                if (totalCount > 0) {
+                    logger.info("getDcaeInformation, answer from DCAE inventory:" + dcaeResponse);
+                    LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
+                    Date startTime = new Date();
+                    LoggingUtils.setTimeContext(startTime, new Date());
+                    return getItemsFromDcaeInventoryResponse(dcaeResponse);
+                } else {
+                    logger.info("Dcae inventory totalCount returned is 0, so waiting " + retryInterval
+                            + "ms before retrying ...");
+                    // wait for a while and try to connect to DCAE again
+                    Thread.sleep(retryInterval);
+                }
             }
-            logger.info(
-                    "Dcae inventory totalCount returned is 0, so waiting " + retryInterval + "ms before retrying ...");
-            // wait for a while and try to connect to DCAE again
-            Thread.sleep(retryInterval);
         }
         logger.warn("Dcae inventory totalCount returned is still 0, after " + retryLimit + " attempts, returning NULL");
         return null;
