@@ -117,7 +117,7 @@ public class MicroServicePolicy implements Serializable, Policy {
         this.policyTosca = policyTosca;
         this.shared = shared;
         this.jsonRepresentation = JsonUtils.GSON_JPA_MODEL
-                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyTosca), JsonObject.class);
+                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyTosca, modelType), JsonObject.class);
         this.usedByLoops = usedByLoops;
     }
 

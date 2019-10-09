@@ -61,10 +61,12 @@ public class ToscaYamlToJsonConvertor {
     /**
      * Parses Tosca YAML string.
      *
-     * @param yamlString YAML string
+     * @param yamlString     YAML string
+     * @param modelTypeToUse The model type that must be used to obtain the Json
+     *                       Schema
      * @return JSON string
      */
-    public String parseToscaYaml(String yamlString) {
+    public String parseToscaYaml(String yamlString, String modelTypeToUse) {
 
         Yaml yaml = new Yaml();
         LinkedHashMap<String, Object> loadedYaml = yaml.load(yamlString);
@@ -76,7 +78,7 @@ public class ToscaYamlToJsonConvertor {
         JSONObject jsonParentObject = new JSONObject();
         JSONObject jsonTempObject = new JSONObject();
         parseNodeAndDataType(loadedYaml, nodeTypes, dataNodes);
-        populateJsonEditorObject(loadedYaml, nodeTypes, dataNodes, jsonParentObject, jsonTempObject);
+        populateJsonEditorObject(loadedYaml, nodeTypes, dataNodes, jsonParentObject, jsonTempObject, modelTypeToUse);
         if (jsonTempObject.length() > 0) {
             jsonParentObject = jsonTempObject;
         }
@@ -99,75 +101,68 @@ public class ToscaYamlToJsonConvertor {
             } else if (n.getKey().contains(ToscaSchemaConstants.POLICY_DATA)) {
                 dataNodes.put(n.getKey(), n.getValue());
             }
-
         });
     }
 
     @SuppressWarnings("unchecked")
     private void populateJsonEditorObject(LinkedHashMap<String, Object> map, LinkedHashMap<String, Object> nodeTypes,
-            LinkedHashMap<String, Object> dataNodes, JSONObject jsonParentObject, JSONObject jsonTempObject) {
+            LinkedHashMap<String, Object> dataNodes, JSONObject jsonParentObject, JSONObject jsonTempObject,
+            String modelTypeToUse) {
 
-        Map<String, JSONObject> jsonEntrySchema = new HashMap();
+        Map<String, JSONObject> jsonEntrySchema = new HashMap<>();
         jsonParentObject.put(JsonEditorSchemaConstants.TYPE, JsonEditorSchemaConstants.TYPE_OBJECT);
-        nodeTypes.entrySet().stream().forEach(nt -> {
-            if (nt.getValue() instanceof Map) {
-                ((LinkedHashMap<String, Object>) nt.getValue()).entrySet().forEach(ntElement -> {
-                    if (ntElement.getKey().equalsIgnoreCase(ToscaSchemaConstants.PROPERTIES)) {
-                        JSONArray rootNodeArray = new JSONArray();
-                        if (ntElement.getValue() instanceof Map) {
-                            ((LinkedHashMap<String, Object>) ntElement.getValue()).entrySet()
-                                    .forEach((ntPropertiesElement) -> {
-                                        boolean isListNode = false;
+        if (nodeTypes.get(modelTypeToUse) instanceof Map) {
+            ((LinkedHashMap<String, Object>) nodeTypes.get(modelTypeToUse)).entrySet().forEach(ntElement -> {
+                if (ntElement.getKey().equalsIgnoreCase(ToscaSchemaConstants.PROPERTIES)) {
+                    JSONArray rootNodeArray = new JSONArray();
+                    if (ntElement.getValue() instanceof Map) {
+                        ((LinkedHashMap<String, Object>) ntElement.getValue()).entrySet()
+                                .forEach((ntPropertiesElement) -> {
+                                    boolean isListNode = false;
+                                    parseDescription((LinkedHashMap<String, Object>) ntPropertiesElement.getValue(),
+                                            jsonParentObject);
+                                    LinkedHashMap<String, Object> parentPropertiesMap = (LinkedHashMap<String, Object>) ntPropertiesElement
+                                            .getValue();
+                                    if (parentPropertiesMap.containsKey(ToscaSchemaConstants.TYPE)
+                                            && ((String) parentPropertiesMap.get(ToscaSchemaConstants.TYPE))
+                                                    .contains(ToscaSchemaConstants.TYPE_MAP)
+                                            && parentPropertiesMap.containsKey(ToscaSchemaConstants.ENTRY_SCHEMA)) {
+                                        parentPropertiesMap = (LinkedHashMap<String, Object>) parentPropertiesMap
+                                                .get(ToscaSchemaConstants.ENTRY_SCHEMA);
+                                        isListNode = true;
+                                    }
+                                    if (parentPropertiesMap.containsKey(ToscaSchemaConstants.TYPE)
+                                            && ((String) parentPropertiesMap.get(ToscaSchemaConstants.TYPE))
+                                                    .contains(ToscaSchemaConstants.POLICY_DATA)) {
+                                        ((LinkedHashMap<String, Object>) dataNodes
+                                                .get(parentPropertiesMap.get(ToscaSchemaConstants.TYPE))).entrySet()
+                                                        .stream().forEach(pmap -> {
+                                                            if (pmap.getKey().equalsIgnoreCase(
+                                                                    ToscaSchemaConstants.PROPERTIES)) {
+                                                                parseToscaProperties(ToscaSchemaConstants.POLICY_NODE,
+                                                                        (LinkedHashMap<String, Object>) pmap.getValue(),
+                                                                        jsonParentObject, rootNodeArray,
+                                                                        jsonEntrySchema, dataNodes,
+                                                                        incrementSimpleTypeOrder());
+                                                            }
+                                                        });
+                                    }
+                                    if (isListNode) {
+                                        jsonTempObject.put(JsonEditorSchemaConstants.TYPE,
+                                                JsonEditorSchemaConstants.TYPE_ARRAY);
                                         parseDescription((LinkedHashMap<String, Object>) ntPropertiesElement.getValue(),
-                                                jsonParentObject);
-                                        LinkedHashMap<String, Object> parentPropertiesMap = (LinkedHashMap<String, Object>) ntPropertiesElement
-                                                .getValue();
-                                        if (parentPropertiesMap.containsKey(ToscaSchemaConstants.TYPE)
-                                                && ((String) parentPropertiesMap.get(ToscaSchemaConstants.TYPE))
-                                                        .contains(ToscaSchemaConstants.TYPE_MAP)
-                                                && parentPropertiesMap.containsKey(ToscaSchemaConstants.ENTRY_SCHEMA)) {
-                                            parentPropertiesMap = (LinkedHashMap<String, Object>) parentPropertiesMap
-                                                    .get(ToscaSchemaConstants.ENTRY_SCHEMA);
-                                            isListNode = true;
-                                        }
-                                        if (parentPropertiesMap.containsKey(ToscaSchemaConstants.TYPE)
-                                                && ((String) parentPropertiesMap.get(ToscaSchemaConstants.TYPE))
-                                                        .contains(ToscaSchemaConstants.POLICY_DATA)) {
-                                            ((LinkedHashMap<String, Object>) dataNodes
-                                                    .get(parentPropertiesMap.get(ToscaSchemaConstants.TYPE))).entrySet()
-                                                            .stream().forEach(pmap -> {
-                                                                if (pmap.getKey().equalsIgnoreCase(
-                                                                        ToscaSchemaConstants.PROPERTIES)) {
-                                                                    parseToscaProperties(
-                                                                            ToscaSchemaConstants.POLICY_NODE,
-                                                                            (LinkedHashMap<String, Object>) pmap
-                                                                                    .getValue(),
-                                                                            jsonParentObject, rootNodeArray,
-                                                                            jsonEntrySchema, dataNodes,
-                                                                            incrementSimpleTypeOrder());
-                                                                }
-
-                                                            });
-
-                                        }
-                                        if (isListNode) {
-                                            jsonTempObject.put(JsonEditorSchemaConstants.TYPE,
-                                                    JsonEditorSchemaConstants.TYPE_ARRAY);
-                                            parseDescription(
-                                                    (LinkedHashMap<String, Object>) ntPropertiesElement.getValue(),
-                                                    jsonTempObject);
-                                            jsonTempObject.put(JsonEditorSchemaConstants.ITEMS, jsonParentObject);
-                                            jsonTempObject.put(JsonEditorSchemaConstants.FORMAT,
-                                                    JsonEditorSchemaConstants.CUSTOM_KEY_FORMAT_TABS_TOP);
-                                            jsonTempObject.put(JsonEditorSchemaConstants.UNIQUE_ITEMS,
-                                                    JsonEditorSchemaConstants.TRUE);
-                                        }
-                                    });
-                        }
+                                                jsonTempObject);
+                                        jsonTempObject.put(JsonEditorSchemaConstants.ITEMS, jsonParentObject);
+                                        jsonTempObject.put(JsonEditorSchemaConstants.FORMAT,
+                                                JsonEditorSchemaConstants.CUSTOM_KEY_FORMAT_TABS_TOP);
+                                        jsonTempObject.put(JsonEditorSchemaConstants.UNIQUE_ITEMS,
+                                                JsonEditorSchemaConstants.TRUE);
+                                    }
+                                });
                     }
-                });
-            }
-        });
+                }
+            });
+        }
     }
 
     @SuppressWarnings("unchecked")

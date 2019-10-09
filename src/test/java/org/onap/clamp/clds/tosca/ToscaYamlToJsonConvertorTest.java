@@ -45,7 +45,8 @@ public class ToscaYamlToJsonConvertorTest {
         String toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml");
         ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
 
-        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml);
+        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml,
+                "onap.policies.monitoring.cdap.tca.hi.lo.app");
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json.json"),
                 parsedJsonSchema, true);
@@ -62,7 +63,7 @@ public class ToscaYamlToJsonConvertorTest {
         String toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tosca-with-constraints.yaml");
         ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
 
-        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml);
+        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml,"onap.policies.monitoring.example.app");
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-constraints" +
                                                                              ".json"),
@@ -80,7 +81,7 @@ public class ToscaYamlToJsonConvertorTest {
         String toscaModelYaml = ResourceFileUtil.getResourceAsString("tosca/tosca-with-datatypes.yaml");
         ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
 
-        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml);
+        String parsedJsonSchema = convertor.parseToscaYaml(toscaModelYaml,"onap.policies.monitoring.example.app");
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-datatypes.json"),
                                 parsedJsonSchema, true);
