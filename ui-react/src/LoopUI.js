@@ -33,6 +33,7 @@ import LoopLogs from './components/loop_viewer/logs/LoopLogs';
 import LoopStatus from './components/loop_viewer/status/LoopStatus';
 import UserService from './api/UserService';
 import LoopCache from './api/LoopCache';
+import LoopActionService from './api/LoopActionService';
 
 import { Route } from 'react-router-dom'
 import OpenLoopModal from './components/dialogs/OpenLoop/OpenLoopModal';
@@ -227,7 +228,14 @@ export default class LoopUI extends React.Component {
 	loadLoop(loopName) {
 		LoopService.getLoop(loopName).then(loop => {
 			console.debug("Updating loopCache");
-			this.updateLoopCache(loop);
+			LoopActionService.refreshStatus(loopName).then(data => {
+				this.updateLoopCache(data);
+				this.props.history.push('/');
+			})
+			.catch(error => {
+				this.updateLoopCache(loop);
+				this.props.history.push('/');
+			});
 		});
 	}
 

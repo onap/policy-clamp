@@ -62,7 +62,7 @@ public class PolicyComponent extends ExternalComponent {
          * on by one, each time we increase the level we can't decrease it anymore.
          * That's why it starts with the lowest one SENT_AND_DEPLOYED.
          */
-        super(NOT_SENT);
+        super(SENT_AND_DEPLOYED);
     }
 
     @Override
