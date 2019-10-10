@@ -144,16 +144,22 @@ public class ClampCadiFilter extends CadiFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         try {
-            String certHeader = URLDecoder.decode(((HttpServletRequest) request).getHeader("X-SSL-Cert"),
-                    StandardCharsets.UTF_8.toString());
+            String certHeader = ((HttpServletRequest) request).getHeader("X-SSL-Cert");
             if (certHeader != null) {
-
                 CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
                 X509Certificate cert = (X509Certificate) certificateFactory
-                        .generateCertificate(new ByteArrayInputStream(certHeader.getBytes()));
-                request.setAttribute("javax.servlet.request.X509Certificate", cert);
-
+                        .generateCertificate(new ByteArrayInputStream(
+                                URLDecoder.decode(certHeader, StandardCharsets.UTF_8.toString()).getBytes()));
+                X509Certificate[] certifArray = ((X509Certificate[]) request
+                        .getAttribute("javax.servlet.request.X509Certificate"));
+                if (certifArray == null) {
+                    certifArray = new X509Certificate[] { cert };
+                    request.setAttribute("javax.servlet.request.X509Certificate", certifArray);
+                } else {
+                    certifArray[0] = cert;
+                }
             }
+
         } catch (CertificateException e) {
             logger.error("Unable to inject the X.509 certificate", e);
         }
