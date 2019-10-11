@@ -31,9 +31,13 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.HashSet;
 
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.onap.clamp.clds.model.dcae.DcaeOperationStatusResponse;
 import org.onap.clamp.loop.components.external.DcaeComponent;
+import org.onap.clamp.loop.components.external.ExternalComponentState;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 
 public class DcaeComponentTest {
@@ -90,4 +94,61 @@ public class DcaeComponentTest {
         assertThat(unDeploymentPayload).isEqualTo(expectedPayload);
     }
 
+    @Test
+    public void computeStateTest() throws IOException {
+        Exchange exchange = Mockito.mock(Exchange.class);
+        Message message = Mockito.mock(Message.class);
+        Exchange exchange2 = Mockito.mock(Exchange.class);
+        Mockito.when(exchange.getIn()).thenReturn(message);
+        Mockito.when(message.getExchange()).thenReturn(exchange2);
+        Mockito.when(exchange2.getProperty("dcaeResponse")).thenReturn(null);
+
+        DcaeComponent dcae = new DcaeComponent();
+
+        // initial state
+        ExternalComponentState state = dcae.computeState(exchange);
+        assertThat(state.getStateName()).isEqualTo("BLUEPRINT_DEPLOYED");
+
+        // OperationalType = install
+        DcaeOperationStatusResponse dcaeResponse = Mockito.mock(DcaeOperationStatusResponse.class); 
+        Mockito.when(dcaeResponse.getOperationType()).thenReturn("install");
+
+        Mockito.when(dcaeResponse.getStatus()).thenReturn("succeeded");
+        Mockito.when(exchange2.getProperty("dcaeResponse")).thenReturn(dcaeResponse);
+        ExternalComponentState state2 = dcae.computeState(exchange);
+        assertThat(state2.getStateName()).isEqualTo("MICROSERVICE_INSTALLED_SUCCESSFULLY");
+        Mockito.when(dcaeResponse.getStatus()).thenReturn("processing");
+        ExternalComponentState state3 = dcae.computeState(exchange);
+        assertThat(state3.getStateName()).isEqualTo("PROCESSING_MICROSERVICE_INSTALLATION");
+
+        Mockito.when(dcaeResponse.getStatus()).thenReturn("failed");
+        ExternalComponentState state4 = dcae.computeState(exchange);
+        assertThat(state4.getStateName()).isEqualTo("MICROSERVICE_INSTALLATION_FAILED");
+
+        // OperationalType = uninstall
+        Mockito.when(dcaeResponse.getOperationType()).thenReturn("uninstall");
+
+        Mockito.when(dcaeResponse.getStatus()).thenReturn("succeeded");
+        Mockito.when(exchange2.getProperty("dcaeResponse")).thenReturn(dcaeResponse);
+        ExternalComponentState state5 = dcae.computeState(exchange);
+        assertThat(state5.getStateName()).isEqualTo("MICROSERVICE_UNINSTALLED_SUCCESSFULLY");
+
+        Mockito.when(dcaeResponse.getStatus()).thenReturn("processing");
+        ExternalComponentState state6 = dcae.computeState(exchange);
+        assertThat(state6.getStateName()).isEqualTo("PROCESSING_MICROSERVICE_UNINSTALLATION");
+
+        Mockito.when(dcaeResponse.getStatus()).thenReturn("failed");
+        ExternalComponentState state7 = dcae.computeState(exchange);
+        assertThat(state7.getStateName()).isEqualTo("MICROSERVICE_UNINSTALLATION_FAILED");
+
+        // error cases
+        Mockito.when(dcaeResponse.getOperationType()).thenReturn("whatever");
+        ExternalComponentState state8 = dcae.computeState(exchange);
+        assertThat(state8.getStateName()).isEqualTo("IN_ERROR");
+
+        Mockito.when(dcaeResponse.getOperationType()).thenReturn("install");
+        Mockito.when(dcaeResponse.getStatus()).thenReturn("anythingelse");
+        ExternalComponentState state9 = dcae.computeState(exchange);
+        assertThat(state9.getStateName()).isEqualTo("IN_ERROR");
+    }
 }

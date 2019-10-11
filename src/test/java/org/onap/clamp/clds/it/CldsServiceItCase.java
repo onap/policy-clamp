@@ -23,10 +23,13 @@
 
 package org.onap.clamp.clds.it;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +38,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.NotAuthorizedException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +48,6 @@ import org.mockito.Mockito;
 import org.onap.clamp.clds.model.CldsInfo;
 import org.onap.clamp.clds.service.CldsService;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -66,15 +69,12 @@ public class CldsServiceItCase {
 
     @Autowired
     private CldsService cldsService;
-    private String bpmnText;
-    private String imageText;
-    private String bpmnPropText;
-    private String docText;
 
-    private Authentication authentication;
-    private List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
     private LoggingUtils util;
-
+    private SecurityContext securityContext = mock(SecurityContext.class);
+    private Authentication auth = Mockito.mock(Authentication.class);
+    private UserDetails userDetails = Mockito.mock(UserDetails.class);
+    private List<GrantedAuthority> authorityList = new LinkedList<GrantedAuthority>();
     /**
      * Setup the variable before the tests execution.
      *
@@ -82,20 +82,6 @@ public class CldsServiceItCase {
      */
     @Before
     public void setupBefore() throws IOException {
-        bpmnText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/tca-template.xml");
-        imageText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/tca-img.xml");
-        bpmnPropText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/model-properties.json");
-        docText = ResourceFileUtil.getResourceAsString("example/model-properties/tca_new/doc-text.yaml");
-
-        authList.add(new SimpleGrantedAuthority("permission-type-cl-manage|dev|*"));
-        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|read"));
-        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|update"));
-        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|read"));
-        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
-        authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
-        authList.add(new SimpleGrantedAuthority("permission-type-cl-event|dev|*"));
-        authentication = new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
-
         util = Mockito.mock(LoggingUtils.class);
         Mockito.doNothing().when(util).entering(Matchers.any(HttpServletRequest.class), Matchers.any(String.class));
         cldsService.setLoggingUtil(util);
@@ -104,12 +90,9 @@ public class CldsServiceItCase {
 
     @Test
     public void testCldsInfoNotAuthorized() {
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Authentication localAuth = Mockito.mock(Authentication.class);
-        UserDetails userDetails = Mockito.mock(UserDetails.class);
         Mockito.when(userDetails.getUsername()).thenReturn("admin");
-        Mockito.when(securityContext.getAuthentication()).thenReturn(localAuth);
-        Mockito.when(localAuth.getPrincipal()).thenReturn(userDetails);
+        Mockito.when(securityContext.getAuthentication()).thenReturn(auth);
+        Mockito.when(auth.getPrincipal()).thenReturn(userDetails);
 
         cldsService.setSecurityContext(securityContext);
         CldsInfo cldsInfo = cldsService.getCldsInfo();
@@ -121,7 +104,17 @@ public class CldsServiceItCase {
 
     @Test
     public void testCldsInfoAuthorized() throws Exception {
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Authentication authentication;
+        List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
+        authList.add(new SimpleGrantedAuthority("permission-type-cl-manage|dev|*"));
+        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|read"));
+        authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|update"));
+        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|read"));
+        authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
+        authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
+        authList.add(new SimpleGrantedAuthority("permission-type-cl-event|dev|*"));
+        authentication = new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
+
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
 
         cldsService.setSecurityContext(securityContext);
@@ -137,5 +130,111 @@ public class CldsServiceItCase {
         in.close();
         assertEquals(cldsInfo.getCldsVersion(), prop.getProperty("clds.version"));
         assertEquals(cldsInfo.getUserName(), "admin");
+    }
+
+    @Test(expected = NotAuthorizedException.class)
+    public void isAuthorizedForVfTestNotAuthorized1() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test(expected = NotAuthorizedException.class)
+    public void isAuthorizedForVfTestNotAuthorized2() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        authorityList.add(new SimpleGrantedAuthority("permission-type-filter-vf|prod|*"));
+        when((List<GrantedAuthority>)auth.getAuthorities()).thenReturn(authorityList);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test(expected = NotAuthorizedException.class)
+    public void isAuthorizedForVfTestNotAuthorized3() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        authorityList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|testId2"));
+        when((List<GrantedAuthority>)auth.getAuthorities()).thenReturn(authorityList);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void isAuthorizedForVfTestNotAuthorized4() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        when(securityContext.getAuthentication()).thenReturn(null);
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    public void isAuthorizedForVfTest1() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        authorityList.add(new SimpleGrantedAuthority("permission-type-filter-vf|*|*"));
+        when((List<GrantedAuthority>)auth.getAuthorities()).thenReturn(authorityList);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    public void isAuthorizedForVfTest2() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        authorityList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
+        when((List<GrantedAuthority>)auth.getAuthorities()).thenReturn(authorityList);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    public void isAuthorizedForVfTest3() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        authorityList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|testId"));
+        when((List<GrantedAuthority>)auth.getAuthorities()).thenReturn(authorityList);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    public void isAuthorizedForVfTest4() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        authorityList.add(new SimpleGrantedAuthority("permission-type-filter-vf|*|testId"));
+        when((List<GrantedAuthority>)auth.getAuthorities()).thenReturn(authorityList);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        cldsService.setSecurityContext(securityContext);
+        boolean res = cldsService.isAuthorizedForVf("testId");
+        assertThat(res).isTrue();
+    }
+
+    @Test
+    public void getUserIdTest() throws Exception {
+        when(userDetails.getUsername()).thenReturn("testName");
+        when(auth.getPrincipal()).thenReturn(userDetails);
+        when(securityContext.getAuthentication()).thenReturn(auth);
+
+        cldsService.setSecurityContext(securityContext);
+        assertThat(cldsService.getUserId()).isEqualTo("testName");
     }
 }
