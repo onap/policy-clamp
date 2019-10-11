@@ -5,10 +5,10 @@
 Release Notes
 =============
 
-Version: 4.1.2
+Version: 4.1.3
 --------------
 
-:Release Date: 2019-09-18
+:Release Date: 2019-10-11
 
 **New Features**
 
