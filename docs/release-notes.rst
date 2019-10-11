@@ -26,6 +26,7 @@ The main goal of the El Alto release was to:
 **Known Issues**
 
     - `CLAMP-506 <https://jira.onap.org/browse/CLAMP-506>`_ Elastic Search Clamp image cannot be built anymore(SearchGuard DMCA issue)
+    - `CLAMP-519 <https://jira.onap.org/browse/CLAMP-519>`_ Clamp cannot authenticate to AAF(Local authentication as workaround)
 
 
 **Security Notes**
