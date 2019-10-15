@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.onap.aaf.cadi.config.Config;
 import org.onap.aaf.cadi.filter.CadiFilter;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -150,13 +151,17 @@ public class ClampCadiFilter extends CadiFilter {
                 X509Certificate cert = (X509Certificate) certificateFactory
                         .generateCertificate(new ByteArrayInputStream(
                                 URLDecoder.decode(certHeader, StandardCharsets.UTF_8.toString()).getBytes()));
+                X509Certificate caCert = (X509Certificate) certificateFactory
+                        .generateCertificate(new ByteArrayInputStream(ResourceFileUtil.getResourceAsString("clds/aaf/ssl/ca-certs.pem").getBytes()));
+
                 X509Certificate[] certifArray = ((X509Certificate[]) request
                         .getAttribute("javax.servlet.request.X509Certificate"));
                 if (certifArray == null) {
-                    certifArray = new X509Certificate[] { cert };
+                    certifArray = new X509Certificate[] { cert, caCert };
                     request.setAttribute("javax.servlet.request.X509Certificate", certifArray);
                 } else {
                     certifArray[0] = cert;
+                    certifArray[1] = caCert;
                 }
             }
 
