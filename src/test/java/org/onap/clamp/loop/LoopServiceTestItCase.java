@@ -319,6 +319,40 @@ public class LoopServiceTestItCase {
         assertThat(loopLogService.isExisting(((LoopLog) loop.getLoopLogs().toArray()[0]).getId())).isFalse();
     }
 
+    @Test
+    @Transactional
+    public void testUpdateLoopState() {
+        saveTestLoopToDb();
+        Loop loop = loopService.getLoop(EXAMPLE_LOOP_NAME);
+        loopService.updateLoopState(loop, "SUBMITTED");
+        Loop updatedLoop = loopService.getLoop(EXAMPLE_LOOP_NAME);
+        assertThat(updatedLoop.getLastComputedState()).isEqualTo(LoopState.SUBMITTED);
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateDcaeDeploymentFields() {
+        saveTestLoopToDb();
+        Loop loop = loopService.getLoop(EXAMPLE_LOOP_NAME);
+        loopService.updateDcaeDeploymentFields(loop,"CLAMP_c5ce429a-f570-48c5-a7ea-53bed8f86f85",
+                                               "https4://deployment-handler.onap:8443");
+        loop = loopService.getLoop(EXAMPLE_LOOP_NAME);
+        assertThat(loop.getDcaeDeploymentId()).isEqualTo("CLAMP_c5ce429a-f570-48c5-a7ea-53bed8f86f85");
+        assertThat(loop.getDcaeDeploymentStatusUrl()).isEqualTo("https4://deployment-handler.onap:8443");
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateMicroservicePolicy() {
+        saveTestLoopToDb();
+        assertThat(microServicePolicyService.isExisting("policyName")).isFalse();
+        MicroServicePolicy microServicePolicy = new MicroServicePolicy("policyName", "",
+                                                                       "tosca_definitions_version: tosca_simple_yaml_1_0_0", false,
+                                                                       JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+        loopService.updateMicroservicePolicy(EXAMPLE_LOOP_NAME, microServicePolicy);
+        assertThat(microServicePolicyService.isExisting("policyName")).isTrue();
+    }
+
     private Loop createTestLoop(String loopName, String loopBlueprint, String loopSvg) {
         return new Loop(loopName, loopBlueprint, loopSvg);
     }
