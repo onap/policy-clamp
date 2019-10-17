@@ -1,0 +1,154 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify LoopUI Test the render method 1`] = `
+<styled.div
+  id="main_div"
+>
+  <Route
+    path="/operationalPolicyModal"
+    render={[Function]}
+  />
+  <Route
+    path="/configurationPolicyModal/:componentName"
+    render={[Function]}
+  />
+  <Route
+    path="/openLoop"
+    render={[Function]}
+  />
+  <Route
+    path="/loopProperties"
+    render={[Function]}
+  />
+  <Route
+    path="/userInfo"
+    render={[Function]}
+  />
+  <Route
+    path="/closeLoop"
+    render={[Function]}
+  />
+  <Route
+    path="/submit"
+    render={[Function]}
+  />
+  <Route
+    path="/stop"
+    render={[Function]}
+  />
+  <Route
+    path="/restart"
+    render={[Function]}
+  />
+  <Route
+    path="/delete"
+    render={[Function]}
+  />
+  <Route
+    path="/undeploy"
+    render={[Function]}
+  />
+  <Route
+    path="/deploy"
+    render={[Function]}
+  />
+  <Route
+    path="/refreshStatus"
+    render={[Function]}
+  />
+  <Route
+    path="/logout"
+    render={[Function]}
+  />
+  <GlobalStyleComponent />
+  <Alert
+    closeLabel="Close alert"
+    dismissible={true}
+    onClose={[Function]}
+    show={false}
+    transition={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "defaultProps": Object {
+          "appear": false,
+          "in": false,
+          "mountOnEnter": false,
+          "timeout": 300,
+          "unmountOnExit": false,
+        },
+        "displayName": "Fade",
+        "render": [Function],
+      }
+    }
+    variant="danger"
+  />
+  <Navbar
+    collapseOnSelect={false}
+    expand={true}
+    variant="light"
+  >
+    <NavbarBrand>
+      <img
+        alt=""
+        height="50px"
+        src={null}
+        width="234px"
+      />
+      <styled.a>
+        CLAMP
+      </styled.a>
+    </NavbarBrand>
+    <NavbarToggle
+      aria-controls="responsive-navbar-nav"
+      label="Toggle navigation"
+    />
+    <MenuBar
+      loopName="testLoopName"
+    />
+    <NavbarText>
+      <styled.a>
+        Signed in as: 
+      </styled.a>
+      <Styled(Link)
+        to="/userInfo"
+      >
+        testUser
+      </Styled(Link)>
+      <Styled(Link)
+        to="/logout/"
+      >
+         (logout)
+      </Styled(Link)>
+    </NavbarText>
+  </Navbar>
+  <styled.div>
+    <styled.div>
+      Loop Viewer - 
+      testLoopName
+    </styled.div>
+    <styled.div>
+      <withRouter(LoopViewSvg)
+        loopCache={
+          LoopCache {
+            "loopJsonCache": Object {},
+          }
+        }
+      />
+      <LoopStatus
+        loopCache={
+          LoopCache {
+            "loopJsonCache": Object {},
+          }
+        }
+      />
+      <LoopLogs
+        loopCache={
+          LoopCache {
+            "loopJsonCache": Object {},
+          }
+        }
+      />
+    </styled.div>
+  </styled.div>
+</styled.div>
+`;

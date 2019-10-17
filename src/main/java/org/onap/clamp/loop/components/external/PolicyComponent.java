@@ -52,6 +52,8 @@ public class PolicyComponent extends ExternalComponent {
             "The policies defined have been created but NOT deployed on the policy engine", 50);
     public static final ExternalComponentState SENT_AND_DEPLOYED = new ExternalComponentState("SENT_AND_DEPLOYED",
             "The policies defined have been created and deployed on the policy engine", 10);
+    public static final ExternalComponentState UNKNOWN = new ExternalComponentState("UNKNOWN",
+            "The current status is not clear. Need to regresh the status to get the current status.", 0);
 
     /**
      * Default constructor.
@@ -62,7 +64,7 @@ public class PolicyComponent extends ExternalComponent {
          * on by one, each time we increase the level we can't decrease it anymore.
          * That's why it starts with the lowest one SENT_AND_DEPLOYED.
          */
-        super(SENT_AND_DEPLOYED);
+        super(UNKNOWN);
     }
 
     @Override
