@@ -26,7 +26,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.onap.clamp</groupId>
 	<artifactId>clds</artifactId>
-	<version>4.1.4-SNAPSHOT</version>
+	<version>4.2.0-SNAPSHOT</version>
 	<name>clamp</name>
 
 
@@ -1102,7 +1102,7 @@
 						</goals>
 						<phase>compile</phase>
 						<configuration>
-							<arguments>install --registry https://registry.npmjs.com/</arguments>
+							<arguments>install</arguments>
 						</configuration>
 					</execution>
 					<execution>
@@ -1122,7 +1122,6 @@
 						</goals>
 						<phase>deploy</phase>
 						<configuration>
-							<skip>true</skip>
 							<arguments>publish --registry ${npm.publish.url}</arguments>
 						</configuration>
 					</execution>
