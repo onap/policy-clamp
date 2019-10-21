@@ -97,7 +97,7 @@
 		<sonar.javascript.lcov.reportPaths>${project.build.directory}/${ui.react.src}/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
 
 		<sonar.exclusions>src/main/resources/**</sonar.exclusions>
-		<sonar.coverage.exclusions>src/main/resources/**,target/ui-react/src/**/*.test.js,target/ui-react/src/setupTests.js,src/main/docker/*.py</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>src/main/resources/**,target/ui-react/src/**/*.test.js,target/ui-react/src/setupTests.js,src/main/docker/kibana/*.py</sonar.coverage.exclusions>
 		<docker.push.registry>localhost:5000</docker.push.registry>
 		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
 		<docker.skip.build>true</docker.skip.build>
