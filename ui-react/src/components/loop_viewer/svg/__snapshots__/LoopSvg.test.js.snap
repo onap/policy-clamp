@@ -1,7 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Verify LoopSvg Test the render method 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
+<styled.div
+  dangerouslySetInnerHTML={
+    Object {
+      "__html": "<svg><text x=\\"20\\" y=\\"40\\">No LOOP (SVG)</text></svg>",
+    }
+  }
+  onClick={[Function]}
+/>
+`;
+
+exports[`Verify LoopSvg Test the render method no loopName 1`] = `
+<styled.div
+  dangerouslySetInnerHTML={
+    Object {
+      "__html": "<svg><text x=\\"20\\" y=\\"40\\">No LOOP (SVG)</text></svg>",
+    }
+  }
+  onClick={[Function]}
+/>
+`;
+
+exports[`Verify LoopSvg Test the render method svg not empty 1`] = `
+<styled.div
+  dangerouslySetInnerHTML={
+    Object {
+      "__html": "<svg><text test</text></svg>",
+    }
+  }
+  onClick={[Function]}
+/>
 `;

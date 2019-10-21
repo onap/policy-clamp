@@ -23,12 +23,111 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import LoopSvg from './LoopSvg';
+import LoopCache from '../../../api/LoopCache';
+import LoopService from '../../../api/LoopService';
 
 describe('Verify LoopSvg', () => {
+    const loopCache = new LoopCache({
+        "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+        "microServicePolicies": [{
+            "name": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca",
+            "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
+            "properties": {"domain": "measurementsForVfScaling"},
+            "shared": false,
+            "jsonRepresentation": {"schema": {}}
+        }],
+        "operationalPolicies": [{
+            "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
+            "configurationsJson": {
+                "guard_policies": {},
+                "operational_policy": {
+                    "controlLoop": {},
+                    "policies": []
+                }
+            }
+        }]
+    });
 
-	it('Test the render method', () => {
-		const component = shallow(<LoopSvg />)
+    it('Test the render method no loopName', () => {
+        const localLoopCache = new LoopCache({
+        "microServicePolicies": [{
+            "name": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca",
+            "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
+            "properties": {"domain": "measurementsForVfScaling"},
+            "shared": false,
+            "jsonRepresentation": {"schema": {}}
+          }]
+        });
+        const component = shallow(
+            <LoopSvg.WrappedComponent loopCache={localLoopCache}/>
+        );
 
-		expect(component).toMatchSnapshot();
-	});
+        expect(component).toMatchSnapshot();
+    });
+
+    it('Test the render method', () => {
+        const component = shallow(
+            <LoopSvg.WrappedComponent  loopCache={loopCache}/>
+        );
+
+        expect(component).toMatchSnapshot();
+    });
+
+    it('Test the render method svg not empty', async () => {
+        const flushPromises = () => new Promise(setImmediate);
+        LoopService.getSvg = jest.fn().mockImplementation(() => {
+            return Promise.resolve("<svg><text test</text></svg>");
+        });
+        const component = shallow(
+            <LoopSvg.WrappedComponent  loopCache={loopCache}/>
+        );
+        await flushPromises();
+        expect(component).toMatchSnapshot();
+    });
+
+    it('Test handleSvgClick', () => {
+        const historyMock = { push: jest.fn() };
+
+        const component = shallow(
+            <LoopSvg.WrappedComponent loopCache={loopCache} history={historyMock}/>
+        );
+        let dummyElement = document.createElement('div');
+        dummyElement.setAttribute("data-element-id","TCA_h2NMX_v1_0_ResourceInstanceName1_tca");
+
+        const event = { target: { parentNode: { parentNode:{ parentNode: dummyElement }}}};
+
+        component.simulate('click', event);
+        component.update();
+
+        expect(historyMock.push.mock.calls[0]).toEqual([ '/configurationPolicyModal/TCA_h2NMX_v1_0_ResourceInstanceName1_tca']);
+
+        //click operational policy
+        dummyElement.setAttribute("data-element-id","OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca");
+        const event2 = { target: { parentNode: { parentNode:{ parentNode: dummyElement }}}};
+
+        component.simulate('click', event2);
+        component.update();
+
+        expect(historyMock.push.mock.calls[1]).toEqual([ '/operationalPolicyModal']);
+    });
+
+    it('Test componentWillReceiveProps method', () => {
+        const localLoopCache = new LoopCache({
+        "microServicePolicies": [{
+            "name": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca",
+            "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
+            "properties": {"domain": "measurementsForVfScaling"},
+            "shared": false,
+            "jsonRepresentation": {"schema": {}}
+          }]
+        });
+        const component = shallow(
+            <LoopSvg.WrappedComponent loopCache={localLoopCache}/>
+        );
+
+        expect(component.state('componentModalMapping').size).toEqual(2);
+
+        component.setProps({loopCache: loopCache});
+        expect(component.state('componentModalMapping').size).toEqual(3);
+    });
 });
