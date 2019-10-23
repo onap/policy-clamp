@@ -16,7 +16,7 @@
 		"test:watch": "jest --watch",
 		"test:coverage": "jest --coverage",
 		"eject": "react-scripts eject",
-		"publish": "npm config ls -l"
+		"publish": "npm publish"
 	},
 	"files": [
 		"src/*.js",
