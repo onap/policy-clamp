@@ -5,7 +5,7 @@
 	"author": "ONAP Clamp Team",
 	"license": "Apache-2.0",
 	"publishConfig": {
-		"registry": "https://nexus3.onap.org/repository/npm.snapshot/"
+		"registry": "https://nexus3.onap.org/repository/npm.public/"
 	},
 	"main": "index.js",
 	"proxy": "https://localhost:8443",
