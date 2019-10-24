@@ -107,7 +107,7 @@
 		<python.http.proxy.param />
 		<tomcat.version>9.0.20</tomcat.version>
 		<ui.react.src>ui-react</ui.react.src>
-		<npm.publish.url>https://nexus3.onap.org/repository/npm/</npm.publish.url>
+		<npm.publish.url>https://nexus3.onap.org/repository/npm.release/</npm.publish.url>
 	</properties>
 
 	<profiles>
