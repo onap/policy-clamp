@@ -114,7 +114,40 @@ With the default log settings, all logs will be generated into console and into 
 
 You can see the swagger definition for the jaxrs apis at `/restservices/clds/v1/openapi.json`
 
+## Clamp AAF
+- Connect to windriver with openvpn
+- create a folder aaf-renewal and go to it
+- create a file aaf.props with that content
+    VERSION=2.1.13
+    DOCKER_REPOSITORY=nexus3.onap.org:10001
+    HOSTNAME=
+    CONTAINER_NS=onap
+    AAF_FQDN=aaf-onap-test.osaaf.org
+    AAF_FQDN_IP=10.12.5.145
+    DEPLOY_FQI=deployer@people.osaaf.org
+    APP_FQDN=clamp
+    APP_FQI=clamp@clamp.onap.org
+    VOLUME=clamp_config
+    DRIVER=local
+    LATITUDE=10
+    LONGITUDE=10
+- wget -O agent.sh 'https://gerrit.onap.org/r/gitweb?p=aaf/authz.git;a=blob_plain;f=auth/docker/agent.sh;h=32910874e01ad13865510091ddd4ef9ae5966410;hb=refs/heads/elalto'
+- wget https://nexus.onap.org/content/repositories/releases/org/onap/aaf/authz/aaf-auth-cmd/2.1.13/aaf-auth-cmd-2.1.13-full.jar
+- bash agent.sh bash
+    It's going to ask some questions:
+    Password for deployer@people.osaaf.org: demo123456!
+    AAF Locator URL=https://aaf-onap-test.osaaf.org:8095 
+    # If you do not know your Global Coordinates, we suggest bing.com/maps
+    cadi_latitude[0.000]=10.0
+    cadi_longitude[0.000]=10.0
+- Certs should created, you can get them in /var/lib/docker/volumes/clamp_config/_data/local
+- wget https://nexus.onap.org/content/repositories/releases/org/onap/aaf/authz/aaf-cadi-aaf/2.1.13/aaf-cadi-aaf-2.1.13-full.jar
+- to encrypt or decrypt the store passwords:  java -jar aaf-cadi-aaf-2.1.13-full.jar cadi digest changeit testos.key
 
+- Extract private key from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -nocerts -nodes > clamp.key'
+- Extract public certificate from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -clcerts -nokeys > clamp.pem'
+- Extract CA certificate from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -cacerts -nokeys -chain > ca-certs.pem'
+- reference wiki: https://wiki.onap.org/display/DW/AAF+Certificate+Management+for+Dummies
 ## Clamp Credentials
 
 There are two mechanisms that can enabled for the authentication, one or the other never both at the same time. 
