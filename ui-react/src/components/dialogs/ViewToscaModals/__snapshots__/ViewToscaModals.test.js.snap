@@ -1,0 +1,169 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify ViewToscaModals Test the tosca model view render method 1`] = `
+<Styled(Bootstrap(Modal))
+  onHide={[Function]}
+  show={true}
+  size="xl"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle
+      className="title"
+    >
+      View Tosca Model
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <WithStyles(Component)
+      columns={
+        Array [
+          Object {
+            "cellStyle": Object {
+              "border": "1px solid black",
+            },
+            "field": "index",
+            "headerStyle": Object {
+              "backgroundColor": "#ddd",
+              "border": "2px solid black",
+            },
+            "render": [Function],
+            "title": "#",
+          },
+          Object {
+            "cellStyle": Object {
+              "border": "1px solid black",
+            },
+            "field": "toscaModelName",
+            "headerStyle": Object {
+              "backgroundColor": "#ddd",
+              "border": "2px solid black",
+            },
+            "title": "Micro Service Name",
+          },
+          Object {
+            "cellStyle": Object {
+              "border": "1px solid black",
+            },
+            "field": "policyType",
+            "headerStyle": Object {
+              "backgroundColor": "#ddd",
+              "border": "2px solid black",
+            },
+            "title": "PolicyType",
+          },
+          Object {
+            "cellStyle": Object {
+              "border": "1px solid black",
+            },
+            "field": "version",
+            "headerStyle": Object {
+              "backgroundColor": "#ddd",
+              "border": "2px solid black",
+            },
+            "title": "Version",
+          },
+          Object {
+            "cellStyle": Object {
+              "border": "1px solid black",
+            },
+            "field": "userId",
+            "headerStyle": Object {
+              "backgroundColor": "#ddd",
+              "border": "2px solid black",
+            },
+            "title": "Uploaded By",
+          },
+          Object {
+            "cellStyle": Object {
+              "border": "1px solid black",
+            },
+            "editable": "never",
+            "field": "lastUpdatedDate",
+            "headerStyle": Object {
+              "backgroundColor": "#ddd",
+              "border": "2px solid black",
+            },
+            "title": "Uploaded Date",
+          },
+        ]
+      }
+      data={
+        Object {
+          "index": "1",
+          "lastUpdatedDate": "05-07-2019 19:09:42",
+          "policyType": "mtca",
+          "toscaModelName": "DCAE_MTCAConfig",
+          "toscaModelYaml": "MTCA",
+          "userId": "aj928f",
+          "version": "16",
+        }
+      }
+      icons={
+        Object {
+          "FirstPage": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+          "LastPage": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+          "NextPage": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+          "PreviousPage": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+          "ResetSearch": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+          "Search": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+          "SortArrow": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "render": [Function],
+          },
+        }
+      }
+      onRowClick={[Function]}
+      options={
+        Object {
+          "headerStyle": Object {
+            "backgroundColor": "#ddd",
+            "border": "1px solid black",
+            "fontSize": "15pt",
+            "text": "bold",
+          },
+          "rowStyle": [Function],
+        }
+      }
+      title="View ToscaModel"
+    />
+    <styled.div>
+      <styled.textarea
+        onChange={[Function]}
+        value="Please select Tosca model to view the details"
+      />
+    </styled.div>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="button"
+      variant="secondary"
+    >
+      Close
+    </Button>
+  </ModalFooter>
+</Styled(Bootstrap(Modal))>
+`;

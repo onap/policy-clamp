@@ -87,6 +87,9 @@ export default class MenuBar extends React.Component {
 		return (
 
 				<Navbar.Collapse>
+					<StyledNavDropdown title="Template">
+							<NavDropdown.Item as={StyledLink} to="/viewToscaModals">View Tosca Model</NavDropdown.Item>
+					</StyledNavDropdown>
 					<StyledNavDropdown title="Closed Loop">
 							<NavDropdown.Item as={StyledLink} to="/openLoop">Open CL</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties CL</NavDropdown.Item>
