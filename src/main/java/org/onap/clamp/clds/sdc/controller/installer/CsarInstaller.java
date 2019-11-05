@@ -23,7 +23,6 @@
 
 package org.onap.clamp.clds.sdc.controller.installer;
 
-import org.onap.clamp.clds.exception.policy.PolicyModelException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 
 public interface CsarInstaller {
@@ -31,6 +30,5 @@ public interface CsarInstaller {
 
     boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException;
 
-    public void installTheCsar(CsarHandler csar)
-        throws SdcArtifactInstallerException, InterruptedException, PolicyModelException;
+    public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException, InterruptedException;
 }

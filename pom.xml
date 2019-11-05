@@ -75,14 +75,12 @@
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
 		<clamp.project.version>${project.version}</clamp.project.version>
 		<clamp.build.timestamp>${maven.build.timestamp}</clamp.build.timestamp>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<eelf.core.version>1.0.0</eelf.core.version>
 		<camel.version>2.24.0</camel.version>
-		<springboot.version>2.1.5.RELEASE</springboot.version>
+		<springboot.version>2.2.0.RELEASE</springboot.version>
 
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -105,7 +103,7 @@
 		<docker.skip.tag>true</docker.skip.tag>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
 		<python.http.proxy.param />
-		<tomcat.version>9.0.20</tomcat.version>
+		<tomcat.version>9.0.27</tomcat.version>
 		<ui.react.src>ui-react</ui.react.src>
 		<npm.publish.url>https://nexus3.onap.org/repository/npm.release/</npm.publish.url>
 	</properties>
@@ -276,6 +274,16 @@
 			<groupId>com.att.eelf</groupId>
 			<artifactId>eelf-core</artifactId>
 			<version>${eelf.core.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.powermock</groupId>
+					<artifactId>powermock-module-junit4</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.powermock</groupId>
+					<artifactId>powermock-api-mockito</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.janino</groupId>
@@ -515,7 +523,19 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.10.19</version>
+			<version>2.28.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>2.0.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>2.0.4</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -795,7 +815,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.1</version>
+				<version>2.22.2</version>
 				<configuration>
 					<forkCount>1C</forkCount>
 					<reuseForks>true</reuseForks>
@@ -807,7 +827,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.22.1</version>
+				<version>2.22.2</version>
 				<executions>
 					<execution>
 						<id>integration-tests</id>
@@ -833,7 +853,7 @@
 			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.27.2</version>
+				<version>0.31.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>org.apache.httpcomponents</groupId>
@@ -869,6 +889,9 @@
 								<ports>
 									<port>${docker.mariadb.port.host}:3306</port>
 								</ports>
+								<network>
+									<mode>bridge</mode>
+								</network>
 							</run>
 						</image>
 						<image>
@@ -899,6 +922,9 @@
 									<shell>./start_http_cache.sh ${python.http.proxy.param}
 										--python_proxyaddress=localhost:${docker.http-cache.port.host}</shell>
 								</cmd>
+								<network>
+									<mode>bridge</mode>
+								</network>
 							</run>
 						</image>
 						<image>
@@ -1015,7 +1041,7 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
+				<version>0.8.5</version>
 				<configuration>
 					<dumpOnExit>true</dumpOnExit>
 					<append>true</append>
@@ -1126,6 +1152,15 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>13</source>
+					<target>13</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -28,7 +28,7 @@ package org.onap.clamp.clds.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 
 import java.security.InvalidKeyException;
 
@@ -45,13 +45,13 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"javax.crypto.*"})
+@PowerMockIgnore({ "javax.crypto.*", "com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*" })
 public class CryptoUtilsTest {
 
     private final String data = "This is a test string";
 
     @Test
-    @PrepareForTest({CryptoUtils.class})
+    @PrepareForTest({ CryptoUtils.class })
     public final void testEncryption() throws Exception {
         String encodedString = CryptoUtils.encrypt(data);
         assertNotNull(encodedString);
@@ -59,7 +59,7 @@ public class CryptoUtilsTest {
     }
 
     @Test
-    @PrepareForTest({CryptoUtils.class})
+    @PrepareForTest({ CryptoUtils.class })
     public final void testEncryptedStringIsDifferent() throws Exception {
         String encodedString1 = CryptoUtils.encrypt(data);
         String encodedString2 = CryptoUtils.encrypt(data);
@@ -74,7 +74,7 @@ public class CryptoUtilsTest {
     }
 
     @Test
-    @PrepareForTest({CryptoUtils.class})
+    @PrepareForTest({ CryptoUtils.class })
     public final void testEncryptionBaseOnRandomKey() throws Exception {
         SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
         final String encryptionKey = String.valueOf(Hex.encodeHex(secretKey.getEncoded()));
@@ -86,7 +86,7 @@ public class CryptoUtilsTest {
     }
 
     @Test(expected = InvalidKeyException.class)
-    @PrepareForTest({CryptoUtils.class})
+    @PrepareForTest({ CryptoUtils.class })
     public final void testEncryptionBadKey() throws Exception {
         final String badEncryptionKey = "93210sd";
         setAesEncryptionKeyEnv(badEncryptionKey);

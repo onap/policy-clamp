@@ -36,7 +36,6 @@ import java.util.Map.Entry;
 
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
-import org.onap.clamp.clds.exception.policy.PolicyModelException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
@@ -109,8 +108,7 @@ public class LoopCsarInstaller implements CsarInstaller {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void installTheCsar(CsarHandler csar)
-            throws SdcArtifactInstallerException, InterruptedException, PolicyModelException {
+    public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException, InterruptedException {
         try {
             logger.info("Installing the CSAR " + csar.getFilePath());
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
