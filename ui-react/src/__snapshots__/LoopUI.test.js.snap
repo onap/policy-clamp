@@ -5,7 +5,7 @@ exports[`Verify LoopUI Test the render method 1`] = `
   id="main_div"
 >
   <Route
-    path="/viewToscaModals"
+    path="/viewToscaModal"
     render={[Function]}
   />
   <Route

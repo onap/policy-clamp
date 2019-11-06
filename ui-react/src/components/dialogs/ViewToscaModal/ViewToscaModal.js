@@ -26,7 +26,7 @@ import MaterialTable from "material-table";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
-import TemplateMenu from '../../../api/TemplateMenu';
+import TemplateMenuService from '../../../api/TemplateMenuService';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
@@ -39,15 +39,12 @@ import Search from '@material-ui/icons/Search';
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
-const StyledToscaView = styled.textarea`
-`
-const StyledToscaDiv = styled.div`
-`
+
 const vtmCellStyle = { border: '1px solid black' };
 const vtmHeaderStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
 const vtmRowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
 
-export default class ViewToscalModals extends React.Component {
+export default class ViewToscalModal extends React.Component {
 
 	state = {
 		show: true,
@@ -81,35 +78,34 @@ export default class ViewToscalModals extends React.Component {
 			}
 		],
 		tableIcons: {
-      FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-      LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-      NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-      PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-      ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-      Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-      SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
+		    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+		    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+		    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+		    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+		    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+		    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+		    SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />)
 		}
 	};
 
 	constructor(props, context) {
 		super(props, context);
 		this.handleClose = this.handleClose.bind(this);
-		this.getToscaModals = this.getToscaModals.bind(this);
+		this.getToscaModels = this.getToscaModels.bind(this);
 		this.handleYamlContent = this.handleYamlContent.bind(this);
 	}
 
 	componentWillMount() {
-		this.getToscaModals();
+		this.getToscaModels();
 	}
 
-	getToscaModals() {
-		TemplateMenu.getToscaModals().then(toscaNames => {
+	getToscaModels() {
+	    TemplateMenuService.getToscaModels().then(toscaNames => {
 			this.setState({ toscaNames: toscaNames });
 		});
 	}
 
 	handleYamlContent(event) {
-		console.log('inside handleYamlContent');
 		this.setState({ content: event.target.value });
 	}
 
@@ -138,9 +134,9 @@ export default class ViewToscalModals extends React.Component {
 						})
 					}}
 					/>
-					<StyledToscaDiv>
-						<StyledToscaView value={this.state.content} onChange={this.handleYamlContent}/>
-					</StyledToscaDiv>
+					<div>
+						<textarea value={this.state.content} onChange={this.handleYamlContent}/>
+					</div>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" onClick={this.handleClose}>Close</Button>
