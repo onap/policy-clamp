@@ -57,9 +57,7 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
         title=""
         type="checkbox"
       >
-        <FormCheckLabel
-          type="checkbox"
-        >
+        <FormCheckLabel>
           Read Only
         </FormCheckLabel>
         <Styled(FormCheckInput)

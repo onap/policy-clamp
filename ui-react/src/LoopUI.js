@@ -42,7 +42,7 @@ import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/C
 import LoopProperties from './components/dialogs/LoopProperties';
 import UserInfo from './components/dialogs/UserInfo';
 import LoopService from './api/LoopService';
-import ViewToscaModals from './components/dialogs/ViewToscaModals/ViewToscaModals';
+import ViewToscaModal from './components/dialogs/ViewToscaModal/ViewToscaModal';
 import PerformAction from './components/dialogs/PerformActions';
 import RefreshStatus from './components/dialogs/RefreshStatus';
 import DeployLoop from './components/dialogs/DeployLoop';
@@ -248,7 +248,7 @@ export default class LoopUI extends React.Component {
 	render() {
 		return (
 				<StyledMainDiv id="main_div">
-				<Route path="/viewToscaModals" render={(routeProps) => (<ViewToscaModals {...routeProps} />)} />
+				<Route path="/viewToscaModal" render={(routeProps) => (<ViewToscaModal {...routeProps} />)} />
 				<Route path="/operationalPolicyModal"
 					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} showAlert={this.showAlert}/>)} />
 				<Route path="/configurationPolicyModal/:componentName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />

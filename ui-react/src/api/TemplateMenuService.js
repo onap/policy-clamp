@@ -20,9 +20,9 @@
  *
  */
 
-export default class TemplateMenu {
-  static getToscaModals() {
-    return fetch('restservices/clds/v2/loop/tosca/models', { method: 'GET', credentials: 'same-origin', })
+export default class TemplateMenuService {
+  static getToscaModels() {
+    return fetch('restservices/clds/v2/loop/tosca/models', { method: 'GET', credentials: 'same-origin' })
       .then(function (response) {
         console.debug("getToscaModels response received: ", response.status);
         if (response.ok) {

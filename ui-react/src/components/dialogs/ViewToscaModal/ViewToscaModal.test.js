@@ -22,11 +22,11 @@
  */
 import React from 'react';
 import { shallow } from 'enzyme';
-import ViewToscaModals from './ViewToscaModals';
+import ViewToscaModal from './ViewToscaModal';
 import { mount } from 'enzyme';
 
 
-describe('Verify ViewToscaModals', () => {
+describe('Verify ViewToscaModal', () => {
 	beforeEach(() => {
 		fetch.resetMocks();
 		fetch.mockImplementation(() => {
@@ -49,7 +49,7 @@ describe('Verify ViewToscaModals', () => {
 	});
 
 	it('Test the tosca model view render method', () => {
-		const component = shallow(<ViewToscaModals/>);
+		const component = shallow(<ViewToscaModal/>);
 		component.setState({ toscaNames: {
 			"index": "1",
 			"toscaModelYaml": "MTCA",
@@ -64,22 +64,22 @@ describe('Verify ViewToscaModals', () => {
   });
 
 	it('Test Table icons', () => {
-		const component = mount(<ViewToscaModals/>);
+		const component = mount(<ViewToscaModal/>);
 		expect(component.find('[className="MuiSelect-icon MuiTablePagination-selectIcon"]')).toBeTruthy();
 
   });
 
 	it('Test handleYamlContent', () => {
 		const yamlContent = 'MTCA Tosca model details';
-		const component = shallow(<ViewToscaModals/>);
+		const component = shallow(<ViewToscaModal/>);
 		component.find('[value="Please select Tosca model to view the details"]').prop('onChange')({ target: { value: yamlContent }});
     expect(component.state('content')).toEqual(yamlContent);
   });
 
 	it('Test handleClose', () => {
 		const historyMock = { push: jest.fn() };
-    const handleClose = jest.spyOn(ViewToscaModals.prototype,'handleClose');
-    const component = shallow(<ViewToscaModals history={historyMock} />)
+    const handleClose = jest.spyOn(ViewToscaModal.prototype,'handleClose');
+    const component = shallow(<ViewToscaModal history={historyMock} />)
     component.find('[variant="secondary"]').prop('onClick')();
     expect(handleClose).toHaveBeenCalledTimes(1);
     expect(component.state('show')).toEqual(false);
