@@ -44,7 +44,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.Application;
-import org.onap.clamp.clds.exception.policy.PolicyModelException;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
@@ -88,13 +87,13 @@ public class CsarInstallerItCase {
     private CsarInstaller csarInstaller;
 
     private BlueprintArtifact buildFakeBuildprintArtifact(String instanceName, String invariantResourceUuid,
-        String blueprintFilePath, String artifactName, String invariantServiceUuid) throws IOException {
+            String blueprintFilePath, String artifactName, String invariantServiceUuid) throws IOException {
         IResourceInstance resource = Mockito.mock(IResourceInstance.class);
         Mockito.when(resource.getResourceInstanceName()).thenReturn(instanceName);
         Mockito.when(resource.getResourceInvariantUUID()).thenReturn(invariantResourceUuid);
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
         Mockito.when(blueprintArtifact.getDcaeBlueprint())
-            .thenReturn(ResourceFileUtil.getResourceAsString(blueprintFilePath));
+                .thenReturn(ResourceFileUtil.getResourceAsString(blueprintFilePath));
         Mockito.when(blueprintArtifact.getBlueprintArtifactName()).thenReturn(artifactName);
         Mockito.when(blueprintArtifact.getBlueprintInvariantServiceUuid()).thenReturn(invariantServiceUuid);
         Mockito.when(blueprintArtifact.getResourceAttached()).thenReturn(resource);
@@ -113,19 +112,19 @@ public class CsarInstallerItCase {
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
         // Create fake blueprint artifact 1 on resource1
         BlueprintArtifact blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1,
-            INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca.yaml", "tca.yaml", INVARIANT_SERVICE_UUID);
+                INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca.yaml", "tca.yaml", INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
         // Create fake blueprint artifact 2 on resource2
         blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE2, INVARIANT_RESOURCE2_UUID,
-            "example/sdc/blueprint-dcae/tca_2.yaml", "tca_2.yaml", INVARIANT_SERVICE_UUID);
+                "example/sdc/blueprint-dcae/tca_2.yaml", "tca_2.yaml", INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
 
         // Create fake blueprint artifact 3 on resource 1 so that it's possible to
         // test multiple CL deployment per Service/vnf
         blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1, INVARIANT_RESOURCE1_UUID,
-            "example/sdc/blueprint-dcae/tca_3.yaml", "tca_3.yaml", INVARIANT_SERVICE_UUID);
+                "example/sdc/blueprint-dcae/tca_3.yaml", "tca_3.yaml", INVARIANT_SERVICE_UUID);
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
 
         // Build fake csarhandler
@@ -146,7 +145,7 @@ public class CsarInstallerItCase {
 
         // Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
         Mockito.when(csarHandler.getPolicyModelYaml())
-            .thenReturn(Optional.ofNullable(ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml")));
+                .thenReturn(Optional.ofNullable(ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml")));
         return csarHandler;
     }
 
@@ -162,16 +161,16 @@ public class CsarInstallerItCase {
 
         CsarHandler csarHandler = new CsarHandler(notificationData, "", "");
         csarHandler
-            .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile());
+                .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile());
         Optional<String> testyaml = csarHandler.getPolicyModelYaml();
-        Assert.assertEquals(testyaml,
-            Optional.ofNullable(ResourceFileUtil.getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
+        Assert.assertEquals(testyaml, Optional
+                .ofNullable(ResourceFileUtil.getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
     }
 
     @Test
     @Transactional
     public void testIsCsarAlreadyDeployedTca() throws SdcArtifactInstallerException, SdcToscaParserException,
-        CsarHandlerException, IOException, InterruptedException, PolicyModelException {
+            CsarHandlerException, IOException, InterruptedException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
         assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isFalse();
@@ -183,23 +182,22 @@ public class CsarInstallerItCase {
     @Transactional
     @Rollback(value = false)
     public void testInstallTheCsarTca() throws SdcArtifactInstallerException, SdcToscaParserException,
-        CsarHandlerException, IOException, JSONException, InterruptedException, PolicyModelException {
+            CsarHandlerException, IOException, JSONException, InterruptedException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
         assertThat(loopsRepo
-            .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")))
-                .isTrue();
-        assertThat(loopsRepo
-            .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml")))
-                .isTrue();
-        assertThat(loopsRepo
-            .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml")))
-                .isTrue();
+                .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")))
+                        .isTrue();
+        assertThat(loopsRepo.existsById(
+                Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))).isTrue();
+        assertThat(loopsRepo.existsById(
+                Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))).isTrue();
         // Verify now that policy and json representation, global properties are well
         // set
         Loop loop = loopsRepo
-            .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")).get();
+                .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml"))
+                .get();
         assertThat(loop.getSvgRepresentation()).startsWith("<svg ");
         assertThat(loop.getGlobalPropertiesJson().get("dcaeDeployParameters")).isNotNull();
         assertThat(loop.getMicroServicePolicies()).hasSize(1);
@@ -207,27 +205,27 @@ public class CsarInstallerItCase {
         assertThat(loop.getModelPropertiesJson().get("serviceDetails")).isNotNull();
         assertThat(loop.getModelPropertiesJson().get("resourceDetails")).isNotNull();
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"),
-            JsonUtils.GSON.toJson(loop.getModelPropertiesJson()), true);
+                JsonUtils.GSON.toJson(loop.getModelPropertiesJson()), true);
         assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
 
         loop = loopsRepo
-            .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))
-            .get();
+                .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))
+                .get();
         assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
 
         loop = loopsRepo
-            .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))
-            .get();
+                .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))
+                .get();
         assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
     }
 
     @Test(expected = SdcArtifactInstallerException.class)
     @Transactional
-    public void shouldThrowSdcArtifactInstallerException() throws SdcArtifactInstallerException,
-        SdcToscaParserException, IOException, InterruptedException, PolicyModelException {
+    public void shouldThrowSdcArtifactInstallerException()
+            throws SdcArtifactInstallerException, SdcToscaParserException, IOException, InterruptedException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
-        Mockito.when(csarHandler.getMapOfBlueprints()).thenThrow(IOException.class);
+        Mockito.when(csarHandler.getPolicyModelYaml()).thenThrow(IOException.class);
         csarInstaller.installTheCsar(csarHandler);
     }
 }

@@ -21,7 +21,7 @@
 #
 ###
 
-FROM openjdk:8u191-jdk-alpine3.9
+FROM openjdk:13-alpine3.10
 
 MAINTAINER "The Onap Team"
 LABEL Description="This immage contains alpine, openjdk 11 and clamp"

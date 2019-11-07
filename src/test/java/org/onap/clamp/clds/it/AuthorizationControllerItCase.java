@@ -35,16 +35,13 @@ import org.apache.camel.Exchange;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.onap.clamp.authorization.AuthorizationController;
-import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.NotAuthorizedException;
 import org.onap.clamp.clds.service.SecureServicePermission;
 import org.onap.clamp.util.PrincipalUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -61,14 +58,10 @@ public class AuthorizationControllerItCase {
 
     private PermissionTestDefaultHelper permissionTestHelper = new PermissionTestDefaultHelper();
 
-    @Spy
-    MockEnvironment env;
+    // @Spy
+    // MockEnvironment env;
 
-    @Spy
-    @InjectMocks
-    private ClampProperties clampProp = new ClampProperties();
-
-    @InjectMocks
+    @Autowired
     private AuthorizationController auth;
 
     /**
@@ -76,34 +69,30 @@ public class AuthorizationControllerItCase {
      */
     @Before
     public void setupBefore() {
-        permissionTestHelper.setupMockEnv(env);
+        // permissionTestHelper.setupMockEnv(env);
         List<GrantedAuthority> authList = permissionTestHelper.getAuthList();
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(
-                new UsernamePasswordAuthenticationToken(new User("admin", "", authList),
-                        "", authList)
-        );
+        Mockito.when(securityContext.getAuthentication())
+                .thenReturn(new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList));
         PrincipalUtils.setSecurityContext(securityContext);
     }
 
     @Test
     public void testIsUserPermitted() {
-        assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl","dev","read")));
-        assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl-manage","dev","DEPLOY")));
-        assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-filter-vf","dev",
-                "12345-55555-55555-5555")));
-        assertFalse(auth.isUserPermitted(new SecureServicePermission("permission-type-cl","test","read")));
+        assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl", "dev", "read")));
+        assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl-manage", "dev", "DEPLOY")));
+        assertTrue(auth.isUserPermitted(
+                new SecureServicePermission("permission-type-filter-vf", "dev", "12345-55555-55555-5555")));
+        assertFalse(auth.isUserPermitted(new SecureServicePermission("permission-type-cl", "test", "read")));
     }
 
     @Test
     public void testIfUserAuthorize() {
         Exchange ex = Mockito.mock(Exchange.class);
         try {
-            permissionTestHelper.doActionOnAllPermissions(((type, instance, action) ->
-                        auth.authorize(ex, type, instance, action)
-                    )
-            );
+            permissionTestHelper
+                    .doActionOnAllPermissions(((type, instance, action) -> auth.authorize(ex, type, instance, action)));
         } catch (NotAuthorizedException e) {
             fail(e.getMessage());
         }
@@ -112,6 +101,6 @@ public class AuthorizationControllerItCase {
     @Test(expected = NotAuthorizedException.class)
     public void testIfAuthorizeThrowException() {
         Exchange ex = Mockito.mock(Exchange.class);
-        auth.authorize(ex,"permission-type-cl","test","read");
+        auth.authorize(ex, "cl", "test", "read");
     }
 }

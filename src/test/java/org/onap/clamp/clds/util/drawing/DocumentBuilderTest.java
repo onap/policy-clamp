@@ -23,11 +23,13 @@
 
 package org.onap.clamp.clds.util.drawing;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.util.SVGConstants;
 import org.junit.Assert;
@@ -57,15 +59,15 @@ public class DocumentBuilderTest {
         Node newNode = document.createElement(newNodeTag);
         newNode.appendChild(document.createTextNode(newNodeText));
 
-        when(mockG2d.getRoot(any(Element.class))).then(a -> a.getArgumentAt(0, Element.class).appendChild(newNode));
+        when(mockG2d.getRoot(any(Element.class))).then(a -> a.getArgument(0, Element.class).appendChild(newNode));
 
         DocumentBuilder db = new DocumentBuilder(document, document);
         db.pushChangestoDocument(mockG2d, dataElementId);
         Document actualDocument = db.getGroupingDocument();
 
         Node addedActualNode = actualDocument.getDocumentElement().getLastChild();
-        String actualDataElementId =
-            addedActualNode.getAttributes().getNamedItem(DocumentBuilder.DATA_ELEMENT_ID_ATTRIBUTE).getTextContent();
+        String actualDataElementId = addedActualNode.getAttributes()
+                .getNamedItem(DocumentBuilder.DATA_ELEMENT_ID_ATTRIBUTE).getTextContent();
 
         Assert.assertEquals(dataElementId, actualDataElementId);
         Assert.assertEquals(SVGConstants.SVG_G_TAG, addedActualNode.getNodeName());
