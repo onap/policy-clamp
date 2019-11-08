@@ -28,7 +28,7 @@ println project.properties['clamp.project.version'];
 if ( project.properties['clamp.project.version'].endsWith("-SNAPSHOT") ) {
     project.properties['npm.publish.url']="https://nexus3.onap.org/repository/npm.snapshot/"
 } else {
-    project.properties['npm.publish.url']="https://nexus3.onap.org/repository/npm.release/"
+    project.properties['npm.publish.url']="https://nexus3.onap.org/repository/npm.snapshot/"
 } 
 
 println 'NPM repository: ' + project.properties['npm.publish.url'];
