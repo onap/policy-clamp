@@ -99,11 +99,11 @@ export default class LoopCache {
 	}
 
 	getResourceDetailsVfProperty() {
-		return this.loopJsonCache["modelPropertiesJson"]["resourceDetails"]["VF"];
+		return this.loopJsonCache["modelService"]["resourceDetails"]["VF"];
 	}
 
 	getResourceDetailsVfModuleProperty() {
-		return this.loopJsonCache["modelPropertiesJson"]["resourceDetails"]["VFModule"];
+		return this.loopJsonCache["modelService"]["resourceDetails"]["VFModule"];
 	}
 
 	getLoopLogsArray() {

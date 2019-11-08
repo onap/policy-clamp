@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.loop.service.Service;
 
 public class OperationalPolicyRepresentationBuilder {
 
@@ -47,7 +48,7 @@ public class OperationalPolicyRepresentationBuilder {
      * @throws JsonSyntaxException If the schema template cannot be parsed
      * @throws IOException         In case of issue when opening the schema template
      */
-    public static JsonObject generateOperationalPolicySchema(JsonObject modelJson)
+    public static JsonObject generateOperationalPolicySchema(Service modelJson)
             throws JsonSyntaxException, IOException {
         JsonObject jsonSchema = JsonUtils.GSON.fromJson(
                 ResourceFileUtil.getResourceAsString("clds/json-schema/operational_policies/operational_policy.json"),
@@ -78,9 +79,9 @@ public class OperationalPolicyRepresentationBuilder {
         return property;
     }
 
-    private static JsonArray createVnfSchema(JsonObject modelJson) {
+    private static JsonArray createVnfSchema(Service modelService) {
         JsonArray vnfSchemaArray = new JsonArray();
-        JsonObject modelVnfs = modelJson.get("resourceDetails").getAsJsonObject().get("VF").getAsJsonObject();
+        JsonObject modelVnfs = modelService.getResourceByType("VF");
 
         for (Entry<String, JsonElement> entry : modelVnfs.entrySet()) {
             JsonObject vnfOneOfSchema = new JsonObject();
@@ -96,10 +97,9 @@ public class OperationalPolicyRepresentationBuilder {
         return vnfSchemaArray;
     }
 
-    private static JsonArray createVfModuleSchema(JsonObject modelJson) {
+    private static JsonArray createVfModuleSchema(Service modelService) {
         JsonArray vfModuleOneOfSchemaArray = new JsonArray();
-        JsonObject modelVfModules = modelJson.get("resourceDetails").getAsJsonObject().get("VFModule")
-                .getAsJsonObject();
+        JsonObject modelVfModules = modelService.getResourceByType("VFModule");
 
         for (Entry<String, JsonElement> entry : modelVfModules.entrySet()) {
             JsonObject vfModuleOneOfSchema = new JsonObject();
@@ -137,7 +137,7 @@ public class OperationalPolicyRepresentationBuilder {
         return vfModuleOneOfSchemaArray;
     }
 
-    private static JsonArray createAnyOfArray(JsonObject modelJson) {
+    private static JsonArray createAnyOfArray(Service modelJson) {
         JsonArray targetOneOfStructure = new JsonArray();
         targetOneOfStructure.addAll(createVnfSchema(modelJson));
         targetOneOfStructure.addAll(createVfModuleSchema(modelJson));

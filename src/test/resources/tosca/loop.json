@@ -1,0 +1,704 @@
+{
+  "name": "ControlLoopTest",
+  "dcaeDeploymentId": "123456789",
+  "dcaeDeploymentStatusUrl": "https://dcaetest.org",
+  "dcaeBlueprintId": "UUID-blueprint",
+  "operationalPolicySchema": {
+    "schema": {
+      "uniqueItems": "true",
+      "format": "tabs",
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "title": "Operational policies",
+      "items": {
+        "type": "object",
+        "title": "Operational Policy Item",
+        "id": "operational_policy_item",
+        "headerTemplate": "{{self.name}}",
+        "required": [
+          "name",
+          "configurationsJson"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Operational policy name",
+            "readOnly": "True"
+          },
+          "configurationsJson": {
+            "type": "object",
+            "title": "Configuration",
+            "required": [
+              "operational_policy",
+              "guard_policies"
+            ],
+            "properties": {
+              "operational_policy": {
+                "type": "object",
+                "title": "Related Parameters",
+                "required": [
+                  "controlLoop",
+                  "policies"
+                ],
+                "properties": {
+                  "controlLoop": {
+                    "type": "object",
+                    "title": "Control Loop details",
+                    "required": [
+                      "timeout",
+                      "abatement",
+                      "trigger_policy",
+                      "controlLoopName"
+                    ],
+                    "properties": {
+                      "timeout": {
+                        "type": "string",
+                        "title": "Overall Time Limit",
+                        "default": "0",
+                        "format": "number"
+                      },
+                      "abatement": {
+                        "type": "string",
+                        "title": "Abatement",
+                        "enum": [
+                          "True",
+                          "False"
+                        ]
+                      },
+                      "trigger_policy": {
+                        "type": "string",
+                        "title": "Policy Decision Entry"
+                      },
+                      "controlLoopName": {
+                        "type": "string",
+                        "title": "Control loop name",
+                        "readOnly": "True"
+                      }
+                    }
+                  },
+                  "policies": {
+                    "uniqueItems": "true",
+                    "id": "policies_array",
+                    "type": "array",
+                    "title": "Policy Decision Tree",
+                    "format": "tabs-top",
+                    "items": {
+                      "title": "Policy Decision",
+                      "type": "object",
+                      "id": "policy_item",
+                      "headerTemplate": "{{self.id}} - {{self.recipe}}",
+                      "format": "categories",
+                      "basicCategoryTitle": "recipe",
+                      "required": [
+                        "id",
+                        "recipe",
+                        "retry",
+                        "timeout",
+                        "actor",
+                        "success",
+                        "failure",
+                        "failure_timeout",
+                        "failure_retries",
+                        "failure_exception",
+                        "failure_guard",
+                        "target"
+                      ],
+                      "properties": {
+                        "id": {
+                          "default": "Policy 1",
+                          "title": "Policy ID",
+                          "type": "string"
+                        },
+                        "recipe": {
+                          "title": "Recipe",
+                          "type": "string",
+                          "enum": [
+                            "Restart",
+                            "Rebuild",
+                            "Migrate",
+                            "Health-Check",
+                            "ModifyConfig",
+                            "VF Module Create",
+                            "VF Module Delete",
+                            "Reroute"
+                          ]
+                        },
+                        "retry": {
+                          "default": "0",
+                          "title": "Number of Retry",
+                          "type": "string",
+                          "format": "number"
+                        },
+                        "timeout": {
+                          "default": "0",
+                          "title": "Timeout",
+                          "type": "string",
+                          "format": "number"
+                        },
+                        "actor": {
+                          "title": "Actor",
+                          "type": "string",
+                          "enum": [
+                            "APPC",
+                            "SO",
+                            "VFC",
+                            "SDNC",
+                            "SDNR"
+                          ]
+                        },
+                        "payload": {
+                          "title": "Payload (YAML)",
+                          "type": "string",
+                          "format": "textarea"
+                        },
+                        "success": {
+                          "default": "final_success",
+                          "title": "When Success",
+                          "type": "string"
+                        },
+                        "failure": {
+                          "default": "final_failure",
+                          "title": "When Failure",
+                          "type": "string"
+                        },
+                        "failure_timeout": {
+                          "default": "final_failure_timeout",
+                          "title": "When Failure Timeout",
+                          "type": "string"
+                        },
+                        "failure_retries": {
+                          "default": "final_failure_retries",
+                          "title": "When Failure Retries",
+                          "type": "string"
+                        },
+                        "failure_exception": {
+                          "default": "final_failure_exception",
+                          "title": "When Failure Exception",
+                          "type": "string"
+                        },
+                        "failure_guard": {
+                          "default": "final_failure_guard",
+                          "title": "When Failure Guard",
+                          "type": "string"
+                        },
+                        "target": {
+                          "type": "object",
+                          "required": [
+                            "type",
+                            "resourceID"
+                          ],
+                          "anyOf": [
+                            {
+                              "title": "User Defined",
+                              "additionalProperties": "True",
+                              "properties": {
+                                "type": {
+                                  "title": "Target type",
+                                  "type": "string",
+                                  "default": "",
+                                  "enum": [
+                                    "VNF",
+                                    "VFMODULE",
+                                    "VM"
+                                  ]
+                                },
+                                "resourceID": {
+                                  "title": "Target type",
+                                  "type": "string",
+                                  "default": ""
+                                }
+                              }
+                            },
+                            {
+                              "title": "VNF-vLoadBalancerMS 0",
+                              "properties": {
+                                "type": {
+                                  "title": "Type",
+                                  "type": "string",
+                                  "default": "VNF",
+                                  "readOnly": "True"
+                                },
+                                "resourceID": {
+                                  "title": "Resource ID",
+                                  "type": "string",
+                                  "default": "vLoadBalancerMS",
+                                  "readOnly": "True"
+                                }
+                              }
+                            },
+                            {
+                              "title": "VFMODULE-Vloadbalancerms..vpkg..module-1",
+                              "properties": {
+                                "type": {
+                                  "title": "Type",
+                                  "type": "string",
+                                  "default": "VFMODULE",
+                                  "readOnly": "True"
+                                },
+                                "resourceID": {
+                                  "title": "Resource ID",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..vpkg..module-1",
+                                  "readOnly": "True"
+                                },
+                                "modelInvariantId": {
+                                  "title": "Model Invariant Id (ModelInvariantUUID)",
+                                  "type": "string",
+                                  "default": "ca052563-eb92-4b5b-ad41-9111768ce043",
+                                  "readOnly": "True"
+                                },
+                                "modelVersionId": {
+                                  "title": "Model Version Id (ModelUUID)",
+                                  "type": "string",
+                                  "default": "1e725ccc-b823-4f67-82b9-4f4367070dbc",
+                                  "readOnly": "True"
+                                },
+                                "modelName": {
+                                  "title": "Model Name",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..vpkg..module-1",
+                                  "readOnly": "True"
+                                },
+                                "modelVersion": {
+                                  "title": "Model Version",
+                                  "type": "string",
+                                  "default": "1",
+                                  "readOnly": "True"
+                                },
+                                "modelCustomizationId": {
+                                  "title": "Customization ID",
+                                  "type": "string",
+                                  "default": "1bffdc31-a37d-4dee-b65c-dde623a76e52",
+                                  "readOnly": "True"
+                                }
+                              }
+                            },
+                            {
+                              "title": "VFMODULE-Vloadbalancerms..vdns..module-3",
+                              "properties": {
+                                "type": {
+                                  "title": "Type",
+                                  "type": "string",
+                                  "default": "VFMODULE",
+                                  "readOnly": "True"
+                                },
+                                "resourceID": {
+                                  "title": "Resource ID",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..vdns..module-3",
+                                  "readOnly": "True"
+                                },
+                                "modelInvariantId": {
+                                  "title": "Model Invariant Id (ModelInvariantUUID)",
+                                  "type": "string",
+                                  "default": "4c10ba9b-f88f-415e-9de3-5d33336047fa",
+                                  "readOnly": "True"
+                                },
+                                "modelVersionId": {
+                                  "title": "Model Version Id (ModelUUID)",
+                                  "type": "string",
+                                  "default": "4fa73b49-8a6c-493e-816b-eb401567b720",
+                                  "readOnly": "True"
+                                },
+                                "modelName": {
+                                  "title": "Model Name",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..vdns..module-3",
+                                  "readOnly": "True"
+                                },
+                                "modelVersion": {
+                                  "title": "Model Version",
+                                  "type": "string",
+                                  "default": "1",
+                                  "readOnly": "True"
+                                },
+                                "modelCustomizationId": {
+                                  "title": "Customization ID",
+                                  "type": "string",
+                                  "default": "bafcdab0-801d-4d81-9ead-f464640a38b1",
+                                  "readOnly": "True"
+                                }
+                              }
+                            },
+                            {
+                              "title": "VFMODULE-Vloadbalancerms..base_template..module-0",
+                              "properties": {
+                                "type": {
+                                  "title": "Type",
+                                  "type": "string",
+                                  "default": "VFMODULE",
+                                  "readOnly": "True"
+                                },
+                                "resourceID": {
+                                  "title": "Resource ID",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..base_template..module-0",
+                                  "readOnly": "True"
+                                },
+                                "modelInvariantId": {
+                                  "title": "Model Invariant Id (ModelInvariantUUID)",
+                                  "type": "string",
+                                  "default": "921f7c96-ebdd-42e6-81b9-1cfc0c9796f3",
+                                  "readOnly": "True"
+                                },
+                                "modelVersionId": {
+                                  "title": "Model Version Id (ModelUUID)",
+                                  "type": "string",
+                                  "default": "63734409-f745-4e4d-a38b-131638a0edce",
+                                  "readOnly": "True"
+                                },
+                                "modelName": {
+                                  "title": "Model Name",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..base_template..module-0",
+                                  "readOnly": "True"
+                                },
+                                "modelVersion": {
+                                  "title": "Model Version",
+                                  "type": "string",
+                                  "default": "1",
+                                  "readOnly": "True"
+                                },
+                                "modelCustomizationId": {
+                                  "title": "Customization ID",
+                                  "type": "string",
+                                  "default": "86baddea-c730-4fb8-9410-cd2e17fd7f27",
+                                  "readOnly": "True"
+                                }
+                              }
+                            },
+                            {
+                              "title": "VFMODULE-Vloadbalancerms..vlb..module-2",
+                              "properties": {
+                                "type": {
+                                  "title": "Type",
+                                  "type": "string",
+                                  "default": "VFMODULE",
+                                  "readOnly": "True"
+                                },
+                                "resourceID": {
+                                  "title": "Resource ID",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..vlb..module-2",
+                                  "readOnly": "True"
+                                },
+                                "modelInvariantId": {
+                                  "title": "Model Invariant Id (ModelInvariantUUID)",
+                                  "type": "string",
+                                  "default": "a772a1f4-0064-412c-833d-4749b15828dd",
+                                  "readOnly": "True"
+                                },
+                                "modelVersionId": {
+                                  "title": "Model Version Id (ModelUUID)",
+                                  "type": "string",
+                                  "default": "0f5c3f6a-650a-4303-abb6-fff3e573a07a",
+                                  "readOnly": "True"
+                                },
+                                "modelName": {
+                                  "title": "Model Name",
+                                  "type": "string",
+                                  "default": "Vloadbalancerms..vlb..module-2",
+                                  "readOnly": "True"
+                                },
+                                "modelVersion": {
+                                  "title": "Model Version",
+                                  "type": "string",
+                                  "default": "1",
+                                  "readOnly": "True"
+                                },
+                                "modelCustomizationId": {
+                                  "title": "Customization ID",
+                                  "type": "string",
+                                  "default": "96a78aad-4ffb-4ef0-9c4f-deb03bf1d806",
+                                  "readOnly": "True"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "guard_policies": {
+                "type": "array",
+                "format": "tabs-top",
+                "title": "Associated Guard policies",
+                "items": {
+                  "headerTemplate": "{{self.policy-id}} - {{self.content.recipe}}",
+                  "anyOf": [
+                    {
+                      "title": "Guard MinMax",
+                      "type": "object",
+                      "properties": {
+                        "policy-id": {
+                          "type": "string",
+                          "default": "guard.minmax.new",
+                          "pattern": "^(guard.minmax\\..*)$"
+                        },
+                        "content": {
+                          "properties": {
+                            "actor": {
+                              "type": "string",
+                              "enum": [
+                                "APPC",
+                                "SO",
+                                "VFC",
+                                "SDNC",
+                                "SDNR"
+                              ]
+                            },
+                            "recipe": {
+                              "type": "string",
+                              "enum": [
+                                "Restart",
+                                "Rebuild",
+                                "Migrate",
+                                "Health-Check",
+                                "ModifyConfig",
+                                "VF Module Create",
+                                "VF Module Delete",
+                                "Reroute"
+                              ]
+                            },
+                            "targets": {
+                              "type": "string",
+                              "default": ".*"
+                            },
+                            "clname": {
+                              "type": "string",
+                              "template": "{{loopName}}",
+                              "watch": {
+                                "loopName": "operational_policy_item.configurationsJson.operational_policy.controlLoop.controlLoopName"
+                              }
+                            },
+                            "guardActiveStart": {
+                              "type": "string",
+                              "default": "00:00:00Z"
+                            },
+                            "guardActiveEnd": {
+                              "type": "string",
+                              "default": "10:00:00Z"
+                            },
+                            "min": {
+                              "type": "string",
+                              "default": "0"
+                            },
+                            "max": {
+                              "type": "string",
+                              "default": "1"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "title": "Guard Frequency",
+                      "type": "object",
+                      "properties": {
+                        "policy-id": {
+                          "type": "string",
+                          "default": "guard.frequency.new",
+                          "pattern": "^(guard.frequency\\..*)$"
+                        },
+                        "content": {
+                          "properties": {
+                            "actor": {
+                              "type": "string",
+                              "enum": [
+                                "APPC",
+                                "SO",
+                                "VFC",
+                                "SDNC",
+                                "SDNR"
+                              ]
+                            },
+                            "recipe": {
+                              "type": "string",
+                              "enum": [
+                                "Restart",
+                                "Rebuild",
+                                "Migrate",
+                                "Health-Check",
+                                "ModifyConfig",
+                                "VF Module Create",
+                                "VF Module Delete",
+                                "Reroute"
+                              ]
+                            },
+                            "targets": {
+                              "type": "string",
+                              "default": ".*"
+                            },
+                            "clname": {
+                              "type": "string",
+                              "template": "{{loopName}}",
+                              "watch": {
+                                "loopName": "operational_policy_item.configurationsJson.operational_policy.controlLoop.controlLoopName"
+                              }
+                            },
+                            "guardActiveStart": {
+                              "type": "string",
+                              "default": "00:00:00Z"
+                            },
+                            "guardActiveEnd": {
+                              "type": "string",
+                              "default": "10:00:00Z"
+                            },
+                            "limit": {
+                              "type": "string"
+                            },
+                            "timeWindow": {
+                              "type": "string"
+                            },
+                            "timeUnits": {
+                              "type": "string",
+                              "enum": [
+                                "minute",
+                                "hour",
+                                "day",
+                                "week",
+                                "month",
+                                "year"
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "globalPropertiesJson": {
+    "testname": "testvalue"
+  },
+  "modelService": {
+    "serviceDetails": {
+      "serviceType": "",
+      "namingPolicy": "",
+      "environmentContext": "General_Revenue-Bearing",
+      "serviceEcompNaming": "true",
+      "serviceRole": "",
+      "name": "vLoadBalancerMS",
+      "description": "vLBMS",
+      "invariantUUID": "30ec5b59-4799-48d8-ac5f-1058a6b0e48f",
+      "ecompGeneratedNaming": "true",
+      "category": "Network L4+",
+      "type": "Service",
+      "UUID": "63cac700-ab9a-4115-a74f-7eac85e3fce0",
+      "instantiationType": "A-la-carte"
+    },
+    "resourceDetails": {
+      "CP": {},
+      "VL": {},
+      "VF": {
+        "vLoadBalancerMS 0": {
+          "resourceVendor": "Test",
+          "resourceVendorModelNumber": "",
+          "name": "vLoadBalancerMS",
+          "description": "vLBMS",
+          "invariantUUID": "1a31b9f2-e50d-43b7-89b3-a040250cf506",
+          "subcategory": "Load Balancer",
+          "category": "Application L4+",
+          "type": "VF",
+          "UUID": "b4c4f3d7-929e-4b6d-a1cd-57e952ddc3e6",
+          "version": "1.0",
+          "resourceVendorRelease": "1.0",
+          "customizationUUID": "465246dc-7748-45f4-a013-308d92922552"
+        }
+      },
+      "CR": {},
+      "VFC": {},
+      "PNF": {},
+      "Service": {},
+      "CVFC": {},
+      "Service Proxy": {},
+      "Configuration": {},
+      "AllottedResource": {},
+      "VFModule": {
+        "Vloadbalancerms..vpkg..module-1": {
+          "vfModuleModelInvariantUUID": "ca052563-eb92-4b5b-ad41-9111768ce043",
+          "vfModuleModelVersion": "1",
+          "vfModuleModelName": "Vloadbalancerms..vpkg..module-1",
+          "vfModuleModelUUID": "1e725ccc-b823-4f67-82b9-4f4367070dbc",
+          "vfModuleModelCustomizationUUID": "1bffdc31-a37d-4dee-b65c-dde623a76e52",
+          "min_vf_module_instances": 0,
+          "vf_module_label": "vpkg",
+          "max_vf_module_instances": 1,
+          "vf_module_type": "Expansion",
+          "isBase": false,
+          "initial_count": 0,
+          "volume_group": false
+        },
+        "Vloadbalancerms..vdns..module-3": {
+          "vfModuleModelInvariantUUID": "4c10ba9b-f88f-415e-9de3-5d33336047fa",
+          "vfModuleModelVersion": "1",
+          "vfModuleModelName": "Vloadbalancerms..vdns..module-3",
+          "vfModuleModelUUID": "4fa73b49-8a6c-493e-816b-eb401567b720",
+          "vfModuleModelCustomizationUUID": "bafcdab0-801d-4d81-9ead-f464640a38b1",
+          "min_vf_module_instances": 0,
+          "vf_module_label": "vdns",
+          "max_vf_module_instances": 50,
+          "vf_module_type": "Expansion",
+          "isBase": false,
+          "initial_count": 0,
+          "volume_group": false
+        },
+        "Vloadbalancerms..base_template..module-0": {
+          "vfModuleModelInvariantUUID": "921f7c96-ebdd-42e6-81b9-1cfc0c9796f3",
+          "vfModuleModelVersion": "1",
+          "vfModuleModelName": "Vloadbalancerms..base_template..module-0",
+          "vfModuleModelUUID": "63734409-f745-4e4d-a38b-131638a0edce",
+          "vfModuleModelCustomizationUUID": "86baddea-c730-4fb8-9410-cd2e17fd7f27",
+          "min_vf_module_instances": 1,
+          "vf_module_label": "base_template",
+          "max_vf_module_instances": 1,
+          "vf_module_type": "Base",
+          "isBase": true,
+          "initial_count": 1,
+          "volume_group": false
+        },
+        "Vloadbalancerms..vlb..module-2": {
+          "vfModuleModelInvariantUUID": "a772a1f4-0064-412c-833d-4749b15828dd",
+          "vfModuleModelVersion": "1",
+          "vfModuleModelName": "Vloadbalancerms..vlb..module-2",
+          "vfModuleModelUUID": "0f5c3f6a-650a-4303-abb6-fff3e573a07a",
+          "vfModuleModelCustomizationUUID": "96a78aad-4ffb-4ef0-9c4f-deb03bf1d806",
+          "min_vf_module_instances": 0,
+          "vf_module_label": "vlb",
+          "max_vf_module_instances": 1,
+          "vf_module_type": "Expansion",
+          "isBase": false,
+          "initial_count": 0,
+          "volume_group": false
+        }
+      }
+    }
+  },
+  "lastComputedState": "DESIGN",
+  "components": {
+    "POLICY": {
+      "componentState": {
+        "stateName": "UNKNOWN",
+        "description": "The current status is not clear. Need to regresh the status to get the current status."
+      }
+    },
+    "DCAE": {
+      "componentState": {
+        "stateName": "BLUEPRINT_DEPLOYED",
+        "description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
+      }
+    }
+  },
+  "operationalPolicies": [],
+  "microServicePolicies": [],
+  "loopLogs": []
+}

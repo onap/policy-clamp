@@ -1,0 +1,96 @@
+{
+	"CP": {
+	},
+	"VL": {
+	},
+	"VF": {
+		"vLoadBalancerMS 0": {
+			"resourceVendor": "Test",
+			"resourceVendorModelNumber": "",
+			"name": "vLoadBalancerMS",
+			"description": "vLBMS",
+			"invariantUUID": "1a31b9f2-e50d-43b7-89b3-a040250cf506",
+			"subcategory": "Load Balancer",
+			"category": "Application L4+",
+			"type": "VF",
+			"UUID": "b4c4f3d7-929e-4b6d-a1cd-57e952ddc3e6",
+			"version": "1.0",
+			"resourceVendorRelease": "1.0",
+			"customizationUUID": "465246dc-7748-45f4-a013-308d92922552"
+		}
+	},
+	"CR": {
+	},
+	"VFC": {
+	},
+	"PNF": {
+	},
+	"Service": {
+	},
+	"CVFC": {
+	},
+	"Service Proxy": {
+	},
+	"Configuration": {
+	},
+	"AllottedResource": {
+	},
+	"VFModule": {
+		"Vloadbalancerms..vpkg..module-1": {
+			"vfModuleModelInvariantUUID": "ca052563-eb92-4b5b-ad41-9111768ce043",
+			"vfModuleModelVersion": "1",
+			"vfModuleModelName": "Vloadbalancerms..vpkg..module-1",
+			"vfModuleModelUUID": "1e725ccc-b823-4f67-82b9-4f4367070dbc",
+			"vfModuleModelCustomizationUUID": "1bffdc31-a37d-4dee-b65c-dde623a76e52",
+			"min_vf_module_instances": 0,
+			"vf_module_label": "vpkg",
+			"max_vf_module_instances": 1,
+			"vf_module_type": "Expansion",
+			"isBase": false,
+			"initial_count": 0,
+			"volume_group": false
+		},
+		"Vloadbalancerms..vdns..module-3": {
+			"vfModuleModelInvariantUUID": "4c10ba9b-f88f-415e-9de3-5d33336047fa",
+			"vfModuleModelVersion": "1",
+			"vfModuleModelName": "Vloadbalancerms..vdns..module-3",
+			"vfModuleModelUUID": "4fa73b49-8a6c-493e-816b-eb401567b720",
+			"vfModuleModelCustomizationUUID": "bafcdab0-801d-4d81-9ead-f464640a38b1",
+			"min_vf_module_instances": 0,
+			"vf_module_label": "vdns",
+			"max_vf_module_instances": 50,
+			"vf_module_type": "Expansion",
+			"isBase": false,
+			"initial_count": 0,
+			"volume_group": false
+		},
+		"Vloadbalancerms..base_template..module-0": {
+			"vfModuleModelInvariantUUID": "921f7c96-ebdd-42e6-81b9-1cfc0c9796f3",
+			"vfModuleModelVersion": "1",
+			"vfModuleModelName": "Vloadbalancerms..base_template..module-0",
+			"vfModuleModelUUID": "63734409-f745-4e4d-a38b-131638a0edce",
+			"vfModuleModelCustomizationUUID": "86baddea-c730-4fb8-9410-cd2e17fd7f27",
+			"min_vf_module_instances": 1,
+			"vf_module_label": "base_template",
+			"max_vf_module_instances": 1,
+			"vf_module_type": "Base",
+			"isBase": true,
+			"initial_count": 1,
+			"volume_group": false
+		},
+		"Vloadbalancerms..vlb..module-2": {
+			"vfModuleModelInvariantUUID": "a772a1f4-0064-412c-833d-4749b15828dd",
+			"vfModuleModelVersion": "1",
+			"vfModuleModelName": "Vloadbalancerms..vlb..module-2",
+			"vfModuleModelUUID": "0f5c3f6a-650a-4303-abb6-fff3e573a07a",
+			"vfModuleModelCustomizationUUID": "96a78aad-4ffb-4ef0-9c4f-deb03bf1d806",
+			"min_vf_module_instances": 0,
+			"vf_module_label": "vlb",
+			"max_vf_module_instances": 1,
+			"vf_module_type": "Expansion",
+			"isBase": false,
+			"initial_count": 0,
+			"volume_group": false
+		}
+	}
+}

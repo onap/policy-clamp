@@ -29,7 +29,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -41,6 +43,7 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -54,7 +57,7 @@ public class LoopToJsonTest {
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
-            String dcaeId, String dcaeUrl, String dcaeBlueprintId) {
+            String dcaeId, String dcaeUrl, String dcaeBlueprintId) throws JsonSyntaxException, IOException {
         Loop loop = new Loop(name, blueprint, svgRepresentation);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
@@ -113,6 +116,29 @@ public class LoopToJsonTest {
         assertThat(loopTestDeserialized.getLoopLogs()).containsExactly(loopLog);
         assertThat((LoopLog) loopTestDeserialized.getLoopLogs().toArray()[0]).isEqualToIgnoringGivenFields(loopLog,
                 "loop");
+    }
+
+    @Test
+    public void loopServiceTest() throws IOException {
+        Loop loopTest2 = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+                "123456789", "https://dcaetest.org", "UUID-blueprint");
+
+        JsonObject jsonModel = new GsonBuilder().create()
+                .fromJson(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"), JsonObject.class);
+        Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
+                jsonModel.get("resourceDetails").getAsJsonObject());
+        loopTest2.setModelService(service);
+
+        String jsonSerialized = JsonUtils.GSON_JPA_MODEL.toJson(loopTest2);
+        assertThat(jsonSerialized).isNotNull().isNotEmpty();
+        System.out.println(jsonSerialized);
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/loop.json"),
+                jsonSerialized, true);
+
+        Loop loopTestDeserialized = JsonUtils.GSON_JPA_MODEL.fromJson(jsonSerialized, Loop.class);
+        assertNotNull(loopTestDeserialized);
+        assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest2, "modelService", 
+            "svgRepresentation", "blueprint", "components");
     }
 
     @Test

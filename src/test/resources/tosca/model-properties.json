@@ -16,10 +16,8 @@
 	},
 	"resourceDetails": {
 		"CP": {
-			
 		},
 		"VL": {
-			
 		},
 		"VF": {
 			"vLoadBalancerMS 0": {
@@ -38,28 +36,20 @@
 			}
 		},
 		"CR": {
-			
 		},
 		"VFC": {
-			
 		},
 		"PNF": {
-			
 		},
 		"Service": {
-			
 		},
 		"CVFC": {
-			
 		},
 		"Service Proxy": {
-			
 		},
 		"Configuration": {
-			
 		},
 		"AllottedResource": {
-			
 		},
 		"VFModule": {
 			"Vloadbalancerms..vpkg..module-1": {

@@ -347,8 +347,8 @@ public class LoopServiceTestItCase {
         saveTestLoopToDb();
         assertThat(microServicePolicyService.isExisting("policyName")).isFalse();
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("policyName", "",
-                                                                       "tosca_definitions_version: tosca_simple_yaml_1_0_0", false,
-                                                                       JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+            "tosca_definitions_version: tosca_simple_yaml_1_0_0", false,
+            JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
         loopService.updateMicroservicePolicy(EXAMPLE_LOOP_NAME, microServicePolicy);
         assertThat(microServicePolicyService.isExisting("policyName")).isTrue();
     }

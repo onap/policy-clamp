@@ -46,6 +46,7 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.drawing.SvgFacade;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -138,7 +139,7 @@ public class LoopCsarInstaller implements CsarInstaller {
         if (microServicesChain.isEmpty()) {
             microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
         }
-        newLoop.setModelPropertiesJson(createModelPropertiesJson(csar));
+        newLoop.setModelService(createServiceModel(csar));
         newLoop.setMicroServicePolicies(
                 createMicroServicePolicies(microServicesChain, csar, blueprintArtifact, newLoop));
         newLoop.setOperationalPolicies(createOperationalPolicies(csar, blueprintArtifact, newLoop));
@@ -219,16 +220,17 @@ public class LoopCsarInstaller implements CsarInstaller {
         return resourcesProp;
     }
 
-    private static JsonObject createModelPropertiesJson(CsarHandler csar) {
-        JsonObject modelProperties = new JsonObject();
-        // Add service details
-        modelProperties.add("serviceDetails", JsonUtils.GSON.fromJson(
-                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class));
+    private Service createServiceModel(CsarHandler csar) {
+        JsonObject serviceDetails = JsonUtils.GSON.fromJson(
+                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
+
         // Add properties details for each type, VfModule, VF, VFC, ....
         JsonObject resourcesProp = createServicePropertiesByType(csar);
         resourcesProp.add("VFModule", createVfModuleProperties(csar));
-        modelProperties.add("resourceDetails", resourcesProp);
-        return modelProperties;
+
+        Service modelService = new Service(serviceDetails, resourcesProp);
+
+        return modelService;
     }
 
     private JsonObject getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {
