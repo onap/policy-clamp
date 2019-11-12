@@ -39,12 +39,20 @@ import Search from '@material-ui/icons/Search';
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
+const TextModal = styled.textarea`
+	margin-top: 20px;
+	white-space:pre;
+	background-color: ${props => props.theme.toscaTextareaBackgroundColor};
+	text-align: justify;
+	font-size: ${props => props.theme.toscaTextareaFontSize};
+	width: 100%;
+	height: 300px;
+`
+const cellStyle = { border: '1px solid black' };
+const headerStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
+const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
 
-const vtmCellStyle = { border: '1px solid black' };
-const vtmHeaderStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
-const vtmRowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
-
-export default class ViewToscalModal extends React.Component {
+export default class ViewToscalPolicyModal extends React.Component {
 
 	state = {
 		show: true,
@@ -53,28 +61,28 @@ export default class ViewToscalModal extends React.Component {
 		toscaNames: [],
 		toscaColumns: [
 			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
-				cellStyle: vtmCellStyle,
-				headerStyle: vtmHeaderStyle
+				cellStyle: cellStyle,
+				headerStyle: headerStyle
 			},
 			{ title: "Micro Service Name", field: "toscaModelName",
-				cellStyle: vtmCellStyle,
-				headerStyle: vtmHeaderStyle
+				cellStyle: cellStyle,
+				headerStyle: headerStyle
 			},
 			{ title: "PolicyType", field: "policyType",
-				cellStyle: vtmCellStyle,
-				headerStyle: vtmHeaderStyle
+				cellStyle: cellStyle,
+				headerStyle: headerStyle
 			},
-			{ title: "Version", field: "version",
-				cellStyle: vtmCellStyle,
-				headerStyle: vtmHeaderStyle
+			{ title: "Version", field: "toscaModelRevisions[0].version",
+				cellStyle: cellStyle,
+				headerStyle: headerStyle
 			},
 			{ title: "Uploaded By", field: "userId",
-				cellStyle: vtmCellStyle,
-				headerStyle: vtmHeaderStyle
+				cellStyle: cellStyle,
+				headerStyle: headerStyle
 			},
 			{ title: "Uploaded Date", field: "lastUpdatedDate", editable: 'never',
-				cellStyle: vtmCellStyle,
-				headerStyle: vtmHeaderStyle
+				cellStyle: cellStyle,
+				headerStyle: headerStyle
 			}
 		],
 		tableIcons: {
@@ -91,16 +99,16 @@ export default class ViewToscalModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 		this.handleClose = this.handleClose.bind(this);
-		this.getToscaModels = this.getToscaModels.bind(this);
+		this.getPolicyToscaModels = this.getToscaPolicyModels.bind(this);
 		this.handleYamlContent = this.handleYamlContent.bind(this);
 	}
 
 	componentWillMount() {
-		this.getToscaModels();
+		this.getToscaPolicyModels();
 	}
 
-	getToscaModels() {
-	    TemplateMenuService.getToscaModels().then(toscaNames => {
+	getToscaPolicyModels() {
+	    TemplateMenuService.getToscaPolicyModels().then(toscaNames => {
 			this.setState({ toscaNames: toscaNames });
 		});
 	}
@@ -118,24 +126,23 @@ export default class ViewToscalModal extends React.Component {
 		return (
 			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
-					<Modal.Title className="title">View Tosca Model</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<MaterialTable
-					title={"View ToscaModel"}
+					title={"View Tosca Policy Models"}
 					data={this.state.toscaNames}
 					columns={this.state.toscaColumns}
 					icons={this.state.tableIcons}
 					onRowClick={(event, rowData) => {this.setState({content: rowData.toscaModelRevisions[0].toscaModelYaml, selectedRow: rowData.tableData.id})}}
 					options={{
-						headerStyle: vtmRowHeaderStyle,
+						headerStyle: rowHeaderStyle,
 						rowStyle: rowData => ({
 							backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
 						})
 					}}
 					/>
 					<div>
-						<textarea value={this.state.content} onChange={this.handleYamlContent}/>
+						<TextModal value={this.state.content} onChange={this.handleYamlContent}/>
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
