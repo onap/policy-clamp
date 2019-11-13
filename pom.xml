@@ -1164,7 +1164,7 @@
 						</goals>
 						<phase>deploy</phase>
 						<configuration>
-							<arguments>run-script publish</arguments>
+							<arguments>publish</arguments>
 						</configuration>
 					</execution>
 				</executions>
