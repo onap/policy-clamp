@@ -33,7 +33,7 @@ const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
 
-export default class UserInfo extends React.Component {
+export default class UserInfoModal extends React.Component {
 
 	constructor(props, context) {
 		super(props, context);

@@ -22,9 +22,9 @@
  */
 import React from 'react';
 import { shallow } from 'enzyme';
-import UserInfo from './UserInfo';
+import UserInfoModal from './UserInfoModal';
 
-describe('Verify UserInfo', () => {
+describe('Verify UserInfoModal', () => {
 
 	beforeEach(() => {
 		fetch.resetMocks();
@@ -42,7 +42,7 @@ describe('Verify UserInfo', () => {
 	})
 
 	it('Test the render method full permission', () => {
-		const component = shallow(<UserInfo />)
+		const component = shallow(<UserInfoModal />)
 		component.setState({ userInfo: {
 			"userName": "test",
 			"cldsVersion": "1.0.0",
@@ -57,7 +57,7 @@ describe('Verify UserInfo', () => {
 	});
 
 	it('Test the render method no permission', () => {
-		const component = shallow(<UserInfo />)
+		const component = shallow(<UserInfoModal />)
 		component.setState({ userInfo: {}
 		});
 
@@ -65,7 +65,7 @@ describe('Verify UserInfo', () => {
 	});
 
 	it('Test the render method read permission', () => {
-		const component = shallow(<UserInfo />)
+		const component = shallow(<UserInfoModal />)
 		component.setState({ userInfo: {
 			"userName": "test",
 			"cldsVersion": "1.0.0",

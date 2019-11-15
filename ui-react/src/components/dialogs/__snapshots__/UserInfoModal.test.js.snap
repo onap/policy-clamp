@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Verify UserInfo Test the render method full permission 1`] = `
+exports[`Verify UserInfoModal Test the render method full permission 1`] = `
 <Styled(Bootstrap(Modal))
   onHide={[Function]}
   show={true}
