@@ -22,11 +22,11 @@
  */
 import React from 'react';
 import { shallow } from 'enzyme';
-import LoopProperties from './LoopProperties';
-import LoopCache from '../../api/LoopCache';
-import LoopService from '../../api/LoopService';
+import LoopPropertiesModal from './LoopPropertiesModal';
+import LoopCache from '../../../api/LoopCache';
+import LoopService from '../../../api/LoopService';
 
-describe('Verify LoopProperties', () => {
+describe('Verify LoopPropertiesModal', () => {
 	const loopCache = new LoopCache({
 		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
 		"globalPropertiesJson": {
@@ -39,7 +39,7 @@ describe('Verify LoopProperties', () => {
 
 	it('Test the render method', () => {
 		const component = shallow(
-			<LoopProperties loopCache={loopCache}/>
+			<LoopPropertiesModal loopCache={loopCache}/>
 		)
 		component.setState({ show: true,
 			temporaryPropertiesJson: {
@@ -62,8 +62,8 @@ describe('Verify LoopProperties', () => {
 
 	it('Test handleClose', () => {
 		const historyMock = { push: jest.fn() };
-		const handleClose = jest.spyOn(LoopProperties.prototype,'handleClose');
-		const component = shallow(<LoopProperties history={historyMock} loopCache={loopCache}/>)
+		const handleClose = jest.spyOn(LoopPropertiesModal.prototype,'handleClose');
+		const component = shallow(<LoopPropertiesModal history={historyMock} loopCache={loopCache}/>)
 
 		component.find('[variant="secondary"]').prop('onClick')();
 
@@ -75,7 +75,7 @@ describe('Verify LoopProperties', () => {
 		const flushPromises = () => new Promise(setImmediate);
 		const historyMock = { push: jest.fn() };
 		const loadLoopFunction = jest.fn();
-		const handleSave = jest.spyOn(LoopProperties.prototype,'handleSave');
+		const handleSave = jest.spyOn(LoopPropertiesModal.prototype,'handleSave');
 		LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
 				ok: true,
@@ -84,7 +84,7 @@ describe('Verify LoopProperties', () => {
 			});
 		});
 
-		const component = shallow(<LoopProperties history={historyMock} 
+		const component = shallow(<LoopPropertiesModal history={historyMock} 
 						loopCache={loopCache} loadLoopFunction={loadLoopFunction} />)
 
 		component.find('[variant="primary"]').prop('onClick')();
@@ -98,7 +98,7 @@ describe('Verify LoopProperties', () => {
 
 	it('Onchange event', () => {
 		const event = {target:{name:"dcaeDeployParameters", value:"{\"location_id\": \"testLocation\",\"policy_id\": \"TCA_h2NMX_v1_0_ResourceInstanceName1_tca\"}"}};
-		const component = shallow(<LoopProperties loopCache={loopCache}/>);
+		const component = shallow(<LoopPropertiesModal loopCache={loopCache}/>);
 
 		component.find('FormControl').simulate('change', event);
 		component.update();

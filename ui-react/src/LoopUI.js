@@ -39,7 +39,7 @@ import { Route } from 'react-router-dom'
 import OpenLoopModal from './components/dialogs/OpenLoop/OpenLoopModal';
 import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
 import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
-import LoopProperties from './components/dialogs/LoopProperties';
+import LoopPropertiesModal from './components/dialogs/Loop/LoopPropertiesModal';
 import UserInfo from './components/dialogs/UserInfo';
 import LoopService from './api/LoopService';
 import ViewToscaModal from './components/dialogs/ViewToscaModal/ViewToscaModal';
@@ -253,7 +253,7 @@ export default class LoopUI extends React.Component {
 					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} showAlert={this.showAlert}/>)} />
 				<Route path="/configurationPolicyModal/:componentName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
-				<Route path="/loopProperties" render={(routeProps) => (<LoopProperties {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
+				<Route path="/loopProperties" render={(routeProps) => (<LoopPropertiesModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/userInfo" render={(routeProps) => (<UserInfo {...routeProps} />)} />
 				<Route path="/closeLoop" render={this.closeLoop} />
 				<Route path="/submit" render={(routeProps) => (<PerformAction {...routeProps} loopAction="submit" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />

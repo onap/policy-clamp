@@ -25,12 +25,12 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import styled from 'styled-components';
-import LoopService from '../../api/LoopService';
+import LoopService from '../../../api/LoopService';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
-export default class LoopProperties extends React.Component {
+export default class LoopPropertiesModal extends React.Component {
 
 	state = {
 		show: true,
