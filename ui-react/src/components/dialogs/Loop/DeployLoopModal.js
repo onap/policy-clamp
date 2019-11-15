@@ -21,8 +21,8 @@
  *
  */
 import React from 'react';
-import LoopActionService from '../../api/LoopActionService';
-import LoopService from '../../api/LoopService';
+import LoopActionService from '../../../api/LoopActionService';
+import LoopService from '../../../api/LoopService';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -34,7 +34,7 @@ const ModalStyled = styled(Modal)`
 const FormStyled = styled(Form.Group)`
 	padding: .25rem 1.5rem;
 `
-export default class DeployLoop extends React.Component {
+export default class DeployLoopModal extends React.Component {
 	state = {
 		loopCache: this.props.loopCache,
 		temporaryPropertiesJson: JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties())),

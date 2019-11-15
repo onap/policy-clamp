@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Verify DeployLoop Test the render method 1`] = `
+exports[`Verify DeployLoopModal Test the render method 1`] = `
 <Styled(Bootstrap(Modal))
   onHide={[Function]}
   show={true}

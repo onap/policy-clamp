@@ -26,7 +26,7 @@ import ConfigurationPolicyModal from './ConfigurationPolicyModal';
 import LoopCache from '../../../api/LoopCache';
 
 
-describe('Verify DeployLoop', () => {
+describe('Verify ConfigurationPolicyModal', () => {
     beforeEach(() => {
         fetch.resetMocks();
         fetch.mockImplementation(() => {

@@ -45,7 +45,7 @@ import LoopService from './api/LoopService';
 import ViewToscaModal from './components/dialogs/ViewToscaModal/ViewToscaModal';
 import PerformAction from './components/dialogs/PerformActions';
 import RefreshStatus from './components/dialogs/RefreshStatus';
-import DeployLoop from './components/dialogs/DeployLoop';
+import DeployLoopModal from './components/dialogs/Loop/DeployLoopModal';
 import Alert from 'react-bootstrap/Alert';
 
 import { Link } from 'react-router-dom';
@@ -261,7 +261,7 @@ export default class LoopUI extends React.Component {
 				<Route path="/restart" render={(routeProps) => (<PerformAction {...routeProps} loopAction="restart" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
 				<Route path="/delete" render={(routeProps) => (<PerformAction {...routeProps} loopAction="delete" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
 				<Route path="/undeploy" render={(routeProps) => (<PerformAction {...routeProps} loopAction="undeploy" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
-				<Route path="/deploy" render={(routeProps) => (<DeployLoop {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
+				<Route path="/deploy" render={(routeProps) => (<DeployLoopModal {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
 				<Route path="/refreshStatus" render={(routeProps) => (<RefreshStatus {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
 				<Route path="/logout" render={this.logout} />
 				<GlobalClampStyle />
