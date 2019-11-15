@@ -36,7 +36,7 @@ import LoopCache from './api/LoopCache';
 import LoopActionService from './api/LoopActionService';
 
 import { Route } from 'react-router-dom'
-import OpenLoopModal from './components/dialogs/OpenLoop/OpenLoopModal';
+import OpenLoopModal from './components/dialogs/Loop/OpenLoopModal';
 import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
 import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
 import LoopPropertiesModal from './components/dialogs/Loop/LoopPropertiesModal';
