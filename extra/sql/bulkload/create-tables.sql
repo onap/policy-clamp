@@ -23,9 +23,9 @@
         dcae_deployment_status_url varchar(255),
         global_properties_json json,
         last_computed_state varchar(255) not null,
-        model_properties_json json,
         operational_policy_schema json,
         svg_representation MEDIUMTEXT,
+        service_uuid varchar(255),
         primary key (name)
     ) engine=InnoDB;
 
@@ -52,10 +52,23 @@
         primary key (name)
     ) engine=InnoDB;
 
+    create table services (
+       service_uuid varchar(255) not null,
+        name varchar(255) not null,
+        resource_details json,
+        service_details json,
+        primary key (service_uuid)
+    ) engine=InnoDB;
+
     alter table loop_logs 
        add constraint FK1j0cda46aickcaoxqoo34khg2 
        foreign key (loop_id) 
        references loops (name);
+
+    alter table loops 
+       add constraint FK4b9wnqopxogwek014i1shqw7w 
+       foreign key (service_uuid) 
+       references services (service_uuid);
 
     alter table loops_microservicepolicies 
        add constraint FKem7tp1cdlpwe28av7ef91j1yl 

@@ -104,7 +104,6 @@ public class CldsServiceItCase {
 
     @Test
     public void testCldsInfoAuthorized() throws Exception {
-        Authentication authentication;
         List<GrantedAuthority> authList = new LinkedList<GrantedAuthority>();
         authList.add(new SimpleGrantedAuthority("permission-type-cl-manage|dev|*"));
         authList.add(new SimpleGrantedAuthority("permission-type-cl|dev|read"));
@@ -113,6 +112,7 @@ public class CldsServiceItCase {
         authList.add(new SimpleGrantedAuthority("permission-type-template|dev|update"));
         authList.add(new SimpleGrantedAuthority("permission-type-filter-vf|dev|*"));
         authList.add(new SimpleGrantedAuthority("permission-type-cl-event|dev|*"));
+        Authentication authentication;
         authentication = new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList);
 
         Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);

@@ -202,10 +202,13 @@ public class CsarInstallerItCase {
         assertThat(loop.getGlobalPropertiesJson().get("dcaeDeployParameters")).isNotNull();
         assertThat(loop.getMicroServicePolicies()).hasSize(1);
         assertThat(loop.getOperationalPolicies()).hasSize(1);
-        assertThat(loop.getModelPropertiesJson().get("serviceDetails")).isNotNull();
-        assertThat(loop.getModelPropertiesJson().get("resourceDetails")).isNotNull();
+        assertThat(loop.getModelService().getServiceUuid()).isEqualTo("63cac700-ab9a-4115-a74f-7eac85e3fce0");
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"),
-                JsonUtils.GSON.toJson(loop.getModelPropertiesJson()), true);
+            JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService()), true);
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/service-details.json"),
+                JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService().getServiceDetails()), true);
+        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/resource-details.json"),
+                JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService().getResourceDetails()), true);
         assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
 
         loop = loopsRepo

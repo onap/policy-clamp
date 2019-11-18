@@ -21,35 +21,35 @@
  *
  */
 
-package org.onap.clamp.policy.operational;
+package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import java.io.IOException;
-
 import org.junit.Test;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.service.Service;
-import org.skyscreamer.jsonassert.JSONAssert;
 
-public class OperationalPolicyRepresentationBuilderTest {
+public class ServiceTest {
 
     @Test
-    public void testOperationalPolicyPayloadConstruction() throws IOException {
-        JsonObject jsonModel = new GsonBuilder().create()
-                .fromJson(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"), JsonObject.class);
-        Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
-                jsonModel.get("resourceDetails").getAsJsonObject());
+    public void equalMethodTest() {
+        String serviceStr1 = "{\"name\": \"vLoadBalancerMS\", \"UUID\": \"63cac700-ab9a-4115-a74f-7eac85e3fce0\"}";
+        String serviceStr2 = "{\"name\": \"vLoadBalancerMS2\", \"UUID\": \"63cac700-ab9a-4115-a74f-7eac85e3fce0\"}";
+        String serviceStr3 = "{\"name\": \"vLoadBalancerMS\",\"UUID\": \"63cac700-ab9a-4115-a74f-7eac85e3fc11\"}";
+        String resourceStr = "{\"CP\": {}}";
 
-        JsonObject jsonSchema = OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(service);
+        Service service1 = new Service(JsonUtils.GSON.fromJson(serviceStr1, JsonObject.class), 
+                JsonUtils.GSON.fromJson(resourceStr, JsonObject.class));
 
-        assertThat(jsonSchema).isNotNull();
+        Service service2 = new Service(JsonUtils.GSON.fromJson(serviceStr2, JsonObject.class), null);
 
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/operational-policy-json-schema.json"),
-                new GsonBuilder().create().toJson(jsonSchema), false);
+        Service service3 = new Service(JsonUtils.GSON.fromJson(serviceStr3, JsonObject.class), 
+                JsonUtils.GSON.fromJson(resourceStr, JsonObject.class));
+
+        assertThat(service1.equals(service2)).isEqualTo(true);
+        assertThat(service1.equals(service3)).isEqualTo(false);
     }
 
 }

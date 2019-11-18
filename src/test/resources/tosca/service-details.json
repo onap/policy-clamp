@@ -1,0 +1,15 @@
+{
+	"serviceType": "",
+	"namingPolicy": "",
+	"environmentContext": "General_Revenue-Bearing",
+	"serviceEcompNaming": "true",
+	"serviceRole": "",
+	"name": "vLoadBalancerMS",
+	"description": "vLBMS",
+	"invariantUUID": "30ec5b59-4799-48d8-ac5f-1058a6b0e48f",
+	"ecompGeneratedNaming": "true",
+	"category": "Network L4+",
+	"type": "Service",
+	"UUID": "63cac700-ab9a-4115-a74f-7eac85e3fce0",
+	"instantiationType": "A-la-carte"
+}

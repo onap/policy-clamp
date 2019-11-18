@@ -48,6 +48,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -61,6 +62,7 @@ import org.onap.clamp.loop.components.external.DcaeComponent;
 import org.onap.clamp.loop.components.external.ExternalComponent;
 import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LoopLog;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.onap.clamp.policy.operational.OperationalPolicyRepresentationBuilder;
@@ -109,9 +111,9 @@ public class Loop implements Serializable {
     private JsonObject globalPropertiesJson;
 
     @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "model_properties_json")
-    private JsonObject modelPropertiesJson;
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "service_uuid")
+    private Service modelService;
 
     @Column(columnDefinition = "MEDIUMTEXT", nullable = false, name = "blueprint_yaml")
     private String blueprint;
@@ -266,15 +268,15 @@ public class Loop implements Serializable {
         this.dcaeBlueprintId = dcaeBlueprintId;
     }
 
-    public JsonObject getModelPropertiesJson() {
-        return modelPropertiesJson;
+    public Service getModelService() {
+        return modelService;
     }
 
-    void setModelPropertiesJson(JsonObject modelPropertiesJson) {
-        this.modelPropertiesJson = modelPropertiesJson;
+    void setModelService(Service modelService) {
+        this.modelService = modelService;
         try {
             this.operationalPolicySchema = OperationalPolicyRepresentationBuilder
-                    .generateOperationalPolicySchema(this.getModelPropertiesJson());
+                    .generateOperationalPolicySchema(this.getModelService());
         } catch (JsonSyntaxException | IOException | NullPointerException e) {
             logger.error("Unable to generate the operational policy Schema ... ", e);
             this.operationalPolicySchema = new JsonObject();
