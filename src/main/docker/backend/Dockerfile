@@ -21,7 +21,7 @@
 #
 ###
 
-FROM openjdk:13-alpine3.10
+FROM alpine:3.10
 
 MAINTAINER "The Onap Team"
 LABEL Description="This immage contains alpine, openjdk 11 and clamp"
@@ -32,6 +32,8 @@ ENV HTTP_PROXY=$http_proxy
 ENV HTTPS_PROXY=$https_proxy
 ENV http_proxy=$HTTP_PROXY
 ENV https_proxy=$HTTPS_PROXY
+
+RUN apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
 RUN addgroup onap && adduser -D -G onap clamp
 VOLUME /opt/clamp/config
