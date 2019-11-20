@@ -21,6 +21,8 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       "menuFontColor": "black",
       "menuHighlightedBackgroundColor": "#337ab7",
       "menuHighlightedFontColor": "white",
+      "toscaTextareaBackgroundColor": "#E8E8E8",
+      "toscaTextareaFontSize": "13px",
     }
   }
 >
@@ -28,7 +30,11 @@ exports[`Verify OnapClamp Test the render method 1`] = `
     id="main_div"
   >
     <Route
-      path="/viewToscaModal"
+      path="/viewToscaPolicyModal"
+      render={[Function]}
+    />
+    <Route
+      path="/viewBlueprintMicroServiceTemplatesModal"
       render={[Function]}
     />
     <Route

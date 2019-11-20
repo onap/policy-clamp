@@ -86,9 +86,12 @@ export const DefaultClampTheme = {
 	loopViewerFontColor: 'yellow',
 	loopViewerHeaderBackgroundColor: '#337ab7',
 	loopViewerHeaderFontColor: 'white',
-	
+
 	menuBackgroundColor: 'white',
 	menuFontColor: 'black',
 	menuHighlightedBackgroundColor: '#337ab7',
-	menuHighlightedFontColor: 'white'
+	menuHighlightedFontColor: 'white',
+
+	toscaTextareaBackgroundColor: '#E8E8E8',
+	toscaTextareaFontSize: '13px'
 };
