@@ -46,6 +46,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -55,6 +56,7 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.Policy;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -89,6 +91,12 @@ public class OperationalPolicy implements Serializable, Policy {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loop_id", nullable = false)
     private Loop loop;
+
+    @Expose
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({ @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+        @JoinColumn(name = "policy_model_version", referencedColumnName = "version") })
+    private PolicyModel policyModel;
 
     public OperationalPolicy() {
         // Serialization
@@ -135,6 +143,33 @@ public class OperationalPolicy implements Serializable, Policy {
 
     public void setConfigurationsJson(JsonObject configurationsJson) {
         this.configurationsJson = configurationsJson;
+    }
+
+    /**
+     * policyModel getter.
+     * 
+     * @return the policyModel
+     */
+    public PolicyModel getPolicyModel() {
+        return policyModel;
+    }
+
+    /**
+     * policyModel setter.
+     * 
+     * @param policyModel the policyModel to set
+     */
+    public void setPolicyModel(PolicyModel policyModel) {
+        this.policyModel = policyModel;
+    }
+
+    /**
+     * name setter.
+     * 
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

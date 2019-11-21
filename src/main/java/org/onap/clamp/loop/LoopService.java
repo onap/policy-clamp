@@ -31,29 +31,23 @@ import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
-import org.onap.clamp.policy.microservice.MicroservicePolicyService;
+import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.onap.clamp.policy.operational.OperationalPolicyService;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@Component
 public class LoopService {
 
-    private final LoopsRepository loopsRepository;
-    private final MicroservicePolicyService microservicePolicyService;
-    private final OperationalPolicyService operationalPolicyService;
+    @Autowired
+    private LoopsRepository loopsRepository;
 
-    /**
-     * Constructor.
-     */
-    public LoopService(LoopsRepository loopsRepository, MicroservicePolicyService microservicePolicyService,
-        OperationalPolicyService operationalPolicyService) {
-        this.loopsRepository = loopsRepository;
-        this.microservicePolicyService = microservicePolicyService;
-        this.operationalPolicyService = operationalPolicyService;
-    }
+    @Autowired
+    private MicroServicePolicyService microservicePolicyService;
+
+    @Autowired
+    private OperationalPolicyService operationalPolicyService;
 
     Loop saveOrUpdateLoop(Loop loop) {
         return loopsRepository.save(loop);
@@ -109,6 +103,6 @@ public class LoopService {
 
     private Loop findClosedLoopByName(String loopName) {
         return loopsRepository.findById(loopName)
-            .orElseThrow(() -> new EntityNotFoundException("Couldn't find closed loop named: " + loopName));
+                .orElseThrow(() -> new EntityNotFoundException("Couldn't find closed loop named: " + loopName));
     }
 }

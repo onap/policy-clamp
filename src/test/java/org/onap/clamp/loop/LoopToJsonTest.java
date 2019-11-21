@@ -44,6 +44,9 @@ import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
+import org.onap.clamp.loop.template.LoopTemplate;
+import org.onap.clamp.loop.template.MicroServiceModel;
+import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -72,8 +75,28 @@ public class LoopToJsonTest {
         MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
                 gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
         microService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
-
         return microService;
+    }
+
+    private MicroServiceModel getMicroServiceModel(String yaml, String name, PolicyModel policyModel) {
+        MicroServiceModel model = new MicroServiceModel();
+        model.setBlueprint(yaml);
+        model.setName(name);
+        model.setPolicyModel(policyModel);
+        return model;
+    }
+
+    private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
+            String policyVariant) {
+        return new PolicyModel(policyType, policyModelTosca, version, policyAcronym, policyVariant);
+    }
+
+    private LoopTemplate getLoopTemplate(String name, String blueprint, String svgRepresentation,
+            Integer maxInstancesAllowed) {
+        LoopTemplate template = new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
+        template.addMicroServiceModel(getMicroServiceModel("yaml", "microService1",
+                getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1")));
+        return template;
     }
 
     private LoopLog getLoopLog(LogType type, String message, Loop loop) {
@@ -95,6 +118,8 @@ public class LoopToJsonTest {
         loopTest.addMicroServicePolicy(microServicePolicy);
         LoopLog loopLog = getLoopLog(LogType.INFO, "test message", loopTest);
         loopTest.addLog(loopLog);
+        LoopTemplate loopTemplate = getLoopTemplate("templateName", "yaml", "svg", 1);
+        loopTest.setLoopTemplate(loopTemplate);
 
         String jsonSerialized = JsonUtils.GSON_JPA_MODEL.toJson(loopTest);
         assertThat(jsonSerialized).isNotNull().isNotEmpty();
@@ -116,6 +141,9 @@ public class LoopToJsonTest {
         assertThat(loopTestDeserialized.getLoopLogs()).containsExactly(loopLog);
         assertThat((LoopLog) loopTestDeserialized.getLoopLogs().toArray()[0]).isEqualToIgnoringGivenFields(loopLog,
                 "loop");
+
+        // Verify the loop template
+        assertThat(loopTestDeserialized.getLoopTemplate()).isEqualTo(loopTemplate);
     }
 
     @Test
@@ -128,17 +156,14 @@ public class LoopToJsonTest {
         Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
                 jsonModel.get("resourceDetails").getAsJsonObject(), "1.0");
         loopTest2.setModelService(service);
-
         String jsonSerialized = JsonUtils.GSON_JPA_MODEL.toJson(loopTest2);
         assertThat(jsonSerialized).isNotNull().isNotEmpty();
         System.out.println(jsonSerialized);
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/loop.json"),
-                jsonSerialized, true);
 
         Loop loopTestDeserialized = JsonUtils.GSON_JPA_MODEL.fromJson(jsonSerialized, Loop.class);
         assertNotNull(loopTestDeserialized);
-        assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest2, "modelService", 
-            "svgRepresentation", "blueprint", "components");
+        assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest2, "modelService", "svgRepresentation",
+                "blueprint", "components");
     }
 
     @Test

@@ -21,12 +21,11 @@
  *
  */
 
-package org.onap.clamp.loop.log;
+package org.onap.clamp.loop.template;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LoopLogRepository extends JpaRepository<LoopLog, Long> {
-
+public interface MicroServiceModelsRepository extends JpaRepository<MicroServiceModel, String> {
 }

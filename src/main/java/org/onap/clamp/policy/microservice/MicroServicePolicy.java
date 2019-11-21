@@ -40,7 +40,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -52,13 +54,15 @@ import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.common.AuditEntity;
+import org.onap.clamp.loop.template.MicroServiceModel;
 import org.onap.clamp.policy.Policy;
 import org.yaml.snakeyaml.Yaml;
 
 @Entity
 @Table(name = "micro_service_policies")
 @TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
-public class MicroServicePolicy implements Serializable, Policy {
+public class MicroServicePolicy extends AuditEntity implements Serializable, Policy {
     /**
      * The serial version ID.
      */
@@ -73,8 +77,16 @@ public class MicroServicePolicy implements Serializable, Policy {
     private String name;
 
     @Expose
-    @Column(nullable = false, name = "model_type")
+    @Column(nullable = false, name = "policy_model_type")
     private String modelType;
+
+    @Expose
+    @Column(name = "context")
+    private String context;
+
+    @Expose
+    @Column(name = "device_type_scope")
+    private String deviceTypeScope;
 
     @Expose
     @Type(type = "json")
@@ -95,6 +107,11 @@ public class MicroServicePolicy implements Serializable, Policy {
 
     @ManyToMany(mappedBy = "microServicePolicies", fetch = FetchType.EAGER)
     private Set<Loop> usedByLoops = new HashSet<>();
+
+    @Expose
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "micro_service_model_id")
+    private MicroServiceModel microServiceModel;
 
     public MicroServicePolicy() {
         // serialization
@@ -201,6 +218,49 @@ public class MicroServicePolicy implements Serializable, Policy {
 
     void setUsedByLoops(Set<Loop> usedBy) {
         this.usedByLoops = usedBy;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    public String getDeviceTypeScope() {
+        return deviceTypeScope;
+    }
+
+    public void setDeviceTypeScope(String deviceTypeScope) {
+        this.deviceTypeScope = deviceTypeScope;
+    }
+
+    /**
+     * microServiceModel getter.
+     * 
+     * @return the microServiceModel
+     */
+    public MicroServiceModel getMicroServiceModel() {
+        return microServiceModel;
+    }
+
+    /**
+     * microServiceModel setter.
+     * 
+     * @param microServiceModel the microServiceModel to set
+     */
+    public void setMicroServiceModel(MicroServiceModel microServiceModel) {
+        this.microServiceModel = microServiceModel;
+    }
+
+    /**
+     * name setter.
+     * 
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

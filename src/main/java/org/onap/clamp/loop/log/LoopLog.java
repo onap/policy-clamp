@@ -190,9 +190,7 @@ public class LoopLog implements Serializable, Comparable<LoopLog> {
         if (arg0.getId() == null) {
             return -1;
         }
-
         return arg0.getId().compareTo(this.getId());
-
     }
 
 }

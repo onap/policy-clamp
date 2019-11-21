@@ -32,18 +32,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.util.Set;
+
 import javax.transaction.Transactional;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
-
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
-import org.onap.clamp.policy.microservice.MicroservicePolicyService;
+import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,7 +60,7 @@ public class LoopControllerTestItCase {
     LoopsRepository loopsRepository;
 
     @Autowired
-    MicroservicePolicyService microServicePolicyService;
+    MicroServicePolicyService microServicePolicyService;
 
     @Autowired
     LoopController loopController;
@@ -78,18 +75,10 @@ public class LoopControllerTestItCase {
         return new Loop(loopName, loopBlueprint, loopSvg);
     }
 
-    @Before
-    public void setUp() {
-        saveTestLoopToDb();
-    }
-
-    @After
-    public void tearDown() {
-        loopsRepository.deleteAll();
-    }
-
     @Test
+    @Transactional
     public void testUpdateOperationalPolicies() {
+        saveTestLoopToDb();
         String policy = "[{\"name\":\"OPERATIONAL_CLholmes31_v1_0_vFW_PG_T10_k8s-holmes-rules\","
                 + "\"configurationsJson\":{\"guard_policies\":{},"
                 + "\"operational_policy\":{\"controlLoop\":{\"trigger_policy\":\"unique-policy-id-1-modifyConfig\","
@@ -113,6 +102,7 @@ public class LoopControllerTestItCase {
     @Test
     @Transactional
     public void testUpdateGlobalProperties() {
+        saveTestLoopToDb();
         String policy = "{\"dcaeDeployParameters\":{\"aaiEnrichmentHost\":\"aai.onap.svc.cluster.local\","
                 + "\"aaiEnrichmentPort\":\"8443\",\"enableAAIEnrichment\":\"false\",\"dmaap_host\":\"message-router"
                 + ".onap\",\"dmaap_port\":\"3904\",\"enableRedisCaching\":\"false\",\"redisHosts\":\"dcae-redis.onap"
@@ -134,9 +124,10 @@ public class LoopControllerTestItCase {
     @Test
     @Transactional
     public void testUpdateMicroservicePolicy() {
+        saveTestLoopToDb();
         MicroServicePolicy policy = new MicroServicePolicy("policyName", "",
-                                                      "tosca_definitions_version: tosca_simple_yaml_1_0_0", false,
-                                                      JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                "tosca_definitions_version: tosca_simple_yaml_1_0_0", false,
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
         loopController.updateMicroservicePolicy(EXAMPLE_LOOP_NAME, policy);
         assertThat(microServicePolicyService.isExisting("policyName")).isTrue();
     }
@@ -144,7 +135,8 @@ public class LoopControllerTestItCase {
     @Test
     @Transactional
     public void testGetSvgRepresentation() {
-        String svgRepresentation =  loopController.getSvgRepresentation(EXAMPLE_LOOP_NAME);
+        saveTestLoopToDb();
+        String svgRepresentation = loopController.getSvgRepresentation(EXAMPLE_LOOP_NAME);
         assertThat(svgRepresentation).isEqualTo("representation");
     }
 }

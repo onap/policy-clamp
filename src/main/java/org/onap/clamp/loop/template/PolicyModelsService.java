@@ -21,17 +21,39 @@
  *
  */
 
-package org.onap.clamp.loop;
+package org.onap.clamp.loop.template;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Repository
-public interface LoopsRepository extends JpaRepository<Loop, String> {
+@Service
+public class PolicyModelsService {
+    private final PolicyModelsRepository policyModelsRepository;
 
-    @Query("SELECT loop.name FROM Loop as loop")
-    List<String> getAllLoopNames();
+    @Autowired
+    public PolicyModelsService(PolicyModelsRepository policyModelrepo) {
+        policyModelsRepository = policyModelrepo;
+    }
+
+    public PolicyModel saveOrUpdatePolicyModel(PolicyModel policyModel) {
+        return policyModelsRepository.save(policyModel);
+    }
+
+    public List<String> getAllPolicyModelTypes() {
+        return policyModelsRepository.getAllPolicyModelType();
+    }
+
+    public Iterable<PolicyModel> getAllPolicyModels() {
+        return policyModelsRepository.findAll();
+    }
+
+    public PolicyModel getPolicyModel(String type, String version) {
+        return policyModelsRepository.findById(new PolicyModelId(type, version)).orElse(null);
+    }
+
+    public Iterable<PolicyModel> getAllPolicyModelsByType(String type) {
+        return policyModelsRepository.findByPolicyModelType(type);
+    }
 }

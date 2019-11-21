@@ -23,10 +23,10 @@
 
 package org.onap.clamp.policy.operational;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface OperationalPolicyRepository extends CrudRepository<OperationalPolicy, String> {
+public interface OperationalPolicyRepository extends JpaRepository<OperationalPolicy, String> {
     void deleteByName(String policyName);
 }

@@ -23,10 +23,10 @@
 
 package org.onap.clamp.policy.microservice;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface MicroServicePolicyRepository extends CrudRepository<MicroServicePolicy, String> {
+public interface MicroServicePolicyRepository extends JpaRepository<MicroServicePolicy, String> {
 
 }

@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.gson.JsonObject;
 
 import java.util.Set;
+
 import javax.transaction.Transactional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.log.LogType;
@@ -77,10 +77,10 @@ public class LoopLogServiceTestItCase {
         assertThat(loopLogs).hasSize(1);
         LoopLog loopLog = loopLogs.iterator().next();
         assertThat(loopLog.getMessage()).isEqualTo(SAMPLE_LOG_MESSAGE);
-        loopsRepository.deleteAll();
     }
 
     @Test
+    @Transactional
     public void testLoopLog() {
         LoopLog log = new LoopLog();
         Long id = Long.valueOf(100);

@@ -35,12 +35,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MicroservicePolicyService implements PolicyService<MicroServicePolicy> {
+public class MicroServicePolicyService implements PolicyService<MicroServicePolicy> {
 
     private final MicroServicePolicyRepository repository;
 
     @Autowired
-    public MicroservicePolicyService(MicroServicePolicyRepository repository) {
+    public MicroServicePolicyService(MicroServicePolicyRepository repository) {
         this.repository = repository;
     }
 
