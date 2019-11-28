@@ -48,6 +48,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.onap.clamp.clds.util.ClampVersioning;
+import org.onap.clamp.util.PassDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -61,18 +62,24 @@ public class CamelConfiguration extends RouteBuilder {
     @Autowired
     private Environment env;
 
-    private void configureDefaultSslProperties() {
+    private void configureDefaultSslProperties() throws IOException {
         if (env.getProperty("server.ssl.trust-store") != null) {
             URL storeResource = Thread.currentThread().getContextClassLoader()
                 .getResource(env.getProperty("server.ssl.trust-store").replaceAll("classpath:", ""));
             System.setProperty("javax.net.ssl.trustStore", storeResource.getPath());
-            System.setProperty("javax.net.ssl.trustStorePassword", env.getProperty("server.ssl.trust-store-password"));
+            String keyFile = env.getProperty("clamp.config.keyFile");
+            String trustStorePass = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"),
+                keyFile);
+            System.setProperty("javax.net.ssl.trustStorePassword", trustStorePass);
             System.setProperty("javax.net.ssl.trustStoreType", "jks");
             System.setProperty("ssl.TrustManagerFactory.algorithm", "PKIX");
             storeResource = Thread.currentThread().getContextClassLoader()
                 .getResource(env.getProperty("server.ssl.key-store").replaceAll("classpath:", ""));
             System.setProperty("javax.net.ssl.keyStore", storeResource.getPath());
-            System.setProperty("javax.net.ssl.keyStorePassword", env.getProperty("server.ssl.key-store-password"));
+
+            String keyStorePass = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
+                keyFile);
+            System.setProperty("javax.net.ssl.keyStorePassword", keyStorePass);
             System.setProperty("javax.net.ssl.keyStoreType", env.getProperty("server.ssl.key-store-type"));
         }
     }
@@ -81,10 +88,12 @@ public class CamelConfiguration extends RouteBuilder {
         throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException, CertificateException, IOException {
         if (env.getProperty("server.ssl.trust-store") != null) {
             KeyStore truststore = KeyStore.getInstance("JKS");
+            String keyFile = env.getProperty("clamp.config.keyFile");
+            String password = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"), keyFile);
             truststore.load(
                 Thread.currentThread().getContextClassLoader()
                     .getResourceAsStream(env.getProperty("server.ssl.trust-store").replaceAll("classpath:", "")),
-                env.getProperty("server.ssl.trust-store-password").toCharArray());
+                    password.toCharArray());
 
             TrustManagerFactory trustFactory = TrustManagerFactory.getInstance("PKIX");
             trustFactory.init(truststore);

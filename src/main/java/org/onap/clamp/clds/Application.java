@@ -29,6 +29,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -39,6 +40,7 @@ import java.util.Enumeration;
 import org.apache.catalina.connector.Connector;
 import org.onap.clamp.clds.util.ClampVersioning;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.util.PassDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -135,6 +137,8 @@ public class Application extends SpringBootServletInitializer {
         return tomcat;
     }
 
+
+
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
             eelfLogger.warn("HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
@@ -155,10 +159,12 @@ public class Application extends SpringBootServletInitializer {
             if (env.getProperty("server.ssl.key-store") != null) {
 
                 KeyStore keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
-                keystore.load(
-                        ResourceFileUtil.getResourceAsStream(
-                                env.getProperty("server.ssl.key-store").replaceAll("classpath:", "")),
-                        env.getProperty("server.ssl.key-store-password").toCharArray());
+                String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"), 
+                        env.getProperty("clamp.config.keyFile"));
+                String keyStore = env.getProperty("server.ssl.key-store");
+                InputStream is = ResourceFileUtil.getResourceAsStream(keyStore.replaceAll("classpath:", ""));
+                keystore.load(is, password.toCharArray());
+
                 Enumeration<String> aliases = keystore.aliases();
                 while (aliases.hasMoreElements()) {
                     String alias = aliases.nextElement();
