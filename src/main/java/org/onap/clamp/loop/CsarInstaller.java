@@ -42,11 +42,11 @@ import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintParser;
 import org.onap.clamp.clds.sdc.controller.installer.ChainGenerator;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
-import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.onap.clamp.loop.service.Service;
+import org.onap.clamp.loop.service.ServiceRepository;
 import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -70,10 +70,10 @@ import org.yaml.snakeyaml.Yaml;
  * received from SDC in DB.
  */
 @Component
-@Qualifier("loopInstaller")
-public class LoopCsarInstaller implements CsarInstaller {
+@Qualifier("csarInstaller")
+public class CsarInstaller {
 
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(LoopCsarInstaller.class);
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstaller.class);
     public static final String CONTROL_NAME_PREFIX = "ClosedLoop-";
     public static final String GET_INPUT_BLUEPRINT_PARAM = "get_input";
     // This will be used later as the policy scope
@@ -81,6 +81,9 @@ public class LoopCsarInstaller implements CsarInstaller {
 
     @Autowired
     LoopsRepository loopRepository;
+
+    @Autowired
+    ServiceRepository serviceRepository;
 
     @Autowired
     BlueprintParser blueprintParser;
@@ -94,9 +97,20 @@ public class LoopCsarInstaller implements CsarInstaller {
     @Autowired
     private SvgFacade svgFacade;
 
-    @Override
+   /**
+    * Verify whether Csar is deployed.
+    * 
+    * @param csar The Csar Handler
+    * @return The flag indicating whether Csar is deployed
+    * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
+    */
     public boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
         boolean alreadyInstalled = true;
+        JsonObject serviceDetails = JsonUtils.GSON.fromJson(
+                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
+        alreadyInstalled = alreadyInstalled
+                && serviceRepository.existsById(serviceDetails.get("UUID").getAsString());
+
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
             alreadyInstalled = alreadyInstalled
                     && loopRepository.existsById(Loop.generateLoopName(csar.getSdcNotification().getServiceName(),
@@ -104,27 +118,73 @@ public class LoopCsarInstaller implements CsarInstaller {
                             blueprint.getValue().getResourceAttached().getResourceInstanceName(),
                             blueprint.getValue().getBlueprintArtifactName()));
         }
+        
         return alreadyInstalled;
     }
 
-    @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    /**
+     * Install the service and loops from the csar.
+     * 
+     * @param csar The Csar Handler
+     * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
+     * @throws InterruptedException The InterruptedException
+     */
     public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException, InterruptedException {
+        logger.info("Installing the CSAR " + csar.getFilePath());
+        installTheLoop(csar, installTheService(csar));
+        logger.info("Successfully installed the CSAR " + csar.getFilePath());
+    }
+
+    /**
+     * Install the Loop from the csar.
+     * 
+     * @param csar The Csar Handler
+     * @param service The service object that is related to the loop
+     * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
+     * @throws InterruptedException The InterruptedException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void installTheLoop(CsarHandler csar, Service service) 
+            throws SdcArtifactInstallerException, InterruptedException {
         try {
-            logger.info("Installing the CSAR " + csar.getFilePath());
+            logger.info("Installing the Loops");
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
                 logger.info("Processing blueprint " + blueprint.getValue().getBlueprintArtifactName());
-                loopRepository.save(createLoopFromBlueprint(csar, blueprint.getValue()));
+                loopRepository.save(createLoopFromBlueprint(csar, blueprint.getValue(), service));
             }
-            logger.info("Successfully installed the CSAR " + csar.getFilePath());
+            logger.info("Successfully installed the Loops ");
         } catch (IOException e) {
-            throw new SdcArtifactInstallerException("Exception caught during the Csar installation in database", e);
+            throw new SdcArtifactInstallerException("Exception caught during the Loop installation in database", e);
         } catch (ParseException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Dcae query to get ServiceTypeId", e);
         }
     }
 
-    private Loop createLoopFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact)
+    /**
+     * Install the Service from the csar.
+     * 
+     * @param csar The Csar Handler
+     * @return The service object
+     */
+    @Transactional
+    public Service installTheService(CsarHandler csar) {
+        logger.info("Start to install the Service from csar");
+        JsonObject serviceDetails = JsonUtils.GSON.fromJson(
+                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
+
+        // Add properties details for each type, VfModule, VF, VFC, ....
+        JsonObject resourcesProp = createServicePropertiesByType(csar);
+        resourcesProp.add("VFModule", createVfModuleProperties(csar));
+
+        Service modelService = new Service(serviceDetails, resourcesProp, 
+                csar.getSdcNotification().getServiceVersion());
+
+        serviceRepository.save(modelService);
+        logger.info("Successfully installed the Service");
+        return modelService;
+    }
+
+    private Loop createLoopFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact, Service service)
             throws IOException, ParseException, InterruptedException {
         Loop newLoop = new Loop();
         newLoop.setBlueprint(blueprintArtifact.getDcaeBlueprint());
@@ -139,7 +199,7 @@ public class LoopCsarInstaller implements CsarInstaller {
         if (microServicesChain.isEmpty()) {
             microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
         }
-        newLoop.setModelService(createServiceModel(csar));
+        newLoop.setModelService(service);
         newLoop.setMicroServicePolicies(
                 createMicroServicePolicies(microServicesChain, csar, blueprintArtifact, newLoop));
         newLoop.setOperationalPolicies(createOperationalPolicies(csar, blueprintArtifact, newLoop));
@@ -218,19 +278,6 @@ public class LoopCsarInstaller implements CsarInstaller {
             resourcesProp.add(type.getValue(), resourcesPropByType);
         }
         return resourcesProp;
-    }
-
-    private Service createServiceModel(CsarHandler csar) {
-        JsonObject serviceDetails = JsonUtils.GSON.fromJson(
-                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
-
-        // Add properties details for each type, VfModule, VF, VFC, ....
-        JsonObject resourcesProp = createServicePropertiesByType(csar);
-        resourcesProp.add("VFModule", createVfModuleProperties(csar));
-
-        Service modelService = new Service(serviceDetails, resourcesProp);
-
-        return modelService;
     }
 
     private JsonObject getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {

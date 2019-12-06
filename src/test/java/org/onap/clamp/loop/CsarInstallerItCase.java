@@ -48,9 +48,9 @@ import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
-import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.loop.service.ServiceRepository;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
@@ -83,7 +83,10 @@ public class CsarInstallerItCase {
     private LoopsRepository loopsRepo;
 
     @Autowired
-    @Qualifier("loopInstaller")
+    ServiceRepository serviceRepository;
+
+    @Autowired
+    @Qualifier("csarInstaller")
     private CsarInstaller csarInstaller;
 
     private BlueprintArtifact buildFakeBuildprintArtifact(String instanceName, String invariantResourceUuid,
@@ -186,6 +189,8 @@ public class CsarInstallerItCase {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
+        assertThat(serviceRepository
+                .existsById("63cac700-ab9a-4115-a74f-7eac85e3fce0")).isTrue();
         assertThat(loopsRepo
                 .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")))
                         .isTrue();

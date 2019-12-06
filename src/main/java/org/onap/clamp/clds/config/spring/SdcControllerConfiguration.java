@@ -37,7 +37,7 @@ import org.onap.clamp.clds.config.sdc.SdcControllersConfiguration;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.sdc.controller.SdcSingleController;
 import org.onap.clamp.clds.sdc.controller.SdcSingleControllerStatus;
-import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
+import org.onap.clamp.loop.CsarInstaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -58,7 +58,7 @@ public class SdcControllerConfiguration {
 
     @Autowired
     public SdcControllerConfiguration(ClampProperties clampProp,
-            @Qualifier("loopInstaller") CsarInstaller csarInstaller) {
+            @Qualifier("csarInstaller") CsarInstaller csarInstaller) {
         this.clampProp = clampProp;
         this.csarInstaller = csarInstaller;
     }
