@@ -3,7 +3,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,13 +29,32 @@ import com.google.gson.annotations.Expose;
 /**
  * This class maps the DCAE inventory answer to a nice pojo.
  */
-public class DcaeInventoryResponse {
+public class DcaeInventoryResponse implements Comparable<DcaeInventoryResponse> {
 
     @Expose
     private String typeName;
 
     @Expose
     private String typeId;
+
+    @Expose
+    private String blueprintTemplate;
+
+    /**
+     * This field will be used to know all blueprints associated a loop.
+     */
+    @Expose
+    private String asdcServiceId;
+
+    /**
+     * This field will be used to know to order of each blueprint microservice in a
+     * loop.
+     */
+    @Expose
+    private String asdcResourceId;
+
+    @Expose
+    private String selfLink;
 
     public String getTypeName() {
         return typeName;
@@ -51,5 +70,44 @@ public class DcaeInventoryResponse {
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
+    }
+
+    public String getBlueprintTemplate() {
+        return blueprintTemplate;
+    }
+
+    public void setBlueprintTemplate(String blueprintTemplate) {
+        this.blueprintTemplate = blueprintTemplate;
+    }
+
+    public String getAsdcServiceId() {
+        return asdcServiceId;
+    }
+
+    public void setAsdcServiceId(String asdcServiceId) {
+        this.asdcServiceId = asdcServiceId;
+    }
+
+    public String getAsdcResourceId() {
+        return asdcResourceId;
+    }
+
+    public void setAsdcResourceId(String asdcResourceId) {
+        this.asdcResourceId = asdcResourceId;
+    }
+
+    public String getSelfLink() {
+        return selfLink;
+    }
+
+    public void setSelfLink(String selfLink) {
+        this.selfLink = selfLink;
+    }
+
+    @Override
+    public int compareTo(DcaeInventoryResponse otherResponse) {
+        int thisResourceId = Integer.parseInt(this.asdcResourceId);
+        int otherResourceId = Integer.parseInt(otherResponse.getAsdcResourceId());
+        return (thisResourceId < otherResourceId ? -1 : (thisResourceId > otherResourceId ? 1 : 0));
     }
 }
