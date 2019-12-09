@@ -42,7 +42,7 @@ public class OperationalPolicyRepresentationBuilderTest {
         JsonObject jsonModel = new GsonBuilder().create()
                 .fromJson(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"), JsonObject.class);
         Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
-                jsonModel.get("resourceDetails").getAsJsonObject());
+                jsonModel.get("resourceDetails").getAsJsonObject(), "1.0");
 
         JsonObject jsonSchema = OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(service);
 

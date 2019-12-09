@@ -41,12 +41,12 @@ public class ServiceTest {
         String resourceStr = "{\"CP\": {}}";
 
         Service service1 = new Service(JsonUtils.GSON.fromJson(serviceStr1, JsonObject.class), 
-                JsonUtils.GSON.fromJson(resourceStr, JsonObject.class));
+                JsonUtils.GSON.fromJson(resourceStr, JsonObject.class), "1.0");
 
-        Service service2 = new Service(JsonUtils.GSON.fromJson(serviceStr2, JsonObject.class), null);
+        Service service2 = new Service(JsonUtils.GSON.fromJson(serviceStr2, JsonObject.class), null, "1.0");
 
         Service service3 = new Service(JsonUtils.GSON.fromJson(serviceStr3, JsonObject.class), 
-                JsonUtils.GSON.fromJson(resourceStr, JsonObject.class));
+                JsonUtils.GSON.fromJson(resourceStr, JsonObject.class), "1.0");
 
         assertThat(service1.equals(service2)).isEqualTo(true);
         assertThat(service1.equals(service3)).isEqualTo(false);

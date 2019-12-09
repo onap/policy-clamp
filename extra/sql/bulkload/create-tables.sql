@@ -57,6 +57,7 @@
         name varchar(255) not null,
         resource_details json,
         service_details json,
+        version varchar(255),
         primary key (service_uuid)
     ) engine=InnoDB;
 

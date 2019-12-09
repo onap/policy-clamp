@@ -45,7 +45,7 @@ import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
 import org.onap.clamp.clds.sdc.controller.SdcSingleController;
 import org.onap.clamp.clds.sdc.controller.SdcSingleControllerStatus;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
-import org.onap.clamp.clds.sdc.controller.installer.CsarInstaller;
+import org.onap.clamp.loop.CsarInstaller;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;

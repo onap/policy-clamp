@@ -111,7 +111,7 @@ public class Loop implements Serializable {
     private JsonObject globalPropertiesJson;
 
     @Expose
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_uuid")
     private Service modelService;
 

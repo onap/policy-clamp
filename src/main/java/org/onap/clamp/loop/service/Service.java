@@ -62,6 +62,9 @@ public class Service implements Serializable {
     @Column(nullable = false, name = "name")
     private String name;
 
+    @Column(name = "version")
+    private String version;
+
     @Expose
     @Type(type = "json")
     @Column(columnDefinition = "json", name = "service_details")
@@ -81,11 +84,12 @@ public class Service implements Serializable {
     /**
      * Constructor.
      */
-    public Service(JsonObject serviceDetails, JsonObject resourceDetails) {
+    public Service(JsonObject serviceDetails, JsonObject resourceDetails, String version) {
         this.name = serviceDetails.get("name").getAsString();
         this.serviceUuid = serviceDetails.get("UUID").getAsString();
         this.serviceDetails = serviceDetails;
         this.resourceDetails = resourceDetails;
+        this.version = version;
     }
 
     public String getServiceUuid() {

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,14 +21,12 @@
  *
  */
 
-package org.onap.clamp.clds.sdc.controller.installer;
+package org.onap.clamp.loop.service;
 
-import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface CsarInstaller {
-    String TEMPLATE_NAME_PREFIX = "DCAE-Designer-Template-";
+@Repository
+public interface ServiceRepository extends CrudRepository<Service, String> {
 
-    boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException;
-
-    public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException, InterruptedException;
 }
