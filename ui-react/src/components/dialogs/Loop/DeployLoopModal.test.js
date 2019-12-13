@@ -32,8 +32,10 @@ describe('Verify DeployLoopModal', () => {
 		"name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
 		"globalPropertiesJson": {
 			"dcaeDeployParameters": {
-				"location_id": "",
-				"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+				"testMs": {
+					"location_id": "",
+					"policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+				}
 			}
 		}
 	});
@@ -101,10 +103,9 @@ describe('Verify DeployLoopModal', () => {
 	it('Onchange event', () => {
 		const event = { target: { name: "location_id", value: "testLocation"} };
 		const component = shallow(<DeployLoopModal loopCache={loopCache}/>);
-		const forms = component.find('StateManager');
 
 		component.find('[name="location_id"]').simulate('change', event);
 		component.update();
-		expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.location_id).toEqual("testLocation");
+		expect(component.state('temporaryPropertiesJson').dcaeDeployParameters.testMs.location_id).toEqual("testLocation");
 	});
 });

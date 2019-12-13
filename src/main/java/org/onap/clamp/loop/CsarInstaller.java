@@ -45,6 +45,7 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.drawing.SvgFacade;
+import org.onap.clamp.loop.deploy.DeployParameters;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.service.ServiceRepository;
 import org.onap.clamp.policy.Policy;
@@ -240,9 +241,7 @@ public class CsarInstaller {
     }
 
     private JsonObject createGlobalPropertiesJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {
-        JsonObject globalProperties = new JsonObject();
-        globalProperties.add("dcaeDeployParameters", getAllBlueprintParametersInJson(blueprintArtifact, newLoop));
-        return globalProperties;
+        return new DeployParameters(blueprintArtifact, newLoop).getDeploymentParametersinJson();
     }
 
     private static JsonObject createVfModuleProperties(CsarHandler csar) {
@@ -280,24 +279,6 @@ public class CsarInstaller {
         return resourcesProp;
     }
 
-    private JsonObject getAllBlueprintParametersInJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {
-        JsonObject node = new JsonObject();
-        Yaml yaml = new Yaml();
-        Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
-                .load(blueprintArtifact.getDcaeBlueprint())).get("inputs"));
-        inputsNodes.entrySet().stream().filter(e -> !e.getKey().contains("policy_id")).forEach(elem -> {
-            Object defaultValue = ((Map<String, Object>) elem.getValue()).get("default");
-            if (defaultValue != null) {
-                addPropertyToNode(node, elem.getKey(), defaultValue);
-            } else {
-                node.addProperty(elem.getKey(), "");
-            }
-        });
-        // For Dublin only one micro service is expected
-        node.addProperty("policy_id", ((MicroServicePolicy) newLoop.getMicroServicePolicies().toArray()[0]).getName());
-        return node;
-    }
-
     /**
      * ll get the latest version of the artifact (version can be specified to DCAE
      * call).
@@ -311,17 +292,4 @@ public class CsarInstaller {
                 blueprintArtifact.getResourceAttached().getResourceInvariantUUID());
     }
 
-    private void addPropertyToNode(JsonObject node, String key, Object value) {
-        if (value instanceof String) {
-            node.addProperty(key, (String) value);
-        } else if (value instanceof Number) {
-            node.addProperty(key, (Number) value);
-        } else if (value instanceof Boolean) {
-            node.addProperty(key, (Boolean) value);
-        } else if (value instanceof Character) {
-            node.addProperty(key, (Character) value);
-        } else {
-            node.addProperty(key, JsonUtils.GSON.toJson(value));
-        }
-    }
 }

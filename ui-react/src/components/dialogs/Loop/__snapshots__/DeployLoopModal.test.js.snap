@@ -14,34 +14,48 @@ exports[`Verify DeployLoopModal Test the render method 1`] = `
       Deployment parameters
     </ModalTitle>
   </ModalHeader>
-  <Styled(FormGroup)>
-    <FormLabel
-      column={false}
-      srOnly={false}
+  <Tabs
+    activeKey="testMs"
+    id="controlled-tab-example"
+    mountOnEnter={false}
+    onSelect={[Function]}
+    unmountOnExit={false}
+    variant="tabs"
+  >
+    <Tab
+      eventKey="testMs"
+      title="testMs"
     >
-      location_id
-    </FormLabel>
-    <FormControl
-      defaultValue=""
-      name="location_id"
-      onChange={[Function]}
-      type="text"
-    />
-  </Styled(FormGroup)>
-  <Styled(FormGroup)>
-    <FormLabel
-      column={false}
-      srOnly={false}
-    >
-      policy_id
-    </FormLabel>
-    <FormControl
-      defaultValue="TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
-      name="policy_id"
-      onChange={[Function]}
-      type="text"
-    />
-  </Styled(FormGroup)>
+      <Styled(FormGroup)>
+        <FormLabel
+          column={false}
+          srOnly={false}
+        >
+          location_id
+        </FormLabel>
+        <FormControl
+          defaultValue=""
+          name="location_id"
+          onChange={[Function]}
+          type="text"
+        />
+      </Styled(FormGroup)>
+      <Styled(FormGroup)>
+        <FormLabel
+          column={false}
+          srOnly={false}
+        >
+          policy_id
+        </FormLabel>
+        <FormControl
+          defaultValue="TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+          name="policy_id"
+          onChange={[Function]}
+          type="text"
+        />
+      </Styled(FormGroup)>
+    </Tab>
+  </Tabs>
   <ModalFooter>
     <Button
       active={false}

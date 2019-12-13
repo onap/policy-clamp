@@ -1,0 +1,43 @@
+{
+  "dcaeDeployParameters": {
+    "testName": {
+      "location_id": "",
+      "service_id": "",
+      "policy_id": "testName"
+    },
+    "testName1": {
+      "aaiEnrichmentHost": "aai.onap.svc.cluster.local",
+      "aaiEnrichmentPort": "8443",
+      "enableAAIEnrichment": true,
+      "dmaap_host": "message-router.onap",
+      "dmaap_port": "3904",
+      "enableRedisCaching": false,
+      "redisHosts": "dcae-redis.onap.svc.cluster.local:6379",
+      "tag_version": "nexus3.onap.org:10001/onap/org.onap.dcaegen2.deployments.tca-cdap-container:1.1.1",
+      "consul_host": "consul-server.onap",
+      "consul_port": "8500",
+      "cbs_host": "config-binding-servicel",
+      "cbs_port": "10000",
+      "external_port": "32012",
+      "policy_model_id": "onap.policies.monitoring.cdap.tca.hi.lo.app",
+      "policy_id": "testName"
+    },
+    "testName2": {
+      "aaiEnrichmentHost": "aai.onap.svc.cluster.local",
+      "aaiEnrichmentPort": "8443",
+      "enableAAIEnrichment": true,
+      "dmaap_host": "message-router.onap.svc.cluster.local",
+      "dmaap_port": "3904",
+      "enableRedisCaching": false,
+      "redisHosts": "dcae-redis.onap.svc.cluster.local:6379",
+      "tag_version": "nexus3.onap.org:10001/onap/org.onap.dcaegen2.deployments.tca-cdap-container:1.1.0-STAGING-latest",
+      "consul_host": "consul-server.onap.svc.cluster.local",
+      "consul_port": "8500",
+      "cbs_host": "config-binding-service.dcae.svc.cluster.local",
+      "cbs_port": "10000",
+      "external_port": "32012",
+      "policy_model_id": "onap.policies.monitoring.cdap.tca.hi.lo.app",
+      "policy_id": "testName"
+    }
+  }
+}
