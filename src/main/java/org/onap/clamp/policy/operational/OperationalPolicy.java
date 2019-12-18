@@ -30,8 +30,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -79,6 +81,11 @@ public class OperationalPolicy implements Serializable, Policy {
     @Column(columnDefinition = "json", name = "configurations_json")
     private JsonObject configurationsJson;
 
+    @Expose
+    @Type(type = "json")
+    @Column(columnDefinition = "json", name = "json_representation", nullable = false)
+    private JsonObject jsonRepresentation;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loop_id", nullable = false)
     private Loop loop;
@@ -100,6 +107,13 @@ public class OperationalPolicy implements Serializable, Policy {
         this.loop = loop;
         this.configurationsJson = configurationsJson;
         LegacyOperationalPolicy.preloadConfiguration(this.configurationsJson, loop);
+        try {
+            this.jsonRepresentation = OperationalPolicyRepresentationBuilder
+                    .generateOperationalPolicySchema(loop.getModelService());
+        } catch (JsonSyntaxException | IOException | NullPointerException e) {
+            logger.error("Unable to generate the operational policy Schema ... ", e);
+            this.jsonRepresentation = new JsonObject();
+        }
     }
 
     @Override
@@ -125,7 +139,11 @@ public class OperationalPolicy implements Serializable, Policy {
 
     @Override
     public JsonObject getJsonRepresentation() {
-        return null;
+         return jsonRepresentation;
+    }
+
+    void setJsonRepresentation(JsonObject jsonRepresentation) {
+        this.jsonRepresentation = jsonRepresentation;
     }
 
     @Override

@@ -26,10 +26,8 @@ package org.onap.clamp.loop;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,7 +63,6 @@ import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-import org.onap.clamp.policy.operational.OperationalPolicyRepresentationBuilder;
 
 @Entity
 @Table(name = "loops")
@@ -99,11 +96,6 @@ public class Loop implements Serializable {
 
     @Column(columnDefinition = "MEDIUMTEXT", name = "svg_representation")
     private String svgRepresentation;
-
-    @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "operational_policy_schema")
-    private JsonObject operationalPolicySchema;
 
     @Expose
     @Type(type = "json")
@@ -274,13 +266,6 @@ public class Loop implements Serializable {
 
     void setModelService(Service modelService) {
         this.modelService = modelService;
-        try {
-            this.operationalPolicySchema = OperationalPolicyRepresentationBuilder
-                    .generateOperationalPolicySchema(this.getModelService());
-        } catch (JsonSyntaxException | IOException | NullPointerException e) {
-            logger.error("Unable to generate the operational policy Schema ... ", e);
-            this.operationalPolicySchema = new JsonObject();
-        }
     }
 
     public Map<String, ExternalComponent> getComponents() {

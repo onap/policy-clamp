@@ -23,7 +23,6 @@
         dcae_deployment_status_url varchar(255),
         global_properties_json json,
         last_computed_state varchar(255) not null,
-        operational_policy_schema json,
         svg_representation MEDIUMTEXT,
         service_uuid varchar(255),
         primary key (name)
@@ -48,6 +47,7 @@
     create table operational_policies (
        name varchar(255) not null,
         configurations_json json,
+        json_representation json not null,
         loop_id varchar(255) not null,
         primary key (name)
     ) engine=InnoDB;
