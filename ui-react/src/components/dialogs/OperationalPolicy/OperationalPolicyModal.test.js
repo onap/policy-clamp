@@ -46,9 +46,9 @@ describe('Verify OperationalPolicyModal', () => {
                         "controlLoop": {},
                         "policies": []
                     }
-                }
-             }],
-            "operationalPolicySchema": {"schema": {}}
+                },
+                "jsonRepresentation" : {"schema": {}}
+             }]
     });
     const historyMock = { push: jest.fn() };
     const flushPromises = () => new Promise(setImmediate);

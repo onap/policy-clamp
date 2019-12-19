@@ -114,7 +114,7 @@ export default class OperationalPolicyModal extends React.Component {
 			console.error("NO Operational policy schema found");
 			return;
 		}
-		var operationalPoliciesData = this.state.loopCache.getOperationalPolicies();
+		var operationalPoliciesData = this.state.loopCache.getOperationalPoliciesNoJsonSchema();
 
 		this.setState({
 				jsonEditor: new JSONEditor(document.getElementById("editor"),

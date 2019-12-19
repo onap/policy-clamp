@@ -53,11 +53,17 @@ export default class LoopCache {
 	}
 	
 	getOperationalPolicyJsonSchema() {
-		return this.loopJsonCache["operationalPolicySchema"];
+		return this.loopJsonCache["operationalPolicies"]["0"]["jsonRepresentation"];
 	}
 
 	getOperationalPolicies() {
 		return this.loopJsonCache["operationalPolicies"];
+	}
+
+	getOperationalPoliciesNoJsonSchema() {
+		var operationalPolicies = JSON.parse(JSON.stringify(this.loopJsonCache["operationalPolicies"]));
+		delete operationalPolicies[0]["jsonRepresentation"];
+		return operationalPolicies;
 	}
 
 	getGlobalProperties() {

@@ -49,13 +49,36 @@ describe('Verify LoopCache functions', () => {
           "operational_policy": {
             "controlLoop": {},
             "policies": []
-
           }
-        }
+        },
+       "jsonRepresentation": {
+        "schema": {}
+      }
       }];
       expect(loopCache.getOperationalPolicies()).toStrictEqual(opPolicy);
     });
 
+    it('getOperationalPoliciesNoJsonSchema', () => {
+      const opPolicy = [{
+        "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
+        "configurationsJson": {
+          "guard_policies": {},
+          "operational_policy": {
+            "controlLoop": {},
+            "policies": []
+          }
+        }
+      }];
+      expect(loopCache.getOperationalPoliciesNoJsonSchema()).toStrictEqual(opPolicy);
+    });
+
+    it('getOperationalPolicyJsonSchema', () => {
+      const jsonSchema = {
+          "schema": {}
+      };
+
+      expect(loopCache.getOperationalPolicyJsonSchema()).toStrictEqual(jsonSchema);
+    });
     it('getGlobalProperties', () => {
       const globelProp = {
         "dcaeDeployParameters": {

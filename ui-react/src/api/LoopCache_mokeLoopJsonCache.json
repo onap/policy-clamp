@@ -93,6 +93,9 @@
           "controlLoop": {},
           "policies": []
         }
+      },
+      "jsonRepresentation": {
+        "schema": {}
       }
     }
   ],
