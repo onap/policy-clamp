@@ -17,7 +17,6 @@
 			<stop />
 		</when>
 	</route>
-
 	<route id="update-policy-status-for-loop">
 		<from uri="direct:update-policy-status-for-loop" />
 		<setProperty propertyName="policyComponent">

@@ -117,4 +117,14 @@ public class LoopController {
         Loop loop = loopService.getLoop(loopName);
         return loop != null ? loop.getSvgRepresentation() : null;
     }
+
+    /**
+     * Refresh the Operational Policy Json representation of the loop.
+     *
+     * @param loopName The loop name
+     * @return The refreshed Loop
+     */
+    public Loop refreshOpPolicyJsonRepresentation(String loopName) {
+        return loopService.refreshOpPolicyJsonRepresentation(loopName);
+    }
 }

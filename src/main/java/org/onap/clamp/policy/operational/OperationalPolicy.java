@@ -247,4 +247,13 @@ public class OperationalPolicy implements Serializable, Policy {
         return result;
     }
 
+    public void updateJsonRepresentation () {
+        try {
+            this.jsonRepresentation = OperationalPolicyRepresentationBuilder
+                    .generateOperationalPolicySchema(loop.getModelService());
+        } catch (JsonSyntaxException | IOException | NullPointerException e) {
+            logger.error("Unable to generate the operational policy Schema ... ", e);
+            this.jsonRepresentation = new JsonObject();
+        }
+    }
 }

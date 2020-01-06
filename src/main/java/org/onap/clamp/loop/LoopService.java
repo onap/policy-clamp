@@ -111,4 +111,14 @@ public class LoopService {
         return loopsRepository.findById(loopName)
             .orElseThrow(() -> new EntityNotFoundException("Couldn't find closed loop named: " + loopName));
     }
+
+    public Loop refreshOpPolicyJsonRepresentation(String loopName) {
+        Loop loop = findClosedLoopByName(loopName);
+        Set<OperationalPolicy> policyList = loop.getOperationalPolicies();
+        for (OperationalPolicy policy : policyList) {
+            policy.updateJsonRepresentation();
+        }
+        loop.setOperationalPolicies(policyList);
+        return loopsRepository.save(loop);
+    }
 }
