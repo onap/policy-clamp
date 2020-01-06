@@ -252,7 +252,7 @@ export default class LoopUI extends React.Component {
 				<Route path="/viewToscaPolicyModal" render={(routeProps) => (<ViewToscaPolicyModal {...routeProps} />)} />
 				<Route path="/viewBlueprintMicroServiceTemplatesModal" render={(routeProps) => (<ViewBlueprintMicroServiceTemplatesModal {...routeProps} />)} />
 				<Route path="/operationalPolicyModal"
-					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} showAlert={this.showAlert}/>)} />
+					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
 				<Route path="/configurationPolicyModal/:componentName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
 				<Route path="/loopProperties" render={(routeProps) => (<LoopPropertiesModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />

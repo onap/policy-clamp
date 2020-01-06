@@ -57,7 +57,7 @@ describe('Verify OperationalPolicyModal', () => {
       const handleClose = jest.spyOn(OperationalPolicyModal.prototype,'handleClose');
       const component = mount(<OperationalPolicyModal history={historyMock} loopCache={loopCache}/>)
 
-      component.find('[variant="secondary"]').prop('onClick')();
+      component.find('[variant="secondary"]').get(0).props.onClick();
 
       expect(handleClose).toHaveBeenCalledTimes(1);
       expect(component.state('show')).toEqual(false);
@@ -77,5 +77,18 @@ describe('Verify OperationalPolicyModal', () => {
         expect(handleSave).toHaveBeenCalledTimes(1);
         expect(component.state('show')).toEqual(false);
         expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
+    });
+
+    it('Test handleRefresh', async () => {
+        const updateLoopFunction = jest.fn();
+        const handleRefresh = jest.spyOn(OperationalPolicyModal.prototype,'handleRefresh');
+        const component = mount(<OperationalPolicyModal loopCache={loopCache} updateLoopFunction={updateLoopFunction} />)
+
+        component.find('[variant="secondary"]').get(1).props.onClick();
+        await flushPromises();
+        component.update();
+
+        expect(handleRefresh).toHaveBeenCalledTimes(1);
+        expect(component.state('show')).toEqual(true);
     });
 });

@@ -152,4 +152,27 @@ export default class LoopService {
 				return "";
 			});
 	}
+
+	static refreshOpPolicyJson(loopName) {
+		return fetch('/restservices/clds/v2/loop/refreshOpPolicyJsonSchema/' + loopName, {
+			method: 'PUT',
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: 'same-origin'
+		})
+			.then(function (response) {
+				console.debug("Refresh Operational Policy Json Schema response received: ", response.status);
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error("Refresh Operational Policy Json Schema query failed");
+					return {};
+				}
+			})
+			.catch(function (error) {
+				console.error("Refresh Operational Policy Json Schema error received", error);
+				return {};
+			});
+	}
 }
