@@ -41,7 +41,7 @@ import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 
-public class DeployParametersTest {
+public class BlueprintInputParametersTest {
 
     private BlueprintArtifact buildFakeBuildprintArtifact(String blueprintFilePath) throws IOException {
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
@@ -77,8 +77,7 @@ public class DeployParametersTest {
         umServiceSet.add(umService);
         Mockito.when(loop.getMicroServicePolicies()).thenReturn(umServiceSet);
 
-        DeployParameters deployParams = new DeployParameters(buildFakeCsarHandler(), loop);
-        JsonObject paramJson = deployParams.getDeploymentParametersinJson();
+        JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(buildFakeCsarHandler(), loop);
 
         Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson), 
             ResourceFileUtil.getResourceAsString("example/sdc/expected-result/deployment-parameters.json"));

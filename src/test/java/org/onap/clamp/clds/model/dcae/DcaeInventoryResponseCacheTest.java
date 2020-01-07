@@ -32,6 +32,9 @@ public class DcaeInventoryResponseCacheTest {
 
     public static DcaeInventoryCache inventoryCache = new DcaeInventoryCache();
 
+    /**
+     * Initialize the responses.
+     */
     @BeforeClass
     public static void createExample() {
         DcaeInventoryResponse response1 = new DcaeInventoryResponse();

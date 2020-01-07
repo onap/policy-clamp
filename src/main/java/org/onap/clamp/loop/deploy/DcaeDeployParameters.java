@@ -35,33 +35,14 @@ import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.yaml.snakeyaml.Yaml;
 
-public class DeployParameters  {
+/**
+ * To decode the bluprint input parameters.
+ */
+public class DcaeDeployParameters  {
 
-    private LinkedHashMap<String, JsonObject> deploymentParamMap = new LinkedHashMap<String, JsonObject>();
-
-    /**
-     * Constructor.
-     * 
-     * @param blueprintArtifactList A list of blueprint artifacts
-     * @param loop The loop object
-     */
-    public DeployParameters(LinkedHashSet<BlueprintArtifact> blueprintArtifactList, Loop loop) {
-        this.init(blueprintArtifactList, loop);
-    }
-
-    /**
-     * Constructor.
-     * 
-     * @param blueprintArtifact One blueprint artifact
-     * @param loop The loop object
-     */
-    public DeployParameters(BlueprintArtifact blueprintArtifact, Loop loop) {
-        LinkedHashSet<BlueprintArtifact> blueprintArtifactList = new LinkedHashSet<BlueprintArtifact>();
-        blueprintArtifactList.add(blueprintArtifact);
-        this.init(blueprintArtifactList, loop);
-    }
-
-    private void init(LinkedHashSet<BlueprintArtifact> blueprintArtifactList, Loop loop) {
+    private static LinkedHashMap<String, JsonObject> init(LinkedHashSet<BlueprintArtifact> blueprintArtifactList,
+            Loop loop) {
+        LinkedHashMap<String, JsonObject> deploymentParamMap = new LinkedHashMap<String, JsonObject>();
         String microServiceName = ((MicroServicePolicy) loop.getMicroServicePolicies().toArray()[0]).getName();
         // Add index to the microservice name from the 2nd blueprint artifact for now.
         // Update the microservice names, when able to link the microserivce <-> blueprint in the future
@@ -69,15 +50,18 @@ public class DeployParameters  {
         for (BlueprintArtifact blueprintArtifact: blueprintArtifactList) {
             if (index > 0) {
                 deploymentParamMap.put(microServiceName + index, 
-                        generateDeployParameter(blueprintArtifact, microServiceName));
+                        generateDcaeDeployParameter(blueprintArtifact, microServiceName));
             } else {
-                deploymentParamMap.put(microServiceName, generateDeployParameter(blueprintArtifact, microServiceName));
+                deploymentParamMap.put(microServiceName, 
+                        generateDcaeDeployParameter(blueprintArtifact, microServiceName));
             }
             index++;
         }
+        return deploymentParamMap;
     }
 
-    private JsonObject generateDeployParameter(BlueprintArtifact blueprintArtifact, String microServiceName) {
+    private static JsonObject generateDcaeDeployParameter(BlueprintArtifact blueprintArtifact,
+            String microServiceName) {
         JsonObject deployJsonBody = new JsonObject();
         Yaml yaml = new Yaml();
         Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
@@ -95,7 +79,7 @@ public class DeployParameters  {
         return deployJsonBody;
     }
 
-    private void addPropertyToNode(JsonObject node, String key, Object value) {
+    private static void addPropertyToNode(JsonObject node, String key, Object value) {
         if (value instanceof String) {
             node.addProperty(key, (String) value);
         } else if (value instanceof Number) {
@@ -114,7 +98,10 @@ public class DeployParameters  {
      *
      * @return The deploymentParameters in Json
      */
-    public JsonObject getDeploymentParametersinJson() {
+    public static JsonObject getDcaeDeploymentParametersInJson(LinkedHashSet<BlueprintArtifact> blueprintArtifactList,
+            Loop loop) {
+        LinkedHashMap<String, JsonObject> deploymentParamMap = init(blueprintArtifactList, loop);
+
         JsonObject globalProperties = new JsonObject();
         JsonObject deployParamJson = new JsonObject();
         for (Map.Entry<String, JsonObject> mapElement: deploymentParamMap.entrySet()) {
@@ -124,4 +111,14 @@ public class DeployParameters  {
         return globalProperties;
     }
 
+    /**
+     * Convert the object in Json.
+     *
+     * @return The deploymentParameters in Json
+     */
+    public static JsonObject getDcaeDeploymentParametersInJson(BlueprintArtifact blueprintArtifact, Loop loop) {
+        LinkedHashSet<BlueprintArtifact> blueprintArtifactList = new LinkedHashSet<BlueprintArtifact>();
+        blueprintArtifactList.add(blueprintArtifact);
+        return getDcaeDeploymentParametersInJson(blueprintArtifactList, loop);
+    }
 }

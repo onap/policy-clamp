@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.json.simple.parser.ParseException;
@@ -45,7 +44,7 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.drawing.SvgFacade;
-import org.onap.clamp.loop.deploy.DeployParameters;
+import org.onap.clamp.loop.deploy.DcaeDeployParameters;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.service.ServiceRepository;
 import org.onap.clamp.policy.Policy;
@@ -98,7 +97,7 @@ public class CsarInstaller {
     @Autowired
     private SvgFacade svgFacade;
 
-   /**
+    /**
     * Verify whether Csar is deployed.
     * 
     * @param csar The Csar Handler
@@ -241,7 +240,7 @@ public class CsarInstaller {
     }
 
     private JsonObject createGlobalPropertiesJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {
-        return new DeployParameters(blueprintArtifact, newLoop).getDeploymentParametersinJson();
+        return DcaeDeployParameters.getDcaeDeploymentParametersInJson(blueprintArtifact, newLoop);
     }
 
     private static JsonObject createVfModuleProperties(CsarHandler csar) {

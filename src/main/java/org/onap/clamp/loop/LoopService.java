@@ -112,6 +112,12 @@ public class LoopService {
             .orElseThrow(() -> new EntityNotFoundException("Couldn't find closed loop named: " + loopName));
     }
 
+    /**
+    * Api to refresh the Operational Policy UI window.
+    * 
+    * @param loopName The loop Name
+    * @return The refreshed loop object
+    */
     public Loop refreshOpPolicyJsonRepresentation(String loopName) {
         Loop loop = findClosedLoopByName(loopName);
         Set<OperationalPolicy> policyList = loop.getOperationalPolicies();

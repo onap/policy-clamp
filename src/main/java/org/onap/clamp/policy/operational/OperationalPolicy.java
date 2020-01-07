@@ -139,7 +139,7 @@ public class OperationalPolicy implements Serializable, Policy {
 
     @Override
     public JsonObject getJsonRepresentation() {
-         return jsonRepresentation;
+        return jsonRepresentation;
     }
 
     void setJsonRepresentation(JsonObject jsonRepresentation) {
@@ -247,7 +247,11 @@ public class OperationalPolicy implements Serializable, Policy {
         return result;
     }
 
-    public void updateJsonRepresentation () {
+    /**
+    * Regenerate the Operational Policy Json Representation.
+    *
+    */
+    public void updateJsonRepresentation() {
         try {
             this.jsonRepresentation = OperationalPolicyRepresentationBuilder
                     .generateOperationalPolicySchema(loop.getModelService());
