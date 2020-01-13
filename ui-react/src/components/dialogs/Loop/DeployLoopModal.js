@@ -37,11 +37,9 @@ const FormStyled = styled(Form.Group)`
 	padding: .25rem 1.5rem;
 `
 export default class DeployLoopModal extends React.Component {
-	state = {
-		loopCache: this.props.loopCache,
-		temporaryPropertiesJson: JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties())),
-		show: true
-	};
+
+
+		
 	constructor(props, context) {
 		super(props, context);
 
@@ -50,6 +48,24 @@ export default class DeployLoopModal extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.refreshStatus = this.refreshStatus.bind(this);
 		this.renderDeployParam = this.renderDeployParam.bind(this);
+
+		const propertiesJson = JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties()));
+		this.state = {
+			loopCache: this.props.loopCache,
+			temporaryPropertiesJson: propertiesJson,
+			show: true,
+			key: this.getInitialKeyValue(propertiesJson)
+		};
+	}
+	getInitialKeyValue(temporaryPropertiesJson) {
+		const deployJsonList = temporaryPropertiesJson["dcaeDeployParameters"];
+		let initialKey;
+		Object.keys(deployJsonList)
+			.filter((obj) => Object.keys(deployJsonList).indexOf(obj) === 0)
+			.map(obj =>
+				initialKey = obj
+		);
+		return initialKey;
 	}
 	componentWillReceiveProps(newProps) {
 		this.setState({
@@ -57,14 +73,7 @@ export default class DeployLoopModal extends React.Component {
 			show: true
 		});
 	}
-	componentDidMount() {
-		const deployJsonList = this.state.temporaryPropertiesJson["dcaeDeployParameters"];
-		Object.keys(deployJsonList)
-			.filter((obj) => Object.keys(deployJsonList).indexOf(obj) === 0)
-			.map(obj =>
-				this.setState({key: obj})
-		);
-	}
+
 	handleClose(){
 		this.props.history.push('/');
 	}
@@ -117,7 +126,6 @@ export default class DeployLoopModal extends React.Component {
 		);
 		return indents;
 	}
-
 	renderDeployParam(deployJson) {
 		var indents = [];
 		Object.keys(deployJson).map((item,key) =>
