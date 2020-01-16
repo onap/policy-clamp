@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import org.onap.aaf.cadi.Symm;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
@@ -43,8 +44,9 @@ public class PassDecoder {
 
     /**
      * Decode the password.
+     * 
      * @param encryptedPass The encrypted password
-     * @param keyFileIs The key file in InputStream format
+     * @param keyFile       The key file name in String
      */
     public static String decode(String encryptedPass, String keyFile) {
         if (null == keyFile) {

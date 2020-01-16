@@ -65,6 +65,13 @@ public class LoopService {
         loopsRepository.deleteById(loopName);
     }
 
+    /**
+     * This method is used to refresh the DCAE deployment status fields.
+     * 
+     * @param loop          The loop instance to be modified
+     * @param deploymentId  The deployment ID as returned by DCAE
+     * @param deploymentUrl The Deployment URL as returned by DCAE
+     */
     public void updateDcaeDeploymentFields(Loop loop, String deploymentId, String deploymentUrl) {
         loop.setDcaeDeploymentId(deploymentId);
         loop.setDcaeDeploymentStatusUrl(deploymentUrl);

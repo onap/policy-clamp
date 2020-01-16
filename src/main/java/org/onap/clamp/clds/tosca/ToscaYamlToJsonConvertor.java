@@ -360,21 +360,6 @@ public class ToscaYamlToJsonConvertor {
                         JSONArray jsonArray = new JSONArray();
                         ((LinkedHashMap<String, Object>) dataNodes.get(typeValue)).entrySet().stream().forEach(pmap -> {
                             if (pmap.getKey().equalsIgnoreCase(ToscaSchemaConstants.PROPERTIES)) {
-
-                                ((LinkedHashMap<String, Object>) pmap.getValue()).entrySet().stream().forEach(p -> {
-                                    if (p.getValue() instanceof Map) {
-                                        LinkedHashMap<String, Object> childNodeMap2 = (LinkedHashMap<String, Object>) p
-                                                .getValue();
-                                        if (childNodeMap2.containsKey(ToscaSchemaConstants.TYPE)
-                                                && (((String) childNodeMap2.get(ToscaSchemaConstants.TYPE))
-                                                        .contains(ToscaSchemaConstants.POLICY_DATA))) {
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                        ((LinkedHashMap<String, Object>) dataNodes.get(typeValue)).entrySet().stream().forEach(pmap -> {
-                            if (pmap.getKey().equalsIgnoreCase(ToscaSchemaConstants.PROPERTIES)) {
                                 parseToscaPropertiesForType(childObjectKey,
                                         (LinkedHashMap<String, Object>) pmap.getValue(), entrySchemaObject, childArray,
                                         jsonEntrySchema, dataNodes, true, incrementComplexSimpleTypeOrder());

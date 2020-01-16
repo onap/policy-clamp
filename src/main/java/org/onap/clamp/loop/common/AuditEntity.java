@@ -38,6 +38,10 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * This class is the parent of the hibernate entities requiring to be audited.
+ *
+ */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class AuditEntity {
@@ -66,6 +70,11 @@ public class AuditEntity {
         return createdDate;
     }
 
+    /**
+     * createdDate setter.
+     * 
+     * @param createdDate The created Date object
+     */
     public void setCreatedDate(Instant createdDate) {
         if (createdDate != null) {
             this.createdDate = createdDate.truncatedTo(ChronoUnit.SECONDS);
@@ -74,10 +83,20 @@ public class AuditEntity {
         }
     }
 
+    /**
+     * updatedDate getter.
+     * 
+     * @return the updatedDate
+     */
     public Instant getUpdatedDate() {
         return updatedDate;
     }
 
+    /**
+     * updatedDate setter.
+     * 
+     * @param updatedDate updatedDate to set
+     */
     public void setUpdatedDate(Instant updatedDate) {
         if (updatedDate != null) {
             this.updatedDate = updatedDate.truncatedTo(ChronoUnit.SECONDS);
@@ -86,22 +105,45 @@ public class AuditEntity {
         }
     }
 
+    /**
+     * updatedBy getter.
+     * 
+     * @return the updatedBy
+     */
     public String getUpdatedBy() {
         return updatedBy;
     }
 
+    /**
+     * updatedBy setter.
+     * 
+     * @param updatedBy the updatedBy
+     */
     public void setUpdatedBy(String updatedBy) {
         this.updatedBy = updatedBy;
     }
 
+    /**
+     * createdBy getter.
+     * 
+     * @return the createdBy
+     */
     public String getCreatedBy() {
         return createdBy;
     }
 
+    /**
+     * createdBy setter.
+     * 
+     * @param createdBy the createdBy to set
+     */
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
+    /**
+     * Empty constructor.
+     */
     public AuditEntity() {
     }
 

@@ -86,11 +86,10 @@ public class Service implements Serializable {
      */
     public Service(String serviceDetails, String resourceDetails) {
         JsonObject serviceDetailsJson = JsonUtils.GSON.fromJson(serviceDetails, JsonObject.class);
-        JsonObject resourceDetailsJson = JsonUtils.GSON.fromJson(resourceDetails, JsonObject.class);
         this.name = serviceDetailsJson.get("name").getAsString();
         this.serviceUuid = serviceDetailsJson.get("UUID").getAsString();
         this.serviceDetails = serviceDetailsJson;
-        this.resourceDetails = resourceDetailsJson;
+        this.resourceDetails = JsonUtils.GSON.fromJson(resourceDetails, JsonObject.class);
     }
 
     /**

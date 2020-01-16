@@ -58,7 +58,7 @@ public class CldsConfiguration {
     /**
      * This loads the file system.properties.
      * 
-     * @return
+     * @return The PropertiesFactoryBean
      */
     @Bean(name = "mapper")
     public PropertiesFactoryBean mapper() {
