@@ -153,7 +153,7 @@ public class ClampCadiFilter extends CadiFilter {
                                 URLDecoder.decode(certHeader, StandardCharsets.UTF_8.toString()).getBytes()));
                 X509Certificate caCert = (X509Certificate) certificateFactory
                         .generateCertificate(new ByteArrayInputStream(
-                        ResourceFileUtil.getResourceAsString("clds/aaf/ssl/ca-certs.pem").getBytes()));
+                                ResourceFileUtil.getResourceAsString("clds/aaf/ssl/ca-certs.pem").getBytes()));
 
                 X509Certificate[] certifArray = ((X509Certificate[]) request
                         .getAttribute("javax.servlet.request.X509Certificate"));

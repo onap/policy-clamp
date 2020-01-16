@@ -39,8 +39,8 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
-
 
 @Entity
 @Table(name = "services")
@@ -76,13 +76,25 @@ public class Service implements Serializable {
     private JsonObject resourceDetails;
 
     /**
-     * Public constructor.
+     * Default constructor for serialization.
      */
     public Service() {
     }
 
     /**
-     * Constructor.
+     * Constructor with string.
+     */
+    public Service(String serviceDetails, String resourceDetails) {
+        JsonObject serviceDetailsJson = JsonUtils.GSON.fromJson(serviceDetails, JsonObject.class);
+        JsonObject resourceDetailsJson = JsonUtils.GSON.fromJson(resourceDetails, JsonObject.class);
+        this.name = serviceDetailsJson.get("name").getAsString();
+        this.serviceUuid = serviceDetailsJson.get("UUID").getAsString();
+        this.serviceDetails = serviceDetailsJson;
+        this.resourceDetails = resourceDetailsJson;
+    }
+
+    /**
+     * Constructor with Json Object.
      */
     public Service(JsonObject serviceDetails, JsonObject resourceDetails, String version) {
         this.name = serviceDetails.get("name").getAsString();

@@ -21,12 +21,18 @@
  *
  */
 
-package org.onap.clamp.loop.log;
+package org.onap.clamp.tosca;
+
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LoopLogRepository extends JpaRepository<LoopLog, Long> {
+public interface DictionaryRepository extends JpaRepository<Dictionary, String> {
+
+    @Query("SELECT dict.name FROM Dictionary as dict")
+    List<String> getAllDictionaryNames();
 
 }

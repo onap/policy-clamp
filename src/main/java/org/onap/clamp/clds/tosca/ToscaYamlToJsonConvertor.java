@@ -481,63 +481,6 @@ public class ToscaYamlToJsonConvertor {
 
     private void processDictionaryElements(JSONObject childObject, String dictionaryReference) {
 
-        /*
-         * if (dictionaryReference.contains("#")) { String[] dictionaryKeyArray =
-         * dictionaryReference
-         * .substring(dictionaryReference.indexOf(ToscaSchemaConstants.DICTIONARY) + 11,
-         * dictionaryReference.length()) .split("#"); // We support only one # as of
-         * now. List<CldsDictionaryItem> cldsDictionaryElements = null;
-         * List<CldsDictionaryItem> subDictionaryElements = null; if (dictionaryKeyArray
-         * != null && dictionaryKeyArray.length == 2) { cldsDictionaryElements =
-         * getCldsDao().getDictionaryElements(dictionaryKeyArray[0], null, null);
-         * subDictionaryElements =
-         * getCldsDao().getDictionaryElements(dictionaryKeyArray[1], null, null);
-         * 
-         * if (cldsDictionaryElements != null) { List<String> subCldsDictionaryNames =
-         * subDictionaryElements.stream()
-         * .map(CldsDictionaryItem::getDictElementShortName).collect(Collectors.toList()
-         * ); JSONArray jsonArray = new JSONArray();
-         * 
-         * Optional.ofNullable(cldsDictionaryElements).get().stream().forEach(c -> {
-         * JSONObject jsonObject = new JSONObject();
-         * jsonObject.put(JsonEditorSchemaConstants.TYPE,
-         * getJsonType(c.getDictElementType())); if (c.getDictElementType() != null &&
-         * c.getDictElementType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_STRING)) {
-         * jsonObject.put(JsonEditorSchemaConstants.MIN_LENGTH, 1); }
-         * jsonObject.put(JsonEditorSchemaConstants.ID, c.getDictElementName());
-         * jsonObject.put(JsonEditorSchemaConstants.LABEL, c.getDictElementShortName());
-         * jsonObject.put(JsonEditorSchemaConstants.OPERATORS, subCldsDictionaryNames);
-         * jsonArray.put(jsonObject); }); ; JSONObject filterObject = new JSONObject();
-         * filterObject.put(JsonEditorSchemaConstants.FILTERS, jsonArray);
-         * 
-         * childObject.put(JsonEditorSchemaConstants.TYPE,
-         * JsonEditorSchemaConstants.TYPE_QBLDR); // TO invoke validation on such
-         * parameters childObject.put(JsonEditorSchemaConstants.MIN_LENGTH, 1);
-         * childObject.put(JsonEditorSchemaConstants.QSSCHEMA, filterObject);
-         * 
-         * } } } else { String dictionaryKey = dictionaryReference.substring(
-         * dictionaryReference.indexOf(ToscaSchemaConstants.DICTIONARY) + 11,
-         * dictionaryReference.length()); if (dictionaryKey != null) {
-         * List<CldsDictionaryItem> cldsDictionaryElements =
-         * getCldsDao().getDictionaryElements(dictionaryKey, null, null); if
-         * (cldsDictionaryElements != null) { List<String> cldsDictionaryNames = new
-         * ArrayList<>(); List<String> cldsDictionaryFullNames = new ArrayList<>();
-         * cldsDictionaryElements.stream().forEach(c -> { // Json type will be
-         * translated before Policy creation if (c.getDictElementType() != null &&
-         * !c.getDictElementType().equalsIgnoreCase("json")) {
-         * cldsDictionaryFullNames.add(c.getDictElementName()); }
-         * cldsDictionaryNames.add(c.getDictElementShortName()); });
-         * 
-         * if (cldsDictionaryFullNames.size() > 0) {
-         * childObject.put(JsonEditorSchemaConstants.ENUM, cldsDictionaryFullNames); //
-         * Add Enum titles for generated translated values during JSON instance //
-         * generation JSONObject enumTitles = new JSONObject();
-         * enumTitles.put(JsonEditorSchemaConstants.ENUM_TITLES, cldsDictionaryNames);
-         * childObject.put(JsonEditorSchemaConstants.OPTIONS, enumTitles); } else {
-         * childObject.put(JsonEditorSchemaConstants.ENUM, cldsDictionaryNames); }
-         * 
-         * } } }
-         */
     }
 
     private String getJsonType(String toscaType) {

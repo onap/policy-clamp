@@ -21,12 +21,18 @@
  *
  */
 
-package org.onap.clamp.loop.log;
+package org.onap.clamp.loop.template;
+
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface LoopLogRepository extends JpaRepository<LoopLog, Long> {
+public interface PolicyModelsRepository extends JpaRepository<PolicyModel, PolicyModelId> {
+    @Query("SELECT policymodel.policyModelType FROM PolicyModel as policymodel")
+    List<String> getAllPolicyModelType();
 
+    List<PolicyModel> findByPolicyModelType(String policyModelType);
 }

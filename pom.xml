@@ -259,6 +259,12 @@
 			<groupId>org.apache.xmlgraphics</groupId>
 			<artifactId>batik-svggen</artifactId>
 			<version>1.11</version>
+			<exclusions>
+			<exclusion>
+				<groupId>xml-apis</groupId>
+				<artifactId>xml-apis</artifactId>
+			</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlgraphics</groupId>
@@ -601,9 +607,9 @@
 
 		<plugins>
 			<plugin>
-				<groupId>de.jpdigital</groupId>
-				<artifactId>hibernate52-ddl-maven-plugin</artifactId>
-				<version>2.2.0</version>
+					<groupId>de.jpdigital</groupId>
+					<artifactId>hibernate52-ddl-maven-plugin</artifactId>
+					<version>2.2.0</version>
 				<dependencies>
 					<dependency>
 						<groupId>javax.xml.bind</groupId>
@@ -619,7 +625,7 @@
 						</goals>
 						<configuration>
 							<packages>
-								<param>org.onap.clamp.dao.model</param>
+								<param>org.onap.clamp</param>
 							</packages>
 							<dialects>
 								<param>MARIADB53</param>

@@ -58,6 +58,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -65,13 +66,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @ComponentScan(basePackages = { "org.onap.clamp" })
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, SecurityAutoConfiguration.class,
-        UserDetailsServiceAutoConfiguration.class })
+    UserDetailsServiceAutoConfiguration.class })
 @EnableJpaRepositories(basePackages = { "org.onap.clamp" })
 @EntityScan(basePackages = { "org.onap.clamp" })
 @EnableTransactionManagement
 @EnableConfigurationProperties
 @EnableAsync
 @EnableScheduling
+@EnableJpaAuditing
 public class Application extends SpringBootServletInitializer {
 
     protected static final EELFLogger eelfLogger = EELFManager.getInstance().getLogger(Application.class);
@@ -137,8 +139,6 @@ public class Application extends SpringBootServletInitializer {
         return tomcat;
     }
 
-
-
     private Connector createRedirectConnector(int redirectSecuredPort) {
         if (redirectSecuredPort <= 0) {
             eelfLogger.warn("HTTP port redirection to HTTPS is disabled because the HTTPS port is 0 (random port) or -1"
@@ -159,7 +159,7 @@ public class Application extends SpringBootServletInitializer {
             if (env.getProperty("server.ssl.key-store") != null) {
 
                 KeyStore keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
-                String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"), 
+                String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
                         env.getProperty("clamp.config.keyFile"));
                 String keyStore = env.getProperty("server.ssl.key-store");
                 InputStream is = ResourceFileUtil.getResourceAsStream(keyStore.replaceAll("classpath:", ""));

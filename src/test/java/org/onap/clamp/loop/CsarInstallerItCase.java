@@ -63,7 +63,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -183,7 +183,7 @@ public class CsarInstallerItCase {
 
     @Test
     @Transactional
-    @Rollback(value = false)
+    @Commit
     public void testInstallTheCsarTca() throws SdcArtifactInstallerException, SdcToscaParserException,
             CsarHandlerException, IOException, JSONException, InterruptedException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
@@ -209,7 +209,7 @@ public class CsarInstallerItCase {
         assertThat(loop.getOperationalPolicies()).hasSize(1);
         assertThat(loop.getModelService().getServiceUuid()).isEqualTo("63cac700-ab9a-4115-a74f-7eac85e3fce0");
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"),
-            JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService()), true);
+                JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService()), true);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/service-details.json"),
                 JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService().getServiceDetails()), true);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/resource-details.json"),
