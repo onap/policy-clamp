@@ -113,6 +113,14 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
     @JoinColumn(name = "micro_service_model_id")
     private MicroServiceModel microServiceModel;
 
+    @Expose
+    @Column(name = "dcae_deployment_id")
+    private String dcaeDeploymentId;
+
+    @Expose
+    @Column(name = "dcae_deployment_status_url")
+    private String dcaeDeploymentStatusUrl;
+
     public MicroServicePolicy() {
         // serialization
     }
@@ -252,6 +260,34 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
      */
     public void setMicroServiceModel(MicroServiceModel microServiceModel) {
         this.microServiceModel = microServiceModel;
+    }
+
+    /**
+     * @return the dcaeDeploymentId
+     */
+    public String getDcaeDeploymentId() {
+        return dcaeDeploymentId;
+    }
+
+    /**
+     * @param dcaeDeploymentId the dcaeDeploymentId to set
+     */
+    public void setDcaeDeploymentId(String dcaeDeploymentId) {
+        this.dcaeDeploymentId = dcaeDeploymentId;
+    }
+
+    /**
+     * @return the dcaeDeploymentStatusUrl
+     */
+    public String getDcaeDeploymentStatusUrl() {
+        return dcaeDeploymentStatusUrl;
+    }
+
+    /**
+     * @param dcaeDeploymentStatusUrl the dcaeDeploymentStatusUrl to set
+     */
+    public void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
+        this.dcaeDeploymentStatusUrl = dcaeDeploymentStatusUrl;
     }
 
     /**

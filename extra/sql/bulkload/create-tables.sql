@@ -97,6 +97,8 @@
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
         context varchar(255),
+        dcae_deployment_id varchar(255),
+        dcae_deployment_status_url varchar(255),
         device_type_scope varchar(255),
         json_representation json not null,
         policy_model_type varchar(255) not null,
