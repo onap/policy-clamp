@@ -42,27 +42,18 @@ import org.onap.clamp.clds.sdc.controller.installer.BlueprintParser;
 import org.onap.clamp.clds.sdc.controller.installer.ChainGenerator;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.sdc.controller.installer.MicroService;
-import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.onap.clamp.loop.deploy.DcaeDeployParameters;
+import org.onap.clamp.loop.service.CsarServiceInstaller;
 import org.onap.clamp.loop.service.Service;
-import org.onap.clamp.loop.service.ServiceRepository;
 import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-import org.onap.sdc.tosca.parser.api.IEntityDetails;
-import org.onap.sdc.tosca.parser.elements.queries.EntityQuery;
-import org.onap.sdc.tosca.parser.elements.queries.TopologyTemplateQuery;
-import org.onap.sdc.tosca.parser.enums.EntityTemplateType;
-import org.onap.sdc.tosca.parser.enums.SdcTypes;
-import org.onap.sdc.toscaparser.api.NodeTemplate;
-import org.onap.sdc.toscaparser.api.Property;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.yaml.snakeyaml.Yaml;
 
 /**
  * This class will be instantiated by spring config, and used by Sdc Controller.
@@ -83,9 +74,6 @@ public class CsarInstaller {
     LoopsRepository loopRepository;
 
     @Autowired
-    ServiceRepository serviceRepository;
-
-    @Autowired
     BlueprintParser blueprintParser;
 
     @Autowired
@@ -97,19 +85,18 @@ public class CsarInstaller {
     @Autowired
     private SvgFacade svgFacade;
 
+    @Autowired
+    CsarServiceInstaller csarServiceInstaller;
+
     /**
-    * Verify whether Csar is deployed.
-    * 
-    * @param csar The Csar Handler
-    * @return The flag indicating whether Csar is deployed
-    * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
-    */
+     * Verify whether Csar is deployed.
+     * 
+     * @param csar The Csar Handler
+     * @return The flag indicating whether Csar is deployed
+     * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
+     */
     public boolean isCsarAlreadyDeployed(CsarHandler csar) throws SdcArtifactInstallerException {
-        boolean alreadyInstalled = true;
-        JsonObject serviceDetails = JsonUtils.GSON.fromJson(
-                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
-        alreadyInstalled = alreadyInstalled
-                && serviceRepository.existsById(serviceDetails.get("UUID").getAsString());
+        boolean alreadyInstalled = csarServiceInstaller.isServiceAlreadyDeployed(csar);
 
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
             alreadyInstalled = alreadyInstalled
@@ -118,7 +105,6 @@ public class CsarInstaller {
                             blueprint.getValue().getResourceAttached().getResourceInstanceName(),
                             blueprint.getValue().getBlueprintArtifactName()));
         }
-        
         return alreadyInstalled;
     }
 
@@ -127,24 +113,24 @@ public class CsarInstaller {
      * 
      * @param csar The Csar Handler
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
-     * @throws InterruptedException The InterruptedException
+     * @throws InterruptedException          The InterruptedException
      */
     public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException, InterruptedException {
         logger.info("Installing the CSAR " + csar.getFilePath());
-        installTheLoop(csar, installTheService(csar));
+        installTheLoop(csar, csarServiceInstaller.installTheService(csar));
         logger.info("Successfully installed the CSAR " + csar.getFilePath());
     }
 
     /**
      * Install the Loop from the csar.
      * 
-     * @param csar The Csar Handler
+     * @param csar    The Csar Handler
      * @param service The service object that is related to the loop
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
-     * @throws InterruptedException The InterruptedException
+     * @throws InterruptedException          The InterruptedException
      */
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void installTheLoop(CsarHandler csar, Service service) 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void installTheLoop(CsarHandler csar, Service service)
             throws SdcArtifactInstallerException, InterruptedException {
         try {
             logger.info("Installing the Loops");
@@ -158,30 +144,6 @@ public class CsarInstaller {
         } catch (ParseException e) {
             throw new SdcArtifactInstallerException("Exception caught during the Dcae query to get ServiceTypeId", e);
         }
-    }
-
-    /**
-     * Install the Service from the csar.
-     * 
-     * @param csar The Csar Handler
-     * @return The service object
-     */
-    @Transactional
-    public Service installTheService(CsarHandler csar) {
-        logger.info("Start to install the Service from csar");
-        JsonObject serviceDetails = JsonUtils.GSON.fromJson(
-                JsonUtils.GSON.toJson(csar.getSdcCsarHelper().getServiceMetadataAllProperties()), JsonObject.class);
-
-        // Add properties details for each type, VfModule, VF, VFC, ....
-        JsonObject resourcesProp = createServicePropertiesByType(csar);
-        resourcesProp.add("VFModule", createVfModuleProperties(csar));
-
-        Service modelService = new Service(serviceDetails, resourcesProp, 
-                csar.getSdcNotification().getServiceVersion());
-
-        serviceRepository.save(modelService);
-        logger.info("Successfully installed the Service");
-        return modelService;
     }
 
     private Loop createLoopFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact, Service service)
@@ -241,41 +203,6 @@ public class CsarInstaller {
 
     private JsonObject createGlobalPropertiesJson(BlueprintArtifact blueprintArtifact, Loop newLoop) {
         return DcaeDeployParameters.getDcaeDeploymentParametersInJson(blueprintArtifact, newLoop);
-    }
-
-    private static JsonObject createVfModuleProperties(CsarHandler csar) {
-        JsonObject vfModuleProps = new JsonObject();
-        // Loop on all Groups defined in the service (VFModule entries type:
-        // org.openecomp.groups.VfModule)
-        for (IEntityDetails entity : csar.getSdcCsarHelper().getEntity(
-                EntityQuery.newBuilder(EntityTemplateType.GROUP).build(),
-                TopologyTemplateQuery.newBuilder(SdcTypes.SERVICE).build(), false)) {
-            // Get all metadata info
-            JsonObject allVfProps = (JsonObject) JsonUtils.GSON.toJsonTree(entity.getMetadata().getAllProperties());
-            vfModuleProps.add(entity.getMetadata().getAllProperties().get("vfModuleModelName"), allVfProps);
-            // now append the properties section so that we can also have isBase,
-            // volume_group, etc ... fields under the VFmodule name
-            for (Entry<String, Property> additionalProp : entity.getProperties().entrySet()) {
-                allVfProps.add(additionalProp.getValue().getName(),
-                        JsonUtils.GSON.toJsonTree(additionalProp.getValue().getValue()));
-            }
-        }
-        return vfModuleProps;
-    }
-
-    private static JsonObject createServicePropertiesByType(CsarHandler csar) {
-        JsonObject resourcesProp = new JsonObject();
-        // Iterate on all types defined in the tosca lib
-        for (SdcTypes type : SdcTypes.values()) {
-            JsonObject resourcesPropByType = new JsonObject();
-            // For each type, get the metadata of each nodetemplate
-            for (NodeTemplate nodeTemplate : csar.getSdcCsarHelper().getServiceNodeTemplateBySdcType(type)) {
-                resourcesPropByType.add(nodeTemplate.getName(),
-                        JsonUtils.GSON.toJsonTree(nodeTemplate.getMetaData().getAllProperties()));
-            }
-            resourcesProp.add(type.getValue(), resourcesPropByType);
-        }
-        return resourcesProp;
     }
 
     /**
