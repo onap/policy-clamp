@@ -78,8 +78,8 @@ public class ImageBuilder {
     }
 
     ImageBuilder circle(String dataElementId, int lineThickness) {
-        Shape circleStart = new Ellipse2D.Double(currentPoint.x, currentPoint.y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS,
-                2 * CIRCLE_RADIUS);
+        Shape circleStart = new Ellipse2D.Double(currentPoint.x, ((double) currentPoint.y) - CIRCLE_RADIUS,
+                2.0 * CIRCLE_RADIUS, 2.0 * CIRCLE_RADIUS);
 
         Stroke oldStroke = g2d.getStroke();
         g2d.setStroke(new BasicStroke(lineThickness));

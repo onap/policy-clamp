@@ -53,8 +53,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     /**
      * Use the default Gson {@link Gson} and with a custom unmarshal type.
      *
-     * @param unmarshalType
-     *        the custom unmarshal type
+     * @param unmarshalType the custom unmarshal type
      */
     public ClampGsonDataFormat(Class<?> unmarshalType) {
         this(null, unmarshalType);
@@ -63,10 +62,8 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     /**
      * Use a custom Gson mapper and and unmarshal type.
      *
-     * @param gson
-     *        the custom mapper
-     * @param unmarshalType
-     *        the custom unmarshal type
+     * @param gson          the custom mapper
+     * @param unmarshalType the custom unmarshal type
      */
     public ClampGsonDataFormat(Gson gson, Class<?> unmarshalType) {
         this.gson = gson;
@@ -76,8 +73,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     /**
      * Use the default Gson {@link Gson} and with a custom unmarshal generic type.
      *
-     * @param unmarshalGenericType
-     *        the custom unmarshal generic type
+     * @param unmarshalGenericType the custom unmarshal generic type
      */
     public ClampGsonDataFormat(Type unmarshalGenericType) {
         this(null, unmarshalGenericType);
@@ -86,10 +82,8 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     /**
      * Use a custom Gson mapper and and unmarshal token type.
      *
-     * @param gson
-     *        the custom mapper
-     * @param unmarshalGenericType
-     *        the custom unmarshal generic type
+     * @param gson                 the custom mapper
+     * @param unmarshalGenericType the custom unmarshal generic type
      */
     public ClampGsonDataFormat(Gson gson, Type unmarshalGenericType) {
         this.gson = gson;
@@ -104,7 +98,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     @Override
     public void marshal(final Exchange exchange, final Object graph, final OutputStream stream) throws Exception {
         try (final OutputStreamWriter osw = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
-            final BufferedWriter writer = IOHelper.buffered(osw)) {
+                final BufferedWriter writer = IOHelper.buffered(osw)) {
             gson.toJson(graph, writer);
         }
 
@@ -120,7 +114,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     @Override
     public Object unmarshal(final Exchange exchange, final InputStream stream) throws Exception {
         try (final InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
-            final BufferedReader reader = IOHelper.buffered(isr)) {
+                final BufferedReader reader = IOHelper.buffered(isr)) {
             if (unmarshalGenericType == null) {
                 return gson.fromJson(reader, unmarshalType);
             } else {
@@ -153,7 +147,7 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     }
 
     public Type getUnmarshalGenericType() {
-        return this.unmarshalType;
+        return this.unmarshalGenericType;
     }
 
     public void setUnmarshalGenericType(Type unmarshalGenericType) {
