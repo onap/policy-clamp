@@ -40,13 +40,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.json.JSONObject;
@@ -54,15 +51,13 @@ import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
-import org.onap.clamp.loop.common.AuditEntity;
-import org.onap.clamp.loop.template.MicroServiceModel;
 import org.onap.clamp.policy.Policy;
 import org.yaml.snakeyaml.Yaml;
 
 @Entity
 @Table(name = "micro_service_policies")
 @TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
-public class MicroServicePolicy extends AuditEntity implements Serializable, Policy {
+public class MicroServicePolicy extends Policy implements Serializable {
     /**
      * The serial version ID.
      */
@@ -89,29 +84,14 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
     private String deviceTypeScope;
 
     @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "properties")
-    private JsonObject properties;
-
-    @Expose
     @Column(name = "shared", nullable = false)
     private Boolean shared;
 
     @Column(columnDefinition = "MEDIUMTEXT", name = "policy_tosca", nullable = false)
     private String policyTosca;
 
-    @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "json_representation", nullable = false)
-    private JsonObject jsonRepresentation;
-
     @ManyToMany(mappedBy = "microServicePolicies", fetch = FetchType.EAGER)
     private Set<Loop> usedByLoops = new HashSet<>();
-
-    @Expose
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "micro_service_model_id")
-    private MicroServiceModel microServiceModel;
 
     @Expose
     @Column(name = "dcae_deployment_id")
@@ -141,8 +121,8 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
         this.modelType = modelType;
         this.policyTosca = policyTosca;
         this.shared = shared;
-        this.jsonRepresentation = JsonUtils.GSON_JPA_MODEL
-                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyTosca, modelType), JsonObject.class);
+        this.setJsonRepresentation(JsonUtils.GSON_JPA_MODEL
+                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyTosca, modelType), JsonObject.class));
         this.usedByLoops = usedByLoops;
     }
 
@@ -171,12 +151,22 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
         this.policyTosca = policyTosca;
         this.shared = shared;
         this.usedByLoops = usedByLoops;
-        this.jsonRepresentation = jsonRepresentation;
+        this.setJsonRepresentation(jsonRepresentation);
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    /**
+     * name setter.
+     * 
+     * @param name the name to set
+     */
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getModelType() {
@@ -185,14 +175,6 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
 
     void setModelType(String modelType) {
         this.modelType = modelType;
-    }
-
-    public JsonObject getProperties() {
-        return properties;
-    }
-
-    public void setProperties(JsonObject properties) {
-        this.properties = properties;
     }
 
     public Boolean getShared() {
@@ -209,15 +191,6 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
 
     void setPolicyTosca(String policyTosca) {
         this.policyTosca = policyTosca;
-    }
-
-    @Override
-    public JsonObject getJsonRepresentation() {
-        return jsonRepresentation;
-    }
-
-    void setJsonRepresentation(JsonObject jsonRepresentation) {
-        this.jsonRepresentation = jsonRepresentation;
     }
 
     public Set<Loop> getUsedByLoops() {
@@ -245,24 +218,8 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
     }
 
     /**
-     * microServiceModel getter.
+     * dcaeDeploymentId getter.
      * 
-     * @return the microServiceModel
-     */
-    public MicroServiceModel getMicroServiceModel() {
-        return microServiceModel;
-    }
-
-    /**
-     * microServiceModel setter.
-     * 
-     * @param microServiceModel the microServiceModel to set
-     */
-    public void setMicroServiceModel(MicroServiceModel microServiceModel) {
-        this.microServiceModel = microServiceModel;
-    }
-
-    /**
      * @return the dcaeDeploymentId
      */
     public String getDcaeDeploymentId() {
@@ -270,6 +227,8 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
     }
 
     /**
+     * dcaeDeploymentId setter.
+     * 
      * @param dcaeDeploymentId the dcaeDeploymentId to set
      */
     public void setDcaeDeploymentId(String dcaeDeploymentId) {
@@ -277,6 +236,8 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
     }
 
     /**
+     * dcaeDeploymentStatusUrl getter.
+     * 
      * @return the dcaeDeploymentStatusUrl
      */
     public String getDcaeDeploymentStatusUrl() {
@@ -284,19 +245,12 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
     }
 
     /**
+     * dcaeDeploymentStatusUrl setter.
+     * 
      * @param dcaeDeploymentStatusUrl the dcaeDeploymentStatusUrl to set
      */
     public void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
         this.dcaeDeploymentStatusUrl = dcaeDeploymentStatusUrl;
-    }
-
-    /**
-     * name setter.
-     * 
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -362,7 +316,7 @@ public class MicroServicePolicy extends AuditEntity implements Serializable, Pol
 
         JsonObject policyProperties = new JsonObject();
         policyDetails.add("properties", policyProperties);
-        policyProperties.add(this.getMicroServicePropertyNameFromTosca(toscaJson), this.getProperties());
+        policyProperties.add(this.getMicroServicePropertyNameFromTosca(toscaJson), this.getConfigurationsJson());
         String policyPayload = new GsonBuilder().setPrettyPrinting().create().toJson(policyPayloadResult);
         logger.info("Micro service policy payload: " + policyPayload);
         return policyPayload;

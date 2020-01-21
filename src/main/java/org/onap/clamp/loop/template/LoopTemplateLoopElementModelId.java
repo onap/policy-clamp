@@ -31,7 +31,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class TemplateMicroServiceModelId implements Serializable {
+public class LoopTemplateLoopElementModelId implements Serializable {
 
     /**
      * Serial ID.
@@ -43,13 +43,13 @@ public class TemplateMicroServiceModelId implements Serializable {
     private String loopTemplateName;
 
     @Expose
-    @Column(name = "micro_service_model_name")
-    private String microServiceModelName;
+    @Column(name = "loop_element_model_name")
+    private String loopElementModelName;
 
     /**
      * Default constructor for serialization.
      */
-    public TemplateMicroServiceModelId() {
+    public LoopTemplateLoopElementModelId() {
 
     }
 
@@ -59,9 +59,9 @@ public class TemplateMicroServiceModelId implements Serializable {
      * @param loopTemplateName      The loop template name id
      * @param microServiceModelName THe micro Service name id
      */
-    public TemplateMicroServiceModelId(String loopTemplateName, String microServiceModelName) {
+    public LoopTemplateLoopElementModelId(String loopTemplateName, String microServiceModelName) {
         this.loopTemplateName = loopTemplateName;
-        this.microServiceModelName = microServiceModelName;
+        this.loopElementModelName = microServiceModelName;
     }
 
     /**
@@ -87,16 +87,16 @@ public class TemplateMicroServiceModelId implements Serializable {
      * 
      * @return the microServiceModelName
      */
-    public String getMicroServiceModelName() {
-        return microServiceModelName;
+    public String getLoopElementModelName() {
+        return loopElementModelName;
     }
 
     /**
-     * microServiceModelName setter.
+     * loopElementModelName setter.
      * 
-     * @param microServiceModelName the microServiceModelName to set
+     * @param loopElementModelName the loopElementModelName to set
      */
-    public void setMicroServiceModelName(String microServiceModelName) {
-        this.microServiceModelName = microServiceModelName;
+    public void setLoopElementModelName(String loopElementModelName) {
+        this.loopElementModelName = loopElementModelName;
     }
 }

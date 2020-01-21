@@ -52,8 +52,6 @@ import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This class will be instantiated by spring config, and used by Sdc Controller.
@@ -129,7 +127,6 @@ public class CsarInstaller {
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
      * @throws InterruptedException          The InterruptedException
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void installTheLoop(CsarHandler csar, Service service)
             throws SdcArtifactInstallerException, InterruptedException {
         try {

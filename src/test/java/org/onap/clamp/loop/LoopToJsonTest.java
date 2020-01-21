@@ -44,8 +44,8 @@ import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
+import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.LoopTemplate;
-import org.onap.clamp.loop.template.MicroServiceModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -74,27 +74,28 @@ public class LoopToJsonTest {
             String policyTosca, String jsonProperties, boolean shared) {
         MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
                 gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
-        microService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
+        microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
     }
 
-    private MicroServiceModel getMicroServiceModel(String yaml, String name, PolicyModel policyModel) {
-        MicroServiceModel model = new MicroServiceModel();
+    private LoopElementModel getLoopElementModel(String yaml, String name, PolicyModel policyModel) {
+        LoopElementModel model = new LoopElementModel();
         model.setBlueprint(yaml);
         model.setName(name);
-        model.setPolicyModel(policyModel);
+        model.addPolicyModel(policyModel);
+        model.setLoopElementType("OPERATIONAL_POLICY");
         return model;
     }
 
     private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
             String policyVariant) {
-        return new PolicyModel(policyType, policyModelTosca, version, policyAcronym, policyVariant);
+        return new PolicyModel(policyType, policyModelTosca, version, policyAcronym);
     }
 
     private LoopTemplate getLoopTemplate(String name, String blueprint, String svgRepresentation,
             Integer maxInstancesAllowed) {
         LoopTemplate template = new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
-        template.addMicroServiceModel(getMicroServiceModel("yaml", "microService1",
+        template.addLoopElementModel(getLoopElementModel("yaml", "microService1",
                 getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1")));
         return template;
     }

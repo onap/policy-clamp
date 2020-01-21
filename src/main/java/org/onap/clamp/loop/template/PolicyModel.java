@@ -26,11 +26,15 @@ package org.onap.clamp.loop.template;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.onap.clamp.loop.common.AuditEntity;
@@ -74,9 +78,15 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
     @Column(name = "policy_acronym")
     private String policyAcronym;
 
-    @Expose
-    @Column(name = "policy_variant")
-    private String policyVariant;
+    @ManyToMany(mappedBy = "policyModels", fetch = FetchType.EAGER)
+    private Set<LoopElementModel> usedByElementModels = new HashSet<>();
+
+    /**
+     * @return the usedByElementModels
+     */
+    public Set<LoopElementModel> getUsedByElementModels() {
+        return usedByElementModels;
+    }
 
     /**
      * policyModelTosca getter.
@@ -152,24 +162,6 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
     }
 
     /**
-     * policyVariant getter.
-     * 
-     * @return the policyVariant value
-     */
-    public String getPolicyVariant() {
-        return policyVariant;
-    }
-
-    /**
-     * policyVariant setter.
-     * 
-     * @param policyVariant The policyVariant to set
-     */
-    public void setPolicyVariant(String policyVariant) {
-        this.policyVariant = policyVariant;
-    }
-
-    /**
      * Default constructor for serialization.
      */
     public PolicyModel() {
@@ -181,16 +173,13 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
      * @param policyType       The policyType (referenced in the blueprint)
      * @param policyModelTosca The policy tosca model in yaml
      * @param version          the version like 1.0.0
-     * @param policyAcronym    Short policy name if it exists
      * @param policyVariant    Subtype for policy if it exists (could be used by UI)
      */
-    public PolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
-            String policyVariant) {
+    public PolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym) {
         this.policyModelType = policyType;
         this.policyModelTosca = policyModelTosca;
         this.version = version;
         this.policyAcronym = policyAcronym;
-        this.policyVariant = policyVariant;
     }
 
     @Override

@@ -20,6 +20,7 @@
  * ===================================================================
  *
  */
+
 package org.onap.clamp.clds.tosca;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,7 +61,7 @@ public class DictionaryRepositoriesTestItCase {
         element1.setSubDictionary("subDictionary1");
         element1.setType("type1");
         element1.setDescription("description1");
-        
+
         LinkedList<DictionaryElement> elementList1 = new LinkedList<DictionaryElement>();
         elementList1.add(element1);
         dictionaryTest1.setDictionaryElements(elementList1);

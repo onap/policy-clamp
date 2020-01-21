@@ -57,7 +57,7 @@ public class DcaeComponentTest {
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", "",
             "tosca_definitions_version: tosca_simple_yaml_1_0_0", true,
             new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), new HashSet<>());
-        microServicePolicy.setProperties(new Gson().fromJson("{\"param1\":\"value1\"}", JsonObject.class));
+        microServicePolicy.setConfigurationsJson(new Gson().fromJson("{\"param1\":\"value1\"}", JsonObject.class));
 
         loopTest.addMicroServicePolicy(microServicePolicy);
         return loopTest;

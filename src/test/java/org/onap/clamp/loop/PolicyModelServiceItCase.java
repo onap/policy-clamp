@@ -66,7 +66,6 @@ public class PolicyModelServiceItCase {
         policyModel.setPolicyAcronym(policyAcronym);
         policyModel.setPolicyModelTosca(policyModelTosca);
         policyModel.setPolicyModelType(policyType);
-        policyModel.setPolicyVariant(policyVariant);
         policyModel.setUpdatedBy(createdBy);
         policyModel.setVersion(version);
         return policyModel;
@@ -92,7 +91,6 @@ public class PolicyModelServiceItCase {
         assertThat(actualPolicyModel.getCreatedDate()).isNotNull();
         assertThat(actualPolicyModel.getPolicyAcronym()).isEqualTo(policyModel.getPolicyAcronym());
         assertThat(actualPolicyModel.getPolicyModelTosca()).isEqualTo(policyModel.getPolicyModelTosca());
-        assertThat(actualPolicyModel.getPolicyVariant()).isEqualTo(policyModel.getPolicyVariant());
         assertThat(actualPolicyModel.getUpdatedBy()).isEqualTo("");
         assertThat(actualPolicyModel.getUpdatedDate()).isNotNull();
         assertThat(actualPolicyModel.getVersion()).isEqualTo(policyModel.getVersion());

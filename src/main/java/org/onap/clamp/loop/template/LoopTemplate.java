@@ -72,7 +72,7 @@ public class LoopTemplate extends AuditEntity implements Serializable {
     @Expose
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "loopTemplate", orphanRemoval = true)
     @SortNatural
-    private SortedSet<TemplateMicroServiceModel> microServiceModelUsed = new TreeSet<>();
+    private SortedSet<LoopTemplateLoopElementModel> loopElementModelsUsed = new TreeSet<>();
 
     @Expose
     @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
@@ -138,12 +138,12 @@ public class LoopTemplate extends AuditEntity implements Serializable {
     }
 
     /**
-     * microServiceModelUsed getter.
+     * loopElementModelsUsed getter.
      * 
-     * @return the microServiceModelUsed
+     * @return the loopElementModelsUsed
      */
-    public SortedSet<TemplateMicroServiceModel> getMicroServiceModelUsed() {
-        return microServiceModelUsed;
+    public SortedSet<LoopTemplateLoopElementModel> getLoopElementModelsUsed() {
+        return loopElementModelsUsed;
     }
 
     /**
@@ -165,29 +165,30 @@ public class LoopTemplate extends AuditEntity implements Serializable {
     }
 
     /**
-     * Add a microService model to the current template, the microservice is added
-     * at the end of the list so the flowOrder is computed automatically.
+     * Add a loopElement to the current template, the loopElementModel is added at
+     * the end of the list so the flowOrder is computed automatically.
      * 
-     * @param microServiceModel The microserviceModel to add
+     * @param loopElementModel The loopElementModel to add
      */
-    public void addMicroServiceModel(MicroServiceModel microServiceModel) {
-        TemplateMicroServiceModel jointEntry = new TemplateMicroServiceModel(this, microServiceModel,
-                this.microServiceModelUsed.size());
-        this.microServiceModelUsed.add(jointEntry);
-        microServiceModel.getUsedByLoopTemplates().add(jointEntry);
+    public void addLoopElementModel(LoopElementModel loopElementModel) {
+        LoopTemplateLoopElementModel jointEntry = new LoopTemplateLoopElementModel(this, loopElementModel,
+                this.loopElementModelsUsed.size());
+        this.loopElementModelsUsed.add(jointEntry);
+        loopElementModel.getUsedByLoopTemplates().add(jointEntry);
     }
 
     /**
-     * Add a microService model to the current template, the flow order must be
+     * Add a loopElement model to the current template, the flow order must be
      * specified manually.
      * 
-     * @param microServiceModel The microserviceModel to add
-     * @param listPosition      The position in the flow
+     * @param loopElementModel The loopElementModel to add
+     * @param listPosition     The position in the flow
      */
-    public void addMicroServiceModel(MicroServiceModel microServiceModel, Integer listPosition) {
-        TemplateMicroServiceModel jointEntry = new TemplateMicroServiceModel(this, microServiceModel, listPosition);
-        this.microServiceModelUsed.add(jointEntry);
-        microServiceModel.getUsedByLoopTemplates().add(jointEntry);
+    public void addLoopElementModel(LoopElementModel loopElementModel, Integer listPosition) {
+        LoopTemplateLoopElementModel jointEntry = new LoopTemplateLoopElementModel(this, loopElementModel,
+                listPosition);
+        this.loopElementModelsUsed.add(jointEntry);
+        loopElementModel.getUsedByLoopTemplates().add(jointEntry);
     }
 
     /**

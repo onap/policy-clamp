@@ -51,7 +51,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
@@ -64,7 +63,7 @@ import org.yaml.snakeyaml.Yaml;
 @Entity
 @Table(name = "operational_policies")
 @TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
-public class OperationalPolicy implements Serializable, Policy {
+public class OperationalPolicy extends Policy implements Serializable {
     /**
      * The serial version ID.
      */
@@ -77,16 +76,6 @@ public class OperationalPolicy implements Serializable, Policy {
     @Expose
     @Column(nullable = false, name = "name", unique = true)
     private String name;
-
-    @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "configurations_json")
-    private JsonObject configurationsJson;
-
-    @Expose
-    @Type(type = "json")
-    @Column(columnDefinition = "json", name = "json_representation", nullable = false)
-    private JsonObject jsonRepresentation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loop_id", nullable = false)
@@ -113,20 +102,15 @@ public class OperationalPolicy implements Serializable, Policy {
     public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson) {
         this.name = name;
         this.loop = loop;
-        this.configurationsJson = configurationsJson;
-        LegacyOperationalPolicy.preloadConfiguration(this.configurationsJson, loop);
+        this.setConfigurationsJson(configurationsJson);
+        LegacyOperationalPolicy.preloadConfiguration(configurationsJson, loop);
         try {
-            this.jsonRepresentation = OperationalPolicyRepresentationBuilder
-                    .generateOperationalPolicySchema(loop.getModelService());
+            this.setJsonRepresentation(
+                    OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService()));
         } catch (JsonSyntaxException | IOException | NullPointerException e) {
             logger.error("Unable to generate the operational policy Schema ... ", e);
-            this.jsonRepresentation = new JsonObject();
+            this.setJsonRepresentation(new JsonObject());
         }
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     public void setLoop(Loop loopName) {
@@ -137,12 +121,19 @@ public class OperationalPolicy implements Serializable, Policy {
         return loop;
     }
 
-    public JsonObject getConfigurationsJson() {
-        return configurationsJson;
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public void setConfigurationsJson(JsonObject configurationsJson) {
-        this.configurationsJson = configurationsJson;
+    /**
+     * name setter.
+     * 
+     * @param name the name to set
+     */
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -161,24 +152,6 @@ public class OperationalPolicy implements Serializable, Policy {
      */
     public void setPolicyModel(PolicyModel policyModel) {
         this.policyModel = policyModel;
-    }
-
-    /**
-     * name setter.
-     * 
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public JsonObject getJsonRepresentation() {
-        return jsonRepresentation;
-    }
-
-    void setJsonRepresentation(JsonObject jsonRepresentation) {
-        this.jsonRepresentation = jsonRepresentation;
     }
 
     @Override
@@ -240,7 +213,7 @@ public class OperationalPolicy implements Serializable, Policy {
         metadata.addProperty("policy-id", this.name);
 
         operationalPolicyDetails.add("properties", LegacyOperationalPolicy
-                .reworkPayloadAttributes(this.configurationsJson.get("operational_policy").deepCopy()));
+                .reworkPayloadAttributes(this.getConfigurationsJson().get("operational_policy").deepCopy()));
 
         DumperOptions options = new DumperOptions();
         options.setIndent(2);
@@ -256,8 +229,11 @@ public class OperationalPolicy implements Serializable, Policy {
         // Now using the legacy payload fo Dublin
         JsonObject payload = new JsonObject();
         payload.addProperty("policy-id", this.getName());
-        payload.addProperty("content", URLEncoder.encode(LegacyOperationalPolicy.createPolicyPayloadYamlLegacy(
-                this.configurationsJson.get("operational_policy")), StandardCharsets.UTF_8.toString()));
+        payload.addProperty("content",
+                URLEncoder.encode(
+                        LegacyOperationalPolicy
+                                .createPolicyPayloadYamlLegacy(this.getConfigurationsJson().get("operational_policy")),
+                        StandardCharsets.UTF_8.toString()));
         String opPayload = new GsonBuilder().setPrettyPrinting().create().toJson(payload);
         logger.info("Operational policy payload: " + opPayload);
         return opPayload;
@@ -283,16 +259,16 @@ public class OperationalPolicy implements Serializable, Policy {
     }
 
     /**
-    * Regenerate the Operational Policy Json Representation.
-    *
-    */
+     * Regenerate the Operational Policy Json Representation.
+     *
+     */
     public void updateJsonRepresentation() {
         try {
-            this.jsonRepresentation = OperationalPolicyRepresentationBuilder
-                    .generateOperationalPolicySchema(loop.getModelService());
+            this.setJsonRepresentation(
+                    OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService()));
         } catch (JsonSyntaxException | IOException | NullPointerException e) {
             logger.error("Unable to generate the operational policy Schema ... ", e);
-            this.jsonRepresentation = new JsonObject();
+            this.setJsonRepresentation(new JsonObject());
         }
     }
 }

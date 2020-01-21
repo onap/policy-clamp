@@ -110,7 +110,9 @@ public class LoopServiceTestItCase {
         assertThat(actualLoop.getName()).isEqualTo(EXAMPLE_LOOP_NAME);
         Set<OperationalPolicy> savedPolicies = actualLoop.getOperationalPolicies();
         assertThat(savedPolicies).hasSize(1);
-        assertThat(savedPolicies).usingElementComparatorIgnoringFields("loop").contains(operationalPolicy);
+        assertThat(savedPolicies)
+                .usingElementComparatorIgnoringFields("loop", "createdBy", "createdDate", "updatedBy", "updatedDate")
+                .contains(operationalPolicy);
         OperationalPolicy savedPolicy = savedPolicies.iterator().next();
         assertThat(savedPolicy.getLoop().getName()).isEqualTo(EXAMPLE_LOOP_NAME);
 
@@ -154,7 +156,8 @@ public class LoopServiceTestItCase {
                 JsonUtils.GSON.fromJson("{}", JsonObject.class), null);
 
         // when
-        firstMicroServicePolicy.setProperties(JsonUtils.GSON.fromJson("{\"name1\":\"value1\"}", JsonObject.class));
+        firstMicroServicePolicy
+                .setConfigurationsJson(JsonUtils.GSON.fromJson("{\"name1\":\"value1\"}", JsonObject.class));
         Loop actualLoop = loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME,
                 Lists.newArrayList(firstMicroServicePolicy, secondMicroServicePolicy));
 
@@ -229,7 +232,8 @@ public class LoopServiceTestItCase {
         assertThat(actualLoop.getName()).isEqualTo(EXAMPLE_LOOP_NAME);
         Set<OperationalPolicy> savedPolicies = actualLoop.getOperationalPolicies();
         assertThat(savedPolicies).hasSize(2);
-        assertThat(savedPolicies).usingElementComparatorIgnoringFields("loop")
+        assertThat(savedPolicies)
+                .usingElementComparatorIgnoringFields("loop", "createdDate", "updatedDate", "createdBy", "updatedBy")
                 .containsExactlyInAnyOrder(firstOperationalPolicy, secondOperationalPolicy);
         Set<String> policiesLoops = Lists.newArrayList(savedPolicies).stream().map(OperationalPolicy::getLoop)
                 .map(Loop::getName).collect(Collectors.toSet());
@@ -258,7 +262,9 @@ public class LoopServiceTestItCase {
         assertThat(actualLoop.getName()).isEqualTo(EXAMPLE_LOOP_NAME);
         Set<OperationalPolicy> savedPolicies = actualLoop.getOperationalPolicies();
         assertThat(savedPolicies).hasSize(1);
-        assertThat(savedPolicies).usingElementComparatorIgnoringFields("loop").containsExactly(secondOperationalPolicy);
+        assertThat(savedPolicies)
+                .usingElementComparatorIgnoringFields("loop", "createdDate", "updatedDate", "createdBy", "updatedBy")
+                .containsExactly(secondOperationalPolicy);
         OperationalPolicy savedPolicy = savedPolicies.iterator().next();
         assertThat(savedPolicy.getLoop().getName()).isEqualTo(EXAMPLE_LOOP_NAME);
 

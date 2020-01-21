@@ -42,10 +42,10 @@ import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.log.LoopLogRepository;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.service.ServicesRepository;
+import org.onap.clamp.loop.template.LoopElementModel;
+import org.onap.clamp.loop.template.LoopElementModelsRepository;
 import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.LoopTemplatesRepository;
-import org.onap.clamp.loop.template.MicroServiceModel;
-import org.onap.clamp.loop.template.MicroServiceModelsRepository;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsRepository;
@@ -80,7 +80,7 @@ public class LoopRepositoriesItCase {
     private LoopTemplatesRepository loopTemplateRepository;
 
     @Autowired
-    private MicroServiceModelsRepository microServiceModelsRepository;
+    private LoopElementModelsRepository microServiceModelsRepository;
 
     @Autowired
     private PolicyModelsRepository policyModelsRepository;
@@ -96,21 +96,22 @@ public class LoopRepositoriesItCase {
         return new OperationalPolicy(name, null, new Gson().fromJson(configJson, JsonObject.class));
     }
 
-    private MicroServiceModel getMicroServiceModel(String yaml, String name, String policyType, String createdBy,
+    private LoopElementModel getLoopElementModel(String yaml, String name, String policyType, String createdBy,
             PolicyModel policyModel) {
-        MicroServiceModel model = new MicroServiceModel(name, policyType, yaml, policyModel);
+        LoopElementModel model = new LoopElementModel(name, policyType, yaml);
+        model.addPolicyModel(policyModel);
         return model;
     }
 
     private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
             String policyVariant, String createdBy) {
-        return new PolicyModel(policyType, policyModelTosca, version, policyAcronym, policyVariant);
+        return new PolicyModel(policyType, policyModelTosca, version, policyAcronym);
     }
 
     private LoopTemplate getLoopTemplate(String name, String blueprint, String svgRepresentation, String createdBy,
             Integer maxInstancesAllowed) {
         LoopTemplate template = new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
-        template.addMicroServiceModel(getMicroServiceModel("yaml", "microService1", "org.onap.policy.drools", createdBy,
+        template.addLoopElementModel(getLoopElementModel("yaml", "microService1", "org.onap.policy.drools", createdBy,
                 getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1", createdBy)));
         return template;
     }
@@ -134,7 +135,7 @@ public class LoopRepositoriesItCase {
             String policyTosca, String jsonProperties, boolean shared) {
         MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
                 gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
-        microService.setProperties(new Gson().fromJson(jsonProperties, JsonObject.class));
+        microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
     }
 
@@ -182,13 +183,13 @@ public class LoopRepositoriesItCase {
         assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isEqualTo(true);
         assertThat(servicesRepository.existsById(loopInDb.getModelService().getServiceUuid())).isEqualTo(true);
         assertThat(microServiceModelsRepository.existsById(
-                loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel().getName()))
+                loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getName()))
                         .isEqualTo(true);
         assertThat(policyModelsRepository.existsById(new PolicyModelId(
-                loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel().getPolicyModel()
-                        .getPolicyModelType(),
-                loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel().getPolicyModel()
-                        .getVersion()))).isEqualTo(true);
+                loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
+                        .first().getPolicyModelType(),
+                loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
+                        .first().getVersion()))).isEqualTo(true);
 
         // Now attempt to read from database
         Loop loopInDbRetrieved = loopRepository.findById(loopTest.getName()).get();
@@ -198,7 +199,16 @@ public class LoopRepositoriesItCase {
                 "createdBy", "updatedBy");
         assertThat((LoopLog) loopInDbRetrieved.getLoopLogs().toArray()[0]).isEqualToComparingFieldByField(loopLog);
         assertThat((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0])
-                .isEqualToComparingFieldByField(opPolicy);
+                .isEqualToIgnoringGivenFields(opPolicy, "createdDate", "updatedDate", "createdBy", "updatedBy");
+        assertThat(((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0]).getCreatedDate())
+                .isNotNull();
+        assertThat(((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0]).getUpdatedDate())
+                .isNotNull();
+        assertThat(((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0]).getCreatedBy())
+                .isNotNull();
+        assertThat(((OperationalPolicy) loopInDbRetrieved.getOperationalPolicies().toArray()[0]).getUpdatedBy())
+                .isNotNull();
+
         assertThat((MicroServicePolicy) loopInDbRetrieved.getMicroServicePolicies().toArray()[0])
                 .isEqualToIgnoringGivenFields(microServicePolicy, "createdDate", "updatedDate", "createdBy",
                         "updatedBy");
@@ -230,23 +240,14 @@ public class LoopRepositoriesItCase {
         assertThat(loopTemplateRepository.existsById(loopInDb.getLoopTemplate().getName())).isEqualTo(true);
         assertThat(servicesRepository.existsById(loopInDb.getModelService().getServiceUuid())).isEqualTo(true);
         assertThat(microServiceModelsRepository.existsById(
-                loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel().getName()))
+                loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getName()))
                         .isEqualTo(true);
 
         assertThat(policyModelsRepository.existsById(new PolicyModelId(
-                loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel().getPolicyModel()
-                        .getPolicyModelType(),
-                loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel().getPolicyModel()
-                        .getVersion()))).isEqualTo(true);
-
-        // Cleanup
-        // microServiceModelsRepository
-        // .delete(loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel());
-        //
-        // policyModelsRepository.delete(
-        // loopInDb.getLoopTemplate().getMicroServiceModelUsed().first().getMicroServiceModel().getPolicyModel());
-        // loopTemplateRepository.delete(loopInDb.getLoopTemplate());
-        // servicesRepository.delete(service);
+                loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
+                        .first().getPolicyModelType(),
+                loopInDb.getLoopTemplate().getLoopElementModelsUsed().first().getLoopElementModel().getPolicyModels()
+                        .first().getVersion()))).isEqualTo(true);
 
     }
 }

@@ -127,8 +127,8 @@ public class Loop extends AuditEntity implements Serializable {
 
     @Expose
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @JoinTable(name = "loops_microservicepolicies", joinColumns = @JoinColumn(name = "loop_id"),
-            inverseJoinColumns = @JoinColumn(name = "microservicepolicy_id"))
+    @JoinTable(name = "loops_to_microservicepolicies", joinColumns = @JoinColumn(name = "loop_name"),
+            inverseJoinColumns = @JoinColumn(name = "microservicepolicy_name"))
     private Set<MicroServicePolicy> microServicePolicies = new HashSet<>();
 
     @Expose

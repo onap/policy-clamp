@@ -28,6 +28,8 @@ import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,11 +37,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.SortNatural;
 import org.onap.clamp.loop.common.AuditEntity;
 
 /**
@@ -47,9 +50,9 @@ import org.onap.clamp.loop.common.AuditEntity;
  */
 
 @Entity
-@Table(name = "micro_service_models")
-public class MicroServiceModel extends AuditEntity implements Serializable {
-
+@Table(name = "loop_element_models")
+public class LoopElementModel extends AuditEntity implements Serializable {
+    public static final String DEFAULT_GROUP_NAME = "DEFAULT";
     /**
      * The serial version id.
      */
@@ -61,41 +64,50 @@ public class MicroServiceModel extends AuditEntity implements Serializable {
     private String name;
 
     /**
+     * Here we store the blueprint coming from DCAE.
+     */
+    @Column(nullable = false, name = "blueprint_yaml")
+    private String blueprint;
+
+    /**
+     * The type of element
+     */
+    @Column(nullable = false, name = "loop_element_type")
+    private String loopElementType;
+
+    /**
      * This variable is used to store the type mentioned in the micro-service
      * blueprint.
      */
     @Expose
-    @Column(nullable = false, name = "policy_type")
-    private String policyType;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+    @JoinTable(name = "loopelementmodels_to_policymodels",
+            joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
+            inverseJoinColumns = { @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+                @JoinColumn(name = "policy_model_version", referencedColumnName = "version") })
+    @SortNatural
+    private SortedSet<PolicyModel> policyModels = new TreeSet<>();
 
-    @Column(nullable = false, name = "blueprint_yaml")
-    private String blueprint;
-
-    @Expose
-    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-    @JoinColumns({ @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-        @JoinColumn(name = "policy_model_version", referencedColumnName = "version") })
-    private PolicyModel policyModel;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "microServiceModel", orphanRemoval = true)
-    private Set<TemplateMicroServiceModel> usedByLoopTemplates = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "loopElementModel", orphanRemoval = true)
+    private Set<LoopTemplateLoopElementModel> usedByLoopTemplates = new HashSet<>();
 
     /**
-     * policyModel getter.
+     * policyModels getter.
      * 
      * @return the policyModel
      */
-    public PolicyModel getPolicyModel() {
-        return policyModel;
+    public SortedSet<PolicyModel> getPolicyModels() {
+        return policyModels;
     }
 
     /**
-     * policyModel setter.
+     * Method to add a new policyModel to the list.
      * 
-     * @param policyModel the policyModel to set
+     * @param policyModel
      */
-    public void setPolicyModel(PolicyModel policyModel) {
-        this.policyModel = policyModel;
+    public void addPolicyModel(PolicyModel policyModel) {
+        policyModels.add(policyModel);
+        policyModel.getUsedByElementModels().add(this);
     }
 
     /**
@@ -117,24 +129,6 @@ public class MicroServiceModel extends AuditEntity implements Serializable {
     }
 
     /**
-     * policyType getter.
-     * 
-     * @return the policyType
-     */
-    public String getPolicyType() {
-        return policyType;
-    }
-
-    /**
-     * policyType setter.
-     * 
-     * @param policyType the policyType to set
-     */
-    public void setPolicyType(String policyType) {
-        this.policyType = policyType;
-    }
-
-    /**
      * blueprint getter.
      * 
      * @return the blueprint
@@ -153,35 +147,46 @@ public class MicroServiceModel extends AuditEntity implements Serializable {
     }
 
     /**
+     * @return the loopElementType
+     */
+    public String getLoopElementType() {
+        return loopElementType;
+    }
+
+    /**
+     * @param loopElementType the loopElementType to set
+     */
+    public void setLoopElementType(String loopElementType) {
+        this.loopElementType = loopElementType;
+    }
+
+    /**
      * usedByLoopTemplates getter.
      * 
      * @return the usedByLoopTemplates
      */
-    public Set<TemplateMicroServiceModel> getUsedByLoopTemplates() {
+    public Set<LoopTemplateLoopElementModel> getUsedByLoopTemplates() {
         return usedByLoopTemplates;
     }
 
     /**
      * Default constructor for serialization.
      */
-    public MicroServiceModel() {
+    public LoopElementModel() {
     }
 
     /**
      * Constructor.
      * 
-     * @param name        The name id
-     * @param policyType  The policy model type like
-     *                    onap.policies.controlloop.operational.common.Apex
-     * @param blueprint   The blueprint defined for dcae that contains the policy
-     *                    type to use
-     * @param policyModel The policy model for the policy type mentioned here
+     * @param name            The name id
+     * @param loopElementType The type of loop element
+     * @param blueprint       The blueprint defined for dcae that contains the
+     *                        policy type to use
      */
-    public MicroServiceModel(String name, String policyType, String blueprint, PolicyModel policyModel) {
+    public LoopElementModel(String name, String loopElementType, String blueprint) {
         this.name = name;
-        this.policyType = policyType;
+        this.loopElementType = loopElementType;
         this.blueprint = blueprint;
-        this.policyModel = policyModel;
     }
 
     @Override
@@ -203,7 +208,7 @@ public class MicroServiceModel extends AuditEntity implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        MicroServiceModel other = (MicroServiceModel) obj;
+        LoopElementModel other = (LoopElementModel) obj;
         if (name == null) {
             if (other.name != null) {
                 return false;

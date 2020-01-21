@@ -38,8 +38,8 @@ import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "templates_microservicemodels")
-public class TemplateMicroServiceModel implements Serializable, Comparable<TemplateMicroServiceModel> {
+@Table(name = "looptemplates_to_loopelementmodels")
+public class LoopTemplateLoopElementModel implements Serializable, Comparable<LoopTemplateLoopElementModel> {
 
     /**
      * Serial ID.
@@ -47,7 +47,7 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
     private static final long serialVersionUID = 5924989899078094245L;
 
     @EmbeddedId
-    private TemplateMicroServiceModelId templateMicroServiceModelId;
+    private LoopTemplateLoopElementModelId loopTemplateLoopElementModelId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("loopTemplateName")
@@ -56,9 +56,9 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
 
     @Expose
     @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-    @MapsId("microServiceModelName")
-    @JoinColumn(name = "micro_service_model_name")
-    private MicroServiceModel microServiceModel;
+    @MapsId("loopElementModelName")
+    @JoinColumn(name = "loop_element_model_name")
+    private LoopElementModel loopElementModel;
 
     @Expose
     @Column(nullable = false, name = "flow_order")
@@ -67,24 +67,24 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
     /**
      * Default constructor for serialization.
      */
-    public TemplateMicroServiceModel() {
+    public LoopTemplateLoopElementModel() {
 
     }
 
     /**
      * Constructor.
      * 
-     * @param loopTemplate      The loop template object
-     * @param microServiceModel The microServiceModel object
-     * @param flowOrder         The position of the micro service in the flow
+     * @param loopTemplate     The loop template object
+     * @param loopElementModel The loopElementModel object
+     * @param flowOrder        The position of the micro service in the flow
      */
-    public TemplateMicroServiceModel(LoopTemplate loopTemplate, MicroServiceModel microServiceModel,
+    public LoopTemplateLoopElementModel(LoopTemplate loopTemplate, LoopElementModel loopElementModel,
             Integer flowOrder) {
         this.loopTemplate = loopTemplate;
-        this.microServiceModel = microServiceModel;
+        this.loopElementModel = loopElementModel;
         this.flowOrder = flowOrder;
-        this.templateMicroServiceModelId = new TemplateMicroServiceModelId(loopTemplate.getName(),
-                microServiceModel.getName());
+        this.loopTemplateLoopElementModelId = new LoopTemplateLoopElementModelId(loopTemplate.getName(),
+                loopElementModel.getName());
     }
 
     /**
@@ -106,21 +106,21 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
     }
 
     /**
-     * microServiceModel getter.
+     * loopElementModel getter.
      * 
-     * @return the microServiceModel
+     * @return the loopElementModel
      */
-    public MicroServiceModel getMicroServiceModel() {
-        return microServiceModel;
+    public LoopElementModel getLoopElementModel() {
+        return loopElementModel;
     }
 
     /**
-     * microServiceModel setter.
+     * loopElementModel setter.
      * 
-     * @param microServiceModel the microServiceModel to set
+     * @param loopElementModel the loopElementModel to set
      */
-    public void setMicroServiceModel(MicroServiceModel microServiceModel) {
-        this.microServiceModel = microServiceModel;
+    public void setLoopElementModel(LoopElementModel loopElementModel) {
+        this.loopElementModel = loopElementModel;
     }
 
     /**
@@ -142,7 +142,7 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
     }
 
     @Override
-    public int compareTo(TemplateMicroServiceModel arg0) {
+    public int compareTo(LoopTemplateLoopElementModel arg0) {
         // Reverse it, so that by default we have the latest
         if (getFlowOrder() == null) {
             return 1;
@@ -158,7 +158,7 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
         final int prime = 31;
         int result = 1;
         result = prime * result + ((loopTemplate == null) ? 0 : loopTemplate.hashCode());
-        result = prime * result + ((microServiceModel == null) ? 0 : microServiceModel.hashCode());
+        result = prime * result + ((loopElementModel == null) ? 0 : loopElementModel.hashCode());
         return result;
     }
 
@@ -173,7 +173,7 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
         if (getClass() != obj.getClass()) {
             return false;
         }
-        TemplateMicroServiceModel other = (TemplateMicroServiceModel) obj;
+        LoopTemplateLoopElementModel other = (LoopTemplateLoopElementModel) obj;
         if (loopTemplate == null) {
             if (other.loopTemplate != null) {
                 return false;
@@ -181,11 +181,11 @@ public class TemplateMicroServiceModel implements Serializable, Comparable<Templ
         } else if (!loopTemplate.equals(other.loopTemplate)) {
             return false;
         }
-        if (microServiceModel == null) {
-            if (other.microServiceModel != null) {
+        if (loopElementModel == null) {
+            if (other.loopElementModel != null) {
                 return false;
             }
-        } else if (!microServiceModel.equals(other.microServiceModel)) {
+        } else if (!loopElementModel.equals(other.loopElementModel)) {
             return false;
         }
         return true;

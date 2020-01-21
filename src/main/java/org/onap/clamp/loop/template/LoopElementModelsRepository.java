@@ -27,5 +27,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MicroServiceModelsRepository extends JpaRepository<MicroServiceModel, String> {
+public interface LoopElementModelsRepository extends JpaRepository<LoopElementModel, String> {
 }

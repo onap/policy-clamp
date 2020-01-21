@@ -73,7 +73,7 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,
         MicroServicePolicy newPolicy, Loop loop) {
-        oldPolicy.setProperties(newPolicy.getProperties());
+        oldPolicy.setConfigurationsJson(newPolicy.getConfigurationsJson());
         if (!oldPolicy.getUsedByLoops().contains(loop)) {
             oldPolicy.getUsedByLoops().add(loop);
         }
