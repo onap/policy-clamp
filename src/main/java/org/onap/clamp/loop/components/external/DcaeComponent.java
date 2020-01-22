@@ -24,10 +24,17 @@
 package org.onap.clamp.loop.components.external;
 
 import com.google.gson.JsonObject;
-
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
-
 import org.apache.camel.Exchange;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.model.dcae.DcaeOperationStatusResponse;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.Loop;
@@ -163,5 +170,27 @@ public class DcaeComponent extends ExternalComponent {
             setState(IN_ERROR);
         }
         return this.getState();
+    }
+
+    /**
+     * Convert the json response to a DcaeInventoryResponse.
+     *
+     * @param responseBody The DCAE response Json paylaod
+     * @return list of DcaeInventoryResponse
+     * @throws ParseException In case of issues with the Json parsing
+     */
+    public static List<DcaeInventoryResponse> convertToDcaeInventoryResponse(String responseBody)
+            throws ParseException {
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObj = (JSONObject) parser.parse(responseBody);
+        JSONArray itemsArray = (JSONArray) jsonObj.get("items");
+        Iterator it = itemsArray.iterator();
+        List<DcaeInventoryResponse> inventoryResponseList = new LinkedList<>();
+        while (it.hasNext()) {
+            JSONObject item = (JSONObject) it.next();
+            DcaeInventoryResponse response = JsonUtils.GSON.fromJson(item.toString(), DcaeInventoryResponse.class);
+            inventoryResponseList.add(response);
+        }
+        return inventoryResponseList;
     }
 }
