@@ -84,9 +84,9 @@
 
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
-		<sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/coverage-reports/jacoco-xml</sonar.coverage.jacoco.xmlReportPaths>
+		<!-- <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
+		<sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath> -->
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
 		<sonar.projectVersion>${project.version}</sonar.projectVersion>
 		<!-- Enable language to disable javascript analysis -->
@@ -1111,20 +1111,18 @@
 									</includes>
 								</fileSet>
 							</fileSets>
-							<destFile>${project.build.directory}/jacoco-dev.exec</destFile>
+							<destFile>${project.build.directory}/jacoco.exec</destFile>
 						</configuration>
 					</execution>
 					<execution>
-						<id>post-integration-xml</id>
+						<id>report-xml</id>
 						<goals>
 							<goal>report</goal>
 						</goals>
-						<phase>post-integration-test</phase>
 						<configuration>
-							<dataFile>${project.build.directory}/coverage-reports/jacoco.exec</dataFile>
-							<outputDirectory>
-								${project.build.directory}/coverage-reports/jacoco-xml
-							</outputDirectory>
+							<includes>
+								<include>org.onap.clamp.*</include>
+							</includes>
 						</configuration>
 					</execution>
 				</executions>
