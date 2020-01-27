@@ -84,9 +84,10 @@
 
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
+		<!-- The value below comes from the jacoco maven plugin output, sonar now takes xml only -->
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-html-xml-reports/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
 		<sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath> -->
-		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
 		<sonar.projectVersion>${project.version}</sonar.projectVersion>
 		<!-- Enable language to disable javascript analysis -->
@@ -1069,7 +1070,7 @@
 					<dumpOnExit>true</dumpOnExit>
 					<append>true</append>
 					<includes>
-						<include>org.onap.clamp.*</include>
+						<include>org/onap/clamp/**</include>
 					</includes>
 				</configuration>
 				<executions>
@@ -1120,9 +1121,9 @@
 							<goal>report</goal>
 						</goals>
 						<configuration>
-							<includes>
-								<include>org.onap.clamp.*</include>
-							</includes>
+							<!-- Setting explicit path, so that we remember where it picks them up from -->
+							<dataFile>${project.build.directory}/jacoco.exec</dataFile>
+							<outputDirectory>${project.build.directory}/jacoco-html-xml-reports</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
