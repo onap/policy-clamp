@@ -119,6 +119,66 @@ public class DeployFlowTestItCase {
         assertThat(loopAfterTest.getDcaeDeploymentId()).isNull();
     }
 
+    @Test
+    @Transactional
+    public void undeployWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
+        Loop loopTest = createLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+                 "UUID-blueprint");
+        LoopTemplate template = new LoopTemplate();
+        template.setName("templateName");
+        template.setBlueprint("yamlcontent");
+        loopTest.setLoopTemplate(template);
+        loopTest.setDcaeDeploymentId("testDeploymentId");
+        loopTest.setDcaeDeploymentStatusUrl("testUrl");
+        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
+                "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+                "{\"param1\":\"value1\"}", true);
+        loopTest.addMicroServicePolicy(microServicePolicy);
+        loopService.saveOrUpdateLoop(loopTest);
+        Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext)
+            .withProperty("loopObject", loopTest).build();
+
+        camelContext.createProducerTemplate()
+            .send("direct:undeploy-loop", myCamelExchange);
+
+        Loop loopAfterTest = loopService.getLoop("ControlLoopTest");
+        assertThat(loopAfterTest.getDcaeDeploymentStatusUrl().contains("/uninstall")).isTrue();
+    }
+
+    @Test
+    @Transactional
+    public void undeployWithMultipleBlueprintTest() throws JsonSyntaxException, IOException {
+        Loop loopTest2 = createLoop("ControlLoopTest2", "<xml></xml>", "yamlcontent", "{\"dcaeDeployParameters\": {"
+            + "\"microService1\": {\"location_id\": \"\", \"policy_id\": \"TCA_h2NMX_v1_0_ResourceInstanceName1_tca\"},"
+            + "\"microService2\": {\"location_id\": \"\", \"policy_id\": \"TCA_h2NMX_v1_0_ResourceInstanceName2_tca\"}"
+            + "}}", "UUID-blueprint");
+        LoopTemplate template = new LoopTemplate();
+        template.setName("templateName");
+        loopTest2.setLoopTemplate(template);
+        MicroServicePolicy microServicePolicy1 = getMicroServicePolicy("microService1", "",
+                "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+                "{\"param1\":\"value1\"}", true, "testDeploymentId1", "testDeploymentStatusUrl1");
+        MicroServicePolicy microServicePolicy2 = getMicroServicePolicy("microService2", "",
+                "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
+                "{\"param1\":\"value1\"}", true, "testDeploymentId2", "testDeploymentStatusUrl2");
+        loopTest2.addMicroServicePolicy(microServicePolicy1);
+        loopTest2.addMicroServicePolicy(microServicePolicy2);
+        loopService.saveOrUpdateLoop(loopTest2);
+        Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext)
+            .withProperty("loopObject", loopTest2).build();
+
+        camelContext.createProducerTemplate()
+            .send("direct:undeploy-loop", myCamelExchange);
+
+        Loop loopAfterTest = loopService.getLoop("ControlLoopTest2");
+        Set<MicroServicePolicy> policyList = loopAfterTest.getMicroServicePolicies();
+        for (MicroServicePolicy policy : policyList) {
+            assertThat(policy.getDcaeDeploymentStatusUrl().contains("/uninstall")).isTrue();
+        }
+        assertThat(loopAfterTest.getDcaeDeploymentStatusUrl()).isNull();
+        assertThat(loopAfterTest.getDcaeDeploymentId()).isNull();
+    }
+
     private Loop createLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
             String dcaeBlueprintId) throws JsonSyntaxException, IOException {
         Loop loop = new Loop(name, blueprint, svgRepresentation);
@@ -133,6 +193,16 @@ public class DeployFlowTestItCase {
         MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
                 gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
+        return microService;
+    }
+
+    private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
+            String policyTosca, String jsonProperties, boolean shared, String deploymengId, String deploymentStatusUrl) {
+        MicroServicePolicy microService = getMicroServicePolicy(name, modelType, jsonRepresentation,
+                policyTosca, jsonProperties, shared);
+
+        microService.setDcaeDeploymentId(deploymengId);
+        microService.setDcaeDeploymentStatusUrl(deploymentStatusUrl);
         return microService;
     }
 }

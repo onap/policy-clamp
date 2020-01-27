@@ -99,7 +99,7 @@
 			<log loggingLevel="INFO"
 				message="Endpoint to get policy deployment status: {{clamp.config.policy.pap.url}}/policy/pap/v1/policies/deployed/${exchangeProperty[policyName]}/1.0.0"></log>
 			<toD
-				uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/policies/${exchangeProperty[policyName]}/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
+				uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/policies/deployed/${exchangeProperty[policyName]}/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to

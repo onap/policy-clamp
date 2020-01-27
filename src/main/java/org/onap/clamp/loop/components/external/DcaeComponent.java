@@ -165,6 +165,18 @@ public class DcaeComponent extends ExternalComponent {
         return rootObject.toString();
     }
 
+    /**
+     * Return the uninstallation payload for DCAE.
+     *
+     * @param microServicePolicy The microServicePolicy object
+     * @return The payload in string (json)
+     */
+    public static String getUndeployPayload(MicroServicePolicy policy) {
+        JsonObject rootObject = new JsonObject();
+        rootObject.addProperty(DCAE_SERVICETYPE_ID, policy.getDcaeBlueprintId());
+        return rootObject.toString();
+    }
+
     @Override
     public ExternalComponentState computeState(Exchange camelExchange) {
 
