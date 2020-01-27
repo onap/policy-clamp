@@ -31,6 +31,7 @@ import org.apache.camel.Exchange;
 import org.onap.clamp.clds.model.dcae.DcaeOperationStatusResponse;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.policy.microservice.MicroServicePolicy;
 
 public class DcaeComponent extends ExternalComponent {
 
@@ -84,7 +85,6 @@ public class DcaeComponent extends ExternalComponent {
             return null;
         }
     }
-
     /**
      * Generate the deployment id, it's random.
      *
@@ -114,6 +114,27 @@ public class DcaeComponent extends ExternalComponent {
     public static String getDeployPayload(Loop loop) {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
         JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER);
+
+        String serviceTypeId = loop.getDcaeBlueprintId();
+
+        JsonObject rootObject = new JsonObject();
+        rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
+        if (deploymentProp != null) {
+            rootObject.add(DCAE_INPUTS, deploymentProp);
+        }
+        return rootObject.toString();
+    }
+
+    /**
+     * Return the deploy payload for DCAE.
+     *
+     * @param loop The loop object
+     * @param microServiceName The micro service name
+     * @return The payload used to send deploy closed loop request
+     */
+    public static String getDeployPayload(Loop loop, String microServiceName) {
+        JsonObject globalProp = loop.getGlobalPropertiesJson();
+        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(microServiceName);
 
         String serviceTypeId = loop.getDcaeBlueprintId();
 

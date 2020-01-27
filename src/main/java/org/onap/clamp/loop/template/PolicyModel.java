@@ -82,6 +82,8 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
     private Set<LoopElementModel> usedByElementModels = new HashSet<>();
 
     /**
+     * usedByElementModels getter.
+     * 
      * @return the usedByElementModels
      */
     public Set<LoopElementModel> getUsedByElementModels() {
@@ -170,10 +172,10 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
     /**
      * Constructor.
      * 
-     * @param policyType       The policyType (referenced in the blueprint)
+     * @param policyType       The policyType (referenced in the blueprint
      * @param policyModelTosca The policy tosca model in yaml
      * @param version          the version like 1.0.0
-     * @param policyVariant    Subtype for policy if it exists (could be used by UI)
+     * @param policyAcronym    Subtype for policy if it exists (could be used by UI)
      */
     public PolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym) {
         this.policyModelType = policyType;

@@ -70,7 +70,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     private String blueprint;
 
     /**
-     * The type of element
+     * The type of element.
      */
     @Column(nullable = false, name = "loop_element_type")
     private String loopElementType;
@@ -103,7 +103,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     /**
      * Method to add a new policyModel to the list.
      * 
-     * @param policyModel
+     * @param policyModel The policy model
      */
     public void addPolicyModel(PolicyModel policyModel) {
         policyModels.add(policyModel);
@@ -147,6 +147,8 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     }
 
     /**
+     * loopElementType getter.
+     * 
      * @return the loopElementType
      */
     public String getLoopElementType() {
@@ -154,6 +156,8 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     }
 
     /**
+     * loopElementType setter.
+     * 
      * @param loopElementType the loopElementType to set
      */
     public void setLoopElementType(String loopElementType) {

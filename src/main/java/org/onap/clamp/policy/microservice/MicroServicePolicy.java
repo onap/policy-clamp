@@ -101,6 +101,10 @@ public class MicroServicePolicy extends Policy implements Serializable {
     @Column(name = "dcae_deployment_status_url")
     private String dcaeDeploymentStatusUrl;
 
+    @Expose
+    @Column(name = "dcae_blueprint_id")
+    private String dcaeBlueprintId;
+
     public MicroServicePolicy() {
         // serialization
     }
@@ -251,6 +255,24 @@ public class MicroServicePolicy extends Policy implements Serializable {
      */
     public void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
         this.dcaeDeploymentStatusUrl = dcaeDeploymentStatusUrl;
+    }
+
+    /**
+     * dcaeBlueprintId getter.
+     * 
+     * @return the dcaeBlueprintId
+     */
+    public String getDcaeBlueprintId() {
+        return dcaeBlueprintId;
+    }
+
+    /**
+     * dcaeBlueprintId setter.
+     * 
+     * @param dcaeBlueprintId the dcaeBlueprintId to set
+     */
+    void setDcaeBlueprintId(String dcaeBlueprintId) {
+        this.dcaeBlueprintId = dcaeBlueprintId;
     }
 
     @Override
