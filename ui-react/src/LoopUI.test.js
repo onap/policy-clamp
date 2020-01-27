@@ -23,6 +23,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import LoopUI from './LoopUI';
+import OnapConstants from './utils/OnapConstants';
 
 import LoopCache from './api/LoopCache';
 import LoopActionService from './api/LoopActionService';
@@ -77,7 +78,7 @@ describe('Verify LoopUI', () => {
 		const instance = component.instance();
 		instance.closeLoop();
 			
-		expect(component.state('loopName')).toEqual("Empty (NO loop loaded yet)");
+		expect(component.state('loopName')).toEqual(OnapConstants.defaultLoopName);
 		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
 	})
 

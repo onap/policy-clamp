@@ -39,7 +39,7 @@
 	<description>
 	       This is the MAVEN project that builds everything for ONAP CLAMP.
 	       Docker engine is normally requires to perfom all possible tasks (including integration tests)
-	       
+
            It can build:
            - The ONAP CLAMP JAR that contains CLAMP back-end code.
            - The DOCKER images for:
@@ -53,7 +53,7 @@
             - The CLAMP backend, JAVA unit testing
             - The CLAMP backend, JAVA integration tests (with Spring + docker mariadb database + docker policy/dcae emulator written in python)
             - The CLAMP frontend, Javascrip tests (NodeJS(NPM) + JEST + Enzyme fro React)
-           
+
            The test coverage for dev's can be found after a "clean install" build in:
             - Clamp backend: target/jacoco-dev.exec (unit tests + integration tests merged)
                 or separately target/coverage-reports/jacoco.exec and target/coverage-reports/jacoco-it.exec
@@ -104,6 +104,7 @@
 		<python.http.proxy.param />
 		<tomcat.version>9.0.27</tomcat.version>
 		<ui.react.src>ui-react</ui.react.src>
+		<ui.react.lib.src>ui-react-lib</ui.react.lib.src>
 		<npm.publish.url>https://nexus3.onap.org/repository/npm.release/</npm.publish.url>
 	</properties>
 
@@ -589,7 +590,7 @@
 			</testResource>
 		</testResources>
 		<resources>
-			<!-- For AAF folder maven should not try to filter Keystores/Truststores ... Otherwise 
+			<!-- For AAF folder maven should not try to filter Keystores/Truststores ... Otherwise
 				they will be broken and unreadable -->
 			<resource>
 				<directory>src/main/resources</directory>
@@ -607,6 +608,9 @@
 			</resource>
 			<resource>
 				<directory>${ui.react.src}</directory>
+				<excludes>
+					<exclude>node_modules</exclude>
+				</excludes>
 				<includes>
 					<include>src/**</include>
 					<include>public/**</include>
@@ -615,6 +619,30 @@
 				</includes>
 				<filtering>true</filtering>
 				<targetPath>${project.build.directory}/${ui.react.src}</targetPath>
+			</resource>
+			<resource>
+				<directory>${ui.react.src}</directory>
+				<includes>
+					<include>src/**</include>
+				</includes>
+				<excludes>
+					<exclude>**/__snapshots__/**</exclude>
+					<exclude>**/**.test.js</exclude>
+				</excludes>
+				<filtering>true</filtering>
+				<targetPath>${project.build.directory}/${ui.react.lib.src}</targetPath>
+			</resource>
+			<resource>
+				<directory>${ui.react.lib.src}</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>node_modules/**</exclude>
+					<exclude>package-lock.json</exclude>
+				</excludes>
+				<filtering>true</filtering>
+				<targetPath>${project.build.directory}/${ui.react.lib.src}</targetPath>
 			</resource>
 		</resources>
 
@@ -652,7 +680,7 @@
 				</executions>
 
 			</plugin>
-			<!-- Read the swagger.json file and the definition from SwaggerConfig.java; generate 
+			<!-- Read the swagger.json file and the definition from SwaggerConfig.java; generate
 				a list of .adoc files containing the APIs info in more structured way -->
 			<plugin>
 				<groupId>io.github.swagger2markup</groupId>
@@ -687,7 +715,7 @@
 				</executions>
 			</plugin>
 
-			<!-- Run the generated asciidoc through Asciidoctor to generate other documentation 
+			<!-- Run the generated asciidoc through Asciidoctor to generate other documentation
 				types, such as PDFs or HTML5 -->
 			<plugin>
 				<groupId>org.asciidoctor</groupId>
@@ -975,7 +1003,7 @@
 									<tag>${project.docker.latesttagtimestamp.version}</tag>
 									<tag>${project.docker.latesttag.version}</tag>
 								</tags>
-								<!-- A relative path is looked up in ${project.basedir}/src/main/docker by 
+								<!-- A relative path is looked up in ${project.basedir}/src/main/docker by
 									default -->
 								<dockerFile>backend/Dockerfile</dockerFile>
 								<assembly>
@@ -997,7 +1025,7 @@
 									<tag>${project.docker.latesttagtimestamp.version}</tag>
 									<tag>${project.docker.latesttag.version}</tag>
 								</tags>
-								<!-- A relative path is looked up in ${project.basedir}/src/main/docker by 
+								<!-- A relative path is looked up in ${project.basedir}/src/main/docker by
 									default -->
 								<dockerFile>frontend/Dockerfile</dockerFile>
 								<assembly>
@@ -1153,7 +1181,6 @@
 				<version>1.8.0</version>
 				<configuration>
 					<installDirectory>${project.build.directory}/${ui.react.src}</installDirectory>
-					<workingDirectory>${project.build.directory}/${ui.react.src}</workingDirectory>
 				</configuration>
 				<executions>
 					<execution>
@@ -1163,8 +1190,8 @@
 						</goals>
 						<phase>generate-sources</phase>
 						<configuration>
-						<nodeVersion>v12.13.0</nodeVersion>
-						<npmVersion>6.13.0</npmVersion>
+							<nodeVersion>v12.13.0</nodeVersion>
+							<npmVersion>6.13.0</npmVersion>
 						</configuration>
 					</execution>
 					<execution>
@@ -1174,6 +1201,7 @@
 						</goals>
 						<phase>compile</phase>
 						<configuration>
+							<workingDirectory>${project.build.directory}/${ui.react.src}</workingDirectory>
 							<arguments>install</arguments>
 						</configuration>
 					</execution>
@@ -1185,6 +1213,29 @@
 						<phase>test</phase>
 						<configuration>
 							<arguments>run-script test:coverage</arguments>
+							<workingDirectory>${project.build.directory}/${ui.react.src}</workingDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm_install_lib</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>deploy</phase>
+						<configuration>
+							<workingDirectory>${project.build.directory}/${ui.react.lib.src}</workingDirectory>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm_build_lib</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>deploy</phase>
+						<configuration>
+							<workingDirectory>${project.build.directory}/${ui.react.lib.src}</workingDirectory>
+							<arguments>run build</arguments>
 						</configuration>
 					</execution>
 					<execution>
@@ -1194,6 +1245,7 @@
 						</goals>
 						<phase>deploy</phase>
 						<configuration>
+							<workingDirectory>${project.build.directory}/${ui.react.lib.src}</workingDirectory>
 							<arguments>publish</arguments>
 						</configuration>
 					</execution>

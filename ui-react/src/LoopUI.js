@@ -27,6 +27,7 @@ import MenuBar from './components/menu/MenuBar';
 import Navbar from 'react-bootstrap/Navbar';
 import logo from './logo.png';
 import { GlobalClampStyle } from './theme/globalStyle.js';
+import OnapConstants from './utils/OnapConstants';
 
 import LoopSvg from './components/loop_viewer/svg/LoopSvg';
 import LoopLogs from './components/loop_viewer/logs/LoopLogs';
@@ -99,11 +100,9 @@ const LoopViewBodyDivStyled = styled.div`
 
 export default class LoopUI extends React.Component {
 
-	static defaultLoopName="Empty (NO loop loaded yet)";
-
 	state = {
 		userName: null,
-		loopName: LoopUI.defaultLoopName,
+		loopName: OnapConstants.defaultLoopName,
 		loopCache: new LoopCache({}),
 		showAlert: false
 	};
@@ -242,7 +241,7 @@ export default class LoopUI extends React.Component {
 	}
 
 	closeLoop() {
-		this.setState({ loopCache: new LoopCache({}), loopName: LoopUI.defaultLoopName });
+		this.setState({ loopCache: new LoopCache({}), loopName: OnapConstants.defaultLoopName });
 		this.props.history.push('/');
 	}
 
