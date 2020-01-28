@@ -50,7 +50,7 @@ public class DcaeComponentTest {
         String yaml = "imports:\n" + "  - \"http://www.getcloudify.org/spec/cloudify/3.4/types.yaml\"\n"
             + "node_templates:\n" + "  docker_service_host:\n" + "    type: dcae.nodes.SelectedDockerHost";
 
-        Loop loopTest = new Loop("ControlLoopTest", yaml, "<xml></xml>");
+        Loop loopTest = new Loop("ControlLoopTest", "<xml></xml>");
         loopTest.setGlobalPropertiesJson(
             new Gson().fromJson("{\"dcaeDeployParameters\":" + "{\"policy_id\": \"name\"}}", JsonObject.class));
         loopTest.setLastComputedState(LoopState.DESIGN);

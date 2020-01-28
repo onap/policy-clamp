@@ -87,7 +87,6 @@ public class LoopServiceTestItCase {
         assertThat(actualLoop).isNotNull();
         assertThat(actualLoop).isEqualTo(loopsRepository.findById(actualLoop.getName()).get());
         assertThat(actualLoop.getName()).isEqualTo(EXAMPLE_LOOP_NAME);
-        assertThat(actualLoop.getBlueprint()).isEqualTo(loopBlueprint);
         assertThat(actualLoop.getSvgRepresentation()).isEqualTo(loopSvg);
         assertThat(actualLoop.getGlobalPropertiesJson().getAsJsonPrimitive("testName").getAsString())
                 .isEqualTo("testValue");
@@ -354,6 +353,6 @@ public class LoopServiceTestItCase {
     }
 
     private Loop createTestLoop(String loopName, String loopBlueprint, String loopSvg) {
-        return new Loop(loopName, loopBlueprint, loopSvg);
+        return new Loop(loopName, loopSvg);
     }
 }

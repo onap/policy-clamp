@@ -51,7 +51,11 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.service.ServiceRepository;
-import org.onap.clamp.policy.microservice.MicroServicePolicy;
+import org.onap.clamp.loop.template.LoopTemplate;
+import org.onap.clamp.loop.template.LoopTemplateLoopElementModel;
+import org.onap.clamp.loop.template.LoopTemplatesRepository;
+import org.onap.clamp.loop.template.PolicyModelId;
+import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
@@ -80,10 +84,13 @@ public class CsarInstallerItCase {
     private static final String RESOURCE_INSTANCE_NAME_RESOURCE2 = "ResourceInstanceName2";
 
     @Autowired
-    private LoopsRepository loopsRepo;
+    private LoopTemplatesRepository loopTemplatesRepo;
 
     @Autowired
     ServiceRepository serviceRepository;
+
+    @Autowired
+    PolicyModelsRepository policyModelsRepository;
 
     @Autowired
     @Qualifier("csarInstaller")
@@ -189,42 +196,44 @@ public class CsarInstallerItCase {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
-        assertThat(serviceRepository
-                .existsById("63cac700-ab9a-4115-a74f-7eac85e3fce0")).isTrue();
-        assertThat(loopsRepo
-                .existsById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")))
-                        .isTrue();
-        assertThat(loopsRepo.existsById(
-                Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))).isTrue();
-        assertThat(loopsRepo.existsById(
-                Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))).isTrue();
+        assertThat(serviceRepository.existsById("63cac700-ab9a-4115-a74f-7eac85e3fce0")).isTrue();
+        assertThat(loopTemplatesRepo.existsById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
+                RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml"))).isTrue();
+        assertThat(loopTemplatesRepo.existsById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
+                RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))).isTrue();
+        assertThat(loopTemplatesRepo.existsById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
+                RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))).isTrue();
         // Verify now that policy and json representation, global properties are well
         // set
-        Loop loop = loopsRepo
-                .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml"))
-                .get();
-        assertThat(loop.getSvgRepresentation()).startsWith("<svg ");
-        assertThat(loop.getGlobalPropertiesJson().get("dcaeDeployParameters")).isNotNull();
-        assertThat(loop.getMicroServicePolicies()).hasSize(1);
-        assertThat(loop.getOperationalPolicies()).hasSize(1);
-        assertThat(loop.getModelService().getServiceUuid()).isEqualTo("63cac700-ab9a-4115-a74f-7eac85e3fce0");
+        LoopTemplate loopTemplate = loopTemplatesRepo.findById(LoopTemplate.generateLoopTemplateName(generatedName,
+                "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")).get();
+        assertThat(loopTemplate.getSvgRepresentation()).startsWith("<svg ");
+        assertThat(loopTemplate.getLoopElementModelsUsed()).hasSize(1);
+        assertThat(loopTemplate.getModelService().getServiceUuid()).isEqualTo("63cac700-ab9a-4115-a74f-7eac85e3fce0");
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"),
-                JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService()), true);
+                JsonUtils.GSON_JPA_MODEL.toJson(loopTemplate.getModelService()), true);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/service-details.json"),
-                JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService().getServiceDetails()), true);
+                JsonUtils.GSON_JPA_MODEL.toJson(loopTemplate.getModelService().getServiceDetails()), true);
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/resource-details.json"),
-                JsonUtils.GSON_JPA_MODEL.toJson(loop.getModelService().getResourceDetails()), true);
-        assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
+                JsonUtils.GSON_JPA_MODEL.toJson(loopTemplate.getModelService().getResourceDetails()), true);
+        assertThat(((LoopTemplateLoopElementModel) (loopTemplate.getLoopElementModelsUsed().toArray()[0]))
+                .getLoopElementModel().getName()).isNotEmpty();
 
-        loop = loopsRepo
-                .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))
-                .get();
-        assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
+        loopTemplate = loopTemplatesRepo.findById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
+                RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml")).get();
+        assertThat(((LoopTemplateLoopElementModel) (loopTemplate.getLoopElementModelsUsed().toArray()[0]))
+                .getLoopElementModel().getName()).isNotEmpty();
+        assertThat(((LoopTemplateLoopElementModel) (loopTemplate.getLoopElementModelsUsed().toArray()[0]))
+                .getLoopElementModel().getName()).isNotEmpty();
+        assertThat(loopTemplate.getMaximumInstancesAllowed()).isEqualByComparingTo(Integer.valueOf(0));
+        loopTemplate = loopTemplatesRepo.findById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
+                RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml")).get();
+        assertThat(((LoopTemplateLoopElementModel) (loopTemplate.getLoopElementModelsUsed().toArray()[0]))
+                .getLoopElementModel().getName()).isNotEmpty();
 
-        loop = loopsRepo
-                .findById(Loop.generateLoopName(generatedName, "1.0", RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))
-                .get();
-        assertThat(((MicroServicePolicy) (loop.getMicroServicePolicies().toArray()[0])).getModelType()).isNotEmpty();
+        assertThat(policyModelsRepository.findAll().size()).isEqualByComparingTo(1);
+        assertThat(policyModelsRepository
+                .existsById(new PolicyModelId("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0"))).isTrue();
     }
 
     @Test(expected = SdcArtifactInstallerException.class)

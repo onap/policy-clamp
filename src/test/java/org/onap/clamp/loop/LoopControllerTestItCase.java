@@ -72,7 +72,7 @@ public class LoopControllerTestItCase {
     }
 
     private Loop createTestLoop(String loopName, String loopBlueprint, String loopSvg) {
-        return new Loop(loopName, loopBlueprint, loopSvg);
+        return new Loop(loopName, loopSvg);
     }
 
     @Test

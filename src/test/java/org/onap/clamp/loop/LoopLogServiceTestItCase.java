@@ -62,7 +62,7 @@ public class LoopLogServiceTestItCase {
     LoopLogService loopLogService;
 
     private void saveTestLoopToDb() {
-        Loop testLoop = new Loop(EXAMPLE_LOOP_NAME, BLUEPRINT, SVG_REPRESENTATION);
+        Loop testLoop = new Loop(EXAMPLE_LOOP_NAME, SVG_REPRESENTATION);
         testLoop.setGlobalPropertiesJson(JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
         loopService.saveOrUpdateLoop(testLoop);
     }
@@ -88,7 +88,7 @@ public class LoopLogServiceTestItCase {
         log.setLogComponent(CLAMP_COMPONENT);
         log.setLogType(LogType.INFO);
         log.setMessage(SAMPLE_LOG_MESSAGE);
-        Loop testLoop = new Loop(EXAMPLE_LOOP_NAME, BLUEPRINT, SVG_REPRESENTATION);
+        Loop testLoop = new Loop(EXAMPLE_LOOP_NAME, SVG_REPRESENTATION);
         log.setLoop(testLoop);
         assertThat(log.getMessage()).isEqualTo(SAMPLE_LOG_MESSAGE);
         assertThat(log.getLogType()).isEqualTo(LogType.INFO);

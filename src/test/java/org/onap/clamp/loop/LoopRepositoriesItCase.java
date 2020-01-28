@@ -121,7 +121,6 @@ public class LoopRepositoriesItCase {
         Loop loop = new Loop();
         loop.setName(name);
         loop.setSvgRepresentation(svgRepresentation);
-        loop.setBlueprint(blueprint);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
         loop.setDcaeDeploymentId(dcaeId);
@@ -215,11 +214,10 @@ public class LoopRepositoriesItCase {
 
         // Attempt an update
         ((LoopLog) loopInDbRetrieved.getLoopLogs().toArray()[0]).setLogInstant(Instant.now());
-        loopInDbRetrieved.setBlueprint("yaml2");
+        loopInDbRetrieved.setSvgRepresentation("");
         Loop loopInDbRetrievedUpdated = loopRepository.saveAndFlush(loopInDbRetrieved);
         // Loop loopInDbRetrievedUpdated =
         // loopRepository.findById(loopTest.getName()).get();
-        assertThat(loopInDbRetrievedUpdated.getBlueprint()).isEqualTo("yaml2");
         assertThat((LoopLog) loopInDbRetrievedUpdated.getLoopLogs().toArray()[0])
                 .isEqualToComparingFieldByField(loopInDbRetrieved.getLoopLogs().toArray()[0]);
         // UpdatedDate should have been changed

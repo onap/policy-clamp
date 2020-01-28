@@ -61,7 +61,7 @@ public class LoopToJsonTest {
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
             String dcaeId, String dcaeUrl, String dcaeBlueprintId) throws JsonSyntaxException, IOException {
-        Loop loop = new Loop(name, blueprint, svgRepresentation);
+        Loop loop = new Loop(name, svgRepresentation);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
         loop.setDcaeDeploymentId(dcaeId);
@@ -134,7 +134,6 @@ public class LoopToJsonTest {
         assertThat(loopTestDeserialized.getComponent("POLICY").getState()).isEqualToComparingOnlyGivenFields(
                 loopTest.getComponent("POLICY").getState(), "stateName", "description");
         // svg and blueprint not exposed so wont be deserialized
-        assertThat(loopTestDeserialized.getBlueprint()).isEqualTo(null);
         assertThat(loopTestDeserialized.getSvgRepresentation()).isEqualTo(null);
 
         assertThat(loopTestDeserialized.getOperationalPolicies()).containsExactly(opPolicy);
