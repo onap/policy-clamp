@@ -93,8 +93,9 @@
 		<!-- Enable language to disable javascript analysis -->
 		<!-- <sonar.language>java</sonar.language> -->
 		<!-- Parameters for Javascript coverage -->
+		<sonar.verbose>true</sonar.verbose>
 		<sonar.sources>.</sonar.sources>
-		<sonar.inclusions>src/main/**,${project.build.directory}/${ui.react.src}/src/**</sonar.inclusions>
+		<sonar.inclusions>src/main/**,{ui.react.src}/src/**</sonar.inclusions>
 		<sonar.exclusions>src/main/resources/**</sonar.exclusions>
 		<sonar.scm.exclusions.disabled>true</sonar.scm.exclusions.disabled>
 		<sonar.javascript.lcov.reportPaths>${project.build.directory}/${ui.react.src}/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
