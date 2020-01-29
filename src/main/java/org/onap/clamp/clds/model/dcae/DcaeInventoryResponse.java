@@ -53,9 +53,6 @@ public class DcaeInventoryResponse implements Comparable<DcaeInventoryResponse> 
     @Expose
     private String asdcResourceId;
 
-    @Expose
-    private String selfLink;
-
     public String getTypeName() {
         return typeName;
     }
@@ -94,14 +91,6 @@ public class DcaeInventoryResponse implements Comparable<DcaeInventoryResponse> 
 
     public void setAsdcResourceId(String asdcResourceId) {
         this.asdcResourceId = asdcResourceId;
-    }
-
-    public String getSelfLink() {
-        return selfLink;
-    }
-
-    public void setSelfLink(String selfLink) {
-        this.selfLink = selfLink;
     }
 
     @Override

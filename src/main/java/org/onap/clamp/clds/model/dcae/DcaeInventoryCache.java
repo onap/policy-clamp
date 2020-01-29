@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DcaeInventoryCache {
 
-    private Map<String, Set<DcaeInventoryResponse>> blueprintsMap = new ConcurrentHashMap<>();
+    private static Map<String, Set<DcaeInventoryResponse>> blueprintsMap = new ConcurrentHashMap<>();
 
     /**
      * Add Dcae inventory response.

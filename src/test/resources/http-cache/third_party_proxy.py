@@ -249,6 +249,22 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         with open(cached_file_content, 'w') as f:
             f.write(jsonGenerated)
         return True
+     elif self.path.startswith("/dcae-service-types") and http_type == "GET":
+        if not _file_available:
+            self.path = "/dcae-service-types"
+            cached_file_folder = '%s/%s' % (TMP_ROOT, self.path)
+            cached_file_content = self._get_cached_content_file_name(cached_file_folder)
+            cached_file_header = self._get_cached_header_file_name(cached_file_folder)
+            print "self.path start with /dcae-service-types, generating response json..."
+            response = "{\"links\": {\"previousLink\": {\"title\": \"string\",\"rel\": \"string\",\"uri\": \"string\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"},\"nextLink\": {\"title\": \"string\",\"rel\": \"string\",\"uri\": \"string\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"}},\"totalCount\": 1,\"items\": [{\"owner\": \"testOwner\",\"application\": \"testApplication\",\"component\": \"testComponent\",\"typeName\": \"testTypeName\",\"typeVersion\": 0,\"blueprintTemplate\": \"testBlueprintTemplate\",\"serviceIds\": [\"serviceId1\", \"serviceId2\"],\"vnfTypes\": [\"vnfType1\", \"vnfType2\"],\"serviceLocations\": [\"serviceLocation1\", \"serviceLocation2\"],\"asdcServiceId\": \"testAsdcServiceId\",\"asdcResourceId\": \"0\",\"asdcServiceURL\": \"testAsdcServiceURL\",\"typeId\": \"testtypeId\",\"selfLink\": {\"title\": \"selfLinkTitle\",\"rel\": \"selfLinkRel\",\"uri\": \"selfLinkUri\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"},\"created\": \"2020-01-22T09:38:15.436Z\",\"deactivated\": \"2020-01-22T09:38:15.437Z\"},{\"owner\": \"testOwner2\",\"application\": \"testApplication1\",\"component\": \"testComponent2\",\"typeName\": \"testTypeName2\",\"typeVersion\": 0,\"blueprintTemplate\": \"testBlueprintTemplate2\",\"serviceIds\": [\"serviceId3\", \"serviceId4\"],\"vnfTypes\": [\"vnfType13\", \"vnfType4\"],\"serviceLocations\": [\"serviceLocation3\", \"serviceLocation4\"],\"asdcServiceId\": \"testAsdcServiceId\",\"asdcResourceId\": \"1\",\"asdcServiceURL\": \"testAsdcServiceURL2\",\"typeId\": \"testtypeId2\",\"selfLink\": {\"title\": \"selfLinkTitle\",\"rel\": \"selfLinkRel\",\"uri\": \"selfLinkUri\",\"uriBuilder\": {},\"rels\": [\"string\"],\"params\": {\"additionalProp1\": \"string\",\"additionalProp2\": \"string\",\"additionalProp3\": \"string\"},\"type\": \"string\"},\"created\": \"2020-01-22T09:38:15.436Z\",\"deactivated\": \"2020-01-22T09:38:15.437Z\"}]}"
+            print "jsonGenerated: " + response
+
+            os.makedirs(cached_file_folder, 0777)
+            with open(cached_file_header, 'w') as f:
+                f.write("{\"Content-Length\": \"" + str(len(response)) + "\", \"Content-Type\": \"application/json\"}")
+            with open(cached_file_content, 'w') as f:
+                f.write(response)
+        return True
      else:
         return False
 
@@ -303,6 +319,9 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         self._send_content(cached_file_header, cached_file_content)
 
         if self.path.startswith("/dcae-service-types?asdcResourceId="):
+            print "DCAE case deleting folder created " + cached_file_folder
+            shutil.rmtree(cached_file_folder, ignore_errors=False, onerror=None)
+        elif self.path.startswith("/dcae-service-types"):
             print "DCAE case deleting folder created " + cached_file_folder
             shutil.rmtree(cached_file_folder, ignore_errors=False, onerror=None)
         else:

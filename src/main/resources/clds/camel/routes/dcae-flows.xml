@@ -213,4 +213,47 @@
 		</doTry>
 
 	</route>
+	<route id="get-all-dcae-blueprint-inventory">
+		<from uri="direct:get-all-dcae-blueprint-inventory" />
+		<log loggingLevel="INFO"
+			 message="Getting all DCAE blueprint from inventory" />
+		<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Getting all blueprint from inventory')" />
+		<doTry>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>GET</constant>
+			</setHeader>
+			<setHeader headerName="X-ONAP-RequestID">
+				<simple>${exchangeProperty[X-ONAP-RequestID]}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-InvocationID">
+				<simple>${exchangeProperty[X-ONAP-InvocationID]}
+				</simple>
+			</setHeader>
+			<setHeader headerName="X-ONAP-PartnerName">
+				<simple>${exchangeProperty[X-ONAP-PartnerName]}
+				</simple>
+			</setHeader>
+			<log loggingLevel="INFO"
+				 message="Endpoint to query Blueprints from DCAE inventory: {{clamp.config.dcae.inventory.url}}/dcae-service-types?${header[CamelHttpQuery]}"></log>
+			<toD uri="{{clamp.config.dcae.inventory.url}}/dcae-service-types;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
+			<convertBodyTo type="java.lang.String" />
+			<setProperty propertyName="dcaeResponseList">
+				<method ref="org.onap.clamp.loop.components.external.DcaeComponent"
+						method="convertToDcaeInventoryResponse(${body})" />
+			</setProperty>
+			<split>
+				<simple>${exchangeProperty[dcaeResponseList]}</simple>
+				<convertBodyTo type="org.onap.clamp.clds.model.dcae.DcaeInventoryResponse" />
+				<setProperty propertyName="dcaeResponse">
+					<simple>${body}</simple>
+				</setProperty>
+				<to uri="bean:org.onap.clamp.clds.model.dcae.DcaeInventoryCache?method=addDcaeInventoryResponse(${exchangeProperty[dcaeResponse]})" />
+			</split>
+			<doFinally>
+				<to uri="direct:reset-raise-http-exception-flag" />
+				<to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()" />
+			</doFinally>
+		</doTry>
+	</route>
 </routes>
