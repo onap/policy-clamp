@@ -119,6 +119,20 @@ public class Service implements Serializable {
         return (JsonObject) resourceDetails.get(type);
     }
 
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the version
+     */
+    public String getVersion() {
+        return version;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;

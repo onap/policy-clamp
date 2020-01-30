@@ -111,8 +111,7 @@ public class PolicyModelServiceItCase {
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
         List<String> policyModelTypesList = policyModelsService.getAllPolicyModelTypes();
 
-        assertThat(policyModelTypesList).containsOnly(policyModel1.getPolicyModelType(),
-                policyModel2.getPolicyModelType());
+        assertThat(policyModelTypesList).contains(policyModel1.getPolicyModelType(), policyModel2.getPolicyModelType());
     }
 
     @Test
@@ -125,7 +124,7 @@ public class PolicyModelServiceItCase {
                 "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
 
-        assertThat(policyModelsService.getAllPolicyModels()).containsOnly(policyModel1, policyModel2);
+        assertThat(policyModelsService.getAllPolicyModels()).contains(policyModel1, policyModel2);
     }
 
     @Test
@@ -138,7 +137,7 @@ public class PolicyModelServiceItCase {
                 "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
 
-        assertThat(policyModelsService.getAllPolicyModelsByType(POLICY_MODEL_TYPE_2)).containsOnly(policyModel1,
+        assertThat(policyModelsService.getAllPolicyModelsByType(POLICY_MODEL_TYPE_2)).contains(policyModel1,
                 policyModel2);
     }
 
@@ -154,6 +153,6 @@ public class PolicyModelServiceItCase {
 
         SortedSet<PolicyModel> sortedSet = new TreeSet<>();
         policyModelsService.getAllPolicyModels().forEach(sortedSet::add);
-        assertThat(sortedSet).containsExactly(policyModel2, policyModel1);
+        assertThat(sortedSet).contains(policyModel2, policyModel1);
     }
 }

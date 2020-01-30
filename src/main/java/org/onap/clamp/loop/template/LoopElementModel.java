@@ -63,10 +63,14 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     @Column(nullable = false, name = "name", unique = true)
     private String name;
 
+    @Expose
+    @Column(name = "dcae_blueprint_id")
+    private String dcaeBlueprintId;
+
     /**
      * Here we store the blueprint coming from DCAE.
      */
-    @Column(nullable = false, name = "blueprint_yaml")
+    @Column(columnDefinition = "MEDIUMTEXT", nullable = false, name = "blueprint_yaml")
     private String blueprint;
 
     /**
@@ -149,6 +153,24 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     /**
      * loopElementType getter.
      * 
+     * dcaeBlueprintId getter.
+     * 
+     * @return the dcaeBlueprintId
+     */
+    public String getDcaeBlueprintId() {
+        return dcaeBlueprintId;
+    }
+
+    /**
+     * dcaeBlueprintId setter.
+     * 
+     * @param dcaeBlueprintId the dcaeBlueprintId to set
+     */
+    public void setDcaeBlueprintId(String dcaeBlueprintId) {
+        this.dcaeBlueprintId = dcaeBlueprintId;
+    }
+
+    /**
      * @return the loopElementType
      */
     public String getLoopElementType() {

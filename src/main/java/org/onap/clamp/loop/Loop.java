@@ -109,9 +109,6 @@ public class Loop extends AuditEntity implements Serializable {
     @JoinColumn(name = "service_uuid")
     private Service modelService;
 
-    @Column(columnDefinition = "MEDIUMTEXT", nullable = false, name = "blueprint_yaml")
-    private String blueprint;
-
     @Expose
     @Column(nullable = false, name = "last_computed_state")
     @Enumerated(EnumType.STRING)
@@ -156,10 +153,9 @@ public class Loop extends AuditEntity implements Serializable {
     /**
      * Constructor.
      */
-    public Loop(String name, String blueprint, String svgRepresentation) {
+    public Loop(String name, String svgRepresentation) {
         this.name = name;
         this.svgRepresentation = svgRepresentation;
-        this.blueprint = blueprint;
         this.lastComputedState = LoopState.DESIGN;
         this.globalPropertiesJson = new JsonObject();
         initializeExternalComponents();
@@ -195,14 +191,6 @@ public class Loop extends AuditEntity implements Serializable {
 
     void setSvgRepresentation(String svgRepresentation) {
         this.svgRepresentation = svgRepresentation;
-    }
-
-    public String getBlueprint() {
-        return blueprint;
-    }
-
-    void setBlueprint(String blueprint) {
-        this.blueprint = blueprint;
     }
 
     public LoopState getLastComputedState() {
@@ -305,7 +293,7 @@ public class Loop extends AuditEntity implements Serializable {
      * @param blueprintFileName The blueprint file name
      * @return The generated loop name
      */
-    static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
+    public static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
             String blueprintFilename) {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
                 .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));

@@ -26,6 +26,7 @@ package org.onap.clamp.loop.template;
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -56,6 +57,10 @@ public class LoopTemplate extends AuditEntity implements Serializable {
     @Expose
     @Column(nullable = false, name = "name", unique = true)
     private String name;
+
+    @Expose
+    @Column(name = "dcae_blueprint_id")
+    private String dcaeBlueprintId;
 
     /**
      * This field is used when we have a blueprint defining all microservices. The
@@ -111,6 +116,24 @@ public class LoopTemplate extends AuditEntity implements Serializable {
     }
 
     /**
+     * dcaeBlueprintId getter.
+     * 
+     * @return the dcaeBlueprintId
+     */
+    public String getDcaeBlueprintId() {
+        return dcaeBlueprintId;
+    }
+
+    /**
+     * dcaeBlueprintId setter.
+     * 
+     * @param dcaeBlueprintId the dcaeBlueprintId to set
+     */
+    public void setDcaeBlueprintId(String dcaeBlueprintId) {
+        this.dcaeBlueprintId = dcaeBlueprintId;
+    }
+
+    /**
      * blueprint setter.
      * 
      * @param blueprint the blueprint to set
@@ -162,6 +185,18 @@ public class LoopTemplate extends AuditEntity implements Serializable {
      */
     public void setMaximumInstancesAllowed(Integer maximumInstancesAllowed) {
         this.maximumInstancesAllowed = maximumInstancesAllowed;
+    }
+
+    /**
+     * Add list of loopElements to the current template, each loopElementModel is
+     * added at the end of the list so the flowOrder is computed automatically.
+     * 
+     * @param loopElementModels The loopElementModel set to add
+     */
+    public void addLoopElementModels(Set<LoopElementModel> loopElementModels) {
+        for (LoopElementModel loopElementModel : loopElementModels) {
+            addLoopElementModel(loopElementModel);
+        }
     }
 
     /**
@@ -265,5 +300,22 @@ public class LoopTemplate extends AuditEntity implements Serializable {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Generate the loop template name.
+     *
+     * @param serviceName       The service name
+     * @param serviceVersion    The service version
+     * @param resourceName      The resource name
+     * @param blueprintFileName The blueprint file name
+     * @return The generated loop template name
+     */
+    public static String generateLoopTemplateName(String serviceName, String serviceVersion, String resourceName,
+            String blueprintFilename) {
+        StringBuilder buffer = new StringBuilder("LOOP_TEMPLATE_").append(serviceName).append("_v")
+                .append(serviceVersion).append("_").append(resourceName).append("_")
+                .append(blueprintFilename.replaceAll(".yaml", ""));
+        return buffer.toString().replace('.', '_').replaceAll(" ", "");
     }
 }

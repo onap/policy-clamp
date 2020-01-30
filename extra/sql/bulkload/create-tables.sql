@@ -36,7 +36,8 @@
         created_timestamp datetime(6) not null,
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
-        blueprint_yaml varchar(255) not null,
+        blueprint_yaml MEDIUMTEXT not null,
+        dcae_blueprint_id varchar(255),
         loop_element_type varchar(255) not null,
         primary key (name)
     ) engine=InnoDB;
@@ -58,6 +59,7 @@
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
         blueprint_yaml MEDIUMTEXT,
+        dcae_blueprint_id varchar(255),
         maximum_instances_allowed integer,
         svg_representation MEDIUMTEXT,
         service_uuid varchar(255),
@@ -77,7 +79,6 @@
         created_timestamp datetime(6) not null,
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
-        blueprint_yaml MEDIUMTEXT not null,
         dcae_blueprint_id varchar(255),
         dcae_deployment_id varchar(255),
         dcae_deployment_status_url varchar(255),
