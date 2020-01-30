@@ -25,6 +25,8 @@
 
 package org.onap.clamp.clds.sdc.controller.installer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -57,7 +59,7 @@ public class BlueprintParserTest {
     private static String microServiceTheWholeBlueprintValid;
     private static String microServiceBlueprintOldStyleTCA;
     private static String microServiceBlueprintOldStyleHolmes;
-
+    private static String newMicroServiceBlueprint;
     private static JsonObject jsonObjectBlueprintValid;
     private static JsonObject jsonObjectBlueprintWithoutName;
     private static JsonObject jsonObjectBlueprintWithoutProperties;
@@ -66,22 +68,22 @@ public class BlueprintParserTest {
     /**
      * Method to load Blueprints before all test.
      *
-     * @throws IOException
-     *         In case of issues when opening the files
+     * @throws IOException In case of issues when opening the files
      */
     @BeforeClass
     public static void loadBlueprints() throws IOException {
         microServiceTheWholeBlueprintValid = ResourceFileUtil
-            .getResourceAsString("clds/blueprint-with-microservice-chain.yaml");
+                .getResourceAsString("clds/blueprint-with-microservice-chain.yaml");
         microServiceBlueprintOldStyleTCA = ResourceFileUtil.getResourceAsString("clds/tca-old-style-ms.yaml");
+        newMicroServiceBlueprint = ResourceFileUtil.getResourceAsString("clds/new-microservice.yaml");
         microServiceBlueprintOldStyleHolmes = ResourceFileUtil.getResourceAsString("clds/holmes-old-style-ms.yaml");
 
         String microServiceBlueprintValid = ResourceFileUtil
-            .getResourceAsString("clds/single-microservice-fragment-valid.yaml");
+                .getResourceAsString("clds/single-microservice-fragment-valid.yaml");
         String microServiceBlueprintWithoutName = ResourceFileUtil
-            .getResourceAsString("clds/single-microservice-fragment-without-name.yaml");
+                .getResourceAsString("clds/single-microservice-fragment-without-name.yaml");
         String microServiceBlueprintWithoutProperties = ResourceFileUtil
-            .getResourceAsString("clds/single-microservice-fragment-without-properties.yaml");
+                .getResourceAsString("clds/single-microservice-fragment-without-properties.yaml");
 
         jsonObjectBlueprintValid = yamlToJson(microServiceBlueprintValid);
         jsonObjectBlueprintWithoutName = yamlToJson(microServiceBlueprintWithoutName);
@@ -97,7 +99,7 @@ public class BlueprintParserTest {
     public void getNameShouldReturnDefinedName() {
         final JsonObject jsonObject = jsonObjectBlueprintValid;
         String expectedName = jsonObject.get(jsonObject.keySet().iterator().next()).getAsJsonObject().get("properties")
-            .getAsJsonObject().get("name").getAsString();
+                .getAsJsonObject().get("name").getAsString();
         Entry<String, JsonElement> entry = jsonObject.entrySet().iterator().next();
         String actualName = new BlueprintParser().getName(entry);
 
@@ -174,8 +176,8 @@ public class BlueprintParserTest {
     @Test
 
     public void fallBackToOneMicroServiceTcaTest() {
-        MicroService tcaMs = new MicroService(BlueprintParser.TCA,
-                "onap.policies.monitoring.cdap.tca.hi.lo.app", "", "");
+        MicroService tcaMs = new MicroService(BlueprintParser.TCA, "onap.policies.monitoring.cdap.tca.hi.lo.app", "",
+                "");
         List<MicroService> expected = Collections.singletonList(tcaMs);
         List<MicroService> actual = new BlueprintParser().fallbackToOneMicroService(microServiceBlueprintOldStyleTCA);
 
@@ -184,14 +186,25 @@ public class BlueprintParserTest {
 
     @Test
     public void fallBackToOneMicroServiceHolmesTest() {
-        MicroService holmesMs = new MicroService(BlueprintParser.HOLMES,
-                "onap.policies.monitoring.cdap.tca.hi.lo.app", "", "");
+        MicroService holmesMs = new MicroService(BlueprintParser.HOLMES, "onap.policies.monitoring.cdap.tca.hi.lo.app",
+                "", "");
 
         List<MicroService> expected = Collections.singletonList(holmesMs);
         List<MicroService> actual = new BlueprintParser()
-            .fallbackToOneMicroService(microServiceBlueprintOldStyleHolmes);
+                .fallbackToOneMicroService(microServiceBlueprintOldStyleHolmes);
 
         Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void newMicroServiceTest() {
+        List<MicroService> microServicesChain = new ChainGenerator()
+                .getChainOfMicroServices(new BlueprintParser().getMicroServices(newMicroServiceBlueprint));
+        if (microServicesChain.isEmpty()) {
+            microServicesChain = new BlueprintParser().fallbackToOneMicroService(newMicroServiceBlueprint);
+        }
+        assertThat(microServicesChain.size()).isEqualTo(1);
+        assertThat(microServicesChain.get(0).getName()).isEqualTo("pmsh");
     }
 
     private static JsonObject yamlToJson(String yamlString) {
