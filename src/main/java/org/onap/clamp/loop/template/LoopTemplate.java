@@ -62,7 +62,7 @@ public class LoopTemplate extends AuditEntity implements Serializable {
      * other option would be to have independent blueprint for each microservices.
      * In that case they are stored in each MicroServiceModel
      */
-    @Column(columnDefinition = "MEDIUMTEXT", nullable = false, name = "blueprint_yaml")
+    @Column(columnDefinition = "MEDIUMTEXT", name = "blueprint_yaml")
     private String blueprint;
 
     @Expose
