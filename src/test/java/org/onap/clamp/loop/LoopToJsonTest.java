@@ -66,7 +66,6 @@ public class LoopToJsonTest {
         loop.setLastComputedState(LoopState.DESIGN);
         loop.setDcaeDeploymentId(dcaeId);
         loop.setDcaeDeploymentStatusUrl(dcaeUrl);
-        loop.setDcaeBlueprintId(dcaeBlueprintId);
         return loop;
     }
 

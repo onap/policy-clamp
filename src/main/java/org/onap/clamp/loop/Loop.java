@@ -92,10 +92,6 @@ public class Loop extends AuditEntity implements Serializable {
     @Column(name = "dcae_deployment_status_url")
     private String dcaeDeploymentStatusUrl;
 
-    @Expose
-    @Column(name = "dcae_blueprint_id")
-    private String dcaeBlueprintId;
-
     @Column(columnDefinition = "MEDIUMTEXT", name = "svg_representation")
     private String svgRepresentation;
 
@@ -246,14 +242,6 @@ public class Loop extends AuditEntity implements Serializable {
     public void addLog(LoopLog log) {
         log.setLoop(this);
         this.loopLogs.add(log);
-    }
-
-    public String getDcaeBlueprintId() {
-        return dcaeBlueprintId;
-    }
-
-    void setDcaeBlueprintId(String dcaeBlueprintId) {
-        this.dcaeBlueprintId = dcaeBlueprintId;
     }
 
     public Service getModelService() {

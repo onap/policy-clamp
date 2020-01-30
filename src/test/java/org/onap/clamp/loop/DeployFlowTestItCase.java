@@ -177,7 +177,6 @@ public class DeployFlowTestItCase {
         Loop loop = new Loop(name, svgRepresentation);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
-        loop.setDcaeBlueprintId(dcaeBlueprintId);
         return loop;
     }
 

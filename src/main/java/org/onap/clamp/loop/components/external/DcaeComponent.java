@@ -24,16 +24,17 @@
 package org.onap.clamp.loop.components.external;
 
 import com.google.gson.JsonObject;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
+
 import org.apache.camel.Exchange;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.model.dcae.DcaeOperationStatusResponse;
 import org.onap.clamp.clds.util.JsonUtils;
@@ -92,6 +93,7 @@ public class DcaeComponent extends ExternalComponent {
             return null;
         }
     }
+
     /**
      * Generate the deployment id, it's random.
      *
@@ -122,7 +124,7 @@ public class DcaeComponent extends ExternalComponent {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
         JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER);
 
-        String serviceTypeId = loop.getDcaeBlueprintId();
+        String serviceTypeId = loop.getLoopTemplate().getDcaeBlueprintId();
 
         JsonObject rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
@@ -135,7 +137,7 @@ public class DcaeComponent extends ExternalComponent {
     /**
      * Return the deploy payload for DCAE.
      *
-     * @param loop The loop object
+     * @param loop             The loop object
      * @param microServiceName The micro service name
      * @return The payload used to send deploy closed loop request
      */
@@ -143,7 +145,7 @@ public class DcaeComponent extends ExternalComponent {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
         JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(microServiceName);
 
-        String serviceTypeId = loop.getDcaeBlueprintId();
+        String serviceTypeId = loop.getLoopTemplate().getDcaeBlueprintId();
 
         JsonObject rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
@@ -161,7 +163,7 @@ public class DcaeComponent extends ExternalComponent {
      */
     public static String getUndeployPayload(Loop loop) {
         JsonObject rootObject = new JsonObject();
-        rootObject.addProperty(DCAE_SERVICETYPE_ID, loop.getDcaeBlueprintId());
+        rootObject.addProperty(DCAE_SERVICETYPE_ID, loop.getLoopTemplate().getDcaeBlueprintId());
         return rootObject.toString();
     }
 
