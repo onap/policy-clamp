@@ -125,7 +125,6 @@ public class LoopRepositoriesItCase {
         loop.setLastComputedState(LoopState.DESIGN);
         loop.setDcaeDeploymentId(dcaeId);
         loop.setDcaeDeploymentStatusUrl(dcaeUrl);
-        loop.setDcaeBlueprintId(dcaeBlueprintId);
         loop.setLoopTemplate(getLoopTemplate("templateName", "yaml", "svg", "toto", 1));
         return loop;
     }

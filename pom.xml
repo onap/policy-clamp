@@ -84,18 +84,12 @@
 
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
-		<!-- The value below comes from the jacoco maven plugin output, sonar now takes xml only -->
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/jacoco-html-xml-reports/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-		<!-- <sonar.jacoco.reportPath>${project.build.directory}/coverage-reports/jacoco.exec</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${project.build.directory}/coverage-reports/jacoco-it.exec</sonar.jacoco.itReportPath> -->
 		<sonar.jacoco.reportMissing.force.zero>true</sonar.jacoco.reportMissing.force.zero>
 		<sonar.projectVersion>${project.version}</sonar.projectVersion>
-		<!-- Enable language to disable javascript analysis -->
-		<!-- <sonar.language>java</sonar.language> -->
-		<!-- Parameters for Javascript coverage -->
 		<sonar.log.level>DEBUG</sonar.log.level>
-        <sonar.nodejs.executable>${project.build.directory}/${ui.react.src}/node/node</sonar.nodejs.executable>
-        <sonar.verbose>true</sonar.verbose>
+		<sonar.nodejs.executable>${project.build.directory}/${ui.react.src}/node/node</sonar.nodejs.executable>
+		<sonar.verbose>true</sonar.verbose>
 		<sonar.sources>src/main,${project.build.directory}/${ui.react.src}/src</sonar.sources>
 		<sonar.exclusions>src/main/resources/**</sonar.exclusions>
 		<sonar.scm.exclusions.disabled>true</sonar.scm.exclusions.disabled>
@@ -114,6 +108,7 @@
 	</properties>
 
 	<profiles>
+		<!-- BEGIN: NOT USABLE profiles, those are defined when specific flags are enabled -->
 		<profile>
 			<id>without-test</id>
 			<activation>
@@ -153,6 +148,7 @@
 				<docker.skip>true</docker.skip>
 			</properties>
 		</profile>
+		<!-- END: NOT USABLE profiles, those are defined when specific flags are enabled -->
 		<profile>
 			<id>docker</id>
 			<properties>

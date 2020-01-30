@@ -79,7 +79,6 @@
         created_timestamp datetime(6) not null,
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
-        dcae_blueprint_id varchar(255),
         dcae_deployment_id varchar(255),
         dcae_deployment_status_url varchar(255),
         global_properties_json json,
