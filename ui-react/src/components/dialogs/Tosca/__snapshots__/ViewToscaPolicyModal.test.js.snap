@@ -30,29 +30,29 @@ exports[`Verify ViewToscaPolicyModal Test the tosca model view render method 1`]
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "toscaModelName",
+            "field": "policyModelType",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
             },
-            "title": "Micro Service Name",
+            "title": "Policy Model Type",
           },
           Object {
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "policyType",
+            "field": "policyAcronym",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
             },
-            "title": "PolicyType",
+            "title": "Policy Acronym",
           },
           Object {
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "toscaModelRevisions[0].version",
+            "field": "version",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
@@ -63,7 +63,7 @@ exports[`Verify ViewToscaPolicyModal Test the tosca model view render method 1`]
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "userId",
+            "field": "updatedBy",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
@@ -75,7 +75,7 @@ exports[`Verify ViewToscaPolicyModal Test the tosca model view render method 1`]
               "border": "1px solid black",
             },
             "editable": "never",
-            "field": "lastUpdatedDate",
+            "field": "updatedDate",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
@@ -84,17 +84,7 @@ exports[`Verify ViewToscaPolicyModal Test the tosca model view render method 1`]
           },
         ]
       }
-      data={
-        Object {
-          "index": "1",
-          "lastUpdatedDate": "05-07-2019 19:09:42",
-          "policyType": "mtca",
-          "toscaModelName": "DCAE_MTCAConfig",
-          "toscaModelYaml": "MTCA",
-          "userId": "aj928f",
-          "version": "16",
-        }
-      }
+      data={Array []}
       icons={
         Object {
           "FirstPage": Object {

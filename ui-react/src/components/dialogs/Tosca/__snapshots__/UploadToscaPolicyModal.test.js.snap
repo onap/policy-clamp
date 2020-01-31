@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Upload Tosca Policy Model Test handleMicroServiceName 1`] = `
+<Styled(Bootstrap(Modal))
+  onHide={[Function]}
+  show={true}
+  size="lg"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Upload Tosca Modal
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
+      controlId="formPlaintextEmail"
+    >
+      <Col
+        sm="10"
+      >
+        <input
+          accept=".yaml"
+          name="file"
+          onChange={[Function]}
+          style={
+            Object {
+              "display": "none",
+            }
+          }
+          type="file"
+        />
+        <button
+          onClick={[Function]}
+        >
+          Pick Tosca File
+        </button>
+        <Alert
+          closeLabel="Close alert"
+          show={true}
+          transition={
+            Object {
+              "$$typeof": Symbol(react.forward_ref),
+              "defaultProps": Object {
+                "appear": false,
+                "in": false,
+                "mountOnEnter": false,
+                "timeout": 300,
+                "unmountOnExit": false,
+              },
+              "displayName": "Fade",
+              "render": [Function],
+            }
+          }
+          variant="secondary"
+        >
+          <p />
+        </Alert>
+        <FormLabel
+          column={true}
+          sm="2"
+          srOnly={false}
+        >
+          Micro Service Name:
+        </FormLabel>
+        <input
+          onChange={[Function]}
+          style={
+            Object {
+              "width": "50%",
+            }
+          }
+          type="text"
+          value="TCA"
+        />
+      </Col>
+    </FormGroup>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="null"
+      variant="secondary"
+    >
+      Cancel
+    </Button>
+    <Button
+      active={false}
+      disabled={true}
+      onClick={[Function]}
+      type="submit"
+      variant="primary"
+    >
+      Upload
+    </Button>
+  </ModalFooter>
+</Styled(Bootstrap(Modal))>
+`;

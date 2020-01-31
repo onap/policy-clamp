@@ -88,7 +88,8 @@ export default class MenuBar extends React.Component {
 
 				<Navbar.Collapse>
 					<StyledNavDropdown title="Template">
-							<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Policy Models</NavDropdown.Item>
+					<NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Policy Model</NavDropdown.Item>
+					<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Policy Models</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/viewBlueprintMicroServiceTemplatesModal">View Blueprint MicroService Templates</NavDropdown.Item>
 					</StyledNavDropdown>
 					<StyledNavDropdown title="Closed Loop">

@@ -24,13 +24,11 @@
 package org.onap.clamp.loop.template;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,7 +39,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.SortNatural;
 import org.onap.clamp.loop.common.AuditEntity;
 
@@ -80,15 +77,26 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     private String loopElementType;
 
     /**
+     * This variable is used to display the micro-service name in the SVG.
+     */
+    @Expose
+    @Column(name = "short_name")
+    private String shortName;
+
+    /**
      * This variable is used to store the type mentioned in the micro-service
      * blueprint.
      */
     @Expose
-    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
-    @JoinTable(name = "loopelementmodels_to_policymodels",
-            joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
-            inverseJoinColumns = { @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-                @JoinColumn(name = "policy_model_version", referencedColumnName = "version") })
+    @ManyToMany(
+        fetch = FetchType.EAGER,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+        name = "loopelementmodels_to_policymodels",
+        joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
+        inverseJoinColumns = {
+            @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
     @SortNatural
     private SortedSet<PolicyModel> policyModels = new TreeSet<>();
 
@@ -97,7 +105,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * policyModels getter.
-     * 
+     *
      * @return the policyModel
      */
     public SortedSet<PolicyModel> getPolicyModels() {
@@ -106,7 +114,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * Method to add a new policyModel to the list.
-     * 
+     *
      * @param policyModel The policy model
      */
     public void addPolicyModel(PolicyModel policyModel) {
@@ -116,7 +124,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * name getter.
-     * 
+     *
      * @return the name
      */
     public String getName() {
@@ -125,7 +133,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * name setter.
-     * 
+     *
      * @param name the name to set
      */
     public void setName(String name) {
@@ -134,7 +142,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * blueprint getter.
-     * 
+     *
      * @return the blueprint
      */
     public String getBlueprint() {
@@ -143,7 +151,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * blueprint setter.
-     * 
+     *
      * @param blueprint the blueprint to set
      */
     public void setBlueprint(String blueprint) {
@@ -151,10 +159,8 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     }
 
     /**
-     * loopElementType getter.
-     * 
      * dcaeBlueprintId getter.
-     * 
+     *
      * @return the dcaeBlueprintId
      */
     public String getDcaeBlueprintId() {
@@ -163,7 +169,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * dcaeBlueprintId setter.
-     * 
+     *
      * @param dcaeBlueprintId the dcaeBlueprintId to set
      */
     public void setDcaeBlueprintId(String dcaeBlueprintId) {
@@ -171,6 +177,8 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     }
 
     /**
+     * loopElementType getter.
+     *
      * @return the loopElementType
      */
     public String getLoopElementType() {
@@ -179,7 +187,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * loopElementType setter.
-     * 
+     *
      * @param loopElementType the loopElementType to set
      */
     public void setLoopElementType(String loopElementType) {
@@ -187,8 +195,24 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     }
 
     /**
+     * shortName getter.
+     *
+     * @return the shortName
+     */
+    public String getShortName() {
+        return shortName;
+    }
+
+    /**
+     * @param shortName the shortName to set.
+     */
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
+
+    /**
      * usedByLoopTemplates getter.
-     * 
+     *
      * @return the usedByLoopTemplates
      */
     public Set<LoopTemplateLoopElementModel> getUsedByLoopTemplates() {
@@ -203,11 +227,11 @@ public class LoopElementModel extends AuditEntity implements Serializable {
 
     /**
      * Constructor.
-     * 
-     * @param name            The name id
+     *
+     * @param name The name id
      * @param loopElementType The type of loop element
-     * @param blueprint       The blueprint defined for dcae that contains the
-     *                        policy type to use
+     * @param blueprint The blueprint defined for dcae that contains the
+     *        policy type to use
      */
     public LoopElementModel(String name, String loopElementType, String blueprint) {
         this.name = name;

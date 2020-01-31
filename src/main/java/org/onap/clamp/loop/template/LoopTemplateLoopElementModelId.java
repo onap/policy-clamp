@@ -24,9 +24,7 @@
 package org.onap.clamp.loop.template;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -55,8 +53,8 @@ public class LoopTemplateLoopElementModelId implements Serializable {
 
     /**
      * Constructor.
-     * 
-     * @param loopTemplateName      The loop template name id
+     *
+     * @param loopTemplateName The loop template name id
      * @param microServiceModelName THe micro Service name id
      */
     public LoopTemplateLoopElementModelId(String loopTemplateName, String microServiceModelName) {
@@ -66,7 +64,7 @@ public class LoopTemplateLoopElementModelId implements Serializable {
 
     /**
      * loopTemplateName getter.
-     * 
+     *
      * @return the loopTemplateName
      */
     public String getLoopTemplateName() {
@@ -75,7 +73,7 @@ public class LoopTemplateLoopElementModelId implements Serializable {
 
     /**
      * loopTemplateName setter.
-     * 
+     *
      * @param loopTemplateName the loopTemplateName to set
      */
     public void setLoopTemplateName(String loopTemplateName) {
@@ -84,7 +82,7 @@ public class LoopTemplateLoopElementModelId implements Serializable {
 
     /**
      * microServiceModelName getter.
-     * 
+     *
      * @return the microServiceModelName
      */
     public String getLoopElementModelName() {
@@ -93,7 +91,7 @@ public class LoopTemplateLoopElementModelId implements Serializable {
 
     /**
      * loopElementModelName setter.
-     * 
+     *
      * @param loopElementModelName the loopElementModelName to set
      */
     public void setLoopElementModelName(String loopElementModelName) {

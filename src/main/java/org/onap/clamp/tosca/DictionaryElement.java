@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,17 +24,15 @@
 package org.onap.clamp.tosca;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
-
-import javax.persistence.CascadeType;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
 import org.onap.clamp.loop.common.AuditEntity;
 
 /**
@@ -51,32 +49,31 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     @Id
     @Expose
-    @Column(nullable = false, name = "name", unique = true)
-    private String name;
-
-    @Expose
-    @Column(nullable = false, name = "short_name", unique = true)
+    @Column(nullable = false, name = "short_name")
     private String shortName;
 
     @Expose
-    @Column(name = "description")
+    @Column(nullable = false, name = "name")
+    private String name;
+
+    @Expose
+    @Column(nullable = false, name = "description")
     private String description;
 
     @Expose
     @Column(nullable = false, name = "type")
     private String type;
 
-    @Column(name = "subdictionary_id", nullable = false)
     @Expose
+    @Column(nullable = true, name = "subdictionary_name")
     private String subDictionary;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "dictionary_id")
-    private Dictionary dictionary;
+    @ManyToMany(mappedBy = "dictionaryElements", fetch = FetchType.EAGER)
+    private Set<Dictionary> usedByDictionaries = new HashSet<>();
 
     /**
      * name getter.
-     * 
+     *
      * @return the name
      */
     public String getName() {
@@ -85,7 +82,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * name setter.
-     * 
+     *
      * @param name the name to set
      */
     public void setName(String name) {
@@ -94,7 +91,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * shortName getter.
-     * 
+     *
      * @return the shortName
      */
     public String getShortName() {
@@ -103,7 +100,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * shortName setter.
-     * 
+     *
      * @param shortName the shortName to set
      */
     public void setShortName(String shortName) {
@@ -112,7 +109,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * description getter.
-     * 
+     *
      * @return the description
      */
     public String getDescription() {
@@ -121,7 +118,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * description setter.
-     * 
+     *
      * @param description the description to set
      */
     public void setDescription(String description) {
@@ -130,7 +127,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * type getter.
-     * 
+     *
      * @return the type
      */
     public String getType() {
@@ -139,7 +136,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * type setter.
-     * 
+     *
      * @param type the type to set
      */
     public void setType(String type) {
@@ -148,7 +145,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * subDictionary getter.
-     * 
+     *
      * @return the subDictionary
      */
     public String getSubDictionary() {
@@ -157,7 +154,7 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * subDictionary setter.
-     * 
+     *
      * @param subDictionary the subDictionary to set
      */
     public void setSubDictionary(String subDictionary) {
@@ -165,21 +162,21 @@ public class DictionaryElement extends AuditEntity implements Serializable {
     }
 
     /**
-     * dictionary getter.
-     * 
-     * @return the dictionary
+     * usedByDictionaries getter.
+     *
+     * @return the usedByDictionaries
      */
-    public Dictionary getDictionary() {
-        return dictionary;
+    public Set<Dictionary> getUsedByDictionaries() {
+        return usedByDictionaries;
     }
 
     /**
-     * dictionary setter.
-     * 
-     * @param dictionary the dictionary to set
+     * usedByDictionaries setter.
+     *
+     * @param usedByDictionaries the usedByDictionaries to set
      */
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
+    public void setUsedByDictionaries(Set<Dictionary> usedByDictionaries) {
+        this.usedByDictionaries = usedByDictionaries;
     }
 
     /**
@@ -190,30 +187,46 @@ public class DictionaryElement extends AuditEntity implements Serializable {
 
     /**
      * Constructor.
-     * 
-     * @param name          The Dictionary element name
-     * @param shortName     The short name
-     * @param description   The description
-     * @param type          The type of element
+     *
+     * @param name The Dictionary element name
+     * @param shortName The short name
+     * @param description The description
+     * @param type The type of element
      * @param subDictionary The sub type
-     * @param dictionary    The parent dictionary
      */
-    public DictionaryElement(String name, String shortName, String description, String type, String subDictionary,
-            Dictionary dictionary) {
+    public DictionaryElement(String name, String shortName, String description, String type,
+        String subDictionary) {
         this.name = name;
         this.shortName = shortName;
         this.description = description;
         this.type = type;
         this.subDictionary = subDictionary;
-        this.dictionary = dictionary;
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param name The Dictionary element name
+     * @param shortName The short name
+     * @param description The description
+     * @param type The type of element
+     * @param subDictionary The sub type
+     */
+    public DictionaryElement(String name, String shortName, String description, String type,
+        String subDictionary, Set<Dictionary> usedByDictionaries) {
+        this.name = name;
+        this.shortName = shortName;
+        this.description = description;
+        this.type = type;
+        this.subDictionary = subDictionary;
+        this.usedByDictionaries = usedByDictionaries;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((dictionary == null) ? 0 : dictionary.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((shortName == null) ? 0 : shortName.hashCode());
         return result;
     }
 
@@ -229,21 +242,13 @@ public class DictionaryElement extends AuditEntity implements Serializable {
             return false;
         }
         DictionaryElement other = (DictionaryElement) obj;
-        if (dictionary == null) {
-            if (other.dictionary != null) {
+        if (shortName == null) {
+            if (other.shortName != null) {
                 return false;
             }
-        } else if (!dictionary.equals(other.dictionary)) {
-            return false;
-        }
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
+        } else if (!shortName.equals(other.shortName)) {
             return false;
         }
         return true;
     }
-
 }

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,29 +58,29 @@ export default class ViewToscalPolicyModal extends React.Component {
 		show: true,
 		content: 'Please select Tosca model to view the details',
 		selectedRow: -1,
-		toscaNames: [],
+		toscaPolicyModelNames: [],
 		toscaColumns: [
 			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Micro Service Name", field: "toscaModelName",
+			{ title: "Policy Model Type", field: "policyModelType",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "PolicyType", field: "policyType",
+			{ title: "Policy Acronym", field: "policyAcronym",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Version", field: "toscaModelRevisions[0].version",
+			{ title: "Version", field: "version",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Uploaded By", field: "userId",
+			{ title: "Uploaded By", field: "updatedBy",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Uploaded Date", field: "lastUpdatedDate", editable: 'never',
+			{ title: "Uploaded Date", field: "updatedDate", editable: 'never',
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			}
@@ -101,6 +101,7 @@ export default class ViewToscalPolicyModal extends React.Component {
 		this.handleClose = this.handleClose.bind(this);
 		this.getPolicyToscaModels = this.getToscaPolicyModels.bind(this);
 		this.handleYamlContent = this.handleYamlContent.bind(this);
+		this.getToscaPolicyModelYaml = this.getToscaPolicyModelYaml.bind(this);
 	}
 
 	componentWillMount() {
@@ -108,9 +109,23 @@ export default class ViewToscalPolicyModal extends React.Component {
 	}
 
 	getToscaPolicyModels() {
-	    TemplateMenuService.getToscaPolicyModels().then(toscaNames => {
-			this.setState({ toscaNames: toscaNames });
+	    TemplateMenuService.getToscaPolicyModels().then(toscaPolicyModelNames => {
+			this.setState({ toscaPolicyModelNames: toscaPolicyModelNames });
 		});
+	}
+
+	getToscaPolicyModelYaml(policyModelType) {
+		if (typeof policyModelType !== "undefined") {
+			TemplateMenuService.getToscaPolicyModelYaml(policyModelType).then(toscaYaml => {
+				if (toscaYaml.length !== 0) {
+					this.setState({content: toscaYaml})
+				} else {
+					this.setState({ content: 'Please select Tosca model to view the details' })
+				}
+			});
+		} else {
+			this.setState({ content: 'Please select Tosca model to view the details' })
+		}
 	}
 
 	handleYamlContent(event) {
@@ -130,10 +145,10 @@ export default class ViewToscalPolicyModal extends React.Component {
 				<Modal.Body>
 					<MaterialTable
 					title={"View Tosca Policy Models"}
-					data={this.state.toscaNames}
+					data={this.state.toscaPolicyModelNames}
 					columns={this.state.toscaColumns}
 					icons={this.state.tableIcons}
-					onRowClick={(event, rowData) => {this.setState({content: rowData.toscaModelRevisions[0].toscaModelYaml, selectedRow: rowData.tableData.id})}}
+					onRowClick={(event, rowData) => {this.getToscaPolicyModelYaml(rowData.policyModelType);this.setState({selectedRow: rowData.tableData.id})}}
 					options={{
 						headerStyle: rowHeaderStyle,
 						rowStyle: rowData => ({

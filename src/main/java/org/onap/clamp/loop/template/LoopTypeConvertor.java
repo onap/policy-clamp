@@ -21,12 +21,32 @@
  *
  */
 
-package org.onap.clamp.tosca;
+package org.onap.clamp.loop.template;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.stream.Stream;
+import javax.persistence.AttributeConverter;
 
-@Repository
-public interface DictionaryElementsRepository extends JpaRepository<DictionaryElement, String> {
+/**
+ * Attribute Converter to allow using LoopType Enum values in DB and Java classes.
+ *
+ */
+public class LoopTypeConvertor implements AttributeConverter<LoopType, String> {
 
+    @Override
+    public String convertToDatabaseColumn(LoopType loopType) {
+        if (loopType == null) {
+            return null;
+        }
+        return loopType.getValue();
+    }
+
+    @Override
+    public LoopType convertToEntityAttribute(String value) {
+        if (value == null) {
+            return null;
+        }
+
+        return Stream.of(LoopType.values()).filter(c -> c.getValue().equals(value)).findFirst()
+            .orElseThrow(IllegalArgumentException::new);
+    }
 }

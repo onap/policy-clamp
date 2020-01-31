@@ -11,17 +11,22 @@
     ) engine=InnoDB;
 
     create table dictionary_elements (
-       name varchar(255) not null,
+       short_name varchar(255) not null,
         created_by varchar(255),
         created_timestamp datetime(6) not null,
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
-        description varchar(255),
-        short_name varchar(255) not null,
-        subdictionary_id varchar(255) not null,
+        description varchar(255) not null,
+        name varchar(255) not null,
+        subdictionary_name varchar(255),
         type varchar(255) not null,
-        dictionary_id varchar(255),
-        primary key (name)
+        primary key (short_name)
+    ) engine=InnoDB;
+
+    create table dictionary_to_dictionaryelements (
+       dictionary_name varchar(255) not null,
+        dictionary_element_short_name varchar(255) not null,
+        primary key (dictionary_name, dictionary_element_short_name)
     ) engine=InnoDB;
 
     create table hibernate_sequence (
@@ -39,6 +44,7 @@
         blueprint_yaml MEDIUMTEXT,
         dcae_blueprint_id varchar(255),
         loop_element_type varchar(255) not null,
+        short_name varchar(255),
         primary key (name)
     ) engine=InnoDB;
 
@@ -58,6 +64,7 @@
         created_timestamp datetime(6) not null,
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
+        allowed_loop_type varchar(255),
         blueprint_yaml MEDIUMTEXT,
         dcae_blueprint_id varchar(255),
         maximum_instances_allowed integer,
@@ -161,12 +168,14 @@
         primary key (service_uuid)
     ) engine=InnoDB;
 
-    alter table dictionary_elements 
-       add constraint UK_qxkrvsrhp26m60apfvxphpl3d unique (short_name);
+    alter table dictionary_to_dictionaryelements 
+       add constraint FK68hjjinnm8nte2owstd0xwp23 
+       foreign key (dictionary_element_short_name) 
+       references dictionary_elements (short_name);
 
-    alter table dictionary_elements 
-       add constraint FKn87bpgpm9i56w7uko585rbkgn 
-       foreign key (dictionary_id) 
+    alter table dictionary_to_dictionaryelements 
+       add constraint FKtqfxg46gsxwlm2gkl6ne3cxfe 
+       foreign key (dictionary_name) 
        references dictionary (name);
 
     alter table loop_logs 

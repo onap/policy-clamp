@@ -25,9 +25,7 @@ package org.onap.clamp.clds.tosca;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.LinkedList;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
@@ -55,16 +53,12 @@ public class DictionaryRepositoriesTestItCase {
         dictionaryTest1.setSubDictionaryType("testType");
 
         DictionaryElement element1 = new DictionaryElement();
-        element1.setDictionary(dictionaryTest1);
         element1.setName("element1");
         element1.setShortName("shortName1");
-        element1.setSubDictionary("subDictionary1");
         element1.setType("type1");
         element1.setDescription("description1");
 
-        LinkedList<DictionaryElement> elementList1 = new LinkedList<DictionaryElement>();
-        elementList1.add(element1);
-        dictionaryTest1.setDictionaryElements(elementList1);
+        dictionaryTest1.addDictionaryElements(element1);
 
         Dictionary dictionaryTest2 = new Dictionary();
         dictionaryTest2.setName("testDictionary2");
@@ -72,16 +66,13 @@ public class DictionaryRepositoriesTestItCase {
         dictionaryTest2.setSubDictionaryType("testType");
 
         DictionaryElement element2 = new DictionaryElement();
-        element2.setDictionary(dictionaryTest2);
         element2.setName("element2");
         element2.setShortName("shortName2");
-        element2.setSubDictionary("subDictionary2");
+        element2.setSubDictionary("testDictionary1");
         element2.setType("type2");
         element2.setDescription("description2");
 
-        LinkedList<DictionaryElement> elementList2 = new LinkedList<DictionaryElement>();
-        elementList2.add(element2);
-        dictionaryTest2.setDictionaryElements(elementList2);
+        dictionaryTest2.addDictionaryElements(element2);
 
         dictionaryRepository.save(dictionaryTest1);
         List<String> res1 = dictionaryRepository.getAllDictionaryNames();

@@ -21,12 +21,22 @@
  *
  */
 
-package org.onap.clamp.tosca;
+package org.onap.clamp.loop.template;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+/**
+ * Enums for AllowedLoopType in LoopTemplate enity.
+ *
+ */
+public enum LoopType {
+    OPEN("OPEN"), CLOSED("CLOSED"), HYBRID("HYBRID");
 
-@Repository
-public interface DictionaryElementsRepository extends JpaRepository<DictionaryElement, String> {
+    private String value;
 
+    private LoopType(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

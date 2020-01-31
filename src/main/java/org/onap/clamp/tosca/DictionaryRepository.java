@@ -24,7 +24,6 @@
 package org.onap.clamp.tosca;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -34,5 +33,8 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, String> 
 
     @Query("SELECT dict.name FROM Dictionary as dict")
     List<String> getAllDictionaryNames();
+
+    @Query("SELECT dict.name FROM Dictionary as dict where dict.secondLevelDictionary = 1")
+    List<String> getAllSecondaryLevelDictionaryNames();
 
 }

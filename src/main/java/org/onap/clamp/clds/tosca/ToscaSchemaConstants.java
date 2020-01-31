@@ -42,6 +42,11 @@ public class ToscaSchemaConstants {
     public static final String PROPERTIES = "properties";
     public static final String REQUIRED = "required";
     public static final String ENTRY_SCHEMA = "entry_schema";
+    
+    public static final String METADATA = "metadata";
+    public static final String METADATA_POLICY_MODEL_TYPE = "policy_model_type";
+    public static final String METADATA_ACRONYM = "acronym";
+    public static final String METADATA_CLAMP_POSSIBLE_VALUES = "clamp_possible_values";
 
     // Constraints
     public static final String CONSTRAINTS = "constraints";

@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,19 +24,18 @@
 package org.onap.clamp.tosca;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
 import org.onap.clamp.loop.common.AuditEntity;
 
 /**
@@ -59,19 +58,27 @@ public class Dictionary extends AuditEntity implements Serializable {
 
     @Expose
     @Column(name = "dictionary_second_level")
-    private int secondLevelDictionary;
+    private int secondLevelDictionary = 0;
 
     @Expose
     @Column(name = "dictionary_type")
     private String subDictionaryType;
 
     @Expose
-    @OneToMany(mappedBy = "dictionary", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<DictionaryElement> dictionaryElements = new ArrayList<>();
+    @ManyToMany(
+        fetch = FetchType.EAGER,
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinTable(
+        name = "dictionary_to_dictionaryelements",
+        joinColumns = @JoinColumn(name = "dictionary_name", referencedColumnName = "name"),
+        inverseJoinColumns = {@JoinColumn(
+            name = "dictionary_element_short_name",
+            referencedColumnName = "short_name")})
+    private Set<DictionaryElement> dictionaryElements = new HashSet<>();
 
     /**
      * name getter.
-     * 
+     *
      * @return the name
      */
     public String getName() {
@@ -80,7 +87,7 @@ public class Dictionary extends AuditEntity implements Serializable {
 
     /**
      * name setter.
-     * 
+     *
      * @param name the name to set
      */
     public void setName(String name) {
@@ -89,7 +96,7 @@ public class Dictionary extends AuditEntity implements Serializable {
 
     /**
      * secondLevelDictionary getter.
-     * 
+     *
      * @return the secondLevelDictionary
      */
     public int getSecondLevelDictionary() {
@@ -98,7 +105,7 @@ public class Dictionary extends AuditEntity implements Serializable {
 
     /**
      * secondLevelDictionary setter.
-     * 
+     *
      * @param secondLevelDictionary the secondLevelDictionary to set
      */
     public void setSecondLevelDictionary(int secondLevelDictionary) {
@@ -107,7 +114,7 @@ public class Dictionary extends AuditEntity implements Serializable {
 
     /**
      * subDictionaryType getter.
-     * 
+     *
      * @return the subDictionaryType
      */
     public String getSubDictionaryType() {
@@ -116,7 +123,7 @@ public class Dictionary extends AuditEntity implements Serializable {
 
     /**
      * subDictionaryType setter.
-     * 
+     *
      * @param subDictionaryType the subDictionaryType to set
      */
     public void setSubDictionaryType(String subDictionaryType) {
@@ -125,20 +132,51 @@ public class Dictionary extends AuditEntity implements Serializable {
 
     /**
      * dictionaryElements getter.
-     * 
-     * @return the dictionaryElements
+     *
+     * @return the dictionaryElements List of dictionary element
      */
-    public List<DictionaryElement> getDictionaryElements() {
+    public Set<DictionaryElement> getDictionaryElements() {
         return dictionaryElements;
     }
 
     /**
-     * dictionaryElements setter.
-     * 
-     * @param dictionaryElements the dictionaryElements to set
+     * Method to add a new dictionaryElement to the list.
+     *
+     * @param dictionaryElement The dictionary element
      */
-    public void setDictionaryElements(List<DictionaryElement> dictionaryElements) {
-        this.dictionaryElements = dictionaryElements;
+    public void addDictionaryElements(DictionaryElement dictionaryElement) {
+        dictionaryElements.add(dictionaryElement);
+        dictionaryElement.getUsedByDictionaries().add(this);
+    }
+
+    /**
+     * Method to delete a dictionaryElement from the list.
+     *
+     * @param dictionaryElement The dictionary element
+     */
+    public void removeDictionaryElement(DictionaryElement dictionaryElement) {
+        dictionaryElements.remove(dictionaryElement);
+        dictionaryElement.getUsedByDictionaries().remove(this);
+    }
+
+    /**
+     * Default Constructor.
+     */
+    public Dictionary() {
+
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param name The Dictionary name
+     * @param secondLevelDictionary defines if dictionary is a secondary level
+     * @param subDictionaryType defines the type of secondary level dictionary
+     */
+    public Dictionary(String name, int secondLevelDictionary, String subDictionaryType) {
+        this.name = name;
+        this.secondLevelDictionary = secondLevelDictionary;
+        this.subDictionaryType = subDictionaryType;
     }
 
     @Override

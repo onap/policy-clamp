@@ -33,12 +33,13 @@ public class SemanticVersioning {
     public static final int BEFORE = -1;
     public static final int EQUAL = 0;
     public static final int AFTER = 1;
+    public static final String DEFAULT_VERSION = "1.0.0";
 
     /**
      * The compare method that compare arg0 to arg1.
-     * 
-     * @param arg0 A version in string for semantice versioning (a.b.c.d...)
-     * @param arg1 A version in string for semantice versioning (a.b.c.d...)
+     *
+     * @param arg0 A version in string for semantic versioning (a.b.c.d...)
+     * @param arg1 A version in string for semantic versioning (a.b.c.d...)
      * @return objects (arg0, arg1) given as parameters. It returns the value: 0: if
      *         (arg0==arg1) -1: if (arg0 < arg1) 1: if (arg0 > arg1)
      */
@@ -58,11 +59,13 @@ public class SemanticVersioning {
 
         int smalestStringLength = Math.min(arg0Array.length, arg1Array.length);
 
-        for (int currentVersionIndex = 0; currentVersionIndex < smalestStringLength; ++currentVersionIndex) {
-            if (Integer.parseInt(arg0Array[currentVersionIndex]) < Integer.parseInt(arg1Array[currentVersionIndex])) {
+        for (int currentVersionIndex =
+            0; currentVersionIndex < smalestStringLength; ++currentVersionIndex) {
+            if (Integer.parseInt(arg0Array[currentVersionIndex]) < Integer
+                .parseInt(arg1Array[currentVersionIndex])) {
                 return BEFORE;
             } else if (Integer.parseInt(arg0Array[currentVersionIndex]) > Integer
-                    .parseInt(arg1Array[currentVersionIndex])) {
+                .parseInt(arg1Array[currentVersionIndex])) {
                 return AFTER;
             }
             // equals, so do not return anything, continue
@@ -72,5 +75,19 @@ public class SemanticVersioning {
         } else {
             return Integer.compare(arg0Array.length, arg1Array.length);
         }
+    }
+
+    /**
+     * Method to increment a version from its current version.
+     *
+     * @param currentVersion The current Version
+     * @return the increment version string
+     */
+    public static String incrementMajorVersion(String currentVersion) {
+        if (currentVersion == null || currentVersion.isEmpty()) {
+            return DEFAULT_VERSION;
+        }
+        String[] versionArray = currentVersion.split("\\.");
+        return String.valueOf(Integer.parseInt(versionArray[0]) + 1)+".0.0";
     }
 }

@@ -24,11 +24,9 @@
 package org.onap.clamp.loop.template;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -36,7 +34,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.util.SemanticVersioning;
 
@@ -83,7 +80,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * usedByElementModels getter.
-     * 
+     *
      * @return the usedByElementModels
      */
     public Set<LoopElementModel> getUsedByElementModels() {
@@ -92,7 +89,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * policyModelTosca getter.
-     * 
+     *
      * @return the policyModelTosca
      */
     public String getPolicyModelTosca() {
@@ -101,7 +98,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * policyModelTosca setter.
-     * 
+     *
      * @param policyModelTosca the policyModelTosca to set
      */
     public void setPolicyModelTosca(String policyModelTosca) {
@@ -110,7 +107,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * policyModelType getter.
-     * 
+     *
      * @return the modelType
      */
     public String getPolicyModelType() {
@@ -119,7 +116,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * policyModelType setter.
-     * 
+     *
      * @param modelType the modelType to set
      */
     public void setPolicyModelType(String modelType) {
@@ -128,7 +125,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * version getter.
-     * 
+     *
      * @return the version
      */
     public String getVersion() {
@@ -137,7 +134,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * version setter.
-     * 
+     *
      * @param version the version to set
      */
     public void setVersion(String version) {
@@ -147,7 +144,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * policyAcronym getter.
-     * 
+     *
      * @return the policyAcronym value
      */
     public String getPolicyAcronym() {
@@ -156,7 +153,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * policyAcronym setter.
-     * 
+     *
      * @param policyAcronym The policyAcronym to set
      */
     public void setPolicyAcronym(String policyAcronym) {
@@ -171,13 +168,14 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     /**
      * Constructor.
-     * 
-     * @param policyType       The policyType (referenced in the blueprint
+     *
+     * @param policyType The policyType (referenced in the blueprint
      * @param policyModelTosca The policy tosca model in yaml
-     * @param version          the version like 1.0.0
-     * @param policyAcronym    Subtype for policy if it exists (could be used by UI)
+     * @param version the version like 1.0.0
+     * @param policyAcronym Subtype for policy if it exists (could be used by UI)
      */
-    public PolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym) {
+    public PolicyModel(String policyType, String policyModelTosca, String version,
+        String policyAcronym) {
         this.policyModelType = policyType;
         this.policyModelTosca = policyModelTosca;
         this.version = version;
