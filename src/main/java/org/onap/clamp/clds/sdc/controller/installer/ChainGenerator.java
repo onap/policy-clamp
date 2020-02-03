@@ -42,11 +42,11 @@ public class ChainGenerator {
      * @param input A set of microservices
      * @return The list of microservice chained
      */
-    public List<MicroService> getChainOfMicroServices(Set<MicroService> input) {
-        LinkedList<MicroService> returnList = new LinkedList<>();
+    public List<BlueprintMicroService> getChainOfMicroServices(Set<BlueprintMicroService> input) {
+        LinkedList<BlueprintMicroService> returnList = new LinkedList<>();
         if (preValidate(input)) {
-            LinkedList<MicroService> theList = new LinkedList<>();
-            for (MicroService ms : input) {
+            LinkedList<BlueprintMicroService> theList = new LinkedList<>();
+            for (BlueprintMicroService ms : input) {
                 insertNodeTemplateIntoChain(ms, theList);
             }
             if (postValidate(theList)) {
@@ -56,16 +56,16 @@ public class ChainGenerator {
         return returnList;
     }
 
-    private boolean preValidate(Set<MicroService> input) {
-        List<MicroService> noInputs = input.stream().filter(ms -> "".equals(ms.getInputFrom()))
+    private boolean preValidate(Set<BlueprintMicroService> input) {
+        List<BlueprintMicroService> noInputs = input.stream().filter(ms -> "".equals(ms.getInputFrom()))
                 .collect(Collectors.toList());
         return noInputs.size() == 1;
     }
 
-    private boolean postValidate(LinkedList<MicroService> microServices) {
+    private boolean postValidate(LinkedList<BlueprintMicroService> microServices) {
         for (int i = 1; i < microServices.size() - 1; i++) {
-            MicroService prev = microServices.get(i - 1);
-            MicroService current = microServices.get(i);
+            BlueprintMicroService prev = microServices.get(i - 1);
+            BlueprintMicroService current = microServices.get(i);
             if (!current.getInputFrom().equals(prev.getName())) {
                 return false;
             }
@@ -73,11 +73,11 @@ public class ChainGenerator {
         return true;
     }
 
-    private void insertNodeTemplateIntoChain(MicroService microServicetoInsert,
-            LinkedList<MicroService> chainOfMicroServices) {
+    private void insertNodeTemplateIntoChain(BlueprintMicroService microServicetoInsert,
+            LinkedList<BlueprintMicroService> chainOfMicroServices) {
         int insertIndex = 0;
         for (int i = 0; i < chainOfMicroServices.size(); i++) {
-            MicroService current = chainOfMicroServices.get(i);
+            BlueprintMicroService current = chainOfMicroServices.get(i);
             if (microServicetoInsert.getName().equals(current.getInputFrom())) {
                 insertIndex = i;
                 break;

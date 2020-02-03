@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -52,11 +53,13 @@ public class PolicyModelServiceItCase {
     @Autowired
     PolicyModelsRepository policyModelsRepository;
 
-    private static final String POLICY_MODEL_TYPE_1 = "org.onap.test";
+    private static final String POLICY_MODEL_TYPE_1 = "org.onap.testos";
     private static final String POLICY_MODEL_TYPE_1_VERSION_1 = "1.0.0";
 
-    private static final String POLICY_MODEL_TYPE_2 = "org.onap.test2";
+    private static final String POLICY_MODEL_TYPE_2 = "org.onap.testos2";
+    private static final String POLICY_MODEL_TYPE_3 = "org.onap.testos3";
     private static final String POLICY_MODEL_TYPE_2_VERSION_1 = "1.0.0";
+    private static final String POLICY_MODEL_TYPE_3_VERSION_1 = "1.0.0";
     private static final String POLICY_MODEL_TYPE_2_VERSION_2 = "2.0.0";
 
     private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
@@ -150,9 +153,17 @@ public class PolicyModelServiceItCase {
         PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_2, "TEST",
                 "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
+        PolicyModel policyModel3 = getPolicyModel(POLICY_MODEL_TYPE_3, "yaml", POLICY_MODEL_TYPE_3_VERSION_1, "TEST",
+                "VARIANT", "user");
+        policyModelsService.saveOrUpdatePolicyModel(policyModel3);
 
         SortedSet<PolicyModel> sortedSet = new TreeSet<>();
         policyModelsService.getAllPolicyModels().forEach(sortedSet::add);
-        assertThat(sortedSet).contains(policyModel2, policyModel1);
+        List<PolicyModel> listToCheck = sortedSet.stream().filter(
+            policy -> policy.equals(policyModel3) || policy.equals(policyModel2) || policy.equals(policyModel1))
+                .collect(Collectors.toList());
+        assertThat(listToCheck.get(0)).isEqualByComparingTo(policyModel2);
+        assertThat(listToCheck.get(1)).isEqualByComparingTo(policyModel1);
+        assertThat(listToCheck.get(2)).isEqualByComparingTo(policyModel3);
     }
 }

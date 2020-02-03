@@ -27,7 +27,7 @@ package org.onap.clamp.clds.util.drawing;
 import java.util.List;
 
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.onap.clamp.clds.sdc.controller.installer.MicroService;
+import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.clds.util.XmlTools;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
@@ -40,7 +40,7 @@ public class SvgFacade {
      * @param microServicesChain THe chain of microservices
      * @return A String containing the SVG
      */
-    public String getSvgImage(List<MicroService> microServicesChain) {
+    public String getSvgImage(List<BlueprintMicroService> microServicesChain) {
         SVGGraphics2D svgGraphics2D = new SVGGraphics2D(XmlTools.createEmptySvgDocument());
         Document document = XmlTools.createEmptySvgDocument();
         DocumentBuilder dp = new DocumentBuilder(document, svgGraphics2D.getDOMFactory());

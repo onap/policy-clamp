@@ -45,7 +45,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore({ "javax.crypto.*", "com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*" })
+@PowerMockIgnore({ "javax.crypto.*", "com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*" })
 public class CryptoUtilsTest {
 
     private final String data = "This is a test string";

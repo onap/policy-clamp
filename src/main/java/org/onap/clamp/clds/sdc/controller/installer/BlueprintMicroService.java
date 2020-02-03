@@ -17,7 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END============================================
- * Modifications copyright (c) 2019 AT&T
+ * Modifications copyright (c) 2019-2020 AT&T
  * ===================================================================
  *
  */
@@ -26,25 +26,24 @@ package org.onap.clamp.clds.sdc.controller.installer;
 
 import java.util.Objects;
 
-public class MicroService {
+public class BlueprintMicroService {
     private final String name;
     private final String modelType;
     private final String inputFrom;
-    private String mappedNameJpa;
+    private final String modelVersion;
 
     /**
      * The Micro service constructor.
      * 
-     * @param name          The name in String
-     * @param modelType     The model type
-     * @param inputFrom     Comes from (single chained)
-     * @param mappedNameJpa Name in database
+     * @param name      The name in String
+     * @param modelType The model type
+     * @param inputFrom Comes from (single chained)
      */
-    public MicroService(String name, String modelType, String inputFrom, String mappedNameJpa) {
+    public BlueprintMicroService(String name, String modelType, String inputFrom, String modelVersion) {
         this.name = name;
         this.inputFrom = inputFrom;
-        this.mappedNameJpa = mappedNameJpa;
         this.modelType = modelType;
+        this.modelVersion = modelVersion;
     }
 
     public String getName() {
@@ -59,18 +58,19 @@ public class MicroService {
         return inputFrom;
     }
 
+    /**
+     * modelVerrsion getter.
+     * 
+     * @return the modelVersion
+     */
+    public String getModelVersion() {
+        return modelVersion;
+    }
+
     @Override
     public String toString() {
-        return "MicroService{" + "name='" + name + '\'' + ", modelType='" + modelType + '\'' + ", inputFrom='"
-                + inputFrom + '\'' + ", mappedNameJpa='" + mappedNameJpa + '\'' + '}';
-    }
-
-    public String getMappedNameJpa() {
-        return mappedNameJpa;
-    }
-
-    public void setMappedNameJpa(String mappedNameJpa) {
-        this.mappedNameJpa = mappedNameJpa;
+        return "MicroService {" + "name='" + name + '\'' + ", modelType='" + modelType + '\'' + ", inputFrom='"
+                + inputFrom + '\'' + ", modelVersion='" + modelVersion + '\'' + '}';
     }
 
     @Override
@@ -81,13 +81,13 @@ public class MicroService {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        MicroService that = (MicroService) obj;
+        BlueprintMicroService that = (BlueprintMicroService) obj;
         return name.equals(that.name) && modelType.equals(that.modelType) && inputFrom.equals(that.inputFrom)
-                && mappedNameJpa.equals(that.mappedNameJpa);
+                && modelVersion.equals(that.modelVersion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, modelType, inputFrom, mappedNameJpa);
+        return Objects.hash(name, modelType, inputFrom, modelVersion);
     }
 }

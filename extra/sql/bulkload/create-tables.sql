@@ -36,7 +36,7 @@
         created_timestamp datetime(6) not null,
         updated_by varchar(255),
         updated_timestamp datetime(6) not null,
-        blueprint_yaml MEDIUMTEXT not null,
+        blueprint_yaml MEDIUMTEXT,
         dcae_blueprint_id varchar(255),
         loop_element_type varchar(255) not null,
         primary key (name)

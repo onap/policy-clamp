@@ -39,7 +39,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.onap.clamp.clds.sdc.controller.installer.MicroService;
+import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClampGraphBuilderTest {
@@ -50,7 +50,7 @@ public class ClampGraphBuilderTest {
     private ArgumentCaptor<String> collectorCaptor;
 
     @Captor
-    private ArgumentCaptor<List<MicroService>> microServicesCaptor;
+    private ArgumentCaptor<List<BlueprintMicroService>> microServicesCaptor;
 
     @Captor
     private ArgumentCaptor<String> policyCaptor;
@@ -58,17 +58,17 @@ public class ClampGraphBuilderTest {
     @Test
     public void clampGraphBuilderCompleteChainTest() {
         String collector = "VES";
-        MicroService ms1 = new MicroService("ms1", "", "", "ms1_jpa_id");
-        MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id");
+        BlueprintMicroService ms1 = new BlueprintMicroService("ms1", "", "", "1.0.0");
+        BlueprintMicroService ms2 = new BlueprintMicroService("ms2", "", "", "1.0.0");
 
         String policy = "OperationalPolicy";
-        final List<MicroService> microServices = Arrays.asList(ms1, ms2);
+        final List<BlueprintMicroService> microServices = Arrays.asList(ms1, ms2);
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
         clampGraphBuilder.collector(collector).addMicroService(ms1).addMicroService(ms2).policy(policy).build();
 
         verify(mockPainter, times(1)).doPaint(collectorCaptor.capture(), microServicesCaptor.capture(),
-            policyCaptor.capture());
+                policyCaptor.capture());
 
         Assert.assertEquals(collector, collectorCaptor.getValue());
         Assert.assertEquals(microServices, microServicesCaptor.getValue());
@@ -78,8 +78,8 @@ public class ClampGraphBuilderTest {
     @Test(expected = InvalidStateException.class)
     public void clampGraphBuilderNoPolicyGivenTest() {
         String collector = "VES";
-        MicroService ms1 = new MicroService("ms1", "", "", "ms1_jpa_id");
-        MicroService ms2 = new MicroService("ms2", "", "", "ms2_jpa_id");
+        BlueprintMicroService ms1 = new BlueprintMicroService("ms1", "", "", "1.0.0");
+        BlueprintMicroService ms2 = new BlueprintMicroService("ms2", "", "", "1.0.0");
 
         ClampGraphBuilder clampGraphBuilder = new ClampGraphBuilder(mockPainter);
         clampGraphBuilder.collector(collector).addMicroService(ms1).addMicroService(ms2).build();

@@ -70,7 +70,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     /**
      * Here we store the blueprint coming from DCAE.
      */
-    @Column(columnDefinition = "MEDIUMTEXT", nullable = false, name = "blueprint_yaml")
+    @Column(columnDefinition = "MEDIUMTEXT", name = "blueprint_yaml")
     private String blueprint;
 
     /**

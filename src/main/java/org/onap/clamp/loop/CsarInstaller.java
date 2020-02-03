@@ -33,13 +33,15 @@ import java.util.Map.Entry;
 
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
+import org.onap.clamp.clds.client.PolicyEngineServices;
+import org.onap.clamp.clds.exception.sdc.controller.BlueprintParserException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
+import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintParser;
 import org.onap.clamp.clds.sdc.controller.installer.ChainGenerator;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
-import org.onap.clamp.clds.sdc.controller.installer.MicroService;
 import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.onap.clamp.loop.service.CsarServiceInstaller;
 import org.onap.clamp.loop.service.Service;
@@ -47,6 +49,8 @@ import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.LoopTemplatesRepository;
 import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelId;
+import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -61,31 +65,27 @@ import org.springframework.stereotype.Component;
 public class CsarInstaller {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarInstaller.class);
-    public static final String CONTROL_NAME_PREFIX = "ClosedLoop-";
-    public static final String GET_INPUT_BLUEPRINT_PARAM = "get_input";
-    // This will be used later as the policy scope
-    public static final String MODEL_NAME_PREFIX = "Loop_";
 
     @Autowired
-    LoopsRepository loopRepository;
+    private PolicyModelsRepository policyModelsRepository;
 
     @Autowired
-    LoopTemplatesRepository loopTemplatesRepository;
+    private LoopTemplatesRepository loopTemplatesRepository;
 
     @Autowired
-    BlueprintParser blueprintParser;
+    private ChainGenerator chainGenerator;
 
     @Autowired
-    ChainGenerator chainGenerator;
-
-    @Autowired
-    DcaeInventoryServices dcaeInventoryService;
+    private DcaeInventoryServices dcaeInventoryService;
 
     @Autowired
     private SvgFacade svgFacade;
 
     @Autowired
-    CsarServiceInstaller csarServiceInstaller;
+    private CsarServiceInstaller csarServiceInstaller;
+
+    @Autowired
+    private PolicyEngineServices policyEngineServices;
 
     /**
      * Verify whether Csar is deployed.
@@ -113,8 +113,11 @@ public class CsarInstaller {
      * @param csar The Csar Handler
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
      * @throws InterruptedException          The InterruptedException
+     * @throws BlueprintParserException      In case of issues with the blueprint
+     *                                       parsing
      */
-    public void installTheCsar(CsarHandler csar) throws SdcArtifactInstallerException, InterruptedException {
+    public void installTheCsar(CsarHandler csar)
+            throws SdcArtifactInstallerException, InterruptedException, BlueprintParserException {
         logger.info("Installing the CSAR " + csar.getFilePath());
         installTheLoopTemplates(csar, csarServiceInstaller.installTheService(csar));
         logger.info("Successfully installed the CSAR " + csar.getFilePath());
@@ -127,9 +130,11 @@ public class CsarInstaller {
      * @param service The service object that is related to the loop
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
      * @throws InterruptedException          The InterruptedException
+     * @throws BlueprintParserException      In case of issues with the blueprint
+     *                                       parsing
      */
     public void installTheLoopTemplates(CsarHandler csar, Service service)
-            throws SdcArtifactInstallerException, InterruptedException {
+            throws SdcArtifactInstallerException, InterruptedException, BlueprintParserException {
         try {
             logger.info("Installing the Loops");
             for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
@@ -145,20 +150,20 @@ public class CsarInstaller {
     }
 
     private LoopTemplate createLoopTemplateFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact,
-            Service service) throws IOException, ParseException, InterruptedException {
+            Service service) throws IOException, ParseException, InterruptedException, BlueprintParserException {
         LoopTemplate newLoopTemplate = new LoopTemplate();
         newLoopTemplate.setBlueprint(blueprintArtifact.getDcaeBlueprint());
         newLoopTemplate.setName(LoopTemplate.generateLoopTemplateName(csar.getSdcNotification().getServiceName(),
                 csar.getSdcNotification().getServiceVersion(),
                 blueprintArtifact.getResourceAttached().getResourceInstanceName(),
                 blueprintArtifact.getBlueprintArtifactName()));
-        List<MicroService> microServicesChain = chainGenerator
-                .getChainOfMicroServices(blueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()));
+        List<BlueprintMicroService> microServicesChain = chainGenerator
+                .getChainOfMicroServices(BlueprintParser.getMicroServices(blueprintArtifact.getDcaeBlueprint()));
         if (microServicesChain.isEmpty()) {
-            microServicesChain = blueprintParser.fallbackToOneMicroService(blueprintArtifact.getDcaeBlueprint());
+            microServicesChain = BlueprintParser.fallbackToOneMicroService();
         }
         newLoopTemplate.setModelService(service);
-        newLoopTemplate.addLoopElementModels(createMicroServiceModels(microServicesChain, csar, blueprintArtifact));
+        newLoopTemplate.addLoopElementModels(createMicroServiceModels(microServicesChain));
         newLoopTemplate.setMaximumInstancesAllowed(0);
         newLoopTemplate.setSvgRepresentation(svgFacade.getSvgImage(microServicesChain));
         DcaeInventoryResponse dcaeResponse = queryDcaeToGetServiceTypeId(blueprintArtifact);
@@ -166,14 +171,14 @@ public class CsarInstaller {
         return newLoopTemplate;
     }
 
-    private HashSet<LoopElementModel> createMicroServiceModels(List<MicroService> microServicesChain, CsarHandler csar,
-            BlueprintArtifact blueprintArtifact) throws IOException {
+    private HashSet<LoopElementModel> createMicroServiceModels(List<BlueprintMicroService> microServicesChain)
+            throws InterruptedException {
         HashSet<LoopElementModel> newSet = new HashSet<>();
-        for (MicroService microService : microServicesChain) {
+        for (BlueprintMicroService microService : microServicesChain) {
             LoopElementModel loopElementModel = new LoopElementModel(microService.getModelType(), "CONFIG_POLICY",
-                    blueprintArtifact.getDcaeBlueprint());
+                    null);
             newSet.add(loopElementModel);
-            loopElementModel.addPolicyModel(createPolicyModel(microService, csar));
+            loopElementModel.addPolicyModel(getPolicyModel(microService));
         }
         return newSet;
     }
@@ -183,14 +188,20 @@ public class CsarInstaller {
         return policyNameArray[policyNameArray.length - 1];
     }
 
-    private PolicyModel createPolicyModel(MicroService microService, CsarHandler csar) throws IOException {
-        return new PolicyModel(microService.getModelType(), csar.getPolicyModelYaml().orElse(""), "1.0",
-                createPolicyAcronym(microService.getModelType()));
+    private PolicyModel createPolicyModel(BlueprintMicroService microService) throws InterruptedException {
+        return new PolicyModel(microService.getModelType(),
+                policyEngineServices.downloadOnePolicy(microService.getModelType(), microService.getModelVersion()),
+                microService.getModelVersion(), createPolicyAcronym(microService.getModelType()));
+    }
+
+    private PolicyModel getPolicyModel(BlueprintMicroService microService) throws InterruptedException {
+        return policyModelsRepository
+                .findById(new PolicyModelId(microService.getModelType(), microService.getModelVersion()))
+                .orElse(createPolicyModel(microService));
     }
 
     /**
-     * ll get the latest version of the artifact (version can be specified to DCAE
-     * call).
+     * Get the service blueprint Id in the Dcae inventory using the SDC UUID.
      *
      * @return The DcaeInventoryResponse object containing the dcae values
      */

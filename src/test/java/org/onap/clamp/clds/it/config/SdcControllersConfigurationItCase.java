@@ -45,7 +45,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller-new")
+@ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller")
 public class SdcControllersConfigurationItCase {
 
     @Autowired

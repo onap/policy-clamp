@@ -31,7 +31,7 @@ import java.awt.RenderingHints;
 import java.util.List;
 
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.onap.clamp.clds.sdc.controller.installer.MicroService;
+import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 
 public class Painter {
     private final int canvasSize;
@@ -57,7 +57,7 @@ public class Painter {
         this.canvasSize = DEFALUT_CANVAS_SIZE;
     }
 
-    DocumentBuilder doPaint(String collector, List<MicroService> microServices, String policy) {
+    DocumentBuilder doPaint(String collector, List<BlueprintMicroService> microServices, String policy) {
         int numOfRectangles = 2 + microServices.size();
         int numOfArrows = numOfRectangles + 1;
         int baseLength = (canvasSize - 2 * CIRCLE_RADIUS) / (numOfArrows + numOfRectangles);
@@ -76,12 +76,12 @@ public class Painter {
         return ib.getDocumentBuilder();
     }
 
-    private void doTheActualDrawing(String collector, List<MicroService> microServices, String policy,
+    private void doTheActualDrawing(String collector, List<BlueprintMicroService> microServices, String policy,
             ImageBuilder ib) {
         ib.circle("start-circle", SLIM_LINE).arrow().rectangle(collector, RectTypes.COLECTOR, collector);
 
-        for (MicroService ms : microServices) {
-            ib.arrow().rectangle(ms.getMappedNameJpa(), RectTypes.MICROSERVICE, ms.getName());
+        for (BlueprintMicroService ms : microServices) {
+            ib.arrow().rectangle(ms.getModelType(), RectTypes.MICROSERVICE, ms.getName());
         }
 
         ib.arrow().rectangle(policy, RectTypes.POLICY, policy).arrow().circle("stop-circle", THICK_LINE);

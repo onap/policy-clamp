@@ -41,14 +41,12 @@ import org.onap.clamp.loop.CsarInstaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
-@ComponentScan(basePackages = { "org.onap.clamp.loop", "org.onap.clamp.clds.config" })
-@Profile("clamp-sdc-controller-new")
+@Profile("clamp-sdc-controller")
 public class SdcControllerConfiguration {
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(SdcControllerConfiguration.class);

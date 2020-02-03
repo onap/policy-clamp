@@ -28,12 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.onap.clamp.clds.sdc.controller.installer.MicroService;
+import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 
 public class ClampGraphBuilder {
     private String policy;
     private String collector;
-    private List<MicroService> microServices = new ArrayList<>();
+    private List<BlueprintMicroService> microServices = new ArrayList<>();
     private final Painter painter;
 
     public ClampGraphBuilder(Painter painter) {
@@ -50,12 +50,12 @@ public class ClampGraphBuilder {
         return this;
     }
 
-    public ClampGraphBuilder addMicroService(MicroService ms) {
+    public ClampGraphBuilder addMicroService(BlueprintMicroService ms) {
         microServices.add(ms);
         return this;
     }
 
-    public ClampGraphBuilder addAllMicroServices(List<MicroService> msList) {
+    public ClampGraphBuilder addAllMicroServices(List<BlueprintMicroService> msList) {
         microServices.addAll(msList);
         return this;
     }

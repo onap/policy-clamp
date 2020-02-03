@@ -46,7 +46,7 @@ public class DcaeInventoryCache {
     public void addDcaeInventoryResponse(DcaeInventoryResponse inventoryResponse) {
         Set<DcaeInventoryResponse> responsesSet = blueprintsMap.get(inventoryResponse.getAsdcServiceId());
         if (responsesSet == null) {
-            responsesSet = new TreeSet<DcaeInventoryResponse>();
+            responsesSet = new TreeSet<>();
             blueprintsMap.put(inventoryResponse.getAsdcServiceId(), responsesSet);
         }
         responsesSet.add(inventoryResponse);

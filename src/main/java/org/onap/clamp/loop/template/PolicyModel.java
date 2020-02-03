@@ -224,7 +224,13 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
 
     @Override
     public int compareTo(PolicyModel arg0) {
-        // Reverse it, so that by default we have the latest
-        return SemanticVersioning.compare(arg0.getVersion(), this.version);
+
+        if (this.getPolicyModelType().equals(arg0.getPolicyModelType())) {
+            // Reverse it, so that by default we have the latest in they are same model type
+            return SemanticVersioning.compare(arg0.getVersion(), this.version);
+        } else {
+            return this.getPolicyModelType().compareTo(arg0.getPolicyModelType());
+        }
+
     }
 }

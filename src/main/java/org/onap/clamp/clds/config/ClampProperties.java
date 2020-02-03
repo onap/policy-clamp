@@ -23,13 +23,11 @@
 
 package org.onap.clamp.clds.config;
 
-import com.google.common.base.Splitter;
-
 import com.google.gson.JsonElement;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.onap.clamp.clds.util.JsonUtils;
@@ -53,8 +51,7 @@ public class ClampProperties {
     /**
      * get property value.
      *
-     * @param key
-     *        The first key
+     * @param key The first key
      * @return The string with the value
      */
     public String getStringValue(String key) {
@@ -65,10 +62,8 @@ public class ClampProperties {
      * get property value for a combo key (key1 + "." + key2). If not found just use
      * key1.
      *
-     * @param key1
-     *        The first key
-     * @param key2
-     *        The second key after a dot
+     * @param key1 The first key
+     * @param key2 The second key after a dot
      * @return The string with the value
      */
     public String getStringValue(String key1, String key2) {
@@ -83,17 +78,15 @@ public class ClampProperties {
      * Return json as objects that can be updated. The value obtained from the
      * clds-reference file will be used as a filename.
      *
-     * @param key
-     *        The key that will be used to access the clds-reference file
+     * @param key The key that will be used to access the clds-reference file
      * @return A jsonNode
-     * @throws IOException
-     *         In case of issues with the JSON parser
+     * @throws IOException In case of issues with the JSON parser
      */
     public JsonElement getJsonTemplate(String key) throws IOException {
         String fileReference = getStringValue(key);
         return (fileReference != null)
-            ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
-            : null;
+                ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
+                : null;
     }
 
     /**
@@ -101,30 +94,25 @@ public class ClampProperties {
      * "." + key2), otherwise default to just key1. The value obtained from the
      * clds-reference file will be used as a filename.
      *
-     * @param key1
-     *        The first key
-     * @param key2
-     *        The second key after a dot
+     * @param key1 The first key
+     * @param key2 The second key after a dot
      * @return A JsonNode
-     * @throws IOException
-     *         In case of issues with the JSON parser
+     * @throws IOException In case of issues with the JSON parser
      */
     public JsonElement getJsonTemplate(String key1, String key2) throws IOException {
         String fileReference = getStringValue(key1, key2);
         return (fileReference != null)
-            ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
-            : null;
+                ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
+                : null;
     }
 
     /**
      * Return the file content. The value obtained from the clds-reference file will
      * be used as a filename.
      *
-     * @param key
-     *        The key that will be used to access the clds-reference file
+     * @param key The key that will be used to access the clds-reference file
      * @return File content in String
-     * @throws IOException
-     *         In case of issues with the JSON parser
+     * @throws IOException In case of issues with the JSON parser
      */
     public String getFileContent(String key) throws IOException {
         String fileReference = getStringValue(key);
@@ -136,13 +124,10 @@ public class ClampProperties {
      * otherwise default to just key1. The value obtained from the clds-reference
      * file will be used as a filename.
      *
-     * @param key1
-     *        The first key
-     * @param key2
-     *        The second key after a dot
+     * @param key1 The first key
+     * @param key2 The second key after a dot
      * @return File content in String
-     * @throws IOException
-     *         In case of issues with the JSON parser
+     * @throws IOException In case of issues with the JSON parser
      */
     public String getFileContent(String key1, String key2) throws IOException {
         String fileReference = getStringValue(key1, key2);
@@ -152,19 +137,5 @@ public class ClampProperties {
     private String getFileContentFromPath(String filepath) throws IOException {
         URL url = appContext.getResource(filepath).getURL();
         return IOUtils.toString(url, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Returns the list of strings split with separator.
-     *
-     * @param key
-     *        property key
-     * @param separator
-     *        property value separator
-     * @return List of Strings split with a separator
-     */
-    public List<String> getStringList(String key, String separator) {
-        return Splitter.on(separator).trimResults().omitEmptyStrings()
-            .splitToList(env.getProperty(CONFIG_PREFIX + key));
     }
 }

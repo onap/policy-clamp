@@ -33,6 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
+import org.onap.clamp.clds.exception.sdc.controller.BlueprintParserException;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;
@@ -290,6 +291,10 @@ public class SdcSingleController {
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
                     DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
             Thread.currentThread().interrupt();
+        } catch (BlueprintParserException e) {
+            logger.error("BlueprintParser exception caught during the notification processing", e);
+            sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
+                    DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
         } catch (RuntimeException e) {
             logger.error("Unexpected exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
