@@ -48,6 +48,8 @@ public class DcaeComponent extends ExternalComponent {
     private static final String DCAE_SERVICETYPE_ID = "serviceTypeId";
     private static final String DCAE_INPUTS = "inputs";
 
+    private String name;
+
     public static final ExternalComponentState BLUEPRINT_DEPLOYED = new ExternalComponentState("BLUEPRINT_DEPLOYED",
             "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop");
     public static final ExternalComponentState PROCESSING_MICROSERVICE_INSTALLATION = new ExternalComponentState(
@@ -73,12 +75,19 @@ public class DcaeComponent extends ExternalComponent {
 
     public DcaeComponent() {
         super(BLUEPRINT_DEPLOYED);
+        this.name = "DCAE";
+    }
+
+    public DcaeComponent(String name) {
+        super(BLUEPRINT_DEPLOYED);
+        this.name = "DCAE_" + name;
     }
 
     @Override
     public String getComponentName() {
-        return "DCAE";
+        return name;
     }
+
 
     /**
      * Convert the json response to a DcaeOperationStatusResponse.
@@ -170,7 +179,7 @@ public class DcaeComponent extends ExternalComponent {
     /**
      * Return the uninstallation payload for DCAE.
      *
-     * @param microServicePolicy The microServicePolicy object
+     * @param policy The microServicePolicy object
      * @return The payload in string (json)
      */
     public static String getUndeployPayload(MicroServicePolicy policy) {

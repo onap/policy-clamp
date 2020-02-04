@@ -3,12 +3,12 @@
 		<from uri="direct:deploy-loop" />
 		<choice>
 			<when>
-				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getBlueprint()} != null
+				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == true
 				</simple>
 				<to uri="direct:deploy-loop-single-blueprint" />
 			</when>
 			<when>
-				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getBlueprint()} == null
+				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == false
 				</simple>
 				<to uri="direct:deploy-loop-multi-blueprint" />
 			</when>
@@ -74,18 +74,14 @@
 					</setProperty>
 					<to
 						uri="bean:org.onap.clamp.policy.microservice.MicroServicePolicyService?method=updateDcaeDeploymentFields(${exchangeProperty[microServicePolicy]},${exchangeProperty[dcaeDeploymentId]},${exchangeProperty[dcaeStatusUrl]})" />
-					<setProperty propertyName="logMessage">
-						<simple>DEPLOY loop status
-							(Dep-id:${exchangeProperty[dcaeDeploymentId]},
-							StatusUrl:${exchangeProperty[dcaeStatusUrl]})
-						</simple>
-					</setProperty>
-					<setProperty propertyName="logComponent">
-						<simple>DCAE</simple>
-					</setProperty>
-					<to uri="direct:dump-loop-log-http-response" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('Deploy for the micro service: ${exchangeProperty[microServicePolicy].getName()} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO','DCAE',${exchangeProperty[loopObject]})" />
 			</split>
 			<doCatch>
+				<exception>java.lang.Exception</exception>
+				<handled>
+					<constant>false</constant>
+				</handled>
 				<setProperty propertyName="logMessage">
 					<simple>DEPLOY micro service failed 
 						(MicroService name:${exchangeProperty[microServicePolicy].getName()}),
@@ -176,12 +172,12 @@
 		<from uri="direct:undeploy-loop" />
 		<choice>
 			<when>
-				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getBlueprint()} != null
+				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == true
 				</simple>
 				<to uri="direct:undeploy-loop-single-blueprint" />
 			</when>
 			<when>
-				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getBlueprint()} == null
+				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == false
 				</simple>
 				<to uri="direct:undeploy-loop-multi-blueprint" />
 			</when>
@@ -244,25 +240,22 @@
 						</setProperty>
 						<to
 							uri="bean:org.onap.clamp.policy.microservice.MicroServicePolicyService?method=updateDcaeDeploymentFields(${exchangeProperty[microServicePolicy]},${exchangeProperty[microServicePolicy].getDcaeDeploymentId()},${exchangeProperty[dcaeStatusUrl]})" />
-						<setProperty propertyName="logMessage">
-							<simple>UNDEPLOY micro service successful
-								(MicroService name:${exchangeProperty[microServicePolicy].getName()})
-							</simple>
-						</setProperty>
-						<setProperty propertyName="logComponent">
-							<simple>DCAE</simple>
-						</setProperty>
-						<to uri="direct:dump-loop-log-http-response" />
+						<to
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO','DCAE',${exchangeProperty[loopObject]})" />
 					</when>
 					<otherwise>
 						<log loggingLevel="WARNING"
 							message="Cannot Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()}, the Deployment ID does not exist !" />
 						<to
-							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Cannot Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()}, the Deployment ID does not exist !','WARNING',${exchangeProperty[loopObject]})" />
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('Cannot Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()}, the Deployment ID does not exist !','WARNING','DCAE',${exchangeProperty[loopObject]})" />
 					</otherwise>
 				</choice>
 			</split>
 			<doCatch>
+				<exception>java.lang.Exception</exception>
+				<handled>
+					<constant>false</constant>
+				</handled>
 				<setProperty propertyName="logMessage">
 					<simple>UNDEPLOY micro service failed
 						(MicroService name:${exchangeProperty[microServicePolicy].getName()})
@@ -355,7 +348,7 @@
 	<route id="get-dcae-deployment-status">
 		<from uri="direct:get-dcae-deployment-status" />
 		<log loggingLevel="INFO"
-			message="Getting DCAE deployment status for loop: ${exchangeProperty[loopObject].getName()}" />
+			message="Getting DCAE deployment status for loop: ${exchangeProperty[loopObject].getName()} - ${exchangeProperty[dcaeComponent].getComponentName()}" />
 		<to
 			uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Getting Deployment status')" />
 		<doTry>
@@ -375,9 +368,9 @@
 				</simple>
 			</setHeader>
 			<log loggingLevel="INFO"
-				message="Endpoint to query Closed Loop status: ${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}"></log>
+				message="Endpoint to query Closed Loop status: ${exchangeProperty[getStatusUrl]}"></log>
 			<toD
-				uri="${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
+				uri="${exchangeProperty[getStatusUrl]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to

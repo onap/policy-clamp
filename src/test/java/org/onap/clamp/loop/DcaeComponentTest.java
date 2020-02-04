@@ -69,8 +69,8 @@ public class DcaeComponentTest {
 
     @Test
     public void convertDcaeResponseTest() throws IOException {
-        String dcaeFakeResponse = "{'requestId':'testId','operationType':'install','status':'state','error':'errorMessage', "
-                + "'links':{'self':'selfUrl','uninstall':'uninstallUrl'}}";
+        String dcaeFakeResponse = "{'requestId':'testId','operationType':'install','status':'state',"
+                + "'error':'errorMessage', 'links':{'self':'selfUrl','uninstall':'uninstallUrl'}}";
         DcaeOperationStatusResponse responseObject = DcaeComponent.convertDcaeResponse(dcaeFakeResponse);
         assertThat(responseObject.getRequestId()).isEqualTo("testId");
         assertThat(responseObject.getOperationType()).isEqualTo("install");
