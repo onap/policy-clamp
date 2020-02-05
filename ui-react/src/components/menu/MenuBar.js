@@ -24,7 +24,7 @@ import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import LoopUI from '../../LoopUI';
+import OnapConstants from '../../utils/OnapConstants';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -76,7 +76,7 @@ export default class MenuBar extends React.Component {
 	};
 
 	componentWillReceiveProps(newProps) {
-		if (newProps.loopName !== LoopUI.defaultLoopName) {
+		if (newProps.loopName !== OnapConstants.defaultLoopName) {
 			this.setState({ disabled: false });
 		} else {
 			this.setState({ disabled: true });

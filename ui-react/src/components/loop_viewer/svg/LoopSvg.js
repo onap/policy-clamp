@@ -23,7 +23,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import LoopCache from '../../../api/LoopCache';
-import { withRouter } from "react-router";
+import { withRouter } from "react-router-dom";
 import LoopService from '../../../api/LoopService';
 import LoopComponentConverter from './LoopComponentConverter';
 
