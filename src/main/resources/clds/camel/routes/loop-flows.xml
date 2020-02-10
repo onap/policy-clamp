@@ -108,37 +108,84 @@
 		<from uri="direct:update-dcae-status-for-loop" />
 		<log loggingLevel="INFO"
 			message="Updating DCAE status for loop: ${exchangeProperty[loopObject].getName()}" />
-		<setProperty propertyName="dcaeComponent">
-			<simple>${exchangeProperty[loopObject].getComponent('DCAE')}</simple>
-		</setProperty>
-		<when>
-			<simple>${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}
-				!= null
-			</simple>
-			<setProperty propertyName="raiseHttpExceptionFlag">
-				<simple resultType="java.lang.Boolean">false</simple>
-			</setProperty>
-			<to uri="direct:get-dcae-deployment-status" />
+		<choice>
 			<when>
-				<simple> ${header.CamelHttpResponseCode} == 200 </simple>
-				<convertBodyTo type="java.lang.String" />
-				<setProperty propertyName="dcaeResponse">
-					<method ref="org.onap.clamp.loop.components.external.DcaeComponent"
-						method="convertDcaeResponse(${body})" />
+				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == true
+				</simple>
+					<setProperty propertyName="dcaeComponent">
+						<simple>${exchangeProperty[loopObject].getComponent('DCAE')}</simple>
+					</setProperty>
+				<when>
+					<simple>${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()} != null
+					</simple>
+					<setProperty propertyName="getStatusUrl">
+						<simple>${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}</simple>
+					</setProperty>
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">false</simple>
+					</setProperty>
+					<to uri="direct:get-dcae-deployment-status" />
+					<when>
+						<simple> ${header.CamelHttpResponseCode} == 200 </simple>
+						<convertBodyTo type="java.lang.String" />
+						<setProperty propertyName="dcaeResponse">
+							<method ref="org.onap.clamp.loop.components.external.DcaeComponent"
+								method="convertDcaeResponse(${body})" />
+						</setProperty>
+					</when>
+				</when>
+				<setProperty propertyName="dcaeState">
+					<simple> ${exchangeProperty[dcaeComponent].computeState(*)}
+					</simple>
 				</setProperty>
+				<log loggingLevel="INFO"
+					message="DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - DCAE message: ${exchangeProperty[dcaeResponse].getError()}" />
+				<to
+					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[loopObject]})" />
 			</when>
-		</when>
-
-		<setProperty propertyName="dcaeState">
-			<simple> ${exchangeProperty[dcaeComponent].computeState(*)}
-			</simple>
-		</setProperty>
-		<log loggingLevel="INFO"
-			message="DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - DCAE message: ${exchangeProperty[dcaeResponse].getError()}" />
-		<to
-			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[loopObject]})" />
-
-	</route>
+			<when>
+				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == false
+				</simple>
+				<split>
+					<simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
+					</simple>
+					<setProperty propertyName="microServicePolicy">
+						<simple>${body}</simple>
+					</setProperty>
+					<setProperty propertyName="dcaeComponent">
+						<simple>${exchangeProperty[loopObject].getComponent('DCAE_' + ${exchangeProperty[microServicePolicy].getName())}</simple>
+					</setProperty>
+					<when>
+						<simple>${exchangeProperty[microServicePolicy].getDcaeDeploymentStatusUrl()} != null
+						</simple>
+						<setProperty propertyName="getStatusUrl">
+							<simple>${exchangeProperty[microServicePolicy].getDcaeDeploymentStatusUrl()}</simple>
+						</setProperty>
+						<setProperty propertyName="raiseHttpExceptionFlag">
+							<simple resultType="java.lang.Boolean">false</simple>
+						</setProperty>
+						<to uri="direct:get-dcae-deployment-status" />
+						<when>
+							<simple> ${header.CamelHttpResponseCode} == 200 </simple>
+							<convertBodyTo type="java.lang.String" />
+							<setProperty propertyName="dcaeResponse">
+								<method ref="org.onap.clamp.loop.components.external.DcaeComponent"
+									method="convertDcaeResponse(${body})" />
+							</setProperty>
+						</when>
+					</when>
+					<setProperty propertyName="dcaeState">
+						<simple> ${exchangeProperty[dcaeComponent].computeState(*)}
+						</simple>
+					</setProperty>
+					<log loggingLevel="INFO"
+						message="DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - DCAE message: ${exchangeProperty[dcaeResponse].getError()}" />
+					<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[microServicePolicy]})" />
+				</split>>
+			</when>
+		</choice>
+		</route>
 	<route id="direct:update-loop-state">
 		<from uri="direct:update-loop-state" />
 		<log loggingLevel="INFO"

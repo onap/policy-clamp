@@ -39,6 +39,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -68,6 +69,9 @@ public class LoopControllerTestItCase {
     private void saveTestLoopToDb() {
         Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, "blueprint", "representation");
         testLoop.setGlobalPropertiesJson(JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
+        LoopTemplate template =  new LoopTemplate();
+        template.setName("testTemplate");
+        testLoop.setLoopTemplate(template);
         loopService.saveOrUpdateLoop(testLoop);
     }
 

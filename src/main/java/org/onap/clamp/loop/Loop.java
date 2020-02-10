@@ -131,7 +131,7 @@ public class Loop extends AuditEntity implements Serializable {
 
     @Expose
     @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @JoinColumn(name = "loop_template_name")
+    @JoinColumn(name = "loop_template_name", nullable=false)
     private LoopTemplate loopTemplate;
 
     private void initializeExternalComponents() {
@@ -253,10 +253,12 @@ public class Loop extends AuditEntity implements Serializable {
     }
 
     public Map<String, ExternalComponent> getComponents() {
+        refreshDcaeComponents();
         return components;
     }
 
     public ExternalComponent getComponent(String componentName) {
+        refreshDcaeComponents();
         return this.components.get(componentName);
     }
 
@@ -272,6 +274,17 @@ public class Loop extends AuditEntity implements Serializable {
         this.loopTemplate = loopTemplate;
     }
 
+    private void refreshDcaeComponents() {
+        if (!this.loopTemplate.getUniqueBlueprint()) {
+            this.components.remove("DCAE");
+            for (MicroServicePolicy policy : this.microServicePolicies) {
+                if (!this.components.containsKey("DCAE_" + policy.getName())) {
+                    this.addComponent(new DcaeComponent(policy.getName()));
+                }
+            }
+        }
+    }
+
     /**
      * Generate the loop name.
      *
@@ -282,9 +295,9 @@ public class Loop extends AuditEntity implements Serializable {
      * @return The generated loop name
      */
     public static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
-            String blueprintFilename) {
+            String blueprintFileName) {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
-                .append("_").append(resourceName).append("_").append(blueprintFilename.replaceAll(".yaml", ""));
+                .append("_").append(resourceName).append("_").append(blueprintFileName.replaceAll(".yaml", ""));
         return buffer.toString().replace('.', '_').replaceAll(" ", "");
     }
 

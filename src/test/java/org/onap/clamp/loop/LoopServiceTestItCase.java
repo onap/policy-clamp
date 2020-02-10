@@ -40,6 +40,7 @@ import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.log.LoopLogService;
+import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -175,6 +176,9 @@ public class LoopServiceTestItCase {
     private void saveTestLoopToDb() {
         Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, "blueprint", "representation");
         testLoop.setGlobalPropertiesJson(JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
+        LoopTemplate template =  new LoopTemplate();
+        template.setName("testTemplate");
+        testLoop.setLoopTemplate(template);
         loopService.saveOrUpdateLoop(testLoop);
     }
 
@@ -296,6 +300,9 @@ public class LoopServiceTestItCase {
         // Add log
         Loop loop = loopsRepository.findById(EXAMPLE_LOOP_NAME).orElse(null);
         loop.addLog(new LoopLog("test", LogType.INFO, "CLAMP", loop));
+        LoopTemplate template =  new LoopTemplate();
+        template.setName("testTemplate");
+        loop.setLoopTemplate(template);
         loop = loopService.saveOrUpdateLoop(loop);
         // Add op policy
         OperationalPolicy operationalPolicy = new OperationalPolicy("opPolicy", null,
