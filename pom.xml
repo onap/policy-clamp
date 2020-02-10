@@ -45,9 +45,6 @@
            - The DOCKER images for:
                 * CLAMP backend (Java Spring)
                 * CLAMP frontend (Javscript React)
-                * The dashboard - Elastic search
-                * The dashboard - Logstash
-                * The dashboard - Kibana
 
            It can test:
             - The CLAMP backend, JAVA unit testing
@@ -94,7 +91,7 @@
 		<sonar.exclusions>src/main/resources/**</sonar.exclusions>
 		<sonar.scm.exclusions.disabled>true</sonar.scm.exclusions.disabled>
 		<sonar.javascript.lcov.reportPaths>${project.build.directory}/${ui.react.src}/coverage/lcov.info</sonar.javascript.lcov.reportPaths>
-		<sonar.coverage.exclusions>src/main/resources/**,target/ui-react/src/**/*.test.js,target/ui-react/src/setupTests.js,src/main/docker/kibana/*.py</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>src/main/resources/**,target/ui-react/src/**/*.test.js,target/ui-react/src/setupTests.js</sonar.coverage.exclusions>
 		<docker.push.registry>localhost:5000</docker.push.registry>
 		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
 		<docker.skip.build>true</docker.skip.build>
@@ -1032,38 +1029,6 @@
 									<descriptor>frontend/frontend-files.xml</descriptor>
 									<name>onap-clamp-frontend</name>
 								</assembly>
-							</build>
-						</image>
-						<image>
-							<name>onap/clamp-dashboard-logstash</name>
-							<alias>onap-clamp-dashboard-logstash</alias>
-							<run>
-								<skip>true</skip>
-							</run>
-							<build>
-								<cleanup>true</cleanup>
-								<tags>
-									<tag>latest</tag>
-									<tag>${project.docker.latesttagtimestamp.version}</tag>
-									<tag>${project.docker.latesttag.version}</tag>
-								</tags>
-								<dockerFile>logstash/Dockerfile</dockerFile>
-							</build>
-						</image>
-						<image>
-							<name>onap/clamp-dashboard-kibana</name>
-							<alias>onap-clamp-dashboard-kibana</alias>
-							<run>
-								<skip>true</skip>
-							</run>
-							<build>
-								<cleanup>true</cleanup>
-								<tags>
-									<tag>latest</tag>
-									<tag>${project.docker.latesttagtimestamp.version}</tag>
-									<tag>${project.docker.latesttag.version}</tag>
-								</tags>
-								<dockerFile>kibana/Dockerfile</dockerFile>
 							</build>
 						</image>
 					</images>
