@@ -183,21 +183,10 @@ public class CsarInstaller {
         return newSet;
     }
 
-    private static String createPolicyAcronym(String policyType) {
-        String[] policyNameArray = policyType.split("\\.");
-        return policyNameArray[policyNameArray.length - 1];
-    }
-
-    private PolicyModel createPolicyModel(BlueprintMicroService microService) throws InterruptedException {
-        return new PolicyModel(microService.getModelType(),
-                policyEngineServices.downloadOnePolicy(microService.getModelType(), microService.getModelVersion()),
-                microService.getModelVersion(), createPolicyAcronym(microService.getModelType()));
-    }
-
     private PolicyModel getPolicyModel(BlueprintMicroService microService) throws InterruptedException {
         return policyModelsRepository
                 .findById(new PolicyModelId(microService.getModelType(), microService.getModelVersion()))
-                .orElse(createPolicyModel(microService));
+                .orElse(policyEngineServices.createPolicyModelFromPolicyEngine(microService));
     }
 
     /**
