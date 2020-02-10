@@ -4,6 +4,9 @@
 	"description": "ONAP CLAMP UI Reactjs Component Library",
 	"author": "ONAP Clamp Team",
 	"license": "Apache-2.0",
+	"publishConfig": {
+		"registry": "${npm.publish.url}"
+	},
 	"main": "dist/index.js",
 	"module": "dist/esindex.js",
 	"scripts": {
