@@ -6,55 +6,55 @@ policy_types:
       derived_from: tosca.policies.Root
       properties:
         # Omitted for brevity, see Section 1
- 
- - onap.policies.controlloop.Operational:
+
+  - onap.policies.controlloop.Operational:
       version: 1.0.0
       description: Operational Policy for Control Loops
       derived_from: tosca.policies.Root
       properties:
         # Omitted for brevity, see Section 1
- 
+
   - onap.policies.controloop.operational.Drools:
       version: 1.0.0
       description: Operational Policy for Control Loops using the Drools PDP
       derived_from: onap.policies.controlloop.Operational
       properties:
         # Omitted for brevity, see Section 1
- 
+
   - onap.policies.controloop.operational.Apex:
       version: 1.0.0
       description: Operational Policy for Control Loops using the APEX PDP
       derived_from: onap.policies.controlloop.Operational
       properties:
         # Omitted for brevity, see Section 1
- 
- - onap.policies.controlloop.Guard:
+
+  - onap.policies.controlloop.Guard:
       version: 1.0.0
       description: Operational Policy for Control Loops
       derived_from: tosca.policies.Root
       properties:
         # Omitted for brevity, see Section 1
- 
+
   - onap.policies.controlloop.guard.FrequencyLimiter:
       version: 1.0.0
       description: Supports limiting the frequency of actions being taken by a Actor.
       derived_from: onap.policies.controlloop.Guard
       properties:
         # Omitted for brevity, see Section 1
- 
+
   - onap.policies.controlloop.guard.Blacklist:
       version: 1.0.0
       description: Supports blacklist of VNF's from performing control loop actions on.
       derived_from: onap.policies.controlloop.Guard
       properties:
         # Omitted for brevity, see Section 1
- 
+
   - onap.policies.controlloop.guard.MinMax:
       version: 1.0.0
       description: Supports Min/Max number of VF Modules
       derived_from: onap.policies.controlloop.Guard
       properties:
         # Omitted for brevity, see Section 1
- 
+
 data_types:
   # Any bespoke data types referenced by policy type definitions[]

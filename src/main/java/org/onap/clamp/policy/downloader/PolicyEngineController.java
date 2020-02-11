@@ -26,12 +26,12 @@ package org.onap.clamp.policy.downloader;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.onap.clamp.clds.client.PolicyEngineServices;
-import org.onap.clamp.loop.template.PolicyModel;
-import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -46,51 +46,41 @@ import org.yaml.snakeyaml.Yaml;
  */
 @Configuration
 @Profile("clamp-policy-controller")
-public class PolicyDownloader {
+public class PolicyEngineController {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyDownloader.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineController.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     public static final String POLICY_RETRY_INTERVAL = "policy.retry.interval";
     public static final String POLICY_RETRY_LIMIT = "policy.retry.limit";
 
     private final PolicyEngineServices policyEngineServices;
-    private final PolicyModelsRepository policyModelsRepository;
 
     @Autowired
-    public PolicyDownloader(PolicyEngineServices policyEngineService, PolicyModelsRepository policyModelsRepository) {
+    public PolicyEngineController(PolicyEngineServices policyEngineService,
+            PolicyModelsRepository policyModelsRepository) {
         this.policyEngineServices = policyEngineService;
-        this.policyModelsRepository = policyModelsRepository;
-    }
-
-    private void createPolicyInDbIfNeeded(PolicyModel policyModel) {
-        if (!policyModelsRepository
-                .existsById(new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
-            policyModelsRepository.save(policyModel);
-        }
     }
 
     @Scheduled(fixedRate = 120000)
-    public void synchronizeAllPolicies() throws InterruptedException {
-        try {
-            LinkedHashMap<String, Object> loadedYaml = new Yaml().load(policyEngineServices.downloadAllPolicies());
-            if (loadedYaml == null || loadedYaml.isEmpty()) {
-                logger.warn(
-                        "getAllPolicyType yaml returned by policy engine could not be decoded, as it's null or empty");
-                return;
-            }
-
-            LinkedHashMap<String, Object> policyTypesList = (LinkedHashMap<String, Object>) loadedYaml
-                    .get("policy_types");
-            for (Entry<String, Object> policyType : policyTypesList.entrySet()) {
-                createPolicyInDbIfNeeded(policyEngineServices.createPolicyModelFromPolicyEngine(policyType.getKey(),
-                        ((String) ((LinkedHashMap<String, Object>) policyType.getValue()).get("version"))));
-            }
-        } catch (InterruptedException e) {
-            logger.warn("query to policy engine has been interrupted", e);
-            throw e;
+    public void synchronizeAllPolicies() {
+        LinkedHashMap<String, Object> loadedYaml;
+        loadedYaml = new Yaml().load(policyEngineServices.downloadAllPolicies());
+        if (loadedYaml == null || loadedYaml.isEmpty()) {
+            logger.warn("getAllPolicyType yaml returned by policy engine could not be decoded, as it's null or empty");
+            return;
         }
 
+        List<LinkedHashMap<String, Object>> policyTypesList = (List<LinkedHashMap<String, Object>>) loadedYaml
+                .get("policy_types");
+        policyTypesList.parallelStream().forEach(policyType -> {
+            Entry<String, Object> policyTypeEntry = (Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
+
+            policyEngineServices.createPolicyInDbIfNeeded(
+                    policyEngineServices.createPolicyModelFromPolicyEngine(policyTypeEntry.getKey(),
+                            ((String) ((LinkedHashMap<String, Object>) policyTypeEntry.getValue()).get("version"))));
+
+        });
     }
 
 }
