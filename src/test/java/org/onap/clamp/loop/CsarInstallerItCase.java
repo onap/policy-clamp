@@ -232,7 +232,7 @@ public class CsarInstallerItCase {
         assertThat(((LoopTemplateLoopElementModel) (loopTemplate.getLoopElementModelsUsed().toArray()[0]))
                 .getLoopElementModel().getName()).isNotEmpty();
 
-        assertThat(policyModelsRepository.findAll().size()).isEqualByComparingTo(1);
+        assertThat(policyModelsRepository.findAll().size()).isGreaterThanOrEqualTo(1);
         assertThat(policyModelsRepository
                 .existsById(new PolicyModelId("onap.policies.monitoring.cdap.tca.hi.lo.app", "1.0.0"))).isTrue();
         assertThat(policyModelsRepository

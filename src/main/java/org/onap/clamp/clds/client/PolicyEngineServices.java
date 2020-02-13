@@ -32,8 +32,12 @@ import org.apache.camel.builder.ExchangeBuilder;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelId;
+import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The class implements the communication with the Policy Engine to retrieve
@@ -45,6 +49,8 @@ import org.springframework.stereotype.Component;
 public class PolicyEngineServices {
     private final CamelContext camelContext;
 
+    private final PolicyModelsRepository policyModelsRepository;
+
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineServices.class);
     private static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
     private static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
@@ -55,9 +61,10 @@ public class PolicyEngineServices {
     public static final String POLICY_RETRY_LIMIT = "policy.retry.limit";
 
     @Autowired
-    public PolicyEngineServices(CamelContext camelContext, ClampProperties refProp) {
+    public PolicyEngineServices(CamelContext camelContext, ClampProperties refProp,
+            PolicyModelsRepository policyModelsRepository) {
         this.camelContext = camelContext;
-
+        this.policyModelsRepository = policyModelsRepository;
         if (refProp.getStringValue(POLICY_RETRY_LIMIT) != null) {
             retryLimit = Integer.valueOf(refProp.getStringValue(POLICY_RETRY_LIMIT));
         }
@@ -66,20 +73,20 @@ public class PolicyEngineServices {
         }
     }
 
-    public PolicyModel createPolicyModelFromPolicyEngine(String policyType, String policyVersion)
-            throws InterruptedException {
-        return new PolicyModel(policyType, this.downloadOnePolicy(policyType, policyVersion), policyVersion,
-                createPolicyAcronym(policyType));
+    public PolicyModel createPolicyModelFromPolicyEngine(String policyType, String policyVersion) {
+        return new PolicyModel(policyType, this.downloadOnePolicy(policyType, policyVersion), policyVersion);
     }
 
-    public PolicyModel createPolicyModelFromPolicyEngine(BlueprintMicroService microService)
-            throws InterruptedException {
+    public PolicyModel createPolicyModelFromPolicyEngine(BlueprintMicroService microService) {
         return createPolicyModelFromPolicyEngine(microService.getModelType(), microService.getModelVersion());
     }
 
-    private static String createPolicyAcronym(String policyType) {
-        String[] policyNameArray = policyType.split("\\.");
-        return policyNameArray[policyNameArray.length - 1];
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createPolicyInDbIfNeeded(PolicyModel policyModel) {
+        if (!policyModelsRepository
+                .existsById(new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
+            policyModelsRepository.save(policyModel);
+        }
     }
 
     /**
@@ -89,7 +96,7 @@ public class PolicyEngineServices {
      * @return A yaml containing all policy Types and all data types
      * @throws InterruptedException In case of issue when sleeping during the retry
      */
-    public String downloadAllPolicies() throws InterruptedException {
+    public String downloadAllPolicies() {
         return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models");
     }
 
@@ -101,12 +108,12 @@ public class PolicyEngineServices {
      * @return A string with the whole policy tosca model
      * @throws InterruptedException In case of issue when sleeping during the retry
      */
-    public String downloadOnePolicy(String policyType, String policyVersion) throws InterruptedException {
+    public String downloadOnePolicy(String policyType, String policyVersion) {
         return callCamelRoute(ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
                 .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model");
     }
 
-    private String callCamelRoute(Exchange exchange, String camelFlow) throws InterruptedException {
+    private String callCamelRoute(Exchange exchange, String camelFlow) {
         for (int i = 0; i < retryLimit; i++) {
             Exchange exchangeResponse = camelContext.createProducerTemplate().send(camelFlow, exchange);
             if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
@@ -114,7 +121,11 @@ public class PolicyEngineServices {
             } else {
                 logger.info("Policy query " + retryInterval + "ms before retrying ...");
                 // wait for a while and try to connect to DCAE again
-                Thread.sleep(retryInterval);
+                try {
+                    Thread.sleep(retryInterval);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
             }
         }
         return "";
