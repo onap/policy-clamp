@@ -26,6 +26,7 @@ package org.onap.clamp.policy.downloader;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -56,31 +57,23 @@ public class PolicyEngineController {
 
     private final PolicyEngineServices policyEngineServices;
 
+    private Instant lastInstantExecuted;
+
     @Autowired
     public PolicyEngineController(PolicyEngineServices policyEngineService,
-            PolicyModelsRepository policyModelsRepository) {
+                                  PolicyModelsRepository policyModelsRepository) {
         this.policyEngineServices = policyEngineService;
     }
 
     @Scheduled(fixedRate = 120000)
-    public void synchronizeAllPolicies() {
-        LinkedHashMap<String, Object> loadedYaml;
-        loadedYaml = new Yaml().load(policyEngineServices.downloadAllPolicies());
-        if (loadedYaml == null || loadedYaml.isEmpty()) {
-            logger.warn("getAllPolicyType yaml returned by policy engine could not be decoded, as it's null or empty");
-            return;
-        }
-
-        List<LinkedHashMap<String, Object>> policyTypesList = (List<LinkedHashMap<String, Object>>) loadedYaml
-                .get("policy_types");
-        policyTypesList.parallelStream().forEach(policyType -> {
-            Entry<String, Object> policyTypeEntry = (Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
-
-            policyEngineServices.createPolicyInDbIfNeeded(
-                    policyEngineServices.createPolicyModelFromPolicyEngine(policyTypeEntry.getKey(),
-                            ((String) ((LinkedHashMap<String, Object>) policyTypeEntry.getValue()).get("version"))));
-
-        });
+    public synchronized void synchronizeAllPolicies() {
+        policyEngineServices.synchronizeAllPolicies();
+        lastInstantExecuted = Instant.now();
     }
+
+    public Instant getLastInstantExecuted() {
+        return lastInstantExecuted;
+    }
+
 
 }

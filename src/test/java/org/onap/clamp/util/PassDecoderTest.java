@@ -40,13 +40,13 @@ public class PassDecoderTest {
 
     @Test
     public final void testDecryptionNoPassword() throws Exception {
-        String decodedPass = PassDecoder.decode(null, "src/test/resources/clds/aaf/org.onap.clamp.keyfile");
+        String decodedPass = PassDecoder.decode(null, "classpath:clds/aaf/org.onap.clamp.keyfile");
         assertNull(decodedPass);
     }
 
     @Test
     public final void testDecryption() throws Exception {
-        String decodedPass = PassDecoder.decode(encrypted, "src/test/resources/clds/aaf/org.onap.clamp.keyfile");
+        String decodedPass = PassDecoder.decode(encrypted, "classpath:clds/aaf/org.onap.clamp.keyfile");
         assertEquals(decodedPass, "China in the Spring");
     }
 }

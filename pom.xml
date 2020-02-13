@@ -562,6 +562,20 @@
 
 		<testResources>
 			<testResource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>clds/aaf/**</exclude>
+				</excludes>
+			</testResource>
+			<testResource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>clds/aaf/**</include>
+				</includes>
+			</testResource>
+			<testResource>
 				<directory>src/test/resources</directory>
 				<excludes>
 					<exclude>**/*.jks</exclude>

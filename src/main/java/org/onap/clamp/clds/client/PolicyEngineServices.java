@@ -26,6 +26,11 @@ package org.onap.clamp.clds.client;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -38,6 +43,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.yaml.snakeyaml.Yaml;
+
+
+
 
 /**
  * The class implements the communication with the Policy Engine to retrieve
@@ -60,33 +69,81 @@ public class PolicyEngineServices {
     public static final String POLICY_RETRY_INTERVAL = "policy.retry.interval";
     public static final String POLICY_RETRY_LIMIT = "policy.retry.limit";
 
+    /**
+     * Default constructor.
+     *
+     * @param camelContext Camel context bean
+     * @param clampProperties ClampProperties bean
+     * @param policyModelsRepository policyModel repository bean
+     */
     @Autowired
-    public PolicyEngineServices(CamelContext camelContext, ClampProperties refProp,
+    public PolicyEngineServices(CamelContext camelContext, ClampProperties clampProperties,
             PolicyModelsRepository policyModelsRepository) {
         this.camelContext = camelContext;
         this.policyModelsRepository = policyModelsRepository;
-        if (refProp.getStringValue(POLICY_RETRY_LIMIT) != null) {
-            retryLimit = Integer.valueOf(refProp.getStringValue(POLICY_RETRY_LIMIT));
+        if (clampProperties.getStringValue(POLICY_RETRY_LIMIT) != null) {
+            retryLimit = Integer.valueOf(clampProperties.getStringValue(POLICY_RETRY_LIMIT));
         }
-        if (refProp.getStringValue(POLICY_RETRY_INTERVAL) != null) {
-            retryInterval = Integer.valueOf(refProp.getStringValue(POLICY_RETRY_INTERVAL));
+        if (clampProperties.getStringValue(POLICY_RETRY_INTERVAL) != null) {
+            retryInterval = Integer.valueOf(clampProperties.getStringValue(POLICY_RETRY_INTERVAL));
         }
     }
 
+    /**
+     * This method query Policy engine and create a PolicyModel object with type and version.
+     *
+     * @param policyType The policyType id
+     * @param policyVersion The policy version of that type
+     * @return A PolicyModel created from policyEngine data
+     */
     public PolicyModel createPolicyModelFromPolicyEngine(String policyType, String policyVersion) {
         return new PolicyModel(policyType, this.downloadOnePolicy(policyType, policyVersion), policyVersion);
     }
 
+    /**
+     * This method query Policy engine and create a PolicyModel object with type and version.
+     *
+     * @param microService microservice object instance
+     * @return A PolicyModel created from policyEngine data
+     */
     public PolicyModel createPolicyModelFromPolicyEngine(BlueprintMicroService microService) {
         return createPolicyModelFromPolicyEngine(microService.getModelType(), microService.getModelVersion());
     }
 
+    /**
+     * Thie method creates an PolicyModel in Db if it does not exist.
+     *
+     * @param policyModel The policyModel to save
+     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createPolicyInDbIfNeeded(PolicyModel policyModel) {
         if (!policyModelsRepository
                 .existsById(new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
             policyModelsRepository.save(policyModel);
         }
+    }
+
+    /**
+     * This method synchronize the clamp database and the policy engine.
+     * So it creates the required PolicyModel.
+     */
+    public void synchronizeAllPolicies() {
+        LinkedHashMap<String, Object> loadedYaml;
+        loadedYaml = new Yaml().load(downloadAllPolicies());
+        if (loadedYaml == null || loadedYaml.isEmpty()) {
+            logger.warn("getAllPolicyType yaml returned by policy engine could not be decoded, as it's null or empty");
+            return;
+        }
+
+        List<LinkedHashMap<String, Object>> policyTypesList = (List<LinkedHashMap<String, Object>>) loadedYaml
+                .get("policy_types");
+        policyTypesList.parallelStream().forEach(policyType -> {
+            Map.Entry<String, Object> policyTypeEntry = (Map.Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
+
+            createPolicyInDbIfNeeded(
+                    createPolicyModelFromPolicyEngine(policyTypeEntry.getKey(),
+                            ((String) ((LinkedHashMap<String, Object>) policyTypeEntry.getValue()).get("version"))));
+        });
     }
 
     /**

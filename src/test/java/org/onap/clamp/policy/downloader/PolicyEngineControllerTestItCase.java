@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -56,10 +57,19 @@ public class PolicyEngineControllerTestItCase {
     @Transactional
     public void synchronizeAllPoliciesTest() throws JsonSyntaxException, IOException, InterruptedException {
         policyController.synchronizeAllPolicies();
+        Instant firstExecution = policyController.getLastInstantExecuted();
+        assertThat (firstExecution).isNotNull();
         List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
         assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(8);
         assertThat(policyModelsList).contains(new PolicyModel("onap.policies.Monitoring", null, "1.0.0"));
         assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0"));
+
+        // Re-do it to check that there is no issue with duplicate key
+        policyController.synchronizeAllPolicies();
+        Instant secondExecution = policyController.getLastInstantExecuted();
+        assertThat (secondExecution).isNotNull();
+
+        assertThat(firstExecution).isBefore(secondExecution);
     }
 
 }
