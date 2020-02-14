@@ -147,14 +147,14 @@ public class DcaeComponent extends ExternalComponent {
      * Return the deploy payload for DCAE.
      *
      * @param loop             The loop object
-     * @param microServiceName The micro service name
+     * @param microServicePolicy The micro service policy
      * @return The payload used to send deploy closed loop request
      */
-    public static String getDeployPayload(Loop loop, String microServiceName) {
+    public static String getDeployPayload(Loop loop, MicroServicePolicy microServicePolicy) {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
-        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(microServiceName);
+        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(microServicePolicy.getName());
 
-        String serviceTypeId = loop.getLoopTemplate().getDcaeBlueprintId();
+        String serviceTypeId = microServicePolicy.getDcaeBlueprintId();
 
         JsonObject rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, serviceTypeId);
