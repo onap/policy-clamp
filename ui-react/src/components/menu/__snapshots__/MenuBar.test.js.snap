@@ -154,9 +154,9 @@ exports[`Verify MenuBar Test the render method 1`] = `
         }
       }
       disabled={false}
-      to="/viewBlueprintMicroServiceTemplatesModal"
+      to="/ViewLoopTemplatesModal"
     >
-      View Blueprint MicroService Templates
+      View Loop Templates
     </DropdownItem>
   </Styled(NavDropdown)>
   <Styled(NavDropdown)

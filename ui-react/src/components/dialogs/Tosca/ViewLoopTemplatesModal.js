@@ -51,34 +51,34 @@ const cellStyle = { border: '1px solid black' };
 const headerStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
 const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
 
-export default class ViewBlueprintMicroServiceTemplatesModal extends React.Component {
+export default class ViewLoopTemplatesModal extends React.Component {
   state = {
     show: true,
-		content: 'Please select Blue print template to view the details',
+		content: 'Please select a loop template to display it',
 		selectedRow: -1,
-		bpTemplNames: [],
-		bpTemplColumns: [
+		loopTemplateData: [],
+		loopTemplateColumnsDefinition: [
 			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Template Name", field: "templateName",
+			{ title: "Template Name", field: "name",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Policy Model", field: "templatePolicy[0].policyModelId",
+			{ title: "Service Model Name", field: "modelService.serviceDetails.name",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Template ID", field: "templateId",
+			{ title: "Loop Type Allowed", field: "allowedLoopType",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Uploaded By", field: "updatedBy",
+			{ title: "# Instances Allowed", field: "maximumInstancesAllowed",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-			{ title: "Uploaded Date", field: "timestamp", editable: 'never',
+			{ title: "Modified Date", field: "updatedDate", editable: 'never',
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			}
@@ -99,15 +99,12 @@ export default class ViewBlueprintMicroServiceTemplatesModal extends React.Compo
 		this.handleClose = this.handleClose.bind(this);
 		this.getBlueprintMicroServiceTemplates = this.getBlueprintMicroServiceTemplates.bind(this);
 		this.handleYamlContent = this.handleYamlContent.bind(this);
-	}
-
-	componentWillMount() {
 		this.getBlueprintMicroServiceTemplates();
 	}
 
 	getBlueprintMicroServiceTemplates() {
-		TemplateMenuService.getBlueprintMicroServiceTemplates().then(bpTemplNames => {
-		this.setState({ bpTemplNames: bpTemplNames })
+		TemplateMenuService.getBlueprintMicroServiceTemplates().then(loopTemplateData => {
+		this.setState({ loopTemplateData: loopTemplateData })
 		});
 	}
 
@@ -130,10 +127,10 @@ export default class ViewBlueprintMicroServiceTemplatesModal extends React.Compo
 				<Modal.Body>
           <MaterialTable
             title={"View Blueprint MicroService Templates"}
-            data={this.state.bpTemplNames}
-					  columns={this.state.bpTemplColumns}
+            data={this.state.loopTemplateData}
+					  columns={this.state.loopTemplateColumnsDefinition}
 					  icons={this.state.tableIcons}
-					  onRowClick={(event, rowData) => {this.setState({content: rowData.templateYaml, selectedRow: rowData.tableData.id})}}
+					  onRowClick={(event, rowData) => {this.setState({content: rowData.name, selectedRow: rowData.tableData.id})}}
 					  options={{
 					  headerStyle:rowHeaderStyle,
 					  rowStyle: rowData => ({

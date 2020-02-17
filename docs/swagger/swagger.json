@@ -1,19 +1,57 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "4.2.0-SNAPSHOT",
+    "version" : "5.0.0-SNAPSHOT",
     "title" : "Clamp Rest API"
   },
-  "host" : "localhost:33953",
+  "host" : "localhost:33699",
   "basePath" : "/restservices/clds/",
   "schemes" : [ "http" ],
   "paths" : {
-    "/v2/loop/{loopName}" : {
+    "/v2/dictionary" : {
       "get" : {
+        "operationId" : "route18",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/Dictionary"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route18"
+      },
+      "put" : {
         "operationId" : "route20",
+        "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "loopName",
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Dictionary"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/Dictionary"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route20"
+      }
+    },
+    "/v2/dictionary/{dictionaryName}" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "dictionaryName",
           "in" : "path",
           "required" : true,
           "type" : "string"
@@ -22,19 +60,47 @@
           "200" : {
             "description" : "Output type",
             "schema" : {
-              "$ref" : "#/definitions/Loop"
+              "$ref" : "#/definitions/Dictionary"
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route20"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
       }
     },
-    "/v2/loop/delete/{loopName}" : {
+    "/v2/dictionary/{name}" : {
       "put" : {
-        "operationId" : "route30",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "loopName",
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Dictionary"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/Dictionary"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
+      },
+      "delete" : {
+        "operationId" : "route22",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
           "in" : "path",
           "required" : true,
           "type" : "string"
@@ -42,35 +108,33 @@
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route30"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route22"
       }
     },
-    "/v2/loop/deploy/{loopName}" : {
-      "put" : {
-        "operationId" : "route25",
+    "/v2/dictionary/{name}/elements/{shortName}" : {
+      "delete" : {
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "loopName",
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "shortName",
           "in" : "path",
           "required" : true,
           "type" : "string"
         } ],
         "responses" : {
-          "200" : {
-            "description" : "Output type",
-            "schema" : {
-              "$ref" : "#/definitions/Loop"
-            }
-          }
+          "200" : { }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route25"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
       }
     },
-    "/v2/loop/getAllNames" : {
+    "/v2/dictionary/secondary/names" : {
       "get" : {
-        "operationId" : "route19",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -83,13 +147,92 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route19"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
+      }
+    },
+    "/v2/loop/{loopName}" : {
+      "get" : {
+        "operationId" : "route3",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "loopName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/Loop"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route3"
+      }
+    },
+    "/v2/loop/delete/{loopName}" : {
+      "put" : {
+        "operationId" : "route14",
+        "parameters" : [ {
+          "name" : "loopName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : { }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route14"
+      }
+    },
+    "/v2/loop/deploy/{loopName}" : {
+      "put" : {
+        "operationId" : "route8",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "loopName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/Loop"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route8"
+      }
+    },
+    "/v2/loop/getAllNames" : {
+      "get" : {
+        "operationId" : "route2",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route2"
       }
     },
     "/v2/loop/getstatus/{loopName}" : {
       "get" : {
-        "operationId" : "route31",
+        "operationId" : "route15",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -105,13 +248,35 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route31"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route15"
+      }
+    },
+    "/v2/loop/refreshOpPolicyJsonSchema/{loopName}" : {
+      "put" : {
+        "operationId" : "route9",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "loopName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/Loop"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route9"
       }
     },
     "/v2/loop/restart/{loopName}" : {
       "put" : {
-        "operationId" : "route28",
+        "operationId" : "route12",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -127,13 +292,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route28"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route12"
       }
     },
     "/v2/loop/stop/{loopName}" : {
       "put" : {
-        "operationId" : "route27",
+        "operationId" : "route11",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -149,13 +314,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route27"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route11"
       }
     },
     "/v2/loop/submit/{loopName}" : {
       "put" : {
-        "operationId" : "route29",
+        "operationId" : "route13",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -171,13 +336,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route29"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route13"
       }
     },
     "/v2/loop/svgRepresentation/{loopName}" : {
       "get" : {
-        "operationId" : "route21",
+        "operationId" : "route4",
         "produces" : [ "application/xml" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -193,13 +358,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route21"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route4"
       }
     },
     "/v2/loop/undeploy/{loopName}" : {
       "put" : {
-        "operationId" : "route26",
+        "operationId" : "route10",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -215,13 +380,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route26"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route10"
       }
     },
     "/v2/loop/updateGlobalProperties/{loopName}" : {
       "post" : {
-        "operationId" : "route22",
+        "operationId" : "route5",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -245,13 +410,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route22"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route5"
       }
     },
     "/v2/loop/updateMicroservicePolicy/{loopName}" : {
       "post" : {
-        "operationId" : "route24",
+        "operationId" : "route7",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -275,13 +440,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route24"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route7"
       }
     },
     "/v2/loop/updateOperationalPolicies/{loopName}" : {
       "post" : {
-        "operationId" : "route23",
+        "operationId" : "route6",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -305,13 +470,154 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route23"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route6"
+      }
+    },
+    "/v2/policyToscaModels" : {
+      "get" : {
+        "operationId" : "route25",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/PolicyModel"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route25"
+      }
+    },
+    "/v2/policyToscaModels/{policyModelType}" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "policyModelType",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/PolicyModel"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
+      },
+      "put" : {
+        "operationId" : "route26",
+        "consumes" : [ "plain/text" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "policyModelType",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/PolicyModel"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route26"
+      }
+    },
+    "/v2/policyToscaModels/yaml/{policyModelType}" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "policyModelType",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "type" : "string"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
+      }
+    },
+    "/v2/templates" : {
+      "get" : {
+        "operationId" : "route29",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/LoopTemplate"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route29"
+      }
+    },
+    "/v2/templates/{templateName}" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "templateName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "$ref" : "#/definitions/LoopTemplate"
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
+      }
+    },
+    "/v2/templates/names" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Output type",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string"
+              }
+            }
+          }
+        },
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : null
       }
     },
     "/v1/clds/cldsInfo" : {
       "get" : {
-        "operationId" : "route32",
+        "operationId" : "route30",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -321,13 +627,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route32"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route30"
       }
     },
     "/v1/healthcheck" : {
       "get" : {
-        "operationId" : "route33",
+        "operationId" : "route31",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -337,23 +643,104 @@
             }
           }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route33"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route31"
       }
     },
     "/v1/user/getUser" : {
       "get" : {
-        "operationId" : "route34",
+        "operationId" : "route32",
         "produces" : [ "text/plain" ],
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-2",
-        "x-routeId" : "route34"
+        "x-camelContextId" : "camel-1",
+        "x-routeId" : "route32"
       }
     }
   },
   "definitions" : {
+    "Dictionary" : {
+      "type" : "object",
+      "properties" : {
+        "createdDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedBy" : {
+          "type" : "string"
+        },
+        "createdBy" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "secondLevelDictionary" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "subDictionaryType" : {
+          "type" : "string"
+        },
+        "dictionaryElements" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/DictionaryElement"
+          }
+        }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.tosca.Dictionary"
+      }
+    },
+    "DictionaryElement" : {
+      "type" : "object",
+      "properties" : {
+        "createdDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedBy" : {
+          "type" : "string"
+        },
+        "createdBy" : {
+          "type" : "string"
+        },
+        "shortName" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "subDictionary" : {
+          "type" : "string"
+        },
+        "usedByDictionaries" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Dictionary"
+          }
+        }
+      }
+    },
     "Loop" : {
       "type" : "object",
       "properties" : {
@@ -380,9 +767,6 @@
         "dcaeDeploymentStatusUrl" : {
           "type" : "string"
         },
-        "dcaeBlueprintId" : {
-          "type" : "string"
-        },
         "svgRepresentation" : {
           "type" : "string"
         },
@@ -391,9 +775,6 @@
         },
         "modelService" : {
           "$ref" : "#/definitions/Service"
-        },
-        "blueprint" : {
-          "type" : "string"
         },
         "lastComputedState" : {
           "type" : "string",
@@ -435,51 +816,10 @@
         "format" : "org.onap.clamp.loop.Loop"
       }
     },
-    "MicroServiceModel" : {
-      "type" : "object",
-      "properties" : {
-        "createdDate" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "updatedDate" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "updatedBy" : {
-          "type" : "string"
-        },
-        "createdBy" : {
-          "type" : "string"
-        },
-        "name" : {
-          "type" : "string"
-        },
-        "policyType" : {
-          "type" : "string"
-        },
-        "blueprint" : {
-          "type" : "string"
-        },
-        "policyModel" : {
-          "$ref" : "#/definitions/PolicyModel"
-        },
-        "usedByLoopTemplates" : {
-          "type" : "array",
-          "uniqueItems" : true,
-          "items" : {
-            "$ref" : "#/definitions/TemplateMicroServiceModel"
-          }
-        }
-      }
-    },
     "JsonPrimitive" : {
       "type" : "object",
       "properties" : {
         "asBoolean" : {
-          "type" : "boolean"
-        },
-        "boolean" : {
           "type" : "boolean"
         },
         "number" : {
@@ -487,6 +827,19 @@
         },
         "asString" : {
           "type" : "string"
+        },
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "boolean" : {
+          "type" : "boolean"
+        },
+        "string" : {
+          "type" : "boolean"
         },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
@@ -517,29 +870,19 @@
         "asBigDecimal" : {
           "type" : "number"
         },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "string" : {
-          "type" : "boolean"
-        },
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
         },
         "asJsonPrimitive" : {
           "$ref" : "#/definitions/JsonPrimitive"
         },
-        "jsonArray" : {
-          "type" : "boolean"
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
         },
         "jsonObject" : {
+          "type" : "boolean"
+        },
+        "jsonArray" : {
           "type" : "boolean"
         },
         "jsonPrimitive" : {
@@ -570,6 +913,18 @@
         "createdBy" : {
           "type" : "string"
         },
+        "jsonRepresentation" : {
+          "$ref" : "#/definitions/JsonObject"
+        },
+        "configurationsJson" : {
+          "$ref" : "#/definitions/JsonObject"
+        },
+        "loopElementModel" : {
+          "$ref" : "#/definitions/LoopElementModel"
+        },
+        "pdpGroup" : {
+          "type" : "string"
+        },
         "name" : {
           "type" : "string"
         },
@@ -582,17 +937,11 @@
         "deviceTypeScope" : {
           "type" : "string"
         },
-        "properties" : {
-          "$ref" : "#/definitions/JsonObject"
-        },
         "shared" : {
           "type" : "boolean"
         },
         "policyTosca" : {
           "type" : "string"
-        },
-        "jsonRepresentation" : {
-          "$ref" : "#/definitions/JsonObject"
         },
         "usedByLoops" : {
           "type" : "array",
@@ -601,8 +950,14 @@
             "$ref" : "#/definitions/Loop"
           }
         },
-        "microServiceModel" : {
-          "$ref" : "#/definitions/MicroServiceModel"
+        "dcaeDeploymentId" : {
+          "type" : "string"
+        },
+        "dcaeDeploymentStatusUrl" : {
+          "type" : "string"
+        },
+        "dcaeBlueprintId" : {
+          "type" : "string"
         }
       },
       "x-className" : {
@@ -619,19 +974,26 @@
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
         },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
+        },
         "asString" : {
           "type" : "string"
         },
         "asJsonArray" : {
           "$ref" : "#/definitions/JsonArray"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
-        "jsonArray" : {
+        "jsonObject" : {
           "type" : "boolean"
         },
-        "jsonObject" : {
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "jsonArray" : {
           "type" : "boolean"
         },
         "jsonPrimitive" : {
@@ -671,13 +1033,6 @@
         },
         "asBigDecimal" : {
           "type" : "number"
-        },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       },
       "x-className" : {
@@ -714,15 +1069,29 @@
         "policyAcronym" : {
           "type" : "string"
         },
-        "policyVariant" : {
-          "type" : "string"
+        "usedByElementModels" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/LoopElementModel"
+          }
         }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.loop.template.PolicyModel"
       }
     },
     "Service" : {
       "type" : "object",
       "properties" : {
         "serviceUuid" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "version" : {
           "type" : "string"
         },
         "serviceDetails" : {
@@ -733,23 +1102,58 @@
         }
       }
     },
+    "LoopTemplateLoopElementModel" : {
+      "type" : "object",
+      "properties" : {
+        "loopTemplate" : {
+          "$ref" : "#/definitions/LoopTemplate"
+        },
+        "loopElementModel" : {
+          "$ref" : "#/definitions/LoopElementModel"
+        },
+        "flowOrder" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
     "OperationalPolicy" : {
       "type" : "object",
       "properties" : {
-        "name" : {
+        "createdDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedBy" : {
           "type" : "string"
+        },
+        "createdBy" : {
+          "type" : "string"
+        },
+        "jsonRepresentation" : {
+          "$ref" : "#/definitions/JsonObject"
         },
         "configurationsJson" : {
           "$ref" : "#/definitions/JsonObject"
+        },
+        "loopElementModel" : {
+          "$ref" : "#/definitions/LoopElementModel"
+        },
+        "pdpGroup" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
         },
         "loop" : {
           "$ref" : "#/definitions/Loop"
         },
         "policyModel" : {
           "$ref" : "#/definitions/PolicyModel"
-        },
-        "jsonRepresentation" : {
-          "$ref" : "#/definitions/JsonObject"
         }
       }
     },
@@ -762,19 +1166,26 @@
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
         },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
+        },
         "asString" : {
           "type" : "string"
         },
         "asJsonArray" : {
           "$ref" : "#/definitions/JsonArray"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
-        "jsonArray" : {
+        "jsonObject" : {
           "type" : "boolean"
         },
-        "jsonObject" : {
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "jsonArray" : {
           "type" : "boolean"
         },
         "jsonPrimitive" : {
@@ -814,13 +1225,6 @@
         },
         "asBigDecimal" : {
           "type" : "number"
-        },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
         }
       }
     },
@@ -832,6 +1236,13 @@
         },
         "asString" : {
           "type" : "string"
+        },
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
@@ -862,26 +1273,19 @@
         "asBigDecimal" : {
           "type" : "number"
         },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
         },
         "asJsonPrimitive" : {
           "$ref" : "#/definitions/JsonPrimitive"
         },
-        "jsonArray" : {
-          "type" : "boolean"
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
         },
         "jsonObject" : {
+          "type" : "boolean"
+        },
+        "jsonArray" : {
           "type" : "boolean"
         },
         "jsonPrimitive" : {
@@ -925,21 +1329,6 @@
         }
       }
     },
-    "TemplateMicroServiceModel" : {
-      "type" : "object",
-      "properties" : {
-        "loopTemplate" : {
-          "$ref" : "#/definitions/LoopTemplate"
-        },
-        "microServiceModel" : {
-          "$ref" : "#/definitions/MicroServiceModel"
-        },
-        "flowOrder" : {
-          "type" : "integer",
-          "format" : "int32"
-        }
-      }
-    },
     "Number" : {
       "type" : "object"
     },
@@ -974,17 +1363,20 @@
         "name" : {
           "type" : "string"
         },
+        "dcaeBlueprintId" : {
+          "type" : "string"
+        },
         "blueprint" : {
           "type" : "string"
         },
         "svgRepresentation" : {
           "type" : "string"
         },
-        "microServiceModelUsed" : {
+        "loopElementModelsUsed" : {
           "type" : "array",
           "uniqueItems" : true,
           "items" : {
-            "$ref" : "#/definitions/TemplateMicroServiceModel"
+            "$ref" : "#/definitions/LoopTemplateLoopElementModel"
           }
         },
         "modelService" : {
@@ -993,7 +1385,18 @@
         "maximumInstancesAllowed" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "uniqueBlueprint" : {
+          "type" : "boolean"
+        },
+        "allowedLoopType" : {
+          "type" : "string",
+          "enum" : [ "OPEN", "CLOSED", "HYBRID" ]
         }
+      },
+      "x-className" : {
+        "type" : "string",
+        "format" : "org.onap.clamp.loop.template.LoopTemplate"
       }
     },
     "ExternalComponentState" : {
@@ -1008,6 +1411,54 @@
         "level" : {
           "type" : "integer",
           "format" : "int32"
+        }
+      }
+    },
+    "LoopElementModel" : {
+      "type" : "object",
+      "properties" : {
+        "createdDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedDate" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedBy" : {
+          "type" : "string"
+        },
+        "createdBy" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "dcaeBlueprintId" : {
+          "type" : "string"
+        },
+        "blueprint" : {
+          "type" : "string"
+        },
+        "loopElementType" : {
+          "type" : "string"
+        },
+        "shortName" : {
+          "type" : "string"
+        },
+        "policyModels" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/PolicyModel"
+          }
+        },
+        "usedByLoopTemplates" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/LoopTemplateLoopElementModel"
+          }
         }
       }
     },

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Verify ViewBlueprintMicroServiceTemplatesModal Test the tosca model view render method 1`] = `
+exports[`Verify ViewLoopTemplatesModal Test the tosca model view render method 1`] = `
 <Styled(Bootstrap(Modal))
   onHide={[Function]}
   show={true}
@@ -30,7 +30,7 @@ exports[`Verify ViewBlueprintMicroServiceTemplatesModal Test the tosca model vie
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "templateName",
+            "field": "name",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
@@ -41,58 +41,57 @@ exports[`Verify ViewBlueprintMicroServiceTemplatesModal Test the tosca model vie
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "templatePolicy[0].policyModelId",
+            "field": "modelService.serviceDetails.name",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
             },
-            "title": "Policy Model",
+            "title": "Service Model Name",
           },
           Object {
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "templateId",
+            "field": "allowedLoopType",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
             },
-            "title": "Template ID",
+            "title": "Loop Type Allowed",
           },
           Object {
             "cellStyle": Object {
               "border": "1px solid black",
             },
-            "field": "updatedBy",
+            "field": "maximumInstancesAllowed",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
             },
-            "title": "Uploaded By",
+            "title": "# Instances Allowed",
           },
           Object {
             "cellStyle": Object {
               "border": "1px solid black",
             },
             "editable": "never",
-            "field": "timestamp",
+            "field": "updatedDate",
             "headerStyle": Object {
               "backgroundColor": "#ddd",
               "border": "2px solid black",
             },
-            "title": "Uploaded Date",
+            "title": "Modified Date",
           },
         ]
       }
       data={
         Object {
-          "content": "MTCA version 1",
+          "allowedLoopType": "CLOSED",
           "index": "1",
-          "templateId": "aaaa_bbbb_cccc",
-          "templateName": "MTCA",
-          "templatePolicy.policyModelId": "onap.policies.monitoring.docker.mtca.app",
-          "timestamp": "2019-09-06 19:09:42",
-          "updatedBy": "tester",
+          "maximumInstancesAllowed": 1,
+          "modelService.serviceDetails.name": "MTCA",
+          "name": "MTCA version 1",
+          "updatedDate": "2019-09-06 19:09:42",
         }
       }
       icons={
@@ -144,7 +143,7 @@ exports[`Verify ViewBlueprintMicroServiceTemplatesModal Test the tosca model vie
     <div>
       <styled.textarea
         onChange={[Function]}
-        value="Please select Blue print template to view the details"
+        value="Please select a loop template to display it"
       />
     </div>
   </ModalBody>

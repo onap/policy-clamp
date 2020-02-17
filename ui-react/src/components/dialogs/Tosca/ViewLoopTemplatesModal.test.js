@@ -22,10 +22,10 @@
  */
 import React from 'react';
 import { shallow } from 'enzyme';
-import ViewBlueprintMicroServiceTemplatesModal from './ViewBlueprintMicroServiceTemplatesModal';
+import ViewLoopTemplatesModal from './ViewLoopTemplatesModal';
 import { mount } from 'enzyme';
 
-describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
+describe('Verify ViewLoopTemplatesModal', () => {
 	beforeEach(() => {
 		fetch.resetMocks();
 		}
@@ -39,17 +39,16 @@ describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
 				json: () => {
 					return Promise.resolve({
 						"index": "1",
-						"content": "MTCA version 1",
-						"templateName": "MTCA",
-						"templatePolicy.policyModelId" : "onap.policies.monitoring.docker.mtca.app",
-						"updatedBy":"tester",
-						"templateId":"aaaa_bbbb_cccc",
-						"timestamp":"2019-09-06 19:09:42"
+						"name": "MTCA version 1",
+						"modelService.serviceDetails.name": "MTCA",
+						"allowedLoopType" : "CLOSED",
+						"maximumInstancesAllowed":1,
+						"updatedDate":"2019-09-06 19:09:42"
 					});
 				}
 			});
 		});
-		const component = shallow(<ViewBlueprintMicroServiceTemplatesModal/>);
+		const component = shallow(<ViewLoopTemplatesModal/>);
 	});
   	
 	it('Test API Exception', () => {
@@ -60,17 +59,16 @@ describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
 				json: () => {
 					return Promise.resolve({
 						"index": "1",
-						"content": "MTCA version 1",
-						"templateName": "MTCA",
-						"templatePolicy.policyModelId" : "onap.policies.monitoring.docker.mtca.app",
-						"updatedBy":"tester",
-						"templateId":"aaaa_bbbb_cccc",
-						"timestamp":"2019-09-06 19:09:42"
+						"name": "MTCA version 1",
+						"modelService.serviceDetails.name": "MTCA",
+						"allowedLoopType" : "CLOSED",
+						"maximumInstancesAllowed":1,
+						"updatedDate":"2019-09-06 19:09:42"
 					});
 				}
 			});
 		});
-		const component = shallow(<ViewBlueprintMicroServiceTemplatesModal/>);
+		const component = shallow(<ViewLoopTemplatesModal/>);
 	});
 
 	it('Test API Rejection', () => {
@@ -81,7 +79,7 @@ describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
 		100
 		);
 		new Promise(resolve => setTimeout(resolve, 200));
-		const component = shallow(<ViewBlueprintMicroServiceTemplatesModal/>);
+		const component = shallow(<ViewLoopTemplatesModal/>);
 		expect(myMockFunc.mock.calls.length).toBe(1);
 	});
 
@@ -93,25 +91,23 @@ describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
 				json: () => {
 					return Promise.resolve({
 						"index": "1",
-						"content": "MTCA version 1",
-						"templateName": "MTCA",
-						"templatePolicy.policyModelId" : "onap.policies.monitoring.docker.mtca.app",
-						"updatedBy":"tester",
-						"templateId":"aaaa_bbbb_cccc",
-						"timestamp":"2019-09-06 19:09:42"
+						"name": "MTCA version 1",
+						"modelService.serviceDetails.name": "MTCA",
+						"allowedLoopType" : "CLOSED",
+						"maximumInstancesAllowed":1,
+						"updatedDate":"2019-09-06 19:09:42"
 					});
 				}
 			});
 		});
-		const component = shallow(<ViewBlueprintMicroServiceTemplatesModal/>);
-		component.setState({ bpTemplNames: {
-			"index": "1",
-			"content": "MTCA version 1",
-			"templateName": "MTCA",
-			"templatePolicy.policyModelId" : "onap.policies.monitoring.docker.mtca.app",
-			"updatedBy":"tester",
-			"templateId":"aaaa_bbbb_cccc",
-			"timestamp":"2019-09-06 19:09:42"
+		const component = shallow(<ViewLoopTemplatesModal/>);
+		component.setState({ loopTemplateData: {
+						"index": "1",
+						"name": "MTCA version 1",
+						"modelService.serviceDetails.name": "MTCA",
+						"allowedLoopType" : "CLOSED",
+						"maximumInstancesAllowed":1,
+						"updatedDate":"2019-09-06 19:09:42"
 		  }
 		});
 		expect(component).toMatchSnapshot();
@@ -124,18 +120,17 @@ describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
 					status: 200,
 					json: () => {
 						return Promise.resolve({
-							"index": "1",
-							"content": "MTCA version 1",
-							"templateName": "MTCA",
-							"templatePolicy.policyModelId" : "onap.policies.monitoring.docker.mtca.app",
-							"updatedBy":"tester",
-							"templateId":"aaaa_bbbb_cccc",
-							"timestamp":"2019-09-06 19:09:42"
+						"index": "1",
+						"name": "MTCA version 1",
+						"modelService.serviceDetails.name": "MTCA",
+						"allowedLoopType" : "CLOSED",
+						"maximumInstancesAllowed":1,
+						"updatedDate":"2019-09-06 19:09:42"
 						});
 					}
 				});
 			});
-			const component = mount(<ViewBlueprintMicroServiceTemplatesModal/>);
+			const component = mount(<ViewLoopTemplatesModal/>);
 			expect(component.find('[className="MuiSelect-icon MuiTablePagination-selectIcon"]')).toBeTruthy();
 		});
 
@@ -146,20 +141,19 @@ describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
 					status: 200,
 					json: () => {
 						return Promise.resolve({
-							"index": "1",
-							"content": "MTCA version 1",
-							"templateName": "MTCA",
-							"templatePolicy.policyModelId" : "onap.policies.monitoring.docker.mtca.app",
-							"updatedBy":"tester",
-							"templateId":"aaaa_bbbb_cccc",
-							"timestamp":"2019-09-06 19:09:42"
+						"index": "1",
+						"name": "MTCA version 1",
+						"modelService.serviceDetails.name": "MTCA",
+						"allowedLoopType" : "CLOSED",
+						"maximumInstancesAllowed":1,
+						"updatedDate":"2019-09-06 19:09:42"
 						});
 					}
 				});
 			});
-			const yamlContent = 'MTCA Tosca model details';
-			const component = shallow(<ViewBlueprintMicroServiceTemplatesModal/>);
-			component.find('[value="Please select Blue print template to view the details"]').prop('onChange')({ target: { value: yamlContent }});
+			const yamlContent = 'MTCA version 1';
+			const component = shallow(<ViewLoopTemplatesModal/>);
+			component.find('[value="Please select a loop template to display it"]').prop('onChange')({ target: { value: yamlContent }});
 			expect(component.state('content')).toEqual(yamlContent);
 		});
 		
@@ -170,20 +164,19 @@ describe('Verify ViewBlueprintMicroServiceTemplatesModal', () => {
 					status: 200,
 					json: () => {
 						return Promise.resolve({
-							"index": "1",
-							"content": "MTCA version 1",
-							"templateName": "MTCA",
-							"templatePolicy.policyModelId" : "onap.policies.monitoring.docker.mtca.app",
-							"updatedBy":"tester",
-							"templateId":"aaaa_bbbb_cccc",
-							"timestamp":"2019-09-06 19:09:42"
+						"index": "1",
+						"name": "MTCA version 1",
+						"modelService.serviceDetails.name": "MTCA",
+						"allowedLoopType" : "CLOSED",
+						"maximumInstancesAllowed":1,
+						"updatedDate":"2019-09-06 19:09:42"
 						});
 					}
 				});
 			});
 			const historyMock = { push: jest.fn() };
-			const handleClose = jest.spyOn(ViewBlueprintMicroServiceTemplatesModal.prototype,'handleClose');
-			const component = shallow(<ViewBlueprintMicroServiceTemplatesModal history={historyMock} />)
+			const handleClose = jest.spyOn(ViewLoopTemplatesModal.prototype,'handleClose');
+			const component = shallow(<ViewLoopTemplatesModal history={historyMock} />)
 			component.find('[variant="secondary"]').prop('onClick')();
 			expect(handleClose).toHaveBeenCalledTimes(1);
 			expect(component.state('show')).toEqual(false);

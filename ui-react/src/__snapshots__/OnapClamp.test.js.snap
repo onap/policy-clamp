@@ -38,7 +38,7 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       render={[Function]}
     />
     <Route
-      path="/viewBlueprintMicroServiceTemplatesModal"
+      path="/ViewLoopTemplatesModal"
       render={[Function]}
     />
     <Route
