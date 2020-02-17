@@ -42,7 +42,7 @@ import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.template.LoopElementModel;
 
 @MappedSuperclass
-@TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
+@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public abstract class Policy extends AuditEntity {
 
     @Expose
@@ -55,6 +55,10 @@ public abstract class Policy extends AuditEntity {
     @Column(columnDefinition = "json", name = "configurations_json")
     private JsonObject configurationsJson;
 
+    /**
+     * This attribute can be null when the user add a policy on the loop instance, not the template.
+     * When null, It therefore indicates that this policy is not by default in the loop template.
+     */
     @Expose
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "loop_element_model_id")
@@ -68,20 +72,19 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * Name getter.
-     * 
+     *
      * @return the name
      */
     public abstract String getName();
 
     /**
      * Name setter.
-     * 
      */
     public abstract void setName(String name);
 
     /**
      * jsonRepresentation getter.
-     * 
+     *
      * @return the jsonRepresentation
      */
     public JsonObject getJsonRepresentation() {
@@ -90,7 +93,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * jsonRepresentation setter.
-     * 
+     *
      * @param jsonRepresentation The jsonRepresentation to set
      */
     public void setJsonRepresentation(JsonObject jsonRepresentation) {
@@ -99,7 +102,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * configurationsJson getter.
-     * 
+     *
      * @return The configurationsJson
      */
     public JsonObject getConfigurationsJson() {
@@ -108,7 +111,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * configurationsJson setter.
-     * 
+     *
      * @param configurationsJson the configurationsJson to set
      */
     public void setConfigurationsJson(JsonObject configurationsJson) {
@@ -117,7 +120,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * loopElementModel getter.
-     * 
+     *
      * @return the loopElementModel
      */
     public LoopElementModel getLoopElementModel() {
@@ -126,7 +129,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * loopElementModel setter.
-     * 
+     *
      * @param loopElementModel the loopElementModel to set
      */
     public void setLoopElementModel(LoopElementModel loopElementModel) {
@@ -135,7 +138,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * pdpGroup getter.
-     * 
+     *
      * @return the pdpGroup
      */
     public String getPdpGroup() {
@@ -144,7 +147,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * pdpGroup setter.
-     * 
+     *
      * @param pdpGroup the pdpGroup to set
      */
     public void setPdpGroup(String pdpGroup) {
@@ -162,7 +165,7 @@ public abstract class Policy extends AuditEntity {
      * @return The generated policy name
      */
     public static String generatePolicyName(String policyType, String serviceName, String serviceVersion,
-            String resourceName, String blueprintFilename) {
+                                            String resourceName, String blueprintFilename) {
         StringBuilder buffer = new StringBuilder(policyType).append("_").append(serviceName).append("_v")
                 .append(serviceVersion).append("_").append(resourceName).append("_")
                 .append(blueprintFilename.replaceAll(".yaml", ""));

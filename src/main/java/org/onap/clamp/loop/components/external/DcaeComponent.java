@@ -54,7 +54,7 @@ public class DcaeComponent extends ExternalComponent {
             "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop");
     public static final ExternalComponentState PROCESSING_MICROSERVICE_INSTALLATION = new ExternalComponentState(
             "PROCESSING_MICROSERVICE_INSTALLATION", "Clamp has requested DCAE to install the microservices "
-                    + "defined in the DCAE blueprint and it's currently processing the request");
+            + "defined in the DCAE blueprint and it's currently processing the request");
     public static final ExternalComponentState MICROSERVICE_INSTALLATION_FAILED = new ExternalComponentState(
             "MICROSERVICE_INSTALLATION_FAILED",
             "Clamp has requested DCAE to install the microservices defined in the DCAE blueprint and it failed");
@@ -63,7 +63,7 @@ public class DcaeComponent extends ExternalComponent {
             "Clamp has requested DCAE to install the DCAE blueprint and it has been installed successfully");
     public static final ExternalComponentState PROCESSING_MICROSERVICE_UNINSTALLATION = new ExternalComponentState(
             "PROCESSING_MICROSERVICE_UNINSTALLATION", "Clamp has requested DCAE to uninstall the microservices "
-                    + "defined in the DCAE blueprint and it's currently processing the request");
+            + "defined in the DCAE blueprint and it's currently processing the request");
     public static final ExternalComponentState MICROSERVICE_UNINSTALLATION_FAILED = new ExternalComponentState(
             "MICROSERVICE_UNINSTALLATION_FAILED",
             "Clamp has requested DCAE to uninstall the microservices defined in the DCAE blueprint and it failed");
@@ -91,7 +91,7 @@ public class DcaeComponent extends ExternalComponent {
 
     /**
      * Convert the json response to a DcaeOperationStatusResponse.
-     * 
+     *
      * @param responseBody The DCAE response Json paylaod
      * @return The dcae object provisioned
      */
@@ -146,13 +146,14 @@ public class DcaeComponent extends ExternalComponent {
     /**
      * Return the deploy payload for DCAE.
      *
-     * @param loop             The loop object
+     * @param loop               The loop object
      * @param microServicePolicy The micro service policy
      * @return The payload used to send deploy closed loop request
      */
     public static String getDeployPayload(Loop loop, MicroServicePolicy microServicePolicy) {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
-        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(microServicePolicy.getName());
+        JsonObject deploymentProp =
+                globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(microServicePolicy.getName());
 
         String serviceTypeId = microServicePolicy.getDcaeBlueprintId();
 

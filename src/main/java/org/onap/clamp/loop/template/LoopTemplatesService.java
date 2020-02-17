@@ -24,11 +24,7 @@
 package org.onap.clamp.loop.template;
 
 import java.util.List;
-import org.onap.clamp.clds.exception.sdc.controller.BlueprintParserException;
-import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
-import org.onap.clamp.clds.sdc.controller.installer.BlueprintParser;
 import org.onap.clamp.clds.sdc.controller.installer.ChainGenerator;
-import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +35,6 @@ public class LoopTemplatesService {
 
     @Autowired
     ChainGenerator chainGenerator;
-
-    @Autowired
-    private SvgFacade svgFacade;
 
     /**
      * Constructor.
@@ -54,24 +47,6 @@ public class LoopTemplatesService {
 
     public LoopTemplate saveOrUpdateLoopTemplate(LoopTemplate loopTemplate) {
         return loopTemplatesRepository.save(loopTemplate);
-    }
-
-    /**
-     * Saves or updates loop template Object.
-     *
-     * @param templateName the loop template name
-     * @param loopTemplate the loop template object
-     * @return the loop template
-     * @throws BlueprintParserException In case of issues with the blueprint
-     *         parsing
-     */
-    public LoopTemplate saveOrUpdateLoopTemplateByName(String templateName,
-        LoopTemplate loopTemplate) throws BlueprintParserException {
-
-        if (getLoopTemplate(templateName) != null) {
-            loopTemplate.setName(getLoopTemplate(templateName).getName());
-        }
-        return saveOrUpdateLoopTemplate(createTemplateFromBlueprint(templateName, loopTemplate));
     }
 
     public List<String> getLoopTemplateNames() {
@@ -88,24 +63,5 @@ public class LoopTemplatesService {
 
     public void deleteLoopTemplate(String name) {
         loopTemplatesRepository.deleteById(name);
-    }
-
-    private LoopTemplate createTemplateFromBlueprint(String templateName, LoopTemplate loopTemplate)
-        throws BlueprintParserException {
-
-        String blueprintYaml = loopTemplate.getBlueprint();
-        List<BlueprintMicroService> microServicesChain =
-            chainGenerator.getChainOfMicroServices(BlueprintParser.getMicroServices(blueprintYaml));
-        if (microServicesChain.isEmpty()) {
-            microServicesChain = BlueprintParser.fallbackToOneMicroService();
-        }
-        loopTemplate.setSvgRepresentation(svgFacade.getSvgImage(microServicesChain));
-        loopTemplate.setName(templateName);
-
-        LoopTemplate existingTemplate = getLoopTemplate(templateName);
-        if (existingTemplate != null) {
-            loopTemplate.setName(existingTemplate.getName());
-        }
-        return loopTemplate;
     }
 }

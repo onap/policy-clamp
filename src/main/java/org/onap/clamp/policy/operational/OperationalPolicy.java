@@ -62,7 +62,7 @@ import org.yaml.snakeyaml.Yaml;
 
 @Entity
 @Table(name = "operational_policies")
-@TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
+@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public class OperationalPolicy extends Policy implements Serializable {
     /**
      * The serial version ID.
@@ -83,8 +83,8 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     @Expose
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumns({ @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-        @JoinColumn(name = "policy_model_version", referencedColumnName = "version") })
+    @JoinColumns({@JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
     private PolicyModel policyModel;
 
     public OperationalPolicy() {
@@ -98,10 +98,12 @@ public class OperationalPolicy extends Policy implements Serializable {
      * @param loop               The loop that uses this operational policy
      * @param configurationsJson The operational policy property in the format of
      *                           json
+     * @param policyModel        The policy model associated if any, can be null
      */
-    public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson) {
+    public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson, PolicyModel policyModel) {
         this.name = name;
         this.loop = loop;
+        this.setPolicyModel(policyModel);
         this.setConfigurationsJson(configurationsJson);
         LegacyOperationalPolicy.preloadConfiguration(configurationsJson, loop);
         try {
@@ -128,7 +130,7 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     /**
      * name setter.
-     * 
+     *
      * @param name the name to set
      */
     @Override
@@ -138,7 +140,7 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     /**
      * policyModel getter.
-     * 
+     *
      * @return the policyModel
      */
     public PolicyModel getPolicyModel() {
@@ -147,7 +149,7 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     /**
      * policyModel setter.
-     * 
+     *
      * @param policyModel the policyModel to set
      */
     public void setPolicyModel(PolicyModel policyModel) {
@@ -186,7 +188,7 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     /**
      * Create policy Yaml from json defined here.
-     * 
+     *
      * @return A string containing Yaml
      */
     public String createPolicyPayloadYaml() {
@@ -260,7 +262,6 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     /**
      * Regenerate the Operational Policy Json Representation.
-     *
      */
     public void updateJsonRepresentation() {
         try {

@@ -32,11 +32,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
-
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
@@ -56,11 +54,13 @@ public class LoopToJsonTest {
     private Gson gson = new Gson();
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name) {
-        return new OperationalPolicy(name, null, gson.fromJson(configJson, JsonObject.class));
+        return new OperationalPolicy(name, null, gson.fromJson(configJson, JsonObject.class),
+                getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"));
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
-            String dcaeId, String dcaeUrl, String dcaeBlueprintId) throws JsonSyntaxException, IOException {
+                         String dcaeId, String dcaeUrl, String dcaeBlueprintId)
+            throws JsonSyntaxException, IOException {
         Loop loop = new Loop(name, svgRepresentation);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
@@ -70,8 +70,9 @@ public class LoopToJsonTest {
     }
 
     private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
-            String policyTosca, String jsonProperties, boolean shared) {
-        MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
+                                                     String policyTosca, String jsonProperties, boolean shared) {
+        MicroServicePolicy microService = new MicroServicePolicy(name, new PolicyModel(modelType, policyTosca, "1.0.0"),
+                shared,
                 gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
@@ -87,12 +88,12 @@ public class LoopToJsonTest {
     }
 
     private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
-            String policyVariant) {
+                                       String policyVariant) {
         return new PolicyModel(policyType, policyModelTosca, version, policyAcronym);
     }
 
     private LoopTemplate getLoopTemplate(String name, String blueprint, String svgRepresentation,
-            Integer maxInstancesAllowed) {
+                                         Integer maxInstancesAllowed) {
         LoopTemplate template = new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
         template.addLoopElementModel(getLoopElementModel("yaml", "microService1",
                 getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1")));

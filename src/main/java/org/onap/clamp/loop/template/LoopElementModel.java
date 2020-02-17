@@ -43,13 +43,13 @@ import org.hibernate.annotations.SortNatural;
 import org.onap.clamp.loop.common.AuditEntity;
 
 /**
- * This class represents a micro service model for a loop template.
+ * This class represents a micro service/operational/... model for a loop template.
+ * So it's an element in the flow (a box shown in the loop).
  */
 
 @Entity
 @Table(name = "loop_element_models")
 public class LoopElementModel extends AuditEntity implements Serializable {
-    public static final String DEFAULT_GROUP_NAME = "DEFAULT";
     /**
      * The serial version id.
      */
@@ -65,11 +65,13 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     private String dcaeBlueprintId;
 
     /**
-     * Here we store the blueprint coming from DCAE.
+     * Here we store the blueprint coming from DCAE, it can be null if this is not a micro service model.
      */
     @Column(columnDefinition = "MEDIUMTEXT", name = "blueprint_yaml")
     private String blueprint;
 
+    public static String MICRO_SERVICE_TYPE = "MICRO_SERVICE_TYPE";
+    public static String OPERATIONAL_POLICY_TYPE = "OPERATIONAL_POLICY_TYPE";
     /**
      * The type of element.
      */
@@ -89,14 +91,14 @@ public class LoopElementModel extends AuditEntity implements Serializable {
      */
     @Expose
     @ManyToMany(
-        fetch = FetchType.EAGER,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
-        name = "loopelementmodels_to_policymodels",
-        joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
-        inverseJoinColumns = {
-            @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
+            name = "loopelementmodels_to_policymodels",
+            joinColumns = @JoinColumn(name = "loop_element_name", referencedColumnName = "name"),
+            inverseJoinColumns = {
+                    @JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+                    @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
     @SortNatural
     private SortedSet<PolicyModel> policyModels = new TreeSet<>();
 
@@ -228,10 +230,10 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     /**
      * Constructor.
      *
-     * @param name The name id
+     * @param name            The name id
      * @param loopElementType The type of loop element
-     * @param blueprint The blueprint defined for dcae that contains the
-     *        policy type to use
+     * @param blueprint       The blueprint defined for dcae that contains the
+     *                        policy type to use
      */
     public LoopElementModel(String name, String loopElementType, String blueprint) {
         this.name = name;

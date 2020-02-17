@@ -25,12 +25,10 @@ package org.onap.clamp.loop;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.DcaeInventoryServices;
 import org.onap.clamp.clds.client.PolicyEngineServices;
@@ -42,7 +40,6 @@ import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintParser;
 import org.onap.clamp.clds.sdc.controller.installer.ChainGenerator;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
-import org.onap.clamp.clds.util.drawing.SvgFacade;
 import org.onap.clamp.loop.service.CsarServiceInstaller;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -79,9 +76,6 @@ public class CsarInstaller {
     private DcaeInventoryServices dcaeInventoryService;
 
     @Autowired
-    private SvgFacade svgFacade;
-
-    @Autowired
     private CsarServiceInstaller csarServiceInstaller;
 
     @Autowired
@@ -89,7 +83,7 @@ public class CsarInstaller {
 
     /**
      * Verify whether Csar is deployed.
-     * 
+     *
      * @param csar The Csar Handler
      * @return The flag indicating whether Csar is deployed
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
@@ -100,16 +94,16 @@ public class CsarInstaller {
         for (Entry<String, BlueprintArtifact> blueprint : csar.getMapOfBlueprints().entrySet()) {
             alreadyInstalled = alreadyInstalled
                     && loopTemplatesRepository.existsById(LoopTemplate.generateLoopTemplateName(
-                            csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
-                            blueprint.getValue().getResourceAttached().getResourceInstanceName(),
-                            blueprint.getValue().getBlueprintArtifactName()));
+                    csar.getSdcNotification().getServiceName(), csar.getSdcNotification().getServiceVersion(),
+                    blueprint.getValue().getResourceAttached().getResourceInstanceName(),
+                    blueprint.getValue().getBlueprintArtifactName()));
         }
         return alreadyInstalled;
     }
 
     /**
      * Install the service and loop templates from the csar.
-     * 
+     *
      * @param csar The Csar Handler
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
      * @throws InterruptedException          The InterruptedException
@@ -125,7 +119,7 @@ public class CsarInstaller {
 
     /**
      * Install the loop templates from the csar.
-     * 
+     *
      * @param csar    The Csar Handler
      * @param service The service object that is related to the loop
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
@@ -150,7 +144,8 @@ public class CsarInstaller {
     }
 
     private LoopTemplate createLoopTemplateFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact,
-            Service service) throws IOException, ParseException, InterruptedException, BlueprintParserException {
+                                                         Service service)
+            throws IOException, ParseException, InterruptedException, BlueprintParserException {
         LoopTemplate newLoopTemplate = new LoopTemplate();
         newLoopTemplate.setBlueprint(blueprintArtifact.getDcaeBlueprint());
         newLoopTemplate.setName(LoopTemplate.generateLoopTemplateName(csar.getSdcNotification().getServiceName(),
@@ -165,7 +160,6 @@ public class CsarInstaller {
         newLoopTemplate.setModelService(service);
         newLoopTemplate.addLoopElementModels(createMicroServiceModels(microServicesChain));
         newLoopTemplate.setMaximumInstancesAllowed(0);
-        newLoopTemplate.setSvgRepresentation(svgFacade.getSvgImage(microServicesChain));
         DcaeInventoryResponse dcaeResponse = queryDcaeToGetServiceTypeId(blueprintArtifact);
         newLoopTemplate.setDcaeBlueprintId(dcaeResponse.getTypeId());
         return newLoopTemplate;
@@ -175,8 +169,9 @@ public class CsarInstaller {
             throws InterruptedException {
         HashSet<LoopElementModel> newSet = new HashSet<>();
         for (BlueprintMicroService microService : microServicesChain) {
-            LoopElementModel loopElementModel = new LoopElementModel(microService.getModelType(), "CONFIG_POLICY",
-                    null);
+            LoopElementModel loopElementModel =
+                    new LoopElementModel(microService.getModelType(), LoopElementModel.MICRO_SERVICE_TYPE,
+                            null);
             newSet.add(loopElementModel);
             loopElementModel.addPolicyModel(getPolicyModel(microService));
         }

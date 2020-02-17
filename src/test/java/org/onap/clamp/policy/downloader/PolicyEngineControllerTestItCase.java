@@ -25,13 +25,10 @@ package org.onap.clamp.policy.downloader;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.JsonSyntaxException;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
-
 import javax.transaction.Transactional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
@@ -53,12 +50,19 @@ public class PolicyEngineControllerTestItCase {
     @Autowired
     PolicyModelsRepository policyModelsRepository;
 
+    /**
+     * This method tests a fake synchronization with the emulator.
+     *
+     * @throws JsonSyntaxException  In case of issues
+     * @throws IOException          In case of issues
+     * @throws InterruptedException In case of issues
+     */
     @Test
     @Transactional
     public void synchronizeAllPoliciesTest() throws JsonSyntaxException, IOException, InterruptedException {
         policyController.synchronizeAllPolicies();
         Instant firstExecution = policyController.getLastInstantExecuted();
-        assertThat (firstExecution).isNotNull();
+        assertThat(firstExecution).isNotNull();
         List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
         assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(8);
         assertThat(policyModelsList).contains(new PolicyModel("onap.policies.Monitoring", null, "1.0.0"));
@@ -67,7 +71,7 @@ public class PolicyEngineControllerTestItCase {
         // Re-do it to check that there is no issue with duplicate key
         policyController.synchronizeAllPolicies();
         Instant secondExecution = policyController.getLastInstantExecuted();
-        assertThat (secondExecution).isNotNull();
+        assertThat(secondExecution).isNotNull();
 
         assertThat(firstExecution).isBefore(secondExecution);
     }

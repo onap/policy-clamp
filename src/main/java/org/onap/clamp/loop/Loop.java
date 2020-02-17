@@ -27,7 +27,6 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,11 +48,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.clds.util.drawing.SvgLoopGenerator;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.components.external.DcaeComponent;
@@ -68,7 +66,7 @@ import org.onap.clamp.policy.operational.OperationalPolicy;
 
 @Entity
 @Table(name = "loops")
-@TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
+@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public class Loop extends AuditEntity implements Serializable {
 
     /**
@@ -101,7 +99,7 @@ public class Loop extends AuditEntity implements Serializable {
     private JsonObject globalPropertiesJson;
 
     @Expose
-    @ManyToOne(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH })
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "service_uuid")
     private Service modelService;
 
@@ -119,7 +117,7 @@ public class Loop extends AuditEntity implements Serializable {
     private Set<OperationalPolicy> operationalPolicies = new HashSet<>();
 
     @Expose
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "loops_to_microservicepolicies", joinColumns = @JoinColumn(name = "loop_name"),
             inverseJoinColumns = @JoinColumn(name = "microservicepolicy_name"))
     private Set<MicroServicePolicy> microServicePolicies = new HashSet<>();
@@ -130,8 +128,8 @@ public class Loop extends AuditEntity implements Serializable {
     private SortedSet<LoopLog> loopLogs = new TreeSet<>();
 
     @Expose
-    @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.EAGER)
-    @JoinColumn(name = "loop_template_name", nullable=false)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "loop_template_name", nullable = false)
     private LoopTemplate loopTemplate;
 
     private void initializeExternalComponents() {
@@ -229,14 +227,28 @@ public class Loop extends AuditEntity implements Serializable {
         this.loopLogs = loopLogs;
     }
 
-    void addOperationalPolicy(OperationalPolicy opPolicy) {
+    /**
+     * This method adds an operational policy to the loop.
+     * It re-computes the Svg as well.
+     *
+     * @param opPolicy the operationalPolicy to add
+     */
+    public void addOperationalPolicy(OperationalPolicy opPolicy) {
         operationalPolicies.add(opPolicy);
         opPolicy.setLoop(this);
+        this.setSvgRepresentation(SvgLoopGenerator.getSvgImage(this));
     }
 
-    void addMicroServicePolicy(MicroServicePolicy microServicePolicy) {
+    /**
+     * This method adds an micro service policy to the loop.
+     * It re-computes the Svg as well.
+     *
+     * @param microServicePolicy the micro service to add
+     */
+    public void addMicroServicePolicy(MicroServicePolicy microServicePolicy) {
         microServicePolicies.add(microServicePolicy);
         microServicePolicy.getUsedByLoops().add(this);
+        this.setSvgRepresentation(SvgLoopGenerator.getSvgImage(this));
     }
 
     public void addLog(LoopLog log) {
@@ -295,7 +307,7 @@ public class Loop extends AuditEntity implements Serializable {
      * @return The generated loop name
      */
     public static String generateLoopName(String serviceName, String serviceVersion, String resourceName,
-            String blueprintFileName) {
+                                          String blueprintFileName) {
         StringBuilder buffer = new StringBuilder("LOOP_").append(serviceName).append("_v").append(serviceVersion)
                 .append("_").append(resourceName).append("_").append(blueprintFileName.replaceAll(".yaml", ""));
         return buffer.toString().replace('.', '_').replaceAll(" ", "");

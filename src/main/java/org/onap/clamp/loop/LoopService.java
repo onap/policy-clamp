@@ -24,12 +24,13 @@
 package org.onap.clamp.loop;
 
 import com.google.gson.JsonObject;
-
 import java.util.List;
 import java.util.Set;
-
 import javax.persistence.EntityNotFoundException;
-
+import org.apache.commons.lang3.RandomStringUtils;
+import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelsService;
+import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -49,6 +50,9 @@ public class LoopService {
     @Autowired
     private OperationalPolicyService operationalPolicyService;
 
+    @Autowired
+    private PolicyModelsService policyModelsService;
+
     Loop saveOrUpdateLoop(Loop loop) {
         return loopsRepository.save(loop);
     }
@@ -67,7 +71,7 @@ public class LoopService {
 
     /**
      * This method is used to refresh the DCAE deployment status fields.
-     * 
+     *
      * @param loop          The loop instance to be modified
      * @param deploymentId  The deployment ID as returned by DCAE
      * @param deploymentUrl The Deployment URL as returned by DCAE
@@ -81,6 +85,19 @@ public class LoopService {
     public void updateLoopState(Loop loop, String newState) {
         loop.setLastComputedState(LoopState.valueOf(newState));
         loopsRepository.save(loop);
+    }
+
+    Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) {
+        Loop loop = findClosedLoopByName(loopName);
+        PolicyModel policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
+        if (policyModel == null) {
+            return null;
+        }
+        loop.addOperationalPolicy(
+                new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL", loop.getModelService().getName(),
+                        loop.getModelService().getVersion(), RandomStringUtils.randomAlphanumeric(3),
+                        RandomStringUtils.randomAlphanumeric(4)), loop, null, policyModel));
+        return loopsRepository.save(loop);
     }
 
     Loop updateAndSaveOperationalPolicies(String loopName, List<OperationalPolicy> newOperationalPolicies) {
@@ -114,11 +131,11 @@ public class LoopService {
     }
 
     /**
-    * Api to refresh the Operational Policy UI window.
-    * 
-    * @param loopName The loop Name
-    * @return The refreshed loop object
-    */
+     * Api to refresh the Operational Policy UI window.
+     *
+     * @param loopName The loop Name
+     * @return The refreshed loop object
+     */
     public Loop refreshOpPolicyJsonRepresentation(String loopName) {
         Loop loop = findClosedLoopByName(loopName);
         Set<OperationalPolicy> policyList = loop.getOperationalPolicies();

@@ -26,8 +26,6 @@ package org.onap.clamp.util;
 /**
  * This class is the base class for object that requires semantic versioning.
  * ... This class supports also a.b.c.d... etc ... as a version.
- *
- *
  */
 public class SemanticVersioning {
     public static final int BEFORE = -1;
@@ -41,7 +39,7 @@ public class SemanticVersioning {
      * @param arg0 A version in string for semantic versioning (a.b.c.d...)
      * @param arg1 A version in string for semantic versioning (a.b.c.d...)
      * @return objects (arg0, arg1) given as parameters. It returns the value: 0: if
-     *         (arg0==arg1) -1: if (arg0 < arg1) 1: if (arg0 > arg1)
+     *      (arg0==arg1) -1: if (arg0 < arg1) 1: if (arg0 > arg1)
      */
     public static int compare(String arg0, String arg1) {
 
@@ -60,12 +58,12 @@ public class SemanticVersioning {
         int smalestStringLength = Math.min(arg0Array.length, arg1Array.length);
 
         for (int currentVersionIndex =
-            0; currentVersionIndex < smalestStringLength; ++currentVersionIndex) {
+             0; currentVersionIndex < smalestStringLength; ++currentVersionIndex) {
             if (Integer.parseInt(arg0Array[currentVersionIndex]) < Integer
-                .parseInt(arg1Array[currentVersionIndex])) {
+                    .parseInt(arg1Array[currentVersionIndex])) {
                 return BEFORE;
             } else if (Integer.parseInt(arg0Array[currentVersionIndex]) > Integer
-                .parseInt(arg1Array[currentVersionIndex])) {
+                    .parseInt(arg1Array[currentVersionIndex])) {
                 return AFTER;
             }
             // equals, so do not return anything, continue
@@ -88,6 +86,6 @@ public class SemanticVersioning {
             return DEFAULT_VERSION;
         }
         String[] versionArray = currentVersion.split("\\.");
-        return String.valueOf(Integer.parseInt(versionArray[0]) + 1)+".0.0";
+        return String.valueOf(Integer.parseInt(versionArray[0]) + 1) + ".0.0";
     }
 }

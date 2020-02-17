@@ -28,13 +28,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.transaction.Transactional;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -42,6 +39,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.loop.template.LoopTemplate;
+import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelsService;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,11 +55,20 @@ public class DeployFlowTestItCase {
     CamelContext camelContext;
 
     @Autowired
+    PolicyModelsService policyModelsService;
+
+    @Autowired
     LoopService loopService;
 
     @Autowired
     LoopsRepository loopsRepository;
 
+    /**
+     * This method tests a deployment a single blueprint.
+     *
+     * @throws JsonSyntaxException In case of issues
+     * @throws IOException In case of issues
+     */
     @Test
     @Transactional
     public void deployWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
@@ -85,6 +93,12 @@ public class DeployFlowTestItCase {
         assertThat(loopAfterTest.getDcaeDeploymentId()).isNotNull();
     }
 
+    /**
+     * This method tests the deployment of multiple separated  blueprints.
+     *
+     * @throws JsonSyntaxException In case of issues
+     * @throws IOException In case of issues
+     */
     @Test
     @Transactional
     public void deployWithMultipleBlueprintTest() throws JsonSyntaxException, IOException {
@@ -117,6 +131,12 @@ public class DeployFlowTestItCase {
         assertThat(loopAfterTest.getDcaeDeploymentId()).isNull();
     }
 
+    /**
+     * This method tests the undeployment of a single blueprint.
+     *
+     * @throws JsonSyntaxException In case of issues
+     * @throws IOException In case of issues
+     */
     @Test
     @Transactional
     public void undeployWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
@@ -142,6 +162,12 @@ public class DeployFlowTestItCase {
         assertThat(loopAfterTest.getDcaeDeploymentStatusUrl().contains("/uninstall")).isTrue();
     }
 
+    /**
+     * This method tests the undeployment of multiple separated blueprints.
+     *
+     * @throws JsonSyntaxException In case of issues
+     * @throws IOException In case of issues
+     */
     @Test
     @Transactional
     public void undeployWithMultipleBlueprintTest() throws JsonSyntaxException, IOException {
@@ -175,7 +201,12 @@ public class DeployFlowTestItCase {
         assertThat(loopAfterTest.getDcaeDeploymentId()).isNull();
     }
 
-
+    /**
+     * This method tests the DCAE get status for a single blueprint.
+     *
+     * @throws JsonSyntaxException In case of issues
+     * @throws IOException In case of issues
+     */
     @Test
     @Transactional
     public void getStatusWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
@@ -206,6 +237,12 @@ public class DeployFlowTestItCase {
         assertThat(loopAfterTest.getComponent("POLICY")).isNotNull();
     }
 
+    /**
+     * This method tests the dcae get status for multiple blueprints.
+     *
+     * @throws JsonSyntaxException In case of issues
+     * @throws IOException In case of issues
+     */
     @Test
     @Transactional
     public void getStatusWithMultipleBlueprintTest() throws JsonSyntaxException, IOException {
@@ -256,8 +293,13 @@ public class DeployFlowTestItCase {
 
     private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
             String policyTosca, String jsonProperties, boolean shared) {
-        MicroServicePolicy microService = new MicroServicePolicy(name, modelType, policyTosca, shared,
+
+        PolicyModel policyModel = new PolicyModel(modelType, policyTosca,"1.0.0");
+        policyModelsService.saveOrUpdatePolicyModel(policyModel);
+        MicroServicePolicy microService = new MicroServicePolicy(name, policyModel,
+                shared,
                 gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
+
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
     }

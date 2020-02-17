@@ -124,10 +124,10 @@
         dcae_deployment_id varchar(255),
         dcae_deployment_status_url varchar(255),
         device_type_scope varchar(255),
-        policy_model_type varchar(255) not null,
-        policy_tosca MEDIUMTEXT not null,
         shared bit not null,
         loop_element_model_id varchar(255),
+        policy_model_type varchar(255),
+        policy_model_version varchar(255),
         primary key (name)
     ) engine=InnoDB;
 
@@ -232,6 +232,11 @@
        add constraint FKqvvdypacbww07fuv8xvlvdjgl 
        foreign key (loop_element_model_id) 
        references loop_element_models (name);
+
+    alter table micro_service_policies 
+       add constraint FKn17j9ufmyhqicb6cvr1dbjvkt 
+       foreign key (policy_model_type, policy_model_version) 
+       references policy_models (policy_model_type, version);
 
     alter table operational_policies 
        add constraint FKi9kh7my40737xeuaye9xwbnko 

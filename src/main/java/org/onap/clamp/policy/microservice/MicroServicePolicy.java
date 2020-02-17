@@ -30,20 +30,20 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.json.JSONObject;
@@ -51,12 +51,13 @@ import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.Policy;
 import org.yaml.snakeyaml.Yaml;
 
 @Entity
 @Table(name = "micro_service_policies")
-@TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
+@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public class MicroServicePolicy extends Policy implements Serializable {
     /**
      * The serial version ID.
@@ -72,10 +73,6 @@ public class MicroServicePolicy extends Policy implements Serializable {
     private String name;
 
     @Expose
-    @Column(nullable = false, name = "policy_model_type")
-    private String modelType;
-
-    @Expose
     @Column(name = "context")
     private String context;
 
@@ -86,9 +83,6 @@ public class MicroServicePolicy extends Policy implements Serializable {
     @Expose
     @Column(name = "shared", nullable = false)
     private Boolean shared;
-
-    @Column(columnDefinition = "MEDIUMTEXT", name = "policy_tosca", nullable = false)
-    private String policyTosca;
 
     @ManyToMany(mappedBy = "microServicePolicies", fetch = FetchType.EAGER)
     private Set<Loop> usedByLoops = new HashSet<>();
@@ -105,6 +99,12 @@ public class MicroServicePolicy extends Policy implements Serializable {
     @Column(name = "dcae_blueprint_id")
     private String dcaeBlueprintId;
 
+    @Expose
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({@JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
+    private PolicyModel policyModel;
+
     public MicroServicePolicy() {
         // serialization
     }
@@ -114,24 +114,23 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * using the ToscaYamlToJsonConvertor.
      *
      * @param name        The name of the MicroService
-     * @param modelType   The model type of the MicroService
-     * @param policyTosca The policy Tosca of the MicroService
+     * @param policyModel The policy model of the MicroService
      * @param shared      The flag indicate whether the MicroService is shared
      * @param usedByLoops The list of loops that uses this MicroService
      */
-    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared,
-            Set<Loop> usedByLoops) {
+    public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared,
+                              Set<Loop> usedByLoops) {
         this.name = name;
-        this.modelType = modelType;
-        this.policyTosca = policyTosca;
+        this.policyModel = policyModel;
         this.shared = shared;
         this.setJsonRepresentation(JsonUtils.GSON_JPA_MODEL
-                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyTosca, modelType), JsonObject.class));
+                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyModel.getPolicyModelTosca(),
+                        policyModel.getPolicyModelType()), JsonObject.class));
         this.usedByLoops = usedByLoops;
     }
 
     private JsonObject createJsonFromPolicyTosca() {
-        Map<String, Object> map = new Yaml().load(this.getPolicyTosca());
+        Map<String, Object> map = new Yaml().load(this.getPolicyModel().getPolicyModelTosca());
         JSONObject jsonObject = new JSONObject(map);
         return new Gson().fromJson(jsonObject.toString(), JsonObject.class);
     }
@@ -141,18 +140,16 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * the jsonRepresentation instead.
      *
      * @param name               The name of the MicroService
-     * @param modelType          The model type of the MicroService
-     * @param policyTosca        The policy Tosca of the MicroService
+     * @param policyModel        The policy model type of the MicroService
      * @param shared             The flag indicate whether the MicroService is
      *                           shared
      * @param jsonRepresentation The UI representation in json format
      * @param usedByLoops        The list of loops that uses this MicroService
      */
-    public MicroServicePolicy(String name, String modelType, String policyTosca, Boolean shared,
-            JsonObject jsonRepresentation, Set<Loop> usedByLoops) {
+    public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared,
+                              JsonObject jsonRepresentation, Set<Loop> usedByLoops) {
         this.name = name;
-        this.modelType = modelType;
-        this.policyTosca = policyTosca;
+        this.policyModel = policyModel;
         this.shared = shared;
         this.usedByLoops = usedByLoops;
         this.setJsonRepresentation(jsonRepresentation);
@@ -165,20 +162,12 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     /**
      * name setter.
-     * 
+     *
      * @param name the name to set
      */
     @Override
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getModelType() {
-        return modelType;
-    }
-
-    void setModelType(String modelType) {
-        this.modelType = modelType;
     }
 
     public Boolean getShared() {
@@ -187,14 +176,6 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     void setShared(Boolean shared) {
         this.shared = shared;
-    }
-
-    public String getPolicyTosca() {
-        return policyTosca;
-    }
-
-    void setPolicyTosca(String policyTosca) {
-        this.policyTosca = policyTosca;
     }
 
     public Set<Loop> getUsedByLoops() {
@@ -221,9 +202,17 @@ public class MicroServicePolicy extends Policy implements Serializable {
         this.deviceTypeScope = deviceTypeScope;
     }
 
+    public PolicyModel getPolicyModel() {
+        return policyModel;
+    }
+
+    public void setPolicyModel(PolicyModel policyModel) {
+        this.policyModel = policyModel;
+    }
+
     /**
      * dcaeDeploymentId getter.
-     * 
+     *
      * @return the dcaeDeploymentId
      */
     public String getDcaeDeploymentId() {
@@ -232,7 +221,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     /**
      * dcaeDeploymentId setter.
-     * 
+     *
      * @param dcaeDeploymentId the dcaeDeploymentId to set
      */
     public void setDcaeDeploymentId(String dcaeDeploymentId) {
@@ -241,7 +230,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     /**
      * dcaeDeploymentStatusUrl getter.
-     * 
+     *
      * @return the dcaeDeploymentStatusUrl
      */
     public String getDcaeDeploymentStatusUrl() {
@@ -250,7 +239,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     /**
      * dcaeDeploymentStatusUrl setter.
-     * 
+     *
      * @param dcaeDeploymentStatusUrl the dcaeDeploymentStatusUrl to set
      */
     public void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
@@ -259,7 +248,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     /**
      * dcaeBlueprintId getter.
-     * 
+     *
      * @return the dcaeBlueprintId
      */
     public String getDcaeBlueprintId() {
@@ -268,7 +257,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     /**
      * dcaeBlueprintId setter.
-     * 
+     *
      * @param dcaeBlueprintId the dcaeBlueprintId to set
      */
     void setDcaeBlueprintId(String dcaeBlueprintId) {
@@ -306,7 +295,9 @@ public class MicroServicePolicy extends Policy implements Serializable {
     }
 
     private String getMicroServicePropertyNameFromTosca(JsonObject object) {
-        return object.getAsJsonObject("policy_types").getAsJsonObject(this.modelType).getAsJsonObject("properties")
+        return object.getAsJsonObject("policy_types").getAsJsonObject(this.getPolicyModel().getPolicyModelType())
+                .getAsJsonObject(
+                        "properties")
                 .keySet().toArray(new String[1])[0];
     }
 
@@ -329,8 +320,8 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
         JsonObject policyDetails = new JsonObject();
         thisPolicy.add(this.getName(), policyDetails);
-        policyDetails.addProperty("type", this.getModelType());
-        policyDetails.addProperty("version", "1.0.0");
+        policyDetails.addProperty("type", this.getPolicyModel().getPolicyModelType());
+        policyDetails.addProperty("version", this.getPolicyModel().getVersion());
 
         JsonObject policyMetadata = new JsonObject();
         policyDetails.add("metadata", policyMetadata);

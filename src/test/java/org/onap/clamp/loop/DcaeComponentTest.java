@@ -27,11 +27,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.json.simple.parser.ParseException;
@@ -42,6 +40,7 @@ import org.onap.clamp.clds.model.dcae.DcaeOperationStatusResponse;
 import org.onap.clamp.loop.components.external.DcaeComponent;
 import org.onap.clamp.loop.components.external.ExternalComponentState;
 import org.onap.clamp.loop.template.LoopTemplate;
+import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 
 public class DcaeComponentTest {
@@ -54,8 +53,8 @@ public class DcaeComponentTest {
         loopTest.setDcaeDeploymentId("123456789");
         loopTest.setDcaeDeploymentStatusUrl("http4://localhost:8085");
 
-        MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", "",
-                "tosca_definitions_version: tosca_simple_yaml_1_0_0", true,
+        MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", new PolicyModel("policy1",
+                "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0"), true,
                 new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), new HashSet<>());
         microServicePolicy.setConfigurationsJson(new Gson().fromJson("{\"param1\":\"value1\"}", JsonObject.class));
 
@@ -67,6 +66,10 @@ public class DcaeComponentTest {
         return loopTest;
     }
 
+    /**
+     * Test the DcaeReponse roughly.
+     * @throws IOException In case of issues
+     */
     @Test
     public void convertDcaeResponseTest() throws IOException {
         String dcaeFakeResponse = "{'requestId':'testId','operationType':'install','status':'state',"
@@ -99,6 +102,11 @@ public class DcaeComponentTest {
         assertThat(unDeploymentPayload).isEqualTo(expectedPayload);
     }
 
+    /**
+     * Test the computeState method of the DcaeComponent roughly.
+     *
+     * @throws IOException In case of issues
+     */
     @Test
     public void computeStateTest() throws IOException {
         Exchange exchange = Mockito.mock(Exchange.class);
@@ -157,6 +165,11 @@ public class DcaeComponentTest {
         assertThat(state9.getStateName()).isEqualTo("IN_ERROR");
     }
 
+    /**
+     * Test the Converter to DcaeInventoryResponse method.
+     * @throws IOException In case of failure
+     * @throws ParseException In case of failure
+     */
     @Test
     public void convertToDcaeInventoryResponseTest() throws IOException, ParseException {
         String dcaeFakeResponse = "{\n" + "  \"links\": {\n" + "    \"previousLink\": {\n"

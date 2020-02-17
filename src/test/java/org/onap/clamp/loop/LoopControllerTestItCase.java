@@ -30,16 +30,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import java.util.Set;
-
 import javax.transaction.Transactional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.template.LoopTemplate;
+import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelsService;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -62,6 +61,9 @@ public class LoopControllerTestItCase {
 
     @Autowired
     MicroServicePolicyService microServicePolicyService;
+
+    @Autowired
+    PolicyModelsService policyModelsService;
 
     @Autowired
     LoopController loopController;
@@ -129,8 +131,10 @@ public class LoopControllerTestItCase {
     @Transactional
     public void testUpdateMicroservicePolicy() {
         saveTestLoopToDb();
-        MicroServicePolicy policy = new MicroServicePolicy("policyName", "",
-                "tosca_definitions_version: tosca_simple_yaml_1_0_0", false,
+        PolicyModel policyModel = new PolicyModel("",
+                "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0");
+        policyModelsService.saveOrUpdatePolicyModel(policyModel);
+        MicroServicePolicy policy = new MicroServicePolicy("policyName", policyModel, false,
                 JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
         loopController.updateMicroservicePolicy(EXAMPLE_LOOP_NAME, policy);
         assertThat(microServicePolicyService.isExisting("policyName")).isTrue();

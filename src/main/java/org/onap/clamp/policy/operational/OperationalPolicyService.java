@@ -35,28 +35,30 @@ import org.springframework.stereotype.Service;
 @Service
 public class OperationalPolicyService implements PolicyService<OperationalPolicy> {
 
-    private final OperationalPolicyRepository repository;
+    private final OperationalPolicyRepository operationalPolicyRepository;
 
     @Autowired
     public OperationalPolicyService(OperationalPolicyRepository repository) {
-        this.repository = repository;
+        this.operationalPolicyRepository = repository;
     }
 
     @Override
     public Set<OperationalPolicy> updatePolicies(Loop loop, List<OperationalPolicy> operationalPolicies) {
         return operationalPolicies
-            .stream()
-            .map(policy ->
-                repository
-                    .findById(policy.getName())
-                    .map(p -> setConfigurationJson(p, policy.getConfigurationsJson()))
-                    .orElse(new OperationalPolicy(policy.getName(), loop, policy.getConfigurationsJson())))
-            .collect(Collectors.toSet());
+                .parallelStream()
+                .map(policy ->
+                        operationalPolicyRepository
+                                .findById(policy.getName())
+                                .map(p -> setConfigurationJson(p, policy.getConfigurationsJson()))
+                                .orElse(new OperationalPolicy(policy.getName(), loop,
+                                        policy.getConfigurationsJson(),
+                                        policy.getPolicyModel())))
+                .collect(Collectors.toSet());
     }
 
     @Override
     public boolean isExisting(String policyName) {
-        return repository.existsById(policyName);
+        return operationalPolicyRepository.existsById(policyName);
     }
 
     private OperationalPolicy setConfigurationJson(OperationalPolicy policy, JsonObject configurationsJson) {

@@ -102,11 +102,16 @@ public class CldsService extends SecureServiceBase {
     @Autowired
     public CldsService(
             @Value("${clamp.config.security.permission.type.cl:permission-type-cl}") String cldsPersmissionTypeCl,
-            @Value("${clamp.config.security.permission.type.cl.manage:permission-type-cl-manage}") String cldsPermissionTypeClManage,
-            @Value("${clamp.config.security.permission.type.cl.event:permission-type-cl-event}") String cldsPermissionTypeClEvent,
-            @Value("${clamp.config.security.permission.type.filter.vf:permission-type-filter-vf}") String cldsPermissionTypeFilterVf,
-            @Value("${clamp.config.security.permission.type.template:permission-type-template}") String cldsPermissionTypeTemplate,
-            @Value("${clamp.config.security.permission.type.tosca:permission-type-tosca}") String cldsPermissionTypeTosca,
+            @Value("${clamp.config.security.permission.type.cl.manage:permission-type-cl-manage}")
+                    String cldsPermissionTypeClManage,
+            @Value("${clamp.config.security.permission.type.cl.event:permission-type-cl-event}")
+                    String cldsPermissionTypeClEvent,
+            @Value("${clamp.config.security.permission.type.filter.vf:permission-type-filter-vf}")
+                    String cldsPermissionTypeFilterVf,
+            @Value("${clamp.config.security.permission.type.template:permission-type-template}")
+                    String cldsPermissionTypeTemplate,
+            @Value("${clamp.config.security.permission.type.tosca:permission-type-tosca}")
+                    String cldsPermissionTypeTosca,
             @Value("${clamp.config.security.permission.instance:dev}") String cldsPermissionInstance) {
         this.cldsPermissionTypeFilterVf = cldsPermissionTypeFilterVf;
         this.cldsPermissionInstance = cldsPermissionInstance;
@@ -125,7 +130,7 @@ public class CldsService extends SecureServiceBase {
      * Gets clds info. CLDS IFO service will return 3 things 1. User Name 2. CLDS
      * code version that is currently installed from pom.xml file 3. User
      * permissions
-     * 
+     *
      * @return the clds info
      */
     public CldsInfo getCldsInfo() {

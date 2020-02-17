@@ -24,30 +24,51 @@
 
 package org.onap.clamp.clds.util.drawing;
 
-import java.util.List;
-
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.batik.svggen.SVGGraphics2D;
-import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.clds.util.XmlTools;
-import org.springframework.stereotype.Component;
+import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.LoopElementModel;
+import org.onap.clamp.loop.template.LoopTemplate;
+import org.onap.clamp.loop.template.LoopTemplateLoopElementModel;
 import org.w3c.dom.Document;
 
-@Component
-public class SvgFacade {
+public class SvgLoopGenerator {
     /**
-     * Generate the SVG images from the microservice Chain.
-     * 
-     * @param microServicesChain THe chain of microservices
+     * Generate the SVG images from the loop.
+     *
+     * @param loop The loop object, so it won't use the loop template
      * @return A String containing the SVG
      */
-    public String getSvgImage(List<BlueprintMicroService> microServicesChain) {
+    public static String getSvgImage(Loop loop) {
         SVGGraphics2D svgGraphics2D = new SVGGraphics2D(XmlTools.createEmptySvgDocument());
         Document document = XmlTools.createEmptySvgDocument();
         DocumentBuilder dp = new DocumentBuilder(document, svgGraphics2D.getDOMFactory());
         Painter painter = new Painter(svgGraphics2D, dp);
         ClampGraphBuilder cgp = new ClampGraphBuilder(painter).collector("VES");
-        cgp.addAllMicroServices(microServicesChain);
-        ClampGraph cg = cgp.policy("OperationalPolicy").build();
+        cgp.addAllMicroServices(loop.getMicroServicePolicies());
+        ClampGraph cg = cgp.addAllPolicies(loop.getOperationalPolicies()).build();
+        return cg.getAsSvg();
+    }
+
+    /**
+     * Generate the SVG images from the loop template.
+     *
+     * @param loopTemplate The loop template
+     * @return A String containing the SVG
+     */
+    public static String getSvgImage(LoopTemplate loopTemplate) {
+        SVGGraphics2D svgGraphics2D = new SVGGraphics2D(XmlTools.createEmptySvgDocument());
+        Document document = XmlTools.createEmptySvgDocument();
+        DocumentBuilder dp = new DocumentBuilder(document, svgGraphics2D.getDOMFactory());
+        Painter painter = new Painter(svgGraphics2D, dp);
+        ClampGraphBuilder cgp = new ClampGraphBuilder(painter).collector("VES");
+        Set<LoopElementModel> elementModelsSet = new HashSet<>();
+        for (LoopTemplateLoopElementModel elementModelLink:loopTemplate.getLoopElementModelsUsed()) {
+            elementModelsSet.add(elementModelLink.getLoopElementModel());
+        }
+        ClampGraph cg = cgp.addAllLoopElementModels(elementModelsSet).build();
         return cg.getAsSvg();
     }
 
