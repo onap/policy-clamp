@@ -119,6 +119,7 @@
         configurations_json json,
         json_representation json not null,
         pdp_group varchar(255),
+        pdp_sub_group varchar(255),
         context varchar(255),
         dcae_blueprint_id varchar(255),
         dcae_deployment_id varchar(255),
@@ -140,6 +141,7 @@
         configurations_json json,
         json_representation json not null,
         pdp_group varchar(255),
+        pdp_sub_group varchar(255),
         loop_element_model_id varchar(255),
         loop_id varchar(255) not null,
         policy_model_type varchar(255),
@@ -156,6 +158,7 @@
         updated_timestamp datetime(6) not null,
         policy_acronym varchar(255),
         policy_tosca MEDIUMTEXT,
+        policy_pdp_group json,
         primary key (policy_model_type, version)
     ) engine=InnoDB;
 

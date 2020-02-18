@@ -28,6 +28,7 @@ import com.att.eelf.configuration.EELFManager;
 
 import java.time.Instant;
 
+import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.PolicyEngineServices;
 import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,8 @@ public class PolicyEngineController {
         return lastInstantExecuted;
     }
 
-
+    @Scheduled(fixedRate = 300000)
+    public synchronized void downloadPdpGroups() throws ParseException {
+        policyEngineServices.downloadPdpGroups();
+    }
 }

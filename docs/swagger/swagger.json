@@ -4,13 +4,13 @@
     "version" : "5.0.0-SNAPSHOT",
     "title" : "Clamp Rest API"
   },
-  "host" : "localhost:32977",
+  "host" : "localhost:33631",
   "basePath" : "/restservices/clds/",
   "schemes" : [ "http" ],
   "paths" : {
     "/v2/dictionary" : {
       "get" : {
-        "operationId" : "route111",
+        "operationId" : "route80",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -20,11 +20,11 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route111"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route80"
       },
       "put" : {
-        "operationId" : "route113",
+        "operationId" : "route82",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -43,8 +43,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route113"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route82"
       }
     },
     "/v2/dictionary/{dictionaryName}" : {
@@ -64,7 +64,7 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
@@ -93,11 +93,11 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       },
       "delete" : {
-        "operationId" : "route115",
+        "operationId" : "route84",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "name",
@@ -108,8 +108,8 @@
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route115"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route84"
       }
     },
     "/v2/dictionary/{name}/elements/{shortName}" : {
@@ -129,7 +129,7 @@
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
@@ -147,13 +147,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
     "/v2/loop/{loopName}" : {
       "get" : {
-        "operationId" : "route96",
+        "operationId" : "route65",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -169,13 +169,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route96"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route65"
       }
     },
     "/v2/loop/delete/{loopName}" : {
       "put" : {
-        "operationId" : "route107",
+        "operationId" : "route76",
         "parameters" : [ {
           "name" : "loopName",
           "in" : "path",
@@ -185,13 +185,13 @@
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route107"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route76"
       }
     },
     "/v2/loop/deploy/{loopName}" : {
       "put" : {
-        "operationId" : "route101",
+        "operationId" : "route70",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -207,13 +207,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route101"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route70"
       }
     },
     "/v2/loop/getAllNames" : {
       "get" : {
-        "operationId" : "route95",
+        "operationId" : "route64",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -226,13 +226,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route95"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route64"
       }
     },
     "/v2/loop/getstatus/{loopName}" : {
       "get" : {
-        "operationId" : "route108",
+        "operationId" : "route77",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -248,13 +248,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route108"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route77"
       }
     },
     "/v2/loop/refreshOpPolicyJsonSchema/{loopName}" : {
       "put" : {
-        "operationId" : "route102",
+        "operationId" : "route71",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -270,13 +270,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route102"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route71"
       }
     },
     "/v2/loop/restart/{loopName}" : {
       "put" : {
-        "operationId" : "route105",
+        "operationId" : "route74",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -292,13 +292,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route105"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route74"
       }
     },
     "/v2/loop/stop/{loopName}" : {
       "put" : {
-        "operationId" : "route104",
+        "operationId" : "route73",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -314,13 +314,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route104"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route73"
       }
     },
     "/v2/loop/submit/{loopName}" : {
       "put" : {
-        "operationId" : "route106",
+        "operationId" : "route75",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -336,13 +336,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route106"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route75"
       }
     },
     "/v2/loop/svgRepresentation/{loopName}" : {
       "get" : {
-        "operationId" : "route97",
+        "operationId" : "route66",
         "produces" : [ "application/xml" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -358,13 +358,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route97"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route66"
       }
     },
     "/v2/loop/undeploy/{loopName}" : {
       "put" : {
-        "operationId" : "route103",
+        "operationId" : "route72",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -380,13 +380,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route103"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route72"
       }
     },
     "/v2/loop/updateGlobalProperties/{loopName}" : {
       "post" : {
-        "operationId" : "route98",
+        "operationId" : "route67",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -410,13 +410,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route98"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route67"
       }
     },
     "/v2/loop/updateMicroservicePolicy/{loopName}" : {
       "post" : {
-        "operationId" : "route100",
+        "operationId" : "route69",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -440,13 +440,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route100"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route69"
       }
     },
     "/v2/loop/updateOperationalPolicies/{loopName}" : {
       "post" : {
-        "operationId" : "route99",
+        "operationId" : "route68",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -470,13 +470,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route99"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route68"
       }
     },
     "/v2/policyToscaModels" : {
       "get" : {
-        "operationId" : "route118",
+        "operationId" : "route87",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -486,8 +486,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route118"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route87"
       }
     },
     "/v2/policyToscaModels/{policyModelType}" : {
@@ -507,11 +507,11 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       },
       "put" : {
-        "operationId" : "route119",
+        "operationId" : "route88",
         "consumes" : [ "plain/text" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -535,8 +535,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route119"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route88"
       }
     },
     "/v2/policyToscaModels/yaml/{policyModelType}" : {
@@ -556,13 +556,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
     "/v2/templates" : {
       "get" : {
-        "operationId" : "route122",
+        "operationId" : "route91",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -572,8 +572,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route122"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route91"
       }
     },
     "/v2/templates/{templateName}" : {
@@ -593,7 +593,7 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
@@ -611,13 +611,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
     "/v1/healthcheck" : {
       "get" : {
-        "operationId" : "route123",
+        "operationId" : "route92",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -627,19 +627,19 @@
             }
           }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route123"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route92"
       }
     },
     "/v1/user/getUser" : {
       "get" : {
-        "operationId" : "route124",
+        "operationId" : "route93",
         "produces" : [ "text/plain" ],
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-4",
-        "x-routeId" : "route124"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route93"
       }
     }
   },
@@ -809,19 +809,18 @@
         "number" : {
           "type" : "boolean"
         },
+        "string" : {
+          "type" : "boolean"
+        },
+        "boolean" : {
+          "type" : "boolean"
+        },
         "asString" : {
           "type" : "string"
-        },
-        "asNumber" : {
-          "$ref" : "#/definitions/Number"
         },
         "asDouble" : {
           "type" : "number",
           "format" : "double"
-        },
-        "asFloat" : {
-          "type" : "number",
-          "format" : "float"
         },
         "asLong" : {
           "type" : "integer",
@@ -830,6 +829,13 @@
         "asInt" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "asNumber" : {
+          "$ref" : "#/definitions/Number"
+        },
+        "asFloat" : {
+          "type" : "number",
+          "format" : "float"
         },
         "asByte" : {
           "type" : "string",
@@ -848,20 +854,8 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "boolean" : {
-          "type" : "boolean"
-        },
-        "string" : {
-          "type" : "boolean"
-        },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
         },
         "jsonArray" : {
           "type" : "boolean"
@@ -874,6 +868,12 @@
         },
         "jsonNull" : {
           "type" : "boolean"
+        },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
         },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"
@@ -952,17 +952,23 @@
         "asBoolean" : {
           "type" : "boolean"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
+        "asJsonObject" : {
+          "$ref" : "#/definitions/JsonObject"
         },
         "asString" : {
           "type" : "string"
         },
-        "asJsonObject" : {
-          "$ref" : "#/definitions/JsonObject"
+        "asDouble" : {
+          "type" : "number",
+          "format" : "double"
         },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
+        "asLong" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "asInt" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "jsonArray" : {
           "type" : "boolean"
@@ -976,27 +982,21 @@
         "jsonNull" : {
           "type" : "boolean"
         },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
+        },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"
         },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
         },
-        "asDouble" : {
-          "type" : "number",
-          "format" : "double"
-        },
         "asFloat" : {
           "type" : "number",
           "format" : "float"
-        },
-        "asLong" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "asInt" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "asByte" : {
           "type" : "string",
@@ -1144,17 +1144,23 @@
         "asBoolean" : {
           "type" : "boolean"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
+        "asJsonObject" : {
+          "$ref" : "#/definitions/JsonObject"
         },
         "asString" : {
           "type" : "string"
         },
-        "asJsonObject" : {
-          "$ref" : "#/definitions/JsonObject"
+        "asDouble" : {
+          "type" : "number",
+          "format" : "double"
         },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
+        "asLong" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "asInt" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "jsonArray" : {
           "type" : "boolean"
@@ -1168,27 +1174,21 @@
         "jsonNull" : {
           "type" : "boolean"
         },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
+        },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"
         },
         "asNumber" : {
           "$ref" : "#/definitions/Number"
         },
-        "asDouble" : {
-          "type" : "number",
-          "format" : "double"
-        },
         "asFloat" : {
           "type" : "number",
           "format" : "float"
-        },
-        "asLong" : {
-          "type" : "integer",
-          "format" : "int64"
-        },
-        "asInt" : {
-          "type" : "integer",
-          "format" : "int32"
         },
         "asByte" : {
           "type" : "string",
@@ -1218,16 +1218,9 @@
         "asString" : {
           "type" : "string"
         },
-        "asNumber" : {
-          "$ref" : "#/definitions/Number"
-        },
         "asDouble" : {
           "type" : "number",
           "format" : "double"
-        },
-        "asFloat" : {
-          "type" : "number",
-          "format" : "float"
         },
         "asLong" : {
           "type" : "integer",
@@ -1236,6 +1229,13 @@
         "asInt" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "asNumber" : {
+          "$ref" : "#/definitions/Number"
+        },
+        "asFloat" : {
+          "type" : "number",
+          "format" : "float"
         },
         "asByte" : {
           "type" : "string",
@@ -1254,14 +1254,8 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
         },
         "jsonArray" : {
           "type" : "boolean"
@@ -1274,6 +1268,12 @@
         },
         "jsonNull" : {
           "type" : "boolean"
+        },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
         },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"

@@ -1,0 +1,76 @@
+{
+    "groups": [
+        {
+            "description": "This group should be used for managing all control loop related policies and pdps",
+            "name": "controlloop",
+            "pdpGroupState": "ACTIVE",
+            "pdpSubgroups": [
+                {
+                    "currentInstanceCount": 0,
+                    "desiredInstanceCount": 1,
+                    "pdpInstances": [],
+                    "pdpType": "apex",
+                    "policies": [],
+                    "properties": {},
+                    "supportedPolicyTypes": [
+                        {
+                            "name": "onap.policies.controlloop.Operational",
+                            "version": "1.0.0"
+                        }
+                    ]
+                },
+                {
+                    "currentInstanceCount": 0,
+                    "desiredInstanceCount": 1,
+                    "pdpInstances": [],
+                    "pdpType": "drools",
+                    "policies": [],
+                    "properties": {},
+                    "supportedPolicyTypes": [
+                        {
+                            "name": "onap.policies.controlloop.Operational",
+                            "version": "1.0.0"
+                        }
+                    ]
+                },
+                {
+                    "currentInstanceCount": 0,
+                    "desiredInstanceCount": 1,
+                    "pdpInstances": [],
+                    "pdpType": "xacml",
+                    "policies": [],
+                    "properties": {},
+                    "supportedPolicyTypes": [
+                        {
+                            "name": "onap.policies.controlloop.Guard",
+                            "version": "1.0.0"
+                        }
+                    ]
+                }
+            ],
+            "properties": {}
+        },
+        {
+            "description": "This group should be used for managing all monitoring related policies and pdps",
+            "name": "monitoring",
+            "pdpGroupState": "ACTIVE",
+            "pdpSubgroups": [
+                {
+                    "currentInstanceCount": 0,
+                    "desiredInstanceCount": 1,
+                    "pdpInstances": [],
+                    "pdpType": "xacml",
+                    "policies": [],
+                    "properties": {},
+                    "supportedPolicyTypes": [
+                        {
+                            "name": "onap.policies.monitoring.*",
+                            "version": "1.0.0"
+                        }
+                    ]
+                }
+            ],
+            "properties": {}
+        }
+    ]
+}

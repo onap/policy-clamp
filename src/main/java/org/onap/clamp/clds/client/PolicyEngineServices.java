@@ -25,17 +25,28 @@ package org.onap.clamp.clds.client;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
+import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsService;
+import org.onap.clamp.policy.pdpgroup.PdpGroup;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
@@ -53,11 +64,9 @@ import org.yaml.snakeyaml.Yaml;
 public class PolicyEngineServices {
     private final CamelContext camelContext;
 
-    private final PolicyModelsService policyModelsSService;
+    private final PolicyModelsService policyModelsService;
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineServices.class);
-    private static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-    private static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
     private static int retryInterval = 0;
     private static int retryLimit = 1;
 
@@ -70,12 +79,13 @@ public class PolicyEngineServices {
      * @param camelContext Camel context bean
      * @param clampProperties ClampProperties bean
      * @param policyModelsSService policyModel repository bean
+     * @param policyModelsService policyModel service
      */
     @Autowired
     public PolicyEngineServices(CamelContext camelContext, ClampProperties clampProperties,
                                 PolicyModelsService policyModelsSService) {
         this.camelContext = camelContext;
-        this.policyModelsSService = policyModelsSService;
+        this.policyModelsService = policyModelsSService;
         if (clampProperties.getStringValue(POLICY_RETRY_LIMIT) != null) {
             retryLimit = Integer.parseInt(clampProperties.getStringValue(POLICY_RETRY_LIMIT));
         }
@@ -122,7 +132,7 @@ public class PolicyEngineServices {
         policyTypesList.parallelStream().forEach(policyType -> {
             Map.Entry<String, Object> policyTypeEntry = (Map.Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
 
-            policyModelsSService.createPolicyInDbIfNeeded(
+            policyModelsService.createPolicyInDbIfNeeded(
                     createPolicyModelFromPolicyEngine(policyTypeEntry.getKey(),
                             ((String) ((LinkedHashMap<String, Object>) policyTypeEntry.getValue()).get("version"))));
         });
@@ -135,7 +145,7 @@ public class PolicyEngineServices {
      * @return A yaml containing all policy Types and all data types
      */
     public String downloadAllPolicies() {
-        return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models");
+        return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models", "Get all policies");
     }
 
     /**
@@ -147,16 +157,43 @@ public class PolicyEngineServices {
      */
     public String downloadOnePolicy(String policyType, String policyVersion) {
         return callCamelRoute(ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
-                .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model");
+                .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model", "Get one policy");
     }
 
-    private String callCamelRoute(Exchange exchange, String camelFlow) {
+    /**
+     * This method can be used to download all Pdp Groups data from policy engine.
+     * 
+     */
+    public void downloadPdpGroups() {
+        String responseBody = callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-pdp-groups", "Get Pdp Groups");
+
+        if (responseBody == null || responseBody.isEmpty()) {
+            logger.warn("getPdpGroups returned by policy engine could not be decoded, as it's null or empty");
+            return;
+        }
+
+        JsonObject jsonObj = JsonUtils.GSON.fromJson(responseBody, JsonObject.class);
+
+        List<PdpGroup> pdpGroupList = new LinkedList<>();
+        JsonArray itemsArray = (JsonArray) jsonObj.get("groups");
+
+        Iterator it = itemsArray.iterator();
+        while (it.hasNext()) {
+            JsonObject item = (JsonObject) it.next();
+            PdpGroup pdpGroup = JsonUtils.GSON.fromJson(item.toString(), PdpGroup.class);
+            pdpGroupList.add(pdpGroup);
+        }
+
+        policyModelsService.updatePdpGroupInfo(pdpGroupList);
+    }
+
+    private String callCamelRoute(Exchange exchange, String camelFlow, String logMsg) {
         for (int i = 0; i < retryLimit; i++) {
             Exchange exchangeResponse = camelContext.createProducerTemplate().send(camelFlow, exchange);
             if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
                 return (String) exchangeResponse.getIn().getBody();
             } else {
-                logger.info("Policy query " + retryInterval + "ms before retrying ...");
+                logger.info(logMsg + " query " + retryInterval + "ms before retrying ...");
                 // wait for a while and try to connect to DCAE again
                 try {
                     Thread.sleep(retryInterval);

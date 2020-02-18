@@ -23,12 +23,14 @@
 
 package org.onap.clamp.loop.template;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.onap.clamp.clds.tosca.ToscaSchemaConstants;
 import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
+import org.onap.clamp.policy.pdpgroup.PdpGroup;
 import org.onap.clamp.util.SemanticVersioning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,13 +49,30 @@ public class PolicyModelsService {
         toscaYamlToJsonConvertor = convertor;
     }
 
+    /**
+     * Save or Update Policy Model.
+     *
+     * @param policyModel
+     *        The policyModel
+     * @return The Policy Model
+     */
     public PolicyModel saveOrUpdatePolicyModel(PolicyModel policyModel) {
         return policyModelsRepository.save(policyModel);
     }
 
     /**
-     * Creates the Tosca Policy Model from a policy tosca file,
-     * if the same type already exists in database, it increases the version automatically.
+     * Verify whether Policy Model exist by ID.
+     *
+     * @param policyModelId
+     *        The policyModel Id
+     * @return The flag indicates whether Policy Model exist
+     */
+    public boolean existsById(PolicyModelId policyModelId) {
+        return policyModelsRepository.existsById(policyModelId);
+    }
+
+    /**
+     * Creates or updates the Tosca Policy Model.
      *
      * @param policyModelType  The policyModeltype in Tosca yaml
      * @param policyModelTosca The Policymodel object
@@ -135,6 +154,32 @@ public class PolicyModelsService {
         if (!policyModelsRepository
                 .existsById(new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
             policyModelsRepository.save(policyModel);
+        }
+    }
+
+     /**
+     * Update the Pdp Group info in Policy Model DB.
+     *
+     * @param pdpGroupList The list of Pdp Group info received from Policy Engine
+     */
+    public void updatePdpGroupInfo(List<PdpGroup> pdpGroupList) {
+        List<PolicyModel> policyModelList = policyModelsRepository.findAll();
+        for (PolicyModel policyModel :  policyModelList) {
+            JsonArray supportedPdpGroups = new JsonArray();
+            for (PdpGroup pdpGroup : pdpGroupList) {
+                JsonObject supportedPdpGroup = pdpGroup.getSupportedSubgroups(policyModel.getPolicyModelType(),
+                        policyModel.getVersion());
+                if (supportedPdpGroup != null) {
+                    supportedPdpGroups.add(supportedPdpGroup);
+                }
+            }
+
+            if (supportedPdpGroups.size() > 0) {
+                JsonObject supportedPdpJson = new JsonObject ();
+                supportedPdpJson.add("supportedPdpGroups", supportedPdpGroups);
+                policyModel.setPolicyPdpGroup(supportedPdpJson);
+                policyModelsRepository.save(policyModel);
+            }
         }
     }
 }

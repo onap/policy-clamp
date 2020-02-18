@@ -24,15 +24,19 @@ package org.onap.clamp.policy.downloader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 import javax.transaction.Transactional;
+import org.json.simple.parser.ParseException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -76,4 +80,30 @@ public class PolicyEngineControllerTestItCase {
         assertThat(firstExecution).isBefore(secondExecution);
     }
 
+    @Test
+    @Transactional
+    public void downloadPdpGroupsTest() throws JsonSyntaxException, IOException, InterruptedException, ParseException {
+        PolicyModel policyModel1 = new PolicyModel("onap.policies.monitoring.test", null, "1.0.0");
+        policyModelsRepository.saveAndFlush(policyModel1);
+        PolicyModel policyModel2 = new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0");
+        policyModelsRepository.saveAndFlush(policyModel2);
+
+        policyController.downloadPdpGroups();
+
+        List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
+        assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(2);
+
+        PolicyModel policy1 = policyModelsRepository
+                .getOne(new PolicyModelId("onap.policies.monitoring.test", "1.0.0"));
+        PolicyModel policy2 = policyModelsRepository
+                .getOne(new PolicyModelId("onap.policies.controlloop.Operational", "1.0.0"));
+
+        String expectedRes1 = "{\"supportedPdpGroups\":[{\"monitoring\":[\"xacml\"]}]}";
+        JsonObject expectedJson1 = JsonUtils.GSON.fromJson(expectedRes1, JsonObject.class);
+        assertThat(policy1.getPolicyPdpGroup()).isEqualTo(expectedJson1);
+        String expectedRes2 = "{\"supportedPdpGroups\":[{\"controlloop\":[\"apex\",\"drools\"]}]}";
+        JsonObject expectedJson2 = JsonUtils.GSON.fromJson(expectedRes2, JsonObject.class);
+        assertThat(policy2.getPolicyPdpGroup()).isEqualTo(expectedJson2);
+
+    }
 }

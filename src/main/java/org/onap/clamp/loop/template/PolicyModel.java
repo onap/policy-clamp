@@ -23,6 +23,7 @@
 
 package org.onap.clamp.loop.template;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -34,6 +35,11 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.util.SemanticVersioning;
 
@@ -44,6 +50,7 @@ import org.onap.clamp.util.SemanticVersioning;
 @Entity
 @Table(name = "policy_models")
 @IdClass(PolicyModelId.class)
+@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public class PolicyModel extends AuditEntity implements Serializable, Comparable<PolicyModel> {
 
     /**
@@ -78,6 +85,10 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
     @ManyToMany(mappedBy = "policyModels", fetch = FetchType.EAGER)
     private Set<LoopElementModel> usedByElementModels = new HashSet<>();
 
+    @Type(type = "json")
+    @Column(columnDefinition = "json", name = "policy_pdp_group")
+    private JsonObject policyPdpGroup;
+
     /**
      * usedByElementModels getter.
      *
@@ -85,6 +96,24 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
      */
     public Set<LoopElementModel> getUsedByElementModels() {
         return usedByElementModels;
+    }
+
+    /**
+     * policyPdpGroup getter.
+     *
+     * @return the policyPdpGroup
+     */
+    public JsonObject getPolicyPdpGroup() {
+        return policyPdpGroup;
+    }
+
+    /**
+     * policyPdpGroup setter.
+     *
+     * @param policyPdpGroup the policyPdpGroup to set
+     */
+    public void setPolicyPdpGroup(JsonObject policyPdpGroup) {
+        this.policyPdpGroup = policyPdpGroup;
     }
 
     /**

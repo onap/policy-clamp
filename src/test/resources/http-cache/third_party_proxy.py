@@ -297,6 +297,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 self.send_response(404)
                 self.end_headers()
                 self.wfile.write('404 Not found, no remote HOST specified on the emulator !!!')
+                print("HOST value is: %s " % (options.proxy))
                 return "404 Not found, no remote HOST specified on the emulator !!!"
 
             url = '%s%s' % (HOST, self.path)
@@ -315,6 +316,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 return response.content
         else:
             print("Request for data currently present in cache: %s" % (cached_file_folder,))
+            print("HOST value is: %s " % (HOST))
 
         self._send_content(cached_file_header, cached_file_content)
 
