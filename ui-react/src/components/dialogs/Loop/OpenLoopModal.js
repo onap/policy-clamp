@@ -68,15 +68,16 @@ export default class OpenLoopModal extends React.Component {
 
 	getLoopNames() {
 		LoopService.getLoopNames().then(loopNames => {
-			const loopOptions = loopNames.map((loopName) => { return { label: loopName, value: loopName } });
-			this.setState({ loopNames: loopOptions })
+		    if (Object.entries(loopNames).length !== 0) {
+		        const loopOptions = loopNames.filter(loopName => loopName!=='undefined').map((loopName) => { return { label: loopName, value: loopName } });
+            	this.setState({ loopNames: loopOptions })
+		    }
 		});
 	}
 
 	handleOpen() {
 		console.info("Loop " + this.state.chosenLoopName + " is chosen");
-		this.setState({ show: false });
-		this.props.history.push('/');
+        this.handleClose();
 		this.props.loadLoopFunction(this.state.chosenLoopName);
 	}
 

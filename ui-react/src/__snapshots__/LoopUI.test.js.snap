@@ -33,6 +33,10 @@ exports[`Verify LoopUI Test the render method 1`] = `
     render={[Function]}
   />
   <Route
+    path="/modifyLoop"
+    render={[Function]}
+  />
+  <Route
     path="/userInfo"
     render={[Function]}
   />

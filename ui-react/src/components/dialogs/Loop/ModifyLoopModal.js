@@ -34,6 +34,7 @@ import Clear from '@material-ui/icons/Clear';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
+import LoopService from '../../../api/LoopService';
 
 
 const ModalStyled = styled(Modal)`
@@ -52,13 +53,14 @@ const cellStyle = { border: '1px solid black' };
 const headerStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
 const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
 
-export default class ViewToscalPolicyModal extends React.Component {
+export default class ModifyLoopModal extends React.Component {
 
 	state = {
 		show: true,
+		loopCache: this.props.loopCache,
 		content: 'Please select Tosca model to view the details',
-		selectedRow: -1,
-		toscaPolicyModelNames: [],
+		selectedRowData: {},
+		toscaPolicyModelsData: [],
 		toscaColumns: [
 			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
 				cellStyle: cellStyle,
@@ -83,7 +85,11 @@ export default class ViewToscalPolicyModal extends React.Component {
 			{ title: "Uploaded Date", field: "updatedDate", editable: 'never',
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
-			}
+			},
+             { title: "Add", field: "updatedDate", editable: 'never',
+             	cellStyle: cellStyle,
+             	headerStyle: headerStyle
+             }
 		],
 		tableIcons: {
 		    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -102,15 +108,20 @@ export default class ViewToscalPolicyModal extends React.Component {
 		this.getPolicyToscaModels = this.getToscaPolicyModels.bind(this);
 		this.handleYamlContent = this.handleYamlContent.bind(this);
 		this.getToscaPolicyModelYaml = this.getToscaPolicyModelYaml.bind(this);
-	}
-
-	componentWillMount() {
+		this.handleAdd = this.handleAdd.bind(this);
 		this.getToscaPolicyModels();
 	}
 
+	componentWillReceiveProps(newProps) {
+		this.setState({
+			loopCache: newProps.loopCache,
+			temporaryPropertiesJson: JSON.parse(JSON.stringify(newProps.loopCache.getGlobalProperties()))
+		});
+	}
+
 	getToscaPolicyModels() {
-	    PolicyToscaService.getToscaPolicyModels().then(toscaPolicyModelNames => {
-			this.setState({ toscaPolicyModelNames: toscaPolicyModelNames });
+	    PolicyToscaService.getToscaPolicyModels().then(allToscaModels => {
+			this.setState({ toscaPolicyModelsData: allToscaModels});
 		});
 	}
 
@@ -120,7 +131,7 @@ export default class ViewToscalPolicyModal extends React.Component {
 				if (toscaYaml.length !== 0) {
 					this.setState({content: toscaYaml})
 				} else {
-					this.setState({ content: 'Please select Tosca model to view the details' })
+					this.setState({ content: 'No Tosca model Yaml available' })
 				}
 			});
 		} else {
@@ -137,6 +148,12 @@ export default class ViewToscalPolicyModal extends React.Component {
 		this.props.history.push('/');
 	}
 
+	handleAdd() {
+        LoopService.addOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version);
+        this.handleClose();
+        this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+	}
+
 	render() {
 		return (
 			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
@@ -145,14 +162,14 @@ export default class ViewToscalPolicyModal extends React.Component {
 				<Modal.Body>
 					<MaterialTable
 					title={"View Tosca Policy Models"}
-					data={this.state.toscaPolicyModelNames}
+					data={this.state.toscaPolicyModelsData}
 					columns={this.state.toscaColumns}
 					icons={this.state.tableIcons}
-					onRowClick={(event, rowData) => {this.getToscaPolicyModelYaml(rowData.policyModelType,rowData.version);this.setState({selectedRow: rowData.tableData.id})}}
+					onRowClick={(event, rowData) => {this.getToscaPolicyModelYaml(rowData.policyModelType, rowData.version);this.setState({selectedRowData: rowData})}}
 					options={{
 						headerStyle: rowHeaderStyle,
 						rowStyle: rowData => ({
-							backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
+							backgroundColor: (this.state.selectedRowData !== {} && this.state.selectedRowData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
 						})
 					}}
 					/>
@@ -161,7 +178,8 @@ export default class ViewToscalPolicyModal extends React.Component {
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={this.handleClose}>Close</Button>
+					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
+					<Button variant="primary"  type="submit" onClick={this.handleAdd}>Add</Button>
 				</Modal.Footer>
 			</ModalStyled>
 		);

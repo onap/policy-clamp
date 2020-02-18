@@ -87,26 +87,27 @@ export default class MenuBar extends React.Component {
 		return (
 
 				<Navbar.Collapse>
-					<StyledNavDropdown title="Template">
-					<NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Policy Model</NavDropdown.Item>
-					<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Policy Models</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/ViewLoopTemplatesModal">View Loop Templates</NavDropdown.Item>
+					<StyledNavDropdown title="Loop Templates">
+							<NavDropdown.Item as={StyledLink} to="/ViewLoopTemplatesModal">View All Templates</NavDropdown.Item>
 					</StyledNavDropdown>
-					<StyledNavDropdown title="Closed Loop">
-							<NavDropdown.Item as={StyledLink} to="/openLoop">Open CL</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties CL</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close Model</NavDropdown.Item>
-					</StyledNavDropdown>
-					<StyledNavDropdown title="Manage">
-							<NavDropdown.Item as={StyledLink} to="/submit" disabled={this.state.disabled}>Submit</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/stop" disabled={this.state.disabled}>Stop</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/restart" disabled={this.state.disabled}>Restart</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/delete" disabled={this.state.disabled}>Delete</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/deploy" disabled={this.state.disabled}>Deploy</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/undeploy" disabled={this.state.disabled}>UnDeploy</NavDropdown.Item>
-					</StyledNavDropdown>
-					<StyledNavDropdown title="View">
+					<StyledNavDropdown title="Policy Models">
+                    	    <NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Model</NavDropdown.Item>
+                    		<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
+                    </StyledNavDropdown>
+					<StyledNavDropdown title="Loop Instance">
+							<NavDropdown.Item as={StyledLink} to="/openLoop">Open Loop</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/modifyLoop" >Modify</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/refreshStatus" disabled={this.state.disabled}>Refresh Status</NavDropdown.Item>
+					</StyledNavDropdown>
+					<StyledNavDropdown title="Loop Operations">
+							<NavDropdown.Item as={StyledLink} to="/submit" disabled={this.state.disabled}>Create and deploy to Policy Engine(SUBMIT)</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/stop" disabled={this.state.disabled}>Undeploy from Policy Engine (STOP)</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/restart" disabled={this.state.disabled}>ReDeploy to Policy Engine (RESTART)</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/delete" disabled={this.state.disabled}>Delete loop instance (DELETE)</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/deploy" disabled={this.state.disabled}>Deploy to DCAE (DEPLOY)</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/undeploy" disabled={this.state.disabled}>UnDeploy to DCAE (UNDEPLOY)</NavDropdown.Item>
 					</StyledNavDropdown>
 					<StyledNavDropdown title="Help">
 							<StyledNavLink href="https://wiki.onap.org/" target="_blank">Wiki</StyledNavLink>

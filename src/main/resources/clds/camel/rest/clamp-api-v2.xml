@@ -569,6 +569,50 @@
 			</route>
 		</get>
 
+		<put uri="/v2/loop/addOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}"
+			 outType="org.onap.clamp.loop.Loop" produces="application/json">
+			<route>
+				<removeHeaders pattern="*" excludePattern="loopName" />
+				<doTry>
+					<log loggingLevel="INFO"
+						 message="ADD OperationalPolicy request for loop: ${header.loopName}" />
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'ADD OperationalPolicy request')" />
+					<to
+							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','write')" />
+					<to uri="direct:load-loop" />
+					<to
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request','INFO',${exchangeProperty[loopObject]})" />
+					<doTry>
+						<to
+								uri="bean:org.onap.clamp.loop.LoopService?method=addOperationalPolicy(${loopName},${policyType},${policyVersion})" />
+
+						<to
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request successfully executed','INFO',${exchangeProperty[loopObject]})" />
+						<to
+								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+					</doTry>
+					<doCatch>
+						<exception>java.lang.Exception</exception>
+						<handled>
+							<constant>false</constant>
+						</handled>
+						<to
+								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+						<log loggingLevel="ERROR"
+							 message="ADD OperationalPolicy request failed for loop: ${header.loopName}" />
+						<to
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})" />
+					</doCatch>
+					<doFinally>
+						<setBody>
+							<simple>${exchangeProperty[loopObject]}</simple>
+						</setBody>
+					</doFinally>
+				</doTry>
+			</route>
+		</put>
+
 		<get uri="/v2/dictionary"
 			outType="org.onap.clamp.tosca.Dictionary" produces="application/json">
 			<route>
@@ -782,19 +826,19 @@
 				</doTry>
 			</route>
 		</get>
-		<get uri="/v2/policyToscaModels/{policyModelType}"
+		<get uri="/v2/policyToscaModels/{policyModelType}/{policyModelVersion}"
 			outType="org.onap.clamp.loop.template.PolicyModel"
 			produces="application/json">
 			<route>
 				<removeHeaders pattern="*"
-					excludePattern="policyModelType" />
+					excludePattern="policyModelType|policyModelVersion" />
 				<doTry>
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Tosca Policy Model by Name')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Tosca Policy Model by Name/Version')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','read')" />
 					<to
-						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=getPolicyModelByType(${header.policyModelType})" />
+						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=getPolicyModelByType(${header.policyModelType},${header.policyModelVersion})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
@@ -814,18 +858,18 @@
 				</doTry>
 			</route>
 		</get>
-		<get uri="/v2/policyToscaModels/yaml/{policyModelType}"
+		<get uri="/v2/policyToscaModels/yaml/{policyModelType}/{policyModelVersion}"
 			outType="java.lang.String" produces="application/json">
 			<route>
 				<removeHeaders pattern="*"
-					excludePattern="policyModelType" />
+					excludePattern="policyModelType|policyModelVersion" />
 				<doTry>
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Tosca Policy Model Yaml String by Name')" />
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Tosca Policy Model Yaml String by Name/Version')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','read')" />
 					<to
-						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=getPolicyModelTosca(${header.policyModelType})" />
+						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=getPolicyModelTosca(${header.policyModelType},${header.policyModelVersion})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
@@ -846,7 +890,7 @@
 			</route>
 		</get>
 
-		<put uri="/v2/policyToscaModels/{policyModelType}"
+		<post uri="/v2/policyToscaModels/{policyModelType}"
 			type="java.lang.String"
 			outType="org.onap.clamp.loop.template.PolicyModel"
 			consumes="plain/text" produces="application/json">
@@ -858,11 +902,11 @@
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Upload New or Update Tosca Policy Model')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','update')" />
-					<setProperty propertyName="PolicyModelObject">
+					<setProperty propertyName="PolicyModelTosca">
 						<simple>${body}</simple>
 					</setProperty>
 					<to
-						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=saveOrUpdateByPolicyModelType(${header.policyModelType},${exchangeProperty[PolicyModelObject]})" />
+						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=createNewPolicyModelFromTosca(${header.policyModelType},${exchangeProperty[PolicyModelTosca]})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
@@ -881,8 +925,43 @@
 					</doCatch>
 				</doTry>
 			</route>
+		</post>
+		<put uri="/v2/policyToscaModels/{policyModelType}/{policyModelVersion}"
+			  type="java.lang.String"
+			  outType="org.onap.clamp.loop.template.PolicyModel"
+			  consumes="plain/text" produces="application/json">
+			<route>
+				<removeHeaders pattern="*"
+							   excludePattern="policyModelType|policyModelVersion" />
+				<doTry>
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Upload New or Update Tosca Policy Model')" />
+					<to
+							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','update')" />
+					<setProperty propertyName="PolicyModelTosca">
+						<simple>${body}</simple>
+					</setProperty>
+					<to
+							uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=updatePolicyModelTosca(${header.policyModelType},${policyModelVersion},${exchangeProperty[PolicyModelTosca]})" />
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+					<doCatch>
+						<exception>java.lang.Exception</exception>
+						<handled>
+							<constant>true</constant>
+						</handled>
+						<setHeader headerName="CamelHttpResponseCode">
+							<constant>404</constant>
+						</setHeader>
+						<transform>
+							<simple>ERROR: ${exception.message}</simple>
+						</transform>
+						<to
+								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+					</doCatch>
+				</doTry>
+			</route>
 		</put>
-
 
 		<get uri="/v2/templates"
 			outType="org.onap.clamp.loop.template.LoopTemplate"

@@ -28,7 +28,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import styled from 'styled-components';
 import Alert from 'react-bootstrap/Alert';
-import TemplateMenuService from '../../../api/TemplateMenuService';
+import PolicyToscaService from '../../../api/PolicyToscaService';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
@@ -37,7 +37,7 @@ export default class UploadToscaPolicyModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 
-		this.handleUploadToscaPolicyModel = this.handleUploadToscaPolicyModel.bind(this);
+		this.handleCreateFromToscaPolicyModel = this.handleCreateFromToscaPolicyModel.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.handlePolicyModelType = this.handlePolicyModelType.bind(this);
 		this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
@@ -55,16 +55,10 @@ export default class UploadToscaPolicyModal extends React.Component {
 		fileSelectedHandler = (event) => {
 				if (event.target.files && event.target.files[0]) {
 					const scope = this;
-  				let reader = new FileReader();
+  				    let reader = new FileReader();
 					this.setState({policyModelType: '', policyModelTosca: '' });
 					reader.onload = function(e) {
-					 	var lines = reader.result.split('\n');
-					 	for (var line = 0; line < lines.length; line++) {
-							if(lines[line].trim().slice(0, 24) === 'onap.policies.monitoring') {
-								var microsvc = lines[line].trim().slice(0, -1);
-								scope.setState({ policyModelType: microsvc, policyModelTosca:  reader.result});
-							}
-					  }
+					    scope.setState({ policyModelTosca:  reader.result});
 					};
 					console.log("Filename is", event.target.files[0]);
 					reader.readAsText(event.target.files[0]);
@@ -77,11 +71,11 @@ export default class UploadToscaPolicyModal extends React.Component {
 		this.props.history.push('/');
 	}
 
-	handleUploadToscaPolicyModel(e) {
-    e.preventDefault();
+	handleCreateFromToscaPolicyModel(e) {
+        e.preventDefault();
 		console.log("Policy Model Type is", this.state.policyModelType);
 		if(this.state.policyModelType && this.state.policyModelTosca) {
- 		TemplateMenuService.uploadToscaPolicyModal(this.state.policyModelType, this.state.policyModelTosca).then(resp => {
+ 		PolicyToscaService.createPolicyModelFromToscaModel(this.state.policyModelType, this.state.policyModelTosca).then(resp => {
 			if(resp.status === 200) {
 			this.setState({apiResponseStatus: resp.status, apiResponseMessage: resp.message, upldBtnClicked: true});
 		} else {
@@ -103,7 +97,7 @@ export default class UploadToscaPolicyModal extends React.Component {
 		return (
 			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
-					<Modal.Title>Upload Tosca Modal</Modal.Title>
+					<Modal.Title>Upload Tosca Model</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form.Group as={Row} controlId="formPlaintextEmail">
@@ -114,7 +108,7 @@ export default class UploadToscaPolicyModal extends React.Component {
 							<Alert variant="secondary">
 								<p>{this.state.selectedFile.name}</p>
 							</Alert>
-							<Form.Label column sm="2">Micro Service Name:</Form.Label>
+							<Form.Label column sm="2">Policy Model Type:</Form.Label>
 							<input type="text" style={{width: '50%'}}
 								value={this.state.policyModelType}
 								onChange={this.handlePolicyModelType}
@@ -124,7 +118,7 @@ export default class UploadToscaPolicyModal extends React.Component {
 				</Modal.Body>
 				<Modal.Footer>
 					{!this.state.apiResponseStatus?<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>:""}
-				  {!this.state.apiResponseStatus?<Button disabled={!this.state.selectedFile.name || this.state.upldBtnClicked} variant="primary" type="submit" onClick={this.handleUploadToscaPolicyModel.bind(this)}>Upload</Button>:""}
+				  {!this.state.apiResponseStatus?<Button disabled={!this.state.selectedFile.name || this.state.upldBtnClicked} variant="primary" type="submit" onClick={this.handleCreateFromToscaPolicyModel.bind(this)}>Create</Button>:""}
 					{this.state.apiResponseStatus?<Alert variant={this.state.apiResponseStatus === 200?"success":"danger"}>
 							<p>{this.state.apiResponseMessage}</p>
 								<Button onClick={this.handleClose} variant={this.state.apiResponseStatus === 200?"outline-success":"danger"}>

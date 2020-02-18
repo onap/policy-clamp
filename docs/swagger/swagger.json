@@ -4,13 +4,13 @@
     "version" : "5.0.0-SNAPSHOT",
     "title" : "Clamp Rest API"
   },
-  "host" : "localhost:33699",
+  "host" : "localhost:33631",
   "basePath" : "/restservices/clds/",
   "schemes" : [ "http" ],
   "paths" : {
     "/v2/dictionary" : {
       "get" : {
-        "operationId" : "route18",
+        "operationId" : "route80",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -20,11 +20,11 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route18"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route80"
       },
       "put" : {
-        "operationId" : "route20",
+        "operationId" : "route82",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -43,8 +43,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route20"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route82"
       }
     },
     "/v2/dictionary/{dictionaryName}" : {
@@ -64,7 +64,7 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
@@ -93,11 +93,11 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       },
       "delete" : {
-        "operationId" : "route22",
+        "operationId" : "route84",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "name",
@@ -108,8 +108,8 @@
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route22"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route84"
       }
     },
     "/v2/dictionary/{name}/elements/{shortName}" : {
@@ -129,7 +129,7 @@
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
@@ -147,13 +147,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
     "/v2/loop/{loopName}" : {
       "get" : {
-        "operationId" : "route3",
+        "operationId" : "route65",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -169,13 +169,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route3"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route65"
       }
     },
     "/v2/loop/delete/{loopName}" : {
       "put" : {
-        "operationId" : "route14",
+        "operationId" : "route76",
         "parameters" : [ {
           "name" : "loopName",
           "in" : "path",
@@ -185,13 +185,13 @@
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route14"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route76"
       }
     },
     "/v2/loop/deploy/{loopName}" : {
       "put" : {
-        "operationId" : "route8",
+        "operationId" : "route70",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -207,13 +207,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route8"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route70"
       }
     },
     "/v2/loop/getAllNames" : {
       "get" : {
-        "operationId" : "route2",
+        "operationId" : "route64",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -226,13 +226,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route2"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route64"
       }
     },
     "/v2/loop/getstatus/{loopName}" : {
       "get" : {
-        "operationId" : "route15",
+        "operationId" : "route77",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -248,13 +248,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route15"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route77"
       }
     },
     "/v2/loop/refreshOpPolicyJsonSchema/{loopName}" : {
       "put" : {
-        "operationId" : "route9",
+        "operationId" : "route71",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -270,13 +270,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route9"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route71"
       }
     },
     "/v2/loop/restart/{loopName}" : {
       "put" : {
-        "operationId" : "route12",
+        "operationId" : "route74",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -292,13 +292,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route12"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route74"
       }
     },
     "/v2/loop/stop/{loopName}" : {
       "put" : {
-        "operationId" : "route11",
+        "operationId" : "route73",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -314,13 +314,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route11"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route73"
       }
     },
     "/v2/loop/submit/{loopName}" : {
       "put" : {
-        "operationId" : "route13",
+        "operationId" : "route75",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -336,13 +336,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route13"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route75"
       }
     },
     "/v2/loop/svgRepresentation/{loopName}" : {
       "get" : {
-        "operationId" : "route4",
+        "operationId" : "route66",
         "produces" : [ "application/xml" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -358,13 +358,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route4"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route66"
       }
     },
     "/v2/loop/undeploy/{loopName}" : {
       "put" : {
-        "operationId" : "route10",
+        "operationId" : "route72",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "loopName",
@@ -380,13 +380,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route10"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route72"
       }
     },
     "/v2/loop/updateGlobalProperties/{loopName}" : {
       "post" : {
-        "operationId" : "route5",
+        "operationId" : "route67",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -410,13 +410,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route5"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route67"
       }
     },
     "/v2/loop/updateMicroservicePolicy/{loopName}" : {
       "post" : {
-        "operationId" : "route7",
+        "operationId" : "route69",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -440,13 +440,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route7"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route69"
       }
     },
     "/v2/loop/updateOperationalPolicies/{loopName}" : {
       "post" : {
-        "operationId" : "route6",
+        "operationId" : "route68",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -470,13 +470,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route6"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route68"
       }
     },
     "/v2/policyToscaModels" : {
       "get" : {
-        "operationId" : "route25",
+        "operationId" : "route87",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -486,8 +486,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route25"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route87"
       }
     },
     "/v2/policyToscaModels/{policyModelType}" : {
@@ -507,11 +507,11 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       },
       "put" : {
-        "operationId" : "route26",
+        "operationId" : "route88",
         "consumes" : [ "plain/text" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -535,8 +535,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route26"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route88"
       }
     },
     "/v2/policyToscaModels/yaml/{policyModelType}" : {
@@ -556,13 +556,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
     "/v2/templates" : {
       "get" : {
-        "operationId" : "route29",
+        "operationId" : "route91",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -572,8 +572,8 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route29"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route91"
       }
     },
     "/v2/templates/{templateName}" : {
@@ -593,7 +593,7 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
       }
     },
@@ -611,29 +611,13 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
+        "x-camelContextId" : "camel-3",
         "x-routeId" : null
-      }
-    },
-    "/v1/clds/cldsInfo" : {
-      "get" : {
-        "operationId" : "route30",
-        "produces" : [ "application/json" ],
-        "responses" : {
-          "200" : {
-            "description" : "Output type",
-            "schema" : {
-              "$ref" : "#/definitions/CldsInfo"
-            }
-          }
-        },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route30"
       }
     },
     "/v1/healthcheck" : {
       "get" : {
-        "operationId" : "route31",
+        "operationId" : "route92",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -643,19 +627,19 @@
             }
           }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route31"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route92"
       }
     },
     "/v1/user/getUser" : {
       "get" : {
-        "operationId" : "route32",
+        "operationId" : "route93",
         "produces" : [ "text/plain" ],
         "responses" : {
           "200" : { }
         },
-        "x-camelContextId" : "camel-1",
-        "x-routeId" : "route32"
+        "x-camelContextId" : "camel-3",
+        "x-routeId" : "route93"
       }
     }
   },
@@ -825,32 +809,18 @@
         "number" : {
           "type" : "boolean"
         },
-        "asString" : {
-          "type" : "string"
-        },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
+        "string" : {
+          "type" : "boolean"
         },
         "boolean" : {
           "type" : "boolean"
         },
-        "string" : {
-          "type" : "boolean"
-        },
-        "asNumber" : {
-          "$ref" : "#/definitions/Number"
+        "asString" : {
+          "type" : "string"
         },
         "asDouble" : {
           "type" : "number",
           "format" : "double"
-        },
-        "asFloat" : {
-          "type" : "number",
-          "format" : "float"
         },
         "asLong" : {
           "type" : "integer",
@@ -859,6 +829,13 @@
         "asInt" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "asNumber" : {
+          "$ref" : "#/definitions/Number"
+        },
+        "asFloat" : {
+          "type" : "number",
+          "format" : "float"
         },
         "asByte" : {
           "type" : "string",
@@ -870,19 +847,20 @@
         "asBigDecimal" : {
           "type" : "number"
         },
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
-        },
-        "jsonObject" : {
+        "jsonArray" : {
           "type" : "boolean"
         },
-        "jsonArray" : {
+        "jsonObject" : {
           "type" : "boolean"
         },
         "jsonPrimitive" : {
@@ -890,6 +868,12 @@
         },
         "jsonNull" : {
           "type" : "boolean"
+        },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
         },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"
@@ -928,9 +912,6 @@
         "name" : {
           "type" : "string"
         },
-        "modelType" : {
-          "type" : "string"
-        },
         "context" : {
           "type" : "string"
         },
@@ -939,9 +920,6 @@
         },
         "shared" : {
           "type" : "boolean"
-        },
-        "policyTosca" : {
-          "type" : "string"
         },
         "usedByLoops" : {
           "type" : "array",
@@ -958,6 +936,9 @@
         },
         "dcaeBlueprintId" : {
           "type" : "string"
+        },
+        "policyModel" : {
+          "$ref" : "#/definitions/PolicyModel"
         }
       },
       "x-className" : {
@@ -974,47 +955,12 @@
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
         "asString" : {
           "type" : "string"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
-        },
-        "jsonObject" : {
-          "type" : "boolean"
-        },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "jsonArray" : {
-          "type" : "boolean"
-        },
-        "jsonPrimitive" : {
-          "type" : "boolean"
-        },
-        "jsonNull" : {
-          "type" : "boolean"
-        },
-        "asJsonNull" : {
-          "$ref" : "#/definitions/JsonNull"
-        },
-        "asNumber" : {
-          "$ref" : "#/definitions/Number"
         },
         "asDouble" : {
           "type" : "number",
           "format" : "double"
-        },
-        "asFloat" : {
-          "type" : "number",
-          "format" : "float"
         },
         "asLong" : {
           "type" : "integer",
@@ -1023,6 +969,34 @@
         "asInt" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "jsonArray" : {
+          "type" : "boolean"
+        },
+        "jsonObject" : {
+          "type" : "boolean"
+        },
+        "jsonPrimitive" : {
+          "type" : "boolean"
+        },
+        "jsonNull" : {
+          "type" : "boolean"
+        },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
+        },
+        "asJsonNull" : {
+          "$ref" : "#/definitions/JsonNull"
+        },
+        "asNumber" : {
+          "$ref" : "#/definitions/Number"
+        },
+        "asFloat" : {
+          "type" : "number",
+          "format" : "float"
         },
         "asByte" : {
           "type" : "string",
@@ -1033,6 +1007,13 @@
         },
         "asBigDecimal" : {
           "type" : "number"
+        },
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       },
       "x-className" : {
@@ -1166,47 +1147,12 @@
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
         "asString" : {
           "type" : "string"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
-        },
-        "jsonObject" : {
-          "type" : "boolean"
-        },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "jsonArray" : {
-          "type" : "boolean"
-        },
-        "jsonPrimitive" : {
-          "type" : "boolean"
-        },
-        "jsonNull" : {
-          "type" : "boolean"
-        },
-        "asJsonNull" : {
-          "$ref" : "#/definitions/JsonNull"
-        },
-        "asNumber" : {
-          "$ref" : "#/definitions/Number"
         },
         "asDouble" : {
           "type" : "number",
           "format" : "double"
-        },
-        "asFloat" : {
-          "type" : "number",
-          "format" : "float"
         },
         "asLong" : {
           "type" : "integer",
@@ -1215,6 +1161,34 @@
         "asInt" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "jsonArray" : {
+          "type" : "boolean"
+        },
+        "jsonObject" : {
+          "type" : "boolean"
+        },
+        "jsonPrimitive" : {
+          "type" : "boolean"
+        },
+        "jsonNull" : {
+          "type" : "boolean"
+        },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
+        },
+        "asJsonNull" : {
+          "$ref" : "#/definitions/JsonNull"
+        },
+        "asNumber" : {
+          "$ref" : "#/definitions/Number"
+        },
+        "asFloat" : {
+          "type" : "number",
+          "format" : "float"
         },
         "asByte" : {
           "type" : "string",
@@ -1225,6 +1199,13 @@
         },
         "asBigDecimal" : {
           "type" : "number"
+        },
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
         }
       }
     },
@@ -1237,23 +1218,9 @@
         "asString" : {
           "type" : "string"
         },
-        "asBigInteger" : {
-          "type" : "integer"
-        },
-        "asShort" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "asNumber" : {
-          "$ref" : "#/definitions/Number"
-        },
         "asDouble" : {
           "type" : "number",
           "format" : "double"
-        },
-        "asFloat" : {
-          "type" : "number",
-          "format" : "float"
         },
         "asLong" : {
           "type" : "integer",
@@ -1262,6 +1229,13 @@
         "asInt" : {
           "type" : "integer",
           "format" : "int32"
+        },
+        "asNumber" : {
+          "$ref" : "#/definitions/Number"
+        },
+        "asFloat" : {
+          "type" : "number",
+          "format" : "float"
         },
         "asByte" : {
           "type" : "string",
@@ -1273,19 +1247,20 @@
         "asBigDecimal" : {
           "type" : "number"
         },
+        "asBigInteger" : {
+          "type" : "integer"
+        },
+        "asShort" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
         "asJsonObject" : {
           "$ref" : "#/definitions/JsonObject"
         },
-        "asJsonPrimitive" : {
-          "$ref" : "#/definitions/JsonPrimitive"
-        },
-        "asJsonArray" : {
-          "$ref" : "#/definitions/JsonArray"
-        },
-        "jsonObject" : {
+        "jsonArray" : {
           "type" : "boolean"
         },
-        "jsonArray" : {
+        "jsonObject" : {
           "type" : "boolean"
         },
         "jsonPrimitive" : {
@@ -1293,6 +1268,12 @@
         },
         "jsonNull" : {
           "type" : "boolean"
+        },
+        "asJsonArray" : {
+          "$ref" : "#/definitions/JsonArray"
+        },
+        "asJsonPrimitive" : {
+          "$ref" : "#/definitions/JsonPrimitive"
         },
         "asJsonNull" : {
           "$ref" : "#/definitions/JsonNull"
@@ -1460,39 +1441,6 @@
             "$ref" : "#/definitions/LoopTemplateLoopElementModel"
           }
         }
-      }
-    },
-    "CldsInfo" : {
-      "type" : "object",
-      "properties" : {
-        "userName" : {
-          "type" : "string"
-        },
-        "cldsVersion" : {
-          "type" : "string"
-        },
-        "permissionReadCl" : {
-          "type" : "boolean"
-        },
-        "permissionUpdateCl" : {
-          "type" : "boolean"
-        },
-        "permissionReadTemplate" : {
-          "type" : "boolean"
-        },
-        "permissionUpdateTemplate" : {
-          "type" : "boolean"
-        },
-        "permissionReadTosca" : {
-          "type" : "boolean"
-        },
-        "permissionUpdateTosca" : {
-          "type" : "boolean"
-        }
-      },
-      "x-className" : {
-        "type" : "string",
-        "format" : "org.onap.clamp.clds.model.CldsInfo"
       }
     },
     "CldsHealthCheck" : {

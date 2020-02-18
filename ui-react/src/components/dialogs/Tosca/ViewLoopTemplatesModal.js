@@ -25,7 +25,7 @@ import React, { forwardRef } from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
-import TemplateMenuService from '../../../api/TemplateMenuService';
+import TemplateService from '../../../api/TemplateService';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
@@ -103,7 +103,7 @@ export default class ViewLoopTemplatesModal extends React.Component {
 	}
 
 	getBlueprintMicroServiceTemplates() {
-		TemplateMenuService.getBlueprintMicroServiceTemplates().then(loopTemplateData => {
+		TemplateService.getBlueprintMicroServiceTemplates().then(loopTemplateData => {
 		this.setState({ loopTemplateData: loopTemplateData })
 		});
 	}

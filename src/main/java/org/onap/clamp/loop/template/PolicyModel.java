@@ -65,7 +65,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
      */
     @Id
     @Expose
-    @Column(name = "version")
+    @Column(name = "version",nullable = false)
     private String version;
 
     @Column(columnDefinition = "MEDIUMTEXT", name = "policy_tosca")
@@ -179,7 +179,10 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
         this.policyModelType = policyType;
         this.policyModelTosca = policyModelTosca;
         this.version = version;
-        this.policyAcronym = policyAcronym;
+        this.policyAcronym=policyAcronym;
+        if (this.policyAcronym == null) {
+            this.policyAcronym = createDefaultPolicyAcronym(policyType);
+        }
     }
 
     /**
@@ -190,7 +193,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
      * @param version          the version like 1.0.0
      */
     public PolicyModel(String policyType, String policyModelTosca, String version) {
-        this(policyType, policyModelTosca, version, createDefaultPolicyAcronym(policyType));
+        this(policyType, policyModelTosca, version, null);
     }
 
     public static String createDefaultPolicyAcronym(String policyType) {
