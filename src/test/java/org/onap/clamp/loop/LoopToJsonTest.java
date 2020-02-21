@@ -37,7 +37,6 @@ import java.util.Random;
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
-import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
@@ -46,7 +45,6 @@ import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 public class LoopToJsonTest {
 
@@ -172,26 +170,5 @@ public class LoopToJsonTest {
         assertNotNull(loopTestDeserialized);
         assertThat(loopTestDeserialized).isEqualToIgnoringGivenFields(loopTest2, "modelService", "svgRepresentation",
                 "blueprint", "components");
-    }
-
-    /**
-     * This tests the GSON encode/decode of pdpGroup.
-     *
-     * @throws IOException In case of issues
-     */
-    @Test
-    public void createPoliciesPayloadPdpGroupTest() throws IOException {
-        Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
-                "123456789", "https://dcaetest.org", "UUID-blueprint");
-        OperationalPolicy opPolicy = this.getOperationalPolicy(
-                ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
-        loopTest.addOperationalPolicy(opPolicy);
-        MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
-                "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
-                "{\"param1\":\"value1\"}", true);
-        loopTest.addMicroServicePolicy(microServicePolicy);
-
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/pdp-group-policy-payload.json"),
-                PolicyComponent.createPoliciesPayloadPdpGroup(loopTest), false);
     }
 }
