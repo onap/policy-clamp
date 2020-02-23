@@ -39,12 +39,7 @@ export default class UserInfoModal extends React.Component {
 		super(props, context);
 
 		this.handleClose = this.handleClose.bind(this);
-		this.renderReadTemplatePermission = this.renderReadTemplatePermission.bind(this);
-		this.renderReadModelPermission = this.renderReadModelPermission.bind(this);
-		this.renderReadToscaPermission = this.renderReadToscaPermission.bind(this);
-		this.renderUpdateTemplatePermission = this.renderUpdateTemplatePermission.bind(this);
-		this.renderUpdateModelPermission = this.renderUpdateModelPermission.bind(this);
-		this.renderUpdateToscaPermission = this.renderUpdateToscaPermission.bind(this);
+	    this.renderPermissions = this.renderPermissions.bind(this);
 		this.renderUserName = this.renderUserName.bind(this);
 		this.state = {
 			show: true,
@@ -60,48 +55,16 @@ export default class UserInfoModal extends React.Component {
 	handleClose() {
 			this.props.history.push('/');
 	}
-	renderReadTemplatePermission() {
-		if (this.state.userInfo["permissionReadTemplate"]) {
-			return <Form.Control plaintext readOnly defaultValue="Read Template" />
-		} else  {
-			return;
-		}
-	}
-	renderReadModelPermission() {
-		if (this.state.userInfo["permissionReadCl"]) {
-			return <Form.Control plaintext readOnly defaultValue="Read Model" />
-		} else  {
-			return;
-		}
-	}
-	renderReadToscaPermission() {
-		if (this.state.userInfo["permissionReadTosca"]) {
-			return <Form.Control plaintext readOnly defaultValue="Read Tosca" />
-		} else  {
-			return;
-		}
-	}
-	renderUpdateTemplatePermission() {
-		if (this.state.userInfo["permissionUpdateTemplate"]) {
-			return <Form.Control plaintext readOnly defaultValue="Edit Template" />
-		} else  {
-			return;
-		}
-	}
-	renderUpdateModelPermission() {
-		if (this.state.userInfo["permissionUpdateCl"]) {
-			return <Form.Control plaintext readOnly defaultValue="Edit Model" />
-		} else  {
-			return;
-		}
-	}
-	renderUpdateToscaPermission() {
-		if (this.state.userInfo["permissionUpdateTosca"]) {
-			return <Form.Control plaintext readOnly defaultValue="Edit Tosca" />
-		} else  {
-			return;
-		}
-	}
+	renderPermissions() {
+          if (this.state.userInfo["allPermissions"]) {
+	        var listOfPermissions = this.state.userInfo["allPermissions"].map(function(perm) {
+	            return <Form.Control plaintext readOnly defaultValue={perm} />;
+	        })
+		    return listOfPermissions;
+		  } else {
+		    return;
+		  }
+ 	}
 	renderUserName() {
 		if (this.state.userInfo["userName"]) {
 			return <Form.Control plaintext readOnly defaultValue={this.state.userInfo["userName"]} />
@@ -134,12 +97,7 @@ export default class UserInfoModal extends React.Component {
 					<Form.Group as={Row} controlId="userPermissions">
 						<Form.Label column sm="3">User Permissions:</Form.Label>
 						<Col>
-							{this.renderReadTemplatePermission()}
-							{this.renderReadModelPermission()}
-							{this.renderReadToscaPermission()}
-							{this.renderUpdateTemplatePermission()}
-							{this.renderUpdateModelPermission()}
-							{this.renderUpdateToscaPermission()}
+							{this.renderPermissions()}
 						</Col>
 					</Form.Group>
 				</Modal.Body>

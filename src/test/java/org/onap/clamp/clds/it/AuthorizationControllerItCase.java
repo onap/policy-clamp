@@ -25,27 +25,27 @@
 
 package org.onap.clamp.clds.it;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.util.List;
-
+import java.util.Arrays;
+import java.util.Collection;
 import org.apache.camel.Exchange;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.authorization.AuthorizationController;
+import org.onap.clamp.authorization.SecureServicePermission;
 import org.onap.clamp.clds.exception.NotAuthorizedException;
-import org.onap.clamp.clds.service.SecureServicePermission;
-import org.onap.clamp.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -53,49 +53,72 @@ import org.springframework.test.context.junit4.SpringRunner;
  * and stored procedures.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthorizationControllerItCase {
-
-    private PermissionTestDefaultHelper permissionTestHelper = new PermissionTestDefaultHelper();
-
-    // @Spy
-    // MockEnvironment env;
 
     @Autowired
     private AuthorizationController auth;
 
+    private static SecurityContext sc = SecurityContextHolder.getContext();
+
     /**
      * Setup the variable before the tests execution.
      */
-    @Before
-    public void setupBefore() {
-        // permissionTestHelper.setupMockEnv(env);
-        List<GrantedAuthority> authList = permissionTestHelper.getAuthList();
+    @BeforeClass
+    public static void setupBefore() {
 
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication())
-                .thenReturn(new UsernamePasswordAuthenticationToken(new User("admin", "", authList), "", authList));
-        PrincipalUtils.setSecurityContext(securityContext);
+        sc.setAuthentication(new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return Arrays.asList(new SimpleGrantedAuthority(
+                                new SecureServicePermission("permission-type-cl", "dev", "read").getKey()),
+                        new SimpleGrantedAuthority(new SecureServicePermission("permission-type-cl-manage", "dev",
+                                "DEPLOY").getKey()),
+                        new SimpleGrantedAuthority(new SecureServicePermission("permission-type-filter-vf", "dev",
+                                "12345-55555-55555-5555").getKey()));
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return "admin";
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return true;
+            }
+
+            @Override
+            public void setAuthenticated(boolean authenticatedFlag) throws IllegalArgumentException {
+
+            }
+
+            @Override
+            public String getName() {
+                return "admin";
+            }
+        });
+
     }
 
     @Test
     public void testIsUserPermitted() {
+        assertEquals(AuthorizationController.getPrincipalName(sc),"admin");
         assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl", "dev", "read")));
         assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl-manage", "dev", "DEPLOY")));
         assertTrue(auth.isUserPermitted(
                 new SecureServicePermission("permission-type-filter-vf", "dev", "12345-55555-55555-5555")));
         assertFalse(auth.isUserPermitted(new SecureServicePermission("permission-type-cl", "test", "read")));
-    }
-
-    @Test
-    public void testIfUserAuthorize() {
-        Exchange ex = Mockito.mock(Exchange.class);
-        try {
-            permissionTestHelper
-                    .doActionOnAllPermissions(((type, instance, action) -> auth.authorize(ex, type, instance, action)));
-        } catch (NotAuthorizedException e) {
-            fail(e.getMessage());
-        }
     }
 
     @Test(expected = NotAuthorizedException.class)

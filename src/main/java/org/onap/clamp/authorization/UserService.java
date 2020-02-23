@@ -20,8 +20,7 @@
  * ===================================================================
  */
 
-package org.onap.clamp.clds.service;
-
+package org.onap.clamp.authorization;
 
 
 import org.springframework.security.core.context.SecurityContext;
@@ -35,7 +34,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class UserService {
 
-    private SecurityContext           securityContext = SecurityContextHolder.getContext();
+    private SecurityContext securityContext = SecurityContextHolder.getContext();
 
     /**
      * REST service that returns the username.
@@ -43,6 +42,6 @@ public class UserService {
      * @return the user name
      */
     public String getUser() {
-        return new DefaultUserNameHandler().retrieveUserName(securityContext);
+        return AuthorizationController.getPrincipalName(securityContext);
     }
 }

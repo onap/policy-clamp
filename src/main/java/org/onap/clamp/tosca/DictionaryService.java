@@ -27,12 +27,11 @@ import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
-import org.onap.clamp.clds.service.SecureServiceBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DictionaryService extends SecureServiceBase {
+public class DictionaryService {
 
     private final DictionaryRepository dictionaryRepository;
     private final DictionaryElementsRepository dictionaryElementsRepository;

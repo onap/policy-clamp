@@ -46,12 +46,7 @@ describe('Verify UserInfoModal', () => {
 		component.setState({ userInfo: {
 			"userName": "test",
 			"cldsVersion": "1.0.0",
-			"permissionReadCl": true,
-			"permissionReadTemplate" : true,
-			"permissionReadTosca" : true,
-			"permissionUpdateTemplate" : true,
-			"permissionUpdateCl" : true,
-			"permissionUpdateTosca": true
+			"allPermissions": ["permission1","permission2"]
 		}});
 		expect(component).toMatchSnapshot();
 	});
@@ -69,18 +64,15 @@ describe('Verify UserInfoModal', () => {
 		component.setState({ userInfo: {
 			"userName": "test",
 			"cldsVersion": "1.0.0",
-			"permissionReadCl": true,
-			"permissionReadTemplate" : true,
-			"permissionReadTosca" : true
+			"allPermissions": ["permission1","permission2"]
 		}});
 
-		expect(component.find('FormControl').length).toEqual(5);
+		expect(component.find('FormControl').length).toEqual(4);
 
 		const forms = component.find('FormControl');
 		expect(forms.get(0).props.defaultValue).toEqual("test");
 		expect(forms.get(1).props.defaultValue).toEqual("1.0.0");
-		expect(forms.get(2).props.defaultValue).toEqual("Read Template");
-		expect(forms.get(3).props.defaultValue).toEqual("Read Model");
-		expect(forms.get(4).props.defaultValue).toEqual("Read Tosca");
+		expect(forms.get(2).props.defaultValue).toEqual("permission1");
+		expect(forms.get(3).props.defaultValue).toEqual("permission2");
 	});
 });

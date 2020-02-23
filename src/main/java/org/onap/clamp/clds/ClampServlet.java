@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
-import org.onap.clamp.clds.service.SecureServicePermission;
+import org.onap.clamp.authorization.SecureServicePermission;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

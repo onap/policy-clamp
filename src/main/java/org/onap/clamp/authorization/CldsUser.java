@@ -21,7 +21,7 @@
  * 
  */
 
-package org.onap.clamp.clds.service;
+package org.onap.clamp.authorization;
 
 import java.util.Arrays;
 

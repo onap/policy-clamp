@@ -74,7 +74,7 @@ export default class UserService {
 	}
 
 	static getUserInfo() {
-		return fetch('/restservices/clds/v1/clds/cldsInfo', {
+		return fetch('/restservices/clds/v2/clampInformation', {
 				method: 'GET',
 				credentials: 'same-origin'
 			})
@@ -82,6 +82,8 @@ export default class UserService {
 			console.debug("getUserInfo response received, status code:", response.status);
 			if (response.ok) {
 				return response.json();
+			} else {
+			    return {}
 			}
 		})
 		.then(function (data) {
@@ -91,7 +93,7 @@ export default class UserService {
 		.catch(function(error) {
 			console.warn("getUserInfo error received, user set to: ",UserService.notLoggedUserName);
 			console.error("getUserInfo error:",error);
-			return;
+			return {};
 		});
 	}
 }

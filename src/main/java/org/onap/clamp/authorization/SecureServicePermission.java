@@ -21,7 +21,7 @@
  *
  */
 
-package org.onap.clamp.clds.service;
+package org.onap.clamp.authorization;
 
 /**
  * Permission class that can be instantiated easily using constructor or factory

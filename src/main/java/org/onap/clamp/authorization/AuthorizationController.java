@@ -27,19 +27,18 @@ package org.onap.clamp.authorization;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.util.Date;
-
 import org.apache.camel.Exchange;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.exception.NotAuthorizedException;
-import org.onap.clamp.clds.service.SecureServiceBase;
-import org.onap.clamp.clds.service.SecureServicePermission;
+import org.onap.clamp.clds.model.ClampInformation;
 import org.onap.clamp.clds.util.LoggingUtils;
-import org.onap.clamp.util.PrincipalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 /**
@@ -48,7 +47,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationController {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(SecureServiceBase.class);
+    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(AuthorizationController.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getMetricsLogger();
     protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
 
@@ -56,8 +55,35 @@ public class AuthorizationController {
     @Autowired
     private ClampProperties refProp;
 
+    private SecurityContext securityContext = SecurityContextHolder.getContext();
+
     public static final String PERM_PREFIX = "security.permission.type.";
     private static final String PERM_INSTANCE = "security.permission.instance";
+
+    private static String retrieveUserName(SecurityContext securityContext) {
+        if (securityContext == null || securityContext.getAuthentication() == null) {
+            return null;
+        }
+        if ((securityContext.getAuthentication().getPrincipal()) instanceof String) {
+            // anonymous case
+            return ((String)securityContext.getAuthentication().getPrincipal());
+        } else {
+            return ((UserDetails) securityContext.getAuthentication().getPrincipal()).getUsername();
+        }
+    }
+    /**
+     * Get the principal name.
+     *
+     * @return The principal name
+     */
+    public static String getPrincipalName(SecurityContext securityContext) {
+        String principal = AuthorizationController.retrieveUserName(securityContext);
+        String name = "Not found";
+        if (principal != null) {
+            name = principal;
+        }
+        return name;
+    }
 
     /**
      * Insert authorize the api based on the permission.
@@ -78,7 +104,7 @@ public class AuthorizationController {
         if (null != instanceVar && !instanceVar.isEmpty()) {
             instance = instanceVar;
         }
-        String principalName = PrincipalUtils.getPrincipalName();
+        String principalName = AuthorizationController.getPrincipalName(this.securityContext);
         SecureServicePermission perm = SecureServicePermission.create(type, instance, action);
         Date startTime = new Date();
         LoggingUtils.setTargetContext("Clamp", "authorize");
@@ -101,7 +127,7 @@ public class AuthorizationController {
      */
     public boolean isUserPermitted(SecureServicePermission inPermission) {
 
-        String principalName = PrincipalUtils.getPrincipalName();
+        String principalName = AuthorizationController.getPrincipalName(this.securityContext);
         // check if the user has the permission key or the permission key with a
         // combination of all instance and/or all action.
         if (hasRole(inPermission.getKey()) || hasRole(inPermission.getKeyAllInstance())) {
@@ -124,7 +150,7 @@ public class AuthorizationController {
     }
 
     protected boolean hasRole(String role) {
-        Authentication authentication = PrincipalUtils.getSecurityContext().getAuthentication();
+        Authentication authentication = securityContext.getAuthentication();
         if (authentication == null) {
             return false;
         }
@@ -136,4 +162,23 @@ public class AuthorizationController {
         return false;
     }
 
+    /**
+     * Gets clds info. CLDS IFO service will return 3 things 1. User Name 2. CLDS
+     * code version that is currently installed from pom.xml file 3. User
+     * permissions
+     *
+     * @return the clds info
+     */
+    public ClampInformation getClampInformation() {
+        ClampInformation clampInfo = new ClampInformation();
+        Authentication authentication = securityContext.getAuthentication();
+        if (authentication == null) {
+            return new ClampInformation();
+        }
+        clampInfo.setUserName(AuthorizationController.getPrincipalName(this.securityContext));
+        for (GrantedAuthority auth : authentication.getAuthorities()) {
+            clampInfo.getAllPermissions().add(auth.getAuthority());
+        }
+        return clampInfo;
+    }
 }

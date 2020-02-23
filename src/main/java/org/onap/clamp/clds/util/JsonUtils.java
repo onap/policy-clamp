@@ -30,8 +30,8 @@ import com.google.gson.GsonBuilder;
 
 import java.time.Instant;
 
-import org.onap.clamp.clds.service.SecureServicePermission;
-import org.onap.clamp.clds.service.SecureServicePermissionDeserializer;
+import org.onap.clamp.authorization.SecureServicePermission;
+import org.onap.clamp.authorization.SecureServicePermissionDeserializer;
 import org.onap.clamp.dao.model.gson.converter.InstantDeserializer;
 import org.onap.clamp.dao.model.gson.converter.InstantSerializer;
 

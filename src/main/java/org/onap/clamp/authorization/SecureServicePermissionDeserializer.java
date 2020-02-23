@@ -21,7 +21,8 @@
  *
  */
 
-package org.onap.clamp.clds.service;
+package org.onap.clamp.authorization;
+
 
 import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;

@@ -25,7 +25,6 @@ package org.onap.clamp.clds.util;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URLConnection;
@@ -39,12 +38,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.UUID;
-
 import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
-
-import org.onap.clamp.clds.service.DefaultUserNameHandler;
+import org.onap.clamp.authorization.AuthorizationController;
 import org.slf4j.MDC;
 import org.slf4j.event.Level;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -188,8 +185,8 @@ public class LoggingUtils {
 
         // Default the partner name to the user name used to login to clamp
         if (partnerName.equalsIgnoreCase(EMPTY_MESSAGE)) {
-            MDC.put(OnapLogConstants.Mdcs.PARTNER_NAME, new DefaultUserNameHandler()
-                    .retrieveUserName(SecurityContextHolder.getContext()));
+            MDC.put(OnapLogConstants.Mdcs.PARTNER_NAME,
+                    AuthorizationController.getPrincipalName(SecurityContextHolder.getContext()));
         }
 
         // Set standard MDCs. Override this entire method if you want to set
