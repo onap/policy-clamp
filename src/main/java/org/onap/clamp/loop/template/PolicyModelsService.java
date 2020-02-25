@@ -32,6 +32,8 @@ import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.clamp.util.SemanticVersioning;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PolicyModelsService {
@@ -121,5 +123,18 @@ public class PolicyModelsService {
     public String getPolicyModelTosca(String type, String version) {
         return policyModelsRepository.findById(new PolicyModelId(type, version)).orElse(new PolicyModel())
                 .getPolicyModelTosca();
+    }
+
+    /**
+     * This method creates an PolicyModel in Db if it does not exist.
+     *
+     * @param policyModel The policyModel to save
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void createPolicyInDbIfNeeded(PolicyModel policyModel) {
+        if (!policyModelsRepository
+                .existsById(new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
+            policyModelsRepository.save(policyModel);
+        }
     }
 }

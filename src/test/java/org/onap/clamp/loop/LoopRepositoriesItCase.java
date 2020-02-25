@@ -226,8 +226,8 @@ public class LoopRepositoriesItCase {
         // createdDate should have NOT been changed
         assertThat(loopInDbRetrievedUpdated.getCreatedDate()).isEqualTo(loopInDb.getCreatedDate());
         // other audit are the same
-        assertThat(loopInDbRetrievedUpdated.getCreatedBy()).isEqualTo("");
-        assertThat(loopInDbRetrievedUpdated.getUpdatedBy()).isEqualTo("");
+        assertThat(loopInDbRetrievedUpdated.getCreatedBy()).isEqualTo("Not found");
+        assertThat(loopInDbRetrievedUpdated.getUpdatedBy()).isEqualTo("Not found");
 
         // Attempt to delete the object and check it has well been cascaded
 

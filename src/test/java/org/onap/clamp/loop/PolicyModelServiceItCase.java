@@ -29,9 +29,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-
 import javax.transaction.Transactional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
@@ -74,6 +72,9 @@ public class PolicyModelServiceItCase {
         return policyModel;
     }
 
+    /**
+     * This test the create policy Model.
+     */
     @Test
     @Transactional
     public void shouldCreatePolicyModel() {
@@ -90,11 +91,11 @@ public class PolicyModelServiceItCase {
                 .findById(new PolicyModelId(actualPolicyModel.getPolicyModelType(), actualPolicyModel.getVersion()))
                 .get());
         assertThat(actualPolicyModel.getPolicyModelType()).isEqualTo(policyModel.getPolicyModelType());
-        assertThat(actualPolicyModel.getCreatedBy()).isEqualTo("");
+        assertThat(actualPolicyModel.getCreatedBy()).isEqualTo("Not found");
         assertThat(actualPolicyModel.getCreatedDate()).isNotNull();
         assertThat(actualPolicyModel.getPolicyAcronym()).isEqualTo(policyModel.getPolicyAcronym());
         assertThat(actualPolicyModel.getPolicyModelTosca()).isEqualTo(policyModel.getPolicyModelTosca());
-        assertThat(actualPolicyModel.getUpdatedBy()).isEqualTo("");
+        assertThat(actualPolicyModel.getUpdatedBy()).isEqualTo("Not found");
         assertThat(actualPolicyModel.getUpdatedDate()).isNotNull();
         assertThat(actualPolicyModel.getVersion()).isEqualTo(policyModel.getVersion());
 

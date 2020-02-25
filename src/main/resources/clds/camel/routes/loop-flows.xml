@@ -153,7 +153,7 @@
 						<simple>${body}</simple>
 					</setProperty>
 					<setProperty propertyName="dcaeComponent">
-						<simple>${exchangeProperty[loopObject].getComponent('DCAE_' + ${exchangeProperty[microServicePolicy].getName())}</simple>
+						<simple>${exchangeProperty[loopObject].getComponent('DCAE_' + ${exchangeProperty[microServicePolicy].getName()})}</simple>
 					</setProperty>
 					<when>
 						<simple>${exchangeProperty[microServicePolicy].getDcaeDeploymentStatusUrl()} != null

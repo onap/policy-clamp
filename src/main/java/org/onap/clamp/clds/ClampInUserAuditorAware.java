@@ -24,10 +24,9 @@
 package org.onap.clamp.clds;
 
 import java.util.Optional;
-
+import org.onap.clamp.authorization.AuthorizationController;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,12 +34,7 @@ public class ClampInUserAuditorAware implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-        if (SecurityContextHolder.getContext().getAuthentication() != null
-                && SecurityContextHolder.getContext().getAuthentication().getPrincipal() != null) {
-            return Optional.of(((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                    .getUsername());
-        }
-        return Optional.of("");
+        return Optional.of(AuthorizationController.getPrincipalName(SecurityContextHolder.getContext()));
     }
 
 }

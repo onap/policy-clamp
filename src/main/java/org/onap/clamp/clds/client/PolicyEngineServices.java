@@ -25,24 +25,19 @@ package org.onap.clamp.clds.client;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.loop.template.PolicyModel;
-import org.onap.clamp.loop.template.PolicyModelId;
-import org.onap.clamp.loop.template.PolicyModelsRepository;
+import org.onap.clamp.loop.template.PolicyModelsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.yaml.snakeyaml.Yaml;
 
 
@@ -58,7 +53,7 @@ import org.yaml.snakeyaml.Yaml;
 public class PolicyEngineServices {
     private final CamelContext camelContext;
 
-    private final PolicyModelsRepository policyModelsRepository;
+    private final PolicyModelsService policyModelsSService;
 
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineServices.class);
     private static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
@@ -74,18 +69,18 @@ public class PolicyEngineServices {
      *
      * @param camelContext Camel context bean
      * @param clampProperties ClampProperties bean
-     * @param policyModelsRepository policyModel repository bean
+     * @param policyModelsSService policyModel repository bean
      */
     @Autowired
     public PolicyEngineServices(CamelContext camelContext, ClampProperties clampProperties,
-            PolicyModelsRepository policyModelsRepository) {
+                                PolicyModelsService policyModelsSService) {
         this.camelContext = camelContext;
-        this.policyModelsRepository = policyModelsRepository;
+        this.policyModelsSService = policyModelsSService;
         if (clampProperties.getStringValue(POLICY_RETRY_LIMIT) != null) {
-            retryLimit = Integer.valueOf(clampProperties.getStringValue(POLICY_RETRY_LIMIT));
+            retryLimit = Integer.parseInt(clampProperties.getStringValue(POLICY_RETRY_LIMIT));
         }
         if (clampProperties.getStringValue(POLICY_RETRY_INTERVAL) != null) {
-            retryInterval = Integer.valueOf(clampProperties.getStringValue(POLICY_RETRY_INTERVAL));
+            retryInterval = Integer.parseInt(clampProperties.getStringValue(POLICY_RETRY_INTERVAL));
         }
     }
 
@@ -111,19 +106,6 @@ public class PolicyEngineServices {
     }
 
     /**
-     * Thie method creates an PolicyModel in Db if it does not exist.
-     *
-     * @param policyModel The policyModel to save
-     */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void createPolicyInDbIfNeeded(PolicyModel policyModel) {
-        if (!policyModelsRepository
-                .existsById(new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
-            policyModelsRepository.save(policyModel);
-        }
-    }
-
-    /**
      * This method synchronize the clamp database and the policy engine.
      * So it creates the required PolicyModel.
      */
@@ -140,7 +122,7 @@ public class PolicyEngineServices {
         policyTypesList.parallelStream().forEach(policyType -> {
             Map.Entry<String, Object> policyTypeEntry = (Map.Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
 
-            createPolicyInDbIfNeeded(
+            policyModelsSService.createPolicyInDbIfNeeded(
                     createPolicyModelFromPolicyEngine(policyTypeEntry.getKey(),
                             ((String) ((LinkedHashMap<String, Object>) policyTypeEntry.getValue()).get("version"))));
         });
@@ -151,7 +133,6 @@ public class PolicyEngineServices {
      * policy engine.
      * 
      * @return A yaml containing all policy Types and all data types
-     * @throws InterruptedException In case of issue when sleeping during the retry
      */
     public String downloadAllPolicies() {
         return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models");
@@ -163,7 +144,6 @@ public class PolicyEngineServices {
      * @param policyType    The policy type (id)
      * @param policyVersion The policy version
      * @return A string with the whole policy tosca model
-     * @throws InterruptedException In case of issue when sleeping during the retry
      */
     public String downloadOnePolicy(String policyType, String policyVersion) {
         return callCamelRoute(ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
