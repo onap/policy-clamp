@@ -78,6 +78,33 @@ export default class LoopCache {
 		return this.loopJsonCache["microServicePolicies"];
 	}
 
+	getOperationalPolicyForName(name) {
+		var opProperties=this.getOperationalPolicies();
+		for (var policy in opProperties) {
+			if (opProperties[policy]["name"] === name) {
+				return opProperties[policy];
+			}
+		}
+		return null;
+	}
+
+	getOperationalPolicyPropertiesForName(name) {
+		var opConfig = this.getOperationalPolicyForName(name);
+		if (opConfig !== null) {
+			return opConfig["properties"];
+		}
+		return null;
+	}
+
+	getOperationalPolicyJsonRepresentationForName(name) {
+    	var opConfig = this.getOperationalPolicyForName(name);
+    	if (opConfig !== null) {
+    		return opConfig["jsonRepresentation"];
+    	}
+    	return null;
+    }
+
+
 	getMicroServiceForName(name) {
 		var msProperties=this.getMicroServicePolicies();
 		for (var policy in msProperties) {

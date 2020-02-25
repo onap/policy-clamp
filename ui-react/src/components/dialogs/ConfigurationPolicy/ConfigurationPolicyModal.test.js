@@ -48,7 +48,7 @@ describe('Verify ConfigurationPolicyModal', () => {
         }]
     });
     const historyMock = { push: jest.fn() };
-    const matchMock = { params:{ componentName: "TCA_h2NMX_v1_0_ResourceInstanceName1_tca" } } 
+    const matchMock = { params:{ policyName: "TCA_h2NMX_v1_0_ResourceInstanceName1_tca" } } 
     const flushPromises = () => new Promise(setImmediate);
 	
     it('Test handleClose', () => {
@@ -73,7 +73,7 @@ describe('Verify ConfigurationPolicyModal', () => {
 
         expect(handleSave).toHaveBeenCalledTimes(1);
         expect(component.state('show')).toEqual(false);
-        expect(component.state('componentName')).toEqual("TCA_h2NMX_v1_0_ResourceInstanceName1_tca");
+        expect(component.state('policyName')).toEqual("TCA_h2NMX_v1_0_ResourceInstanceName1_tca");
         expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
     });
 });

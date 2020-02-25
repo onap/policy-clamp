@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,13 +32,15 @@ const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
 
-export default class ConfigurationPolicyModal extends React.Component {
+export default class PolicyModal extends React.Component {
 
 	state = {
 		show: true,
 		loopCache: this.props.loopCache,
 		jsonEditor: null,
-		policyName: this.props.match.params.policyName
+		policyName: this.props.match.params.policyName,
+		// This is to indicate whether it's an operational or config policy (in terms of loop instance)
+		policyInstanceType: this.props.match.params.policyInstanceType
 	};
 
 	constructor(props, context) {
@@ -53,18 +55,27 @@ export default class ConfigurationPolicyModal extends React.Component {
 		var editorData = this.state.jsonEditor.getValue();
 
 		if (errors.length !== 0) {
-			console.error("Errors detected during config policy data validation ", errors);
+			console.error("Errors detected during policy data validation ", errors);
 			this.setState({ show: false });
 			this.props.history.push('/');
 		}
 		else {
-			console.info("NO validation errors found in config policy data");
-			this.state.loopCache.updateMicroServiceProperties(this.state.policyName, editorData[0]);
-			LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.policyName)).then(resp => {
-				this.setState({ show: false });
-				this.props.history.push('/');
-				this.props.loadLoopFunction(this.state.loopCache.getLoopName());
-			});
+			console.info("NO validation errors found in policy data");
+			if (policyInstanceType === 'MICRO-SERVICE-POLICY') {
+                this.state.loopCache.updateMicroServiceProperties(this.state.policyName, editorData[0]);
+                LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.policyName)).then(resp => {
+                    this.setState({ show: false });
+                    this.props.history.push('/');
+                    this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+                });
+			} else if (policyInstanceType === 'OPERATIONAL-POLICY') {
+			    this.state.loopCache.updateOperationalPolicyProperties(editorData);
+            	LoopService.setOperationalPolicyProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getOperationalPolicyForName(this.state.policyName)).then(resp => {
+            		this.setState({ show: false });
+            		this.props.history.push('/');
+            		this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+            	});
+			}
 		}
 	}
 
@@ -78,12 +89,20 @@ export default class ConfigurationPolicyModal extends React.Component {
 	}
 
 	renderJsonEditor() {
-		console.debug("Rendering ConfigurationPolicyModal ", this.state.policyName);
-		var toscaModel = this.state.loopCache.getMicroServiceJsonRepresentationForName(this.state.policyName);
+		console.debug("Rendering PolicyModal ", this.state.policyName);
+		var toscaModel = {};
+	    var editorData = {};
+	    if (policyInstanceType === 'MICRO-SERVICE-POLICY') {
+            toscaModel = this.state.loopCache.getMicroServiceJsonRepresentationForName(this.state.policyName);
+            editorData = this.state.loopCache.getMicroServicePropertiesForName(this.state.policyName);
+        } else if (policyInstanceType === 'OPERATIONAL-POLICY') {
+            toscaModel = this.state.loopCache.getOperationalPolicyJsonRepresentationForName(this.state.policyName);
+            editorData = this.state.loopCache.getOperationalPolicyPropertiesForName(this.state.policyName);
+        }
+
 		if (toscaModel == null) {
 			return;
 		}
-		var editorData = this.state.loopCache.getMicroServicePropertiesForName(this.state.policyName);
 
 		JSONEditor.defaults.options.theme = 'bootstrap4';
 		//JSONEditor.defaults.options.iconlib = 'bootstrap2';
@@ -114,7 +133,7 @@ export default class ConfigurationPolicyModal extends React.Component {
 				<Modal.Footer>
 					<Button variant="secondary" onClick={this.handleClose}>
 						Close
-	            </Button>
+				</Button>
 					<Button variant="primary" onClick={this.handleSave}>
 						Save Changes
 	            </Button>

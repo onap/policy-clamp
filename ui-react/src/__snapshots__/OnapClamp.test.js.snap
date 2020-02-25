@@ -46,7 +46,11 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       render={[Function]}
     />
     <Route
-      path="/configurationPolicyModal/:componentName"
+      path="/policyModal/:policyInstanceType/:policyName"
+      render={[Function]}
+    />
+    <Route
+      path="/configurationPolicyModal/:policyName"
       render={[Function]}
     />
     <Route

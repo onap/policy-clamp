@@ -99,7 +99,7 @@ describe('Verify LoopSvg', () => {
         component.simulate('click', event);
         component.update();
 
-        expect(historyMock.push.mock.calls[0]).toEqual([ '/configurationPolicyModal/TCA_h2NMX_v1_0_ResourceInstanceName1_tca']);
+        expect(historyMock.push.mock.calls[0]).toEqual([ '/policyModal/MICRO-SERVICE-POLICY/TCA_h2NMX_v1_0_ResourceInstanceName1_tca']);
 
         //click operational policy
         dummyElement.setAttribute("data-element-id","OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca");
@@ -108,7 +108,7 @@ describe('Verify LoopSvg', () => {
         component.simulate('click', event2);
         component.update();
 
-        expect(historyMock.push.mock.calls[1]).toEqual([ '/operationalPolicyModal']);
+        expect(historyMock.push.mock.calls[1]).toEqual([ '/policyModal/OPERATIONAL-POLICY/OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca']);
     });
 
     it('Test componentWillReceiveProps method', () => {
@@ -125,9 +125,9 @@ describe('Verify LoopSvg', () => {
             <LoopSvg.WrappedComponent loopCache={localLoopCache}/>
         );
 
-        expect(component.state('componentModalMapping').size).toEqual(2);
+        expect(component.state('componentModalMapping').size).toEqual(1);
 
         component.setProps({loopCache: loopCache});
-        expect(component.state('componentModalMapping').size).toEqual(3);
+        expect(component.state('componentModalMapping').size).toEqual(2);
     });
 });
