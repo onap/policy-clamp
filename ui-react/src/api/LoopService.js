@@ -38,6 +38,24 @@ export default class LoopService {
 			});
 	}
 
+	static createLoop(loopName, templateName) {
+		return fetch('/restservices/clds/v2/loop/create/' + loopName + '?templateName=' + templateName, {
+			method: 'POST',
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: 'same-origin'
+		})
+			.then(function (response) {
+				console.debug("CreateLoop response received: ", response.status);
+				return response.json();
+			})
+			.catch(function (error) {
+				console.error("CreateLoop error received", error);
+				return "";
+			});
+	}
+
 	static getLoop(loopName) {
 		return fetch('/restservices/clds/v2/loop/' + loopName, {
 			method: 'GET',

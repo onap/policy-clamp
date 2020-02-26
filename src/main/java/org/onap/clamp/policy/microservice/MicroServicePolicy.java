@@ -51,6 +51,7 @@ import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.Policy;
 import org.yaml.snakeyaml.Yaml;
@@ -110,23 +111,17 @@ public class MicroServicePolicy extends Policy implements Serializable {
     }
 
     /**
-     * The constructor that create the json representation from the policyTosca
+     * The constructor that creates the json representation from the policyTosca
      * using the ToscaYamlToJsonConvertor.
      *
      * @param name        The name of the MicroService
      * @param policyModel The policy model of the MicroService
      * @param shared      The flag indicate whether the MicroService is shared
-     * @param usedByLoops The list of loops that uses this MicroService
      */
-    public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared,
-                              Set<Loop> usedByLoops) {
-        this.name = name;
-        this.policyModel = policyModel;
-        this.shared = shared;
-        this.setJsonRepresentation(JsonUtils.GSON_JPA_MODEL
+    public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared, LoopElementModel loopElementModel) {
+        this(name,policyModel,shared,JsonUtils.GSON_JPA_MODEL
                 .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyModel.getPolicyModelTosca(),
-                        policyModel.getPolicyModelType()), JsonObject.class));
-        this.usedByLoops = usedByLoops;
+                        policyModel.getPolicyModelType()), JsonObject.class),loopElementModel);
     }
 
     private JsonObject createJsonFromPolicyTosca() {
@@ -138,21 +133,20 @@ public class MicroServicePolicy extends Policy implements Serializable {
     /**
      * The constructor that does not make use of ToscaYamlToJsonConvertor but take
      * the jsonRepresentation instead.
-     *
      * @param name               The name of the MicroService
      * @param policyModel        The policy model type of the MicroService
      * @param shared             The flag indicate whether the MicroService is
-     *                           shared
+ *                           shared
      * @param jsonRepresentation The UI representation in json format
-     * @param usedByLoops        The list of loops that uses this MicroService
+     * @param loopElementModel The loop element model from which this instance should be created
      */
     public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared,
-                              JsonObject jsonRepresentation, Set<Loop> usedByLoops) {
+                              JsonObject jsonRepresentation, LoopElementModel loopElementModel) {
         this.name = name;
         this.policyModel = policyModel;
         this.shared = shared;
-        this.usedByLoops = usedByLoops;
         this.setJsonRepresentation(jsonRepresentation);
+        this.setLoopElementModel(loopElementModel);
     }
 
     @Override

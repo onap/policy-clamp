@@ -25,10 +25,8 @@ package org.onap.clamp.clds.client;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -38,27 +36,21 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
-import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.template.PolicyModel;
-import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsService;
 import org.onap.clamp.policy.pdpgroup.PdpGroup;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
-
-
 
 
 /**
  * The class implements the communication with the Policy Engine to retrieve
  * policy models (tosca). It mainly delegates the physical calls to Camel
  * engine.
- *
  */
 @Component
 public class PolicyEngineServices {
@@ -76,16 +68,15 @@ public class PolicyEngineServices {
     /**
      * Default constructor.
      *
-     * @param camelContext Camel context bean
-     * @param clampProperties ClampProperties bean
-     * @param policyModelsSService policyModel repository bean
+     * @param camelContext        Camel context bean
+     * @param clampProperties     ClampProperties bean
      * @param policyModelsService policyModel service
      */
     @Autowired
     public PolicyEngineServices(CamelContext camelContext, ClampProperties clampProperties,
-                                PolicyModelsService policyModelsSService) {
+                                PolicyModelsService policyModelsService) {
         this.camelContext = camelContext;
-        this.policyModelsService = policyModelsSService;
+        this.policyModelsService = policyModelsService;
         if (clampProperties.getStringValue(POLICY_RETRY_LIMIT) != null) {
             retryLimit = Integer.parseInt(clampProperties.getStringValue(POLICY_RETRY_LIMIT));
         }
@@ -97,7 +88,7 @@ public class PolicyEngineServices {
     /**
      * This method query Policy engine and create a PolicyModel object with type and version.
      *
-     * @param policyType The policyType id
+     * @param policyType    The policyType id
      * @param policyVersion The policy version of that type
      * @return A PolicyModel created from policyEngine data
      */
@@ -130,7 +121,8 @@ public class PolicyEngineServices {
         List<LinkedHashMap<String, Object>> policyTypesList = (List<LinkedHashMap<String, Object>>) loadedYaml
                 .get("policy_types");
         policyTypesList.parallelStream().forEach(policyType -> {
-            Map.Entry<String, Object> policyTypeEntry = (Map.Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
+            Map.Entry<String, Object> policyTypeEntry =
+                    (Map.Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
 
             policyModelsService.createPolicyInDbIfNeeded(
                     createPolicyModelFromPolicyEngine(policyTypeEntry.getKey(),
@@ -141,31 +133,34 @@ public class PolicyEngineServices {
     /**
      * This method can be used to download all policy types + data types defined in
      * policy engine.
-     * 
+     *
      * @return A yaml containing all policy Types and all data types
      */
     public String downloadAllPolicies() {
-        return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models", "Get all policies");
+        return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models",
+                "Get all policies");
     }
 
     /**
      * This method can be used to download a policy tosca model on the engine.
-     * 
+     *
      * @param policyType    The policy type (id)
      * @param policyVersion The policy version
      * @return A string with the whole policy tosca model
      */
     public String downloadOnePolicy(String policyType, String policyVersion) {
         return callCamelRoute(ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
-                .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model", "Get one policy");
+                        .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model",
+                "Get one policy");
     }
 
     /**
      * This method can be used to download all Pdp Groups data from policy engine.
-     * 
      */
     public void downloadPdpGroups() {
-        String responseBody = callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-pdp-groups", "Get Pdp Groups");
+        String responseBody =
+                callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-pdp-groups",
+                        "Get Pdp Groups");
 
         if (responseBody == null || responseBody.isEmpty()) {
             logger.warn("getPdpGroups returned by policy engine could not be decoded, as it's null or empty");

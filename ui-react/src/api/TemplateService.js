@@ -21,6 +21,22 @@
  */
 
 export default class TemplateService {
+	static getTemplateNames() {
+		return fetch('/restservices/clds/v2/templates/names', { method: 'GET', credentials: 'same-origin' })
+			.then(function (response) {
+				console.debug("GetTemplateNames response received: ", response.status);
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error("GetTemplateNames query failed");
+					return {};
+				}
+			})
+			.catch(function (error) {
+				console.error("GetTemplateNames error received", error);
+				return {};
+			});
+	}
 
   static getBlueprintMicroServiceTemplates() {
     return fetch('restservices/clds/v2/templates', { method: 'GET', credentials: 'same-origin', })

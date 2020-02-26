@@ -24,10 +24,8 @@
 package org.onap.clamp.clds.util.drawing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.util.HashSet;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.onap.clamp.loop.Loop;
@@ -41,12 +39,12 @@ public class SvgLoopGeneratorTest {
         MicroServicePolicy ms1 =
                 new MicroServicePolicy("ms1", new PolicyModel("org.onap.ms1", "", "1.0.0", "short.ms1"),
                         false,
-                        new HashSet<Loop>());
+                        null);
         MicroServicePolicy ms2 =
                 new MicroServicePolicy("ms2", new PolicyModel("org.onap.ms2", "", "1.0.0", "short.ms2"),
-                        false, new HashSet<Loop>());
+                        false, null);
         OperationalPolicy opPolicy = new OperationalPolicy("OperationalPolicy", new Loop(), new JsonObject(),
-                new PolicyModel("org.onap.opolicy", null, "1.0.0", "short.OperationalPolicy"));
+                new PolicyModel("org.onap.opolicy", null, "1.0.0", "short.OperationalPolicy"), null);
         Loop loop = new Loop();
         loop.addMicroServicePolicy(ms1);
         loop.addMicroServicePolicy(ms2);

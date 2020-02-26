@@ -29,7 +29,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 import javax.transaction.Transactional;
 import org.apache.camel.CamelContext;
@@ -298,7 +297,7 @@ public class DeployFlowTestItCase {
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy microService = new MicroServicePolicy(name, policyModel,
                 shared,
-                gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
+                gson.fromJson(jsonRepresentation, JsonObject.class), null);
 
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;

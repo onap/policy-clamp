@@ -40,14 +40,20 @@ import org.springframework.stereotype.Controller;
 public class LoopController {
 
     private final LoopService loopService;
-    private static final Type OPERATIONAL_POLICY_TYPE = new TypeToken<List<OperationalPolicy>>() {}
-        .getType();
-    private static final Type MICROSERVICE_POLICY_TYPE = new TypeToken<List<MicroServicePolicy>>() {}
-        .getType();
+    private static final Type OPERATIONAL_POLICY_TYPE = new TypeToken<List<OperationalPolicy>>() {
+    }
+            .getType();
+    private static final Type MICROSERVICE_POLICY_TYPE = new TypeToken<List<MicroServicePolicy>>() {
+    }
+            .getType();
 
     @Autowired
     public LoopController(LoopService loopService) {
         this.loopService = loopService;
+    }
+
+    public Loop createLoop(String loopName, String templateName) {
+        return loopService.createLoopFromTemplate(loopName, templateName);
     }
 
     public List<String> getLoopNames() {

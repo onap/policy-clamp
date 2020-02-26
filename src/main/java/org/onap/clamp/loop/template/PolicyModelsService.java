@@ -52,8 +52,7 @@ public class PolicyModelsService {
     /**
      * Save or Update Policy Model.
      *
-     * @param policyModel
-     *        The policyModel
+     * @param policyModel The policyModel
      * @return The Policy Model
      */
     public PolicyModel saveOrUpdatePolicyModel(PolicyModel policyModel) {
@@ -63,8 +62,7 @@ public class PolicyModelsService {
     /**
      * Verify whether Policy Model exist by ID.
      *
-     * @param policyModelId
-     *        The policyModel Id
+     * @param policyModelId The policyModel Id
      * @return The flag indicates whether Policy Model exist
      */
     public boolean existsById(PolicyModelId policyModelId) {
@@ -157,14 +155,14 @@ public class PolicyModelsService {
         }
     }
 
-     /**
+    /**
      * Update the Pdp Group info in Policy Model DB.
      *
      * @param pdpGroupList The list of Pdp Group info received from Policy Engine
      */
     public void updatePdpGroupInfo(List<PdpGroup> pdpGroupList) {
         List<PolicyModel> policyModelList = policyModelsRepository.findAll();
-        for (PolicyModel policyModel :  policyModelList) {
+        for (PolicyModel policyModel : policyModelList) {
             JsonArray supportedPdpGroups = new JsonArray();
             for (PdpGroup pdpGroup : pdpGroupList) {
                 JsonObject supportedPdpGroup = pdpGroup.getSupportedSubgroups(policyModel.getPolicyModelType(),
@@ -175,7 +173,7 @@ public class PolicyModelsService {
             }
 
             if (supportedPdpGroups.size() > 0) {
-                JsonObject supportedPdpJson = new JsonObject ();
+                JsonObject supportedPdpJson = new JsonObject();
                 supportedPdpJson.add("supportedPdpGroups", supportedPdpGroups);
                 policyModel.setPolicyPdpGroup(supportedPdpJson);
                 policyModelsRepository.save(policyModel);

@@ -33,7 +33,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Random;
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
@@ -55,7 +54,7 @@ public class LoopToJsonTest {
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name) {
         return new OperationalPolicy(name, null, gson.fromJson(configJson, JsonObject.class),
-                getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"));
+                getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"), null);
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
@@ -73,7 +72,7 @@ public class LoopToJsonTest {
                                                      String policyTosca, String jsonProperties, boolean shared) {
         MicroServicePolicy microService = new MicroServicePolicy(name, new PolicyModel(modelType, policyTosca, "1.0.0"),
                 shared,
-                gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
+                gson.fromJson(jsonRepresentation, JsonObject.class), null);
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
     }
@@ -106,6 +105,10 @@ public class LoopToJsonTest {
         return log;
     }
 
+    /**
+     * This tests a GSON encode/decode.
+     * @throws IOException In case of failure
+     */
     @Test
     public void loopGsonTest() throws IOException {
         Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
@@ -146,6 +149,11 @@ public class LoopToJsonTest {
         assertThat(loopTestDeserialized.getLoopTemplate()).isEqualTo(loopTemplate);
     }
 
+    /**
+     * This tests the service object GSON encode/decode.
+     *
+     * @throws IOException In case of issues
+     */
     @Test
     public void loopServiceTest() throws IOException {
         Loop loopTest2 = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
@@ -166,6 +174,11 @@ public class LoopToJsonTest {
                 "blueprint", "components");
     }
 
+    /**
+     * This tests the GSON encode/decode of pdpGroup.
+     *
+     * @throws IOException In case of issues
+     */
     @Test
     public void createPoliciesPayloadPdpGroupTest() throws IOException {
         Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",

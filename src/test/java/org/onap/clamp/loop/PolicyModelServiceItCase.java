@@ -25,6 +25,7 @@ package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.gson.JsonObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -46,8 +47,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.google.gson.JsonObject;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
 public class PolicyModelServiceItCase {
@@ -68,7 +67,7 @@ public class PolicyModelServiceItCase {
     private static final String POLICY_MODEL_TYPE_2_VERSION_2 = "2.0.0";
 
     private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
-            String policyVariant, String createdBy) {
+                                       String policyVariant, String createdBy) {
         PolicyModel policyModel = new PolicyModel();
         policyModel.setCreatedBy(createdBy);
         policyModel.setPolicyAcronym(policyAcronym);
@@ -110,6 +109,9 @@ public class PolicyModelServiceItCase {
                 .isEqualToIgnoringGivenFields(policyModel, "createdDate", "updatedDate", "createdBy", "updatedBy");
     }
 
+    /**
+     * This tests a getAllPolicyModelTypes get.
+     */
     @Test
     @Transactional
     public void shouldReturnAllPolicyModelTypes() {
@@ -125,6 +127,9 @@ public class PolicyModelServiceItCase {
         assertThat(policyModelTypesList).contains(policyModel1.getPolicyModelType(), policyModel2.getPolicyModelType());
     }
 
+    /**
+     * This tests a getAllPolicyModels get.
+     */
     @Test
     @Transactional
     public void shouldReturnAllPolicyModels() {
@@ -138,6 +143,9 @@ public class PolicyModelServiceItCase {
         assertThat(policyModelsService.getAllPolicyModels()).contains(policyModel1, policyModel2);
     }
 
+    /**
+     * This tests a getAllPolicyModelsByType get.
+     */
     @Test
     @Transactional
     public void shouldReturnAllModelsByType() {
@@ -152,6 +160,9 @@ public class PolicyModelServiceItCase {
                 policyModel2);
     }
 
+    /**
+     * This tests the sorting of policyModel.
+     */
     @Test
     @Transactional
     public void shouldReturnSortedSet() {
@@ -167,14 +178,17 @@ public class PolicyModelServiceItCase {
 
         SortedSet<PolicyModel> sortedSet = new TreeSet<>();
         policyModelsService.getAllPolicyModels().forEach(sortedSet::add);
-        List<PolicyModel> listToCheck = sortedSet.stream().filter(
-            policy -> policy.equals(policyModel3) || policy.equals(policyModel2) || policy.equals(policyModel1))
-                .collect(Collectors.toList());
+        List<PolicyModel> listToCheck = sortedSet.stream()
+                .filter(policy -> policy.equals(policyModel3) || policy.equals(policyModel2)
+                        || policy.equals(policyModel1)).collect(Collectors.toList());
         assertThat(listToCheck.get(0)).isEqualByComparingTo(policyModel2);
         assertThat(listToCheck.get(1)).isEqualByComparingTo(policyModel1);
         assertThat(listToCheck.get(2)).isEqualByComparingTo(policyModel3);
     }
 
+    /**
+     * This tests the pdpgroup GSON encode/decode and saving.
+     */
     @Test
     @Transactional
     public void shouldAddPdpGroupInfo() {
@@ -229,12 +243,14 @@ public class PolicyModelServiceItCase {
         policyModelsService.updatePdpGroupInfo(pdpGroupList);
 
         JsonObject res1 = policyModelsService.getPolicyModel("org.onap.testos", "1.0.0").getPolicyPdpGroup();
-        String expectedRes1 = "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\"]}]}";
+        String expectedRes1 =
+                "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\"]}]}";
         JsonObject expectedJson1 = JsonUtils.GSON.fromJson(expectedRes1, JsonObject.class);
         assertThat(res1).isEqualTo(expectedJson1);
 
         JsonObject res2 = policyModelsService.getPolicyModel("org.onap.testos2", "2.0.0").getPolicyPdpGroup();
-        String expectedRes2 = "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\",\"subGroup2\"]}]}";
+        String expectedRes2 =
+                "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\",\"subGroup2\"]}]}";
         JsonObject expectedJson2 = JsonUtils.GSON.fromJson(expectedRes2, JsonObject.class);
         assertThat(res2).isEqualTo(expectedJson2);
 

@@ -27,12 +27,10 @@ package org.onap.clamp.clds.config;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.io.IOException;
-
+import org.onap.clamp.authorization.CldsUser;
 import org.onap.clamp.clds.exception.CldsConfigException;
 import org.onap.clamp.clds.exception.CldsUsersException;
-import org.onap.clamp.authorization.CldsUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

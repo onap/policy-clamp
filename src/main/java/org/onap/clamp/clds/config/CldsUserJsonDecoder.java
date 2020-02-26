@@ -26,14 +26,12 @@
 package org.onap.clamp.clds.config;
 
 import com.google.gson.JsonParseException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
 import org.apache.commons.io.IOUtils;
-import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.authorization.CldsUser;
+import org.onap.clamp.clds.exception.CldsUsersException;
 import org.onap.clamp.clds.util.JsonUtils;
 
 public class CldsUserJsonDecoder {

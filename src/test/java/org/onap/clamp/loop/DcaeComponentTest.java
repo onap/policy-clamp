@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -55,7 +54,7 @@ public class DcaeComponentTest {
 
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", new PolicyModel("policy1",
                 "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0"), true,
-                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), new HashSet<>());
+                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null);
         microServicePolicy.setConfigurationsJson(new Gson().fromJson("{\"param1\":\"value1\"}", JsonObject.class));
 
         loopTest.addMicroServicePolicy(microServicePolicy);

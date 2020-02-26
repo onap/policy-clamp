@@ -83,7 +83,7 @@ public class Painter {
 
         for (MicroServicePolicy ms : microServices) {
             ib.arrow().rectangle(ms.getName(),
-                    RectTypes.MICROSERVICE, ms.getPolicyModel().getPolicyAcronym());
+                    RectTypes.MICROSERVICE, ms.getPolicyModel().getPolicyAcronym()).arrow();
         }
         for (OperationalPolicy policy : policies) {
             ib.arrow().rectangle(policy.getName(), RectTypes.POLICY, policy.getPolicyModel().getPolicyAcronym())

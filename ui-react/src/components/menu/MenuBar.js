@@ -95,10 +95,11 @@ export default class MenuBar extends React.Component {
                     		<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
                     </StyledNavDropdown>
 					<StyledNavDropdown title="Loop Instance">
-							<NavDropdown.Item as={StyledLink} to="/openLoop">Open Loop</NavDropdown.Item>
+					        <NavDropdown.Item as={StyledLink} to="/createLoop">Create</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/openLoop">Open</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/modifyLoop" >Modify</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/modifyLoop" disabled={this.state.disabled}>Modify</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/refreshStatus" disabled={this.state.disabled}>Refresh Status</NavDropdown.Item>
 					</StyledNavDropdown>
 					<StyledNavDropdown title="Loop Operations">

@@ -612,7 +612,40 @@
 				</doTry>
 			</route>
 		</put>
-
+		<post
+				uri="/v2/loop/create/{loopName}?templateName={templateName}"
+				outType="org.onap.clamp.loop.Loop" consumes="application/json"
+				produces="application/json">
+			<route>
+				<removeHeaders
+						pattern="*"
+						excludePattern="loopName|templateName" />
+				<doTry>
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Create Loop')" />
+					<to
+							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to
+							uri="bean:org.onap.clamp.loop.LoopController?method=createLoop(${header.loopName}, ${header.templateName})" />
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+					<doCatch>
+						<exception>java.lang.Exception</exception>
+						<handled>
+							<constant>true</constant>
+						</handled>
+						<setHeader headerName="CamelHttpResponseCode">
+							<constant>500</constant>
+						</setHeader>
+						<transform>
+							<simple>ERROR: ${exception.message}</simple>
+					</transform>
+						<to
+								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+					</doCatch>
+				</doTry>
+			</route>
+		</post>
 		<get uri="/v2/dictionary"
 			outType="org.onap.clamp.tosca.Dictionary" produces="application/json">
 			<route>
@@ -1046,6 +1079,30 @@
 						</handled>
 						<to
 							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+					</doCatch>
+				</doTry>
+			</route>
+		</get>
+		<get uri="/v2/templates/{templateName}/svgRepresentation"
+			 outType="java.lang.String" produces="application/xml">
+			<route>
+				<removeHeaders pattern="*" excludePattern="templateName" />
+				<doTry>
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get SVG Representation for Loop template')" />
+					<to
+							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')" />
+					<to
+							uri="bean:org.onap.clamp.loop.template.LoopTemplatesService?method=getSvgRepresentation(${header.templateName})" />
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+					<doCatch>
+						<exception>java.lang.Exception</exception>
+						<handled>
+							<constant>false</constant>
+						</handled>
+						<to
+								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
 					</doCatch>
 				</doTry>
 			</route>

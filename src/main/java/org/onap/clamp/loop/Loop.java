@@ -60,6 +60,7 @@ import org.onap.clamp.loop.components.external.ExternalComponent;
 import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
+import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -153,6 +154,28 @@ public class Loop extends AuditEntity implements Serializable {
         this.lastComputedState = LoopState.DESIGN;
         this.globalPropertiesJson = new JsonObject();
         initializeExternalComponents();
+    }
+
+    /**
+     * This constructor creates a loop from a loop template.
+     *
+     * @param name         The loop name
+     * @param loopTemplate The loop template from which a new loop instance must be created
+     */
+    public Loop(String name, LoopTemplate loopTemplate) {
+        this(name,"");
+        this.setLoopTemplate(loopTemplate);
+        this.setModelService(loopTemplate.getModelService());
+        loopTemplate.getLoopElementModelsUsed().forEach(element -> {
+            if (LoopElementModel.MICRO_SERVICE_TYPE.equals(element.getLoopElementModel().getLoopElementType())) {
+                this.addMicroServicePolicy(new MicroServicePolicy(name,
+                        element.getLoopElementModel().getPolicyModels().first(), false, element.getLoopElementModel()));
+            } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
+                    .equals(element.getLoopElementModel().getLoopElementType())) {
+                this.addOperationalPolicy(new OperationalPolicy(name, null, new JsonObject(),
+                        element.getLoopElementModel().getPolicyModels().first(), element.getLoopElementModel()));
+            }
+        });
     }
 
     public String getName() {

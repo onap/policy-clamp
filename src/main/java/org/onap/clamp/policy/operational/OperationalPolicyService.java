@@ -52,7 +52,7 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
                                 .map(p -> setConfigurationJson(p, policy.getConfigurationsJson()))
                                 .orElse(new OperationalPolicy(policy.getName(), loop,
                                         policy.getConfigurationsJson(),
-                                        policy.getPolicyModel())))
+                                        policy.getPolicyModel(), null)))
                 .collect(Collectors.toSet());
     }
 

@@ -31,7 +31,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.time.Instant;
-import java.util.HashSet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
@@ -91,7 +90,7 @@ public class LoopRepositoriesItCase {
     }
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name, PolicyModel policyModel) {
-        return new OperationalPolicy(name, null, new Gson().fromJson(configJson, JsonObject.class), policyModel);
+        return new OperationalPolicy(name, null, new Gson().fromJson(configJson, JsonObject.class), policyModel, null);
     }
 
     private LoopElementModel getLoopElementModel(String yaml, String name, String policyType, String createdBy,
@@ -131,7 +130,7 @@ public class LoopRepositoriesItCase {
     private MicroServicePolicy getMicroServicePolicy(String name, String jsonRepresentation, String jsonProperties,
                                                      boolean shared, PolicyModel policyModel) {
         MicroServicePolicy microService = new MicroServicePolicy(name, policyModel, shared,
-                gson.fromJson(jsonRepresentation, JsonObject.class), new HashSet<>());
+                gson.fromJson(jsonRepresentation, JsonObject.class), null);
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
     }

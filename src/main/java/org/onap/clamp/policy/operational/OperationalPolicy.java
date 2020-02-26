@@ -55,6 +55,7 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.Policy;
 import org.yaml.snakeyaml.DumperOptions;
@@ -93,18 +94,20 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     /**
      * The constructor.
-     *
-     * @param name               The name of the operational policy
+     *  @param name               The name of the operational policy
      * @param loop               The loop that uses this operational policy
      * @param configurationsJson The operational policy property in the format of
-     *                           json
+ *                           json
      * @param policyModel        The policy model associated if any, can be null
+     * @param loopElementModel The loop element from which this instance is supposed to be created
      */
-    public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson, PolicyModel policyModel) {
+    public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson, PolicyModel policyModel,
+                             LoopElementModel loopElementModel) {
         this.name = name;
         this.loop = loop;
         this.setPolicyModel(policyModel);
         this.setConfigurationsJson(configurationsJson);
+        this.setLoopElementModel(loopElementModel);
         LegacyOperationalPolicy.preloadConfiguration(configurationsJson, loop);
         try {
             this.setJsonRepresentation(

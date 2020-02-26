@@ -23,12 +23,9 @@
 
 package org.onap.clamp.policy.microservice;
 
-import com.google.common.collect.Sets;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +63,7 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
         return repository.save(
                 repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
                         .orElse(new MicroServicePolicy(policy.getName(), policy.getPolicyModel(),
-                                policy.getShared(), policy.getJsonRepresentation(), Sets.newHashSet(loop))));
+                                policy.getShared(), policy.getJsonRepresentation(),null)));
     }
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,
@@ -84,7 +81,6 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
      * @param microServicePolicy The micro service policy
      * @param deploymentId       The deployment ID as returned by DCAE
      * @param deploymentUrl      The Deployment URL as returned by DCAE
-     * @throws MicroServicePolicy doesn't exist in DB
      */
     public void updateDcaeDeploymentFields(MicroServicePolicy microServicePolicy, String deploymentId,
             String deploymentUrl) {

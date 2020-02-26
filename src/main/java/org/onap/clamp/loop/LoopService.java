@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.onap.clamp.loop.template.LoopTemplatesService;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.loop.template.PolicyModelsService;
 import org.onap.clamp.policy.Policy;
@@ -53,6 +54,9 @@ public class LoopService {
     @Autowired
     private PolicyModelsService policyModelsService;
 
+    @Autowired
+    private LoopTemplatesService loopTemplateService;
+
     Loop saveOrUpdateLoop(Loop loop) {
         return loopsRepository.save(loop);
     }
@@ -67,6 +71,17 @@ public class LoopService {
 
     public void deleteLoop(String loopName) {
         loopsRepository.deleteById(loopName);
+    }
+
+    /**
+     * Creates a Loop Instance from Loop Template Name.
+     *
+     * @param loopName Name of the Loop to be created
+     * @param templateName Loop Template to used for Loop
+     * @return Loop Instance
+     */
+    public Loop createLoopFromTemplate(String loopName, String templateName) {
+        return loopsRepository.save(new Loop(loopName,loopTemplateService.getLoopTemplate(templateName)));
     }
 
     /**
@@ -96,7 +111,7 @@ public class LoopService {
         loop.addOperationalPolicy(
                 new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL", loop.getModelService().getName(),
                         loop.getModelService().getVersion(), RandomStringUtils.randomAlphanumeric(3),
-                        RandomStringUtils.randomAlphanumeric(4)), loop, null, policyModel));
+                        RandomStringUtils.randomAlphanumeric(4)), loop, null, policyModel, null));
         return loopsRepository.save(loop);
     }
 

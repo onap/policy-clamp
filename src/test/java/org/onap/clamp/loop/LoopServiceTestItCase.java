@@ -46,7 +46,6 @@ import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.onap.clamp.policy.operational.OperationalPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -102,7 +101,7 @@ public class LoopServiceTestItCase {
         // given
         saveTestLoopToDb();
         OperationalPolicy operationalPolicy = new OperationalPolicy("policyName", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
 
         // when
         Loop actualLoop = loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME,
@@ -233,11 +232,11 @@ public class LoopServiceTestItCase {
         JsonObject newJsonConfiguration = JsonUtils.GSON.fromJson("{}", JsonObject.class);
 
         OperationalPolicy firstOperationalPolicy = new OperationalPolicy("firstPolicyName", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
         loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
 
         OperationalPolicy secondOperationalPolicy = new OperationalPolicy("secondPolicyName", null,
-                newJsonConfiguration, null);
+                newJsonConfiguration, null, null);
 
         // when
         firstOperationalPolicy.setConfigurationsJson(newJsonConfiguration);
@@ -264,11 +263,11 @@ public class LoopServiceTestItCase {
         saveTestLoopToDb();
 
         OperationalPolicy firstOperationalPolicy = new OperationalPolicy("firstPolicyName", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
         loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
 
         OperationalPolicy secondOperationalPolicy = new OperationalPolicy("policyName", null,
-                JsonUtils.GSON.fromJson("{}", JsonObject.class), null);
+                JsonUtils.GSON.fromJson("{}", JsonObject.class), null, null);
 
         // when
         Loop actualLoop = loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME,
@@ -320,7 +319,7 @@ public class LoopServiceTestItCase {
         loop = loopService.saveOrUpdateLoop(loop);
         // Add op policy
         OperationalPolicy operationalPolicy = new OperationalPolicy("opPolicy", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
         loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(operationalPolicy));
 
         PolicyModel policyModel = new PolicyModel("org.policies.microPolicy",

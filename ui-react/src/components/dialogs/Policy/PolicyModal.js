@@ -61,14 +61,14 @@ export default class PolicyModal extends React.Component {
 		}
 		else {
 			console.info("NO validation errors found in policy data");
-			if (policyInstanceType === 'MICRO-SERVICE-POLICY') {
+			if (this.state.policyInstanceType === 'MICRO-SERVICE-POLICY') {
                 this.state.loopCache.updateMicroServiceProperties(this.state.policyName, editorData[0]);
                 LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.policyName)).then(resp => {
                     this.setState({ show: false });
                     this.props.history.push('/');
                     this.props.loadLoopFunction(this.state.loopCache.getLoopName());
                 });
-			} else if (policyInstanceType === 'OPERATIONAL-POLICY') {
+			} else if (this.state.policyInstanceType === 'OPERATIONAL-POLICY') {
 			    this.state.loopCache.updateOperationalPolicyProperties(editorData);
             	LoopService.setOperationalPolicyProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getOperationalPolicyForName(this.state.policyName)).then(resp => {
             		this.setState({ show: false });
@@ -92,10 +92,10 @@ export default class PolicyModal extends React.Component {
 		console.debug("Rendering PolicyModal ", this.state.policyName);
 		var toscaModel = {};
 	    var editorData = {};
-	    if (policyInstanceType === 'MICRO-SERVICE-POLICY') {
+	    if (this.state.policyInstanceType === 'MICRO-SERVICE-POLICY') {
             toscaModel = this.state.loopCache.getMicroServiceJsonRepresentationForName(this.state.policyName);
             editorData = this.state.loopCache.getMicroServicePropertiesForName(this.state.policyName);
-        } else if (policyInstanceType === 'OPERATIONAL-POLICY') {
+        } else if (this.state.policyInstanceType === 'OPERATIONAL-POLICY') {
             toscaModel = this.state.loopCache.getOperationalPolicyJsonRepresentationForName(this.state.policyName);
             editorData = this.state.loopCache.getOperationalPolicyPropertiesForName(this.state.policyName);
         }
