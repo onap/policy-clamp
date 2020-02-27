@@ -26,10 +26,8 @@ package org.onap.clamp.loop;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.List;
-
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -100,6 +98,27 @@ public class LoopController {
      */
     public Loop updateGlobalPropertiesJson(String loopName, JsonObject globalProperties) {
         return loopService.updateAndSaveGlobalPropertiesJson(loopName, globalProperties);
+    }
+
+    /**
+     * This method add an operational policy to a loop instance.
+     *
+     * @param loopName The loop name
+     * @param policyType The policy model type
+     * @param policyVersion The policy model  version
+     * @return The loop modified
+     */
+    public Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) {
+        return loopService.addOperationalPolicy(loopName,policyType,policyVersion);
+    }
+
+    /**
+     * This method deletes the loop.
+     *
+     * @param loopName The loop Name
+     */
+    public void deleteLoop(String loopName) {
+        loopService.deleteLoop(loopName);
     }
 
     /**

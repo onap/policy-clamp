@@ -102,8 +102,16 @@ public class LoopService {
         loopsRepository.save(loop);
     }
 
+    /**
+     * This method add an operational policy to a loop instance.
+     *
+     * @param loopName The loop name
+     * @param policyType The policy model type
+     * @param policyVersion The policy model  version
+     * @return The loop modified
+     */
     Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) {
-        Loop loop = findClosedLoopByName(loopName);
+        Loop loop = getLoop(loopName);
         PolicyModel policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
         if (policyModel == null) {
             return null;
