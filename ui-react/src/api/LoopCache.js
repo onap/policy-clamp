@@ -31,7 +31,7 @@ export default class LoopCache {
 	updateMicroServiceProperties(name, newMsProperties) {
 			for (var policy in this.loopJsonCache["microServicePolicies"]) {
 				if (this.loopJsonCache["microServicePolicies"][policy]["name"] === name) {
-					this.loopJsonCache["microServicePolicies"][policy]["properties"] = newMsProperties;
+					this.loopJsonCache["microServicePolicies"][policy]["configurationsJson"] = newMsProperties;
 				}
 			}
 	}
@@ -91,7 +91,7 @@ export default class LoopCache {
 	getOperationalPolicyPropertiesForName(name) {
 		var opConfig = this.getOperationalPolicyForName(name);
 		if (opConfig !== null) {
-			return opConfig["properties"];
+			return opConfig["configurationsJson"];
 		}
 		return null;
 	}
@@ -118,7 +118,7 @@ export default class LoopCache {
 	getMicroServicePropertiesForName(name) {
 		var msConfig = this.getMicroServiceForName(name);
 		if (msConfig !== null) {
-			return msConfig["properties"];
+			return msConfig["configurationsJson"];
 		}
 		return null;
 	}

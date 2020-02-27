@@ -103,7 +103,7 @@
     {
       "name": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca",
       "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
-      "properties": {"domain": "measurementsForVfScaling"},
+      "configurationsJson": {"domain": "measurementsForVfScaling"},
       "shared": false,
       "jsonRepresentation": {"schema": {}}
     }
