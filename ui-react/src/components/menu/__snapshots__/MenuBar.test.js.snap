@@ -680,6 +680,9 @@ exports[`Verify MenuBar Test the render method 1`] = `
     >
       Delete loop instance (DELETE)
     </DropdownItem>
+    <DropdownDivider
+      role="separator"
+    />
     <DropdownItem
       as={
         Object {

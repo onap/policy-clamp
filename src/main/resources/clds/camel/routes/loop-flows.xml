@@ -38,7 +38,7 @@
 				<simple>${body.getName()}</simple>
 			</setProperty>
 			<setProperty propertyName="policyType">
-				<simple>${body.getModelType()}</simple>
+				<simple>${body.getPolicyModel().getPolicyModelType()}</simple>
 			</setProperty>
 			<setProperty propertyName="policyVersion">
 				<simple>1.0.0</simple>

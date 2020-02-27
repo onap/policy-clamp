@@ -32,7 +32,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -40,7 +39,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +48,6 @@ import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
@@ -94,12 +91,13 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     /**
      * The constructor.
-     *  @param name               The name of the operational policy
+     *
+     * @param name               The name of the operational policy
      * @param loop               The loop that uses this operational policy
      * @param configurationsJson The operational policy property in the format of
- *                           json
+     *                           json
      * @param policyModel        The policy model associated if any, can be null
-     * @param loopElementModel The loop element from which this instance is supposed to be created
+     * @param loopElementModel   The loop element from which this instance is supposed to be created
      */
     public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson, PolicyModel policyModel,
                              LoopElementModel loopElementModel) {
@@ -108,7 +106,9 @@ public class OperationalPolicy extends Policy implements Serializable {
         this.setPolicyModel(policyModel);
         this.setConfigurationsJson(configurationsJson);
         this.setLoopElementModel(loopElementModel);
-        LegacyOperationalPolicy.preloadConfiguration(configurationsJson, loop);
+        if (policyModel != null && policyModel.getPolicyModelType().contains("legacy")) {
+            LegacyOperationalPolicy.preloadConfiguration(configurationsJson, loop);
+        }
         try {
             this.setJsonRepresentation(
                     OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService()));

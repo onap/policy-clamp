@@ -39,11 +39,10 @@ public class LoopController {
 
     private final LoopService loopService;
     private static final Type OPERATIONAL_POLICY_TYPE = new TypeToken<List<OperationalPolicy>>() {
-    }
-            .getType();
+    }.getType();
+
     private static final Type MICROSERVICE_POLICY_TYPE = new TypeToken<List<MicroServicePolicy>>() {
-    }
-            .getType();
+    }.getType();
 
     @Autowired
     public LoopController(LoopService loopService) {
@@ -103,13 +102,13 @@ public class LoopController {
     /**
      * This method add an operational policy to a loop instance.
      *
-     * @param loopName The loop name
-     * @param policyType The policy model type
+     * @param loopName      The loop name
+     * @param policyType    The policy model type
      * @param policyVersion The policy model  version
      * @return The loop modified
      */
     public Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) {
-        return loopService.addOperationalPolicy(loopName,policyType,policyVersion);
+        return loopService.addOperationalPolicy(loopName, policyType, policyVersion);
     }
 
     /**

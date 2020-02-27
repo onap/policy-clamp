@@ -107,6 +107,7 @@ export default class MenuBar extends React.Component {
 							<NavDropdown.Item as={StyledLink} to="/stop" disabled={this.state.disabled}>Undeploy from Policy Engine (STOP)</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/restart" disabled={this.state.disabled}>ReDeploy to Policy Engine (RESTART)</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/delete" disabled={this.state.disabled}>Delete loop instance (DELETE)</NavDropdown.Item>
+							<NavDropdown.Divider />
 							<NavDropdown.Item as={StyledLink} to="/deploy" disabled={this.state.disabled}>Deploy to DCAE (DEPLOY)</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/undeploy" disabled={this.state.disabled}>UnDeploy to DCAE (UNDEPLOY)</NavDropdown.Item>
 					</StyledNavDropdown>

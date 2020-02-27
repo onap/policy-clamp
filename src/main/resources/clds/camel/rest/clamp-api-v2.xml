@@ -569,29 +569,21 @@
 			</route>
 		</get>
 
-		<put uri="/v2/loop/addOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}"
-			 outType="org.onap.clamp.loop.Loop" produces="application/json">
+		<put uri="/v2/loop/addOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}" outType="org.onap.clamp.loop.Loop" produces="application/json">
 			<route>
-				<removeHeaders pattern="*" excludePattern="loopName" />
+				<removeHeaders pattern="*" excludePattern="loopName|policyType|policyVersion" />
 				<doTry>
-					<log loggingLevel="INFO"
-						 message="ADD OperationalPolicy request for loop: ${header.loopName}" />
 					<to
-							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'ADD OperationalPolicy request')" />
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Add operational Policy')" />
 					<to
-							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','write')" />
+							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
 					<to
-							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request','INFO',${exchangeProperty[loopObject]})" />
-					<doTry>
-						<to
-								uri="bean:org.onap.clamp.loop.LoopController?method=addOperationalPolicy(${loopName},${policyType},${policyVersion})" />
-
-						<to
-								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request successfully executed','INFO',${exchangeProperty[loopObject]})" />
-						<to
-								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
-					</doTry>
+							uri="bean:org.onap.clamp.loop.LoopController?method=addOperationalPolicy(${header.loopName},${header.policyType},${header.policyVersion})" />
+					<to
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request successfully executed','INFO',${exchangeProperty[loopObject]})" />
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
 						<exception>java.lang.Exception</exception>
 						<handled>
@@ -602,13 +594,8 @@
 						<log loggingLevel="ERROR"
 							 message="ADD OperationalPolicy request failed for loop: ${header.loopName}" />
 						<to
-								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})" />
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request failed','ERROR',${exchangeProperty[loopObject]})" />
 					</doCatch>
-					<doFinally>
-						<setBody>
-							<simple>${exchangeProperty[loopObject]}</simple>
-						</setBody>
-					</doFinally>
 				</doTry>
 			</route>
 		</put>

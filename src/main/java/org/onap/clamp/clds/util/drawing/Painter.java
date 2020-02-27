@@ -83,13 +83,12 @@ public class Painter {
 
         for (MicroServicePolicy ms : microServices) {
             ib.arrow().rectangle(ms.getName(),
-                    RectTypes.MICROSERVICE, ms.getPolicyModel().getPolicyAcronym()).arrow();
+                    RectTypes.MICROSERVICE, ms.getPolicyModel().getPolicyAcronym());
         }
         for (OperationalPolicy policy : policies) {
-            ib.arrow().rectangle(policy.getName(), RectTypes.POLICY, policy.getPolicyModel().getPolicyAcronym())
-                    .arrow();
+            ib.arrow().rectangle(policy.getName(), RectTypes.POLICY, policy.getPolicyModel().getPolicyAcronym());
         }
-        ib.circle("stop-circle", THICK_LINE);
+        ib.arrow().circle("stop-circle", THICK_LINE);
     }
 
     private void adjustGraphics2DProperties() {

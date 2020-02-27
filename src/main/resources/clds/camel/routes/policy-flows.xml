@@ -213,9 +213,9 @@
 								</simple>
 						</setHeader>
 						<log loggingLevel="INFO"
-								message="Endpoint to create microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies"></log>
+								message="Endpoint to create microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getPolicyModel().getPolicyModelType()}/versions/1.0.0/policies"></log>
 						<toD
-								uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+								uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getPolicyModel().getPolicyModelType()}/versions/1.0.0/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 						<doFinally>
 								<to uri="direct:reset-raise-http-exception-flag"/>
 								<to
@@ -259,9 +259,9 @@
 								</simple>
 						</setHeader>
 						<log loggingLevel="INFO"
-								message="Endpoint to delete microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0"></log>
+								message="Endpoint to delete microservice policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getPolicyModel().getPolicyModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0"></log>
 						<toD
-								uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+								uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[microServicePolicy].getPolicyModel().getPolicyModelType()}/versions/1.0.0/policies/${exchangeProperty[microServicePolicy].getName()}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 
 						<doFinally>
 								<to uri="direct:reset-raise-http-exception-flag"/>

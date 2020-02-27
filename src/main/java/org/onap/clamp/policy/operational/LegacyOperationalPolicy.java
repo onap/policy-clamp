@@ -173,7 +173,7 @@ public class LegacyOperationalPolicy {
      * @param loop               The parent loop object
      */
     public static void preloadConfiguration(JsonObject configurationsJson, Loop loop) {
-        if (configurationsJson.entrySet().isEmpty()) {
+        if (configurationsJson != null && configurationsJson.entrySet().isEmpty()) {
             JsonObject controlLoopName = new JsonObject();
             controlLoopName.addProperty("controlLoopName",
                     loop != null ? loop.getName() : "Empty (NO loop loaded yet)");
