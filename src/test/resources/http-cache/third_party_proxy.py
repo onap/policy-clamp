@@ -237,7 +237,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
         with open(cached_file_content, 'w+') as f:
                 f.write(self.data_string)
         return True
-     elif (self.path.startswith("/policy/api/v1/policytypes/") or self.path.startswith("/policy/pap/v1/policies/deployed/")) and http_type == "GET":
+     elif (self.path.startswith("/policy/pap/v1/policies/deployed/")) and http_type == "GET":
         print "self.path start with /policy/api/v1/policytypes/, generating response json..."
         jsonGenerated =  "{\"policyTypeId\": \"onap.policies.controlloop.operational\",\"policyTypeVersion\": \"1.0.0\",\"policyId\": \"OPERATIONAL_z711F_v1_0_ResourceInstanceName1_tca\"}"
         print "jsonGenerated: " + jsonGenerated
