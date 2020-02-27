@@ -39,12 +39,10 @@ export default class UploadToscaPolicyModal extends React.Component {
 
 		this.handleCreateFromToscaPolicyModel = this.handleCreateFromToscaPolicyModel.bind(this);
 		this.handleClose = this.handleClose.bind(this);
-		this.handlePolicyModelType = this.handlePolicyModelType.bind(this);
 		this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
 		this.state = {
 				show: true,
 				selectedFile: '',
-				policyModelType: '',
 				policyModelTosca: [],
 				apiResponseStatus: '',
 				apiResponseMessage: '',
@@ -56,7 +54,7 @@ export default class UploadToscaPolicyModal extends React.Component {
 				if (event.target.files && event.target.files[0]) {
 					const scope = this;
   				    let reader = new FileReader();
-					this.setState({policyModelType: '', policyModelTosca: '' });
+					this.setState({policyModelTosca: '' });
 					reader.onload = function(e) {
 					    scope.setState({ policyModelTosca:  reader.result});
 					};
@@ -73,9 +71,8 @@ export default class UploadToscaPolicyModal extends React.Component {
 
 	handleCreateFromToscaPolicyModel(e) {
         e.preventDefault();
-		console.log("Policy Model Type is", this.state.policyModelType);
-		if(this.state.policyModelType && this.state.policyModelTosca) {
- 		PolicyToscaService.createPolicyModelFromToscaModel(this.state.policyModelType, this.state.policyModelTosca).then(resp => {
+		if(this.state.policyModelTosca) {
+ 		PolicyToscaService.createPolicyModelFromToscaModel(this.state.policyModelTosca).then(resp => {
 			if(resp.status === 200) {
 			this.setState({apiResponseStatus: resp.status, apiResponseMessage: resp.message, upldBtnClicked: true});
 		} else {
@@ -86,12 +83,6 @@ export default class UploadToscaPolicyModal extends React.Component {
 		this.setState({apiResponse: 500, apiResponseMessage: 'Parameters are missing', upldBtnClicked: true});
 	}
 }
-
-	handlePolicyModelType = event => {
-    this.setState({
-      policyModelType: event.target.value
-    })
-  }
 
 	render() {
 		return (
@@ -108,11 +99,6 @@ export default class UploadToscaPolicyModal extends React.Component {
 							<Alert variant="secondary">
 								<p>{this.state.selectedFile.name}</p>
 							</Alert>
-							<Form.Label column sm="2">Policy Model Type:</Form.Label>
-							<input type="text" style={{width: '50%'}}
-								value={this.state.policyModelType}
-								onChange={this.handlePolicyModelType}
-							/>
 						</Col>
 					</Form.Group>
 				</Modal.Body>

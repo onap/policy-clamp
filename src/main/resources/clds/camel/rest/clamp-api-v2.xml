@@ -923,13 +923,12 @@
 			</route>
 		</get>
 
-		<post uri="/v2/policyToscaModels/{policyModelType}"
+		<post uri="/v2/policyToscaModels"
 			type="java.lang.String"
 			outType="org.onap.clamp.loop.template.PolicyModel"
 			consumes="plain/text" produces="application/json">
 			<route>
-				<removeHeaders pattern="*"
-					excludePattern="policyModelType" />
+				<removeHeaders pattern="*"/>
 				<doTry>
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Upload New or Update Tosca Policy Model')" />
@@ -939,7 +938,7 @@
 						<simple>${body}</simple>
 					</setProperty>
 					<to
-						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=createNewPolicyModelFromTosca(${header.policyModelType},${exchangeProperty[PolicyModelTosca]})" />
+						uri="bean:org.onap.clamp.loop.template.PolicyModelsService?method=createNewPolicyModelFromTosca(${exchangeProperty[PolicyModelTosca]})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>

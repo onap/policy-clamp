@@ -130,6 +130,19 @@ public class LoopTemplatesServiceItCase {
             .isEqualTo("microService1");
         assertThat(loopTemplateLoopElementModel.getLoopTemplate().getName())
             .isEqualTo("TemplateName");
+        assertNull(actualLoopTemplate.getBlueprint());
+        assertNull(actualLoopTemplate.getModelService());
+    }
+
+    @Test
+    @Transactional
+    public void shouldReturnLoopemplateSvg() {
+        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "svg", "xyz", -1);
+        loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
+        String svgRepresentation = loopTemplatesService.getSvgRepresentation("TemplateName");
+
+        assertNotNull(svgRepresentation);
+        assertThat(svgRepresentation).isEqualTo(loopTemplate.getSvgRepresentation());
     }
 
     @Test

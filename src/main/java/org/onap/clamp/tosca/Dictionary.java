@@ -65,9 +65,7 @@ public class Dictionary extends AuditEntity implements Serializable {
     private String subDictionaryType;
 
     @Expose
-    @ManyToMany(
-        fetch = FetchType.EAGER,
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(
         name = "dictionary_to_dictionaryelements",
         joinColumns = @JoinColumn(name = "dictionary_name", referencedColumnName = "name"),
@@ -147,6 +145,15 @@ public class Dictionary extends AuditEntity implements Serializable {
     public void addDictionaryElements(DictionaryElement dictionaryElement) {
         dictionaryElements.add(dictionaryElement);
         dictionaryElement.getUsedByDictionaries().add(this);
+    }
+
+    /**
+     * Method to set dictionaryElements.
+     *
+     * @param dictionaryElements The dictionary elements set
+     */
+    public void setDictionaryElements(Set<DictionaryElement> dictionaryElements) {
+        this.dictionaryElements = dictionaryElements;
     }
 
     /**
