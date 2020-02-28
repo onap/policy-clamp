@@ -1,11 +1,11 @@
 tosca_definitions_version: tosca_simple_yaml_1_0_0
 topology_template:
   policies:
-  - testPolicy:
+  - testPolicy.legacy:
       type: onap.policies.controlloop.Operational
       version: 1.0.0
       metadata:
-        policy-id: testPolicy
+        policy-id: testPolicy.legacy
       properties:
         controlLoop:
           timeout: '0'

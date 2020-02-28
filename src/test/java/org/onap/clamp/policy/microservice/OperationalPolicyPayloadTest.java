@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.Map;
 import org.junit.Test;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.operational.LegacyOperationalPolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -38,10 +39,11 @@ import org.skyscreamer.jsonassert.JSONAssert;
 public class OperationalPolicyPayloadTest {
 
     @Test
-    public void testOperationalPolicyPayloadConstruction() throws IOException {
+    public void testOperationalPolicyLegacyPayloadConstruction() throws IOException {
         JsonObject jsonConfig = new GsonBuilder().create().fromJson(
                 ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), JsonObject.class);
-        OperationalPolicy policy = new OperationalPolicy("testPolicy", null, jsonConfig, null, null, null, null);
+        OperationalPolicy policy = new OperationalPolicy("testPolicy.legacy", null, jsonConfig,
+                new PolicyModel("onap.policies.controlloop.Operational.legacy","","1.0.0","test"), null,null,null);
 
         assertThat(policy.createPolicyPayloadYaml())
                 .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload.yaml"));

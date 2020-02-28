@@ -23,14 +23,10 @@
 
 package org.onap.clamp.clds.config;
 
-import com.google.gson.JsonElement;
-
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-
 import org.apache.commons.io.IOUtils;
-import org.onap.clamp.clds.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
@@ -72,38 +68,6 @@ public class ClampProperties {
             value = getStringValue(key1);
         }
         return value;
-    }
-
-    /**
-     * Return json as objects that can be updated. The value obtained from the
-     * clds-reference file will be used as a filename.
-     *
-     * @param key The key that will be used to access the clds-reference file
-     * @return A jsonNode
-     * @throws IOException In case of issues with the JSON parser
-     */
-    public JsonElement getJsonTemplate(String key) throws IOException {
-        String fileReference = getStringValue(key);
-        return (fileReference != null)
-                ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
-                : null;
-    }
-
-    /**
-     * Return json as objects that can be updated. First try with combo key (key1 +
-     * "." + key2), otherwise default to just key1. The value obtained from the
-     * clds-reference file will be used as a filename.
-     *
-     * @param key1 The first key
-     * @param key2 The second key after a dot
-     * @return A JsonNode
-     * @throws IOException In case of issues with the JSON parser
-     */
-    public JsonElement getJsonTemplate(String key1, String key2) throws IOException {
-        String fileReference = getStringValue(key1, key2);
-        return (fileReference != null)
-                ? JsonUtils.GSON.fromJson(getFileContentFromPath(fileReference), JsonElement.class)
-                : null;
     }
 
     /**

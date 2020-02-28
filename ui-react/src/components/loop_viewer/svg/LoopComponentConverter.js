@@ -9,11 +9,7 @@ export default class LoopComponentConverter {
 		}
 		if (typeof (loopCache.getOperationalPolicies()) !== "undefined") {
 			loopCache.getOperationalPolicies().forEach(op => {
-				if (op.name.includes("legacy")) {
-					componentsMap.set(op.name,"/operationalPolicyModal");
-				} else {
-					componentsMap.set(op.name, "/policyModal/OPERATIONAL-POLICY/"+op.name);
-				}
+				componentsMap.set(op.name, "/policyModal/OPERATIONAL-POLICY/"+op.name);
 			})
 		}
 		return componentsMap;

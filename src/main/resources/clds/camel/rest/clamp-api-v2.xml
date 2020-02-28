@@ -377,51 +377,56 @@
 					<split>
 						<simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
 						</simple>
-						<setProperty propertyName="microServicePolicy">
+						<setProperty propertyName="policy">
 							<simple>${body}</simple>
 						</setProperty>
 						<log loggingLevel="INFO"
-							message="Processing Micro Service Policy: ${exchangeProperty[microServicePolicy].getName()}" />
+							message="Processing Micro Service Policy: ${exchangeProperty[policy].getName()}" />
 						<setProperty propertyName="raiseHttpExceptionFlag">
 							<simple resultType="java.lang.Boolean">false</simple>
 						</setProperty>
-						<to uri="direct:delete-micro-service-policy" />
-						<to uri="direct:create-micro-service-policy" />
+						<to uri="direct:delete-policy" />
+						<to uri="direct:create-policy" />
 					</split>
 					<log loggingLevel="INFO"
 						message="Processing all OPERATIONAL policies defined in loop ${exchangeProperty[loopObject].getName()}" />
 					<split>
 						<simple>${exchangeProperty[loopObject].getOperationalPolicies()}
 						</simple>
-						<setProperty propertyName="operationalPolicy">
+						<setProperty propertyName="policy">
 							<simple>${body}</simple>
 						</setProperty>
 						<log loggingLevel="INFO"
-							message="Processing Operational Policy: ${exchangeProperty[operationalPolicy].getName()}" />
+							message="Processing Operational Policy: ${exchangeProperty[policy].getName()}" />
 						<setProperty propertyName="raiseHttpExceptionFlag">
 							<simple resultType="java.lang.Boolean">false</simple>
 						</setProperty>
 
-						<to uri="direct:delete-operational-policy" />
-						<to uri="direct:create-operational-policy" />
+						<to uri="direct:delete-policy" />
+						<to uri="direct:create-policy" />
+						<choice>
+							<when>
+								<simple>${exchangeProperty['policy'].isLegacy()} == true
+								</simple>
+								<log loggingLevel="INFO"
+									message="Processing all GUARD policies (LEGACY) defined in loop ${exchangeProperty[loopObject].getName()}" />
+								<split>
+									<simple>${exchangeProperty[operationalPolicy].createGuardPolicyPayloads().entrySet()}
+									</simple>
+									<setProperty propertyName="guardPolicy">
+										<simple>${body}</simple>
+									</setProperty>
+									<log loggingLevel="INFO"
+										message="Processing Guard Policy: ${exchangeProperty[guardPolicy].getKey()}" />
 
-						<log loggingLevel="INFO"
-							message="Processing all GUARD policies defined in loop ${exchangeProperty[loopObject].getName()}" />
-						<split>
-							<simple>${exchangeProperty[operationalPolicy].createGuardPolicyPayloads().entrySet()}
-							</simple>
-							<setProperty propertyName="guardPolicy">
-								<simple>${body}</simple>
-							</setProperty>
-							<log loggingLevel="INFO"
-								message="Processing Guard Policy: ${exchangeProperty[guardPolicy].getKey()}" />
-
-							<setProperty propertyName="raiseHttpExceptionFlag">
-								<simple resultType="java.lang.Boolean">false</simple>
-							</setProperty>
-							<to uri="direct:delete-guard-policy" />
-							<to uri="direct:create-guard-policy" />
-						</split>
+									<setProperty propertyName="raiseHttpExceptionFlag">
+										<simple resultType="java.lang.Boolean">false</simple>
+									</setProperty>
+									<to uri="direct:delete-guard-policy" />
+									<to uri="direct:create-guard-policy" />
+								</split>
+							</when>
+						</choice>
 					</split>
 
 					<delay>

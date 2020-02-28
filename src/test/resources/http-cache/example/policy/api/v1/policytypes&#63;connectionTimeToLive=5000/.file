@@ -1,37 +1,16 @@
 tosca_definitions_version: tosca_simple_yaml_1_0_0
 policy_types:
-  - onap.policies.Monitoring:
-      version: 1.0.0
-      description: A base policy type for all policies that govern monitoring provision
-      derived_from: tosca.policies.Root
-      properties:
-        # Omitted for brevity, see Section 1
-
-  - onap.policies.controlloop.Operational:
-      version: 1.0.0
-      description: Operational Policy for Control Loops
-      derived_from: tosca.policies.Root
-      properties:
-        # Omitted for brevity, see Section 1
-
-  - onap.policies.controloop.operational.Drools:
+  - onap.policies.controlloop.operational.Drools:
       version: 1.0.0
       description: Operational Policy for Control Loops using the Drools PDP
-      derived_from: onap.policies.controlloop.Operational
+      derived_from: onapy.policies.controlloop.Operational
       properties:
         # Omitted for brevity, see Section 1
 
-  - onap.policies.controloop.operational.Apex:
+  - onap.policies.controlloop.operational.Apex:
       version: 1.0.0
       description: Operational Policy for Control Loops using the APEX PDP
       derived_from: onap.policies.controlloop.Operational
-      properties:
-        # Omitted for brevity, see Section 1
-
-  - onap.policies.controlloop.Guard:
-      version: 1.0.0
-      description: Operational Policy for Control Loops
-      derived_from: tosca.policies.Root
       properties:
         # Omitted for brevity, see Section 1
 
@@ -50,7 +29,7 @@ policy_types:
         # Omitted for brevity, see Section 1
 
   - onap.policies.controlloop.guard.MinMax:
-      version: 1.0.0
+      version: 2.0.0
       description: Supports Min/Max number of VF Modules
       derived_from: onap.policies.controlloop.Guard
       properties:

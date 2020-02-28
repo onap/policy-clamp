@@ -50,6 +50,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
+import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -79,12 +81,6 @@ public class OperationalPolicy extends Policy implements Serializable {
     @JoinColumn(name = "loop_id", nullable = false)
     private Loop loop;
 
-    @Expose
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumns({@JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
-            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
-    private PolicyModel policyModel;
-
     public OperationalPolicy() {
         // Serialization
     }
@@ -110,16 +106,32 @@ public class OperationalPolicy extends Policy implements Serializable {
         this.setPdpGroup(pdpGroup);
         this.setPdpSubgroup(pdpSubgroup);
         this.setLoopElementModel(loopElementModel);
-        if (policyModel != null && policyModel.getPolicyModelType().contains("legacy")) {
-            LegacyOperationalPolicy.preloadConfiguration(configurationsJson, loop);
+        this.setJsonRepresentation(this.generateJsonRepresentation(policyModel));
+
+    }
+
+    private JsonObject generateJsonRepresentation(PolicyModel policyModel) {
+        JsonObject jsonReturned = new JsonObject();
+        if (policyModel == null) {
+            return new JsonObject();
         }
         try {
-            this.setJsonRepresentation(
-                OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService()));
+            if (isLegacy()) {
+                // Op policy Legacy case
+                LegacyOperationalPolicy.preloadConfiguration(jsonReturned, loop);
+                this.setJsonRepresentation(
+                        OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService()));
+            } else {
+                // Generic Case
+                this.setJsonRepresentation(JsonUtils.GSON
+                        .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyModel.getPolicyModelTosca(),
+                                policyModel.getPolicyModelType()), JsonObject.class));
+            }
         } catch (JsonSyntaxException | IOException | NullPointerException e) {
             logger.error("Unable to generate the operational policy Schema ... ", e);
             this.setJsonRepresentation(new JsonObject());
         }
+        return jsonReturned;
     }
 
     public void setLoop(Loop loopName) {
@@ -143,24 +155,6 @@ public class OperationalPolicy extends Policy implements Serializable {
     @Override
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * policyModel getter.
-     *
-     * @return the policyModel
-     */
-    public PolicyModel getPolicyModel() {
-        return policyModel;
-    }
-
-    /**
-     * policyModel setter.
-     *
-     * @param policyModel the policyModel to set
-     */
-    public void setPolicyModel(PolicyModel policyModel) {
-        this.policyModel = policyModel;
     }
 
     @Override
@@ -191,6 +185,10 @@ public class OperationalPolicy extends Policy implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public Boolean isLegacy() {
+        return (this.getPolicyModel() != null) && this.getPolicyModel().getPolicyModelType().contains("legacy");
     }
 
     /**
@@ -235,17 +233,22 @@ public class OperationalPolicy extends Policy implements Serializable {
 
     @Override
     public String createPolicyPayload() throws UnsupportedEncodingException {
-        // Now using the legacy payload fo Dublin
-        JsonObject payload = new JsonObject();
-        payload.addProperty("policy-id", this.getName());
-        payload.addProperty("content",
-                URLEncoder.encode(
-                        LegacyOperationalPolicy
-                                .createPolicyPayloadYamlLegacy(this.getConfigurationsJson().get("operational_policy")),
-                        StandardCharsets.UTF_8.toString()));
-        String opPayload = new GsonBuilder().setPrettyPrinting().create().toJson(payload);
-        logger.info("Operational policy payload: " + opPayload);
-        return opPayload;
+        if (isLegacy()) {
+            // Now using the legacy payload fo Dublin
+            JsonObject payload = new JsonObject();
+            payload.addProperty("policy-id", this.getName());
+            payload.addProperty("content",
+                    URLEncoder.encode(
+                            LegacyOperationalPolicy
+                                    .createPolicyPayloadYamlLegacy(
+                                            this.getConfigurationsJson().get("operational_policy")),
+                            StandardCharsets.UTF_8.toString()));
+            String opPayload = new GsonBuilder().setPrettyPrinting().create().toJson(payload);
+            logger.info("Operational policy payload: " + opPayload);
+            return opPayload;
+        } else {
+            return super.createPolicyPayload();
+        }
     }
 
     /**

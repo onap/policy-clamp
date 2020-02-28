@@ -23,27 +23,39 @@
 
 package org.onap.clamp.policy;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 
 import java.io.UnsupportedEncodingException;
-
+import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-
+import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.json.JSONObject;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.template.LoopElementModel;
+import org.onap.clamp.loop.template.PolicyModel;
+import org.yaml.snakeyaml.Yaml;
 
 @MappedSuperclass
 @TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public abstract class Policy extends AuditEntity {
+
+    @Transient
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(Policy.class);
 
     @Expose
     @Type(type = "json")
@@ -72,7 +84,67 @@ public abstract class Policy extends AuditEntity {
     @Column(name = "pdp_sub_group")
     private String pdpSubgroup;
 
-    public abstract String createPolicyPayload() throws UnsupportedEncodingException;
+    @Expose
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumns({@JoinColumn(name = "policy_model_type", referencedColumnName = "policy_model_type"),
+            @JoinColumn(name = "policy_model_version", referencedColumnName = "version")})
+    private PolicyModel policyModel;
+
+    private JsonObject createJsonFromPolicyTosca() {
+        Map<String, Object> map =
+                new Yaml().load(this.getPolicyModel() != null ? this.getPolicyModel().getPolicyModelTosca() : "");
+        JSONObject jsonObject = new JSONObject(map);
+        return new Gson().fromJson(jsonObject.toString(), JsonObject.class);
+    }
+
+    private String getModelPropertyNameFromTosca(JsonObject object, String policyModelType) {
+        return object.getAsJsonObject("policy_types").getAsJsonObject(policyModelType)
+                .getAsJsonObject(
+                        "properties")
+                .keySet().toArray(new String[1])[0];
+    }
+
+    /**
+     * This method create the policy payload that must be sent to PEF.
+     *
+     * @return A String containing the payload
+     * @throws UnsupportedEncodingException In case of failure
+     */
+    public String createPolicyPayload() throws UnsupportedEncodingException {
+        JsonObject toscaJson = createJsonFromPolicyTosca();
+
+        JsonObject policyPayloadResult = new JsonObject();
+
+        policyPayloadResult.add("tosca_definitions_version", toscaJson.get("tosca_definitions_version"));
+
+        JsonObject topologyTemplateNode = new JsonObject();
+        policyPayloadResult.add("topology_template", topologyTemplateNode);
+
+        JsonArray policiesArray = new JsonArray();
+        topologyTemplateNode.add("policies", policiesArray);
+
+        JsonObject thisPolicy = new JsonObject();
+        policiesArray.add(thisPolicy);
+
+        JsonObject policyDetails = new JsonObject();
+        thisPolicy.add(this.getName(), policyDetails);
+        policyDetails.addProperty("type", this.getPolicyModel().getPolicyModelType());
+        policyDetails.addProperty("version", this.getPolicyModel().getVersion());
+
+        JsonObject policyMetadata = new JsonObject();
+        policyDetails.add("metadata", policyMetadata);
+        policyMetadata.addProperty("policy-id", this.getName());
+
+        JsonObject policyProperties = new JsonObject();
+        policyDetails.add("properties", policyProperties);
+        policyProperties
+                .add(this.getModelPropertyNameFromTosca(toscaJson, this.getPolicyModel().getPolicyModelType()),
+                        this.getConfigurationsJson());
+        String policyPayload = new GsonBuilder().setPrettyPrinting().create().toJson(policyPayloadResult);
+        logger.info("Policy payload: " + policyPayload);
+        return policyPayload;
+    }
+
 
     /**
      * Name getter.
@@ -102,6 +174,24 @@ public abstract class Policy extends AuditEntity {
      */
     public void setJsonRepresentation(JsonObject jsonRepresentation) {
         this.jsonRepresentation = jsonRepresentation;
+    }
+
+    /**
+     * policyModel getter.
+     *
+     * @return the policyModel
+     */
+    public PolicyModel getPolicyModel() {
+        return policyModel;
+    }
+
+    /**
+     * policyModel setter.
+     *
+     * @param policyModel The new policyModel
+     */
+    public void setPolicyModel(PolicyModel policyModel) {
+        this.policyModel = policyModel;
     }
 
     /**
@@ -160,7 +250,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * pdpSubgroup getter.
-     * 
+     *
      * @return the pdpSubgroup
      */
     public String getPdpSubgroup() {
@@ -169,7 +259,7 @@ public abstract class Policy extends AuditEntity {
 
     /**
      * pdpSubgroup setter.
-     * 
+     *
      * @param pdpSubgroup the pdpSubgroup to set
      */
     public void setPdpSubgroup(String pdpSubgroup) {

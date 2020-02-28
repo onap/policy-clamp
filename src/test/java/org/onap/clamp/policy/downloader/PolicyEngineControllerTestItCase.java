@@ -68,9 +68,12 @@ public class PolicyEngineControllerTestItCase {
         Instant firstExecution = policyController.getLastInstantExecuted();
         assertThat(firstExecution).isNotNull();
         List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
-        assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(8);
-        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.Monitoring", null, "1.0.0"));
-        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0"));
+        assertThat(policyModelsList.size()).isGreaterThanOrEqualTo(5);
+        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.operational.Drools", null, "1.0.0"));
+        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.operational.Apex", null, "1.0.0"));
+        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.guard.FrequencyLimiter", null, "1.0.0"));
+        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.guard.Blacklist", null, "1.0.0"));
+        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.guard.MinMax", null, "2.0.0"));
 
         // Re-do it to check that there is no issue with duplicate key
         policyController.synchronizeAllPolicies();

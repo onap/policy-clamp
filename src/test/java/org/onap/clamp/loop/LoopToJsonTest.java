@@ -37,6 +37,7 @@ import java.util.Random;
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
@@ -45,6 +46,7 @@ import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 public class LoopToJsonTest {
 
@@ -52,7 +54,7 @@ public class LoopToJsonTest {
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name) {
         return new OperationalPolicy(name, null, gson.fromJson(configJson, JsonObject.class),
-                getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"), null, null, null);
+                getPolicyModel("org.onap.policy.drools.legacy", "yaml", "1.0.0", "Drools", "type1"), null,null,null);
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,

@@ -119,7 +119,7 @@ public class PolicyModelServiceItCase {
     /**
      * This tests a create Policy Model from Tosca.
      *
-     * @throws IOException
+     * @throws IOException In case of failure
      */
     @Test
     @Transactional
@@ -137,7 +137,7 @@ public class PolicyModelServiceItCase {
     /**
      * This tests a update Policy Model.
      *
-     * @throws IOException
+     * @throws IOException In case of failure
      */
     @Test
     @Transactional

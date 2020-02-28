@@ -48,6 +48,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -62,6 +63,7 @@ import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.LoopTemplate;
+import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 
@@ -168,12 +170,18 @@ public class Loop extends AuditEntity implements Serializable {
         this.setModelService(loopTemplate.getModelService());
         loopTemplate.getLoopElementModelsUsed().forEach(element -> {
             if (LoopElementModel.MICRO_SERVICE_TYPE.equals(element.getLoopElementModel().getLoopElementType())) {
-                this.addMicroServicePolicy(new MicroServicePolicy(name,
+                this.addMicroServicePolicy(new MicroServicePolicy(Policy.generatePolicyName("MICROSERVICE_",
+                        loopTemplate.getModelService().getName(),loopTemplate.getModelService().getVersion(),
+                        RandomStringUtils.randomAlphanumeric(3),RandomStringUtils.randomAlphanumeric(3)),
                         element.getLoopElementModel().getPolicyModels().first(), false, element.getLoopElementModel()));
             } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
                     .equals(element.getLoopElementModel().getLoopElementType())) {
-                this.addOperationalPolicy(new OperationalPolicy(name, null, new JsonObject(),
-                        element.getLoopElementModel().getPolicyModels().first(), element.getLoopElementModel(), null, null));
+                this.addOperationalPolicy(new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL_",
+                        loopTemplate.getModelService().getName(),loopTemplate.getModelService().getVersion(),
+                        RandomStringUtils.randomAlphanumeric(3),RandomStringUtils.randomAlphanumeric(3)), null,
+                        new JsonObject(),
+                        element.getLoopElementModel().getPolicyModels().first(), element.getLoopElementModel(),
+                        null,null));
             }
         });
     }

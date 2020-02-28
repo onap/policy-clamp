@@ -24,9 +24,9 @@
 package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
 import java.util.HashSet;
 import org.apache.camel.Exchange;
@@ -44,13 +44,13 @@ import org.onap.clamp.policy.operational.OperationalPolicy;
 public class PolicyComponentTest {
 
     /**
-    * Test the computeState method. 
-    * oldState           newState        expectedFinalState
-    * NOT_SENT      SENT_AND_DEPLOYED          NOT_SENT
-    * NOT_SENT             SENT                NOT_SENT
-    * NOT_SENT           NOT_SENT              NOT_SENT
-    * NOT_SENT           IN_ERROR              IN_ERROR
-    */
+     * Test the computeState method.
+     * oldState           newState        expectedFinalState
+     * NOT_SENT      SENT_AND_DEPLOYED          NOT_SENT
+     * NOT_SENT             SENT                NOT_SENT
+     * NOT_SENT           NOT_SENT              NOT_SENT
+     * NOT_SENT           IN_ERROR              IN_ERROR
+     */
     @Test
     public void computeStateTestOriginalStateUnknown() {
         Exchange exchange = Mockito.mock(Exchange.class);
@@ -81,14 +81,15 @@ public class PolicyComponentTest {
         ExternalComponentState state3 = policy.computeState(exchange);
         assertThat(state3.getStateName()).isEqualTo("IN_ERROR");
     }
+
     /**
-    * Test the computeState method. 
-    * oldState           newState        expectedFinalState
-    * NOT_SENT      SENT_AND_DEPLOYED          NOT_SENT
-    * NOT_SENT             SENT                NOT_SENT
-    * NOT_SENT           NOT_SENT              NOT_SENT
-    * NOT_SENT           IN_ERROR              IN_ERROR
-    */
+     * Test the computeState method.
+     * oldState           newState        expectedFinalState
+     * NOT_SENT      SENT_AND_DEPLOYED          NOT_SENT
+     * NOT_SENT             SENT                NOT_SENT
+     * NOT_SENT           NOT_SENT              NOT_SENT
+     * NOT_SENT           IN_ERROR              IN_ERROR
+     */
     @Test
     public void computeStateTestOriginalStateNotSent() {
         Exchange exchange = Mockito.mock(Exchange.class);
@@ -124,13 +125,13 @@ public class PolicyComponentTest {
 
 
     /**
-    * Test the computeState method. 
-    * oldState           newState        expectedFinalState
-    * SENT                 SENT                SENT
-    * SENT          SENT_AND_DEPLOYED          SENT
-    * SENT              IN_ERROR              IN_ERROR
-    * SENT              NOT_SENT              NOT_SENT
-    */
+     * Test the computeState method.
+     * oldState           newState        expectedFinalState
+     * SENT                 SENT                SENT
+     * SENT          SENT_AND_DEPLOYED          SENT
+     * SENT              IN_ERROR              IN_ERROR
+     * SENT              NOT_SENT              NOT_SENT
+     */
     @Test
     public void computeStateTestOriginalStateSent() throws IOException {
         Exchange exchange = Mockito.mock(Exchange.class);
@@ -166,13 +167,13 @@ public class PolicyComponentTest {
     }
 
     /**
-    * Test the computeState method. 
-    * oldState                   newState        expectedFinalState
-    * SENT_AND_DEPLOYED     SENT_AND_DEPLOYED    SENT_AND_DEPLOYED
-    * SENT_AND_DEPLOYED            SENT                SENT
-    * SENT_AND_DEPLOYED          IN_ERROR            IN_ERROR
-    * SENT_AND_DEPLOYED          NOT_SENT            NOT_SENT
-    */
+     * Test the computeState method.
+     * oldState                   newState        expectedFinalState
+     * SENT_AND_DEPLOYED     SENT_AND_DEPLOYED    SENT_AND_DEPLOYED
+     * SENT_AND_DEPLOYED            SENT                SENT
+     * SENT_AND_DEPLOYED          IN_ERROR            IN_ERROR
+     * SENT_AND_DEPLOYED          NOT_SENT            NOT_SENT
+     */
     @Test
     public void computeStateTestOriginalStateSentAndDeployed() throws IOException {
         Exchange exchange = Mockito.mock(Exchange.class);
@@ -209,13 +210,13 @@ public class PolicyComponentTest {
 
 
     /**
-    * Test the computeState method. 
-    * oldState           newState        expectedFinalState
-    * IN_ERROR     SENT_AND_DEPLOYED         IN_ERROR
-    * IN_ERROR            SENT               IN_ERROR
-    * IN_ERROR          IN_ERROR             IN_ERROR
-    * IN_ERROR          NOT_SENT             IN_ERROR
-    */
+     * Test the computeState method.
+     * oldState           newState        expectedFinalState
+     * IN_ERROR     SENT_AND_DEPLOYED         IN_ERROR
+     * IN_ERROR            SENT               IN_ERROR
+     * IN_ERROR          IN_ERROR             IN_ERROR
+     * IN_ERROR          NOT_SENT             IN_ERROR
+     */
     @Test
     public void computeStateTestOriginalStateInError() throws IOException {
         Exchange exchange = Mockito.mock(Exchange.class);
@@ -265,7 +266,8 @@ public class PolicyComponentTest {
 
         PolicyModel policyModel2 = new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0");
         OperationalPolicy opPolicy = new OperationalPolicy("opPolicy", loopTest,
-                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), policyModel2, null, "pdpGroup2", "pdpSubgroup2");
+                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), policyModel2, null, "pdpGroup2",
+                "pdpSubgroup2");
         loopTest.addOperationalPolicy(opPolicy);
 
         LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", "svg", 1, null);

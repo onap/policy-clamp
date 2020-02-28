@@ -143,9 +143,9 @@
         pdp_group varchar(255),
         pdp_sub_group varchar(255),
         loop_element_model_id varchar(255),
-        loop_id varchar(255) not null,
         policy_model_type varchar(255),
         policy_model_version varchar(255),
+        loop_id varchar(255) not null,
         primary key (name)
     ) engine=InnoDB;
 
@@ -247,11 +247,11 @@
        references loop_element_models (name);
 
     alter table operational_policies 
-       add constraint FK1ddoggk9ni2bnqighv6ecmuwu 
-       foreign key (loop_id) 
-       references loops (name);
-
-    alter table operational_policies 
        add constraint FKlsyhfkoqvkwj78ofepxhoctip 
        foreign key (policy_model_type, policy_model_version) 
        references policy_models (policy_model_type, version);
+
+    alter table operational_policies 
+       add constraint FK1ddoggk9ni2bnqighv6ecmuwu 
+       foreign key (loop_id) 
+       references loops (name);
