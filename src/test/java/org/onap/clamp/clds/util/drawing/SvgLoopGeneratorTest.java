@@ -44,7 +44,7 @@ public class SvgLoopGeneratorTest {
                 new MicroServicePolicy("ms2", new PolicyModel("org.onap.ms2", "", "1.0.0", "short.ms2"),
                         false, null);
         OperationalPolicy opPolicy = new OperationalPolicy("OperationalPolicy", new Loop(), new JsonObject(),
-                new PolicyModel("org.onap.opolicy", null, "1.0.0", "short.OperationalPolicy"), null);
+                new PolicyModel("org.onap.opolicy", null, "1.0.0", "short.OperationalPolicy"), null, null, null);
         Loop loop = new Loop();
         loop.addMicroServicePolicy(ms1);
         loop.addMicroServicePolicy(ms2);

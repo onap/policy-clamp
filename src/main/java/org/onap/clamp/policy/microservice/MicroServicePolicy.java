@@ -121,7 +121,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
     public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared, LoopElementModel loopElementModel) {
         this(name,policyModel,shared,JsonUtils.GSON_JPA_MODEL
                 .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyModel.getPolicyModelTosca(),
-                        policyModel.getPolicyModelType()), JsonObject.class),loopElementModel);
+                        policyModel.getPolicyModelType()), JsonObject.class),loopElementModel, null, null);
     }
 
     private JsonObject createJsonFromPolicyTosca() {
@@ -138,15 +138,19 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * @param shared             The flag indicate whether the MicroService is
  *                           shared
      * @param jsonRepresentation The UI representation in json format
-     * @param loopElementModel The loop element model from which this instance should be created
+     * @param loopElementModel   The loop element model from which this instance should be created
+     * @param pdpGroup           The Pdp Group info
+     * @param pdpSubgroup        The Pdp Subgrouop info
      */
     public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared,
-                              JsonObject jsonRepresentation, LoopElementModel loopElementModel) {
+                              JsonObject jsonRepresentation, LoopElementModel loopElementModel, String pdpGroup, String pdpSubgroup) {
         this.name = name;
         this.policyModel = policyModel;
         this.shared = shared;
         this.setJsonRepresentation(jsonRepresentation);
         this.setLoopElementModel(loopElementModel);
+        this.setPdpGroup(pdpGroup);
+        this.setPdpSubgroup(pdpSubgroup);
     }
 
     @Override
@@ -284,8 +288,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
             }
         } else if (!name.equals(other.name)) {
             return false;
-        }
-        return true;
+        }        return true;
     }
 
     private String getMicroServicePropertyNameFromTosca(JsonObject object) {

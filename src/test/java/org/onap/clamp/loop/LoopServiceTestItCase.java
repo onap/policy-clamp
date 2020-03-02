@@ -101,7 +101,7 @@ public class LoopServiceTestItCase {
         // given
         saveTestLoopToDb();
         OperationalPolicy operationalPolicy = new OperationalPolicy("policyName", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null, null);
 
         // when
         Loop actualLoop = loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME,
@@ -129,7 +129,7 @@ public class LoopServiceTestItCase {
                 "tosca_definitions_version: tosca_simple_yaml_1_0_0", "1.0.0", "policyModel1");
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("policyName", policyModel,
-                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
 
         // when
         Loop actualLoop = loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME,
@@ -159,11 +159,11 @@ public class LoopServiceTestItCase {
                 "tosca_definitions_version: tosca_simple_yaml_1_0_0", "1.0.0", "secondPolicyName");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
         MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy("firstPolicyName", policyModel1, false,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
 
         loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
         MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy("secondPolicyName", policyModel2, false,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
 
         // when
         firstMicroServicePolicy
@@ -203,11 +203,11 @@ public class LoopServiceTestItCase {
                 "tosca_definitions_version: tosca_simple_yaml_1_0_0", "1.0.0", "secondPolicyName");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
         MicroServicePolicy firstMicroServicePolicy = new MicroServicePolicy("firstPolicyName", policyModel1,
-                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
         loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstMicroServicePolicy));
 
         MicroServicePolicy secondMicroServicePolicy = new MicroServicePolicy("secondPolicyName", policyModel2,
-                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
 
         // when
         Loop actualLoop = loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME,
@@ -232,11 +232,11 @@ public class LoopServiceTestItCase {
         JsonObject newJsonConfiguration = JsonUtils.GSON.fromJson("{}", JsonObject.class);
 
         OperationalPolicy firstOperationalPolicy = new OperationalPolicy("firstPolicyName", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null, null);
         loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
 
         OperationalPolicy secondOperationalPolicy = new OperationalPolicy("secondPolicyName", null,
-                newJsonConfiguration, null, null);
+                newJsonConfiguration, null, null, null, null);
 
         // when
         firstOperationalPolicy.setConfigurationsJson(newJsonConfiguration);
@@ -263,11 +263,11 @@ public class LoopServiceTestItCase {
         saveTestLoopToDb();
 
         OperationalPolicy firstOperationalPolicy = new OperationalPolicy("firstPolicyName", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null, null);
         loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(firstOperationalPolicy));
 
         OperationalPolicy secondOperationalPolicy = new OperationalPolicy("policyName", null,
-                JsonUtils.GSON.fromJson("{}", JsonObject.class), null, null);
+                JsonUtils.GSON.fromJson("{}", JsonObject.class), null, null, "pdpGroup1", "pdpSubgroup1");
 
         // when
         Loop actualLoop = loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME,
@@ -319,7 +319,7 @@ public class LoopServiceTestItCase {
         loop = loopService.saveOrUpdateLoop(loop);
         // Add op policy
         OperationalPolicy operationalPolicy = new OperationalPolicy("opPolicy", null,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null, null);
         loopService.updateAndSaveOperationalPolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(operationalPolicy));
 
         PolicyModel policyModel = new PolicyModel("org.policies.microPolicy",
@@ -327,7 +327,7 @@ public class LoopServiceTestItCase {
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         // Add Micro service policy
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("microPolicy", policyModel,
-                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
         loopService.updateAndSaveMicroservicePolicies(EXAMPLE_LOOP_NAME, Lists.newArrayList(microServicePolicy));
 
         // Verify it's there
@@ -371,7 +371,7 @@ public class LoopServiceTestItCase {
                 "tosca_definitions_version: tosca_simple_yaml_1_0_0", "1.0.0", "policyName");
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("policyName", policyModel,
-                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                false, JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
         loopService.updateMicroservicePolicy(EXAMPLE_LOOP_NAME, microServicePolicy);
         assertThat(microServicePolicyService.isExisting("policyName")).isTrue();
     }

@@ -206,18 +206,15 @@ describe('Verify LoopCache functions', () => {
     });
 
     it('updateOperationalPolicyProperties', () => {
-      const newOpPolicy = [{
-        "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca_new",
-        "configurationsJson": {
+      const newOpPolicy = {
           "guard_policies": {},
           "operational_policy": {
             "controlLoop": {},
             "policies": []
           }
-        }
-      }];
-      loopCache.updateOperationalPolicyProperties(newOpPolicy);
-      expect(loopCache.getOperationalPolicies()).toStrictEqual(newOpPolicy);
+        };
+      loopCache.updateOperationalPolicyProperties("OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",newOpPolicy);
+      expect(loopCache.getOperationalPolicyPropertiesForName("OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(newOpPolicy);
     });
 
     it('updateMicroServiceProperties', () => {

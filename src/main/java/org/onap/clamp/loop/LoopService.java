@@ -119,7 +119,7 @@ public class LoopService {
         loop.addOperationalPolicy(
                 new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL", loop.getModelService().getName(),
                         loop.getModelService().getVersion(), RandomStringUtils.randomAlphanumeric(3),
-                        RandomStringUtils.randomAlphanumeric(4)), loop, null, policyModel, null));
+                        RandomStringUtils.randomAlphanumeric(4)), loop, null, policyModel, null, null, null));
         return loopsRepository.save(loop);
     }
 

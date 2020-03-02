@@ -70,7 +70,7 @@ public class ClampGraphBuilderTest {
                 null);
 
         OperationalPolicy opPolicy = new OperationalPolicy("OperationalPolicy", new Loop(), new JsonObject(),
-                new PolicyModel("org.onap.opolicy", null, "1.0.0", "opolicy1"), null);
+                new PolicyModel("org.onap.opolicy", null, "1.0.0", "opolicy1"), null, null, null);
         final Set<OperationalPolicy> opPolicies = Set.of(opPolicy);
         final Set<MicroServicePolicy> microServices = Set.of(ms1, ms2);
 

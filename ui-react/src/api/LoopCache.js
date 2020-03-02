@@ -36,12 +36,34 @@ export default class LoopCache {
 			}
 	}
 
+	updateMicroServicePdpGroup(name, pdpGroup, pdpSubgroup) {
+			for (var policy in this.loopJsonCache["microServicePolicies"]) {
+				if (this.loopJsonCache["microServicePolicies"][policy]["name"] === name) {
+					this.loopJsonCache["microServicePolicies"][policy]["pdpGroup"] = pdpGroup;
+					this.loopJsonCache["microServicePolicies"][policy]["pdpSubgroup"] = pdpSubgroup;
+				}
+			}
+	}
+
 	updateGlobalProperties(newGlobalProperties) {
 		this.loopJsonCache["globalPropertiesJson"] = newGlobalProperties;
 	}
 
-	updateOperationalPolicyProperties(newOpProperties) {
-		this.loopJsonCache["operationalPolicies"] = newOpProperties;
+	updateOperationalPolicyProperties(name, newOpProperties) {
+		for (var policy in this.loopJsonCache["operationalPolicies"]) {
+				if (this.loopJsonCache["operationalPolicies"][policy]["name"] === name) {
+					this.loopJsonCache["operationalPolicies"][policy]["configurationsJson"] = newOpProperties;
+				}
+			}
+	}
+
+	updateOperationalPolicyPdpGroup(name, pdpGroup, pdpSubgroup) {
+		for (var policy in this.loopJsonCache["operationalPolicies"]) {
+			if (this.loopJsonCache["operationalPolicies"][policy]["name"] === name) {
+				this.loopJsonCache["operationalPolicies"][policy]["pdpGroup"] = pdpGroup;
+				this.loopJsonCache["operationalPolicies"][policy]["pdpSubgroup"] = pdpSubgroup;
+			}
+		}
 	}
 
 	getLoopName() {
@@ -51,7 +73,7 @@ export default class LoopCache {
 	getOperationalPolicyConfigurationJson() {
 		return this.loopJsonCache["operationalPolicies"]["0"]["configurationsJson"];
 	}
-	
+
 	getOperationalPolicyJsonSchema() {
 		return this.loopJsonCache["operationalPolicies"]["0"]["jsonRepresentation"];
 	}
@@ -97,13 +119,60 @@ export default class LoopCache {
 	}
 
 	getOperationalPolicyJsonRepresentationForName(name) {
-    	var opConfig = this.getOperationalPolicyForName(name);
-    	if (opConfig !== null) {
-    		return opConfig["jsonRepresentation"];
-    	}
-    	return null;
-    }
+		var opConfig = this.getOperationalPolicyForName(name);
+		if (opConfig !== null) {
+			return opConfig["jsonRepresentation"];
+		}
+		return null;
+	}
 
+	getOperationalPolicySupportedPdpgroup(name) {
+		var opConfig=this.getOperationalPolicyForName(name);
+		if (opConfig !== null) {
+			return opConfig["policyModel"]["policyPdpGroup"]["supportedPdpGroups"];
+		}
+		return null;
+	}
+
+	getOperationalPolicyPdpGroup(name) {
+		var opConfig=this.getOperationalPolicyForName(name);
+		if (opConfig !== null) {
+			return opConfig["pdpGroup"];
+		}
+		return null;
+	}
+
+	getOperationalPolicyPdpSubgroup(name) {
+		var opConfig=this.getOperationalPolicyForName(name);
+		if (opConfig !== null) {
+			return opConfig["pdpSubgroup"];
+		}
+		return null;
+	}
+
+	getMicroServiceSupportedPdpgroup(name) {
+		var microService=this.getMicroServiceForName(name);
+		if (microService !== null) {
+			return microService["policyModel"]["policyPdpGroup"]["supportedPdpGroups"];
+		}
+		return null;
+	}
+
+	getMicroServicePdpGroup(name) {
+		var microService=this.getMicroServiceForName(name);
+		if (microService !== null) {
+			return microService["pdpGroup"];
+		}
+		return null;
+	}
+
+	getMicroServicePdpSubgroup(name) {
+		var microService=this.getMicroServiceForName(name);
+		if (microService !== null) {
+			return microService["pdpSubgroup"];
+		}
+		return null;
+	}
 
 	getMicroServiceForName(name) {
 		var msProperties=this.getMicroServicePolicies();

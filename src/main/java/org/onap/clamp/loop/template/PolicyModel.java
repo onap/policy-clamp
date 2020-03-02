@@ -84,6 +84,7 @@ public class PolicyModel extends AuditEntity implements Serializable, Comparable
     @ManyToMany(mappedBy = "policyModels", fetch = FetchType.EAGER)
     private Set<LoopElementModel> usedByElementModels = new HashSet<>();
 
+    @Expose
     @Type(type = "json")
     @Column(columnDefinition = "json", name = "policy_pdp_group")
     private JsonObject policyPdpGroup;

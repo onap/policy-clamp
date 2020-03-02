@@ -70,7 +70,7 @@ public abstract class Policy extends AuditEntity {
 
     @Expose
     @Column(name = "pdp_sub_group")
-    private String pdpSubGroup;
+    private String pdpSubgroup;
 
     public abstract String createPolicyPayload() throws UnsupportedEncodingException;
 
@@ -159,21 +159,21 @@ public abstract class Policy extends AuditEntity {
     }
 
     /**
-     * pdpSubGroup getter.
+     * pdpSubgroup getter.
      * 
-     * @return the pdpSubGroup
+     * @return the pdpSubgroup
      */
-    public String getPdpSubGroup() {
-        return pdpSubGroup;
+    public String getPdpSubgroup() {
+        return pdpSubgroup;
     }
 
     /**
-     * pdpSubGroup setter.
+     * pdpSubgroup setter.
      * 
-     * @param pdpSubGroup the pdpSubGroup to set
+     * @param pdpSubgroup the pdpSubgroup to set
      */
-    public void setPdpSubGroup(String pdpSubGroup) {
-        this.pdpSubGroup = pdpSubGroup;
+    public void setPdpSubgroup(String pdpSubgroup) {
+        this.pdpSubgroup = pdpSubgroup;
     }
 
     /**
