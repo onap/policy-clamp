@@ -26,6 +26,7 @@ package org.onap.clamp.loop;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
@@ -36,6 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsRepository;
@@ -66,8 +68,8 @@ public class PolicyModelServiceItCase {
     private static final String POLICY_MODEL_TYPE_3_VERSION_1 = "1.0.0";
     private static final String POLICY_MODEL_TYPE_2_VERSION_2 = "2.0.0";
 
-    private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version, String policyAcronym,
-                                       String policyVariant, String createdBy) {
+    private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version,
+        String policyAcronym, String policyVariant, String createdBy) {
         PolicyModel policyModel = new PolicyModel();
         policyModel.setCreatedBy(createdBy);
         policyModel.setPolicyAcronym(policyAcronym);
@@ -85,8 +87,8 @@ public class PolicyModelServiceItCase {
     @Transactional
     public void shouldCreatePolicyModel() {
         // given
-        PolicyModel policyModel = getPolicyModel(POLICY_MODEL_TYPE_1, "yaml", POLICY_MODEL_TYPE_1_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel = getPolicyModel(POLICY_MODEL_TYPE_1, "yaml",
+            POLICY_MODEL_TYPE_1_VERSION_1, "TEST", "VARIANT", "user");
 
         // when
         PolicyModel actualPolicyModel = policyModelsService.saveOrUpdatePolicyModel(policyModel);
@@ -94,19 +96,63 @@ public class PolicyModelServiceItCase {
         // then
         assertThat(actualPolicyModel).isNotNull();
         assertThat(actualPolicyModel).isEqualTo(policyModelsRepository
-                .findById(new PolicyModelId(actualPolicyModel.getPolicyModelType(), actualPolicyModel.getVersion()))
-                .get());
-        assertThat(actualPolicyModel.getPolicyModelType()).isEqualTo(policyModel.getPolicyModelType());
+            .findById(new PolicyModelId(actualPolicyModel.getPolicyModelType(),
+                actualPolicyModel.getVersion()))
+            .get());
+        assertThat(actualPolicyModel.getPolicyModelType())
+            .isEqualTo(policyModel.getPolicyModelType());
         assertThat(actualPolicyModel.getCreatedBy()).isEqualTo("Not found");
         assertThat(actualPolicyModel.getCreatedDate()).isNotNull();
         assertThat(actualPolicyModel.getPolicyAcronym()).isEqualTo(policyModel.getPolicyAcronym());
-        assertThat(actualPolicyModel.getPolicyModelTosca()).isEqualTo(policyModel.getPolicyModelTosca());
+        assertThat(actualPolicyModel.getPolicyModelTosca())
+            .isEqualTo(policyModel.getPolicyModelTosca());
         assertThat(actualPolicyModel.getUpdatedBy()).isEqualTo("Not found");
         assertThat(actualPolicyModel.getUpdatedDate()).isNotNull();
         assertThat(actualPolicyModel.getVersion()).isEqualTo(policyModel.getVersion());
 
-        assertThat(policyModelsService.getPolicyModel(POLICY_MODEL_TYPE_1, POLICY_MODEL_TYPE_1_VERSION_1))
-                .isEqualToIgnoringGivenFields(policyModel, "createdDate", "updatedDate", "createdBy", "updatedBy");
+        assertThat(
+            policyModelsService.getPolicyModel(POLICY_MODEL_TYPE_1, POLICY_MODEL_TYPE_1_VERSION_1))
+                .isEqualToIgnoringGivenFields(policyModel, "createdDate", "updatedDate",
+                    "createdBy", "updatedBy");
+    }
+
+    /**
+     * This tests a create Policy Model from Tosca.
+     *
+     * @throws IOException
+     */
+    @Test
+    @Transactional
+    public void shouldCreatePolicyModelFromTosca() throws IOException {
+        String toscaModelYaml =
+            ResourceFileUtil.getResourceAsString("tosca/tosca_with_metadata.yaml");
+        PolicyModel policyModel = policyModelsService.createNewPolicyModelFromTosca(toscaModelYaml);
+
+        assertThat(policyModelsService.getAllPolicyModels()).contains(policyModel);
+
+        assertThat(policyModelsService.getPolicyModelTosca(policyModel.getPolicyModelType(),
+            policyModel.getVersion())).contains(toscaModelYaml);
+    }
+
+    /**
+     * This tests a update Policy Model.
+     *
+     * @throws IOException
+     */
+    @Test
+    @Transactional
+    public void shouldUpdatePolicyModel() throws IOException {
+        String toscaModelYaml =
+            ResourceFileUtil.getResourceAsString("tosca/tosca_with_metadata.yaml");
+        PolicyModel policyModel = policyModelsService.createNewPolicyModelFromTosca(toscaModelYaml);
+        String newToscaModelYaml =
+            ResourceFileUtil.getResourceAsString("tosca/tosca_metadata_clamp_possible_values.yaml");
+
+        PolicyModel updatedPolicyModel = policyModelsService.updatePolicyModelTosca(
+            policyModel.getPolicyModelType(), policyModel.getVersion(), newToscaModelYaml);
+
+        assertThat(updatedPolicyModel.getPolicyModelTosca()).isEqualTo(newToscaModelYaml);
+
     }
 
     /**
@@ -116,15 +162,16 @@ public class PolicyModelServiceItCase {
     @Transactional
     public void shouldReturnAllPolicyModelTypes() {
         // given
-        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_1, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel1);
-        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_2, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_2, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
         List<String> policyModelTypesList = policyModelsService.getAllPolicyModelTypes();
 
-        assertThat(policyModelTypesList).contains(policyModel1.getPolicyModelType(), policyModel2.getPolicyModelType());
+        assertThat(policyModelTypesList).contains(policyModel1.getPolicyModelType(),
+            policyModel2.getPolicyModelType());
     }
 
     /**
@@ -133,11 +180,11 @@ public class PolicyModelServiceItCase {
     @Test
     @Transactional
     public void shouldReturnAllPolicyModels() {
-        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_1, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel1);
-        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_2, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_2, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
 
         assertThat(policyModelsService.getAllPolicyModels()).contains(policyModel1, policyModel2);
@@ -149,15 +196,15 @@ public class PolicyModelServiceItCase {
     @Test
     @Transactional
     public void shouldReturnAllModelsByType() {
-        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_1, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel1);
-        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_2, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_2, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
 
-        assertThat(policyModelsService.getAllPolicyModelsByType(POLICY_MODEL_TYPE_2)).contains(policyModel1,
-                policyModel2);
+        assertThat(policyModelsService.getAllPolicyModelsByType(POLICY_MODEL_TYPE_2))
+            .contains(policyModel1, policyModel2);
     }
 
     /**
@@ -166,21 +213,23 @@ public class PolicyModelServiceItCase {
     @Test
     @Transactional
     public void shouldReturnSortedSet() {
-        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_1, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel1);
-        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_2, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_2, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
-        PolicyModel policyModel3 = getPolicyModel(POLICY_MODEL_TYPE_3, "yaml", POLICY_MODEL_TYPE_3_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel3 = getPolicyModel(POLICY_MODEL_TYPE_3, "yaml",
+            POLICY_MODEL_TYPE_3_VERSION_1, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel3);
 
         SortedSet<PolicyModel> sortedSet = new TreeSet<>();
         policyModelsService.getAllPolicyModels().forEach(sortedSet::add);
-        List<PolicyModel> listToCheck = sortedSet.stream()
-                .filter(policy -> policy.equals(policyModel3) || policy.equals(policyModel2)
-                        || policy.equals(policyModel1)).collect(Collectors.toList());
+        List<PolicyModel> listToCheck =
+            sortedSet
+                .stream().filter(policy -> policy.equals(policyModel3)
+                    || policy.equals(policyModel2) || policy.equals(policyModel1))
+                .collect(Collectors.toList());
         assertThat(listToCheck.get(0)).isEqualByComparingTo(policyModel2);
         assertThat(listToCheck.get(1)).isEqualByComparingTo(policyModel1);
         assertThat(listToCheck.get(2)).isEqualByComparingTo(policyModel3);
@@ -192,16 +241,15 @@ public class PolicyModelServiceItCase {
     @Test
     @Transactional
     public void shouldAddPdpGroupInfo() {
-        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_1, "yaml", POLICY_MODEL_TYPE_1_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_1, "yaml",
+            POLICY_MODEL_TYPE_1_VERSION_1, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel1);
-        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml", POLICY_MODEL_TYPE_2_VERSION_2, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+            POLICY_MODEL_TYPE_2_VERSION_2, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel2);
-        PolicyModel policyModel3 = getPolicyModel(POLICY_MODEL_TYPE_3, "yaml", POLICY_MODEL_TYPE_3_VERSION_1, "TEST",
-                "VARIANT", "user");
+        PolicyModel policyModel3 = getPolicyModel(POLICY_MODEL_TYPE_3, "yaml",
+            POLICY_MODEL_TYPE_3_VERSION_1, "TEST", "VARIANT", "user");
         policyModelsService.saveOrUpdatePolicyModel(policyModel3);
-
 
         PolicyModelKey type1 = new PolicyModelKey("org.onap.testos", "1.0.0");
         PolicyModelKey type2 = new PolicyModelKey("org.onap.testos2", "2.0.0");
@@ -242,19 +290,22 @@ public class PolicyModelServiceItCase {
         pdpGroupList.add(pdpGroup2);
         policyModelsService.updatePdpGroupInfo(pdpGroupList);
 
-        JsonObject res1 = policyModelsService.getPolicyModel("org.onap.testos", "1.0.0").getPolicyPdpGroup();
+        JsonObject res1 =
+            policyModelsService.getPolicyModel("org.onap.testos", "1.0.0").getPolicyPdpGroup();
         String expectedRes1 =
-                "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\"]}]}";
+            "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\"]}]}";
         JsonObject expectedJson1 = JsonUtils.GSON.fromJson(expectedRes1, JsonObject.class);
         assertThat(res1).isEqualTo(expectedJson1);
 
-        JsonObject res2 = policyModelsService.getPolicyModel("org.onap.testos2", "2.0.0").getPolicyPdpGroup();
+        JsonObject res2 =
+            policyModelsService.getPolicyModel("org.onap.testos2", "2.0.0").getPolicyPdpGroup();
         String expectedRes2 =
-                "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\",\"subGroup2\"]}]}";
+            "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},{\"pdpGroup2\":[\"subGroup1\",\"subGroup2\"]}]}";
         JsonObject expectedJson2 = JsonUtils.GSON.fromJson(expectedRes2, JsonObject.class);
         assertThat(res2).isEqualTo(expectedJson2);
 
-        JsonObject res3 = policyModelsService.getPolicyModel("org.onap.testos3", "1.0.0").getPolicyPdpGroup();
+        JsonObject res3 =
+            policyModelsService.getPolicyModel("org.onap.testos3", "1.0.0").getPolicyPdpGroup();
         assertThat(res3).isNull();
     }
 }

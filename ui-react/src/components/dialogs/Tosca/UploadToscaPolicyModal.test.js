@@ -27,22 +27,6 @@ import UploadToscaPolicyModal from './UploadToscaPolicyModal';
 
 describe('Test Upload Tosca Policy Model', () => {
 
-      it('Test handleMicroServiceName', () => {
-
-      const component = shallow(<UploadToscaPolicyModal />);
-
-        const inputValue = 'TCA'
-
-        const button = component.find('input').at(1);
-
-        button.simulate('change', { target: { value: inputValue }});
-
-        expect(component.state('policyModelType')).toEqual(inputValue);
-
-        expect(component).toMatchSnapshot();
-
-    });
-
     it('Test handleUploadToscaPolicyModel for Tosca Model', () => {
 
       const component = shallow(<UploadToscaPolicyModal />);

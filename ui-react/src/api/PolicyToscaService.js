@@ -78,8 +78,8 @@ export default class PolicyToscaService {
  			});
   }
 
-  static createPolicyModelFromToscaModel(policyModelType, jsonData) {
-       return fetch('/restservices/clds/v2/policyToscaModels/' + policyModelType, {
+  static createPolicyModelFromToscaModel(jsonData) {
+       return fetch('/restservices/clds/v2/policyToscaModels', {
            method: 'POST',
            credentials: 'same-origin',
            headers: {

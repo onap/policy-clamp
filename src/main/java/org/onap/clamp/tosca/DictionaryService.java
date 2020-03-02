@@ -26,6 +26,7 @@ package org.onap.clamp.tosca;
 import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,20 +64,19 @@ public class DictionaryService {
 
         Set<DictionaryElement> newDictionaryElements = dictionary.getDictionaryElements();
 
-        for (DictionaryElement dictionaryElement : newDictionaryElements) {
-            if (dict.getDictionaryElements().contains(dictionaryElement)) {
-                // Update the Dictionary Element
-                getAndUpdateDictionaryElement(dict, dictionaryElement);
-            } else {
-                // Create the Dictionary Element
-                dict.addDictionaryElements(getAndUpdateDictionaryElement(dict, dictionaryElement));
-                dictionaryRepository.save(dict);
-            }
-        }
+        if (newDictionaryElements != null && !newDictionaryElements.isEmpty()) {
+            Set<DictionaryElement> updatedDictionaryElements = newDictionaryElements.stream()
+                .map(dictionaryElement -> getAndUpdateDictionaryElement(dict, dictionaryElement))
+                .collect(Collectors.toSet());
 
-        // Fetch again to get Dictionary with most recent updates.
-        return dictionaryRepository.findById(dictionaryName).orElseThrow(
-            () -> new EntityNotFoundException("Couldn't find Dictionary named: " + dictionaryName));
+            dict.getDictionaryElements().forEach(dictElement -> {
+                if (!updatedDictionaryElements.contains(dictElement)) {
+                    updatedDictionaryElements.add(dictElement);
+                }
+            });
+            dict.setDictionaryElements(updatedDictionaryElements);
+        }
+        return dictionaryRepository.save(dict);
 
     }
 
