@@ -1,16 +1,34 @@
 {
-  "policies": [
+  "groups": [
     {
-      "policy-id": "GuardOpPolicyTest"
+      "name": "pdpGroup2",
+      "deploymentSubgroups": [
+        {
+          "pdpType": "pdpSubgroup2",
+          "action": "POST",
+          "policies": [
+            {
+              "name": "onap.policies.controlloop.Operational",
+              "version": "1.0.0"
+            }
+          ]
+        }
+      ]
     },
     {
-      "policy-id": "guard.minmax.new"
-    },
-    {
-      "policy-id": "guard.frequency.new"
-    },
-    {
-      "policy-id": "configPolicyTest"
+      "name": "pdpGroup1",
+      "deploymentSubgroups": [
+        {
+          "pdpType": "pdpSubgroup1",
+          "action": "POST",
+          "policies": [
+            {
+              "name": "onap.policies.monitoring.test",
+              "version": "1.0.0"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
