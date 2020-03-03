@@ -51,4 +51,5 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
 COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 443
+USER clamp
 CMD ["nginx", "-g", "daemon off;"]
