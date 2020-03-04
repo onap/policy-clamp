@@ -52,7 +52,7 @@ public class LoopToJsonTest {
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name) {
         return new OperationalPolicy(name, null, gson.fromJson(configJson, JsonObject.class),
-                getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"), null);
+                getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"), null, null, null);
     }
 
     private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
@@ -70,7 +70,7 @@ public class LoopToJsonTest {
                                                      String policyTosca, String jsonProperties, boolean shared) {
         MicroServicePolicy microService = new MicroServicePolicy(name, new PolicyModel(modelType, policyTosca, "1.0.0"),
                 shared,
-                gson.fromJson(jsonRepresentation, JsonObject.class), null);
+                gson.fromJson(jsonRepresentation, JsonObject.class), null, null, null);
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
     }

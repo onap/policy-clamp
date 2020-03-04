@@ -91,7 +91,7 @@ public class ClampGraphBuilder {
                     loopElementModel.getPolicyModels().first(), false, loopElementModel));
         } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE.equals(loopElementModel.getLoopElementType())) {
             policies.add(new OperationalPolicy(loopElementModel.getName(), null, null,
-                    loopElementModel.getPolicyModels().first(), loopElementModel));
+                    loopElementModel.getPolicyModels().first(), loopElementModel, null, null));
         }
         return this;
     }

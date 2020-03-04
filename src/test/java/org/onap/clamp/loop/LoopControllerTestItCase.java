@@ -135,7 +135,7 @@ public class LoopControllerTestItCase {
                 "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0");
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy policy = new MicroServicePolicy("policyName", policyModel, false,
-                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null);
+                JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
         loopController.updateMicroservicePolicy(EXAMPLE_LOOP_NAME, policy);
         assertThat(microServicePolicyService.isExisting("policyName")).isTrue();
     }

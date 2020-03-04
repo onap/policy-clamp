@@ -69,7 +69,7 @@ public class LoopController {
      * @return The updated loop
      */
     public Loop updateOperationalPolicies(String loopName, JsonArray operationalPoliciesJson) {
-        List<OperationalPolicy> operationalPolicies = JsonUtils.GSON.fromJson(operationalPoliciesJson,
+        List<OperationalPolicy> operationalPolicies = JsonUtils.GSON_JPA_MODEL.fromJson(operationalPoliciesJson,
                 OPERATIONAL_POLICY_TYPE);
         return loopService.updateAndSaveOperationalPolicies(loopName, operationalPolicies);
     }
@@ -83,7 +83,7 @@ public class LoopController {
      * @return The updated loop
      */
     public Loop updateMicroservicePolicies(String loopName, JsonArray microServicePoliciesJson) {
-        List<MicroServicePolicy> microservicePolicies = JsonUtils.GSON.fromJson(microServicePoliciesJson,
+        List<MicroServicePolicy> microservicePolicies = JsonUtils.GSON_JPA_MODEL.fromJson(microServicePoliciesJson,
                 MICROSERVICE_POLICY_TYPE);
         return loopService.updateAndSaveMicroservicePolicies(loopName, microservicePolicies);
     }

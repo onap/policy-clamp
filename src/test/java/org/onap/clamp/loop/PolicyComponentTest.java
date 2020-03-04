@@ -26,7 +26,9 @@ package org.onap.clamp.loop;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import java.io.IOException;
+import java.util.HashSet;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Test;
@@ -258,18 +260,12 @@ public class PolicyComponentTest {
         PolicyModel policyModel1 = new PolicyModel("onap.policies.monitoring.test", null, "1.0.0");
 
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", policyModel1, true,
-                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null);
-        microServicePolicy.setPdpGroup("pdpGroup1");
-        microServicePolicy.setPdpSubGroup("pdpSubgroup1");
-
+                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null, "pdpGroup1", "pdpSubgroup1");
         loopTest.addMicroServicePolicy(microServicePolicy);
 
         PolicyModel policyModel2 = new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0");
         OperationalPolicy opPolicy = new OperationalPolicy("opPolicy", loopTest,
-                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), policyModel2, null);
-        opPolicy.setPdpGroup("pdpGroup2");
-        opPolicy.setPdpSubGroup("pdpSubgroup2");
-
+                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), policyModel2, null, "pdpGroup2", "pdpSubgroup2");
         loopTest.addOperationalPolicy(opPolicy);
 
         LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", "svg", 1, null);
@@ -278,6 +274,7 @@ public class PolicyComponentTest {
 
         String payload = PolicyComponent.createPoliciesPayloadPdpGroup(loopTest);
         String expectedRes = ResourceFileUtil.getResourceAsString("tosca/pdp-group-policy-payload.json");
+
         assertThat(payload).isEqualTo(expectedRes);
     }
 }

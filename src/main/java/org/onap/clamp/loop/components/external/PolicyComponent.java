@@ -35,7 +35,6 @@ import java.util.List;
 import javax.persistence.Transient;
 
 import org.apache.camel.Exchange;
-import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -85,18 +84,18 @@ public class PolicyComponent extends ExternalComponent {
         jsonObject.add("groups", jsonArray);
 
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
-            jsonArray.add(createPdpDeploymentPayload(opPolicy.getPdpGroup(), opPolicy.getPdpSubGroup(),
+            jsonArray.add(createPdpDeploymentPayload(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
                     opPolicy.getPolicyModel().getPolicyModelType(), opPolicy.getPolicyModel().getVersion()));
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
-            jsonArray.add(createPdpDeploymentPayload(msPolicy.getPdpGroup(), msPolicy.getPdpSubGroup(),
+            jsonArray.add(createPdpDeploymentPayload(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(),
                     msPolicy.getPolicyModel().getPolicyModelType(), msPolicy.getPolicyModel().getVersion()));
         }
 
         String payload = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
         logger.info("PdpGroup policy payload: " + payload);
-        return new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+        return payload;
     }
 
     private static JsonObject createPdpDeploymentPayload(String pdpGroup, String pdpSubGroup,

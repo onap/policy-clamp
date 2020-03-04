@@ -90,7 +90,7 @@ public class LoopRepositoriesItCase {
     }
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name, PolicyModel policyModel) {
-        return new OperationalPolicy(name, null, new Gson().fromJson(configJson, JsonObject.class), policyModel, null);
+        return new OperationalPolicy(name, null, new Gson().fromJson(configJson, JsonObject.class), policyModel, null, null, null);
     }
 
     private LoopElementModel getLoopElementModel(String yaml, String name, String policyType, String createdBy,
@@ -130,7 +130,7 @@ public class LoopRepositoriesItCase {
     private MicroServicePolicy getMicroServicePolicy(String name, String jsonRepresentation, String jsonProperties,
                                                      boolean shared, PolicyModel policyModel) {
         MicroServicePolicy microService = new MicroServicePolicy(name, policyModel, shared,
-                gson.fromJson(jsonRepresentation, JsonObject.class), null);
+                gson.fromJson(jsonRepresentation, JsonObject.class), null, null, null);
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;
     }

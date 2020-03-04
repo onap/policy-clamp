@@ -63,7 +63,7 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
         return repository.save(
                 repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
                         .orElse(new MicroServicePolicy(policy.getName(), policy.getPolicyModel(),
-                                policy.getShared(), policy.getJsonRepresentation(),null)));
+                                policy.getShared(), policy.getJsonRepresentation(),null, policy.getPdpGroup(), policy.getPdpSubgroup())));
     }
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,
@@ -72,6 +72,8 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
         if (!oldPolicy.getUsedByLoops().contains(loop)) {
             oldPolicy.getUsedByLoops().add(loop);
         }
+        oldPolicy.setPdpGroup(newPolicy.getPdpGroup());
+        oldPolicy.setPdpSubgroup(newPolicy.getPdpSubgroup());
         return oldPolicy;
     }
 

@@ -173,7 +173,7 @@ public class Loop extends AuditEntity implements Serializable {
             } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
                     .equals(element.getLoopElementModel().getLoopElementType())) {
                 this.addOperationalPolicy(new OperationalPolicy(name, null, new JsonObject(),
-                        element.getLoopElementModel().getPolicyModels().first(), element.getLoopElementModel()));
+                        element.getLoopElementModel().getPolicyModels().first(), element.getLoopElementModel(), null, null));
             }
         });
     }

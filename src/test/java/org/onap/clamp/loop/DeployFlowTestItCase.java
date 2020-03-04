@@ -297,7 +297,7 @@ public class DeployFlowTestItCase {
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy microService = new MicroServicePolicy(name, policyModel,
                 shared,
-                gson.fromJson(jsonRepresentation, JsonObject.class), null);
+                gson.fromJson(jsonRepresentation, JsonObject.class), null, null, null);
 
         microService.setConfigurationsJson(new Gson().fromJson(jsonProperties, JsonObject.class));
         return microService;

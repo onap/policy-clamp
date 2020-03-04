@@ -49,10 +49,10 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
                 .map(policy ->
                         operationalPolicyRepository
                                 .findById(policy.getName())
-                                .map(p -> setConfigurationJson(p, policy.getConfigurationsJson()))
+                                .map(p -> setConfigurationJson(p, policy))
                                 .orElse(new OperationalPolicy(policy.getName(), loop,
                                         policy.getConfigurationsJson(),
-                                        policy.getPolicyModel(), null)))
+                                        policy.getPolicyModel(), null, policy.getPdpGroup(), policy.getPdpSubgroup())))
                 .collect(Collectors.toSet());
     }
 
@@ -61,8 +61,10 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
         return operationalPolicyRepository.existsById(policyName);
     }
 
-    private OperationalPolicy setConfigurationJson(OperationalPolicy policy, JsonObject configurationsJson) {
-        policy.setConfigurationsJson(configurationsJson);
+    private OperationalPolicy setConfigurationJson(OperationalPolicy policy, OperationalPolicy newPolicy) {
+        policy.setConfigurationsJson(newPolicy.getConfigurationsJson());
+        policy.setPdpGroup(newPolicy.getPdpGroup());
+        policy.setPdpSubgroup(newPolicy.getPdpSubgroup());
         return policy;
     }
 }
