@@ -28,6 +28,10 @@
                     "properties": {},
                     "supportedPolicyTypes": [
                         {
+                            "name": "onap.policies.controlloop.operational.common.*",
+                            "version": "1.0.0"
+                        },
+                        {
                             "name": "onap.policies.controlloop.Operational",
                             "version": "1.0.0"
                         }
@@ -42,7 +46,7 @@
                     "properties": {},
                     "supportedPolicyTypes": [
                         {
-                            "name": "onap.policies.controlloop.Guard",
+                            "name": "onap.policies.controlloop.guard.common.*",
                             "version": "1.0.0"
                         }
                     ]

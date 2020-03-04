@@ -1,4 +1,4 @@
-tosca_definitions_version: tosca_simple_yaml_1_0_0
+tosca_definitions_version: tosca_simple_yaml_1_1_0
 policy_types:
    onap.policies.Monitoring:
       derived_from: tosca.policies.Root
@@ -9,10 +9,9 @@ policy_types:
       version: 1.0.0
       properties:
          tca_policy:
-            type: map
+            type: onap.datatypes.monitoring.tca_policy
             description: TCA Policy JSON
-            entry_schema:
-               type: onap.datatypes.monitoring.tca_policy
+            required: true
 data_types:
    onap.datatypes.monitoring.metricsPerEventName:
       derived_from: tosca.datatypes.Root

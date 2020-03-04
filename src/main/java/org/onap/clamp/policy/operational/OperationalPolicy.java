@@ -44,14 +44,12 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
-import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.clds.tosca.update.UnknownComponentException;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -119,17 +117,15 @@ public class OperationalPolicy extends Policy implements Serializable {
             if (isLegacy()) {
                 // Op policy Legacy case
                 LegacyOperationalPolicy.preloadConfiguration(jsonReturned, loop);
-                this.setJsonRepresentation(
-                        OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService()));
+                jsonReturned =
+                        OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService());
             } else {
                 // Generic Case
-                this.setJsonRepresentation(JsonUtils.GSON
-                        .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyModel.getPolicyModelTosca(),
-                                policyModel.getPolicyModelType()), JsonObject.class));
+                jsonReturned = Policy.generateJsonRepresentationFromToscaModel(policyModel.getPolicyModelTosca(),
+                        policyModel.getPolicyModelType());
             }
-        } catch (JsonSyntaxException | IOException | NullPointerException e) {
+        } catch (UnknownComponentException | IOException | NullPointerException e) {
             logger.error("Unable to generate the operational policy Schema ... ", e);
-            this.setJsonRepresentation(new JsonObject());
         }
         return jsonReturned;
     }

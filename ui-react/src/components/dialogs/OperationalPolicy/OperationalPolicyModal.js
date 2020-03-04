@@ -94,20 +94,8 @@ export default class OperationalPolicyModal extends React.Component {
 				return liel;
 			}
 		});
-		JSONEditor.defaults.options.theme = 'myBootstrap4';
-		JSONEditor.defaults.options.object_layout = 'grid';
-		JSONEditor.defaults.options.disable_properties = true;
-		JSONEditor.defaults.options.disable_edit_json = false;
-		JSONEditor.defaults.options.disable_array_reorder = true;
-		JSONEditor.defaults.options.disable_array_delete_last_row = true;
-		JSONEditor.defaults.options.disable_array_delete_all_rows = false;
-		JSONEditor.defaults.options.array_controls_top=true;
-		JSONEditor.defaults.options.show_errors = 'always';
-		JSONEditor.defaults.options.keep_oneof_values=false;
-		JSONEditor.defaults.options.collapsed=true;
-		//JSONEditor.defaults.options.template = 'default';
 	}
-	
+
 	renderJsonEditor() {
 		console.debug("Rendering OperationalPolicyModal");
 		var schema_json = this.state.loopCache.getOperationalPolicyJsonSchema();
@@ -120,7 +108,21 @@ export default class OperationalPolicyModal extends React.Component {
 
 		this.setState({
 				jsonEditor: new JSONEditor(document.getElementById("editor"),
-					{ schema: schema_json.schema, startval: operationalPoliciesData })
+					{
+					    schema: schema_json.schema,
+					    startval: operationalPoliciesData,
+					    theme: 'myBootstrap4',
+                        object_layout: 'grid',
+                        disable_properties: true,
+                        disable_edit_json: false,
+                        disable_array_reorder: true,
+                        disable_array_delete_last_row: true,
+                        disable_array_delete_all_rows: false,
+                        array_controls_top: true,
+                        show_errors: 'always',
+                        keep_oneof_values: false,
+                        collapsed:true
+					})
 			})
 	}
 

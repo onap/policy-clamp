@@ -1191,6 +1191,7 @@
 						</goals>
 						<phase>test</phase>
 						<configuration>
+							<skip>${maven.test.skip}</skip>
 							<arguments>run-script test:coverage</arguments>
 							<workingDirectory>${project.build.directory}/${ui.react.src}</workingDirectory>
 						</configuration>

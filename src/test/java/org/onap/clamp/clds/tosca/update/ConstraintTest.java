@@ -33,6 +33,7 @@ public class ConstraintTest extends TestCase {
 
     TemplateManagement templateManagement = new TemplateManagement(
             ResourceFileUtil.getResourceAsString("tosca/new-converter/constraints.yaml"),
+            ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
             ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
 
     Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Operation");
@@ -41,7 +42,7 @@ public class ConstraintTest extends TestCase {
     }
 
     /**
-     *  Test get value array.
+     * Test get value array.
      */
     public void testGetValuesArray() {
         Property property = component.getProperties().get("timeout");

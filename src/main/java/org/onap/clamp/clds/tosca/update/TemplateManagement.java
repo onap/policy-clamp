@@ -46,9 +46,10 @@ public class TemplateManagement {
      * @param templateProperties template properties as string
      * @throws IOException in case of failure
      */
-    public TemplateManagement(String yamlContent, String templateProperties) throws IOException {
+    public TemplateManagement(String yamlContent, String nativeComponent, String templateProperties)
+            throws IOException {
         if (yamlContent != null && !yamlContent.isEmpty()) {
-            this.extractor = new Extractor(yamlContent);
+            this.extractor = new Extractor(yamlContent, nativeComponent);
             this.components = extractor.getAllItems();
             this.templates = initializeTemplates(templateProperties);
         }
@@ -155,7 +156,7 @@ public class TemplateManagement {
         if (parserToJson.matchComponent(componentName) == null) {
             throw new UnknownComponentException(componentName);
         }
-        return parserToJson.getJsonProcess(componentName);
+        return parserToJson.getJsonProcess(componentName, "object");
     }
 
     /**

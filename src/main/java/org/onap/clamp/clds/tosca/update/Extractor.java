@@ -23,19 +23,24 @@
 
 package org.onap.clamp.clds.tosca.update;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import org.yaml.snakeyaml.Yaml;
 
 public class Extractor {
-
-    private LinkedHashMap<String, Component> allItems = new LinkedHashMap<>();
+    private LinkedHashMap<String, Component> allItems;
     private String source;
+    private String nativeComponent;
 
     @SuppressWarnings("unchecked")
-    public Extractor(String toParse) {
+    public Extractor(String toParse, String nativeComponent) throws IOException {
+
         this.source = toParse;
+        this.nativeComponent = nativeComponent;
+        allItems = new LinkedHashMap<String, Component>();
         getAllAsMaps();
+
     }
 
     public LinkedHashMap<String, Component> getAllItems() {
@@ -60,10 +65,17 @@ public class Extractor {
                 (LinkedHashMap<String, LinkedHashMap<String, Object>>) contentFile;
         // Get DataTypes
         LinkedHashMap<String, Object> dataTypes = file.get("data_types");
+        dataTypes = (dataTypes == null) ? (new LinkedHashMap<>()) : dataTypes;
         // Get Policies : first, get topology and after extract policies from it
         LinkedHashMap<String, Object> policyTypes = file.get("policy_types");
         // Put the policies and datatypes in the same collection
         dataTypes.putAll(policyTypes);
+
+        Object contentNativeFile = yaml.load(nativeComponent);
+        LinkedHashMap<String, Object> dataTypesEmbedded =
+                ((LinkedHashMap<String, LinkedHashMap<String, Object>>) contentNativeFile).get("data_types");
+        dataTypes.putAll(dataTypesEmbedded);
+
         parseInComponent(dataTypes);
         return dataTypes;
     }
