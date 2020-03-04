@@ -8,12 +8,14 @@
     },
     "policies": [
       {
+        "actor": {
+          "actor": "APPC",
+          "type": "Restart",
+          "payload": "requestParameters: '{\"usePreload\":true,\"userParams\":[]}'\r\nconfigurationParameters: '[{\"ip-addr\":\"$.vf-module-topology.vf-module-parameters.param[10].value\",\"oam-ip-addr\":\"$.vf-module-topology.vf-module-parameters.param[15].value\",\"enabled\":\"$.vf-module-topology.vf-module-parameters.param[22].value\"}]'"
+        },
         "id": "policy1",
-        "recipe": "Restart",
         "retry": "0",
         "timeout": "0",
-        "actor": "APPC",
-        "payload": "requestParameters: '{\"usePreload\":true,\"userParams\":[]}'\r\nconfigurationParameters: '[{\"ip-addr\":\"$.vf-module-topology.vf-module-parameters.param[10].value\",\"oam-ip-addr\":\"$.vf-module-topology.vf-module-parameters.param[15].value\",\"enabled\":\"$.vf-module-topology.vf-module-parameters.param[22].value\"}]'",
         "success": "final_success",
         "failure": "policy2",
         "failure_timeout": "final_failure_timeout",
@@ -26,12 +28,14 @@
         }
       },
     {
+        "actor": {
+         "actor": "SO",
+         "type": "VF Module Create",
+         "payload": ""
+        },
         "id": "policy2",
-        "recipe": "VF Module Create",
         "retry": "0",
         "timeout": "0",
-        "actor": "SO",
-        "payload": "",
         "success": "final_success",
         "failure": "final_failure",
         "failure_timeout": "final_failure_timeout",

@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
+ * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +47,11 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class LegacyOperationalPolicy {
 
+    private static final String ACTOR = "actor";
+    private static final String RECIPE = "recipe";
+    private static final String POLICIES = "policies";
+    private static final String PAYLOAD = "payload";
+
     private LegacyOperationalPolicy() {
 
     }
@@ -79,7 +85,7 @@ public class LegacyOperationalPolicy {
     /**
      * This method rework the payload attribute (yaml) that is normally wrapped in a
      * string when coming from the UI.
-     * 
+     *
      * @param policyJson The operational policy json config
      * @return The same object reference but modified
      */
@@ -150,7 +156,7 @@ public class LegacyOperationalPolicy {
 
     /**
      * This method transforms the configuration json to a Yaml format.
-     * 
+     *
      * @param operationalPolicyJsonElement The operational policy json config
      * @return The Yaml as string
      */
@@ -162,13 +168,13 @@ public class LegacyOperationalPolicy {
         // Policy can't support { } in the yaml
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         return (new Yaml(options)).dump(createMap(fulfillPoliciesTreeField(
-                removeAllQuotes(reworkPayloadAttributes(operationalPolicyJsonElement.getAsJsonObject().deepCopy())))));
+                removeAllQuotes(reworkActorAttributes(operationalPolicyJsonElement.getAsJsonObject().deepCopy())))));
     }
 
     /**
      * This method load mandatory field in the operational policy configuration
      * JSON.
-     * 
+     *
      * @param configurationsJson The operational policy JSON
      * @param loop               The parent loop object
      */
@@ -181,5 +187,46 @@ public class LegacyOperationalPolicy {
             controlLoop.add("controlLoop", controlLoopName);
             configurationsJson.add("operational_policy", controlLoop);
         }
+    }
+
+    /**
+     * This method rework on the actor/recipe and payload attribute.
+     *
+     * @param policyJson The operational policy json config
+     * @return The same object reference but modified
+     */
+    public static JsonElement reworkActorAttributes(JsonElement policyJson) {
+        for (JsonElement policy : policyJson.getAsJsonObject().get(POLICIES).getAsJsonArray()) {
+            JsonObject actor = policy.getAsJsonObject().get(ACTOR).getAsJsonObject();
+            policy.getAsJsonObject().remove(ACTOR);
+            String actorStr = actor.getAsJsonObject().get(ACTOR).getAsString();
+            policy.getAsJsonObject().addProperty(ACTOR, actorStr);
+            policy.getAsJsonObject().addProperty(RECIPE, getRecipe(actor));
+
+            if ("CDS".equalsIgnoreCase(actorStr)) {
+                addPayloadAttributes(actor.getAsJsonObject(ACTOR).getAsJsonObject(RECIPE), policy);
+            } else {
+                addPayloadAttributes(actor, policy);
+            }
+        }
+        return policyJson;
+    }
+
+    private static void addPayloadAttributes(JsonObject jsonObject,
+                                             JsonElement policy) {
+        JsonElement payloadElem = jsonObject.getAsJsonObject().get(PAYLOAD);
+        String payloadString = payloadElem != null ? payloadElem.getAsString() : "";
+        if (!payloadString.isEmpty()) {
+            Map<String, String> testMap = new Yaml().load(payloadString);
+            String json = new GsonBuilder().create().toJson(testMap);
+            policy.getAsJsonObject().add(PAYLOAD,
+                                         new GsonBuilder().create().fromJson(json, JsonElement.class));
+        } else {
+            policy.getAsJsonObject().addProperty(PAYLOAD, "");
+        }
+    }
+
+    private static String getRecipe(JsonObject actor) {
+        return actor.getAsJsonObject().get("type").getAsString();
     }
 }

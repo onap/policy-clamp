@@ -16,7 +16,91 @@
 			"UUID": "b4c4f3d7-929e-4b6d-a1cd-57e952ddc3e6",
 			"version": "1.0",
 			"resourceVendorRelease": "1.0",
-			"customizationUUID": "465246dc-7748-45f4-a013-308d92922552"
+			"customizationUUID": "465246dc-7748-45f4-a013-308d92922552",
+				"controllerProperties": {
+					"sdnc_model_name": "baseconfiguration",
+					"sdnc_model_version": "1.0.0",
+					"workflows": {
+						"resource-assignment": {
+							"inputs": {
+								"resource-assignment-properties": {
+									"request-id": "",
+									"service-instance-id": "",
+									"vnf-id": "",
+									"action-name": "",
+									"scope-type": "",
+									"hostname": "",
+									"vnf_name": ""
+								}
+							}
+						},
+						"activate": {
+							"inputs": {
+								"resource-assignment-properties": {
+									"request-id": "",
+									"service-instance-id": "",
+									"vnf-id": "",
+									"action-name": "",
+									"scope-type": "",
+									"hostname": "",
+									"vnf_name": ""
+								}
+							}
+						},
+						"activate-restconf": {
+							"inputs": {
+								"resource-assignment-properties": {
+									"request-id": "",
+									"service-instance-id": "",
+									"vnf-id": "",
+									"action-name": "",
+									"scope-type": "",
+									"hostname": "",
+									"vnf_name": ""
+								}
+							}
+						},
+						"activate-cli": {
+							"inputs": {
+								"resource-assignment-properties": {
+									"request-id": "",
+									"service-instance-id": "",
+									"vnf-id": "",
+									"action-name": "",
+									"scope-type": "",
+									"hostname": "",
+									"vnf_name": ""
+								}
+							}
+						},
+						"assign-activate": {
+							"inputs": {
+								"resource-assignment-properties": {
+									"request-id": "",
+									"service-instance-id": "",
+									"vnf-id": "",
+									"action-name": "",
+									"scope-type": "",
+									"hostname": "",
+									"vnf_name": ""
+								}
+							}
+						},
+						"imperative-test-wf": {
+							"inputs": {
+								"resource-assignment-properties": {
+									"request-id": "",
+									"service-instance-id": "",
+									"vnf-id": "",
+									"action-name": "",
+									"scope-type": "",
+									"hostname": "",
+									"vnf_name": ""
+								}
+							}
+						} 
+				 }
+		}
 		}
 	},
 	"CR": {

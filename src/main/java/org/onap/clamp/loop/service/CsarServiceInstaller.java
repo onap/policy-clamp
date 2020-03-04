@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
+ * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +30,9 @@ import com.google.gson.JsonObject;
 
 import java.util.Map.Entry;
 
+import org.onap.clamp.clds.client.CdsServices;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
+import org.onap.clamp.clds.model.cds.CdsBpWorkFlowListResponse;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.sdc.tosca.parser.api.IEntityDetails;
@@ -53,9 +56,12 @@ public class CsarServiceInstaller {
     @Autowired
     ServiceRepository serviceRepository;
 
+    @Autowired
+    CdsServices cdsServices;
+
     /**
      * Install the Service from the csar.
-     * 
+     *
      * @param csar The Csar Handler
      * @return The service object
      */
@@ -77,7 +83,7 @@ public class CsarServiceInstaller {
         return modelService;
     }
 
-    private static JsonObject createServicePropertiesByType(CsarHandler csar) {
+    private JsonObject createServicePropertiesByType(CsarHandler csar) {
         JsonObject resourcesProp = new JsonObject();
         // Iterate on all types defined in the tosca lib
         for (SdcTypes type : SdcTypes.values()) {
@@ -86,6 +92,13 @@ public class CsarServiceInstaller {
             for (NodeTemplate nodeTemplate : csar.getSdcCsarHelper().getServiceNodeTemplateBySdcType(type)) {
                 resourcesPropByType.add(nodeTemplate.getName(),
                         JsonUtils.GSON.toJsonTree(nodeTemplate.getMetaData().getAllProperties()));
+                // get cds artifact information and save in resources Prop
+                if (SdcTypes.PNF == type || SdcTypes.VF == type) {
+                    JsonObject controllerProperties = createCdsArtifactProperties(nodeTemplate);
+                    if (controllerProperties != null) {
+                        resourcesPropByType.getAsJsonObject(nodeTemplate.getName()).add("controllerProperties", controllerProperties);
+                    }
+                }
             }
             resourcesProp.add(type.getValue(), resourcesPropByType);
         }
@@ -114,7 +127,7 @@ public class CsarServiceInstaller {
 
     /**
      * Verify whether Service in Csar is deployed.
-     * 
+     *
      * @param csar The Csar Handler
      * @return The flag indicating whether Service is deployed
      * @throws SdcArtifactInstallerException The SdcArtifactInstallerException
@@ -126,5 +139,44 @@ public class CsarServiceInstaller {
         alreadyInstalled = serviceRepository.existsById(serviceDetails.get("UUID").getAsString());
 
         return alreadyInstalled;
+    }
+
+    /**
+     * Retrive CDS artifacts information from node template and save in resource object.
+     *
+     * @param nodeTemplate node template
+     * @return Returns CDS artifacts information
+     */
+    private JsonObject createCdsArtifactProperties(NodeTemplate nodeTemplate) {
+        Object artifactName = nodeTemplate.getPropertyValue("sdnc_model_name");
+        Object artifactVersion = nodeTemplate.getPropertyValue("sdnc_model_version");
+        if (artifactName != null && artifactVersion != null) {
+            CdsBpWorkFlowListResponse response = queryCdsToGetWorkFlowList(artifactName.toString(), artifactVersion.toString());
+            if (response == null) {
+                return null;
+            }
+
+            JsonObject workFlowProps = new JsonObject();
+            for (String workFlow : response.getWorkflows()) {
+                JsonObject inputs = queryCdsToGetWorkFlowInputProperties(response.getBlueprintName(),
+                                                                         response.getVersion(), workFlow);
+                workFlowProps.add(workFlow, inputs);
+            }
+
+            JsonObject controllerProperties = new JsonObject();
+            controllerProperties.addProperty("sdnc_model_name", artifactName.toString());
+            controllerProperties.addProperty("sdnc_model_version", artifactVersion.toString());
+            controllerProperties.add("workflows", workFlowProps);
+            return controllerProperties;
+        }
+        return null;
+    }
+
+    private CdsBpWorkFlowListResponse queryCdsToGetWorkFlowList(String artifactName, String artifactVersion) {
+        return cdsServices.getBlueprintWorkflowList(artifactName, artifactVersion);
+    }
+
+    private JsonObject queryCdsToGetWorkFlowInputProperties(String artifactName, String artifactVersion, String workFlow) {
+        return cdsServices.getWorkflowInputProperties(artifactName, artifactVersion, workFlow);
     }
 }
