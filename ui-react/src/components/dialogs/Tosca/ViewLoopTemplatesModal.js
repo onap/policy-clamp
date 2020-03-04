@@ -38,22 +38,26 @@ import MaterialTable from "material-table";
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
-const TextModal = styled.textarea`
-margin-top: 20px;
-white-space:pre;
-background-color: ${props => props.theme.toscaTextareaBackgroundColor};;
-text-align: justify;
-font-size: ${props => props.theme.toscaTextareaFontSize};;
-width: 100%;
-height: 300px;
+const LoopViewSvgDivStyled = styled.div`
+	overflow: hidden;
+	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
+	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+	margin-left: auto;
+	margin-right:auto;
+	text-align: center;
+	margin-top: 20px;
 `
+const SvgContainerDivStyled = styled.div`
+	border: 1px solid;
+`
+
 const cellStyle = { border: '1px solid black' };
 const headerStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
 const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
 
 export default class ViewLoopTemplatesModal extends React.Component {
   state = {
-    show: true,
+        show: true,
 		content: 'Please select a loop template to display it',
 		selectedRow: -1,
 		loopTemplateData: [],
@@ -97,8 +101,7 @@ export default class ViewLoopTemplatesModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 		this.handleClose = this.handleClose.bind(this);
-		this.getBlueprintMicroServiceTemplates = this.getBlueprintMicroServiceTemplates.bind(this);
-		this.handleYamlContent = this.handleYamlContent.bind(this);
+		this.getBlueprintMicroServiceTemplate = this.getBlueprintMicroServiceTemplate.bind(this);
 		this.getBlueprintMicroServiceTemplates();
 	}
 
@@ -108,11 +111,20 @@ export default class ViewLoopTemplatesModal extends React.Component {
 		});
 	}
 
-	handleYamlContent = event => {
-		this.setState({
-			content: event.target.value
-		});
-	}
+	getBlueprintMicroServiceTemplate(templateName) {
+	    if (typeof templateName !== "undefined") {
+		    TemplateService.getBlueprintMicroServiceTemplate(templateName).then(svgXml => {
+				if (svgXml.length !== 0) {
+					this.setState({ content: svgXml })
+				} else {
+					this.setState({ content: 'Please select a loop template to view the details' })
+
+				}
+			});
+		} else {
+          	this.setState({ content: 'Please select a loop template to view the details' })
+          	}
+    }
 
 	handleClose() {
 		this.setState({ show: false });
@@ -121,30 +133,31 @@ export default class ViewLoopTemplatesModal extends React.Component {
 
 	render() {
     return (
-      <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
-        <Modal.Header closeButton>
-				</Modal.Header>
-				<Modal.Body>
-          <MaterialTable
-            title={"View Blueprint MicroService Templates"}
-            data={this.state.loopTemplateData}
+    		<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
+    			<Modal.Header closeButton>
+    			</Modal.Header>
+    			<Modal.Body>
+    			   <MaterialTable
+    				  title={"View Blueprint MicroService Templates"}
+    				  data={this.state.loopTemplateData}
 					  columns={this.state.loopTemplateColumnsDefinition}
 					  icons={this.state.tableIcons}
-					  onRowClick={(event, rowData) => {this.setState({content: rowData.name, selectedRow: rowData.tableData.id})}}
+    			      onRowClick={(event, rowData) => {this.getBlueprintMicroServiceTemplate(rowData.name);this.setState({selectedRow: rowData.tableData.id})}}
 					  options={{
-					  headerStyle:rowHeaderStyle,
-					  rowStyle: rowData => ({
-					  backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
-            })
-          }}
-          />
-          <div>
-            <TextModal value={this.state.content} onChange={this.handleYamlContent} />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={this.handleClose}>Close</Button>
-        </Modal.Footer>
+					      headerStyle:rowHeaderStyle,
+					      rowStyle: rowData => ({
+					      backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
+                          })
+                      }}
+                  />
+	              <SvgContainerDivStyled>
+		            <LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }} value={this.state.content} >
+					</LoopViewSvgDivStyled>
+	              </SvgContainerDivStyled>
+                </Modal.Body>
+                <Modal.Footer>
+                	<Button variant="secondary" onClick={this.handleClose}>Close</Button>
+               </Modal.Footer>
       </ModalStyled>
       );
     }

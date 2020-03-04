@@ -54,6 +54,23 @@ export default class TemplateService {
 	            return {};
 	        });
 	    }
+
+	static getBlueprintMicroServiceTemplate(templateName) {
+	  	return fetch('/restservices/clds/v2/templates/' + templateName + ' /svgRepresentation', { method: 'GET', credentials: 'same-origin', })
+			.then(function (response) {
+			console.debug("getBlueprintMicroServiceTemplate response received: ", response.status);
+			if (response.ok) {
+				return response.text();
+			} else {
+				console.error("getBlueprintMicroServiceTemplates query failed");
+				return {};
+			}
+		})
+		.catch(function (error) {
+			console.error("getBlueprintMicroServiceTemplate error received", error);
+			return {};
+		});
+	}
 	
 	static getDictionary() {
 	    return fetch('restservices/clds/v2/dictionary/', { method: 'GET', credentials: 'same-origin', })

@@ -28,8 +28,7 @@ import { mount } from 'enzyme';
 describe('Verify ViewLoopTemplatesModal', () => {
 	beforeEach(() => {
 		fetch.resetMocks();
-		}
-	);
+	});
 
 	it('Test API Successful', () => {
 		fetch.mockImplementationOnce(() => {
@@ -132,29 +131,6 @@ describe('Verify ViewLoopTemplatesModal', () => {
 			});
 			const component = mount(<ViewLoopTemplatesModal/>);
 			expect(component.find('[className="MuiSelect-icon MuiTablePagination-selectIcon"]')).toBeTruthy();
-		});
-
-		it('Test handleYamlContent', () => {
-			fetch.mockImplementationOnce(() => {
-				return Promise.resolve({
-					ok: true,
-					status: 200,
-					json: () => {
-						return Promise.resolve({
-						"index": "1",
-						"name": "MTCA version 1",
-						"modelService.serviceDetails.name": "MTCA",
-						"allowedLoopType" : "CLOSED",
-						"maximumInstancesAllowed":1,
-						"updatedDate":"2019-09-06 19:09:42"
-						});
-					}
-				});
-			});
-			const yamlContent = 'MTCA version 1';
-			const component = shallow(<ViewLoopTemplatesModal/>);
-			component.find('[value="Please select a loop template to display it"]').prop('onChange')({ target: { value: yamlContent }});
-			expect(component.state('content')).toEqual(yamlContent);
 		});
 		
 		it('Test handleClose', () => {

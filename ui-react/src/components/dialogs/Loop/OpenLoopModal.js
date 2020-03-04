@@ -37,6 +37,14 @@ const ModalStyled = styled(Modal)`
 const CheckBoxStyled = styled(FormCheck.Input)`
 	margin-left:3rem;
 `
+const LoopViewSvgDivStyled = styled.div`
+	overflow: hidden;
+	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
+	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+	margin-left: auto;
+	margin-right:auto;
+	text-align: center;
+`
 
 export default class OpenLoopModal extends React.Component {
 	constructor(props, context) {
@@ -49,7 +57,8 @@ export default class OpenLoopModal extends React.Component {
 		this.state = {
 			show: true,
 			chosenLoopName: '',
-			loopNames: []
+			loopNames: [],
+			content:''
 		};
 	}
 
@@ -64,6 +73,13 @@ export default class OpenLoopModal extends React.Component {
 
 	handleDropdownListChange(e) {
 		this.setState({ chosenLoopName: e.value });
+		LoopService.getSvg(e.value).then(svgXml => {
+			if (svgXml.length !== 0) {
+				this.setState({ content: svgXml })
+			} else {
+				this.setState({ content: 'Error1' })
+			}
+		});
 	}
 
 	getLoopNames() {
@@ -71,7 +87,9 @@ export default class OpenLoopModal extends React.Component {
 		    if (Object.entries(loopNames).length !== 0) {
 		        const loopOptions = loopNames.filter(loopName => loopName!=='undefined').map((loopName) => { return { label: loopName, value: loopName } });
             	this.setState({ loopNames: loopOptions })
+
 		    }
+
 		});
 	}
 
@@ -83,7 +101,7 @@ export default class OpenLoopModal extends React.Component {
 
 	render() {
 		return (
-			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose}>
+			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Open Model</Modal.Title>
 				</Modal.Header>
@@ -91,9 +109,14 @@ export default class OpenLoopModal extends React.Component {
 					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Model Name</Form.Label>
 						<Col sm="10">
-							<Select onChange={this.handleDropdownListChange} options={this.state.loopNames} />
+							<Select onChange={this.handleDropdownListChange}
+							options={this.state.loopNames} />
 						</Col>
 					</Form.Group>
+					<Form.Group controlId="formPlaintextEmail">
+                         <LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }}   value={this.state.content} >
+                         </LoopViewSvgDivStyled>
+                    </Form.Group>
 					<Form.Group controlId="formBasicChecbox">
 						<Form.Check>
 							<FormCheck.Label>Read Only</FormCheck.Label>
