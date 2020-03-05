@@ -49,6 +49,7 @@ import LoopService from './api/LoopService';
 import UploadToscaPolicyModal from './components/dialogs/Tosca/UploadToscaPolicyModal';
 import ViewToscaPolicyModal from './components/dialogs/Tosca/ViewToscaPolicyModal';
 import ViewLoopTemplatesModal from './components/dialogs/Tosca/ViewLoopTemplatesModal';
+import ManageDictionaries from './components/dialogs/ManageDictionaries/ManageDictionaries';
 import PerformAction from './components/dialogs/PerformActions';
 import RefreshStatus from './components/dialogs/RefreshStatus';
 import DeployLoopModal from './components/dialogs/Loop/DeployLoopModal';
@@ -255,6 +256,7 @@ export default class LoopUI extends React.Component {
 				<Route path="/uploadToscaPolicyModal" render={(routeProps) => (<UploadToscaPolicyModal {...routeProps} />)} />
 				<Route path="/viewToscaPolicyModal" render={(routeProps) => (<ViewToscaPolicyModal {...routeProps} />)} />
 				<Route path="/ViewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
+				<Route path="/ManageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
 				<Route path="/operationalPolicyModal"
 					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
 				<Route path="/policyModal/:policyInstanceType/:policyName" render={(routeProps) => (<PolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />

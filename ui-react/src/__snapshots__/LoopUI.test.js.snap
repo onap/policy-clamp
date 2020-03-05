@@ -17,6 +17,10 @@ exports[`Verify LoopUI Test the render method 1`] = `
     render={[Function]}
   />
   <Route
+    path="/ManageDictionaries"
+    render={[Function]}
+  />
+  <Route
     path="/operationalPolicyModal"
     render={[Function]}
   />

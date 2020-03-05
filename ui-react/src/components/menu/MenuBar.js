@@ -94,6 +94,9 @@ export default class MenuBar extends React.Component {
                     	    <NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Model</NavDropdown.Item>
                     		<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
                     </StyledNavDropdown>
+                    <StyledNavDropdown title="Dictionaries">
+                            <NavDropdown.Item as={StyledLink} to="/ManageDictionaries">Manage Dictionaries</NavDropdown.Item>
+                    </StyledNavDropdown>
 					<StyledNavDropdown title="Loop Instance">
 					        <NavDropdown.Item as={StyledLink} to="/createLoop">Create</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/openLoop">Open</NavDropdown.Item>
