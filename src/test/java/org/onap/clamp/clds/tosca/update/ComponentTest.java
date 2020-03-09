@@ -42,7 +42,7 @@ public class ComponentTest extends TestCase {
                 new TemplateManagement(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Actor");
         assertEquals(reference, component.propertiesNames());
     }

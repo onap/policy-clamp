@@ -25,6 +25,7 @@ package org.onap.clamp.clds.tosca.update;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import junit.framework.TestCase;
 
 public class TemplateTest extends TestCase {
@@ -34,7 +35,8 @@ public class TemplateTest extends TestCase {
      */
     public void testCheckFields() {
         Template toTest = new Template("toTest");
-        ArrayList<String> fields = new ArrayList<>(Arrays.asList("type", "description", "enum"));
+        List<Field> fields = new ArrayList<>(Arrays.asList(new Field("type"), new Field("description"),new Field(
+                "enum")));
         toTest.setFields(fields);
         Template reference = new Template("toTest");
         reference.setFields(fields);

@@ -40,7 +40,7 @@ public class ArrayFieldTest extends TestCase {
         TemplateManagement templateManagement = new TemplateManagement(ResourceFileUtil.getResourceAsString(
                 "tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),ResourceFileUtil.getResourceAsString(
                 "clds/tosca_update/defaultToscaTypes.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Actor");
         Property property = component.getProperties().get("actor");
         ArrayField arrayParser = new ArrayField((ArrayList<Object>) property.getItems().get("default"));

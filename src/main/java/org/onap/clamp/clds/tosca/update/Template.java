@@ -23,7 +23,9 @@
 
 package org.onap.clamp.clds.tosca.update;
 
+import com.google.gson.JsonObject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Template {
 
@@ -31,14 +33,14 @@ public class Template {
      * name parameter is used as "key", in the LinkedHashMap of Templates.
      */
     private String name;
-    private ArrayList<String> fields;
+    private List<Field> fields;
 
     public Template(String name) {
         this.name = name;
-        this.fields = new ArrayList<String>();
+        this.fields = new ArrayList<>();
     }
 
-    public Template(String name, ArrayList<String> fields) {
+    public Template(String name, List<Field> fields) {
         this.name = name;
         this.fields = fields;
     }
@@ -51,24 +53,92 @@ public class Template {
         this.name = name;
     }
 
-    public ArrayList<String> getFields() {
+    public List<Field> getFields() {
         return fields;
     }
 
-    public void setFields(ArrayList<String> fields) {
+    public void setFields(List<Field> fields) {
         this.fields = fields;
     }
 
-    public boolean hasFields(String name) {
-        return fields.contains(name);
+    /**
+     * Search in fields if fieldName exists.
+     *
+     * @param fieldName The field name
+     * @return Ture if it exists, false otherwise
+     */
+    public boolean hasFields(String fieldName) {
+        for (Field field : this.getFields()) {
+            if (field.getTitle().equals(fieldName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public void addField(String field) {
+    /**
+     * Get a specific Field.
+     *
+     * @param fieldName The field name
+     * @return THe Field found
+     */
+    public Field getSpecificField(String fieldName) {
+        for (Field field : this.getFields()) {
+            if (field.getTitle().equals(fieldName)) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    public void addField(Field field) {
         fields.add(field);
     }
 
-    public void removeField(String field) {
+    public void removeField(Field field) {
         fields.remove(field);
+    }
+
+    /**
+     * Enable or disable the visibility.
+     *
+     * @param nameField THe field name
+     * @param state True or false
+     */
+    public void setVisibility(String nameField, boolean state) {
+        for (Field field : this.fields) {
+            if (field.getTitle().equals(nameField)) {
+                field.setVisible(state);
+            }
+        }
+    }
+
+    /**
+     * This method defines if a field is static or not.
+     *
+     * @param nameField The name of the field
+     * @param state true or false
+     */
+    public void setStatic(String nameField, boolean state) {
+        for (Field field : this.fields) {
+            if (field.getTitle().equals(nameField)) {
+                field.setStaticValue(state);
+            }
+        }
+    }
+
+    /**
+     * This method updates the value of a specfic field.
+     *
+     * @param nameField The name of the field
+     * @param newValue The new value as Object
+     */
+    public void updateValueField(String nameField, Object newValue) {
+        for (Field field : this.fields) {
+            if (field.getTitle().equals(nameField)) {
+                field.setValue(newValue);
+            }
+        }
     }
 
     /**
@@ -78,15 +148,15 @@ public class Template {
      * @return a boolean
      */
     public boolean checkFields(Template template) {
-
         boolean duplicateFields = false;
         if (template.getFields().size() == this.getFields().size()) {
             int countMatchingFields = 0;
             //loop each component of first
-            for (String templateField : template.getFields()) {
-                //if component.key is present in the second
-                if (this.getFields().contains(templateField)) {
-                    countMatchingFields++;
+            for (Field templateFieldToCheck : template.getFields()) {
+                for (Field templateField : this.getFields()) {
+                    if (templateFieldToCheck.compareWithField(templateField)) {
+                        countMatchingFields++;
+                    }
                 }
             }
 
@@ -95,6 +165,56 @@ public class Template {
             }
         }
         return duplicateFields;
+    }
+
+    /**
+     * This method gets the specific field status.
+     *
+     * @param field The field name
+     * @return true or false
+     */
+    public boolean fieldStaticStatus(String field) {
+        if (this.hasFields(field) && this.getSpecificField(field).getStaticValue().equals(true)
+                && this.getSpecificField(field).getValue() != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isVisible(String field) {
+        return this.getSpecificField(field).getVisible();
+    }
+
+    /**
+     * Set the value of a property of the Field in the json.
+     *
+     * @param jsonSchema The Json schema
+     * @param fieldName The Field name
+     * @param value The value
+     */
+    public void setValue(JsonObject jsonSchema, String fieldName, String value) {
+        if (isVisible(fieldName)) {
+            if (fieldStaticStatus(fieldName)) {
+                String defaultValue = (String) this.getSpecificField(fieldName).getValue();
+                jsonSchema.addProperty(fieldName, defaultValue);
+            }
+            else {
+                jsonSchema.addProperty(fieldName, value);
+            }
+        }
+    }
+
+    /**
+     * Inject a static value in the json.
+     *
+     * @param jsonSchema The json schema object
+     * @param fieldName The field name
+     */
+    public void injectStaticValue(JsonObject jsonSchema, String fieldName) {
+        if (isVisible(fieldName)) {
+            Field toInject = this.getSpecificField(fieldName);
+            jsonSchema.addProperty(fieldName, (String) toInject.getValue());
+        }
     }
 
     @Override

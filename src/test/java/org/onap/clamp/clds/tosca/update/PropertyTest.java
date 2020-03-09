@@ -43,7 +43,7 @@ public class PropertyTest extends TestCase {
         TemplateManagement templateManagement = new TemplateManagement(
                 ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),
                 ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Actor");
         Property property = component.getProperties().get("actor");
         JsonArray toTest = property.parseArray((ArrayList<Object>) property.getItems().get("default"));
@@ -59,7 +59,7 @@ public class PropertyTest extends TestCase {
         TemplateManagement templateManagement = new TemplateManagement(
                 ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
                 ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         Component component = templateManagement.getComponents().get("onap.datatype.controlloop.operation.Failure");
         Property property = component.getProperties().get("category");
         Template template = templateManagement.getTemplates().get("string");

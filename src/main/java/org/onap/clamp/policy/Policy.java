@@ -294,7 +294,7 @@ public abstract class Policy extends AuditEntity {
      * @param policyModelType The tosca model type (the policy_type entry in the tosca) that will used to create the
      *                        json schema
      * @return THe Json Schema as JsonObject
-     * @throws IOException In case of failure when opening the templates.properties file
+     * @throws IOException In case of failure when opening the templates.json file
      * @throws UnknownComponentException If the policyModelType is not found in the tosca model
      */
     public static JsonObject generateJsonRepresentationFromToscaModel(String policyToscaModel,
@@ -302,7 +302,7 @@ public abstract class Policy extends AuditEntity {
             throws IOException, UnknownComponentException {
         return new TemplateManagement(policyToscaModel,ResourceFileUtil.getResourceAsString(
                 "clds/tosca_update/defaultToscaTypes.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"))
+                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"))
                 .launchTranslation(policyModelType);
     }
 }

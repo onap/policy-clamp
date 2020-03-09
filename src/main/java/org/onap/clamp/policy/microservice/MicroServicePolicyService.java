@@ -63,11 +63,12 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
         return repository.save(
                 repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
                         .orElse(new MicroServicePolicy(policy.getName(), policy.getPolicyModel(),
-                                policy.getShared(), policy.getJsonRepresentation(),null, policy.getPdpGroup(), policy.getPdpSubgroup())));
+                                policy.getShared(), policy.getJsonRepresentation(), null, policy.getPdpGroup(),
+                                policy.getPdpSubgroup())));
     }
 
     private MicroServicePolicy updateMicroservicePolicyProperties(MicroServicePolicy oldPolicy,
-            MicroServicePolicy newPolicy, Loop loop) {
+                                                                  MicroServicePolicy newPolicy, Loop loop) {
         oldPolicy.setConfigurationsJson(newPolicy.getConfigurationsJson());
         if (!oldPolicy.getUsedByLoops().contains(loop)) {
             oldPolicy.getUsedByLoops().add(loop);
@@ -85,7 +86,7 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
      * @param deploymentUrl      The Deployment URL as returned by DCAE
      */
     public void updateDcaeDeploymentFields(MicroServicePolicy microServicePolicy, String deploymentId,
-            String deploymentUrl) {
+                                           String deploymentUrl) {
         microServicePolicy.setDcaeDeploymentId(deploymentId);
         microServicePolicy.setDcaeDeploymentStatusUrl(deploymentUrl);
         repository.save(microServicePolicy);

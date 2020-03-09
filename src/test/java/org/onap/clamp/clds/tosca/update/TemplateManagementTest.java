@@ -26,6 +26,7 @@ package org.onap.clamp.clds.tosca.update;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import junit.framework.TestCase;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
@@ -44,7 +45,7 @@ public class TemplateManagementTest extends TestCase {
                                 + ".policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0&#63;"
                                 + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
                         "clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         assertNull(templateManagement.getParseToJson());
         String componentName = "onap.policies.monitoring.cdap.tca.hi.lo.app";
         templateManagement.launchTranslation(componentName);
@@ -64,7 +65,7 @@ public class TemplateManagementTest extends TestCase {
                                 + ".policies.controlloop.guard.common.FrequencyLimiter/versions/1.0.0&#63;"
                                 + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
                         "clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         assertNull(templateManagement.getParseToJson());
         String componentName = "onap.policies.controlloop.guard.common.FrequencyLimiter";
         templateManagement.launchTranslation(componentName);
@@ -84,7 +85,7 @@ public class TemplateManagementTest extends TestCase {
                                 + ".policies.controlloop.operational.common.Apex/versions/1.0.0&#63;"
                                 + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
                         "clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         assertNull(templateManagement.getParseToJson());
         String componentName = "onap.policies.controlloop.operational.common.Apex";
         templateManagement.launchTranslation(componentName);
@@ -104,7 +105,7 @@ public class TemplateManagementTest extends TestCase {
                                 + ".policies.controlloop.operational.common.Drools/versions/1.0.0&#63;"
                                 + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
                         "clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         assertNull(templateManagement.getParseToJson());
         String componentName = "onap.policies.controlloop.operational.common.Drools";
         templateManagement.launchTranslation(componentName);
@@ -122,7 +123,7 @@ public class TemplateManagementTest extends TestCase {
                 new TemplateManagement(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         assertNull(templateManagement.getParseToJson());
         String componentName = "onap.policies.controlloop.operational.common.Drools";
         templateManagement.launchTranslation(componentName);
@@ -139,10 +140,12 @@ public class TemplateManagementTest extends TestCase {
                 new TemplateManagement(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         int count = templateManagement.getTemplates().size();
-        ArrayList<String> templateFields =
-                new ArrayList<>(Arrays.asList("type", "description", "required", "metadata", "constraints"));
+        List<Field> templateFields = new ArrayList<>(Arrays.asList(new Field("type"), new Field("description"),
+                new Field(
+                "required"),
+                new Field("metadata"), new Field("constraints")));
         templateManagement.addTemplate("test", templateFields);
         assertNotSame(count, templateManagement.getTemplates().size());
     }
@@ -157,7 +160,7 @@ public class TemplateManagementTest extends TestCase {
                 new TemplateManagement(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         int count = templateManagement.getTemplates().size();
         templateManagement.removeTemplate("string");
         assertNotSame(count, templateManagement.getTemplates().size());
@@ -173,9 +176,9 @@ public class TemplateManagementTest extends TestCase {
                 new TemplateManagement(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         int count = templateManagement.getTemplates().get("integer").getFields().size();
-        templateManagement.updateTemplate("integer", "type", false);
+        templateManagement.updateTemplate("integer", new Field("type"), false);
         assertNotSame(count, templateManagement.getTemplates().get("integer").getFields().size());
     }
 
@@ -189,10 +192,11 @@ public class TemplateManagementTest extends TestCase {
                 new TemplateManagement(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
         boolean has = true;
-        ArrayList<String> templateFieldsString =
-                new ArrayList<>(Arrays.asList("type", "description", "required", "metadata", "constraints"));
+        List<Field> templateFieldsString =
+                new ArrayList<>(Arrays.asList(new Field("type"), new Field("description"), new Field("required"),
+                        new Field("metadata"), new Field("constraints")));
         Template templateTest = new Template("String", templateFieldsString);
         has = templateManagement.hasTemplate(templateTest);
         assertEquals(false, has);

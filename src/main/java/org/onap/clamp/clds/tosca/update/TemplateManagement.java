@@ -23,14 +23,14 @@
 
 package org.onap.clamp.clds.tosca.update;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Properties;
+import java.util.List;
+import java.util.Map;
+import org.onap.clamp.clds.util.JsonUtils;
 
 public class TemplateManagement {
 
@@ -93,7 +93,7 @@ public class TemplateManagement {
      * @param name   name
      * @param fields fields
      */
-    public void addTemplate(String name, ArrayList<String> fields) {
+    public void addTemplate(String name, List<Field> fields) {
         Template template = new Template(name, fields);
         //If it is true, the operation does not have any interest :
         // replace OR put two different object with the same body
@@ -115,17 +115,17 @@ public class TemplateManagement {
      * Update Template : adding with true flag, removing with false.
      *
      * @param nameTemplate name template
-     * @param fieldName    field name
+     * @param field        field name
      * @param operation    operation
      */
-    public void updateTemplate(String nameTemplate, String fieldName, Boolean operation) {
+    public void updateTemplate(String nameTemplate, Field field, Boolean operation) {
         // Operation = true && field is not present => add Field
-        if (operation && !this.templates.get(nameTemplate).getFields().contains(fieldName)) {
-            this.templates.get(nameTemplate).addField(fieldName);
+        if (operation && !this.templates.get(nameTemplate).getFields().contains(field)) {
+            this.templates.get(nameTemplate).addField(field);
         }
         // Operation = false && field is present => remove Field
-        else if (!operation && this.templates.get(nameTemplate).getFields().contains(fieldName)) {
-            this.templates.get(nameTemplate).removeField(fieldName);
+        else if (!operation && this.templates.get(nameTemplate).getFields().contains(field)) {
+            this.templates.get(nameTemplate).removeField(field);
         }
     }
 
@@ -162,20 +162,30 @@ public class TemplateManagement {
     /**
      * Create and complete several Templates from file.properties.
      *
-     * @param templateProperties The template properties as String
+     * @param jsonTemplates The template properties as String
      * @return a map
      */
-    private LinkedHashMap<String, Template> initializeTemplates(String templateProperties) throws IOException {
-        LinkedHashMap<String, Template> generatedTemplates = new LinkedHashMap<>();
-        Properties templates = new Properties();
-        templates.load(new StringReader(templateProperties));
+    @SuppressWarnings("unused")
+    private LinkedHashMap<String, Template> initializeTemplates(String jsonTemplates) {
 
-        for (Object key : templates.keySet()) {
-            String fields = (String) templates.get(key);
-            String[] fieldsInArray = fields.split(",");
-            Template template = new Template((String) key, new ArrayList<>(Arrays.asList(fieldsInArray)));
+        LinkedHashMap<String, Template> generatedTemplates = new LinkedHashMap<>();
+        JsonObject templates = JsonUtils.GSON.fromJson(jsonTemplates, JsonObject.class);
+
+        for (Map.Entry<String, JsonElement> templateAsJson : templates.entrySet()) {
+            Template template = new Template(templateAsJson.getKey());
+            JsonObject templateBody = (JsonObject) templateAsJson.getValue();
+            for (Map.Entry<String, JsonElement> field : templateBody.entrySet()) {
+                String fieldName = field.getKey();
+                JsonObject bodyFieldAsJson = (JsonObject) field.getValue();
+                Object fieldValue = bodyFieldAsJson.get("defaultValue").getAsString();
+                Boolean fieldVisible = bodyFieldAsJson.get("visible").getAsBoolean();
+                Boolean fieldStatic = bodyFieldAsJson.get("static").getAsBoolean();
+                Field bodyField = new Field(fieldName, fieldValue, fieldVisible, fieldStatic);
+                template.getFields().add(bodyField);
+            }
             generatedTemplates.put(template.getName(), template);
         }
         return generatedTemplates;
     }
+
 }

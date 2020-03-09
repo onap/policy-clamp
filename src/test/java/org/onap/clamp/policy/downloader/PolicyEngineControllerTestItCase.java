@@ -77,7 +77,8 @@ public class PolicyEngineControllerTestItCase {
                 .contains(new PolicyModel("onap.policies.controlloop.guard.common.FrequencyLimiter", null, "1.0.0"));
         assertThat(policyModelsList)
                 .contains(new PolicyModel("onap.policies.controlloop.guard.common.Blacklist", null, "1.0.0"));
-        assertThat(policyModelsList).contains(new PolicyModel("onap.policies.controlloop.guard.common.MinMax", null, "2.0.0"));
+        assertThat(policyModelsList)
+                .contains(new PolicyModel("onap.policies.controlloop.guard.common.MinMax", null, "2.0.0"));
 
         // Re-do it to check that there is no issue with duplicate key
         policyController.synchronizeAllPolicies();

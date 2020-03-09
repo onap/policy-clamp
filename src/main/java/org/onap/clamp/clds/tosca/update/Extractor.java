@@ -23,7 +23,6 @@
 
 package org.onap.clamp.clds.tosca.update;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import org.yaml.snakeyaml.Yaml;
@@ -33,14 +32,18 @@ public class Extractor {
     private String source;
     private String nativeComponent;
 
-    @SuppressWarnings("unchecked")
-    public Extractor(String toParse, String nativeComponent) throws IOException {
+    /**
+     * Constructor.
+     *
+     * @param toParse Tosca to parse
+     * @param nativeComponent The policy type to scan
+     */
+    public Extractor(String toParse, String nativeComponent) {
 
         this.source = toParse;
         this.nativeComponent = nativeComponent;
         allItems = new LinkedHashMap<String, Component>();
         getAllAsMaps();
-
     }
 
     public LinkedHashMap<String, Component> getAllItems() {

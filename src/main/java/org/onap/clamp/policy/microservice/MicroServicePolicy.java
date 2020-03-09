@@ -108,7 +108,9 @@ public class MicroServicePolicy extends Policy implements Serializable {
         this.setPolicyModel(policyModel);
         this.shared = shared;
         try {
-            this.setJsonRepresentation(Policy.generateJsonRepresentationFromToscaModel(policyModel.getPolicyModelTosca(),policyModel.getPolicyModelType()));
+            this.setJsonRepresentation(
+                    Policy.generateJsonRepresentationFromToscaModel(policyModel.getPolicyModelTosca(),
+                            policyModel.getPolicyModelType()));
         } catch (UnknownComponentException | NullPointerException | IOException e) {
             logger.error("Unable to generate the microservice policy Schema ... ", e);
             this.setJsonRepresentation(new JsonObject());
@@ -130,7 +132,8 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * @param pdpSubgroup        The Pdp Subgrouop info
      */
     public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared,
-                              JsonObject jsonRepresentation, LoopElementModel loopElementModel, String pdpGroup, String pdpSubgroup) {
+                              JsonObject jsonRepresentation, LoopElementModel loopElementModel, String pdpGroup,
+                              String pdpSubgroup) {
         this.name = name;
         this.setPolicyModel(policyModel);
         this.shared = shared;
@@ -265,7 +268,8 @@ public class MicroServicePolicy extends Policy implements Serializable {
             if (other.name != null) {
                 return false;
             }
-        } else if (!name.equals(other.name)) {
+        }
+        else if (!name.equals(other.name)) {
             return false;
         }
         return true;

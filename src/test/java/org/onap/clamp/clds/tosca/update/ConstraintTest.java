@@ -34,7 +34,7 @@ public class ConstraintTest extends TestCase {
     TemplateManagement templateManagement = new TemplateManagement(
             ResourceFileUtil.getResourceAsString("tosca/new-converter/constraints.yaml"),
             ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
-            ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
+            ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
 
     Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Operation");
 

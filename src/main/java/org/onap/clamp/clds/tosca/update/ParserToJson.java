@@ -227,7 +227,7 @@ public class ParserToJson {
 
                         switch ((String) property.getItems().get("type")) {
                             case "map": // Get it as an object
-                                JsonObject componentAsProperty = child.getJsonProcess(nameComponent,"object");
+                                JsonObject componentAsProperty = child.getJsonProcess(nameComponent, "object");
                                 propertiesContainer.add(nameComponent, componentAsProperty);
                                 if (currentPropertyTemplate.hasFields("properties")) {
                                     propertiesInJson.add("properties", propertiesContainer);
@@ -247,13 +247,13 @@ public class ParserToJson {
                         JsonObject itemContainer = new JsonObject();
                         String valueInEntrySchema = this.extractSpecificFieldFromMap(property, "entry_schema");
                         itemContainer.addProperty("type", valueInEntrySchema);
-                          propertiesInJson.add("items", itemContainer);
+                        propertiesInJson.add("items", itemContainer);
                     }
-                    else {//map
-                        // propertiesInJson.add("key?", valueInEntrySchema);
-                    }
+                    // MAP Case, for now nothing
+
                     break;
-                default://Each classical field : type, description, default..
+                default:
+                    //Each classical field : type, description, default..
                     if (currentPropertyTemplate.hasFields(propertyField) && !propertyField.equals("required")) {
                         property.addFieldToJson(propertiesInJson, propertyField,
                                 property.getItems().get(propertyField));
