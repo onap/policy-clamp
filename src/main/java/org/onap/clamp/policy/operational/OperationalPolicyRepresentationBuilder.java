@@ -4,6 +4,7 @@
  * ================================================================================
  * Copyright (C) 2019 AT&T Intellectual Property. All rights
  *                             reserved.
+ * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +43,7 @@ public class OperationalPolicyRepresentationBuilder {
      * used by ui for rendering. It uses the model (VF and VFModule) defined in the
      * loop object to do so, so it's dynamic. It also uses the operational policy
      * schema template defined in the resource folder.
-     * 
+     *
      * @param modelJson The loop model json
      * @return The json representation
      * @throws JsonSyntaxException If the schema template cannot be parsed
@@ -58,6 +59,22 @@ public class OperationalPolicyRepresentationBuilder {
                 .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
                 .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("target")
                 .getAsJsonObject().get("anyOf").getAsJsonArray().addAll(createAnyOfArray(modelJson));
+
+        // update CDS recipe and payload information to schema
+        JsonArray actors = jsonSchema.get("schema").getAsJsonObject().get("items").getAsJsonObject().get("properties")
+                .getAsJsonObject().get("configurationsJson").getAsJsonObject().get("properties").getAsJsonObject()
+                .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
+                .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("actor")
+                .getAsJsonObject().get("anyOf").getAsJsonArray();
+
+        for (JsonElement actor : actors) {
+            if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get("title").getAsString())) {
+                actor.getAsJsonObject().get("properties").getAsJsonObject().get("type").getAsJsonObject()
+                        .get("anyOf").getAsJsonArray()
+                        .addAll(createAnyOfArrayForCdsRecipe(modelJson.getResourceDetails()));
+            }
+        }
+
         return jsonSchema;
     }
 
@@ -142,5 +159,55 @@ public class OperationalPolicyRepresentationBuilder {
         targetOneOfStructure.addAll(createVnfSchema(modelJson));
         targetOneOfStructure.addAll(createVfModuleSchema(modelJson));
         return targetOneOfStructure;
+    }
+
+    private static JsonArray createAnyOfArrayForCdsRecipe(JsonObject resourceDetails) {
+        JsonArray anyOfStructure = new JsonArray();
+        anyOfStructure.addAll(createAnyOfCdsRecipe(resourceDetails.getAsJsonObject("VF")));
+        anyOfStructure.addAll(createAnyOfCdsRecipe(resourceDetails.getAsJsonObject("PNF")));
+        return anyOfStructure;
+    }
+
+    private static JsonArray createAnyOfCdsRecipe(JsonObject jsonObject) {
+        JsonArray schemaArray = new JsonArray();
+        for (Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            JsonObject controllerProperties = entry.getValue().getAsJsonObject()
+                    .getAsJsonObject("controllerProperties");
+
+            if (controllerProperties != null) {
+                JsonObject workflows = controllerProperties.getAsJsonObject("workflows");
+                for (Entry<String, JsonElement> workflowsEntry : workflows.entrySet()) {
+                    JsonObject obj = new JsonObject();
+                    obj.addProperty("title", workflowsEntry.getKey());
+                    obj.add("properties", createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
+                                                                controllerProperties));
+                    schemaArray.add(obj);
+                }
+
+            }
+        }
+        return schemaArray;
+    }
+
+    private static JsonObject createPayloadProperty(JsonObject workFlow, JsonObject controllerProperties) {
+        JsonObject type = new JsonObject();
+        type.addProperty("title", "Payload (YAML)");
+        type.addProperty("type", "string");
+        type.addProperty("default", createDefaultStringForPayload(workFlow, controllerProperties));
+        type.addProperty("format", "textarea");
+        JsonObject properties = new JsonObject();
+        properties.add("type", type);
+        return properties;
+    }
+
+    private static String createDefaultStringForPayload(JsonObject workFlow, JsonObject controllerProperties) {
+        String artifactName = controllerProperties.get("sdnc_model_name").toString();
+        String artifactVersion = controllerProperties.get("sdnc_model_version").toString();
+        String data = workFlow.getAsJsonObject("inputs").toString();
+        StringBuilder builder = new StringBuilder("'").append("artifact_name : ").append(artifactName).append("\n")
+                .append("artifact_version : ").append(artifactVersion).append("\n")
+                .append("mode : async").append("\n")
+                .append("data : ").append("'").append("\\").append("'").append(data).append("\\").append("'").append("'");
+        return builder.toString();
     }
 }

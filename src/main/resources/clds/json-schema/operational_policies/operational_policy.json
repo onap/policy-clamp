@@ -87,7 +87,6 @@
                                         "basicCategoryTitle": "recipe",
                                         "required": [
                                             "id",
-                                            "recipe",
                                             "retry",
                                             "timeout",
                                             "actor",
@@ -105,20 +104,6 @@
                                                 "title": "Policy ID",
                                                 "type": "string"
                                             },
-                                            "recipe": {
-                                                "title": "Recipe",
-                                                "type": "string",
-                                                "enum": [
-                                                    "Restart",
-                                                    "Rebuild",
-                                                    "Migrate",
-                                                    "Health-Check",
-                                                    "ModifyConfig",
-                                                    "VF Module Create",
-                                                    "VF Module Delete",
-                                                    "Reroute"
-                                                ]
-                                            },
                                             "retry": {
                                                 "default": "0",
                                                 "title": "Number of Retry",
@@ -132,20 +117,156 @@
                                                 "format": "number"
                                             },
                                             "actor": {
+                                                "type": "object",
                                                 "title": "Actor",
-                                                "type": "string",
-                                                "enum": [
-                                                    "APPC",
-                                                    "SO",
-                                                    "VFC",
-                                                    "SDNC",
-                                                    "SDNR"
+                                                "anyOf": [
+                                                    {
+                                                        "title": "APPC",
+                                                        "properties": {
+                                                            "actor": {
+                                                                "title": "actor",
+                                                                "type": "string",
+                                                                "default": "APPC",
+                                                                "options": {
+                                                                    "hidden": true
+                                                                }
+                                                            },
+                                                            "type": {
+                                                                "title": "recipe",
+                                                                "type": "string",
+                                                                "default": "",
+                                                                "enum": [
+                                                                    "Restart",
+                                                                    "Rebuild",
+                                                                    "Migrate",
+                                                                    "Health-Check",
+                                                                    "ModifyConfig"
+                                                                ]
+                                                            },
+                                                            "payload": {
+                                                                "title": "Payload (YAML)",
+                                                                "type": "string",
+                                                                "format": "textarea"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "title": "SO",
+                                                        "properties": {
+                                                            "actor": {
+                                                                "title": "actor",
+                                                                "type": "string",
+                                                                "default": "SO",
+                                                                "options": {
+                                                                    "hidden": true
+                                                                }
+                                                            },
+                                                            "type": {
+                                                                "title": "recipe",
+                                                                "type": "string",
+                                                                "default": "",
+                                                                "enum": [
+                                                                    "VF Module Create",
+                                                                    "VF Module Delete"
+                                                                ]
+                                                            },
+                                                            "payload": {
+                                                                "title": "Payload (YAML)",
+                                                                "type": "string",
+                                                                "format": "textarea"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "title": "SDNC",
+                                                        "properties": {
+                                                            "actor": {
+                                                                "title": "actor",
+                                                                "type": "string",
+                                                                "default": "SDNC",
+                                                                "options": {
+                                                                    "hidden": true
+                                                                }
+                                                            },
+                                                            "type": {
+                                                                "title": "recipe",
+                                                                "type": "string",
+                                                                "default": "",
+                                                                "enum": [
+                                                                    "Reroute",
+                                                                    "BandwidthOnDemand"
+                                                                ]
+                                                            },
+                                                            "payload": {
+                                                                "title": "Payload (YAML)",
+                                                                "type": "string",
+                                                                "format": "textarea"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "title": "VFC",
+                                                        "properties": {
+                                                            "actor": {
+                                                                "title": "actor",
+                                                                "type": "string",
+                                                                "default": "VFC",
+                                                                "options": {
+                                                                    "hidden": true
+                                                                }
+                                                            },
+                                                            "type": {
+                                                                "title": "recipe",
+                                                                "type": "string",
+                                                                "required": [
+                                                                    "payload"
+                                                                ],
+                                                                "default": "",
+                                                                "enum": [
+                                                                    "ModifyConfig"
+                                                                ]
+                                                            },
+                                                            "payload": {
+                                                                "title": "Payload (YAML)",
+                                                                "type": "string",
+                                                                "format": "textarea"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "title": "CDS",
+                                                        "properties": {
+                                                            "actor": {
+                                                                "title": "actor",
+                                                                "type": "string",
+                                                                "default": "CDS",
+                                                                "options": {
+                                                                    "hidden": true
+                                                                }
+                                                            },
+                                                            "type": {
+                                                                "title": "recipe",
+                                                                "type": "object",
+                                                                "required": [
+                                                                    "payload"
+                                                                ],
+                                                                "anyOf": [
+                                                                    {
+                                                                        "title": "user-defined",
+                                                                        "properties": {
+                                                                            "type": {
+                                                                                "title": "Payload (YAML)",
+                                                                                "type": "string",
+                                                                                "default" : "",
+                                                                                "format" : "textarea"
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
                                                 ]
-                                            },
-                                            "payload": {
-                                                "title": "Payload (YAML)",
-                                                "type": "string",
-                                                "format": "textarea"
                                             },
                                             "success": {
                                                 "default": "final_success",
@@ -186,7 +307,7 @@
                                                 "anyOf": [
                                                     {
                                                         "title": "User Defined",
-                                                        "additionalProperties":"True",
+                                                        "additionalProperties": "True",
                                                         "properties": {
                                                             "type": {
                                                                 "title": "Target type",
