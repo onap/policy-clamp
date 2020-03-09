@@ -42,6 +42,10 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       render={[Function]}
     />
     <Route
+      path="/ManageDictionaries"
+      render={[Function]}
+    />
+    <Route
       path="/operationalPolicyModal"
       render={[Function]}
     />

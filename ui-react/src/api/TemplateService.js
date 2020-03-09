@@ -38,20 +38,159 @@ export default class TemplateService {
 			});
 	}
 
-  static getBlueprintMicroServiceTemplates() {
-    return fetch('restservices/clds/v2/templates', { method: 'GET', credentials: 'same-origin', })
-      .then(function (response) {
-        console.debug("getBlueprintMicroServiceTemplates response received: ", response.status);
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.error("getBlueprintMicroServiceTemplates query failed");
-          return {};
-        }
-      })
-      .catch(function (error) {
-        console.error("getBlueprintMicroServiceTemplates error received", error);
-        return {};
-      });
-  }
-}
+	static getBlueprintMicroServiceTemplates() {
+	    return fetch('restservices/clds/v2/templates', { method: 'GET', credentials: 'same-origin', })
+	        .then(function (response) {
+	            console.debug("getBlueprintMicroServiceTemplates response received: ", response.status);
+	            if (response.ok) {
+	                return response.json();
+	            } else {
+	                console.error("getBlueprintMicroServiceTemplates query failed");
+	                return {};
+	            }
+	        })
+	        .catch(function (error) {
+	            console.error("getBlueprintMicroServiceTemplates error received", error);
+	            return {};
+	        });
+	    }
+	
+	static getDictionary() {
+	    return fetch('restservices/clds/v2/dictionary/', { method: 'GET', credentials: 'same-origin', })
+	      .then(function (response) {
+	        console.debug("getDictionary response received: ", response.status);
+	        if (response.ok) {
+	          return response.json();
+	        } else {
+	          console.error("getDictionary query failed");
+	          return {};
+	        }
+	      })
+	      .catch(function (error) {
+	        console.error("getDictionary error received", error);
+	        return {};
+	      });
+	  }
+
+	  static getDictionaryElements(dictionaryName) {
+	    return fetch('restservices/clds/v2/dictionary/' + dictionaryName, {
+	      method: 'GET',
+	      headers: {
+	        "Content-Type": "application/json",
+	      },
+	      credentials: 'same-origin',
+	    })
+	      .then(function (response) {
+	        console.debug("getDictionaryElements response received: ", response.status);
+	        if (response.ok) {
+	          return response.json();
+	        } else {
+	          console.error("getDictionaryElements query failed");
+	          return {};
+	        }
+	      })
+	      .catch(function (error) {
+	        console.error("getDictionaryElements error received", error);
+	        return {};
+	      });
+	  }
+
+	  static insDictionary(jsonData) {
+	    console.log("dictionaryName is", jsonData.name)
+	    return fetch('/restservices/clds/v2/dictionary/', {
+	      method: 'PUT',
+	      credentials: 'same-origin',
+	      headers: {
+	        "Content-Type": "application/json",
+	      },
+	      body: JSON.stringify(jsonData)
+	    })
+	      .then(function (response) {
+	        console.debug("insDictionary response received: ", response.status);
+	        if (response.ok) {
+	          return response.status;
+	        } else {
+	          var errorMessage = response.status;
+	          console.error("insDictionary query failed", response.status);
+	          return errorMessage;
+	        }
+	      })
+	      .catch(function (error) {
+	        console.error("insDictionary error received", error);
+	        return "";
+	      });
+	  }
+
+	  static insDictionaryElements(jsonData) {
+	    console.log("dictionaryName is", jsonData.name)
+	    return fetch('/restservices/clds/v2/dictionary/' + jsonData.name, {
+	      method: 'PUT',
+	      credentials: 'same-origin',
+	      headers: {
+	        "Content-Type": "application/json",
+	      },
+	      body: JSON.stringify(jsonData)
+	    })
+	      .then(function (response) {
+	        console.debug("insDictionary response received: ", response.status);
+	        if (response.ok) {
+	          return response.status;
+	        } else {
+	          var errorMessage = response.status;
+	          console.error("insDictionary query failed", response.status);
+	          return errorMessage;
+	        }
+	      })
+	      .catch(function (error) {
+	        console.error("insDictionary error received", error);
+	        return "";
+	      });
+	  }
+
+	  static deleteDictionary(dictionaryName) {
+	    console.log("inside templaemenu service", dictionaryName)
+	    return fetch('restservices/clds/v2/dictionary/' + dictionaryName, {
+	      method: 'DELETE',
+	      headers: {
+	        "Content-Type": "application/json",
+	      },
+	      credentials: 'same-origin',
+	    })
+	      .then(function (response) {
+	        console.debug("deleteDictionary response received: ", response.status);
+	        if (response.ok) {
+	          return response.status;
+	        } else {
+	          console.error("deleteDictionary query failed");
+	          return {};
+	        }
+	      })
+	      .catch(function (error) {
+	        console.error("deleteDictionary error received", error);
+	        return {};
+	      });
+	  }
+
+	  static deleteDictionaryElements(dictionaryData) {
+	    return fetch('restservices/clds/v2/dictionary/' + dictionaryData.name + '/elements/' + dictionaryData.shortName , {
+	      method: 'DELETE',
+	      headers: {
+	        "Content-Type": "application/json",
+	      },
+	      credentials: 'same-origin',
+	    })
+	      .then(function (response) {
+	        console.debug("deleteDictionary response received: ", response.status);
+	        if (response.ok) {
+	          return response.status;
+	        } else {
+	          console.error("deleteDictionary query failed");
+	          return {};
+	        }
+	      })
+	      .catch(function (error) {
+	        console.error("deleteDictionary error received", error);
+	        return {};
+	      });
+	  }
+    }
