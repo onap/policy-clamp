@@ -25,7 +25,6 @@ import { mount } from 'enzyme';
 import ConfigurationPolicyModal from './ConfigurationPolicyModal';
 import LoopCache from '../../../api/LoopCache';
 
-
 describe('Verify ConfigurationPolicyModal', () => {
     beforeEach(() => {
         fetch.resetMocks();

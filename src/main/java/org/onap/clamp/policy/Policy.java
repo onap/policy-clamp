@@ -30,7 +30,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import javax.persistence.Column;
@@ -44,6 +44,9 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.json.JSONObject;
+import org.onap.clamp.clds.tosca.update.TemplateManagement;
+import org.onap.clamp.clds.tosca.update.UnknownComponentException;
+import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -284,4 +287,22 @@ public abstract class Policy extends AuditEntity {
         return buffer.toString().replace('.', '_').replaceAll(" ", "");
     }
 
+    /**
+     * This method can be used to generate the json Schema used by the UI.
+     *
+     * @param policyToscaModel The tosca model as String that must be converted
+     * @param policyModelType The tosca model type (the policy_type entry in the tosca) that will used to create the
+     *                        json schema
+     * @return THe Json Schema as JsonObject
+     * @throws IOException In case of failure when opening the templates.properties file
+     * @throws UnknownComponentException If the policyModelType is not found in the tosca model
+     */
+    public static JsonObject generateJsonRepresentationFromToscaModel(String policyToscaModel,
+                                                                      String policyModelType)
+            throws IOException, UnknownComponentException {
+        return new TemplateManagement(policyToscaModel,ResourceFileUtil.getResourceAsString(
+                "clds/tosca_update/defaultToscaTypes.yaml"),
+                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"))
+                .launchTranslation(policyModelType);
+    }
 }

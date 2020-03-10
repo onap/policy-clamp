@@ -126,12 +126,14 @@ export default class LoopCache {
 		return null;
 	}
 
-	getOperationalPolicySupportedPdpgroup(name) {
+	getOperationalPolicySupportedPdpGroup(name) {
 		var opConfig=this.getOperationalPolicyForName(name);
 		if (opConfig !== null) {
-			return opConfig["policyModel"]["policyPdpGroup"]["supportedPdpGroups"];
+		    if (opConfig["policyModel"]["policyPdpGroup"] !== undefined && opConfig["policyModel"]["policyPdpGroup"]["supportedPdpGroups"] !== undefined) {
+			    return opConfig["policyModel"]["policyPdpGroup"]["supportedPdpGroups"];
+			}
 		}
-		return null;
+		return [];
 	}
 
 	getOperationalPolicyPdpGroup(name) {
@@ -150,12 +152,14 @@ export default class LoopCache {
 		return null;
 	}
 
-	getMicroServiceSupportedPdpgroup(name) {
+	getMicroServiceSupportedPdpGroup(name) {
 		var microService=this.getMicroServiceForName(name);
 		if (microService !== null) {
-			return microService["policyModel"]["policyPdpGroup"]["supportedPdpGroups"];
+		    if (microService["policyModel"]["policyPdpGroup"] !== undefined && microService["policyModel"]["policyPdpGroup"]["supportedPdpGroups"] !== undefined) {
+			    return microService["policyModel"]["policyPdpGroup"]["supportedPdpGroups"];
+			}
 		}
-		return null;
+		return [];
 	}
 
 	getMicroServicePdpGroup(name) {

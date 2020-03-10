@@ -38,7 +38,8 @@ public class ArrayFieldTest extends TestCase {
      */
     public void testDeploy() throws IOException {
         TemplateManagement templateManagement = new TemplateManagement(ResourceFileUtil.getResourceAsString(
-                "tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),
+                "tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),ResourceFileUtil.getResourceAsString(
+                "clds/tosca_update/defaultToscaTypes.yaml"),
                 ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.properties"));
         Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Actor");
         Property property = component.getProperties().get("actor");

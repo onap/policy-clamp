@@ -1,34 +1,34 @@
 tosca_definitions_version: tosca_simple_yaml_1_0_0
 policy_types:
-  - onap.policies.controlloop.operational.Drools:
+  - onap.policies.controlloop.operational.common.Drools:
       version: 1.0.0
       description: Operational Policy for Control Loops using the Drools PDP
       derived_from: onapy.policies.controlloop.Operational
       properties:
         # Omitted for brevity, see Section 1
 
-  - onap.policies.controlloop.operational.Apex:
+  - onap.policies.controlloop.operational.common.Apex:
       version: 1.0.0
       description: Operational Policy for Control Loops using the APEX PDP
       derived_from: onap.policies.controlloop.Operational
       properties:
         # Omitted for brevity, see Section 1
 
-  - onap.policies.controlloop.guard.FrequencyLimiter:
+  - onap.policies.controlloop.guard.common.FrequencyLimiter:
       version: 1.0.0
       description: Supports limiting the frequency of actions being taken by a Actor.
       derived_from: onap.policies.controlloop.Guard
       properties:
         # Omitted for brevity, see Section 1
 
-  - onap.policies.controlloop.guard.Blacklist:
+  - onap.policies.controlloop.guard.common.Blacklist:
       version: 1.0.0
       description: Supports blacklist of VNF's from performing control loop actions on.
       derived_from: onap.policies.controlloop.Guard
       properties:
         # Omitted for brevity, see Section 1
 
-  - onap.policies.controlloop.guard.MinMax:
+  - onap.policies.controlloop.guard.common.MinMax:
       version: 2.0.0
       description: Supports Min/Max number of VF Modules
       derived_from: onap.policies.controlloop.Guard

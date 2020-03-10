@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,8 +40,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.onap.clamp.clds.tosca.ToscaYamlToJsonConvertor;
-import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.clds.tosca.update.UnknownComponentException;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -104,9 +104,16 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * @param shared      The flag indicate whether the MicroService is shared
      */
     public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared, LoopElementModel loopElementModel) {
-        this(name, policyModel, shared, JsonUtils.GSON_JPA_MODEL
-                .fromJson(new ToscaYamlToJsonConvertor().parseToscaYaml(policyModel.getPolicyModelTosca(),
-                        policyModel.getPolicyModelType()), JsonObject.class), loopElementModel,null,null);
+        this.name = name;
+        this.setPolicyModel(policyModel);
+        this.shared = shared;
+        try {
+            this.setJsonRepresentation(Policy.generateJsonRepresentationFromToscaModel(policyModel.getPolicyModelTosca(),policyModel.getPolicyModelType()));
+        } catch (UnknownComponentException | NullPointerException | IOException e) {
+            logger.error("Unable to generate the microservice policy Schema ... ", e);
+            this.setJsonRepresentation(new JsonObject());
+        }
+        this.setLoopElementModel(loopElementModel);
     }
 
     /**
@@ -116,7 +123,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * @param name               The name of the MicroService
      * @param policyModel        The policy model type of the MicroService
      * @param shared             The flag indicate whether the MicroService is
- *                           shared
+     *                           shared
      * @param jsonRepresentation The UI representation in json format
      * @param loopElementModel   The loop element model from which this instance should be created
      * @param pdpGroup           The Pdp Group info
