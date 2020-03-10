@@ -40,12 +40,12 @@ public class PropertyTest extends TestCase {
      * @throws IOException In case of failure
      */
     public void testParseArray() throws IOException {
-        TemplateManagement templateManagement = new TemplateManagement(
+        ToscaConverterManager toscaConverterManager = new ToscaConverterManager(
                 ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
+                ResourceFileUtil.getResourceAsString("clds/tosca_update/default-tosca-types.yaml"),
                 ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Actor");
-        Property property = component.getProperties().get("actor");
+        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.Actor");
+        Property property = toscaElement.getProperties().get("actor");
         JsonArray toTest = property.parseArray((ArrayList<Object>) property.getItems().get("default"));
         assertNotNull(toTest);
     }
@@ -56,13 +56,13 @@ public class PropertyTest extends TestCase {
      * @throws IOException In case of failure
      */
     public void testAddConstraintsAsJson() throws IOException {
-        TemplateManagement templateManagement = new TemplateManagement(
+        ToscaConverterManager toscaConverterManager = new ToscaConverterManager(
                 ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
+                ResourceFileUtil.getResourceAsString("clds/tosca_update/default-tosca-types.yaml"),
                 ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        Component component = templateManagement.getComponents().get("onap.datatype.controlloop.operation.Failure");
-        Property property = component.getProperties().get("category");
-        Template template = templateManagement.getTemplates().get("string");
+        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.operation.Failure");
+        Property property = toscaElement.getProperties().get("category");
+        Template template = toscaConverterManager.getTemplates().get("string");
         JsonObject toTest = new JsonObject();
         property.addConstraintsAsJson(toTest, (ArrayList<Object>) property.getItems().get("constraints"), template);
         String test = "{\"enum\":[\"error\",\"timeout\",\"retries\",\"guard\",\"exception\"]}";

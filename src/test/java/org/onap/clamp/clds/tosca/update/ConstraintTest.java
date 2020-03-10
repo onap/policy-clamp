@@ -31,12 +31,12 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 
 public class ConstraintTest extends TestCase {
 
-    TemplateManagement templateManagement = new TemplateManagement(
+    ToscaConverterManager toscaConverterManager = new ToscaConverterManager(
             ResourceFileUtil.getResourceAsString("tosca/new-converter/constraints.yaml"),
-            ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
+            ResourceFileUtil.getResourceAsString("clds/tosca_update/default-tosca-types.yaml"),
             ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
 
-    Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Operation");
+    ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.Operation");
 
     public ConstraintTest() throws IOException {
     }
@@ -45,15 +45,15 @@ public class ConstraintTest extends TestCase {
      * Test get value array.
      */
     public void testGetValuesArray() {
-        Property property = component.getProperties().get("timeout");
-        Template template = templateManagement.getTemplates().get("integer");
+        Property property = toscaElement.getProperties().get("timeout");
+        Template template = toscaConverterManager.getTemplates().get("integer");
         JsonObject resultProcess = new JsonObject();
         property.addConstraintsAsJson(resultProcess, (ArrayList<Object>) property.getItems().get("constraints"),
                 template);
         String reference = "{\"enum\":[3,4,5.5,6,10]}";
         assertEquals(reference, String.valueOf(resultProcess));
-        property = component.getProperties().get("success");
-        template = templateManagement.getTemplates().get("string");
+        property = toscaElement.getProperties().get("success");
+        template = toscaConverterManager.getTemplates().get("string");
         resultProcess = new JsonObject();
         property.addConstraintsAsJson(resultProcess, (ArrayList<Object>) property.getItems().get("constraints"),
                 template);
@@ -66,8 +66,8 @@ public class ConstraintTest extends TestCase {
      */
     public void testGetSpecificLength() {
         //Test for string type, same process for array
-        Property property = component.getProperties().get("id");
-        Template template = templateManagement.getTemplates().get("string");
+        Property property = toscaElement.getProperties().get("id");
+        Template template = toscaConverterManager.getTemplates().get("string");
         JsonObject resultProcess = new JsonObject();
         property.addConstraintsAsJson(resultProcess, (ArrayList<Object>) property.getItems().get("constraints"),
                 template);
@@ -83,8 +83,8 @@ public class ConstraintTest extends TestCase {
      */
     public void testGetLimitValue() {
         //Test for array type, same process for string
-        Property property = component.getProperties().get("description");
-        Template template = templateManagement.getTemplates().get("array");
+        Property property = toscaElement.getProperties().get("description");
+        Template template = toscaConverterManager.getTemplates().get("array");
         JsonObject resultProcess = new JsonObject();
         property.addConstraintsAsJson(resultProcess, (ArrayList<Object>) property.getItems().get("constraints"),
                 template);

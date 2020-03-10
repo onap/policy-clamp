@@ -32,25 +32,26 @@ import java.util.List;
 import java.util.Map;
 import org.onap.clamp.clds.util.JsonUtils;
 
-public class TemplateManagement {
+public class ToscaConverterManager {
 
     private LinkedHashMap<String, Template> templates;
-    private LinkedHashMap<String, Component> components;
-    private ParserToJson parserToJson;
-    private Extractor extractor;
+    private LinkedHashMap<String, ToscaElement> components;
+    private ToscaConverterToJson toscaConverterToJson;
+    private ToscaItemsParser toscaItemsParser;
 
     /**
      * Constructor.
      *
-     * @param yamlContent        Yaml content as string
-     * @param templateProperties template properties as string
+     * @param toscaYamlContent     Policy Tosca Yaml content as string
+     * @param nativeToscaDatatypes The tosca yaml with tosca native datatypes
+     * @param templateProperties   template properties as string
      * @throws IOException in case of failure
      */
-    public TemplateManagement(String yamlContent, String nativeComponent, String templateProperties)
+    public ToscaConverterManager(String toscaYamlContent, String nativeToscaDatatypes, String templateProperties)
             throws IOException {
-        if (yamlContent != null && !yamlContent.isEmpty()) {
-            this.extractor = new Extractor(yamlContent, nativeComponent);
-            this.components = extractor.getAllItems();
+        if (toscaYamlContent != null && !toscaYamlContent.isEmpty()) {
+            this.toscaItemsParser = new ToscaItemsParser(toscaYamlContent, nativeToscaDatatypes);
+            this.components = toscaItemsParser.getAllItemsFound();
             this.templates = initializeTemplates(templateProperties);
         }
         else {
@@ -59,20 +60,20 @@ public class TemplateManagement {
     }
 
     //GETTERS & SETTERS
-    public LinkedHashMap<String, Component> getComponents() {
+    public LinkedHashMap<String, ToscaElement> getComponents() {
         return components;
     }
 
-    public void setComponents(LinkedHashMap<String, Component> components) {
+    public void setComponents(LinkedHashMap<String, ToscaElement> components) {
         this.components = components;
     }
 
-    public ParserToJson getParseToJson() {
-        return parserToJson;
+    public ToscaConverterToJson getParseToJson() {
+        return toscaConverterToJson;
     }
 
-    public void setParseToJson(ParserToJson parserToJson) {
-        this.parserToJson = parserToJson;
+    public void setParseToJson(ToscaConverterToJson toscaConverterToJson) {
+        this.toscaConverterToJson = toscaConverterToJson;
     }
 
     public LinkedHashMap<String, Template> getTemplates() {
@@ -83,18 +84,18 @@ public class TemplateManagement {
         this.templates = templates;
     }
 
-    public Extractor getExtractor() {
-        return extractor;
+    public ToscaItemsParser getToscaItemsParser() {
+        return toscaItemsParser;
     }
 
     /**
      * Add a template.
      *
-     * @param name   name
-     * @param fields fields
+     * @param name           name
+     * @param templateFields fields
      */
-    public void addTemplate(String name, List<Field> fields) {
-        Template template = new Template(name, fields);
+    public void addTemplate(String name, List<TemplateField> templateFields) {
+        Template template = new Template(name, templateFields);
         //If it is true, the operation does not have any interest :
         // replace OR put two different object with the same body
         if (!templates.containsKey(template.getName()) || !this.hasTemplate(template)) {
@@ -114,18 +115,18 @@ public class TemplateManagement {
     /**
      * Update Template : adding with true flag, removing with false.
      *
-     * @param nameTemplate name template
-     * @param field        field name
-     * @param operation    operation
+     * @param nameTemplate  name template
+     * @param templateField field name
+     * @param operation     operation
      */
-    public void updateTemplate(String nameTemplate, Field field, Boolean operation) {
+    public void updateTemplate(String nameTemplate, TemplateField templateField, Boolean operation) {
         // Operation = true && field is not present => add Field
-        if (operation && !this.templates.get(nameTemplate).getFields().contains(field)) {
-            this.templates.get(nameTemplate).addField(field);
+        if (operation && !this.templates.get(nameTemplate).getTemplateFields().contains(templateField)) {
+            this.templates.get(nameTemplate).addField(templateField);
         }
         // Operation = false && field is present => remove Field
-        else if (!operation && this.templates.get(nameTemplate).getFields().contains(field)) {
-            this.templates.get(nameTemplate).removeField(field);
+        else if (!operation && this.templates.get(nameTemplate).getTemplateFields().contains(templateField)) {
+            this.templates.get(nameTemplate).removeField(templateField);
         }
     }
 
@@ -151,12 +152,12 @@ public class TemplateManagement {
      * @param componentName name
      * @return an json object
      */
-    public JsonObject launchTranslation(String componentName) throws UnknownComponentException {
-        this.parserToJson = new ParserToJson(components, templates);
-        if (parserToJson.matchComponent(componentName) == null) {
+    public JsonObject startConversionToJson(String componentName) throws UnknownComponentException {
+        this.toscaConverterToJson = new ToscaConverterToJson(components, templates);
+        if (toscaConverterToJson.matchComponent(componentName) == null) {
             throw new UnknownComponentException(componentName);
         }
-        return parserToJson.getJsonProcess(componentName, "object");
+        return toscaConverterToJson.getJsonProcess(componentName, "object");
     }
 
     /**
@@ -180,8 +181,8 @@ public class TemplateManagement {
                 Object fieldValue = bodyFieldAsJson.get("defaultValue").getAsString();
                 Boolean fieldVisible = bodyFieldAsJson.get("visible").getAsBoolean();
                 Boolean fieldStatic = bodyFieldAsJson.get("static").getAsBoolean();
-                Field bodyField = new Field(fieldName, fieldValue, fieldVisible, fieldStatic);
-                template.getFields().add(bodyField);
+                TemplateField bodyTemplateField = new TemplateField(fieldName, fieldValue, fieldVisible, fieldStatic);
+                template.getTemplateFields().add(bodyTemplateField);
             }
             generatedTemplates.put(template.getName(), template);
         }

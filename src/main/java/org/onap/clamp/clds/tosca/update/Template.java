@@ -33,16 +33,16 @@ public class Template {
      * name parameter is used as "key", in the LinkedHashMap of Templates.
      */
     private String name;
-    private List<Field> fields;
+    private List<TemplateField> templateFields;
 
     public Template(String name) {
         this.name = name;
-        this.fields = new ArrayList<>();
+        this.templateFields = new ArrayList<>();
     }
 
-    public Template(String name, List<Field> fields) {
+    public Template(String name, List<TemplateField> templateFields) {
         this.name = name;
-        this.fields = fields;
+        this.templateFields = templateFields;
     }
 
     public String getName() {
@@ -53,12 +53,12 @@ public class Template {
         this.name = name;
     }
 
-    public List<Field> getFields() {
-        return fields;
+    public List<TemplateField> getTemplateFields() {
+        return templateFields;
     }
 
-    public void setFields(List<Field> fields) {
-        this.fields = fields;
+    public void setTemplateFields(List<TemplateField> templateFields) {
+        this.templateFields = templateFields;
     }
 
     /**
@@ -68,8 +68,8 @@ public class Template {
      * @return Ture if it exists, false otherwise
      */
     public boolean hasFields(String fieldName) {
-        for (Field field : this.getFields()) {
-            if (field.getTitle().equals(fieldName)) {
+        for (TemplateField templateField : this.getTemplateFields()) {
+            if (templateField.getTitle().equals(fieldName)) {
                 return true;
             }
         }
@@ -82,21 +82,21 @@ public class Template {
      * @param fieldName The field name
      * @return THe Field found
      */
-    public Field getSpecificField(String fieldName) {
-        for (Field field : this.getFields()) {
-            if (field.getTitle().equals(fieldName)) {
-                return field;
+    public TemplateField getSpecificField(String fieldName) {
+        for (TemplateField templateField : this.getTemplateFields()) {
+            if (templateField.getTitle().equals(fieldName)) {
+                return templateField;
             }
         }
         return null;
     }
 
-    public void addField(Field field) {
-        fields.add(field);
+    public void addField(TemplateField templateField) {
+        templateFields.add(templateField);
     }
 
-    public void removeField(Field field) {
-        fields.remove(field);
+    public void removeField(TemplateField templateField) {
+        templateFields.remove(templateField);
     }
 
     /**
@@ -106,9 +106,9 @@ public class Template {
      * @param state True or false
      */
     public void setVisibility(String nameField, boolean state) {
-        for (Field field : this.fields) {
-            if (field.getTitle().equals(nameField)) {
-                field.setVisible(state);
+        for (TemplateField templateField : this.templateFields) {
+            if (templateField.getTitle().equals(nameField)) {
+                templateField.setVisible(state);
             }
         }
     }
@@ -120,9 +120,9 @@ public class Template {
      * @param state true or false
      */
     public void setStatic(String nameField, boolean state) {
-        for (Field field : this.fields) {
-            if (field.getTitle().equals(nameField)) {
-                field.setStaticValue(state);
+        for (TemplateField templateField : this.templateFields) {
+            if (templateField.getTitle().equals(nameField)) {
+                templateField.setStaticValue(state);
             }
         }
     }
@@ -134,9 +134,9 @@ public class Template {
      * @param newValue The new value as Object
      */
     public void updateValueField(String nameField, Object newValue) {
-        for (Field field : this.fields) {
-            if (field.getTitle().equals(nameField)) {
-                field.setValue(newValue);
+        for (TemplateField templateField : this.templateFields) {
+            if (templateField.getTitle().equals(nameField)) {
+                templateField.setValue(newValue);
             }
         }
     }
@@ -149,18 +149,18 @@ public class Template {
      */
     public boolean checkFields(Template template) {
         boolean duplicateFields = false;
-        if (template.getFields().size() == this.getFields().size()) {
+        if (template.getTemplateFields().size() == this.getTemplateFields().size()) {
             int countMatchingFields = 0;
             //loop each component of first
-            for (Field templateFieldToCheck : template.getFields()) {
-                for (Field templateField : this.getFields()) {
+            for (TemplateField templateFieldToCheck : template.getTemplateFields()) {
+                for (TemplateField templateField : this.getTemplateFields()) {
                     if (templateFieldToCheck.compareWithField(templateField)) {
                         countMatchingFields++;
                     }
                 }
             }
 
-            if (template.getFields().size() == countMatchingFields) {
+            if (template.getTemplateFields().size() == countMatchingFields) {
                 duplicateFields = true;
             }
         }
@@ -212,13 +212,13 @@ public class Template {
      */
     public void injectStaticValue(JsonObject jsonSchema, String fieldName) {
         if (isVisible(fieldName)) {
-            Field toInject = this.getSpecificField(fieldName);
+            TemplateField toInject = this.getSpecificField(fieldName);
             jsonSchema.addProperty(fieldName, (String) toInject.getValue());
         }
     }
 
     @Override
     public String toString() {
-        return " fields : " + fields;
+        return " templateFields : " + templateFields;
     }
 }

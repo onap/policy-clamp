@@ -35,11 +35,11 @@ public class TemplateTest extends TestCase {
      */
     public void testCheckFields() {
         Template toTest = new Template("toTest");
-        List<Field> fields = new ArrayList<>(Arrays.asList(new Field("type"), new Field("description"),new Field(
+        List<TemplateField> templateFields = new ArrayList<>(Arrays.asList(new TemplateField("type"), new TemplateField("description"),new TemplateField(
                 "enum")));
-        toTest.setFields(fields);
+        toTest.setTemplateFields(templateFields);
         Template reference = new Template("toTest");
-        reference.setFields(fields);
+        reference.setTemplateFields(templateFields);
         assertTrue(toTest.checkFields(reference));
     }
 

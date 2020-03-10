@@ -23,13 +23,13 @@
 
 package org.onap.clamp.clds.tosca.update;
 
-public class Field {
+public class TemplateField {
     private String title;
     private Object value;
     private Boolean visible;
     private Boolean staticValue;
 
-    public Field(String title) {
+    public TemplateField(String title) {
         this.title = title;
     }
 
@@ -41,7 +41,7 @@ public class Field {
      * @param visible     visible or not
      * @param staticValue The static value
      */
-    public Field(String title, Object value, Boolean visible, Boolean staticValue) {
+    public TemplateField(String title, Object value, Boolean visible, Boolean staticValue) {
         this.title = title;
         this.value = value;
         this.visible = visible;
@@ -98,18 +98,18 @@ public class Field {
             return false;
         }
 
-        Field field = (Field) otherField;
+        TemplateField templateField = (TemplateField) otherField;
 
-        if (title != null ? !title.equals(field.title) : field.title != null) {
+        if (title != null ? !title.equals(templateField.title) : templateField.title != null) {
             return false;
         }
-        if (value != null ? !value.equals(field.value) : field.value != null) {
+        if (value != null ? !value.equals(templateField.value) : templateField.value != null) {
             return false;
         }
-        if (visible != null ? !visible.equals(field.visible) : field.visible != null) {
+        if (visible != null ? !visible.equals(templateField.visible) : templateField.visible != null) {
             return false;
         }
-        return staticValue != null ? staticValue.equals(field.staticValue) : field.staticValue == null;
+        return staticValue != null ? staticValue.equals(templateField.staticValue) : templateField.staticValue == null;
     }
 
     @Override
@@ -121,9 +121,9 @@ public class Field {
             return false;
         }
 
-        Field field = (Field) object;
+        TemplateField templateField = (TemplateField) object;
 
-        return title != null ? title.equals(field.title) : field.title == null;
+        return title != null ? title.equals(templateField.title) : templateField.title == null;
     }
 
     @Override
@@ -134,14 +134,15 @@ public class Field {
     /**
      * This method test the entire equality.
      *
-     * @param field1 object one
-     * @param field2 object two
+     * @param templateField1 object one
+     * @param templateField2 object two
      * @return true if they are totally equals (all attributes, false otherwise
      */
-    public static boolean fieldsEquals(Field field1, Field field2) {
-        return (field2.getTitle().equals(field1.getTitle()) && field2.getValue().equals(field1.getValue())
-                && field2.getVisible().equals(field1.getVisible())
-                && field2.getStaticValue().equals(field1.getStaticValue()));
+    public static boolean fieldsEquals(TemplateField templateField1, TemplateField templateField2) {
+        return (templateField2.getTitle().equals(templateField1.getTitle())
+                && templateField2.getValue().equals(templateField1.getValue())
+                && templateField2.getVisible().equals(templateField1.getVisible())
+                && templateField2.getStaticValue().equals(templateField1.getStaticValue()));
     }
 
 }
