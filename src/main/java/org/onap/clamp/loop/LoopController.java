@@ -110,6 +110,18 @@ public class LoopController {
     }
 
     /**
+     * This method remove an operational policy to a loop instance.
+     *
+     * @param loopName      The loop name
+     * @param policyType    The policy model type
+     * @param policyVersion The policy model  version
+     * @return The loop modified
+     */
+    public Loop removeOperationalPolicy(String loopName, String policyType, String policyVersion) {
+        return loopService.removeOperationalPolicy(loopName, policyType, policyVersion);
+    }
+
+    /**
      * This method deletes the loop.
      *
      * @param loopName The loop Name

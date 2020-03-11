@@ -120,7 +120,31 @@ public class LoopService {
                 new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL", loop.getModelService().getName(),
                         loop.getModelService().getVersion(), RandomStringUtils.randomAlphanumeric(3),
                         RandomStringUtils.randomAlphanumeric(4)), loop, null, policyModel, null, null, null));
-        return loopsRepository.save(loop);
+        return loopsRepository.saveAndFlush(loop);
+    }
+
+    /**
+     * This method remove an operational policy to a loop instance.
+     *
+     * @param loopName The loop name
+     * @param policyType The policy model type
+     * @param policyVersion The policy model  version
+     * @return The loop modified
+     */
+    Loop removeOperationalPolicy(String loopName, String policyType, String policyVersion) {
+        Loop loop = getLoop(loopName);
+        PolicyModel policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
+        if (policyModel == null) {
+            return null;
+        }
+        for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
+            if (opPolicy.getPolicyModel().getPolicyModelType().equals(policyType) &&
+                    opPolicy.getPolicyModel().getVersion().equals(policyVersion)) {
+                loop.removeOperationalPolicy(opPolicy);
+                break;
+            }
+        }
+        return loopsRepository.saveAndFlush(loop);
     }
 
     Loop updateAndSaveOperationalPolicies(String loopName, List<OperationalPolicy> newOperationalPolicies) {

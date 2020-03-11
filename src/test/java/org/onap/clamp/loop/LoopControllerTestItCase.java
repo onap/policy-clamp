@@ -36,14 +36,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.loop.template.PolicyModelsService;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+import org.onap.clamp.policy.operational.OperationalPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -63,6 +66,9 @@ public class LoopControllerTestItCase {
     MicroServicePolicyService microServicePolicyService;
 
     @Autowired
+    OperationalPolicyService operationalPolicyService;
+
+    @Autowired
     PolicyModelsService policyModelsService;
 
     @Autowired
@@ -74,6 +80,8 @@ public class LoopControllerTestItCase {
         LoopTemplate template =  new LoopTemplate();
         template.setName("testTemplate");
         testLoop.setLoopTemplate(template);
+        Service modelService = new Service("{\"name\":\"serviceName\",\"UUID\":\"uuid\"}","{}");
+        testLoop.setModelService(modelService);
         loopService.saveOrUpdateLoop(testLoop);
     }
 
@@ -131,7 +139,7 @@ public class LoopControllerTestItCase {
     @Transactional
     public void testUpdateMicroservicePolicy() {
         saveTestLoopToDb();
-        PolicyModel policyModel = new PolicyModel("",
+        PolicyModel policyModel = new PolicyModel("testPolicyModel",
                 "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0");
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy policy = new MicroServicePolicy("policyName", policyModel, false,
@@ -146,5 +154,29 @@ public class LoopControllerTestItCase {
         saveTestLoopToDb();
         String svgRepresentation = loopController.getSvgRepresentation(EXAMPLE_LOOP_NAME);
         assertThat(svgRepresentation).isEqualTo("representation");
+    }
+
+    @Test
+    @Transactional
+    public void testAddAndRemoveOperationalPolicies() {
+        saveTestLoopToDb();
+        PolicyModel policyModel = new PolicyModel("testPolicyModel",
+                "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0");
+        policyModelsService.saveOrUpdatePolicyModel(policyModel);
+
+        loopController.addOperationalPolicy(EXAMPLE_LOOP_NAME, "testPolicyModel", "1.0.0");
+
+        Loop newLoop = loopController.getLoop(EXAMPLE_LOOP_NAME);
+        Set<OperationalPolicy> opPolicyList = newLoop.getOperationalPolicies();
+        assertThat(opPolicyList.size()).isEqualTo(1);
+        for(OperationalPolicy policy : opPolicyList) {
+            assertThat(policy.getName().contains("OPERATIONAL_serviceName")).isTrue();
+            assertThat(policy.getPolicyModel().getPolicyModelType()).isEqualTo("testPolicyModel");
+            assertThat(policy.getPolicyModel().getVersion()).isEqualTo("1.0.0");
+        }
+
+        loopController.removeOperationalPolicy(EXAMPLE_LOOP_NAME, "testPolicyModel", "1.0.0");
+        Loop newLoop2 = loopController.getLoop(EXAMPLE_LOOP_NAME);
+        assertThat(newLoop2.getOperationalPolicies().size()).isEqualTo(0);
     }
 }
