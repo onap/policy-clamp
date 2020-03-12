@@ -27,6 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,11 +49,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.SortNatural;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.clds.util.drawing.SvgLoopGenerator;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
@@ -63,7 +64,6 @@ import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.LoopTemplate;
-import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
 
@@ -164,24 +164,29 @@ public class Loop extends AuditEntity implements Serializable {
      * @param name         The loop name
      * @param loopTemplate The loop template from which a new loop instance must be created
      */
-    public Loop(String name, LoopTemplate loopTemplate) {
-        this(name,"");
+    public Loop(String name, LoopTemplate loopTemplate, ToscaConverterWithDictionarySupport toscaConverter) {
+        this(name, "");
         this.setLoopTemplate(loopTemplate);
         this.setModelService(loopTemplate.getModelService());
         loopTemplate.getLoopElementModelsUsed().forEach(element -> {
             if (LoopElementModel.MICRO_SERVICE_TYPE.equals(element.getLoopElementModel().getLoopElementType())) {
-                this.addMicroServicePolicy(new MicroServicePolicy(Policy.generatePolicyName("MICROSERVICE_",
-                        loopTemplate.getModelService().getName(),loopTemplate.getModelService().getVersion(),
-                        RandomStringUtils.randomAlphanumeric(3),RandomStringUtils.randomAlphanumeric(3)),
-                        element.getLoopElementModel().getPolicyModels().first(), false, element.getLoopElementModel()));
-            } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
+                try {
+                    this.addMicroServicePolicy((MicroServicePolicy) element.getLoopElementModel()
+                            .createPolicyInstance(this, toscaConverter));
+                } catch (IOException e) {
+                    logger.error("Exception caught when creating the microservice policy instance of the loop "
+                            + "instance", e);
+                }
+            }
+            else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
                     .equals(element.getLoopElementModel().getLoopElementType())) {
-                this.addOperationalPolicy(new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL_",
-                        loopTemplate.getModelService().getName(),loopTemplate.getModelService().getVersion(),
-                        RandomStringUtils.randomAlphanumeric(3),RandomStringUtils.randomAlphanumeric(3)), null,
-                        new JsonObject(),
-                        element.getLoopElementModel().getPolicyModels().first(), element.getLoopElementModel(),
-                        null,null));
+                try {
+                    this.addOperationalPolicy((OperationalPolicy) element.getLoopElementModel()
+                            .createPolicyInstance(this, toscaConverter));
+                } catch (IOException e) {
+                    logger.error("Exception caught when creating the operational policy instance of the loop instance",
+                            e);
+                }
             }
         });
     }
@@ -379,7 +384,8 @@ public class Loop extends AuditEntity implements Serializable {
             if (other.name != null) {
                 return false;
             }
-        } else if (!name.equals(other.name)) {
+        }
+        else if (!name.equals(other.name)) {
             return false;
         }
         return true;

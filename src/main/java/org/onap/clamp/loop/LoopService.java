@@ -24,14 +24,14 @@
 package org.onap.clamp.loop;
 
 import com.google.gson.JsonObject;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.EntityNotFoundException;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.loop.template.LoopTemplatesService;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.loop.template.PolicyModelsService;
-import org.onap.clamp.policy.Policy;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.microservice.MicroServicePolicyService;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -57,6 +57,9 @@ public class LoopService {
     @Autowired
     private LoopTemplatesService loopTemplateService;
 
+    @Autowired
+    private ToscaConverterWithDictionarySupport toscaConverter;
+
     Loop saveOrUpdateLoop(Loop loop) {
         return loopsRepository.save(loop);
     }
@@ -76,12 +79,13 @@ public class LoopService {
     /**
      * Creates a Loop Instance from Loop Template Name.
      *
-     * @param loopName Name of the Loop to be created
+     * @param loopName     Name of the Loop to be created
      * @param templateName Loop Template to used for Loop
      * @return Loop Instance
      */
     public Loop createLoopFromTemplate(String loopName, String templateName) {
-        return loopsRepository.save(new Loop(loopName,loopTemplateService.getLoopTemplate(templateName)));
+        return loopsRepository
+                .save(new Loop(loopName, loopTemplateService.getLoopTemplate(templateName), toscaConverter));
     }
 
     /**
@@ -104,22 +108,21 @@ public class LoopService {
 
     /**
      * This method add an operational policy to a loop instance.
+     * This creates an operational policy from the policy model info and not the loop element model
      *
-     * @param loopName The loop name
-     * @param policyType The policy model type
+     * @param loopName      The loop name
+     * @param policyType    The policy model type
      * @param policyVersion The policy model  version
      * @return The loop modified
      */
-    Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) {
+    Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) throws IOException {
         Loop loop = getLoop(loopName);
         PolicyModel policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
         if (policyModel == null) {
             return null;
         }
         loop.addOperationalPolicy(
-                new OperationalPolicy(Policy.generatePolicyName("OPERATIONAL", loop.getModelService().getName(),
-                        loop.getModelService().getVersion(), RandomStringUtils.randomAlphanumeric(3),
-                        RandomStringUtils.randomAlphanumeric(4)), loop, null, policyModel, null, null, null));
+                new OperationalPolicy(loop,loop.getModelService(), policyModel, toscaConverter));
         return loopsRepository.saveAndFlush(loop);
     }
 

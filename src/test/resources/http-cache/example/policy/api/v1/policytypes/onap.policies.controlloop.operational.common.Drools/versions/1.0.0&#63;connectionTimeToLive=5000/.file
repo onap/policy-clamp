@@ -79,7 +79,7 @@ data_types:
                 description: The resource the operation should be performed on.
                 required: true
                 metadata:
-                    clamp_possible_values: <string:see clamp project for syntax>
+                    clamp_possible_values: test
             payload:
                 type: map
                 description: Name/value pairs of payload information passed by Policy to the actor
@@ -104,7 +104,7 @@ data_types:
                 description: The definition of the operation to be performed.
                 required: true
                 metadata:
-                    clamp_possible_values: <string:see clamp project for syntax>
+                    clamp_possible_values: test
             timeout:
                 type: integer
                 description: The amount of time for the actor to perform the operation.

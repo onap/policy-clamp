@@ -28,10 +28,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.IOException;
 import java.util.Map.Entry;
-
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.service.Service;
@@ -79,7 +77,7 @@ public class OperationalPolicyRepresentationBuilder {
     }
 
     private static JsonObject createSchemaProperty(String title, String type, String defaultValue, String readOnlyFlag,
-            String[] enumArray) {
+                                                   String[] enumArray) {
         JsonObject property = new JsonObject();
         property.addProperty("title", title);
         property.addProperty("type", type);
@@ -128,8 +126,9 @@ public class OperationalPolicyRepresentationBuilder {
                             modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelName").getAsString(),
                             "True", null));
             properties.add("modelInvariantId",
-                    createSchemaProperty("Model Invariant Id (ModelInvariantUUID)", "string", modelVfModules
-                            .get(entry.getKey()).getAsJsonObject().get("vfModuleModelInvariantUUID").getAsString(),
+                    createSchemaProperty("Model Invariant Id (ModelInvariantUUID)", "string",
+                            modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelInvariantUUID")
+                                    .getAsString(),
                             "True", null));
             properties.add("modelVersionId",
                     createSchemaProperty("Model Version Id (ModelUUID)", "string",
@@ -144,8 +143,9 @@ public class OperationalPolicyRepresentationBuilder {
                     "True", null));
             properties
                     .add("modelCustomizationId",
-                            createSchemaProperty("Customization ID", "string", modelVfModules.get(entry.getKey())
-                                    .getAsJsonObject().get("vfModuleModelCustomizationUUID").getAsString(), "True",
+                            createSchemaProperty("Customization ID", "string",
+                                    modelVfModules.get(entry.getKey()).getAsJsonObject()
+                                            .get("vfModuleModelCustomizationUUID").getAsString(), "True",
                                     null));
 
             vfModuleOneOfSchema.add("properties", properties);
@@ -180,7 +180,7 @@ public class OperationalPolicyRepresentationBuilder {
                     JsonObject obj = new JsonObject();
                     obj.addProperty("title", workflowsEntry.getKey());
                     obj.add("properties", createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
-                                                                controllerProperties));
+                            controllerProperties));
                     schemaArray.add(obj);
                 }
 
@@ -207,7 +207,8 @@ public class OperationalPolicyRepresentationBuilder {
         StringBuilder builder = new StringBuilder("'").append("artifact_name : ").append(artifactName).append("\n")
                 .append("artifact_version : ").append(artifactVersion).append("\n")
                 .append("mode : async").append("\n")
-                .append("data : ").append("'").append("\\").append("'").append(data).append("\\").append("'").append("'");
+                .append("data : ").append("'").append("\\").append("'").append(data).append("\\").append("'")
+                .append("'");
         return builder.toString();
     }
 }

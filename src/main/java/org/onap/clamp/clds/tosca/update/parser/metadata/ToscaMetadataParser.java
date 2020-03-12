@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
- * ================================================================================
+  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,26 +21,11 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update;
+package org.onap.clamp.clds.tosca.update.parser.metadata;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import junit.framework.TestCase;
+import com.google.gson.JsonObject;
+import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
 
-public class TemplateTest extends TestCase {
-
-    /**
-     * Test check failed.
-     */
-    public void testCheckFields() {
-        Template toTest = new Template("toTest");
-        List<TemplateField> templateFields = new ArrayList<>(Arrays.asList(new TemplateField("type"), new TemplateField("description"),new TemplateField(
-                "enum")));
-        toTest.setTemplateFields(templateFields);
-        Template reference = new Template("toTest");
-        reference.setTemplateFields(templateFields);
-        assertTrue(toTest.checkFields(reference));
-    }
-
+public interface ToscaMetadataParser {
+    JsonObject processAllMetadataElement(ToscaElementProperty toscaElementProperty);
 }

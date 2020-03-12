@@ -56,7 +56,7 @@ public class PolicyModelsService {
      * @return The Policy Model
      */
     public PolicyModel saveOrUpdatePolicyModel(PolicyModel policyModel) {
-        return policyModelsRepository.save(policyModel);
+        return policyModelsRepository.saveAndFlush(policyModel);
     }
 
     /**

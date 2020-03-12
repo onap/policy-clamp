@@ -21,28 +21,28 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update;
+package org.onap.clamp.clds.tosca.update.templates;
 
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Template {
+public class JsonTemplate {
 
     /**
      * name parameter is used as "key", in the LinkedHashMap of Templates.
      */
     private String name;
-    private List<TemplateField> templateFields;
+    private List<JsonTemplateField> jsonTemplateFields;
 
-    public Template(String name) {
+    public JsonTemplate(String name) {
         this.name = name;
-        this.templateFields = new ArrayList<>();
+        this.jsonTemplateFields = new ArrayList<>();
     }
 
-    public Template(String name, List<TemplateField> templateFields) {
+    public JsonTemplate(String name, List<JsonTemplateField> jsonTemplateFields) {
         this.name = name;
-        this.templateFields = templateFields;
+        this.jsonTemplateFields = jsonTemplateFields;
     }
 
     public String getName() {
@@ -53,12 +53,12 @@ public class Template {
         this.name = name;
     }
 
-    public List<TemplateField> getTemplateFields() {
-        return templateFields;
+    public List<JsonTemplateField> getJsonTemplateFields() {
+        return jsonTemplateFields;
     }
 
-    public void setTemplateFields(List<TemplateField> templateFields) {
-        this.templateFields = templateFields;
+    public void setJsonTemplateFields(List<JsonTemplateField> jsonTemplateFields) {
+        this.jsonTemplateFields = jsonTemplateFields;
     }
 
     /**
@@ -68,8 +68,8 @@ public class Template {
      * @return Ture if it exists, false otherwise
      */
     public boolean hasFields(String fieldName) {
-        for (TemplateField templateField : this.getTemplateFields()) {
-            if (templateField.getTitle().equals(fieldName)) {
+        for (JsonTemplateField jsonTemplateField : this.getJsonTemplateFields()) {
+            if (jsonTemplateField.getTitle().equals(fieldName)) {
                 return true;
             }
         }
@@ -82,21 +82,21 @@ public class Template {
      * @param fieldName The field name
      * @return THe Field found
      */
-    public TemplateField getSpecificField(String fieldName) {
-        for (TemplateField templateField : this.getTemplateFields()) {
-            if (templateField.getTitle().equals(fieldName)) {
-                return templateField;
+    public JsonTemplateField getSpecificField(String fieldName) {
+        for (JsonTemplateField jsonTemplateField : this.getJsonTemplateFields()) {
+            if (jsonTemplateField.getTitle().equals(fieldName)) {
+                return jsonTemplateField;
             }
         }
         return null;
     }
 
-    public void addField(TemplateField templateField) {
-        templateFields.add(templateField);
+    public void addField(JsonTemplateField jsonTemplateField) {
+        jsonTemplateFields.add(jsonTemplateField);
     }
 
-    public void removeField(TemplateField templateField) {
-        templateFields.remove(templateField);
+    public void removeField(JsonTemplateField jsonTemplateField) {
+        jsonTemplateFields.remove(jsonTemplateField);
     }
 
     /**
@@ -106,9 +106,9 @@ public class Template {
      * @param state True or false
      */
     public void setVisibility(String nameField, boolean state) {
-        for (TemplateField templateField : this.templateFields) {
-            if (templateField.getTitle().equals(nameField)) {
-                templateField.setVisible(state);
+        for (JsonTemplateField jsonTemplateField : this.jsonTemplateFields) {
+            if (jsonTemplateField.getTitle().equals(nameField)) {
+                jsonTemplateField.setVisible(state);
             }
         }
     }
@@ -120,9 +120,9 @@ public class Template {
      * @param state true or false
      */
     public void setStatic(String nameField, boolean state) {
-        for (TemplateField templateField : this.templateFields) {
-            if (templateField.getTitle().equals(nameField)) {
-                templateField.setStaticValue(state);
+        for (JsonTemplateField jsonTemplateField : this.jsonTemplateFields) {
+            if (jsonTemplateField.getTitle().equals(nameField)) {
+                jsonTemplateField.setStaticValue(state);
             }
         }
     }
@@ -134,9 +134,9 @@ public class Template {
      * @param newValue The new value as Object
      */
     public void updateValueField(String nameField, Object newValue) {
-        for (TemplateField templateField : this.templateFields) {
-            if (templateField.getTitle().equals(nameField)) {
-                templateField.setValue(newValue);
+        for (JsonTemplateField jsonTemplateField : this.jsonTemplateFields) {
+            if (jsonTemplateField.getTitle().equals(nameField)) {
+                jsonTemplateField.setValue(newValue);
             }
         }
     }
@@ -144,23 +144,23 @@ public class Template {
     /**
      * Compare two templates : size and their contents.
      *
-     * @param template the template
+     * @param jsonTemplate the template
      * @return a boolean
      */
-    public boolean checkFields(Template template) {
+    public boolean checkFields(JsonTemplate jsonTemplate) {
         boolean duplicateFields = false;
-        if (template.getTemplateFields().size() == this.getTemplateFields().size()) {
+        if (jsonTemplate.getJsonTemplateFields().size() == this.getJsonTemplateFields().size()) {
             int countMatchingFields = 0;
             //loop each component of first
-            for (TemplateField templateFieldToCheck : template.getTemplateFields()) {
-                for (TemplateField templateField : this.getTemplateFields()) {
-                    if (templateFieldToCheck.compareWithField(templateField)) {
+            for (JsonTemplateField jsonTemplateFieldToCheck : jsonTemplate.getJsonTemplateFields()) {
+                for (JsonTemplateField jsonTemplateField : this.getJsonTemplateFields()) {
+                    if (jsonTemplateFieldToCheck.compareWithField(jsonTemplateField)) {
                         countMatchingFields++;
                     }
                 }
             }
 
-            if (template.getTemplateFields().size() == countMatchingFields) {
+            if (jsonTemplate.getJsonTemplateFields().size() == countMatchingFields) {
                 duplicateFields = true;
             }
         }
@@ -212,13 +212,13 @@ public class Template {
      */
     public void injectStaticValue(JsonObject jsonSchema, String fieldName) {
         if (isVisible(fieldName)) {
-            TemplateField toInject = this.getSpecificField(fieldName);
+            JsonTemplateField toInject = this.getSpecificField(fieldName);
             jsonSchema.addProperty(fieldName, (String) toInject.getValue());
         }
     }
 
     @Override
     public String toString() {
-        return " templateFields : " + templateFields;
+        return " templateFields : " + jsonTemplateFields;
     }
 }

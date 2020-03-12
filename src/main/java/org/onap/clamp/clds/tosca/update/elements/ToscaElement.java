@@ -21,7 +21,7 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update;
+package org.onap.clamp.clds.tosca.update.elements;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -36,7 +36,7 @@ public class ToscaElement {
     private String version;
     private String typeVersion;
     private String description;
-    private LinkedHashMap<String, Property> properties;
+    private LinkedHashMap<String, ToscaElementProperty> properties;
 
     public ToscaElement() {
     }
@@ -97,16 +97,16 @@ public class ToscaElement {
         this.description = description;
     }
 
-    public LinkedHashMap<String, Property> getProperties() {
+    public LinkedHashMap<String, ToscaElementProperty> getProperties() {
         return properties;
     }
 
-    public void setProperties(LinkedHashMap<String, Property> properties) {
+    public void setProperties(LinkedHashMap<String, ToscaElementProperty> properties) {
         this.properties = properties;
     }
 
-    public void addProperties(Property property) {
-        this.properties.put(property.getName(), property);
+    public void addProperties(ToscaElementProperty toscaElementProperty) {
+        this.properties.put(toscaElementProperty.getName(), toscaElementProperty);
     }
 
     public ArrayList<String> propertiesNames() {

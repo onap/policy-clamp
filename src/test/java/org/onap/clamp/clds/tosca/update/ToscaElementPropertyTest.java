@@ -28,10 +28,14 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+import org.onap.clamp.clds.tosca.update.elements.ToscaElement;
+import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
+import org.onap.clamp.clds.tosca.update.templates.JsonTemplate;
+import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
-public class PropertyTest extends TestCase {
-    public PropertyTest() throws IOException {
+public class ToscaElementPropertyTest extends TestCase {
+    public ToscaElementPropertyTest() throws IOException {
     }
 
     /**
@@ -40,13 +44,14 @@ public class PropertyTest extends TestCase {
      * @throws IOException In case of failure
      */
     public void testParseArray() throws IOException {
-        ToscaConverterManager toscaConverterManager = new ToscaConverterManager(
+        JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(
                 ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/default-tosca-types.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.Actor");
-        Property property = toscaElement.getProperties().get("actor");
-        JsonArray toTest = property.parseArray((ArrayList<Object>) property.getItems().get("default"));
+                ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+        ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Actor");
+        ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("actor");
+        JsonArray toTest =
+                toscaElementProperty.parseArray((ArrayList<Object>) toscaElementProperty.getItems().get("default"));
         assertNotNull(toTest);
     }
 
@@ -56,15 +61,18 @@ public class PropertyTest extends TestCase {
      * @throws IOException In case of failure
      */
     public void testAddConstraintsAsJson() throws IOException {
-        ToscaConverterManager toscaConverterManager = new ToscaConverterManager(
+        JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(
                 ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/default-tosca-types.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.operation.Failure");
-        Property property = toscaElement.getProperties().get("category");
-        Template template = toscaConverterManager.getTemplates().get("string");
+                ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+        ToscaElement toscaElement =
+                jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.operation.Failure");
+        ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("category");
+        JsonTemplate jsonTemplate = jsonTemplateManager.getJsonSchemaTemplates().get("string");
         JsonObject toTest = new JsonObject();
-        property.addConstraintsAsJson(toTest, (ArrayList<Object>) property.getItems().get("constraints"), template);
+        toscaElementProperty
+                .addConstraintsAsJson(toTest, (ArrayList<Object>) toscaElementProperty.getItems().get("constraints"),
+                        jsonTemplate);
         String test = "{\"enum\":[\"error\",\"timeout\",\"retries\",\"guard\",\"exception\"]}";
         assertEquals(test, String.valueOf(toTest));
     }

@@ -26,11 +26,11 @@
 
 package org.onap.clamp.clds.config;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.onap.clamp.authorization.CldsUser;
 import org.onap.clamp.clds.exception.CldsUsersException;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CldsUserJsonDecoderTest {
 

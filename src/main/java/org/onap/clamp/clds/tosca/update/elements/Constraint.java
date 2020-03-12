@@ -21,21 +21,22 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update;
+package org.onap.clamp.clds.tosca.update.elements;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import org.onap.clamp.clds.tosca.update.templates.JsonTemplate;
 
 public class Constraint {
 
     private LinkedHashMap<String, Object> constraints;
-    private Template template;
+    private JsonTemplate jsonTemplate;
 
-    public Constraint(LinkedHashMap<String, Object> constraints, Template template) {
-        this.template = template;
+    public Constraint(LinkedHashMap<String, Object> constraints, JsonTemplate jsonTemplate) {
+        this.jsonTemplate = jsonTemplate;
         this.constraints = constraints;
     }
 
@@ -120,7 +121,7 @@ public class Constraint {
                 checkTemplateField("maxLength", jsonSchema, fieldValue);
                 break;
             case "array":
-                if (fieldValue.equals(1) && template.hasFields("uniqueItems")) {
+                if (fieldValue.equals(1) && jsonTemplate.hasFields("uniqueItems")) {
                     jsonSchema.addProperty("uniqueItems", true);
                 } else {
                     checkTemplateField("minItems", jsonSchema, fieldValue);
@@ -171,7 +172,7 @@ public class Constraint {
      * @param typeProperty Get as Enum the valid values for the property
      */
     public void getValueArray(JsonObject jsonSchema, Object fieldValue, String typeProperty) {
-        if (template.hasFields("enum")) {
+        if (jsonTemplate.hasFields("enum")) {
             JsonArray enumeration = new JsonArray();
             if (typeProperty.equals("string") || typeProperty.equals("String")) {
                 ArrayList<String> arrayValues = (ArrayList<String>) fieldValue;
@@ -197,7 +198,7 @@ public class Constraint {
      * @param fieldValue Simple way to avoid code duplication
      */
     public void checkTemplateField(String field, JsonObject jsonSchema, Object fieldValue) {
-        if (template.hasFields(field)) {
+        if (jsonTemplate.hasFields(field)) {
             String typeField = fieldValue.getClass().getSimpleName();
             switch (typeField) {
                 case "String":

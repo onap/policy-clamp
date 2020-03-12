@@ -23,12 +23,15 @@
 
 package org.onap.clamp.util;
 
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class SemanticVersioningTest {
 
+    /**
+     * compare test.
+     */
     @Test
     public void compareTest() {
         assertThat(SemanticVersioning.compare("1.0.0", "2.0.0")).isEqualTo(-1);
@@ -53,6 +56,9 @@ public class SemanticVersioningTest {
         assertThat(SemanticVersioning.compare("1.2", "1")).isEqualTo(1);
     }
 
+    /**
+     * Compare test.
+     */
     @Test
     public void compareEqualsTest() {
         assertThat(SemanticVersioning.compare("1.0.0", "1.0.0")).isEqualTo(0);
@@ -62,6 +68,9 @@ public class SemanticVersioningTest {
 
     }
 
+    /**
+     * Compare with null.
+     */
     @Test
     public void compareNullTest() {
         assertThat(SemanticVersioning.compare(null, null)).isEqualTo(0);
@@ -69,6 +78,9 @@ public class SemanticVersioningTest {
         assertThat(SemanticVersioning.compare("1.0", null)).isEqualTo(1);
     }
 
+    /**
+     * Increment major version test.
+     */
     @Test
     public void incrementVersionTest() {
         assertThat(SemanticVersioning.incrementMajorVersion("1.0")).isEqualTo("2.0.0");

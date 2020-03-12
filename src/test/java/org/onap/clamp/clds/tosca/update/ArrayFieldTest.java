@@ -27,6 +27,10 @@ import com.google.gson.JsonArray;
 import java.io.IOException;
 import java.util.ArrayList;
 import junit.framework.TestCase;
+import org.onap.clamp.clds.tosca.update.elements.ArrayField;
+import org.onap.clamp.clds.tosca.update.elements.ToscaElement;
+import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
+import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
 public class ArrayFieldTest extends TestCase {
@@ -37,13 +41,13 @@ public class ArrayFieldTest extends TestCase {
      * @throws IOException in case of failure
      */
     public void testDeploy() throws IOException {
-        ToscaConverterManager toscaConverterManager = new ToscaConverterManager(ResourceFileUtil.getResourceAsString(
+        JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(ResourceFileUtil.getResourceAsString(
                 "tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),ResourceFileUtil.getResourceAsString(
-                "clds/tosca_update/default-tosca-types.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.Actor");
-        Property property = toscaElement.getProperties().get("actor");
-        ArrayField arrayParser = new ArrayField((ArrayList<Object>) property.getItems().get("default"));
+                "clds/tosca-converter/default-tosca-types.yaml"),
+                ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+        ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Actor");
+        ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("actor");
+        ArrayField arrayParser = new ArrayField((ArrayList<Object>) toscaElementProperty.getItems().get("default"));
         JsonArray toTest = arrayParser.deploy();
         String reference = "[1,\"String\",5.5,true]";
         assertEquals(reference, String.valueOf(toTest));

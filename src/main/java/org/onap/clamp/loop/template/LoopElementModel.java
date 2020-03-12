@@ -24,6 +24,7 @@
 package org.onap.clamp.loop.template;
 
 import com.google.gson.annotations.Expose;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +41,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.SortNatural;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
+import org.onap.clamp.loop.Loop;
 import org.onap.clamp.loop.common.AuditEntity;
+import org.onap.clamp.policy.Policy;
+import org.onap.clamp.policy.microservice.MicroServicePolicy;
+import org.onap.clamp.policy.operational.OperationalPolicy;
 
 /**
  * This class represents a micro service/operational/... model for a loop template.
@@ -241,6 +247,24 @@ public class LoopElementModel extends AuditEntity implements Serializable {
         this.blueprint = blueprint;
     }
 
+    /**
+     * Create a policy instance from the current loop element model.
+     *
+     * @return A Policy object.
+     * @throws IOException in case of failure when creating an operational policy
+     */
+    public Policy createPolicyInstance(Loop loop, ToscaConverterWithDictionarySupport toscaConverter)
+            throws IOException {
+        if (LoopElementModel.MICRO_SERVICE_TYPE.equals(this.getLoopElementType())) {
+            return new MicroServicePolicy(loop, loop.getModelService(), this, toscaConverter);
+        }
+        else if (LoopElementModel.OPERATIONAL_POLICY_TYPE.equals(this.getLoopElementType())) {
+            return new OperationalPolicy(loop, loop.getModelService(), this, toscaConverter);
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -265,7 +289,8 @@ public class LoopElementModel extends AuditEntity implements Serializable {
             if (other.name != null) {
                 return false;
             }
-        } else if (!name.equals(other.name)) {
+        }
+        else if (!name.equals(other.name)) {
             return false;
         }
         return true;

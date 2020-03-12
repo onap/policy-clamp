@@ -27,15 +27,12 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -44,7 +41,7 @@ import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 
 @Entity
 @Table(name = "services")
-@TypeDefs({ @TypeDef(name = "json", typeClass = StringJsonUserType.class) })
+@TypeDefs({@TypeDef(name = "json", typeClass = StringJsonUserType.class)})
 public class Service implements Serializable {
 
     /**
@@ -120,6 +117,8 @@ public class Service implements Serializable {
     }
 
     /**
+     * Name getter.
+     *
      * @return the name
      */
     public String getName() {
@@ -127,6 +126,8 @@ public class Service implements Serializable {
     }
 
     /**
+     * Version getter.
+     *
      * @return the version
      */
     public String getVersion() {
@@ -157,7 +158,8 @@ public class Service implements Serializable {
             if (other.serviceUuid != null) {
                 return false;
             }
-        } else if (!serviceUuid.equals(other.serviceUuid)) {
+        }
+        else if (!serviceUuid.equals(other.serviceUuid)) {
             return false;
         }
         return true;

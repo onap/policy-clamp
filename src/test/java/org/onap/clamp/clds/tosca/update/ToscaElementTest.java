@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import junit.framework.TestCase;
+import org.onap.clamp.clds.tosca.update.elements.ToscaElement;
+import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
 public class ToscaElementTest extends TestCase {
@@ -38,12 +40,12 @@ public class ToscaElementTest extends TestCase {
      */
     public void testPropertiesNames() throws IOException {
         ArrayList<String> reference = new ArrayList<>(Arrays.asList("actor", "operation", "target", "payload"));
-        ToscaConverterManager toscaConverterManager =
-                new ToscaConverterManager(
+        JsonTemplateManager jsonTemplateManager =
+                new JsonTemplateManager(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.Actor");
+                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+        ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Actor");
         assertEquals(reference, toscaElement.propertiesNames());
     }
 

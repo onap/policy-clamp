@@ -21,15 +21,15 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update;
+package org.onap.clamp.clds.tosca.update.templates;
 
-public class TemplateField {
+public class JsonTemplateField {
     private String title;
     private Object value;
     private Boolean visible;
     private Boolean staticValue;
 
-    public TemplateField(String title) {
+    public JsonTemplateField(String title) {
         this.title = title;
     }
 
@@ -41,7 +41,7 @@ public class TemplateField {
      * @param visible     visible or not
      * @param staticValue The static value
      */
-    public TemplateField(String title, Object value, Boolean visible, Boolean staticValue) {
+    public JsonTemplateField(String title, Object value, Boolean visible, Boolean staticValue) {
         this.title = title;
         this.value = value;
         this.visible = visible;
@@ -98,18 +98,19 @@ public class TemplateField {
             return false;
         }
 
-        TemplateField templateField = (TemplateField) otherField;
+        JsonTemplateField jsonTemplateField = (JsonTemplateField) otherField;
 
-        if (title != null ? !title.equals(templateField.title) : templateField.title != null) {
+        if (title != null ? !title.equals(jsonTemplateField.title) : jsonTemplateField.title != null) {
             return false;
         }
-        if (value != null ? !value.equals(templateField.value) : templateField.value != null) {
+        if (value != null ? !value.equals(jsonTemplateField.value) : jsonTemplateField.value != null) {
             return false;
         }
-        if (visible != null ? !visible.equals(templateField.visible) : templateField.visible != null) {
+        if (visible != null ? !visible.equals(jsonTemplateField.visible) : jsonTemplateField.visible != null) {
             return false;
         }
-        return staticValue != null ? staticValue.equals(templateField.staticValue) : templateField.staticValue == null;
+        return staticValue != null ? staticValue.equals(jsonTemplateField.staticValue) :
+                jsonTemplateField.staticValue == null;
     }
 
     @Override
@@ -121,9 +122,9 @@ public class TemplateField {
             return false;
         }
 
-        TemplateField templateField = (TemplateField) object;
+        JsonTemplateField jsonTemplateField = (JsonTemplateField) object;
 
-        return title != null ? title.equals(templateField.title) : templateField.title == null;
+        return title != null ? title.equals(jsonTemplateField.title) : jsonTemplateField.title == null;
     }
 
     @Override
@@ -134,15 +135,15 @@ public class TemplateField {
     /**
      * This method test the entire equality.
      *
-     * @param templateField1 object one
-     * @param templateField2 object two
+     * @param jsonTemplateField1 object one
+     * @param jsonTemplateField2 object two
      * @return true if they are totally equals (all attributes, false otherwise
      */
-    public static boolean fieldsEquals(TemplateField templateField1, TemplateField templateField2) {
-        return (templateField2.getTitle().equals(templateField1.getTitle())
-                && templateField2.getValue().equals(templateField1.getValue())
-                && templateField2.getVisible().equals(templateField1.getVisible())
-                && templateField2.getStaticValue().equals(templateField1.getStaticValue()));
+    public static boolean fieldsEquals(JsonTemplateField jsonTemplateField1, JsonTemplateField jsonTemplateField2) {
+        return (jsonTemplateField2.getTitle().equals(jsonTemplateField1.getTitle())
+                && jsonTemplateField2.getValue().equals(jsonTemplateField1.getValue())
+                && jsonTemplateField2.getVisible().equals(jsonTemplateField1.getVisible())
+                && jsonTemplateField2.getStaticValue().equals(jsonTemplateField1.getStaticValue()));
     }
 
 }

@@ -27,7 +27,6 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,11 +37,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.onap.clamp.clds.tosca.update.UnknownComponentException;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.Policy;
@@ -91,31 +92,10 @@ public class MicroServicePolicy extends Policy implements Serializable {
     @Column(name = "dcae_blueprint_id")
     private String dcaeBlueprintId;
 
-    public MicroServicePolicy() {
-        // serialization
-    }
-
     /**
-     * The constructor that creates the json representation from the policyTosca
-     * using the ToscaYamlToJsonConvertor.
-     *
-     * @param name        The name of the MicroService
-     * @param policyModel The policy model of the MicroService
-     * @param shared      The flag indicate whether the MicroService is shared
+     * Constructor for serialization.
      */
-    public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared, LoopElementModel loopElementModel) {
-        this.name = name;
-        this.setPolicyModel(policyModel);
-        this.shared = shared;
-        try {
-            this.setJsonRepresentation(
-                    Policy.generateJsonRepresentationFromToscaModel(policyModel.getPolicyModelTosca(),
-                            policyModel.getPolicyModelType()));
-        } catch (UnknownComponentException | NullPointerException | IOException e) {
-            logger.error("Unable to generate the microservice policy Schema ... ", e);
-            this.setJsonRepresentation(new JsonObject());
-        }
-        this.setLoopElementModel(loopElementModel);
+    public MicroServicePolicy() {
     }
 
     /**
@@ -129,7 +109,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * @param jsonRepresentation The UI representation in json format
      * @param loopElementModel   The loop element model from which this instance should be created
      * @param pdpGroup           The Pdp Group info
-     * @param pdpSubgroup        The Pdp Subgrouop info
+     * @param pdpSubgroup        The Pdp Subgroup info
      */
     public MicroServicePolicy(String name, PolicyModel policyModel, Boolean shared,
                               JsonObject jsonRepresentation, LoopElementModel loopElementModel, String pdpGroup,
@@ -141,6 +121,25 @@ public class MicroServicePolicy extends Policy implements Serializable {
         this.setLoopElementModel(loopElementModel);
         this.setPdpGroup(pdpGroup);
         this.setPdpSubgroup(pdpSubgroup);
+    }
+
+    /**
+     * Constructor with tosca converter.
+     *
+     * @param loop The loop instance
+     * @param service The service model object
+     * @param loopElementModel The loop element model from which this microservice instance is created
+     * @param toscaConverter The tosca converter that will used to convert the tosca policy model
+     */
+    public MicroServicePolicy(Loop loop, Service service, LoopElementModel loopElementModel,
+                              ToscaConverterWithDictionarySupport toscaConverter) {
+        this(Policy.generatePolicyName("MICROSERVICE", service.getName(), service.getVersion(),
+                RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)),
+                loopElementModel.getPolicyModels().first(), false,
+                toscaConverter.convertToscaToJsonSchemaObject(
+                        loopElementModel.getPolicyModels().first().getPolicyModelTosca(),
+                        loopElementModel.getPolicyModels().first().getPolicyModelType()),
+                loopElementModel, null, null);
     }
 
     @Override

@@ -88,7 +88,7 @@ public class ClampGraphBuilder {
     public ClampGraphBuilder addLoopElementModel(LoopElementModel loopElementModel) {
         if (LoopElementModel.MICRO_SERVICE_TYPE.equals(loopElementModel.getLoopElementType())) {
             microServices.add(new MicroServicePolicy(loopElementModel.getName(),
-                    loopElementModel.getPolicyModels().first(), false, loopElementModel));
+                    loopElementModel.getPolicyModels().first(), false,null,loopElementModel,null,null));
         } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE.equals(loopElementModel.getLoopElementType())) {
             policies.add(new OperationalPolicy(loopElementModel.getName(), null, null,
                     loopElementModel.getPolicyModels().first(), loopElementModel, null, null));

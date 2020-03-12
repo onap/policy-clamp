@@ -21,7 +21,7 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update;
+package org.onap.clamp.clds.tosca.update.elements;
 
 import com.google.gson.JsonArray;
 import java.util.ArrayList;

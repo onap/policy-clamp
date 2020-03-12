@@ -48,11 +48,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.onap.clamp.clds.tosca.update.UnknownComponentException;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.Policy;
@@ -80,54 +82,101 @@ public class OperationalPolicy extends Policy implements Serializable {
     @JoinColumn(name = "loop_id", nullable = false)
     private Loop loop;
 
+    /**
+     * Constructor for serialization.
+     */
     public OperationalPolicy() {
-        // Serialization
     }
 
     /**
      * The constructor.
      *
      * @param name               The name of the operational policy
-     * @param loop               The loop that uses this operational policy
      * @param configurationsJson The operational policy property in the format of
      *                           json
+     * @param jsonRepresentation The jsonObject defining the json schema
      * @param policyModel        The policy model associated if any, can be null
      * @param loopElementModel   The loop element from which this instance is supposed to be created
      * @param pdpGroup           The Pdp Group info
      * @param pdpSubgroup        The Pdp Subgroup info
      */
-    public OperationalPolicy(String name, Loop loop, JsonObject configurationsJson, PolicyModel policyModel,
+    public OperationalPolicy(String name, JsonObject configurationsJson,
+                             JsonObject jsonRepresentation, PolicyModel policyModel,
                              LoopElementModel loopElementModel, String pdpGroup, String pdpSubgroup) {
         this.name = name;
-        this.loop = loop;
         this.setPolicyModel(policyModel);
         this.setConfigurationsJson(configurationsJson);
         this.setPdpGroup(pdpGroup);
         this.setPdpSubgroup(pdpSubgroup);
         this.setLoopElementModel(loopElementModel);
-        this.setJsonRepresentation(this.generateJsonRepresentation(policyModel));
+        this.setJsonRepresentation(jsonRepresentation);
 
     }
 
-    private JsonObject generateJsonRepresentation(PolicyModel policyModel) {
+    /**
+     * Create an operational policy from a loop element model.
+     *
+     * @param loop             The parent loop
+     * @param service          The loop service
+     * @param loopElementModel The loop element model
+     * @param toscaConverter   The tosca converter that must be used to create the Json representation
+     * @throws IOException In case of issues with the legacy files (generated from resource files
+     */
+    public OperationalPolicy(Loop loop, Service service, LoopElementModel loopElementModel,
+                             ToscaConverterWithDictionarySupport toscaConverter) throws IOException {
+        this(Policy.generatePolicyName("OPERATIONAL", service.getName(), service.getVersion(),
+                RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)), new JsonObject(),
+                new JsonObject(), loopElementModel.getPolicyModels().first(), loopElementModel, null, null);
+        this.setLoop(loop);
+        this.setJsonRepresentation(generateJsonRepresentation(this, toscaConverter));
+    }
+
+    /**
+     * Create an operational policy from a policy model.
+     *
+     * @param loop             The parent loop
+     * @param service          The loop service
+     * @param policyModel       The policy model
+     * @param toscaConverter   The tosca converter that must be used to create the Json representation
+     * @throws IOException In case of issues with the legacy files (generated from resource files
+     */
+    public OperationalPolicy(Loop loop, Service service, PolicyModel policyModel,
+                             ToscaConverterWithDictionarySupport toscaConverter) throws IOException {
+        this(Policy.generatePolicyName("OPERATIONAL", service.getName(), service.getVersion(),
+                RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)), new JsonObject(),
+                new JsonObject(), policyModel, null, null, null);
+        this.setLoop(loop);
+        this.setJsonRepresentation(generateJsonRepresentation(this, toscaConverter));
+    }
+
+    /**
+     * This method can generate a Json representation (json schema) for an operational policy.
+     * This is mainly to support a legacy case and a generic case.
+     *
+     * @param operationalPolicy The operational policy
+     * @param toscaConverter    The tosca converter
+     * @return The Json Object with Json schema
+     */
+    public static JsonObject generateJsonRepresentation(OperationalPolicy operationalPolicy,
+                                                        ToscaConverterWithDictionarySupport toscaConverter)
+            throws IOException {
         JsonObject jsonReturned = new JsonObject();
-        if (policyModel == null) {
+        if (operationalPolicy.getPolicyModel() == null) {
             return new JsonObject();
         }
-        try {
-            if (isLegacy()) {
-                // Op policy Legacy case
-                LegacyOperationalPolicy.preloadConfiguration(jsonReturned, loop);
-                jsonReturned =
-                        OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService());
-            } else {
-                // Generic Case
-                jsonReturned = Policy.generateJsonRepresentationFromToscaModel(policyModel.getPolicyModelTosca(),
-                        policyModel.getPolicyModelType());
-            }
-        } catch (UnknownComponentException | IOException | NullPointerException e) {
-            logger.error("Unable to generate the operational policy Schema ... ", e);
+        if (operationalPolicy.isLegacy()) {
+            // Op policy Legacy case
+            LegacyOperationalPolicy.preloadConfiguration(jsonReturned, operationalPolicy.loop);
+            jsonReturned = OperationalPolicyRepresentationBuilder
+                    .generateOperationalPolicySchema(operationalPolicy.loop.getModelService());
         }
+        else {
+            // Generic Case
+            jsonReturned = toscaConverter.convertToscaToJsonSchemaObject(
+                    operationalPolicy.getPolicyModel().getPolicyModelTosca(),
+                    operationalPolicy.getPolicyModel().getPolicyModelType());
+        }
+
         return jsonReturned;
     }
 
@@ -178,7 +227,8 @@ public class OperationalPolicy extends Policy implements Serializable {
             if (other.name != null) {
                 return false;
             }
-        } else if (!name.equals(other.name)) {
+        }
+        else if (!name.equals(other.name)) {
             return false;
         }
         return true;
@@ -243,7 +293,8 @@ public class OperationalPolicy extends Policy implements Serializable {
             String opPayload = new GsonBuilder().setPrettyPrinting().create().toJson(payload);
             logger.info("Operational policy payload: " + opPayload);
             return opPayload;
-        } else {
+        }
+        else {
             return super.createPolicyPayload();
         }
     }
@@ -261,7 +312,7 @@ public class OperationalPolicy extends Policy implements Serializable {
             if (guardsList != null) {
                 for (JsonElement guardElem : guardsList.getAsJsonArray()) {
                     result.put(guardElem.getAsJsonObject().get("policy-id").getAsString(),
-                        new GsonBuilder().create().toJson(guardElem));
+                            new GsonBuilder().create().toJson(guardElem));
                 }
             }
         }

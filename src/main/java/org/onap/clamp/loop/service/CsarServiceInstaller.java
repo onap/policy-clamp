@@ -27,9 +27,7 @@ package org.onap.clamp.loop.service;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
-
 import java.util.Map.Entry;
-
 import org.onap.clamp.clds.client.CdsServices;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.clamp.clds.model.cds.CdsBpWorkFlowListResponse;
@@ -96,7 +94,8 @@ public class CsarServiceInstaller {
                 if (SdcTypes.PNF == type || SdcTypes.VF == type) {
                     JsonObject controllerProperties = createCdsArtifactProperties(nodeTemplate);
                     if (controllerProperties != null) {
-                        resourcesPropByType.getAsJsonObject(nodeTemplate.getName()).add("controllerProperties", controllerProperties);
+                        resourcesPropByType.getAsJsonObject(nodeTemplate.getName())
+                                .add("controllerProperties", controllerProperties);
                     }
                 }
             }
@@ -151,7 +150,8 @@ public class CsarServiceInstaller {
         Object artifactName = nodeTemplate.getPropertyValue("sdnc_model_name");
         Object artifactVersion = nodeTemplate.getPropertyValue("sdnc_model_version");
         if (artifactName != null && artifactVersion != null) {
-            CdsBpWorkFlowListResponse response = queryCdsToGetWorkFlowList(artifactName.toString(), artifactVersion.toString());
+            CdsBpWorkFlowListResponse response =
+                    queryCdsToGetWorkFlowList(artifactName.toString(), artifactVersion.toString());
             if (response == null) {
                 return null;
             }
@@ -159,7 +159,7 @@ public class CsarServiceInstaller {
             JsonObject workFlowProps = new JsonObject();
             for (String workFlow : response.getWorkflows()) {
                 JsonObject inputs = queryCdsToGetWorkFlowInputProperties(response.getBlueprintName(),
-                                                                         response.getVersion(), workFlow);
+                        response.getVersion(), workFlow);
                 workFlowProps.add(workFlow, inputs);
             }
 
@@ -176,7 +176,8 @@ public class CsarServiceInstaller {
         return cdsServices.getBlueprintWorkflowList(artifactName, artifactVersion);
     }
 
-    private JsonObject queryCdsToGetWorkFlowInputProperties(String artifactName, String artifactVersion, String workFlow) {
+    private JsonObject queryCdsToGetWorkFlowInputProperties(String artifactName, String artifactVersion,
+                                                            String workFlow) {
         return cdsServices.getWorkflowInputProperties(artifactName, artifactVersion, workFlow);
     }
 }

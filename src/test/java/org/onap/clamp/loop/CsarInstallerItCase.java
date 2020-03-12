@@ -27,6 +27,7 @@
 package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +97,8 @@ public class CsarInstallerItCase {
     private CsarInstaller csarInstaller;
 
     private BlueprintArtifact buildFakeBuildprintArtifact(String instanceName, String invariantResourceUuid,
-            String blueprintFilePath, String artifactName, String invariantServiceUuid) throws IOException {
+                                                          String blueprintFilePath, String artifactName,
+                                                          String invariantServiceUuid) throws IOException {
         IResourceInstance resource = Mockito.mock(IResourceInstance.class);
         Mockito.when(resource.getResourceInstanceName()).thenReturn(instanceName);
         Mockito.when(resource.getResourceInvariantUUID()).thenReturn(invariantResourceUuid);

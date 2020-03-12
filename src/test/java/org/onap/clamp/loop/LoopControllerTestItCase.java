@@ -30,6 +30,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.IOException;
 import java.util.Set;
 import javax.transaction.Transactional;
 import org.junit.Test;
@@ -46,7 +47,6 @@ import org.onap.clamp.policy.operational.OperationalPolicy;
 import org.onap.clamp.policy.operational.OperationalPolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -77,10 +77,10 @@ public class LoopControllerTestItCase {
     private void saveTestLoopToDb() {
         Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, "blueprint", "representation");
         testLoop.setGlobalPropertiesJson(JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
-        LoopTemplate template =  new LoopTemplate();
+        LoopTemplate template = new LoopTemplate();
         template.setName("testTemplate");
         testLoop.setLoopTemplate(template);
-        Service modelService = new Service("{\"name\":\"serviceName\",\"UUID\":\"uuid\"}","{}");
+        Service modelService = new Service("{\"name\":\"serviceName\",\"UUID\":\"uuid\"}", "{}");
         testLoop.setModelService(modelService);
         loopService.saveOrUpdateLoop(testLoop);
     }
@@ -140,7 +140,7 @@ public class LoopControllerTestItCase {
     public void testUpdateMicroservicePolicy() {
         saveTestLoopToDb();
         PolicyModel policyModel = new PolicyModel("testPolicyModel",
-                "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0");
+                "tosca_definitions_version: tosca_simple_yaml_1_0_0", "1.0.0");
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy policy = new MicroServicePolicy("policyName", policyModel, false,
                 JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
@@ -158,10 +158,10 @@ public class LoopControllerTestItCase {
 
     @Test
     @Transactional
-    public void testAddAndRemoveOperationalPolicies() {
+    public void testAddAndRemoveOperationalPolicies() throws IOException {
         saveTestLoopToDb();
         PolicyModel policyModel = new PolicyModel("testPolicyModel",
-                "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0");
+                null, "1.0.0");
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
 
         loopController.addOperationalPolicy(EXAMPLE_LOOP_NAME, "testPolicyModel", "1.0.0");
@@ -169,7 +169,7 @@ public class LoopControllerTestItCase {
         Loop newLoop = loopController.getLoop(EXAMPLE_LOOP_NAME);
         Set<OperationalPolicy> opPolicyList = newLoop.getOperationalPolicies();
         assertThat(opPolicyList.size()).isEqualTo(1);
-        for(OperationalPolicy policy : opPolicyList) {
+        for (OperationalPolicy policy : opPolicyList) {
             assertThat(policy.getName().contains("OPERATIONAL_serviceName")).isTrue();
             assertThat(policy.getPolicyModel().getPolicyModelType()).isEqualTo("testPolicyModel");
             assertThat(policy.getPolicyModel().getVersion()).isEqualTo("1.0.0");

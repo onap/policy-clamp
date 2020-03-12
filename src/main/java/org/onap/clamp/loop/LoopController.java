@@ -26,6 +26,7 @@ package org.onap.clamp.loop;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import org.onap.clamp.clds.util.JsonUtils;
@@ -105,7 +106,7 @@ public class LoopController {
      * @param policyVersion The policy model  version
      * @return The loop modified
      */
-    public Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) {
+    public Loop addOperationalPolicy(String loopName, String policyType, String policyVersion) throws IOException {
         return loopService.addOperationalPolicy(loopName, policyType, policyVersion);
     }
 

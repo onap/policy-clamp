@@ -21,14 +21,15 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update;
+package org.onap.clamp.clds.tosca.update.elements;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import org.onap.clamp.clds.tosca.update.templates.JsonTemplate;
 
-public class Property {
+public class ToscaElementProperty {
 
     /**
      * name parameter is used as "key", in the LinkedHashMap of Components.
@@ -42,7 +43,7 @@ public class Property {
      * @param name  the name
      * @param items the items
      */
-    public Property(String name, LinkedHashMap<String, Object> items) {
+    public ToscaElementProperty(String name, LinkedHashMap<String, Object> items) {
         super();
         this.name = name;
         this.items = items;
@@ -117,14 +118,14 @@ public class Property {
      *
      * @param json a json
      * @param constraints constraints
-     * @param template template
+     * @param jsonTemplate template
      */
     @SuppressWarnings("unchecked")
-    public void addConstraintsAsJson(JsonObject json, ArrayList<Object> constraints, Template template) {
+    public void addConstraintsAsJson(JsonObject json, ArrayList<Object> constraints, JsonTemplate jsonTemplate) {
         for (Object constraint : constraints) {
             if (constraint instanceof LinkedHashMap) {
                 LinkedHashMap<String, Object> valueConstraint = (LinkedHashMap<String, Object>) constraint;
-                Constraint constraintParser = new Constraint(valueConstraint, template);
+                Constraint constraintParser = new Constraint(valueConstraint, jsonTemplate);
                 constraintParser.deployConstraints(json, (String) getItems().get("type"));
             }
         }

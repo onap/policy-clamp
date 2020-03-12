@@ -28,7 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.util.HashSet;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Test;
@@ -265,9 +264,12 @@ public class PolicyComponentTest {
         loopTest.addMicroServicePolicy(microServicePolicy);
 
         PolicyModel policyModel2 = new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0");
-        OperationalPolicy opPolicy = new OperationalPolicy("opPolicy", loopTest,
-                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), policyModel2, null, "pdpGroup2",
-                "pdpSubgroup2");
+        OperationalPolicy opPolicy =
+                new OperationalPolicy("opPolicy", new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class),
+                        new Gson().fromJson("{\"jsonschema\":\"schema\"}", JsonObject.class), policyModel2, null,
+                        "pdpGroup2",
+                        "pdpSubgroup2");
+
         loopTest.addOperationalPolicy(opPolicy);
 
         LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", "svg", 1, null);
