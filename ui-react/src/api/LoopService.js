@@ -194,26 +194,49 @@ export default class LoopService {
 			});
 	}
 
-		static addOperationalPolicyType(loopName, policyType, policyVersion) {
-    		return fetch('/restservices/clds/v2/loop/addOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion , {
-    			method: 'PUT',
-    			headers: {
-    				"Content-Type": "application/json"
-    			},
-    			credentials: 'same-origin'
-    		})
-                .then(function (response) {
-                    console.debug("Add Operational Policy response received: ", response.status);
-    				if (response.ok) {
-    					return response.json();
-    				} else {
-    					console.error("Add Operational Policy query failed");
-    					return {};
-    				}
-    			})
-    			.catch(function (error) {
-    				console.error("Add Operational Policy error received", error);
-    				return {};
-    			});
-    	}
+	static addOperationalPolicyType(loopName, policyType, policyVersion) {
+		return fetch('/restservices/clds/v2/loop/addOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion , {
+			method: 'PUT',
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: 'same-origin'
+		})
+				.then(function (response) {
+					console.debug("Add Operational Policy response received: ", response.status);
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error("Add Operational Policy query failed");
+					return {};
+				}
+			})
+			.catch(function (error) {
+				console.error("Add Operational Policy error received", error);
+				return {};
+			});
+	}
+
+	static removeOperationalPolicyType(loopName, policyType, policyVersion) {
+		return fetch('/restservices/clds/v2/loop/removeOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion , {
+			method: 'PUT',
+			headers: {
+				"Content-Type": "application/json"
+			},
+			credentials: 'same-origin'
+		})
+				.then(function (response) {
+					console.debug("Remove Operational Policy response received: ", response.status);
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error("Remove Operational Policy query failed");
+					return {};
+				}
+			})
+			.catch(function (error) {
+				console.error("Remove Operational Policy error received", error);
+				return {};
+			});
+	}
 }

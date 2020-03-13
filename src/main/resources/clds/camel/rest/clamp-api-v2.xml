@@ -604,6 +604,36 @@
 				</doTry>
 			</route>
 		</put>
+		<put uri="/v2/loop/removeOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}" outType="org.onap.clamp.loop.Loop" produces="application/json">
+			<route>
+				<removeHeaders pattern="*" excludePattern="loopName|policyType|policyVersion" />
+				<doTry>
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'REMOVE operational Policy')" />
+					<to
+							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to uri="direct:load-loop" />
+					<to
+							uri="bean:org.onap.clamp.loop.LoopController?method=removeOperationalPolicy(${header.loopName},${header.policyType},${header.policyVersion})" />
+					<to
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REMOVE OperationalPolicy request successfully executed','INFO',${exchangeProperty[loopObject]})" />
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+					<doCatch>
+						<exception>java.lang.Exception</exception>
+						<handled>
+							<constant>false</constant>
+						</handled>
+						<to
+								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+						<log loggingLevel="ERROR"
+							 message="REMOVE OperationalPolicy request failed for loop: ${header.loopName}" />
+						<to
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REMOVE OperationalPolicy request failed','ERROR',${exchangeProperty[loopObject]})" />
+					</doCatch>
+				</doTry>
+			</route>
+		</put>
 		<post
 				uri="/v2/loop/create/{loopName}?templateName={templateName}"
 				outType="org.onap.clamp.loop.Loop" consumes="application/json"

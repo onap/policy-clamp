@@ -35,6 +35,8 @@ import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import LoopService from '../../../api/LoopService';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 
 
 const ModalStyled = styled(Modal)`
@@ -61,6 +63,8 @@ export default class ModifyLoopModal extends React.Component {
 		content: 'Please select Tosca model to view the details',
 		selectedRowData: {},
 		toscaPolicyModelsData: [],
+		selectedPolicyModelsData: [],
+		key: 'add',
 		toscaColumns: [
 			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
 				cellStyle: cellStyle,
@@ -105,11 +109,12 @@ export default class ModifyLoopModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 		this.handleClose = this.handleClose.bind(this);
-		this.getPolicyToscaModels = this.getToscaPolicyModels.bind(this);
+		this.initializeToscaPolicyModelsInfo = this.initializeToscaPolicyModelsInfo.bind(this);
 		this.handleYamlContent = this.handleYamlContent.bind(this);
 		this.getToscaPolicyModelYaml = this.getToscaPolicyModelYaml.bind(this);
 		this.handleAdd = this.handleAdd.bind(this);
-		this.getToscaPolicyModels();
+		this.handleRemove = this.handleRemove.bind(this);
+		this.initializeToscaPolicyModelsInfo();
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -119,9 +124,16 @@ export default class ModifyLoopModal extends React.Component {
 		});
 	}
 
-	getToscaPolicyModels() {
-	    PolicyToscaService.getToscaPolicyModels().then(allToscaModels => {
-			this.setState({ toscaPolicyModelsData: allToscaModels});
+	initializeToscaPolicyModelsInfo() {
+		var operationalPolicies = this.state.loopCache.getOperationalPolicies();
+		var selectedPolicyModels = [];
+		for (var policy in operationalPolicies) {
+			selectedPolicyModels.push(operationalPolicies[policy]["policyModel"]);
+		}
+
+		PolicyToscaService.getToscaPolicyModels().then(allToscaModels => {
+			this.setState({ toscaPolicyModelsData: allToscaModels,
+							selectedPolicyModelsData: selectedPolicyModels});
 		});
 	}
 
@@ -149,38 +161,70 @@ export default class ModifyLoopModal extends React.Component {
 	}
 
 	handleAdd() {
-        LoopService.addOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version);
-        this.handleClose();
-        this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+		LoopService.addOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version);
+		this.handleClose();
+		this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+	}
+
+	handleRemove() {
+		LoopService.removeOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version);
+		this.handleClose();
+		this.props.loadLoopFunction(this.state.loopCache.getLoopName());
 	}
 
 	render() {
 		return (
 			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
+					<Modal.Title>Modify Loop Operational Policies</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
-					<MaterialTable
-					title={"View Tosca Policy Models"}
-					data={this.state.toscaPolicyModelsData}
-					columns={this.state.toscaColumns}
-					icons={this.state.tableIcons}
-					onRowClick={(event, rowData) => {this.getToscaPolicyModelYaml(rowData.policyModelType, rowData.version);this.setState({selectedRowData: rowData})}}
-					options={{
-						headerStyle: rowHeaderStyle,
-						rowStyle: rowData => ({
-							backgroundColor: (this.state.selectedRowData !== {} && this.state.selectedRowData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
-						})
-					}}
-					/>
-					<div>
-						<TextModal value={this.state.content} onChange={this.handleYamlContent}/>
-					</div>
-				</Modal.Body>
+				<Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key, selectedRowData: {} })}>
+					<Tab eventKey="add" title="Add Operational Policies">
+						<Modal.Body>
+							<MaterialTable
+							title={"View Tosca Policy Models"}
+							data={this.state.toscaPolicyModelsData}
+							columns={this.state.toscaColumns}
+							icons={this.state.tableIcons}
+							onRowClick={(event, rowData) => {this.getToscaPolicyModelYaml(rowData.policyModelType, rowData.version);this.setState({selectedRowData: rowData})}}
+							options={{
+								headerStyle: rowHeaderStyle,
+								rowStyle: rowData => ({
+									backgroundColor: (this.state.selectedRowData !== {} && this.state.selectedRowData.tableData !== undefined
+									&& this.state.selectedRowData.tableData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
+								})
+							}}
+							/>
+							<div>
+								<TextModal value={this.state.content} onChange={this.handleYamlContent}/>
+							</div>
+						</Modal.Body>
+					</Tab>
+					<Tab eventKey="remove" title="Remove Operational Policies">
+						<Modal.Body>
+							<MaterialTable
+							title={"Already added Tosca Policy Models"}
+							data={this.state.selectedPolicyModelsData}
+							columns={this.state.toscaColumns}
+							icons={this.state.tableIcons}
+							onRowClick={(event, rowData) => {this.setState({selectedRowData: rowData})}}
+							options={{
+								headerStyle: rowHeaderStyle,
+								rowStyle: rowData => ({
+									backgroundColor: (this.state.selectedRowData !== {} && this.state.selectedRowData.tableData !== undefined
+									&& this.state.selectedRowData.tableData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
+								})
+							}}
+							/>
+						</Modal.Body>
+					</Tab>
+				</Tabs>
 				<Modal.Footer>
 					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
-					<Button variant="primary"  type="submit" onClick={this.handleAdd}>Add</Button>
+					<Button variant="primary" disabled={(this.state.key === "remove")} type="submit" onClick={this.handleAdd}>Add</Button>
+					<Button variant="primary" disabled={(this.state.key === "add")} type="submit" onClick={this.handleRemove}>Remove</Button>
 				</Modal.Footer>
+
 			</ModalStyled>
 		);
 	}
