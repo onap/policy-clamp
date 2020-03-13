@@ -29,12 +29,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+import org.onap.clamp.tosca.DictionaryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class ParserToJson {
-    private LinkedHashMap<String, Component> components;
+@Component
+public class ToscaConverterToJson {
+    private LinkedHashMap<String, ToscaElement> components;
     private LinkedHashMap<String, Template> templates;
 
-    public ParserToJson(LinkedHashMap<String, Component> components, LinkedHashMap<String, Template> templates) {
+    // if this one is set, the dictionary mechanism is enabled
+    @Autowired
+    private DictionaryService dictionaryService;
+
+    public ToscaConverterToJson(LinkedHashMap<String, ToscaElement> components, LinkedHashMap<String, Template> templates) {
         this.components = components;
         this.templates = templates;
     }
@@ -61,28 +69,28 @@ public class ParserToJson {
     /**
      * Return the classical/general fields of the component, & launch the properties deployment.
      *
-     * @param component the compo
+     * @param toscaElement the compo
      * @return a json object
      */
-    public JsonObject getFieldAsObject(Component component) {
+    public JsonObject getFieldAsObject(ToscaElement toscaElement) {
 
         JsonObject globalFields = new JsonObject();
         if (templates.get("object").hasFields("title")) {
-            globalFields.addProperty("title", component.getName());
+            globalFields.addProperty("title", toscaElement.getName());
         }
         if (templates.get("object").hasFields("type")) {
             globalFields.addProperty("type", "object");
         }
         if (templates.get("object").hasFields("description")) {
-            if (component.getDescription() != null) {
-                globalFields.addProperty("description", component.getDescription());
+            if (toscaElement.getDescription() != null) {
+                globalFields.addProperty("description", toscaElement.getDescription());
             }
         }
         if (templates.get("object").hasFields("required")) {
-            globalFields.add("required", this.getRequirements(component.getName()));
+            globalFields.add("required", this.getRequirements(toscaElement.getName()));
         }
         if (templates.get("object").hasFields("properties")) {
-            globalFields.add("properties", this.deploy(component.getName()));
+            globalFields.add("properties", this.deploy(toscaElement.getName()));
         }
         return globalFields;
     }
@@ -95,7 +103,7 @@ public class ParserToJson {
      */
     public JsonArray getRequirements(String nameComponent) {
         JsonArray requirements = new JsonArray();
-        Component toParse = components.get(nameComponent);
+        ToscaElement toParse = components.get(nameComponent);
         //Check for a father component, and launch the same process
         if (!toParse.getDerivedFrom().equals("tosca.datatypes.Root")
                 && !toParse.getDerivedFrom().equals("tosca.policies.Root")) {
@@ -121,7 +129,7 @@ public class ParserToJson {
      */
     public JsonObject deploy(String nameComponent) {
         JsonObject jsonSchema = new JsonObject();
-        Component toParse = components.get(nameComponent);
+        ToscaElement toParse = components.get(nameComponent);
         //Check for a father component, and launch the same process
         if (!toParse.getDerivedFrom().equals("tosca.datatypes.Root")
                 && !toParse.getDerivedFrom().equals("tosca.policies.Root")) {
@@ -212,6 +220,8 @@ public class ParserToJson {
                     }
                     break;
                 case "metadata":
+                    propertiesInJson.add("enum", MetadataParser.processAllMetadataElement(property,
+                            dictionaryService));
                     break;
                 case "constraints":
                     property.addConstraintsAsJson(propertiesInJson,
@@ -222,7 +232,7 @@ public class ParserToJson {
                     //Here, a way to check if entry is a component (datatype) or a simple string
                     if (matchComponent(this.extractSpecificFieldFromMap(property, "entry_schema")) != null) {
                         String nameComponent = this.extractSpecificFieldFromMap(property, "entry_schema");
-                        ParserToJson child = new ParserToJson(components, templates);
+                        ToscaConverterToJson child = new ToscaConverterToJson(components, templates);
                         JsonObject propertiesContainer = new JsonObject();
 
                         switch ((String) property.getItems().get("type")) {
@@ -270,17 +280,17 @@ public class ParserToJson {
      * @param name the name
      * @return a component
      */
-    public Component matchComponent(String name) {
-        Component correspondingComponent = null;
+    public ToscaElement matchComponent(String name) {
+        ToscaElement correspondingToscaElement = null;
         if (components == null) {
             return null;
         }
-        for (Component component : components.values()) {
-            if (component.getName().equals(name)) {
-                correspondingComponent = component;
+        for (ToscaElement toscaElement : components.values()) {
+            if (toscaElement.getName().equals(name)) {
+                correspondingToscaElement = toscaElement;
             }
         }
-        return correspondingComponent;
+        return correspondingToscaElement;
     }
 
     /**

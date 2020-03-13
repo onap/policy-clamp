@@ -23,11 +23,11 @@
 
 package org.onap.clamp.policy.operational;
 
-import com.google.gson.JsonObject;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.onap.clamp.policy.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +37,13 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
 
     private final OperationalPolicyRepository operationalPolicyRepository;
 
+    private final PolicyModelsRepository policyModelsRepository;
+
     @Autowired
-    public OperationalPolicyService(OperationalPolicyRepository repository) {
+    public OperationalPolicyService(OperationalPolicyRepository repository,
+                                    PolicyModelsRepository policyModelsRepository) {
         this.operationalPolicyRepository = repository;
+        this.policyModelsRepository = policyModelsRepository;
     }
 
     @Override
@@ -49,10 +53,8 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
                 .map(policy ->
                         operationalPolicyRepository
                                 .findById(policy.getName())
-                                .map(p -> setConfigurationJson(p, policy))
-                                .orElse(new OperationalPolicy(policy.getName(), loop,
-                                        policy.getConfigurationsJson(),
-                                        policy.getPolicyModel(), null, policy.getPdpGroup(), policy.getPdpSubgroup())))
+                                .map(p -> setConfiguration(p, policy))
+                                .orElse(initializeMissingFields(loop,policy)))
                 .collect(Collectors.toSet());
     }
 
@@ -61,7 +63,12 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
         return operationalPolicyRepository.existsById(policyName);
     }
 
-    private OperationalPolicy setConfigurationJson(OperationalPolicy policy, OperationalPolicy newPolicy) {
+    private OperationalPolicy initializeMissingFields(Loop loop, OperationalPolicy policy) {
+        policy.setLoop(loop);
+        return policy;
+    }
+
+    private OperationalPolicy setConfiguration(OperationalPolicy policy, OperationalPolicy newPolicy) {
         policy.setConfigurationsJson(newPolicy.getConfigurationsJson());
         policy.setPdpGroup(newPolicy.getPdpGroup());
         policy.setPdpSubgroup(newPolicy.getPdpSubgroup());

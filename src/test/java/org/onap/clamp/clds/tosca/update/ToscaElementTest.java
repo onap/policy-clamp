@@ -29,7 +29,7 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 
-public class ComponentTest extends TestCase {
+public class ToscaElementTest extends TestCase {
 
     /**
      * Test propertiesName.
@@ -38,13 +38,13 @@ public class ComponentTest extends TestCase {
      */
     public void testPropertiesNames() throws IOException {
         ArrayList<String> reference = new ArrayList<>(Arrays.asList("actor", "operation", "target", "payload"));
-        TemplateManagement templateManagement =
-                new TemplateManagement(
+        ToscaConverterManager toscaConverterManager =
+                new ToscaConverterManager(
                         ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca_update/defaultToscaTypes.yaml"),
+                        ResourceFileUtil.getResourceAsString("clds/tosca_update/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Actor");
-        assertEquals(reference, component.propertiesNames());
+        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.Actor");
+        assertEquals(reference, toscaElement.propertiesNames());
     }
 
 }

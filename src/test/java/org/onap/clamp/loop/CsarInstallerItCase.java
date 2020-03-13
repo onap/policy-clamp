@@ -27,7 +27,6 @@
 package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
-import org.onap.clamp.loop.service.ServiceRepository;
+import org.onap.clamp.loop.service.ServicesRepository;
 import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.LoopTemplateLoopElementModel;
 import org.onap.clamp.loop.template.LoopTemplatesRepository;
@@ -87,7 +86,7 @@ public class CsarInstallerItCase {
     private LoopTemplatesRepository loopTemplatesRepo;
 
     @Autowired
-    ServiceRepository serviceRepository;
+    ServicesRepository serviceRepository;
 
     @Autowired
     PolicyModelsRepository policyModelsRepository;

@@ -26,7 +26,7 @@ package org.onap.clamp.clds.tosca.update;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-public class Component {
+public class ToscaElement {
 
     /**
      * name parameter is used as "key", in the LinkedHashMap of Components.
@@ -38,7 +38,7 @@ public class Component {
     private String description;
     private LinkedHashMap<String, Property> properties;
 
-    public Component() {
+    public ToscaElement() {
     }
 
     /**
@@ -49,7 +49,7 @@ public class Component {
      * @param description description
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public Component(String name, String derivedFrom, String description) {
+    public ToscaElement(String name, String derivedFrom, String description) {
         super();
         this.name = name;
         this.derivedFrom = derivedFrom;

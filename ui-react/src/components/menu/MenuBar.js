@@ -85,7 +85,6 @@ export default class MenuBar extends React.Component {
 
 	render () {
 		return (
-
 				<Navbar.Collapse>
 					<StyledNavDropdown title="Loop Templates">
 							<NavDropdown.Item as={StyledLink} to="/ViewLoopTemplatesModal">View All Templates</NavDropdown.Item>
@@ -93,16 +92,15 @@ export default class MenuBar extends React.Component {
 					<StyledNavDropdown title="Policy Models">
                     	    <NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Model</NavDropdown.Item>
                     		<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
-                    </StyledNavDropdown>
-                    <StyledNavDropdown title="Dictionaries">
-                            <NavDropdown.Item as={StyledLink} to="/ManageDictionaries">Manage Dictionaries</NavDropdown.Item>
+                            <NavDropdown.Item as={StyledLink} to="/ManageDictionaries">Manage Metadata Dictionaries</NavDropdown.Item>
                     </StyledNavDropdown>
 					<StyledNavDropdown title="Loop Instance">
 					        <NavDropdown.Item as={StyledLink} to="/createLoop">Create</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/openLoop">Open</NavDropdown.Item>
+					        <NavDropdown.Item as={StyledLink} to="/openLoop">Open</NavDropdown.Item>
+					        <NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close</NavDropdown.Item>
+					        <NavDropdown.Item as={StyledLink} to="/modifyLoop" disabled={this.state.disabled}>Modify</NavDropdown.Item>
+						    <NavDropdown.Divider />
 							<NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close</NavDropdown.Item>
-							<NavDropdown.Item as={StyledLink} to="/modifyLoop" disabled={this.state.disabled}>Modify</NavDropdown.Item>
 							<NavDropdown.Item as={StyledLink} to="/refreshStatus" disabled={this.state.disabled}>Refresh Status</NavDropdown.Item>
 					</StyledNavDropdown>
 					<StyledNavDropdown title="Loop Operations">

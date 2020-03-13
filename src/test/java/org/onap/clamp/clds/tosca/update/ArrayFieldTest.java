@@ -37,12 +37,12 @@ public class ArrayFieldTest extends TestCase {
      * @throws IOException in case of failure
      */
     public void testDeploy() throws IOException {
-        TemplateManagement templateManagement = new TemplateManagement(ResourceFileUtil.getResourceAsString(
+        ToscaConverterManager toscaConverterManager = new ToscaConverterManager(ResourceFileUtil.getResourceAsString(
                 "tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),ResourceFileUtil.getResourceAsString(
-                "clds/tosca_update/defaultToscaTypes.yaml"),
+                "clds/tosca_update/default-tosca-types.yaml"),
                 ResourceFileUtil.getResourceAsString("clds/tosca_update/templates.json"));
-        Component component = templateManagement.getComponents().get("onap.datatype.controlloop.Actor");
-        Property property = component.getProperties().get("actor");
+        ToscaElement toscaElement = toscaConverterManager.getComponents().get("onap.datatype.controlloop.Actor");
+        Property property = toscaElement.getProperties().get("actor");
         ArrayField arrayParser = new ArrayField((ArrayList<Object>) property.getItems().get("default"));
         JsonArray toTest = arrayParser.deploy();
         String reference = "[1,\"String\",5.5,true]";

@@ -117,7 +117,7 @@ export default class PolicyModal extends React.Component {
               display_required_only: false,
               show_opt_in: true,
               prompt_before_delete: true,
-              required_by_default: true
+              required_by_default: false
         })
     }
 

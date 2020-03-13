@@ -54,7 +54,7 @@ public class CsarServiceInstaller {
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(CsarServiceInstaller.class);
 
     @Autowired
-    ServiceRepository serviceRepository;
+    ServicesRepository serviceRepository;
 
     @Autowired
     CdsServices cdsServices;
