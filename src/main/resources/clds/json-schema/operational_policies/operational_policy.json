@@ -1,483 +1,464 @@
 {
-    "schema": {
-        "uniqueItems": "true",
-        "format": "tabs",
-        "type": "array",
-        "minItems": 1,
-        "maxItems": 1,
-        "title": "Operational policies",
-        "items": {
+  "type": "object",
+  "title": "Configuration",
+  "required": [
+    "operational_policy",
+    "guard_policies"
+  ],
+  "properties": {
+    "operational_policy": {
+      "type": "object",
+      "title": "Related Parameters",
+      "required": [
+        "controlLoop",
+        "policies"
+      ],
+      "properties": {
+        "controlLoop": {
+          "type": "object",
+          "title": "Control Loop details",
+          "required": [
+            "timeout",
+            "abatement",
+            "trigger_policy",
+            "controlLoopName"
+          ],
+          "properties": {
+            "timeout": {
+              "type": "string",
+              "title": "Overall Time Limit",
+              "default": "0",
+              "format": "number"
+            },
+            "abatement": {
+              "type": "string",
+              "title": "Abatement",
+              "enum": [
+                "True",
+                "False"
+              ]
+            },
+            "trigger_policy": {
+              "type": "string",
+              "title": "Policy Decision Entry"
+            },
+            "controlLoopName": {
+              "type": "string",
+              "title": "Control loop name",
+              "readOnly": "True"
+            }
+          }
+        },
+        "policies": {
+          "uniqueItems": "true",
+          "id": "policies_array",
+          "type": "array",
+          "title": "Policy Decision Tree",
+          "format": "tabs-top",
+          "items": {
+            "title": "Policy Decision",
             "type": "object",
-            "title": "Operational Policy Item",
-            "id": "operational_policy_item",
-            "headerTemplate": "{{self.name}}",
+            "id": "policy_item",
+            "headerTemplate": "{{self.id}} - {{self.recipe}}",
+            "format": "categories",
+            "basicCategoryTitle": "recipe",
             "required": [
-                "name",
-                "configurationsJson"
+              "id",
+              "retry",
+              "timeout",
+              "actor",
+              "success",
+              "failure",
+              "failure_timeout",
+              "failure_retries",
+              "failure_exception",
+              "failure_guard",
+              "target"
             ],
             "properties": {
-                "name": {
-                    "type": "string",
-                    "title": "Operational policy name",
-                    "readOnly": "True"
-                },
-                "configurationsJson": {
-                    "type": "object",
-                    "title": "Configuration",
-                    "required": [
-                        "operational_policy",
-                        "guard_policies"
-                    ],
+              "id": {
+                "default": "Policy 1",
+                "title": "Policy ID",
+                "type": "string"
+              },
+              "retry": {
+                "default": "0",
+                "title": "Number of Retry",
+                "type": "string",
+                "format": "number"
+              },
+              "timeout": {
+                "default": "0",
+                "title": "Timeout",
+                "type": "string",
+                "format": "number"
+              },
+              "actor": {
+                "type": "object",
+                "title": "Actor",
+                "anyOf": [
+                  {
+                    "title": "APPC",
                     "properties": {
-                        "operational_policy": {
-                            "type": "object",
-                            "title": "Related Parameters",
-                            "required": [
-                                "controlLoop",
-                                "policies"
-                            ],
-                            "properties": {
-                                "controlLoop": {
-                                    "type": "object",
-                                    "title": "Control Loop details",
-                                    "required": [
-                                        "timeout",
-                                        "abatement",
-                                        "trigger_policy",
-                                        "controlLoopName"
-                                    ],
-                                    "properties": {
-                                        "timeout": {
-                                            "type": "string",
-                                            "title": "Overall Time Limit",
-                                            "default": "0",
-                                            "format": "number"
-                                        },
-                                        "abatement": {
-                                            "type": "string",
-                                            "title": "Abatement",
-                                            "enum": [
-                                                "True",
-                                                "False"
-                                            ]
-                                        },
-                                        "trigger_policy": {
-                                            "type": "string",
-                                            "title": "Policy Decision Entry"
-                                        },
-                                        "controlLoopName": {
-                                            "type": "string",
-                                            "title": "Control loop name",
-                                            "readOnly": "True"
-                                        }
-                                    }
-                                },
-                                "policies": {
-                                    "uniqueItems": "true",
-                                    "id": "policies_array",
-                                    "type": "array",
-                                    "title": "Policy Decision Tree",
-                                    "format": "tabs-top",
-                                    "items": {
-                                        "title": "Policy Decision",
-                                        "type": "object",
-                                        "id": "policy_item",
-                                        "headerTemplate": "{{self.id}} - {{self.recipe}}",
-                                        "format": "categories",
-                                        "basicCategoryTitle": "recipe",
-                                        "required": [
-                                            "id",
-                                            "retry",
-                                            "timeout",
-                                            "actor",
-                                            "success",
-                                            "failure",
-                                            "failure_timeout",
-                                            "failure_retries",
-                                            "failure_exception",
-                                            "failure_guard",
-                                            "target"
-                                        ],
-                                        "properties": {
-                                            "id": {
-                                                "default": "Policy 1",
-                                                "title": "Policy ID",
-                                                "type": "string"
-                                            },
-                                            "retry": {
-                                                "default": "0",
-                                                "title": "Number of Retry",
-                                                "type": "string",
-                                                "format": "number"
-                                            },
-                                            "timeout": {
-                                                "default": "0",
-                                                "title": "Timeout",
-                                                "type": "string",
-                                                "format": "number"
-                                            },
-                                            "actor": {
-                                                "type": "object",
-                                                "title": "Actor",
-                                                "anyOf": [
-                                                    {
-                                                        "title": "APPC",
-                                                        "properties": {
-                                                            "actor": {
-                                                                "title": "actor",
-                                                                "type": "string",
-                                                                "default": "APPC",
-                                                                "options": {
-                                                                    "hidden": true
-                                                                }
-                                                            },
-                                                            "type": {
-                                                                "title": "recipe",
-                                                                "type": "string",
-                                                                "default": "",
-                                                                "enum": [
-                                                                    "Restart",
-                                                                    "Rebuild",
-                                                                    "Migrate",
-                                                                    "Health-Check",
-                                                                    "ModifyConfig"
-                                                                ]
-                                                            },
-                                                            "payload": {
-                                                                "title": "Payload (YAML)",
-                                                                "type": "string",
-                                                                "format": "textarea"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "title": "SO",
-                                                        "properties": {
-                                                            "actor": {
-                                                                "title": "actor",
-                                                                "type": "string",
-                                                                "default": "SO",
-                                                                "options": {
-                                                                    "hidden": true
-                                                                }
-                                                            },
-                                                            "type": {
-                                                                "title": "recipe",
-                                                                "type": "string",
-                                                                "default": "",
-                                                                "enum": [
-                                                                    "VF Module Create",
-                                                                    "VF Module Delete"
-                                                                ]
-                                                            },
-                                                            "payload": {
-                                                                "title": "Payload (YAML)",
-                                                                "type": "string",
-                                                                "format": "textarea"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "title": "SDNC",
-                                                        "properties": {
-                                                            "actor": {
-                                                                "title": "actor",
-                                                                "type": "string",
-                                                                "default": "SDNC",
-                                                                "options": {
-                                                                    "hidden": true
-                                                                }
-                                                            },
-                                                            "type": {
-                                                                "title": "recipe",
-                                                                "type": "string",
-                                                                "default": "",
-                                                                "enum": [
-                                                                    "Reroute",
-                                                                    "BandwidthOnDemand"
-                                                                ]
-                                                            },
-                                                            "payload": {
-                                                                "title": "Payload (YAML)",
-                                                                "type": "string",
-                                                                "format": "textarea"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "title": "VFC",
-                                                        "properties": {
-                                                            "actor": {
-                                                                "title": "actor",
-                                                                "type": "string",
-                                                                "default": "VFC",
-                                                                "options": {
-                                                                    "hidden": true
-                                                                }
-                                                            },
-                                                            "type": {
-                                                                "title": "recipe",
-                                                                "type": "string",
-                                                                "required": [
-                                                                    "payload"
-                                                                ],
-                                                                "default": "",
-                                                                "enum": [
-                                                                    "ModifyConfig"
-                                                                ]
-                                                            },
-                                                            "payload": {
-                                                                "title": "Payload (YAML)",
-                                                                "type": "string",
-                                                                "format": "textarea"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "title": "CDS",
-                                                        "properties": {
-                                                            "actor": {
-                                                                "title": "actor",
-                                                                "type": "string",
-                                                                "default": "CDS",
-                                                                "options": {
-                                                                    "hidden": true
-                                                                }
-                                                            },
-                                                            "type": {
-                                                                "title": "recipe",
-                                                                "type": "object",
-                                                                "required": [
-                                                                    "payload"
-                                                                ],
-                                                                "anyOf": [
-                                                                    {
-                                                                        "title": "user-defined",
-                                                                        "properties": {
-                                                                            "type": {
-                                                                                "title": "Payload (YAML)",
-                                                                                "type": "string",
-                                                                                "default" : "",
-                                                                                "format" : "textarea"
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    }
-                                                ]
-                                            },
-                                            "success": {
-                                                "default": "final_success",
-                                                "title": "When Success",
-                                                "type": "string"
-                                            },
-                                            "failure": {
-                                                "default": "final_failure",
-                                                "title": "When Failure",
-                                                "type": "string"
-                                            },
-                                            "failure_timeout": {
-                                                "default": "final_failure_timeout",
-                                                "title": "When Failure Timeout",
-                                                "type": "string"
-                                            },
-                                            "failure_retries": {
-                                                "default": "final_failure_retries",
-                                                "title": "When Failure Retries",
-                                                "type": "string"
-                                            },
-                                            "failure_exception": {
-                                                "default": "final_failure_exception",
-                                                "title": "When Failure Exception",
-                                                "type": "string"
-                                            },
-                                            "failure_guard": {
-                                                "default": "final_failure_guard",
-                                                "title": "When Failure Guard",
-                                                "type": "string"
-                                            },
-                                            "target": {
-                                                "type": "object",
-                                                "required": [
-                                                    "type",
-                                                    "resourceID"
-                                                ],
-                                                "anyOf": [
-                                                    {
-                                                        "title": "User Defined",
-                                                        "additionalProperties": "True",
-                                                        "properties": {
-                                                            "type": {
-                                                                "title": "Target type",
-                                                                "type": "string",
-                                                                "default": "",
-                                                                "enum": [
-                                                                    "VNF",
-                                                                    "VFMODULE",
-                                                                    "VM"
-                                                                ]
-                                                            },
-                                                            "resourceID": {
-                                                                "title": "Target type",
-                                                                "type": "string",
-                                                                "default": ""
-                                                            }
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "guard_policies": {
-                            "type": "array",
-                            "format": "tabs-top",
-                            "title": "Associated Guard policies",
-                            "items": {
-                                "headerTemplate": "{{self.policy-id}} - {{self.content.recipe}}",
-                                "anyOf": [
-                                    {
-                                        "title": "Guard MinMax",
-                                        "type": "object",
-                                        "properties": {
-                                            "policy-id": {
-                                                "type": "string",
-                                                "default": "guard.minmax.new",
-                                                "pattern": "^(guard.minmax\\..*)$"
-                                            },
-                                            "content": {
-                                                "properties": {
-                                                    "actor": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "APPC",
-                                                            "SO",
-                                                            "VFC",
-                                                            "SDNC",
-                                                            "SDNR"
-                                                        ]
-                                                    },
-                                                    "recipe": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "Restart",
-                                                            "Rebuild",
-                                                            "Migrate",
-                                                            "Health-Check",
-                                                            "ModifyConfig",
-                                                            "VF Module Create",
-                                                            "VF Module Delete",
-                                                            "Reroute"
-                                                        ]
-                                                    },
-                                                    "targets": {
-                                                        "type": "string",
-                                                        "default": ".*"
-                                                    },
-                                                    "clname": {
-                                                        "type": "string",
-                                                        "template": "{{loopName}}",
-                                                        "watch": {
-                                                            "loopName": "operational_policy_item.configurationsJson.operational_policy.controlLoop.controlLoopName"
-                                                        }
-                                                    },
-                                                    "guardActiveStart": {
-                                                        "type": "string",
-                                                        "default": "00:00:00Z"
-                                                    },
-                                                    "guardActiveEnd": {
-                                                        "type": "string",
-                                                        "default": "10:00:00Z"
-                                                    },
-                                                    "min": {
-                                                        "type": "string",
-                                                        "default": "0"
-                                                    },
-                                                    "max": {
-                                                        "type": "string",
-                                                        "default": "1"
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "title": "Guard Frequency",
-                                        "type": "object",
-                                        "properties": {
-                                            "policy-id": {
-                                                "type": "string",
-                                                "default": "guard.frequency.new",
-                                                "pattern": "^(guard.frequency\\..*)$"
-                                            },
-                                            "content": {
-                                                "properties": {
-                                                    "actor": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "APPC",
-                                                            "SO",
-                                                            "VFC",
-                                                            "SDNC",
-                                                            "SDNR"
-                                                        ]
-                                                    },
-                                                    "recipe": {
-                                                        "type": "string",
-                                                        "enum": [
-                                                            "Restart",
-                                                            "Rebuild",
-                                                            "Migrate",
-                                                            "Health-Check",
-                                                            "ModifyConfig",
-                                                            "VF Module Create",
-                                                            "VF Module Delete",
-                                                            "Reroute"
-                                                        ]
-                                                    },
-                                                    "targets": {
-                                                        "type": "string",
-                                                        "default": ".*"
-                                                    },
-                                                    "clname": {
-                                                        "type": "string",
-                                                        "template": "{{loopName}}",
-                                                        "watch": {
-                                                            "loopName": "operational_policy_item.configurationsJson.operational_policy.controlLoop.controlLoopName"
-                                                        }
-                                                    },
-                                                    "guardActiveStart": {
-                                                        "type": "string",
-                                                        "default": "00:00:00Z"
-                                                    },
-                                                    "guardActiveEnd": {
-                                                        "type": "string",
-                                                        "default": "10:00:00Z"
-                                                    },
-                                                    "limit": {
-                                                        "type": "string"
-                                                    },
-                                                    "timeWindow": {
-                                                        "type": "string"
-                                                    },
-                                                    "timeUnits": {
-                                                        "type": "string",
-                                                        "enum":["minute","hour","day","week","month","year"]
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
-                            }
+                      "actor": {
+                        "title": "actor",
+                        "type": "string",
+                        "default": "APPC",
+                        "options": {
+                          "hidden": true
                         }
+                      },
+                      "type": {
+                        "title": "recipe",
+                        "type": "string",
+                        "default": "",
+                        "enum": [
+                          "Restart",
+                          "Rebuild",
+                          "Migrate",
+                          "Health-Check",
+                          "ModifyConfig"
+                        ]
+                      },
+                      "payload": {
+                        "title": "Payload (YAML)",
+                        "type": "string",
+                        "format": "textarea"
+                      }
                     }
-                }
+                  },
+                  {
+                    "title": "SO",
+                    "properties": {
+                      "actor": {
+                        "title": "actor",
+                        "type": "string",
+                        "default": "SO",
+                        "options": {
+                          "hidden": true
+                        }
+                      },
+                      "type": {
+                        "title": "recipe",
+                        "type": "string",
+                        "default": "",
+                        "enum": [
+                          "VF Module Create",
+                          "VF Module Delete"
+                        ]
+                      },
+                      "payload": {
+                        "title": "Payload (YAML)",
+                        "type": "string",
+                        "format": "textarea"
+                      }
+                    }
+                  },
+                  {
+                    "title": "SDNC",
+                    "properties": {
+                      "actor": {
+                        "title": "actor",
+                        "type": "string",
+                        "default": "SDNC",
+                        "options": {
+                          "hidden": true
+                        }
+                      },
+                      "type": {
+                        "title": "recipe",
+                        "type": "string",
+                        "default": "",
+                        "enum": [
+                          "Reroute",
+                          "BandwidthOnDemand"
+                        ]
+                      },
+                      "payload": {
+                        "title": "Payload (YAML)",
+                        "type": "string",
+                        "format": "textarea"
+                      }
+                    }
+                  },
+                  {
+                    "title": "VFC",
+                    "properties": {
+                      "actor": {
+                        "title": "actor",
+                        "type": "string",
+                        "default": "VFC",
+                        "options": {
+                          "hidden": true
+                        }
+                      },
+                      "type": {
+                        "title": "recipe",
+                        "type": "string",
+                        "required": [
+                          "payload"
+                        ],
+                        "default": "",
+                        "enum": [
+                          "ModifyConfig"
+                        ]
+                      },
+                      "payload": {
+                        "title": "Payload (YAML)",
+                        "type": "string",
+                        "format": "textarea"
+                      }
+                    }
+                  },
+                  {
+                    "title": "CDS",
+                    "properties": {
+                      "actor": {
+                        "title": "actor",
+                        "type": "string",
+                        "default": "CDS",
+                        "options": {
+                          "hidden": true
+                        }
+                      },
+                      "type": {
+                        "title": "recipe",
+                        "type": "object",
+                        "required": [
+                          "payload"
+                        ],
+                        "anyOf": [
+                          {
+                            "title": "user-defined",
+                            "properties": {
+                              "type": {
+                                "title": "Payload (YAML)",
+                                "type": "string",
+                                "default": "",
+                                "format": "textarea"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                ]
+              },
+              "success": {
+                "default": "final_success",
+                "title": "When Success",
+                "type": "string"
+              },
+              "failure": {
+                "default": "final_failure",
+                "title": "When Failure",
+                "type": "string"
+              },
+              "failure_timeout": {
+                "default": "final_failure_timeout",
+                "title": "When Failure Timeout",
+                "type": "string"
+              },
+              "failure_retries": {
+                "default": "final_failure_retries",
+                "title": "When Failure Retries",
+                "type": "string"
+              },
+              "failure_exception": {
+                "default": "final_failure_exception",
+                "title": "When Failure Exception",
+                "type": "string"
+              },
+              "failure_guard": {
+                "default": "final_failure_guard",
+                "title": "When Failure Guard",
+                "type": "string"
+              },
+              "target": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "resourceID"
+                ],
+                "anyOf": [
+                  {
+                    "title": "User Defined",
+                    "additionalProperties": "True",
+                    "properties": {
+                      "type": {
+                        "title": "Target type",
+                        "type": "string",
+                        "default": "",
+                        "enum": [
+                          "VNF",
+                          "VFMODULE",
+                          "VM"
+                        ]
+                      },
+                      "resourceID": {
+                        "title": "Target type",
+                        "type": "string",
+                        "default": ""
+                      }
+                    }
+                  }
+                ]
+              }
             }
+          }
         }
+      }
+    },
+    "guard_policies": {
+      "type": "array",
+      "format": "tabs-top",
+      "title": "Associated Guard policies",
+      "items": {
+        "headerTemplate": "{{self.policy-id}} - {{self.content.recipe}}",
+        "anyOf": [
+          {
+            "title": "Guard MinMax",
+            "type": "object",
+            "properties": {
+              "policy-id": {
+                "type": "string",
+                "default": "guard.minmax.new",
+                "pattern": "^(guard.minmax\\..*)$"
+              },
+              "content": {
+                "properties": {
+                  "actor": {
+                    "type": "string",
+                    "enum": [
+                      "APPC",
+                      "SO",
+                      "VFC",
+                      "SDNC",
+                      "SDNR"
+                    ]
+                  },
+                  "recipe": {
+                    "type": "string",
+                    "enum": [
+                      "Restart",
+                      "Rebuild",
+                      "Migrate",
+                      "Health-Check",
+                      "ModifyConfig",
+                      "VF Module Create",
+                      "VF Module Delete",
+                      "Reroute"
+                    ]
+                  },
+                  "targets": {
+                    "type": "string",
+                    "default": ".*"
+                  },
+                  "clname": {
+                    "type": "string",
+                    "template": "{{loopName}}",
+                    "watch": {
+                      "loopName": "operational_policy.controlLoop.controlLoopName"
+                    }
+                  },
+                  "guardActiveStart": {
+                    "type": "string",
+                    "default": "00:00:00Z"
+                  },
+                  "guardActiveEnd": {
+                    "type": "string",
+                    "default": "10:00:00Z"
+                  },
+                  "min": {
+                    "type": "string",
+                    "default": "0"
+                  },
+                  "max": {
+                    "type": "string",
+                    "default": "1"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "title": "Guard Frequency",
+            "type": "object",
+            "properties": {
+              "policy-id": {
+                "type": "string",
+                "default": "guard.frequency.new",
+                "pattern": "^(guard.frequency\\..*)$"
+              },
+              "content": {
+                "properties": {
+                  "actor": {
+                    "type": "string",
+                    "enum": [
+                      "APPC",
+                      "SO",
+                      "VFC",
+                      "SDNC",
+                      "SDNR"
+                    ]
+                  },
+                  "recipe": {
+                    "type": "string",
+                    "enum": [
+                      "Restart",
+                      "Rebuild",
+                      "Migrate",
+                      "Health-Check",
+                      "ModifyConfig",
+                      "VF Module Create",
+                      "VF Module Delete",
+                      "Reroute"
+                    ]
+                  },
+                  "targets": {
+                    "type": "string",
+                    "default": ".*"
+                  },
+                  "clname": {
+                    "type": "string",
+                    "template": "{{loopName}}",
+                    "watch": {
+                      "loopName": "operational_policy.controlLoop.controlLoopName"
+                    }
+                  },
+                  "guardActiveStart": {
+                    "type": "string",
+                    "default": "00:00:00Z"
+                  },
+                  "guardActiveEnd": {
+                    "type": "string",
+                    "default": "10:00:00Z"
+                  },
+                  "limit": {
+                    "type": "string"
+                  },
+                  "timeWindow": {
+                    "type": "string"
+                  },
+                  "timeUnits": {
+                    "type": "string",
+                    "enum": [
+                      "minute",
+                      "hour",
+                      "day",
+                      "week",
+                      "month",
+                      "year"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
     }
+  }
 }
+

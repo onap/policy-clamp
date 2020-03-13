@@ -152,6 +152,7 @@ public class OperationalPolicy extends Policy implements Serializable {
     /**
      * This method can generate a Json representation (json schema) for an operational policy.
      * This is mainly to support a legacy case and a generic case.
+     * For the legacy case the operational policy given is modified (configurationJson).
      *
      * @param operationalPolicy The operational policy
      * @param toscaConverter    The tosca converter
@@ -166,7 +167,7 @@ public class OperationalPolicy extends Policy implements Serializable {
         }
         if (operationalPolicy.isLegacy()) {
             // Op policy Legacy case
-            LegacyOperationalPolicy.preloadConfiguration(jsonReturned, operationalPolicy.loop);
+            LegacyOperationalPolicy.preloadConfiguration(operationalPolicy.getConfigurationsJson(), operationalPolicy.loop);
             jsonReturned = OperationalPolicyRepresentationBuilder
                     .generateOperationalPolicySchema(operationalPolicy.loop.getModelService());
         }

@@ -112,12 +112,15 @@ export default class PolicyModal extends React.Component {
               disable_array_reorder: true,
               disable_array_delete_last_row: true,
               disable_array_delete_all_rows: false,
-              no_additional_properties: true,
+              array_controls_top: true,
+              keep_oneof_values: false,
+              collapsed:true,
               show_errors: 'always',
               display_required_only: false,
               show_opt_in: true,
               prompt_before_delete: true,
-              required_by_default: false
+              required_by_default: false,
+              array_controls_top: true
         })
     }
 
