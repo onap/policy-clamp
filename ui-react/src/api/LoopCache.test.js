@@ -30,17 +30,6 @@ describe('Verify LoopCache functions', () => {
       expect(loopCache.getLoopName()).toBe("LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca");
 		});
 
-    it('getOperationalPolicyConfigurationJson', () => {
-      const opPolicyConfig = {
-          "guard_policies": {},
-          "operational_policy": {
-            "controlLoop": {},
-            "policies": []
-          }
-      };
-      expect(loopCache.getOperationalPolicyConfigurationJson()).toStrictEqual(opPolicyConfig);
-    });
-
     it('getOperationalPolicies', () => {
       const opPolicy = [{
         "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",

@@ -43,6 +43,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.json.JSONObject;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -174,6 +175,13 @@ public abstract class Policy extends AuditEntity {
     public void setJsonRepresentation(JsonObject jsonRepresentation) {
         this.jsonRepresentation = jsonRepresentation;
     }
+
+    /**
+     * Regenerate the Policy Json Representation.
+     *
+     * @param toscaConverter The tosca converter required to regenerate the json schema
+     */
+    public abstract void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter);
 
     /**
      * policyModel getter.

@@ -24,10 +24,11 @@
 
 package org.onap.clamp.policy.operational;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.util.Map.Entry;
 import org.onap.clamp.clds.util.JsonUtils;
@@ -35,6 +36,9 @@ import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.service.Service;
 
 public class OperationalPolicyRepresentationBuilder {
+
+    private static final EELFLogger logger =
+            EELFManager.getInstance().getLogger(OperationalPolicyRepresentationBuilder.class);
 
     /**
      * This method generates the operational policy json representation that will be
@@ -44,34 +48,38 @@ public class OperationalPolicyRepresentationBuilder {
      *
      * @param modelJson The loop model json
      * @return The json representation
-     * @throws JsonSyntaxException If the schema template cannot be parsed
-     * @throws IOException         In case of issue when opening the schema template
      */
-    public static JsonObject generateOperationalPolicySchema(Service modelJson)
-            throws JsonSyntaxException, IOException {
-        JsonObject jsonSchema = JsonUtils.GSON.fromJson(
-                ResourceFileUtil.getResourceAsString("clds/json-schema/operational_policies/operational_policy.json"),
-                JsonObject.class);
-        jsonSchema.get("properties").getAsJsonObject()
-                .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
-                .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("target")
-                .getAsJsonObject().get("anyOf").getAsJsonArray().addAll(createAnyOfArray(modelJson));
+    public static JsonObject generateOperationalPolicySchema(Service modelJson) {
 
-        // update CDS recipe and payload information to schema
-        JsonArray actors = jsonSchema.get("properties").getAsJsonObject()
-                .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
-                .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("actor")
-                .getAsJsonObject().get("anyOf").getAsJsonArray();
+        JsonObject jsonSchema = null;
+        try {
+            jsonSchema = JsonUtils.GSON.fromJson(
+                    ResourceFileUtil
+                            .getResourceAsString("clds/json-schema/operational_policies/operational_policy.json"),
+                    JsonObject.class);
+            jsonSchema.get("properties").getAsJsonObject()
+                    .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
+                    .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("target")
+                    .getAsJsonObject().get("anyOf").getAsJsonArray().addAll(createAnyOfArray(modelJson));
 
-        for (JsonElement actor : actors) {
-            if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get("title").getAsString())) {
-                actor.getAsJsonObject().get("properties").getAsJsonObject().get("type").getAsJsonObject()
-                        .get("anyOf").getAsJsonArray()
-                        .addAll(createAnyOfArrayForCdsRecipe(modelJson.getResourceDetails()));
+            // update CDS recipe and payload information to schema
+            JsonArray actors = jsonSchema.get("properties").getAsJsonObject()
+                    .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
+                    .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("actor")
+                    .getAsJsonObject().get("anyOf").getAsJsonArray();
+
+            for (JsonElement actor : actors) {
+                if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get("title").getAsString())) {
+                    actor.getAsJsonObject().get("properties").getAsJsonObject().get("type").getAsJsonObject()
+                            .get("anyOf").getAsJsonArray()
+                            .addAll(createAnyOfArrayForCdsRecipe(modelJson.getResourceDetails()));
+                }
             }
+            return jsonSchema;
+        } catch (IOException e) {
+            logger.error("Unable to generate the json schema because of an exception",e);
+            return new JsonObject();
         }
-
-        return jsonSchema;
     }
 
     private static JsonObject createSchemaProperty(String title, String type, String defaultValue, String readOnlyFlag,

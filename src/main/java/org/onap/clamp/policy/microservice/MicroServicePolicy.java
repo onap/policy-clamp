@@ -23,8 +23,6 @@
 
 package org.onap.clamp.policy.microservice;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.Serializable;
@@ -36,7 +34,6 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -56,9 +53,6 @@ public class MicroServicePolicy extends Policy implements Serializable {
      * The serial version ID.
      */
     private static final long serialVersionUID = 6271238288583332616L;
-
-    @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(MicroServicePolicy.class);
 
     @Expose
     @Id
@@ -126,20 +120,19 @@ public class MicroServicePolicy extends Policy implements Serializable {
     /**
      * Constructor with tosca converter.
      *
-     * @param loop The loop instance
-     * @param service The service model object
+     * @param loop             The loop instance
+     * @param service          The service model object
      * @param loopElementModel The loop element model from which this microservice instance is created
-     * @param toscaConverter The tosca converter that will used to convert the tosca policy model
+     * @param toscaConverter   The tosca converter that will used to convert the tosca policy model
      */
     public MicroServicePolicy(Loop loop, Service service, LoopElementModel loopElementModel,
                               ToscaConverterWithDictionarySupport toscaConverter) {
         this(Policy.generatePolicyName("MICROSERVICE", service.getName(), service.getVersion(),
                 RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)),
                 loopElementModel.getPolicyModels().first(), false,
-                toscaConverter.convertToscaToJsonSchemaObject(
-                        loopElementModel.getPolicyModels().first().getPolicyModelTosca(),
-                        loopElementModel.getPolicyModels().first().getPolicyModelType()),
+                new JsonObject(),
                 loopElementModel, null, null);
+        this.updateJsonRepresentation(toscaConverter);
     }
 
     @Override
@@ -155,6 +148,12 @@ public class MicroServicePolicy extends Policy implements Serializable {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter) {
+        toscaConverter.convertToscaToJsonSchemaObject(this.getPolicyModel().getPolicyModelTosca(),
+                this.getPolicyModel().getPolicyModelType());
     }
 
     public Boolean getShared() {

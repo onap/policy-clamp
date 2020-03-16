@@ -31,7 +31,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.Expose;
 import java.io.IOException;
 import java.io.Serializable;
@@ -120,15 +119,14 @@ public class OperationalPolicy extends Policy implements Serializable {
      * @param service          The loop service
      * @param loopElementModel The loop element model
      * @param toscaConverter   The tosca converter that must be used to create the Json representation
-     * @throws IOException In case of issues with the legacy files (generated from resource files
      */
     public OperationalPolicy(Loop loop, Service service, LoopElementModel loopElementModel,
-                             ToscaConverterWithDictionarySupport toscaConverter) throws IOException {
+                             ToscaConverterWithDictionarySupport toscaConverter) {
         this(Policy.generatePolicyName("OPERATIONAL", service.getName(), service.getVersion(),
                 RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)), new JsonObject(),
                 new JsonObject(), loopElementModel.getPolicyModels().first(), loopElementModel, null, null);
         this.setLoop(loop);
-        this.setJsonRepresentation(generateJsonRepresentation(this, toscaConverter));
+        this.updateJsonRepresentation(toscaConverter);
     }
 
     /**
@@ -146,39 +144,7 @@ public class OperationalPolicy extends Policy implements Serializable {
                 RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)), new JsonObject(),
                 new JsonObject(), policyModel, null, null, null);
         this.setLoop(loop);
-        this.setJsonRepresentation(generateJsonRepresentation(this, toscaConverter));
-    }
-
-    /**
-     * This method can generate a Json representation (json schema) for an operational policy.
-     * This is mainly to support a legacy case and a generic case.
-     * For the legacy case the operational policy given is modified (configurationJson).
-     *
-     * @param operationalPolicy The operational policy
-     * @param toscaConverter    The tosca converter
-     * @return The Json Object with Json schema
-     */
-    public static JsonObject generateJsonRepresentation(OperationalPolicy operationalPolicy,
-                                                        ToscaConverterWithDictionarySupport toscaConverter)
-            throws IOException {
-        JsonObject jsonReturned = new JsonObject();
-        if (operationalPolicy.getPolicyModel() == null) {
-            return new JsonObject();
-        }
-        if (operationalPolicy.isLegacy()) {
-            // Op policy Legacy case
-            LegacyOperationalPolicy.preloadConfiguration(operationalPolicy.getConfigurationsJson(), operationalPolicy.loop);
-            jsonReturned = OperationalPolicyRepresentationBuilder
-                    .generateOperationalPolicySchema(operationalPolicy.loop.getModelService());
-        }
-        else {
-            // Generic Case
-            jsonReturned = toscaConverter.convertToscaToJsonSchemaObject(
-                    operationalPolicy.getPolicyModel().getPolicyModelTosca(),
-                    operationalPolicy.getPolicyModel().getPolicyModelType());
-        }
-
-        return jsonReturned;
+        this.updateJsonRepresentation(toscaConverter);
     }
 
     public void setLoop(Loop loopName) {
@@ -202,6 +168,28 @@ public class OperationalPolicy extends Policy implements Serializable {
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter) {
+        {
+            this.setJsonRepresentation(new JsonObject());
+            if (this.getPolicyModel() == null) {
+                return;
+            }
+            if (this.isLegacy()) {
+                // Op policy Legacy case
+                LegacyOperationalPolicy.preloadConfiguration(this.getConfigurationsJson(), this.loop);
+                this.setJsonRepresentation(OperationalPolicyRepresentationBuilder
+                        .generateOperationalPolicySchema(this.loop.getModelService()));
+            }
+            else {
+                // Generic Case
+                this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(
+                        this.getPolicyModel().getPolicyModelTosca(),
+                        this.getPolicyModel().getPolicyModelType()));
+            }
+        }
     }
 
     @Override
@@ -319,18 +307,5 @@ public class OperationalPolicy extends Policy implements Serializable {
         }
         logger.info("Guard policy payload: " + result);
         return result;
-    }
-
-    /**
-     * Regenerate the Operational Policy Json Representation.
-     */
-    public void updateJsonRepresentation() {
-        try {
-            this.setJsonRepresentation(
-                    OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(loop.getModelService()));
-        } catch (JsonSyntaxException | IOException | NullPointerException e) {
-            logger.error("Unable to generate the operational policy Schema ... ", e);
-            this.setJsonRepresentation(new JsonObject());
-        }
     }
 }

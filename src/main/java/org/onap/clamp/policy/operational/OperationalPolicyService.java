@@ -23,9 +23,12 @@
 
 package org.onap.clamp.policy.operational;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.loop.template.PolicyModelsRepository;
 import org.onap.clamp.policy.PolicyService;
@@ -38,6 +41,8 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
     private final OperationalPolicyRepository operationalPolicyRepository;
 
     private final PolicyModelsRepository policyModelsRepository;
+
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(OperationalPolicyService.class);
 
     @Autowired
     public OperationalPolicyService(OperationalPolicyRepository repository,
@@ -54,7 +59,7 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
                         operationalPolicyRepository
                                 .findById(policy.getName())
                                 .map(p -> setConfiguration(p, policy))
-                                .orElse(initializeMissingFields(loop,policy)))
+                                .orElse(initializeMissingFields(loop, policy)))
                 .collect(Collectors.toSet());
     }
 
@@ -73,5 +78,17 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
         policy.setPdpGroup(newPolicy.getPdpGroup());
         policy.setPdpSubgroup(newPolicy.getPdpSubgroup());
         return policy;
+    }
+
+    /**
+     * Api to refresh the Operational Policy UI window.
+     *
+     * @param operationalPolicy The operational policy object
+     * @param toscaConverter    the tosca converter required to convert the tosca model to json schema
+     */
+    public void refreshOperationalPolicyJsonRepresentation(OperationalPolicy operationalPolicy,
+                                                           ToscaConverterWithDictionarySupport toscaConverter) {
+        operationalPolicy.updateJsonRepresentation(toscaConverter);
+        this.operationalPolicyRepository.saveAndFlush(operationalPolicy);
     }
 }

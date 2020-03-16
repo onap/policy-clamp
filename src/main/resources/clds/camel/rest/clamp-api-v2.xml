@@ -207,24 +207,59 @@
 				</doTry>
 			</route>
 		</put>
-		<put uri="/v2/loop/refreshOpPolicyJsonSchema/{loopName}"
-			outType="org.onap.clamp.loop.Loop" produces="application/json">
+		<put uri="/v2/loop/refreshMicroServicePolicyJsonSchema/{loopName}/{microServicePolicyName}"
+			 outType="org.onap.clamp.loop.Loop" produces="application/json">
 			<route>
-				<removeHeaders pattern="*" excludePattern="loopName" />
+				<removeHeaders pattern="*" excludePattern="loopName|microServicePolicyName" />
 				<doTry>
 					<log loggingLevel="INFO"
-						message="Refresh Operational Policy UI for loop: ${header.loopName}" />
+						 message="Refresh Micro Service Policy UI for loop: ${header.loopName} and ${header.microServicePolicyName}" />
 					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'REFRESH OP Policy UI request')" />
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'REFRESH Micro Service Policy UI request')" />
+					<to
+							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
+					<to uri="direct:load-loop" />
+					<to
+							uri="bean:org.onap.clamp.loop.LoopController?method=refreshMicroServicePolicyJsonRepresentation(${exchangeProperty[loopObject]},${header.microServicePolicyName}})" />
+					<log loggingLevel="INFO"
+						 message="REFRESH Micro Service policy request successfully executed for loop: ${header.loopName}" />
+					<to
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REFRESH Micro Service policy request successfully executed','INFO',${exchangeProperty[loopObject]})" />
+					<to
+							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
+					<doCatch>
+						<exception>java.lang.Exception</exception>
+						<handled>
+							<constant>false</constant>
+						</handled>
+						<to
+								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
+						<log loggingLevel="ERROR"
+							 message="REFRESH Micro Service policy request failed for loop: ${header.loopName}" />
+						<to
+								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REFRESH Micro Service policy request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})" />
+					</doCatch>
+				</doTry>
+			</route>
+		</put>
+		<put uri="/v2/loop/refreshOperationalPolicyJsonSchema/{loopName}/{operationalPolicyName}"
+			outType="org.onap.clamp.loop.Loop" produces="application/json">
+			<route>
+				<removeHeaders pattern="*" excludePattern="loopName|operationalPolicyName" />
+				<doTry>
+					<log loggingLevel="INFO"
+						message="Refresh Operational Policy UI for loop: ${header.loopName} and ${header.operationalPolicyName}" />
+					<to
+						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'REFRESH Operational Policy UI request')" />
 					<to
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
 					<to
-						uri="bean:org.onap.clamp.loop.LoopController?method=refreshOpPolicyJsonRepresentation(${header.loopName})" />
+						uri="bean:org.onap.clamp.loop.LoopController?method=refreshOperationalPolicyJsonRepresentation(${exchangeProperty[loopObject]},${header.operationalPolicyName}})" />
 					<log loggingLevel="INFO"
-						message="REFRESH request successfully executed for loop: ${header.loopName}" />
+						message="REFRESH operational policy request successfully executed for loop: ${header.loopName}" />
 					<to
-						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REFRESH request successfully executed','INFO',${exchangeProperty[loopObject]})" />
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REFRESH operational policy request successfully executed','INFO',${exchangeProperty[loopObject]})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
@@ -235,9 +270,9 @@
 						<to
 							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
 						<log loggingLevel="ERROR"
-							message="REFRESH request failed for loop: ${header.loopName}" />
+							message="REFRESH operational policy request failed for loop: ${header.loopName}" />
 						<to
-							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REFRESH request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})" />
+							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('REFRESH operational policy request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})" />
 					</doCatch>
 				</doTry>
 			</route>

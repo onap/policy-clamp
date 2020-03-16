@@ -24,7 +24,6 @@
 package org.onap.clamp.loop.template;
 
 import com.google.gson.annotations.Expose;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -251,16 +250,15 @@ public class LoopElementModel extends AuditEntity implements Serializable {
      * Create a policy instance from the current loop element model.
      *
      * @return A Policy object.
-     * @throws IOException in case of failure when creating an operational policy
      */
-    public Policy createPolicyInstance(Loop loop, ToscaConverterWithDictionarySupport toscaConverter)
-            throws IOException {
+    public Policy createPolicyInstance(Loop loop, ToscaConverterWithDictionarySupport toscaConverter) {
         if (LoopElementModel.MICRO_SERVICE_TYPE.equals(this.getLoopElementType())) {
             return new MicroServicePolicy(loop, loop.getModelService(), this, toscaConverter);
         }
         else if (LoopElementModel.OPERATIONAL_POLICY_TYPE.equals(this.getLoopElementType())) {
             return new OperationalPolicy(loop, loop.getModelService(), this, toscaConverter);
-        } else {
+        }
+        else {
             return null;
         }
     }

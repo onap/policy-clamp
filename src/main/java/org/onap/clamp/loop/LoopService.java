@@ -122,15 +122,15 @@ public class LoopService {
             return null;
         }
         loop.addOperationalPolicy(
-                new OperationalPolicy(loop,loop.getModelService(), policyModel, toscaConverter));
+                new OperationalPolicy(loop, loop.getModelService(), policyModel, toscaConverter));
         return loopsRepository.saveAndFlush(loop);
     }
 
     /**
      * This method remove an operational policy to a loop instance.
      *
-     * @param loopName The loop name
-     * @param policyType The policy model type
+     * @param loopName      The loop name
+     * @param policyType    The policy model type
      * @param policyVersion The policy model  version
      * @return The loop modified
      */
@@ -141,8 +141,8 @@ public class LoopService {
             return null;
         }
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
-            if (opPolicy.getPolicyModel().getPolicyModelType().equals(policyType) &&
-                    opPolicy.getPolicyModel().getVersion().equals(policyVersion)) {
+            if (opPolicy.getPolicyModel().getPolicyModelType().equals(policyType)
+                    && opPolicy.getPolicyModel().getVersion().equals(policyVersion)) {
                 loop.removeOperationalPolicy(opPolicy);
                 break;
             }
@@ -179,20 +179,5 @@ public class LoopService {
         return loopsRepository.findById(loopName)
                 .orElseThrow(() -> new EntityNotFoundException("Couldn't find closed loop named: " + loopName));
     }
-
-    /**
-     * Api to refresh the Operational Policy UI window.
-     *
-     * @param loopName The loop Name
-     * @return The refreshed loop object
-     */
-    public Loop refreshOpPolicyJsonRepresentation(String loopName) {
-        Loop loop = findClosedLoopByName(loopName);
-        Set<OperationalPolicy> policyList = loop.getOperationalPolicies();
-        for (OperationalPolicy policy : policyList) {
-            policy.updateJsonRepresentation();
-        }
-        loop.setOperationalPolicies(policyList);
-        return loopsRepository.save(loop);
-    }
 }
+

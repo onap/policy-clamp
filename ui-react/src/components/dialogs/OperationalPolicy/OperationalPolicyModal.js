@@ -127,7 +127,7 @@ export default class OperationalPolicyModal extends React.Component {
 	}
 
 	handleRefresh() {
-		LoopService.refreshOpPolicyJson(this.state.loopCache.getLoopName()).then(data => {
+		LoopService.refreshOperationalPolicyJson(this.state.loopCache.getLoopName(), this.state.loopCache.getOperationalPolicies()[0]).then(data => {
 			var newLoopCache =  new LoopCache(data);
 			var schema_json = newLoopCache.getOperationalPolicyJsonSchema();
 			var operationalPoliciesData = newLoopCache.getOperationalPoliciesNoJsonSchema();

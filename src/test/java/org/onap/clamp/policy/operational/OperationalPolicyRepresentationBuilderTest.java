@@ -27,9 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
-
 import org.junit.Test;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.service.Service;

@@ -23,11 +23,8 @@
 
 package org.onap.clamp.loop;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -76,9 +73,6 @@ public class Loop extends AuditEntity implements Serializable {
      * The serial version id.
      */
     private static final long serialVersionUID = -286522707701388642L;
-
-    @Transient
-    private static final EELFLogger logger = EELFManager.getInstance().getLogger(Loop.class);
 
     @Id
     @Expose
@@ -170,23 +164,13 @@ public class Loop extends AuditEntity implements Serializable {
         this.setModelService(loopTemplate.getModelService());
         loopTemplate.getLoopElementModelsUsed().forEach(element -> {
             if (LoopElementModel.MICRO_SERVICE_TYPE.equals(element.getLoopElementModel().getLoopElementType())) {
-                try {
-                    this.addMicroServicePolicy((MicroServicePolicy) element.getLoopElementModel()
-                            .createPolicyInstance(this, toscaConverter));
-                } catch (IOException e) {
-                    logger.error("Exception caught when creating the microservice policy instance of the loop "
-                            + "instance", e);
-                }
+                this.addMicroServicePolicy((MicroServicePolicy) element.getLoopElementModel()
+                        .createPolicyInstance(this, toscaConverter));
             }
             else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
                     .equals(element.getLoopElementModel().getLoopElementType())) {
-                try {
-                    this.addOperationalPolicy((OperationalPolicy) element.getLoopElementModel()
-                            .createPolicyInstance(this, toscaConverter));
-                } catch (IOException e) {
-                    logger.error("Exception caught when creating the operational policy instance of the loop instance",
-                            e);
-                }
+                this.addOperationalPolicy((OperationalPolicy) element.getLoopElementModel()
+                        .createPolicyInstance(this, toscaConverter));
             }
         });
     }

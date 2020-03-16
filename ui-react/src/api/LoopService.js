@@ -171,8 +171,8 @@ export default class LoopService {
 			});
 	}
 
-	static refreshOpPolicyJson(loopName) {
-		return fetch('/restservices/clds/v2/loop/refreshOpPolicyJsonSchema/' + loopName, {
+	static refreshOperationalPolicyJson(loopName,operationalPolicyName) {
+		return fetch('/restservices/clds/v2/loop/refreshOperationalPolicyJsonSchema/' + loopName + '/' + operationalPolicyName, {
 			method: 'PUT',
 			headers: {
 				"Content-Type": "application/json"
@@ -193,6 +193,29 @@ export default class LoopService {
 				return {};
 			});
 	}
+
+		static refreshMicroServicePolicyJson(loopName,microServicePolicyName) {
+    		return fetch('/restservices/clds/v2/loop/refreshMicroServicePolicyJsonSchema/' + loopName + '/' + microServicePolicyName, {
+    			method: 'PUT',
+    			headers: {
+    				"Content-Type": "application/json"
+    			},
+    			credentials: 'same-origin'
+    		})
+    			.then(function (response) {
+    				console.debug("Refresh Operational Policy Json Schema response received: ", response.status);
+    				if (response.ok) {
+    					return response.json();
+    				} else {
+    					console.error("Refresh Operational Policy Json Schema query failed");
+    					return {};
+    				}
+    			})
+    			.catch(function (error) {
+    				console.error("Refresh Operational Policy Json Schema error received", error);
+    				return {};
+    			});
+    }
 
 	static addOperationalPolicyType(loopName, policyType, policyVersion) {
 		return fetch('/restservices/clds/v2/loop/addOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion , {

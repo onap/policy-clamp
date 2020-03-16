@@ -26,6 +26,7 @@ package org.onap.clamp.policy.microservice;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.PolicyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class MicroServicePolicyService implements PolicyService<MicroServicePolicy> {
 
-    private final MicroServicePolicyRepository repository;
+    private final MicroServicePolicyRepository microServiceRepository;
 
     @Autowired
-    public MicroServicePolicyService(MicroServicePolicyRepository repository) {
-        this.repository = repository;
+    public MicroServicePolicyService(MicroServicePolicyRepository microServiceRepository) {
+        this.microServiceRepository = microServiceRepository;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
 
     @Override
     public boolean isExisting(String policyName) {
-        return repository.existsById(policyName);
+        return microServiceRepository.existsById(policyName);
     }
 
     /**
@@ -60,8 +61,9 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
      * @return The updated MicroService policy
      */
     public MicroServicePolicy getAndUpdateMicroServicePolicy(Loop loop, MicroServicePolicy policy) {
-        return repository.save(
-                repository.findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
+        return microServiceRepository.save(
+                microServiceRepository
+                        .findById(policy.getName()).map(p -> updateMicroservicePolicyProperties(p, policy, loop))
                         .orElse(new MicroServicePolicy(policy.getName(), policy.getPolicyModel(),
                                 policy.getShared(), policy.getJsonRepresentation(), null, policy.getPdpGroup(),
                                 policy.getPdpSubgroup())));
@@ -89,6 +91,20 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
                                            String deploymentUrl) {
         microServicePolicy.setDcaeDeploymentId(deploymentId);
         microServicePolicy.setDcaeDeploymentStatusUrl(deploymentUrl);
-        repository.save(microServicePolicy);
+        microServiceRepository.save(microServicePolicy);
+    }
+
+
+    /**
+     * Api to refresh the MicroService Policy UI window.
+     *
+     * @param microServicePolicy The micro Service policy object
+     * @param toscaConverter     the tosca converter required to convert the tosca model to json schema
+     */
+    public void refreshMicroServicePolicyJsonRepresentation(MicroServicePolicy microServicePolicy,
+                                                            ToscaConverterWithDictionarySupport toscaConverter) {
+        microServicePolicy.updateJsonRepresentation(toscaConverter);
+        this.microServiceRepository.saveAndFlush(microServicePolicy);
+
     }
 }
