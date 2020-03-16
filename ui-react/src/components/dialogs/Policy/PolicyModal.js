@@ -102,10 +102,25 @@ export default class PolicyModal extends React.Component {
 	}
 
     createJsonEditor(toscaModel, editorData) {
+        JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
+    			getTab: function(text,tabId) {
+    				var liel = document.createElement('li');
+    				liel.classList.add('nav-item');
+    				var ael = document.createElement("a");
+    				ael.classList.add("nav-link");
+    				ael.setAttribute("style",'padding:10px;max-width:160px;');
+    				ael.setAttribute("href", "#" + tabId);
+    				ael.setAttribute('data-toggle', 'tab');
+    				text.setAttribute("style",'word-wrap:break-word;');
+    				ael.appendChild(text);
+    				liel.appendChild(ael);
+    				return liel;
+    			}
+    		});
         return new JSONEditor(document.getElementById("editor"),
         {   schema: toscaModel,
               startval: editorData,
-              theme: 'bootstrap4',
+              theme: 'myBootstrap4',
               object_layout: 'grid',
               disable_properties: true,
               disable_edit_json: false,
@@ -117,10 +132,9 @@ export default class PolicyModal extends React.Component {
               collapsed:true,
               show_errors: 'always',
               display_required_only: false,
-              show_opt_in: true,
+              show_opt_in: false,
               prompt_before_delete: true,
-              required_by_default: false,
-              array_controls_top: true
+              required_by_default: false
         })
     }
 

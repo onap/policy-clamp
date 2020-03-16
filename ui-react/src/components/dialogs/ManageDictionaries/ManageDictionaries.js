@@ -236,7 +236,6 @@ export default class ManageDictionaries extends React.Component {
         TemplateMenuService.getDictionary().then(dictionaryNames => {
             this.setState({ dictionaryNames: dictionaryNames })
         });
-        var dictNamesingetDict = this.state.dictionaryNames;
     }
 
     getDictionaryElements(dictionaryName) {
