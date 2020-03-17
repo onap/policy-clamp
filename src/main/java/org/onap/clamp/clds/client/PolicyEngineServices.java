@@ -27,12 +27,10 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -118,15 +116,12 @@ public class PolicyEngineServices {
             return;
         }
 
-        List<LinkedHashMap<String, Object>> policyTypesList = (List<LinkedHashMap<String, Object>>) loadedYaml
+        LinkedHashMap<String, Object> policyTypesMap = (LinkedHashMap<String, Object>) loadedYaml
                 .get("policy_types");
-        policyTypesList.parallelStream().forEach(policyType -> {
-            Map.Entry<String, Object> policyTypeEntry =
-                    (Map.Entry<String, Object>) new ArrayList(policyType.entrySet()).get(0);
-
+        policyTypesMap.entrySet().parallelStream().forEach(entryPolicyType -> {
             policyModelsService.createPolicyInDbIfNeeded(
-                    createPolicyModelFromPolicyEngine(policyTypeEntry.getKey(),
-                            ((String) ((LinkedHashMap<String, Object>) policyTypeEntry.getValue()).get("version"))));
+                    createPolicyModelFromPolicyEngine(entryPolicyType.getKey(),
+                            ((String) ((LinkedHashMap<String, Object>) entryPolicyType.getValue()).get("version"))));
         });
     }
 

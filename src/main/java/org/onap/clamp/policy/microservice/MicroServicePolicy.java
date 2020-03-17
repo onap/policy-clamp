@@ -152,8 +152,8 @@ public class MicroServicePolicy extends Policy implements Serializable {
 
     @Override
     public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter) {
-        toscaConverter.convertToscaToJsonSchemaObject(this.getPolicyModel().getPolicyModelTosca(),
-                this.getPolicyModel().getPolicyModelType());
+        this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(this.getPolicyModel().getPolicyModelTosca(),
+                this.getPolicyModel().getPolicyModelType()));
     }
 
     public Boolean getShared() {
