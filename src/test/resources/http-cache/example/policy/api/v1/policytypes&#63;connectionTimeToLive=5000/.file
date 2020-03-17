@@ -29,6 +29,13 @@ policy_types:
         # Omitted for brevity, see Section 1
 
   onap.policies.controlloop.guard.common.MinMax:
+      version: 1.0.0
+      description: Supports Min/Max number of VF Modules
+      derived_from: onap.policies.controlloop.Guard
+      properties:
+        # Omitted for brevity, see Section 1
+
+  onap.policies.controlloop.guard.common.MinMax:
       version: 2.0.0
       description: Supports Min/Max number of VF Modules
       derived_from: onap.policies.controlloop.Guard

@@ -118,7 +118,7 @@ public class PolicyEngineServices {
 
         LinkedHashMap<String, Object> policyTypesMap = (LinkedHashMap<String, Object>) loadedYaml
                 .get("policy_types");
-        policyTypesMap.entrySet().parallelStream().forEach(entryPolicyType -> {
+        policyTypesMap.entrySet().stream().forEach(entryPolicyType -> {
             policyModelsService.createPolicyInDbIfNeeded(
                     createPolicyModelFromPolicyEngine(entryPolicyType.getKey(),
                             ((String) ((LinkedHashMap<String, Object>) entryPolicyType.getValue()).get("version"))));

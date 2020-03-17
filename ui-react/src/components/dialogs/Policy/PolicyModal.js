@@ -122,7 +122,7 @@ export default class PolicyModal extends React.Component {
               startval: editorData,
               theme: 'myBootstrap4',
               object_layout: 'grid',
-              disable_properties: true,
+              disable_properties: false,
               disable_edit_json: false,
               disable_array_reorder: true,
               disable_array_delete_last_row: true,
