@@ -30,7 +30,9 @@ import Select from 'react-select';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
 import LoopService from '../../../api/LoopService';
+import LoopCache from '../../../api/LoopCache';
 import JSONEditor from '@json-editor/json-editor';
+import Alert from 'react-bootstrap/Alert';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
@@ -49,7 +51,9 @@ export default class PolicyModal extends React.Component {
 		pdpGroupList: [],
 		pdpSubgroupList: [],
 		chosenPdpGroup: '',
-		chosenPdpSubgroup: ''
+		chosenPdpSubgroup: '',
+		showSucAlert: false,
+		showFailAlert: false
 	};
 
 	constructor(props, context) {
@@ -60,6 +64,8 @@ export default class PolicyModal extends React.Component {
 		this.handlePdpGroupChange = this.handlePdpGroupChange.bind(this);
 		this.handlePdpSubgroupChange = this.handlePdpSubgroupChange.bind(this);
 		this.createJsonEditor = this.createJsonEditor.bind(this);
+		this.handleRefresh = this.handleRefresh.bind(this);
+		this.disableAlert =  this.disableAlert.bind(this);
 	}
 
 	handleSave() {
@@ -195,12 +201,67 @@ export default class PolicyModal extends React.Component {
 		this.setState({ chosenPdpSubgroup: e.value });
 	}
 
+	handleRefresh() {
+		var newLoopCache, toscaModel, editorData;
+		if (this.state.policyInstanceType === 'MICRO-SERVICE-POLICY') {
+			LoopService.refreshMicroServicePolicyJson(this.state.loopCache.getLoopName(),this.state.policyName).then(data => {
+				newLoopCache =  new LoopCache(data);
+				toscaModel = newLoopCache.getMicroServiceJsonRepresentationForName(this.state.policyName);
+				editorData = newLoopCache.getMicroServicePropertiesForName(this.state.policyName);
+				document.getElementById("editor").innerHTML = "";
+				this.setState({
+					loopCache: newLoopCache,
+					jsonEditor: this.createJsonEditor(toscaModel,editorData),
+					showSucAlert: true,
+					showMessage: "Successfully refreshed"
+				});
+			})
+			.catch(error => {
+				console.error("Error while refreshing the Operational Policy Json Representation");
+				this.setState({
+					showFailAlert: true,
+					showMessage: "Refreshing of UI failed"
+				});
+			});
+		} else if (this.state.policyInstanceType === 'OPERATIONAL-POLICY') {
+			LoopService.refreshOperationalPolicyJson(this.state.loopCache.getLoopName(),this.state.policyName).then(data => {
+				var newLoopCache =  new LoopCache(data);
+				toscaModel = newLoopCache.getOperationalPolicyJsonRepresentationForName(this.state.policyName);
+				editorData = newLoopCache.getOperationalPolicyPropertiesForName(this.state.policyName);
+				document.getElementById("editor").innerHTML = "";
+				this.setState({
+					loopCache: newLoopCache,
+					jsonEditor: this.createJsonEditor(toscaModel,editorData),
+					showSucAlert: true,
+					showMessage: "Successfully refreshed"
+				});
+			})
+			.catch(error => {
+				console.error("Error while refreshing the Operational Policy Json Representation");
+				this.setState({
+					showFailAlert: true,
+					showMessage: "Refreshing of UI failed"
+				});
+			});
+		}
+	}
+
+	disableAlert() {
+		this.setState ({ showSucAlert: false, showFailAlert: false });
+	}
+
 	render() {
 		return (
 			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Edit the policy</Modal.Title>
 				</Modal.Header>
+				<Alert variant="success" show={this.state.showSucAlert} onClose={this.disableAlert} dismissible>
+					{this.state.showMessage}
+				</Alert>
+				<Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
+					{this.state.showMessage}
+				</Alert>
 				<Modal.Body>
 					<div id="editor" />
 					<Form.Group as={Row} controlId="formPlaintextEmail">
@@ -219,6 +280,9 @@ export default class PolicyModal extends React.Component {
 					</Button>
 					<Button variant="primary" onClick={this.handleSave}>
 						Save Changes
+					</Button>
+					<Button variant="primary" onClick={this.handleRefresh}>
+						Refresh
 					</Button>
 				</Modal.Footer>
 			</ModalStyled>
