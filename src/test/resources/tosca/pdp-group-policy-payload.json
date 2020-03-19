@@ -1,21 +1,6 @@
 {
   "groups": [
     {
-      "name": "pdpGroup2",
-      "deploymentSubgroups": [
-        {
-          "pdpType": "pdpSubgroup2",
-          "action": "POST",
-          "policies": [
-            {
-              "name": "onap.policies.controlloop.Operational",
-              "version": "1.0.0"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "pdpGroup1",
       "deploymentSubgroups": [
         {
@@ -23,7 +8,22 @@
           "action": "POST",
           "policies": [
             {
-              "name": "onap.policies.monitoring.test",
+              "name": "configPolicyTest",
+              "version": "1.0.0"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "pdpGroup2",
+      "deploymentSubgroups": [
+        {
+          "pdpType": "pdpSubgroup2",
+          "action": "POST",
+          "policies": [
+            {
+              "name": "opPolicy",
               "version": "1.0.0"
             }
           ]

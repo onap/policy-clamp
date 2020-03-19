@@ -30,7 +30,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.persistence.Transient;
 
@@ -79,44 +82,78 @@ public class PolicyComponent extends ExternalComponent {
      * @return The json, payload to send
      */
     public static String createPoliciesPayloadPdpGroup(Loop loop) {
-        JsonObject jsonObject = new JsonObject();
-        JsonArray jsonArray = new JsonArray();
-        jsonObject.add("groups", jsonArray);
-
+        HashMap<String,HashMap<String, List<JsonObject>>> pdpGroupMap = new HashMap <String,HashMap<String, List<JsonObject>>>();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
-            jsonArray.add(createPdpDeploymentPayload(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
-                    opPolicy.getPolicyModel().getPolicyModelType(), opPolicy.getPolicyModel().getVersion()));
+            pdpGroupMap = updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
+                  opPolicy.getName(),
+                  opPolicy.getPolicyModel().getVersion(), pdpGroupMap);
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
-            jsonArray.add(createPdpDeploymentPayload(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(),
-                    msPolicy.getPolicyModel().getPolicyModelType(), msPolicy.getPolicyModel().getVersion()));
+            pdpGroupMap = updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(),
+                    msPolicy.getName(),
+                    msPolicy.getPolicyModel().getVersion(), pdpGroupMap);
         }
 
-        String payload = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+        String payload = new GsonBuilder().setPrettyPrinting().create()
+              .toJson(generateActivatePdpGroupPayload(pdpGroupMap));
         logger.info("PdpGroup policy payload: " + payload);
         return payload;
     }
 
-    private static JsonObject createPdpDeploymentPayload(String pdpGroup, String pdpSubGroup,
-            String policyType, String version) {
-        JsonObject pdpGroupNode = new JsonObject();
-        JsonArray subPdpArray = new JsonArray();
-        pdpGroupNode.addProperty("name", pdpGroup);
-        pdpGroupNode.add("deploymentSubgroups", subPdpArray);
+    private static HashMap<String,HashMap<String, List<JsonObject>>> updatePdpGroupMap (String pdpGroup, String pdpSubGroup, String policyName,
+        String policyModelVersion, HashMap<String,HashMap<String, List<JsonObject>>> pdpGroupMap){
 
-        JsonObject pdpSubGroupNode = new JsonObject();
-        subPdpArray.add(pdpSubGroupNode);
-        pdpSubGroupNode.addProperty("pdpType", pdpSubGroup);
-        pdpSubGroupNode.addProperty("action", "POST");
+        JsonObject policyJson = new JsonObject();
+        policyJson.addProperty("name", policyName);
+        policyJson.addProperty("version", policyModelVersion);
+        HashMap<String, List<JsonObject>> pdpSubGroupMap;
+        List<JsonObject> policyList;
+        if (pdpGroupMap.get(pdpGroup) == null) {
+            pdpSubGroupMap = new HashMap <String, List<JsonObject>>();
+            policyList = new LinkedList<JsonObject>();
+        } else {
+            pdpSubGroupMap = pdpGroupMap.get(pdpGroup);
+            if (pdpSubGroupMap.get(pdpSubGroup) == null) {
+                policyList = new LinkedList<JsonObject>();
+            } else {
+                policyList = (List<JsonObject>)pdpSubGroupMap.get(pdpSubGroup);
+            }
+        }
+        policyList.add(policyJson);
+        pdpSubGroupMap.put(pdpSubGroup, policyList);
+        pdpGroupMap.put(pdpGroup, pdpSubGroupMap);
 
-        JsonArray policyArray = new JsonArray();
-        pdpSubGroupNode.add("policies", policyArray);
-        JsonObject policyNode = new JsonObject();
-        policyNode.addProperty("name", policyType);
-        policyNode.addProperty("version", version);
-        policyArray.add(policyNode);
-        return pdpGroupNode;
+        return pdpGroupMap;
+    }
+
+    private static JsonObject generateActivatePdpGroupPayload(HashMap<String,HashMap<String, List<JsonObject>>> pdpGroupMap) {
+        JsonArray payloadArray = new JsonArray();
+        for (Entry<String, HashMap<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
+            JsonObject pdpGroupNode = new JsonObject();
+            JsonArray subPdpArray = new JsonArray();
+            pdpGroupNode.addProperty("name", pdpGroupInfo.getKey());
+            pdpGroupNode.add("deploymentSubgroups", subPdpArray);
+
+            JsonObject pdpSubGroupNode = new JsonObject();
+            subPdpArray.add(pdpSubGroupNode);
+
+            for (Entry<String, List<JsonObject>> pdpSubGroupInfo : pdpGroupInfo.getValue().entrySet()) {
+                pdpSubGroupNode.addProperty("pdpType", pdpSubGroupInfo.getKey());
+                pdpSubGroupNode.addProperty("action", "POST");
+
+                JsonArray policyArray = new JsonArray();
+                pdpSubGroupNode.add("policies", policyArray);
+
+                for (JsonObject policy : pdpSubGroupInfo.getValue()) {
+                    policyArray.add(policy);
+                }
+            }
+            payloadArray.add(pdpGroupNode);
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("groups", payloadArray);
+        return jsonObject;
     }
 
     /**

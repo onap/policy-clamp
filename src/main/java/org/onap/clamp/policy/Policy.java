@@ -97,13 +97,6 @@ public abstract class Policy extends AuditEntity {
         return new Gson().fromJson(jsonObject.toString(), JsonObject.class);
     }
 
-    private String getModelPropertyNameFromTosca(JsonObject object, String policyModelType) {
-        return object.getAsJsonObject("policy_types").getAsJsonObject(policyModelType)
-                .getAsJsonObject(
-                        "properties")
-                .keySet().toArray(new String[1])[0];
-    }
-
     /**
      * This method create the policy payload that must be sent to PEF.
      *
@@ -129,17 +122,15 @@ public abstract class Policy extends AuditEntity {
         JsonObject policyDetails = new JsonObject();
         thisPolicy.add(this.getName(), policyDetails);
         policyDetails.addProperty("type", this.getPolicyModel().getPolicyModelType());
+        policyDetails.addProperty("type_version", this.getPolicyModel().getVersion());
         policyDetails.addProperty("version", this.getPolicyModel().getVersion());
 
         JsonObject policyMetadata = new JsonObject();
         policyDetails.add("metadata", policyMetadata);
         policyMetadata.addProperty("policy-id", this.getName());
 
-        JsonObject policyProperties = new JsonObject();
-        policyDetails.add("properties", policyProperties);
-        policyProperties
-                .add(this.getModelPropertyNameFromTosca(toscaJson, this.getPolicyModel().getPolicyModelType()),
-                        this.getConfigurationsJson());
+        policyDetails.add("properties", this.getConfigurationsJson());
+
         String policyPayload = new GsonBuilder().setPrettyPrinting().create().toJson(policyPayloadResult);
         logger.info("Policy payload: " + policyPayload);
         return policyPayload;

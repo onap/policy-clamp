@@ -597,9 +597,9 @@
 								</simple>
 						</setHeader>
 						<log loggingLevel="INFO"
-								message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies"></log>
+								message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
 						<toD
-								uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+								uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 
 						<doFinally>
 								<to uri="direct:reset-raise-http-exception-flag"/>
@@ -648,9 +648,9 @@
 										</simple>
 								</setHeader>
 								<log loggingLevel="INFO"
-										message="Endpoint to delete policy from PDP Group: {{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0"></log>
+										message="Endpoint to delete policy from PDP Group: {{clamp.config.policy.pap.url}}/pdps/deployments/batch/${exchangeProperty[policyName]}/versions/1.0.0"></log>
 								<toD
-										uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+										uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 								<setProperty propertyName="logMessage">
 										<simple>${exchangeProperty[policyName]} PDP Group removal status
 										</simple>
