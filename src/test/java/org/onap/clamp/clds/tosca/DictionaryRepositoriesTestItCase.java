@@ -76,13 +76,13 @@ public class DictionaryRepositoriesTestItCase {
 
         dictionaryRepository.save(dictionaryTest1);
         List<String> res1 = dictionaryRepository.getAllDictionaryNames();
-        assertThat(res1.size()).isEqualTo(1);
-        assertThat(res1.get(0)).isEqualTo("testDictionary1");
+        assertThat(res1.size()).isGreaterThan(1);
+        assertThat(res1).contains("testDictionary1");
 
         dictionaryRepository.save(dictionaryTest2);
         List<String> res2 = dictionaryRepository.getAllDictionaryNames();
-        assertThat(res2.size()).isEqualTo(2);
-        assertThat(res2.get(0)).isEqualTo("testDictionary1");
-        assertThat(res2.get(1)).isEqualTo("testDictionary2");
+        assertThat(res2.size()).isGreaterThan(2);
+        assertThat(res2).contains("testDictionary1");
+        assertThat(res2).contains("testDictionary2");
     }
 }

@@ -49,7 +49,7 @@ public class DictionaryService {
     }
 
     public Dictionary saveOrUpdateDictionary(Dictionary dictionary) {
-        return dictionaryRepository.save(dictionary);
+        return dictionaryRepository.saveAndFlush(dictionary);
     }
 
     /**
@@ -76,7 +76,7 @@ public class DictionaryService {
             });
             dict.setDictionaryElements(updatedDictionaryElements);
         }
-        return dictionaryRepository.save(dict);
+        return dictionaryRepository.saveAndFlush(dict);
 
     }
 
@@ -124,7 +124,7 @@ public class DictionaryService {
             if (element != null) {
                 Dictionary dict = getDictionary(dictionaryName);
                 dict.removeDictionaryElement(element);
-                dictionaryRepository.save(dict);
+                dictionaryRepository.saveAndFlush(dict);
             }
         }
     }

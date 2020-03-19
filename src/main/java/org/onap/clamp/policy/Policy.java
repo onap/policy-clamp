@@ -46,6 +46,7 @@ import org.json.JSONObject;
 import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.yaml.snakeyaml.Yaml;
@@ -171,8 +172,10 @@ public abstract class Policy extends AuditEntity {
      * Regenerate the Policy Json Representation.
      *
      * @param toscaConverter The tosca converter required to regenerate the json schema
+     * @param serviceModel The service model associated
      */
-    public abstract void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter);
+    public abstract void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter,
+                                                  Service serviceModel);
 
     /**
      * policyModel getter.

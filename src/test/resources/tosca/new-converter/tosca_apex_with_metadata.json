@@ -1,0 +1,475 @@
+{
+  "title": "onap.policies.controlloop.operational.common.Apex",
+  "type": "object",
+  "description": "Operational policies for Apex PDP",
+  "required": [
+    "id",
+    "timeout",
+    "abatement",
+    "trigger",
+    "operations",
+    "engineServiceParameters",
+    "eventInputParameters",
+    "eventOutputParameters"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The unique control loop id."
+    },
+    "timeout": {
+      "type": "integer",
+      "description": "Overall timeout for executing all the operations. This timeout should equal or exceed the total\ntimeout for each operation listed.\n"
+    },
+    "abatement": {
+      "type": "boolean",
+      "description": "Whether an abatement event message will be expected for the control loop from DCAE.",
+      "default": false
+    },
+    "trigger": {
+      "type": "string",
+      "description": "Initial operation to execute upon receiving an Onset event message for the Control Loop."
+    },
+    "operations": {
+      "type": "array",
+      "description": "List of operations to be performed when Control Loop is triggered.",
+      "items": {
+        "title": "onap.datatype.controlloop.Operation",
+        "type": "object",
+        "description": "An operation supported by an actor",
+        "required": [
+          "id",
+          "operation",
+          "timeout",
+          "retries"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the operation"
+          },
+          "description": {
+            "type": "string",
+            "description": "A user-friendly description of the intent for the operation"
+          },
+          "operation": {
+            "title": "onap.datatype.controlloop.Actor",
+            "type": "object",
+            "description": "An actor/operation/target definition",
+            "required": [
+              "actor",
+              "operation",
+              "target"
+            ],
+            "properties": {
+              "actor": {
+                "type": "string",
+                "description": "The actor performing the operation.",
+                "enum": [
+                  "CDS",
+                  "SDNC",
+                  "SO"
+                ],
+                "options": {
+                  "enum_titles": [
+                    "CDS",
+                    "SDNC",
+                    "SO"
+                  ]
+                }
+              },
+              "operation": {
+                "type": "string",
+                "description": "The operation the actor is performing.",
+                "enum": [
+                  "resource-assignment",
+                  "activate",
+                  "activate-restconf",
+                  "activate-cli",
+                  "assign-activate",
+                  "imperative-test-wf"
+                ]
+              },
+              "target": {
+                "title": "onap.datatype.controlloop.Target",
+                "type": "object",
+                "description": "Definition for a entity in A&AI to perform a control loop operation on",
+                "required": [
+                  "targetType"
+                ],
+                "properties": {
+                  "targetType": {
+                    "type": "string",
+                    "description": "Category for the target type",
+                    "enum": [
+                      "VNF",
+                      "VM",
+                      "VFMODULE",
+                      "PNF"
+                    ]
+                  },
+                  "entityIds": {
+                    "type": "object",
+                    "description": "Map of values that identify the resource. If none are provided, it is assumed that the\nentity that generated the ONSET event will be the target.\n",
+                    "anyOf": [
+                      {
+                        "title": "VNF-vLoadBalancerMS 0",
+                        "properties": {
+                          "resourceID": {
+                            "title": "Resource ID",
+                            "type": "string",
+                            "default": "vLoadBalancerMS",
+                            "readOnly": "True"
+                          }
+                        }
+                      },
+                      {
+                        "title": "VFMODULE-Vloadbalancerms..vpkg..module-1",
+                        "properties": {
+                          "resourceID": {
+                            "title": "Resource ID",
+                            "type": "string",
+                            "default": "Vloadbalancerms..vpkg..module-1",
+                            "readOnly": "True"
+                          },
+                          "modelInvariantId": {
+                            "title": "Model Invariant Id (ModelInvariantUUID)",
+                            "type": "string",
+                            "default": "ca052563-eb92-4b5b-ad41-9111768ce043",
+                            "readOnly": "True"
+                          },
+                          "modelVersionId": {
+                            "title": "Model Version Id (ModelUUID)",
+                            "type": "string",
+                            "default": "1e725ccc-b823-4f67-82b9-4f4367070dbc",
+                            "readOnly": "True"
+                          },
+                          "modelName": {
+                            "title": "Model Name",
+                            "type": "string",
+                            "default": "Vloadbalancerms..vpkg..module-1",
+                            "readOnly": "True"
+                          },
+                          "modelVersion": {
+                            "title": "Model Version",
+                            "type": "string",
+                            "default": "1",
+                            "readOnly": "True"
+                          },
+                          "modelCustomizationId": {
+                            "title": "Customization ID",
+                            "type": "string",
+                            "default": "1bffdc31-a37d-4dee-b65c-dde623a76e52",
+                            "readOnly": "True"
+                          }
+                        }
+                      },
+                      {
+                        "title": "VFMODULE-Vloadbalancerms..vdns..module-3",
+                        "properties": {
+                          "resourceID": {
+                            "title": "Resource ID",
+                            "type": "string",
+                            "default": "Vloadbalancerms..vdns..module-3",
+                            "readOnly": "True"
+                          },
+                          "modelInvariantId": {
+                            "title": "Model Invariant Id (ModelInvariantUUID)",
+                            "type": "string",
+                            "default": "4c10ba9b-f88f-415e-9de3-5d33336047fa",
+                            "readOnly": "True"
+                          },
+                          "modelVersionId": {
+                            "title": "Model Version Id (ModelUUID)",
+                            "type": "string",
+                            "default": "4fa73b49-8a6c-493e-816b-eb401567b720",
+                            "readOnly": "True"
+                          },
+                          "modelName": {
+                            "title": "Model Name",
+                            "type": "string",
+                            "default": "Vloadbalancerms..vdns..module-3",
+                            "readOnly": "True"
+                          },
+                          "modelVersion": {
+                            "title": "Model Version",
+                            "type": "string",
+                            "default": "1",
+                            "readOnly": "True"
+                          },
+                          "modelCustomizationId": {
+                            "title": "Customization ID",
+                            "type": "string",
+                            "default": "bafcdab0-801d-4d81-9ead-f464640a38b1",
+                            "readOnly": "True"
+                          }
+                        }
+                      },
+                      {
+                        "title": "VFMODULE-Vloadbalancerms..base_template..module-0",
+                        "properties": {
+                          "resourceID": {
+                            "title": "Resource ID",
+                            "type": "string",
+                            "default": "Vloadbalancerms..base_template..module-0",
+                            "readOnly": "True"
+                          },
+                          "modelInvariantId": {
+                            "title": "Model Invariant Id (ModelInvariantUUID)",
+                            "type": "string",
+                            "default": "921f7c96-ebdd-42e6-81b9-1cfc0c9796f3",
+                            "readOnly": "True"
+                          },
+                          "modelVersionId": {
+                            "title": "Model Version Id (ModelUUID)",
+                            "type": "string",
+                            "default": "63734409-f745-4e4d-a38b-131638a0edce",
+                            "readOnly": "True"
+                          },
+                          "modelName": {
+                            "title": "Model Name",
+                            "type": "string",
+                            "default": "Vloadbalancerms..base_template..module-0",
+                            "readOnly": "True"
+                          },
+                          "modelVersion": {
+                            "title": "Model Version",
+                            "type": "string",
+                            "default": "1",
+                            "readOnly": "True"
+                          },
+                          "modelCustomizationId": {
+                            "title": "Customization ID",
+                            "type": "string",
+                            "default": "86baddea-c730-4fb8-9410-cd2e17fd7f27",
+                            "readOnly": "True"
+                          }
+                        }
+                      },
+                      {
+                        "title": "VFMODULE-Vloadbalancerms..vlb..module-2",
+                        "properties": {
+                          "resourceID": {
+                            "title": "Resource ID",
+                            "type": "string",
+                            "default": "Vloadbalancerms..vlb..module-2",
+                            "readOnly": "True"
+                          },
+                          "modelInvariantId": {
+                            "title": "Model Invariant Id (ModelInvariantUUID)",
+                            "type": "string",
+                            "default": "a772a1f4-0064-412c-833d-4749b15828dd",
+                            "readOnly": "True"
+                          },
+                          "modelVersionId": {
+                            "title": "Model Version Id (ModelUUID)",
+                            "type": "string",
+                            "default": "0f5c3f6a-650a-4303-abb6-fff3e573a07a",
+                            "readOnly": "True"
+                          },
+                          "modelName": {
+                            "title": "Model Name",
+                            "type": "string",
+                            "default": "Vloadbalancerms..vlb..module-2",
+                            "readOnly": "True"
+                          },
+                          "modelVersion": {
+                            "title": "Model Version",
+                            "type": "string",
+                            "default": "1",
+                            "readOnly": "True"
+                          },
+                          "modelCustomizationId": {
+                            "title": "Customization ID",
+                            "type": "string",
+                            "default": "96a78aad-4ffb-4ef0-9c4f-deb03bf1d806",
+                            "readOnly": "True"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "payload": {
+                "type": "object",
+                "description": "Name/value pairs of payload information passed by Policy to the actor",
+                "anyOf": [
+                  {
+                    "title": "resource-assignment",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "activate",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "activate-restconf",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "activate-cli",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "assign-activate",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "imperative-test-wf",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "The amount of time for the actor to perform the operation."
+          },
+          "retries": {
+            "type": "integer",
+            "description": "The number of retries the actor should attempt to perform the operation.",
+            "default": 0
+          },
+          "success": {
+            "type": "string",
+            "description": "Points to the operation to invoke on success. A value of \"final_success\" indicates and end to the operation.",
+            "default": "final_success"
+          },
+          "failure": {
+            "type": "string",
+            "description": "Points to the operation to invoke on Actor operation failure.",
+            "default": "final_failure"
+          },
+          "failure_timeout": {
+            "type": "string",
+            "description": "Points to the operation to invoke when the time out for the operation occurs.",
+            "default": "final_failure_timeout"
+          },
+          "failure_retries": {
+            "type": "string",
+            "description": "Points to the operation to invoke when the current operation has exceeded its max retries.",
+            "default": "final_failure_retries"
+          },
+          "failure_exception": {
+            "type": "string",
+            "description": "Points to the operation to invoke when the current operation causes an exception.",
+            "default": "final_failure_exception"
+          },
+          "failure_guard": {
+            "type": "string",
+            "description": "Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.",
+            "default": "final_failure_guard"
+          }
+        }
+      }
+    },
+    "engineServiceParameters": {
+      "type": "string",
+      "description": "The engine parameters like name, instanceCount, policy implementation, parameters etc."
+    },
+    "eventInputParameters": {
+      "type": "string",
+      "description": "The event input parameters."
+    },
+    "eventOutputParameters": {
+      "type": "string",
+      "description": "The event output parameters."
+    },
+    "javaProperties": {
+      "type": "string",
+      "description": "Name/value pairs of properties to be set for APEX if needed."
+    }
+  }
+}

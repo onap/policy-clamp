@@ -129,10 +129,8 @@ public class MicroServicePolicy extends Policy implements Serializable {
                               ToscaConverterWithDictionarySupport toscaConverter) {
         this(Policy.generatePolicyName("MICROSERVICE", service.getName(), service.getVersion(),
                 RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)),
-                loopElementModel.getPolicyModels().first(), false,
-                new JsonObject(),
-                loopElementModel, null, null);
-        this.updateJsonRepresentation(toscaConverter);
+                loopElementModel.getPolicyModels().first(), false, new JsonObject(), loopElementModel, null, null);
+        this.updateJsonRepresentation(toscaConverter, service);
     }
 
     @Override
@@ -151,9 +149,10 @@ public class MicroServicePolicy extends Policy implements Serializable {
     }
 
     @Override
-    public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter) {
-        this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(this.getPolicyModel().getPolicyModelTosca(),
-                this.getPolicyModel().getPolicyModelType()));
+    public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter, Service serviceModel) {
+        this.setJsonRepresentation(
+                toscaConverter.convertToscaToJsonSchemaObject(this.getPolicyModel().getPolicyModelTosca(),
+                        this.getPolicyModel().getPolicyModelType(), serviceModel));
     }
 
     public Boolean getShared() {

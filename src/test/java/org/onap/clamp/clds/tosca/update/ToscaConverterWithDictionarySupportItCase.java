@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
-  * ================================================================================
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,10 +29,12 @@ import javax.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
+import org.onap.clamp.clds.tosca.update.execution.ToscaMetadataExecutor;
 import org.onap.clamp.clds.tosca.update.parser.metadata.ToscaMetadataParserWithDictionarySupport;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.tosca.Dictionary;
 import org.onap.clamp.tosca.DictionaryElement;
 import org.onap.clamp.tosca.DictionaryService;
@@ -50,6 +52,9 @@ public class ToscaConverterWithDictionarySupportItCase {
 
     @Autowired
     private ToscaMetadataParserWithDictionarySupport toscaMetadataParserWithDictionarySupport;
+
+    @Autowired
+    private ToscaMetadataExecutor toscaMetadataExecutor;
 
     /**
      * This Test validates Tosca yaml with metadata tag that contains policy_model_type and acronym
@@ -103,16 +108,38 @@ public class ToscaConverterWithDictionarySupportItCase {
 
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("tosca/tosca_metadata_clamp_possible_values.yaml"),
+                        ResourceFileUtil.getResourceAsString("tosca/new-converter/tosca_metadata_clamp_possible_values.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
 
         JsonObject jsonSchema = jsonTemplateManager.getJsonSchemaForPolicyType(
-                "onap.policies.monitoring.cdap.tca.hi.lo.app", toscaMetadataParserWithDictionarySupport);
+                "onap.policies.monitoring.cdap.tca.hi.lo.app", toscaMetadataParserWithDictionarySupport, null);
 
         JSONAssert.assertEquals(
                 ResourceFileUtil
                         .getResourceAsString("tosca/new-converter/tca-with-metadata.json"),
+                JsonUtils.GSON.toJson(jsonSchema), true);
+    }
+
+    @Test
+    @Transactional
+    public final void testMetadataClampPossibleValueWithExecutor() throws IOException, UnknownComponentException {
+        Service service = new Service(ResourceFileUtil.getResourceAsString("tosca/service-details.json"),
+                ResourceFileUtil.getResourceAsString("tosca/resource-details.json"));
+        JsonTemplateManager jsonTemplateManager =
+                new JsonTemplateManager(
+                        ResourceFileUtil.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
+                                + ".policies.controlloop.operational.common.Apex/versions/1.0"
+                                + ".0&#63;connectionTimeToLive=5000/.file"),
+                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+
+        JsonObject jsonSchema = jsonTemplateManager.getJsonSchemaForPolicyType(
+                "onap.policies.controlloop.operational.common.Apex", toscaMetadataParserWithDictionarySupport, service);
+
+        JSONAssert.assertEquals(
+                ResourceFileUtil
+                        .getResourceAsString("tosca/new-converter/tosca_apex_with_metadata.json"),
                 JsonUtils.GSON.toJson(jsonSchema), true);
     }
 }

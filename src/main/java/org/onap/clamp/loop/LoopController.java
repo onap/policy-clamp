@@ -207,7 +207,7 @@ public class LoopController {
         for (MicroServicePolicy microServicePolicy : loop.getMicroServicePolicies()) {
             if (microServicePolicy.getName().equals(microServicePolicyName)) {
                 this.microServicePolicyService
-                        .refreshMicroServicePolicyJsonRepresentation(microServicePolicy, toscaConverter);
+                        .refreshMicroServicePolicyJsonRepresentation(microServicePolicy, toscaConverter, loop);
             }
         }
         return loop;

@@ -60,7 +60,7 @@ public class OperationalPolicyRepresentationBuilder {
             jsonSchema.get("properties").getAsJsonObject()
                     .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
                     .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("target")
-                    .getAsJsonObject().get("anyOf").getAsJsonArray().addAll(createAnyOfArray(modelJson));
+                    .getAsJsonObject().get("anyOf").getAsJsonArray().addAll(createAnyOfArray(modelJson, true));
 
             // update CDS recipe and payload information to schema
             JsonArray actors = jsonSchema.get("properties").getAsJsonObject()
@@ -72,12 +72,12 @@ public class OperationalPolicyRepresentationBuilder {
                 if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get("title").getAsString())) {
                     actor.getAsJsonObject().get("properties").getAsJsonObject().get("type").getAsJsonObject()
                             .get("anyOf").getAsJsonArray()
-                            .addAll(createAnyOfArrayForCdsRecipe(modelJson.getResourceDetails()));
+                            .addAll(createAnyOfArrayForCdsRecipe(modelJson));
                 }
             }
             return jsonSchema;
         } catch (IOException e) {
-            logger.error("Unable to generate the json schema because of an exception",e);
+            logger.error("Unable to generate the json schema because of an exception", e);
             return new JsonObject();
         }
     }
@@ -100,7 +100,7 @@ public class OperationalPolicyRepresentationBuilder {
         return property;
     }
 
-    private static JsonArray createVnfSchema(Service modelService) {
+    private static JsonArray createVnfSchema(Service modelService, boolean generateType) {
         JsonArray vnfSchemaArray = new JsonArray();
         JsonObject modelVnfs = modelService.getResourceByType("VF");
 
@@ -108,7 +108,9 @@ public class OperationalPolicyRepresentationBuilder {
             JsonObject vnfOneOfSchema = new JsonObject();
             vnfOneOfSchema.addProperty("title", "VNF" + "-" + entry.getKey());
             JsonObject properties = new JsonObject();
-            properties.add("type", createSchemaProperty("Type", "string", "VNF", "True", null));
+            if (generateType) {
+                properties.add("type", createSchemaProperty("Type", "string", "VNF", "True", null));
+            }
             properties.add("resourceID", createSchemaProperty("Resource ID", "string",
                     modelVnfs.get(entry.getKey()).getAsJsonObject().get("name").getAsString(), "True", null));
 
@@ -118,7 +120,7 @@ public class OperationalPolicyRepresentationBuilder {
         return vnfSchemaArray;
     }
 
-    private static JsonArray createVfModuleSchema(Service modelService) {
+    private static JsonArray createVfModuleSchema(Service modelService, boolean generateType) {
         JsonArray vfModuleOneOfSchemaArray = new JsonArray();
         JsonObject modelVfModules = modelService.getResourceByType("VFModule");
 
@@ -126,7 +128,9 @@ public class OperationalPolicyRepresentationBuilder {
             JsonObject vfModuleOneOfSchema = new JsonObject();
             vfModuleOneOfSchema.addProperty("title", "VFMODULE" + "-" + entry.getKey());
             JsonObject properties = new JsonObject();
-            properties.add("type", createSchemaProperty("Type", "string", "VFMODULE", "True", null));
+            if (generateType) {
+                properties.add("type", createSchemaProperty("Type", "string", "VFMODULE", "True", null));
+            }
             properties.add("resourceID",
                     createSchemaProperty("Resource ID", "string",
                             modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelName").getAsString(),
@@ -160,17 +164,23 @@ public class OperationalPolicyRepresentationBuilder {
         return vfModuleOneOfSchemaArray;
     }
 
-    private static JsonArray createAnyOfArray(Service modelJson) {
+    /**
+     * Create an anyOf array of possible structure we may have for Target
+     *
+     * @param modelJson The service object
+     * @return A JsonArray with everything inside
+     */
+    public static JsonArray createAnyOfArray(Service modelJson, boolean generateType) {
         JsonArray targetOneOfStructure = new JsonArray();
-        targetOneOfStructure.addAll(createVnfSchema(modelJson));
-        targetOneOfStructure.addAll(createVfModuleSchema(modelJson));
+        targetOneOfStructure.addAll(createVnfSchema(modelJson, generateType));
+        targetOneOfStructure.addAll(createVfModuleSchema(modelJson, generateType));
         return targetOneOfStructure;
     }
 
-    private static JsonArray createAnyOfArrayForCdsRecipe(JsonObject resourceDetails) {
+    public static JsonArray createAnyOfArrayForCdsRecipe(Service modelJson) {
         JsonArray anyOfStructure = new JsonArray();
-        anyOfStructure.addAll(createAnyOfCdsRecipe(resourceDetails.getAsJsonObject("VF")));
-        anyOfStructure.addAll(createAnyOfCdsRecipe(resourceDetails.getAsJsonObject("PNF")));
+        anyOfStructure.addAll(createAnyOfCdsRecipe(modelJson.getResourceDetails().getAsJsonObject("VF")));
+        anyOfStructure.addAll(createAnyOfCdsRecipe(modelJson.getResourceDetails().getAsJsonObject("PNF")));
         return anyOfStructure;
     }
 

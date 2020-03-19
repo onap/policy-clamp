@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
-  * ================================================================================
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,12 +21,20 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update.parser.metadata;
+package org.onap.clamp.clds.tosca.update.execution.target;
 
 import com.google.gson.JsonObject;
-import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
+import org.onap.clamp.clds.tosca.update.execution.ToscaMetadataProcess;
 import org.onap.clamp.loop.service.Service;
+import org.onap.clamp.policy.operational.OperationalPolicyRepresentationBuilder;
 
-public interface ToscaMetadataParser {
-    JsonObject processAllMetadataElement(ToscaElementProperty toscaElementProperty, Service serviceModel);
+/**
+ * This class is there to add the JsonObject for CDS in the json Schema according to what is found in the Tosca model.
+ */
+public class ToscaMetadataTargetProcess extends ToscaMetadataProcess {
+
+    @Override
+    public void executeProcess(String parameters, JsonObject childObject, Service serviceModel) {
+        childObject.add("anyOf", OperationalPolicyRepresentationBuilder.createAnyOfArray(serviceModel, false));
+    }
 }
