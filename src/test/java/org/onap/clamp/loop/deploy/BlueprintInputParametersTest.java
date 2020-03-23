@@ -34,52 +34,79 @@ import java.util.LinkedHashSet;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.LoopElementModel;
+import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 
 public class BlueprintInputParametersTest {
 
-    private BlueprintArtifact buildFakeBuildprintArtifact(String blueprintFilePath) throws IOException {
-        BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
-        Mockito.when(blueprintArtifact.getDcaeBlueprint())
-                .thenReturn(ResourceFileUtil.getResourceAsString(blueprintFilePath));
-        return blueprintArtifact;
-    }
+    @Test
+    public void getDeploymentParametersinJsonMultiBlueprintsTest() throws IOException, SdcToscaParserException {
+        Loop loop = Mockito.mock(Loop.class);
 
-    private LinkedHashSet<BlueprintArtifact> buildFakeCsarHandler() throws IOException, SdcToscaParserException {
+        MicroServicePolicy umService1 = Mockito.mock(MicroServicePolicy.class);
+        Mockito.when(umService1.getName()).thenReturn("testName1");
 
-        LinkedHashSet<BlueprintArtifact> blueprintSet = new LinkedHashSet<BlueprintArtifact>();
+        LoopElementModel loopElement = Mockito.mock(LoopElementModel.class);
+        String blueprint1 = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml");
+        Mockito.when(loopElement.getBlueprint()).thenReturn(blueprint1);
+        Mockito.when(umService1.getLoopElementModel()).thenReturn(loopElement);
 
-        BlueprintArtifact blueprintArtifact = buildFakeBuildprintArtifact("example/sdc/blueprint-dcae/tca.yaml");
+        MicroServicePolicy umService2 = Mockito.mock(MicroServicePolicy.class);
+        Mockito.when(umService2.getName()).thenReturn("testName2");
 
-        blueprintSet.add(blueprintArtifact);
-        // Create fake blueprint artifact 2 on resource2
-        blueprintArtifact = buildFakeBuildprintArtifact("example/sdc/blueprint-dcae/tca_2.yaml");
-        blueprintSet.add(blueprintArtifact);
+        LoopElementModel loopElement2 = Mockito.mock(LoopElementModel.class);
+        String blueprint2 = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca_2.yaml");
+        Mockito.when(loopElement2.getBlueprint()).thenReturn(blueprint2);
+        Mockito.when(umService2.getLoopElementModel()).thenReturn(loopElement2);
 
-        // Create fake blueprint artifact 3 on resource 1 so that it's possible to
-        // test multiple CL deployment per Service/vnf
-        blueprintArtifact = buildFakeBuildprintArtifact("example/sdc/blueprint-dcae/tca_3.yaml");
-        blueprintSet.add(blueprintArtifact);
-        return blueprintSet;
+        MicroServicePolicy umService3 = Mockito.mock(MicroServicePolicy.class);
+        Mockito.when(umService3.getName()).thenReturn("testName3");
+
+        LoopElementModel loopElement3 = Mockito.mock(LoopElementModel.class);
+        String blueprint3 = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca_3.yaml");
+        Mockito.when(loopElement3.getBlueprint()).thenReturn(blueprint3);
+        Mockito.when(umService3.getLoopElementModel()).thenReturn(loopElement3);
+
+        LinkedHashSet<MicroServicePolicy> umServiceSet = new LinkedHashSet<MicroServicePolicy>();
+        umServiceSet.add(umService1);
+        umServiceSet.add(umService2);
+        umServiceSet.add(umService3);
+        Mockito.when(loop.getMicroServicePolicies()).thenReturn(umServiceSet);
+
+        LoopTemplate template = Mockito.mock(LoopTemplate.class);
+        Mockito.when(template.getUniqueBlueprint()).thenReturn(false);
+        Mockito.when(loop.getLoopTemplate()).thenReturn(template);
+
+        JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(loop);
+
+        Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson),
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/deployment-parameters-multi-blueprints.json"));
     }
 
     @Test
-    public void getDeploymentParametersinJsonTest() throws IOException, SdcToscaParserException {
+    public void getDeploymentParametersinJsonSingleBlueprintTest() throws IOException, SdcToscaParserException {
         Loop loop = Mockito.mock(Loop.class);
-        MicroServicePolicy umService = Mockito.mock(MicroServicePolicy.class);
+
+        MicroServicePolicy umService1 = Mockito.mock(MicroServicePolicy.class);
+        Mockito.when(umService1.getName()).thenReturn("testName1");
         LinkedHashSet<MicroServicePolicy> umServiceSet = new LinkedHashSet<MicroServicePolicy>();
-        Mockito.when(umService.getName()).thenReturn("testName");
-        umServiceSet.add(umService);
+        umServiceSet.add(umService1);
         Mockito.when(loop.getMicroServicePolicies()).thenReturn(umServiceSet);
 
-        JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(buildFakeCsarHandler(), loop);
+        LoopTemplate template = Mockito.mock(LoopTemplate.class);
+        Mockito.when(template.getUniqueBlueprint()).thenReturn(true);
+        String blueprint = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml");
+        Mockito.when(template.getBlueprint()).thenReturn(blueprint);
+        Mockito.when(loop.getLoopTemplate()).thenReturn(template);
 
-        Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson), 
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/deployment-parameters.json"));
+        JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(loop);
+
+        Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson),
+            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/deployment-parameters-single-blueprint.json"));
     }
 }

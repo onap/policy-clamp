@@ -59,10 +59,10 @@
 				<simple>${body.getName()}</simple>
 			</setProperty>
 			<setProperty propertyName="policyType">
-				<simple>onap.policies.controlloop.Operational</simple>
+				<simple>${body.getPolicyModel().getPolicyModelType()}</simple>
 			</setProperty>
 			<setProperty propertyName="policyVersion">
-				<simple>1</simple>
+				<simple>1.0.0</simple>
 			</setProperty>
 			<setProperty propertyName="operationalPolicy">
 				<simple>${body}</simple>

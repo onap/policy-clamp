@@ -57,6 +57,7 @@ import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.components.external.DcaeComponent;
 import org.onap.clamp.loop.components.external.ExternalComponent;
 import org.onap.clamp.loop.components.external.PolicyComponent;
+import org.onap.clamp.loop.deploy.DcaeDeployParameters;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -173,6 +174,7 @@ public class Loop extends AuditEntity implements Serializable {
                         .createPolicyInstance(this, toscaConverter));
             }
         });
+        this.setGlobalPropertiesJson(DcaeDeployParameters.getDcaeDeploymentParametersInJson(this));
     }
 
     public String getName() {

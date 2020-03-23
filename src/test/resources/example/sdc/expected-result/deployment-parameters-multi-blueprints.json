@@ -1,11 +1,11 @@
 {
   "dcaeDeployParameters": {
-    "testName": {
+    "testName1": {
       "location_id": "",
       "service_id": "",
-      "policy_id": "testName"
+      "policy_id": "testName1"
     },
-    "testName1": {
+    "testName2": {
       "aaiEnrichmentHost": "aai.onap.svc.cluster.local",
       "aaiEnrichmentPort": "8443",
       "enableAAIEnrichment": true,
@@ -20,9 +20,9 @@
       "cbs_port": "10000",
       "external_port": "32012",
       "policy_model_id": "onap.policies.monitoring.cdap.tca.hi.lo.app",
-      "policy_id": "testName"
+      "policy_id": "testName2"
     },
-    "testName2": {
+    "testName3": {
       "aaiEnrichmentHost": "aai.onap.svc.cluster.local",
       "aaiEnrichmentPort": "8443",
       "enableAAIEnrichment": true,
@@ -37,7 +37,7 @@
       "cbs_port": "10000",
       "external_port": "32012",
       "policy_model_id": "onap.policies.monitoring.cdap.tca.hi.lo.app",
-      "policy_id": "testName"
+      "policy_id": "testName3"
     }
   }
 }
