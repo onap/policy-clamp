@@ -66,15 +66,20 @@
                 "type": "string",
                 "description": "The actor performing the operation.",
                 "enum": [
-                  "CDS",
+                  "SDNR",
                   "SDNC",
-                  "SO"
+                  "VFC",
+                  "SO",
+                  "APPC",
+                  "CDS"
                 ],
                 "options": {
                   "enum_titles": [
-                    "CDS",
+                    "SDNR",
                     "SDNC",
-                    "SO"
+                    "VFC",
+                    "SO",
+                    "APPC"
                   ]
                 }
               },
@@ -82,13 +87,41 @@
                 "type": "string",
                 "description": "The operation the actor is performing.",
                 "enum": [
+                  "BandwidthOnDemand",
+                  "VF Module Delete",
+                  "Reroute",
+                  "VF Module Create",
+                  "ModifyConfig",
+                  "Rebuild",
+                  "Restart",
+                  "Migrate",
+                  "Health-Check",
                   "resource-assignment",
                   "activate",
                   "activate-restconf",
                   "activate-cli",
                   "assign-activate",
                   "imperative-test-wf"
-                ]
+                ],
+                "options": {
+                  "enum_titles": [
+                    "BandwidthOnDemand (SDNC operation)",
+                    "VF Module Delete (SO operation)",
+                    "Reroute (SDNC operation)",
+                    "VF Module Create (SO operation)",
+                    "ModifyConfig (APPC/VFC operation)",
+                    "Rebuild (APPC operation)",
+                    "Restart (APPC operation)",
+                    "Migrate (APPC operation)",
+                    "Health-Check (APPC operation)",
+                    "resource-assignment (CDS operation)",
+                    "activate (CDS operation)",
+                    "activate-restconf (CDS operation)",
+                    "activate-cli (CDS operation)",
+                    "assign-activate (CDS operation)",
+                    "imperative-test-wf (CDS operation)"
+                  ]
+                }
               },
               "target": {
                 "title": "onap.datatype.controlloop.Target",
@@ -294,7 +327,7 @@
               "payload": {
                 "type": "object",
                 "description": "Name/value pairs of payload information passed by Policy to the actor",
-                "anyOf": [
+                "enum": [
                   {
                     "title": "resource-assignment",
                     "properties": {

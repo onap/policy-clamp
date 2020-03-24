@@ -73,13 +73,13 @@ data_types:
                 description: The actor performing the operation.
                 required: true
                 metadata:
-                    clamp_possible_values: Dictionary:DefaultActor
+                    clamp_possible_values: Dictionary:DefaultActors,ClampExecution:CDS/actor
             operation:
                 type: string
                 description: The operation the actor is performing.
                 required: true
                 metadata:
-                    clamp_possible_values: ClampExecution:CDS/operation
+                    clamp_possible_values: Dictionary:DefaultOperations, ClampExecution:CDS/operations
             target:
                 type: onap.datatype.controlloop.Target
                 description: The resource the operation should be performed on.

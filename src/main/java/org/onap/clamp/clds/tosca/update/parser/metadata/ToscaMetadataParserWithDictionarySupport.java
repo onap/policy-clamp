@@ -73,13 +73,17 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
             ((LinkedHashMap<String, Object>) childNodeMap.get(ToscaSchemaConstants.METADATA)).forEach((key,
                                                                                                        value) -> {
                 if (key.equalsIgnoreCase(ToscaSchemaConstants.METADATA_CLAMP_POSSIBLE_VALUES)) {
-                    if (((String) value).contains(ToscaSchemaConstants.DICTIONARY)) {
-                        processDictionaryElements((String) value, childObject, dictionaryService);
+                    String[] multipleValues = ((String) value).split(",");
+                    for (String multipleValue : multipleValues) {
+                        if (multipleValue.contains(ToscaSchemaConstants.DICTIONARY)) {
+                            processDictionaryElements(multipleValue, childObject, dictionaryService);
+                        }
+                        if (multipleValue.contains("ClampExecution:")) {
+                            executeClampProcess(multipleValue.replaceAll("ClampExecution:", ""), childObject,
+                                    serviceModel, toscaMetadataExecutor);
+                        }
                     }
-                    if (((String) value).contains("ClampExecution:")) {
-                        executeClampProcess(((String) value).replaceAll("ClampExecution:", ""), childObject,
-                                serviceModel, toscaMetadataExecutor);
-                    }
+
                 }
             });
         }
@@ -91,72 +95,110 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
         toscaMetadataExecutor.executeTheProcess(processInfo, childObject, serviceModel);
     }
 
+    /**
+     * For dictionary with multiple levels (defined by #).
+     *
+     * @param dictionaryKeyArray the array containing the different elements
+     * @param childObject        the structure getting the new entries
+     * @param dictionaryService  the dictionary service bean
+     */
+    private static void processComplexDictionaryElements(String[] dictionaryKeyArray, JsonObject childObject,
+                                                         DictionaryService dictionaryService) {
+        // We support only one # as of now.
+        List<DictionaryElement> dictionaryElements = null;
+        if (dictionaryKeyArray.length == 2) {
+            dictionaryElements = new ArrayList<>(dictionaryService.getDictionary(dictionaryKeyArray[0])
+                    .getDictionaryElements());
+            JsonArray subDictionaryNames = new JsonArray();
+            new ArrayList<DictionaryElement>(dictionaryService.getDictionary(dictionaryKeyArray[1])
+                    .getDictionaryElements()).forEach(elem -> subDictionaryNames.add(elem.getShortName()));
+
+            JsonArray jsonArray = new JsonArray();
+
+            Optional.of(dictionaryElements).get().forEach(c -> {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(JsonEditorSchemaConstants.TYPE, getJsonType(c.getType()));
+                if (c.getType() != null
+                        && c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_STRING)) {
+                    jsonObject.addProperty(JsonEditorSchemaConstants.MIN_LENGTH, 1);
+
+                }
+                jsonObject.addProperty(JsonEditorSchemaConstants.ID, c.getName());
+                jsonObject.addProperty(JsonEditorSchemaConstants.LABEL, c.getShortName());
+                jsonObject.add(JsonEditorSchemaConstants.OPERATORS, subDictionaryNames);
+                jsonArray.add(jsonObject);
+            });
+
+            JsonObject filterObject = new JsonObject();
+            filterObject.add(JsonEditorSchemaConstants.FILTERS, jsonArray);
+
+            childObject.addProperty(JsonEditorSchemaConstants.TYPE,
+                    JsonEditorSchemaConstants.TYPE_QBLDR);
+            // TO invoke validation on such parameters
+            childObject.addProperty(JsonEditorSchemaConstants.MIN_LENGTH, 1);
+            childObject.add(JsonEditorSchemaConstants.QSSCHEMA, filterObject);
+
+        }
+    }
+
+    /**
+     * For dictionary with single entry.
+     *
+     * @param dictionaryKeyArray the array containing the different elements
+     * @param childObject        the structure getting the new entries
+     * @param dictionaryService  the dictionary service bean
+     */
+    private static void processSimpleDictionaryElements(String[] dictionaryKeyArray, JsonObject childObject,
+                                                        DictionaryService dictionaryService) {
+        JsonArray dictionaryNames = new JsonArray();
+        JsonArray dictionaryFullNames = new JsonArray();
+        dictionaryService.getDictionary(dictionaryKeyArray[0]).getDictionaryElements().forEach(c -> {
+            // Json type will be translated before Policy creation
+            if (c.getType() != null && !c.getType().equalsIgnoreCase("json")) {
+                dictionaryFullNames.add(c.getName());
+            }
+            dictionaryNames.add(c.getShortName());
+        });
+
+        if (dictionaryFullNames.size() > 0) {
+            if (childObject.get(JsonEditorSchemaConstants.ENUM) != null) {
+                childObject.get(JsonEditorSchemaConstants.ENUM).getAsJsonArray().add(dictionaryFullNames);
+            }
+            else {
+                childObject.add(JsonEditorSchemaConstants.ENUM, dictionaryFullNames);
+            }
+            // Add Enum titles for generated translated values during JSON instance
+            // generation
+            JsonObject enumTitles = new JsonObject();
+            enumTitles.add(JsonEditorSchemaConstants.ENUM_TITLES, dictionaryNames);
+            if (childObject.get(JsonEditorSchemaConstants.OPTIONS) != null) {
+                childObject.get(JsonEditorSchemaConstants.OPTIONS).getAsJsonArray().add(enumTitles);
+            }
+            else {
+                childObject.add(JsonEditorSchemaConstants.OPTIONS, enumTitles);
+            }
+
+        }
+        else {
+            if (childObject.get(JsonEditorSchemaConstants.ENUM) != null) {
+                childObject.get(JsonEditorSchemaConstants.ENUM).getAsJsonArray().add(dictionaryNames);
+            }
+            else {
+                childObject.add(JsonEditorSchemaConstants.ENUM, dictionaryNames);
+            }
+        }
+    }
+
     private static void processDictionaryElements(String dictionaryReference, JsonObject childObject,
                                                   DictionaryService dictionaryService) {
         String[] dictionaryKeyArray =
                 dictionaryReference.substring(dictionaryReference.indexOf(ToscaSchemaConstants.DICTIONARY) + 11,
                         dictionaryReference.length()).split("#");
         if (dictionaryKeyArray.length > 1) {
-            // We support only one # as of now.
-            List<DictionaryElement> dictionaryElements = null;
-            if (dictionaryKeyArray.length == 2) {
-                dictionaryElements = new ArrayList<>(dictionaryService.getDictionary(dictionaryKeyArray[0])
-                        .getDictionaryElements());
-                JsonArray subDictionaryNames = new JsonArray();
-                new ArrayList<DictionaryElement>(dictionaryService.getDictionary(dictionaryKeyArray[1])
-                        .getDictionaryElements()).forEach(elem -> subDictionaryNames.add(elem.getShortName()));
-
-                JsonArray jsonArray = new JsonArray();
-
-                Optional.of(dictionaryElements).get().stream().forEach(c -> {
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty(JsonEditorSchemaConstants.TYPE, getJsonType(c.getType()));
-                    if (c.getType() != null
-                            && c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_STRING)) {
-                        jsonObject.addProperty(JsonEditorSchemaConstants.MIN_LENGTH, 1);
-
-                    }
-                    jsonObject.addProperty(JsonEditorSchemaConstants.ID, c.getName());
-                    jsonObject.addProperty(JsonEditorSchemaConstants.LABEL, c.getShortName());
-                    jsonObject.add(JsonEditorSchemaConstants.OPERATORS, subDictionaryNames);
-                    jsonArray.add(jsonObject);
-                });
-
-                JsonObject filterObject = new JsonObject();
-                filterObject.add(JsonEditorSchemaConstants.FILTERS, jsonArray);
-
-                childObject.addProperty(JsonEditorSchemaConstants.TYPE,
-                        JsonEditorSchemaConstants.TYPE_QBLDR);
-                // TO invoke validation on such parameters
-                childObject.addProperty(JsonEditorSchemaConstants.MIN_LENGTH, 1);
-                childObject.add(JsonEditorSchemaConstants.QSSCHEMA, filterObject);
-
-            }
+            processComplexDictionaryElements(dictionaryKeyArray, childObject, dictionaryService);
         }
         else {
-            List<DictionaryElement> dictionaryElements =
-                    new ArrayList<>(dictionaryService.getDictionary(dictionaryKeyArray[0]).getDictionaryElements());
-            JsonArray dictionaryNames = new JsonArray();
-            JsonArray dictionaryFullNames = new JsonArray();
-            dictionaryElements.stream().forEach(c -> {
-                // Json type will be translated before Policy creation
-                if (c.getType() != null && !c.getType().equalsIgnoreCase("json")) {
-                    dictionaryFullNames.add(c.getName());
-                }
-                dictionaryNames.add(c.getShortName());
-            });
-
-            if (dictionaryFullNames.size() > 0) {
-                childObject.add(JsonEditorSchemaConstants.ENUM, dictionaryFullNames);
-                // Add Enum titles for generated translated values during JSON instance
-                // generation
-                JsonObject enumTitles = new JsonObject();
-                enumTitles.add(JsonEditorSchemaConstants.ENUM_TITLES, dictionaryNames);
-                childObject.add(JsonEditorSchemaConstants.OPTIONS, enumTitles);
-            }
-            else {
-                childObject.add(JsonEditorSchemaConstants.ENUM, dictionaryNames);
-            }
+            processSimpleDictionaryElements(dictionaryKeyArray, childObject, dictionaryService);
         }
     }
 
