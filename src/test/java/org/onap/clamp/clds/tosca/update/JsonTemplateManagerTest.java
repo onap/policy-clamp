@@ -50,7 +50,7 @@ public class JsonTemplateManagerTest extends TestCase {
                         "clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.monitoring.cdap.tca.hi.lo.app";
-        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null);
+        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
 
     /**
@@ -68,7 +68,7 @@ public class JsonTemplateManagerTest extends TestCase {
                         "clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.guard.common.FrequencyLimiter";
-        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null);
+        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
 
     /**
@@ -86,7 +86,7 @@ public class JsonTemplateManagerTest extends TestCase {
                         "clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.operational.common.Apex";
-        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null);
+        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
 
     /**
@@ -104,7 +104,7 @@ public class JsonTemplateManagerTest extends TestCase {
                         "clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.operational.common.Drools";
-        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null);
+        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
 
 
@@ -121,7 +121,7 @@ public class JsonTemplateManagerTest extends TestCase {
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.operational.common.Drools";
-        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null);
+        jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
 
     /**

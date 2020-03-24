@@ -33,6 +33,7 @@ import org.onap.clamp.clds.tosca.update.elements.ToscaElement;
 import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
 import org.onap.clamp.clds.tosca.update.parser.metadata.ToscaMetadataParser;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplate;
+import org.onap.clamp.loop.service.Service;
 
 public class ToscaConverterToJsonSchema {
     private LinkedHashMap<String, ToscaElement> components;
@@ -40,19 +41,23 @@ public class ToscaConverterToJsonSchema {
 
     private ToscaMetadataParser metadataParser;
 
+    private Service serviceModel;
+
     /**
      * Constructor.
      *
      * @param toscaElementsMap    All the tosca elements found (policy type + data types + native tosca datatypes)
      * @param jsonSchemaTemplates All Json schema templates to use
      * @param metadataParser      The metadata parser to use for metadata section
+     * @param serviceModel        The service model for clamp enrichment
      */
     public ToscaConverterToJsonSchema(LinkedHashMap<String, ToscaElement> toscaElementsMap,
                                       LinkedHashMap<String, JsonTemplate> jsonSchemaTemplates,
-                                      ToscaMetadataParser metadataParser) {
+                                      ToscaMetadataParser metadataParser, Service serviceModel) {
         this.components = toscaElementsMap;
         this.templates = jsonSchemaTemplates;
         this.metadataParser = metadataParser;
+        this.serviceModel = serviceModel;
     }
 
     /**
@@ -220,7 +225,7 @@ public class ToscaConverterToJsonSchema {
                     break;
                 case "metadata":
                     if (metadataParser != null) {
-                        metadataParser.processAllMetadataElement(toscaElementProperty).entrySet()
+                        metadataParser.processAllMetadataElement(toscaElementProperty, serviceModel).entrySet()
                                 .forEach((jsonEntry) -> {
                                     propertiesInJson.add(jsonEntry.getKey(),
                                             jsonEntry.getValue());
@@ -238,9 +243,8 @@ public class ToscaConverterToJsonSchema {
                     if (getToscaElement(this.extractSpecificFieldFromMap(toscaElementProperty, "entry_schema"))
                             != null) {
                         String nameComponent = this.extractSpecificFieldFromMap(toscaElementProperty, "entry_schema");
-                        ToscaConverterToJsonSchema
-                                child = new ToscaConverterToJsonSchema(components, templates,
-                                metadataParser);
+                        ToscaConverterToJsonSchema child = new ToscaConverterToJsonSchema(components, templates,
+                                metadataParser, serviceModel);
                         JsonObject propertiesContainer = new JsonObject();
 
                         switch ((String) toscaElementProperty.getItems().get("type")) {

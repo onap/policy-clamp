@@ -99,11 +99,13 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
      * Api to refresh the MicroService Policy UI window.
      *
      * @param microServicePolicy The micro Service policy object
-     * @param toscaConverter     the tosca converter required to convert the tosca model to json schema
+     * @param toscaConverter     The tosca converter required to convert the tosca model to json schema
+     * @param loop               As a microservice object can belong to multiple loops, we need it here
      */
     public void refreshMicroServicePolicyJsonRepresentation(MicroServicePolicy microServicePolicy,
-                                                            ToscaConverterWithDictionarySupport toscaConverter) {
-        microServicePolicy.updateJsonRepresentation(toscaConverter);
+                                                            ToscaConverterWithDictionarySupport toscaConverter,
+                                                            Loop loop) {
+        microServicePolicy.updateJsonRepresentation(toscaConverter, loop.getModelService());
         this.microServiceRepository.saveAndFlush(microServicePolicy);
 
     }

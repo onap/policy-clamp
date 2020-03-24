@@ -88,7 +88,7 @@ public class OperationalPolicyService implements PolicyService<OperationalPolicy
      */
     public void refreshOperationalPolicyJsonRepresentation(OperationalPolicy operationalPolicy,
                                                            ToscaConverterWithDictionarySupport toscaConverter) {
-        operationalPolicy.updateJsonRepresentation(toscaConverter);
+        operationalPolicy.updateJsonRepresentation(toscaConverter, operationalPolicy.getLoop().getModelService());
         this.operationalPolicyRepository.saveAndFlush(operationalPolicy);
     }
 }

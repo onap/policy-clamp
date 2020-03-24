@@ -4,7 +4,7 @@
  * ================================================================================
  * Copyright (C) 2020 AT&T Intellectual Property. All rights
  *                             reserved.
-  * ================================================================================
+ * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,12 +21,23 @@
  *
  */
 
-package org.onap.clamp.clds.tosca.update.parser.metadata;
+package org.onap.clamp.clds.tosca.update.execution;
 
 import com.google.gson.JsonObject;
-import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
 import org.onap.clamp.loop.service.Service;
 
-public interface ToscaMetadataParser {
-    JsonObject processAllMetadataElement(ToscaElementProperty toscaElementProperty, Service serviceModel);
+/**
+ * This code is the interface that must be implemented to have a tosca process.
+ */
+public abstract class ToscaMetadataProcess {
+
+    /**
+     * This method add some elements to the JsonObject childObject passed in argument.
+     * The process can take multiple parameters in arguments.
+     *
+     * @param parameters   The parameters required by the process
+     * @param childObject  The Json Object modified by the current process
+     * @param serviceModel The service model associated to do clamp enrichment
+     */
+    public abstract void executeProcess(String parameters, JsonObject childObject, Service serviceModel);
 }

@@ -126,16 +126,16 @@ public class OperationalPolicy extends Policy implements Serializable {
                 RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)), new JsonObject(),
                 new JsonObject(), loopElementModel.getPolicyModels().first(), loopElementModel, null, null);
         this.setLoop(loop);
-        this.updateJsonRepresentation(toscaConverter);
+        this.updateJsonRepresentation(toscaConverter, service);
     }
 
     /**
      * Create an operational policy from a policy model.
      *
-     * @param loop             The parent loop
-     * @param service          The loop service
-     * @param policyModel       The policy model
-     * @param toscaConverter   The tosca converter that must be used to create the Json representation
+     * @param loop           The parent loop
+     * @param service        The loop service
+     * @param policyModel    The policy model
+     * @param toscaConverter The tosca converter that must be used to create the Json representation
      * @throws IOException In case of issues with the legacy files (generated from resource files
      */
     public OperationalPolicy(Loop loop, Service service, PolicyModel policyModel,
@@ -144,7 +144,7 @@ public class OperationalPolicy extends Policy implements Serializable {
                 RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)), new JsonObject(),
                 new JsonObject(), policyModel, null, null, null);
         this.setLoop(loop);
-        this.updateJsonRepresentation(toscaConverter);
+        this.updateJsonRepresentation(toscaConverter, service);
     }
 
     public void setLoop(Loop loopName) {
@@ -171,7 +171,7 @@ public class OperationalPolicy extends Policy implements Serializable {
     }
 
     @Override
-    public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter) {
+    public void updateJsonRepresentation(ToscaConverterWithDictionarySupport toscaConverter, Service serviceModel) {
         {
             this.setJsonRepresentation(new JsonObject());
             if (this.getPolicyModel() == null) {
@@ -187,7 +187,7 @@ public class OperationalPolicy extends Policy implements Serializable {
                 // Generic Case
                 this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(
                         this.getPolicyModel().getPolicyModelTosca(),
-                        this.getPolicyModel().getPolicyModelType()));
+                        this.getPolicyModel().getPolicyModelType(), serviceModel));
             }
         }
     }

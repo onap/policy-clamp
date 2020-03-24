@@ -444,31 +444,31 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_paths">2. Paths</a>
 <ul class="sectlevel2">
-<li><a href="#_route110">2.1. GET /v1/healthcheck</a>
+<li><a href="#_route113">2.1. GET /v1/healthcheck</a>
 <ul class="sectlevel3">
 <li><a href="#_responses">2.1.1. Responses</a></li>
 <li><a href="#_produces">2.1.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route111">2.2. GET /v1/user/getUser</a>
+<li><a href="#_route114">2.2. GET /v1/user/getUser</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_2">2.2.1. Responses</a></li>
 <li><a href="#_produces_2">2.2.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route109">2.3. GET /v2/clampInformation</a>
+<li><a href="#_route112">2.3. GET /v2/clampInformation</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_3">2.3.1. Responses</a></li>
 <li><a href="#_produces_3">2.3.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route95">2.4. GET /v2/dictionary</a>
+<li><a href="#_route98">2.4. GET /v2/dictionary</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_4">2.4.1. Responses</a></li>
 <li><a href="#_produces_4">2.4.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route97">2.5. PUT /v2/dictionary</a>
+<li><a href="#_route100">2.5. PUT /v2/dictionary</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters">2.5.1. Parameters</a></li>
 <li><a href="#_responses_5">2.5.2. Responses</a></li>
@@ -497,7 +497,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_produces_8">2.8.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route99">2.9. DELETE /v2/dictionary/{name}</a>
+<li><a href="#_route102">2.9. DELETE /v2/dictionary/{name}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_4">2.9.1. Parameters</a></li>
 <li><a href="#_responses_9">2.9.2. Responses</a></li>
@@ -511,14 +511,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_produces_10">2.10.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route90">2.11. PUT /v2/loop/addOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a>
+<li><a href="#_route93">2.11. PUT /v2/loop/addOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_6">2.11.1. Parameters</a></li>
 <li><a href="#_responses_11">2.11.2. Responses</a></li>
 <li><a href="#_produces_11">2.11.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route92">2.12. POST /v2/loop/create/{loopName}?templateName={templateName}</a>
+<li><a href="#_route95">2.12. POST /v2/loop/create/{loopName}?templateName={templateName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_7">2.12.1. Parameters</a></li>
 <li><a href="#_responses_12">2.12.2. Responses</a></li>
@@ -526,172 +526,179 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_produces_12">2.12.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route88">2.13. PUT /v2/loop/delete/{loopName}</a>
+<li><a href="#_route91">2.13. PUT /v2/loop/delete/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_8">2.13.1. Parameters</a></li>
 <li><a href="#_responses_13">2.13.2. Responses</a></li>
 </ul>
 </li>
-<li><a href="#_route82">2.14. PUT /v2/loop/deploy/{loopName}</a>
+<li><a href="#_route84">2.14. PUT /v2/loop/deploy/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_9">2.14.1. Parameters</a></li>
 <li><a href="#_responses_14">2.14.2. Responses</a></li>
 <li><a href="#_produces_13">2.14.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route76">2.15. GET /v2/loop/getAllNames</a>
+<li><a href="#_route78">2.15. GET /v2/loop/getAllNames</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_15">2.15.1. Responses</a></li>
 <li><a href="#_produces_14">2.15.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route89">2.16. GET /v2/loop/getstatus/{loopName}</a>
+<li><a href="#_route92">2.16. GET /v2/loop/getstatus/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_10">2.16.1. Parameters</a></li>
 <li><a href="#_responses_16">2.16.2. Responses</a></li>
 <li><a href="#_produces_15">2.16.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route83">2.17. PUT /v2/loop/refreshOpPolicyJsonSchema/{loopName}</a>
+<li><a href="#_route85">2.17. PUT /v2/loop/refreshMicroServicePolicyJsonSchema/{loopName}/{microServicePolicyName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_11">2.17.1. Parameters</a></li>
 <li><a href="#_responses_17">2.17.2. Responses</a></li>
 <li><a href="#_produces_16">2.17.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route91">2.18. PUT /v2/loop/removeOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a>
+<li><a href="#_route86">2.18. PUT /v2/loop/refreshOperationalPolicyJsonSchema/{loopName}/{operationalPolicyName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_12">2.18.1. Parameters</a></li>
 <li><a href="#_responses_18">2.18.2. Responses</a></li>
 <li><a href="#_produces_17">2.18.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route86">2.19. PUT /v2/loop/restart/{loopName}</a>
+<li><a href="#_route94">2.19. PUT /v2/loop/removeOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_13">2.19.1. Parameters</a></li>
 <li><a href="#_responses_19">2.19.2. Responses</a></li>
 <li><a href="#_produces_18">2.19.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route85">2.20. PUT /v2/loop/stop/{loopName}</a>
+<li><a href="#_route89">2.20. PUT /v2/loop/restart/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_14">2.20.1. Parameters</a></li>
 <li><a href="#_responses_20">2.20.2. Responses</a></li>
 <li><a href="#_produces_19">2.20.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route87">2.21. PUT /v2/loop/submit/{loopName}</a>
+<li><a href="#_route88">2.21. PUT /v2/loop/stop/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_15">2.21.1. Parameters</a></li>
 <li><a href="#_responses_21">2.21.2. Responses</a></li>
 <li><a href="#_produces_20">2.21.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route78">2.22. GET /v2/loop/svgRepresentation/{loopName}</a>
+<li><a href="#_route90">2.22. PUT /v2/loop/submit/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_16">2.22.1. Parameters</a></li>
 <li><a href="#_responses_22">2.22.2. Responses</a></li>
 <li><a href="#_produces_21">2.22.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route84">2.23. PUT /v2/loop/undeploy/{loopName}</a>
+<li><a href="#_route80">2.23. GET /v2/loop/svgRepresentation/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_17">2.23.1. Parameters</a></li>
 <li><a href="#_responses_23">2.23.2. Responses</a></li>
 <li><a href="#_produces_22">2.23.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route79">2.24. POST /v2/loop/updateGlobalProperties/{loopName}</a>
+<li><a href="#_route87">2.24. PUT /v2/loop/undeploy/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_18">2.24.1. Parameters</a></li>
 <li><a href="#_responses_24">2.24.2. Responses</a></li>
-<li><a href="#_consumes_4">2.24.3. Consumes</a></li>
-<li><a href="#_produces_23">2.24.4. Produces</a></li>
+<li><a href="#_produces_23">2.24.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route81">2.25. POST /v2/loop/updateMicroservicePolicy/{loopName}</a>
+<li><a href="#_route81">2.25. POST /v2/loop/updateGlobalProperties/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_19">2.25.1. Parameters</a></li>
 <li><a href="#_responses_25">2.25.2. Responses</a></li>
-<li><a href="#_consumes_5">2.25.3. Consumes</a></li>
+<li><a href="#_consumes_4">2.25.3. Consumes</a></li>
 <li><a href="#_produces_24">2.25.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route80">2.26. POST /v2/loop/updateOperationalPolicies/{loopName}</a>
+<li><a href="#_route83">2.26. POST /v2/loop/updateMicroservicePolicy/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_20">2.26.1. Parameters</a></li>
 <li><a href="#_responses_26">2.26.2. Responses</a></li>
-<li><a href="#_consumes_6">2.26.3. Consumes</a></li>
+<li><a href="#_consumes_5">2.26.3. Consumes</a></li>
 <li><a href="#_produces_25">2.26.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route77">2.27. GET /v2/loop/{loopName}</a>
+<li><a href="#_route82">2.27. POST /v2/loop/updateOperationalPolicies/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_21">2.27.1. Parameters</a></li>
 <li><a href="#_responses_27">2.27.2. Responses</a></li>
-<li><a href="#_produces_26">2.27.3. Produces</a></li>
+<li><a href="#_consumes_6">2.27.3. Consumes</a></li>
+<li><a href="#_produces_26">2.27.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route103">2.28. POST /v2/policyToscaModels</a>
+<li><a href="#_route79">2.28. GET /v2/loop/{loopName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_22">2.28.1. Parameters</a></li>
 <li><a href="#_responses_28">2.28.2. Responses</a></li>
-<li><a href="#_consumes_7">2.28.3. Consumes</a></li>
-<li><a href="#_produces_27">2.28.4. Produces</a></li>
+<li><a href="#_produces_27">2.28.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route102">2.29. GET /v2/policyToscaModels</a>
+<li><a href="#_route106">2.29. POST /v2/policyToscaModels</a>
 <ul class="sectlevel3">
-<li><a href="#_responses_29">2.29.1. Responses</a></li>
-<li><a href="#_produces_28">2.29.2. Produces</a></li>
+<li><a href="#_parameters_23">2.29.1. Parameters</a></li>
+<li><a href="#_responses_29">2.29.2. Responses</a></li>
+<li><a href="#_consumes_7">2.29.3. Consumes</a></li>
+<li><a href="#_produces_28">2.29.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get">2.30. GET /v2/policyToscaModels/yaml/{policyModelType}/{policyModelVersion}</a>
+<li><a href="#_route105">2.30. GET /v2/policyToscaModels</a>
 <ul class="sectlevel3">
-<li><a href="#_parameters_23">2.30.1. Parameters</a></li>
-<li><a href="#_responses_30">2.30.2. Responses</a></li>
-<li><a href="#_produces_29">2.30.3. Produces</a></li>
+<li><a href="#_responses_30">2.30.1. Responses</a></li>
+<li><a href="#_produces_29">2.30.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_v2_policytoscamodels_policymodeltype_policymodelversion_get">2.31. GET /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a>
+<li><a href="#_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get">2.31. GET /v2/policyToscaModels/yaml/{policyModelType}/{policyModelVersion}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_24">2.31.1. Parameters</a></li>
 <li><a href="#_responses_31">2.31.2. Responses</a></li>
 <li><a href="#_produces_30">2.31.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route104">2.32. PUT /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a>
+<li><a href="#_v2_policytoscamodels_policymodeltype_policymodelversion_get">2.32. GET /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_25">2.32.1. Parameters</a></li>
 <li><a href="#_responses_32">2.32.2. Responses</a></li>
-<li><a href="#_consumes_8">2.32.3. Consumes</a></li>
-<li><a href="#_produces_31">2.32.4. Produces</a></li>
+<li><a href="#_produces_31">2.32.3. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_route108">2.33. GET /v2/templates</a>
+<li><a href="#_route107">2.33. PUT /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a>
 <ul class="sectlevel3">
-<li><a href="#_responses_33">2.33.1. Responses</a></li>
-<li><a href="#_produces_32">2.33.2. Produces</a></li>
+<li><a href="#_parameters_26">2.33.1. Parameters</a></li>
+<li><a href="#_responses_33">2.33.2. Responses</a></li>
+<li><a href="#_consumes_8">2.33.3. Consumes</a></li>
+<li><a href="#_produces_32">2.33.4. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_v2_templates_names_get">2.34. GET /v2/templates/names</a>
+<li><a href="#_route111">2.34. GET /v2/templates</a>
 <ul class="sectlevel3">
 <li><a href="#_responses_34">2.34.1. Responses</a></li>
 <li><a href="#_produces_33">2.34.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_v2_templates_templatename_get">2.35. GET /v2/templates/{templateName}</a>
+<li><a href="#_v2_templates_names_get">2.35. GET /v2/templates/names</a>
 <ul class="sectlevel3">
-<li><a href="#_parameters_26">2.35.1. Parameters</a></li>
-<li><a href="#_responses_35">2.35.2. Responses</a></li>
-<li><a href="#_produces_34">2.35.3. Produces</a></li>
+<li><a href="#_responses_35">2.35.1. Responses</a></li>
+<li><a href="#_produces_34">2.35.2. Produces</a></li>
 </ul>
 </li>
-<li><a href="#_v2_templates_templatename_svgrepresentation_get">2.36. GET /v2/templates/{templateName}/svgRepresentation</a>
+<li><a href="#_v2_templates_templatename_get">2.36. GET /v2/templates/{templateName}</a>
 <ul class="sectlevel3">
 <li><a href="#_parameters_27">2.36.1. Parameters</a></li>
 <li><a href="#_responses_36">2.36.2. Responses</a></li>
 <li><a href="#_produces_35">2.36.3. Produces</a></li>
+</ul>
+</li>
+<li><a href="#_v2_templates_templatename_svgrepresentation_get">2.37. GET /v2/templates/{templateName}/svgRepresentation</a>
+<ul class="sectlevel3">
+<li><a href="#_parameters_28">2.37.1. Parameters</a></li>
+<li><a href="#_responses_37">2.37.2. Responses</a></li>
+<li><a href="#_produces_36">2.37.3. Produces</a></li>
 </ul>
 </li>
 </ul>
@@ -736,7 +743,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="_uri_scheme"><a class="anchor" href="#_uri_scheme"></a><a class="link" href="#_uri_scheme">1.2. URI scheme</a></h3>
 <div class="paragraph">
-<p><em>Host</em> : localhost:46291<br>
+<p><em>Host</em> : localhost:42393<br>
 <em>BasePath</em> : /restservices/clds/<br>
 <em>Schemes</em> : HTTP</p>
 </div>
@@ -747,7 +754,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_paths"><a class="anchor" href="#_paths"></a><a class="link" href="#_paths">2. Paths</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_route110"><a class="anchor" href="#_route110"></a><a class="link" href="#_route110">2.1. GET /v1/healthcheck</a></h3>
+<h3 id="_route113"><a class="anchor" href="#_route113"></a><a class="link" href="#_route113">2.1. GET /v1/healthcheck</a></h3>
 <div class="sect3">
 <h4 id="_responses"><a class="anchor" href="#_responses"></a><a class="link" href="#_responses">2.1.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -784,7 +791,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route111"><a class="anchor" href="#_route111"></a><a class="link" href="#_route111">2.2. GET /v1/user/getUser</a></h3>
+<h3 id="_route114"><a class="anchor" href="#_route114"></a><a class="link" href="#_route114">2.2. GET /v1/user/getUser</a></h3>
 <div class="sect3">
 <h4 id="_responses_2"><a class="anchor" href="#_responses_2"></a><a class="link" href="#_responses_2">2.2.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -818,7 +825,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route109"><a class="anchor" href="#_route109"></a><a class="link" href="#_route109">2.3. GET /v2/clampInformation</a></h3>
+<h3 id="_route112"><a class="anchor" href="#_route112"></a><a class="link" href="#_route112">2.3. GET /v2/clampInformation</a></h3>
 <div class="sect3">
 <h4 id="_responses_3"><a class="anchor" href="#_responses_3"></a><a class="link" href="#_responses_3">2.3.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -855,7 +862,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route95"><a class="anchor" href="#_route95"></a><a class="link" href="#_route95">2.4. GET /v2/dictionary</a></h3>
+<h3 id="_route98"><a class="anchor" href="#_route98"></a><a class="link" href="#_route98">2.4. GET /v2/dictionary</a></h3>
 <div class="sect3">
 <h4 id="_responses_4"><a class="anchor" href="#_responses_4"></a><a class="link" href="#_responses_4">2.4.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -892,7 +899,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route97"><a class="anchor" href="#_route97"></a><a class="link" href="#_route97">2.5. PUT /v2/dictionary</a></h3>
+<h3 id="_route100"><a class="anchor" href="#_route100"></a><a class="link" href="#_route100">2.5. PUT /v2/dictionary</a></h3>
 <div class="sect3">
 <h4 id="_parameters"><a class="anchor" href="#_parameters"></a><a class="link" href="#_parameters">2.5.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1141,7 +1148,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route99"><a class="anchor" href="#_route99"></a><a class="link" href="#_route99">2.9. DELETE /v2/dictionary/{name}</a></h3>
+<h3 id="_route102"><a class="anchor" href="#_route102"></a><a class="link" href="#_route102">2.9. DELETE /v2/dictionary/{name}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_4"><a class="anchor" href="#_parameters_4"></a><a class="link" href="#_parameters_4">2.9.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1265,7 +1272,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route90"><a class="anchor" href="#_route90"></a><a class="link" href="#_route90">2.11. PUT /v2/loop/addOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a></h3>
+<h3 id="_route93"><a class="anchor" href="#_route93"></a><a class="link" href="#_route93">2.11. PUT /v2/loop/addOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_6"><a class="anchor" href="#_parameters_6"></a><a class="link" href="#_parameters_6">2.11.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1339,7 +1346,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route92"><a class="anchor" href="#_route92"></a><a class="link" href="#_route92">2.12. POST /v2/loop/create/{loopName}?templateName={templateName}</a></h3>
+<h3 id="_route95"><a class="anchor" href="#_route95"></a><a class="link" href="#_route95">2.12. POST /v2/loop/create/{loopName}?templateName={templateName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_7"><a class="anchor" href="#_parameters_7"></a><a class="link" href="#_parameters_7">2.12.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1411,7 +1418,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route88"><a class="anchor" href="#_route88"></a><a class="link" href="#_route88">2.13. PUT /v2/loop/delete/{loopName}</a></h3>
+<h3 id="_route91"><a class="anchor" href="#_route91"></a><a class="link" href="#_route91">2.13. PUT /v2/loop/delete/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_8"><a class="anchor" href="#_parameters_8"></a><a class="link" href="#_parameters_8">2.13.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1460,7 +1467,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route82"><a class="anchor" href="#_route82"></a><a class="link" href="#_route82">2.14. PUT /v2/loop/deploy/{loopName}</a></h3>
+<h3 id="_route84"><a class="anchor" href="#_route84"></a><a class="link" href="#_route84">2.14. PUT /v2/loop/deploy/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_9"><a class="anchor" href="#_parameters_9"></a><a class="link" href="#_parameters_9">2.14.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1522,7 +1529,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route76"><a class="anchor" href="#_route76"></a><a class="link" href="#_route76">2.15. GET /v2/loop/getAllNames</a></h3>
+<h3 id="_route78"><a class="anchor" href="#_route78"></a><a class="link" href="#_route78">2.15. GET /v2/loop/getAllNames</a></h3>
 <div class="sect3">
 <h4 id="_responses_15"><a class="anchor" href="#_responses_15"></a><a class="link" href="#_responses_15">2.15.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1559,7 +1566,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route89"><a class="anchor" href="#_route89"></a><a class="link" href="#_route89">2.16. GET /v2/loop/getstatus/{loopName}</a></h3>
+<h3 id="_route92"><a class="anchor" href="#_route92"></a><a class="link" href="#_route92">2.16. GET /v2/loop/getstatus/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_10"><a class="anchor" href="#_parameters_10"></a><a class="link" href="#_parameters_10">2.16.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1621,7 +1628,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route83"><a class="anchor" href="#_route83"></a><a class="link" href="#_route83">2.17. PUT /v2/loop/refreshOpPolicyJsonSchema/{loopName}</a></h3>
+<h3 id="_route85"><a class="anchor" href="#_route85"></a><a class="link" href="#_route85">2.17. PUT /v2/loop/refreshMicroServicePolicyJsonSchema/{loopName}/{microServicePolicyName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_11"><a class="anchor" href="#_parameters_11"></a><a class="link" href="#_parameters_11">2.17.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1641,6 +1648,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>loopName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>microServicePolicyName</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
@@ -1683,7 +1696,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route91"><a class="anchor" href="#_route91"></a><a class="link" href="#_route91">2.18. PUT /v2/loop/removeOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a></h3>
+<h3 id="_route86"><a class="anchor" href="#_route86"></a><a class="link" href="#_route86">2.18. PUT /v2/loop/refreshOperationalPolicyJsonSchema/{loopName}/{operationalPolicyName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_12"><a class="anchor" href="#_parameters_12"></a><a class="link" href="#_parameters_12">2.18.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1708,13 +1721,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </tr>
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyType</strong><br>
-<em>required</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyVersion</strong><br>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>operationalPolicyName</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
@@ -1757,7 +1764,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route86"><a class="anchor" href="#_route86"></a><a class="link" href="#_route86">2.19. PUT /v2/loop/restart/{loopName}</a></h3>
+<h3 id="_route94"><a class="anchor" href="#_route94"></a><a class="link" href="#_route94">2.19. PUT /v2/loop/removeOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_13"><a class="anchor" href="#_parameters_13"></a><a class="link" href="#_parameters_13">2.19.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1777,6 +1784,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>loopName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyType</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyVersion</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
@@ -1819,7 +1838,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route85"><a class="anchor" href="#_route85"></a><a class="link" href="#_route85">2.20. PUT /v2/loop/stop/{loopName}</a></h3>
+<h3 id="_route89"><a class="anchor" href="#_route89"></a><a class="link" href="#_route89">2.20. PUT /v2/loop/restart/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_14"><a class="anchor" href="#_parameters_14"></a><a class="link" href="#_parameters_14">2.20.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1881,7 +1900,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route87"><a class="anchor" href="#_route87"></a><a class="link" href="#_route87">2.21. PUT /v2/loop/submit/{loopName}</a></h3>
+<h3 id="_route88"><a class="anchor" href="#_route88"></a><a class="link" href="#_route88">2.21. PUT /v2/loop/stop/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_15"><a class="anchor" href="#_parameters_15"></a><a class="link" href="#_parameters_15">2.21.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1943,7 +1962,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route78"><a class="anchor" href="#_route78"></a><a class="link" href="#_route78">2.22. GET /v2/loop/svgRepresentation/{loopName}</a></h3>
+<h3 id="_route90"><a class="anchor" href="#_route90"></a><a class="link" href="#_route90">2.22. PUT /v2/loop/submit/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_16"><a class="anchor" href="#_parameters_16"></a><a class="link" href="#_parameters_16">2.22.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -1988,7 +2007,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_loop">Loop</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1998,14 +2017,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><code>application/xml</code></p>
+<p><code>application/json</code></p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route84"><a class="anchor" href="#_route84"></a><a class="link" href="#_route84">2.23. PUT /v2/loop/undeploy/{loopName}</a></h3>
+<h3 id="_route80"><a class="anchor" href="#_route80"></a><a class="link" href="#_route80">2.23. GET /v2/loop/svgRepresentation/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_17"><a class="anchor" href="#_parameters_17"></a><a class="link" href="#_parameters_17">2.23.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -2050,13 +2069,75 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_loop">Loop</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
 <h4 id="_produces_22"><a class="anchor" href="#_produces_22"></a><a class="link" href="#_produces_22">2.23.3. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/xml</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route87"><a class="anchor" href="#_route87"></a><a class="link" href="#_route87">2.24. PUT /v2/loop/undeploy/{loopName}</a></h3>
+<div class="sect3">
+<h4 id="_parameters_18"><a class="anchor" href="#_parameters_18"></a><a class="link" href="#_parameters_18">2.24.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>loopName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_24"><a class="anchor" href="#_responses_24"></a><a class="link" href="#_responses_24">2.24.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_loop">Loop</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_23"><a class="anchor" href="#_produces_23"></a><a class="link" href="#_produces_23">2.24.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2067,9 +2148,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route79"><a class="anchor" href="#_route79"></a><a class="link" href="#_route79">2.24. POST /v2/loop/updateGlobalProperties/{loopName}</a></h3>
+<h3 id="_route81"><a class="anchor" href="#_route81"></a><a class="link" href="#_route81">2.25. POST /v2/loop/updateGlobalProperties/{loopName}</a></h3>
 <div class="sect3">
-<h4 id="_parameters_18"><a class="anchor" href="#_parameters_18"></a><a class="link" href="#_parameters_18">2.24.1. Parameters</a></h4>
+<h4 id="_parameters_19"><a class="anchor" href="#_parameters_19"></a><a class="link" href="#_parameters_19">2.25.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 22.2222%;">
@@ -2100,7 +2181,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_24"><a class="anchor" href="#_responses_24"></a><a class="link" href="#_responses_24">2.24.2. Responses</a></h4>
+<h4 id="_responses_25"><a class="anchor" href="#_responses_25"></a><a class="link" href="#_responses_25">2.25.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10%;">
@@ -2124,7 +2205,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_4"><a class="anchor" href="#_consumes_4"></a><a class="link" href="#_consumes_4">2.24.3. Consumes</a></h4>
+<h4 id="_consumes_4"><a class="anchor" href="#_consumes_4"></a><a class="link" href="#_consumes_4">2.25.3. Consumes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2134,7 +2215,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_produces_23"><a class="anchor" href="#_produces_23"></a><a class="link" href="#_produces_23">2.24.4. Produces</a></h4>
+<h4 id="_produces_24"><a class="anchor" href="#_produces_24"></a><a class="link" href="#_produces_24">2.25.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2145,9 +2226,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route81"><a class="anchor" href="#_route81"></a><a class="link" href="#_route81">2.25. POST /v2/loop/updateMicroservicePolicy/{loopName}</a></h3>
+<h3 id="_route83"><a class="anchor" href="#_route83"></a><a class="link" href="#_route83">2.26. POST /v2/loop/updateMicroservicePolicy/{loopName}</a></h3>
 <div class="sect3">
-<h4 id="_parameters_19"><a class="anchor" href="#_parameters_19"></a><a class="link" href="#_parameters_19">2.25.1. Parameters</a></h4>
+<h4 id="_parameters_20"><a class="anchor" href="#_parameters_20"></a><a class="link" href="#_parameters_20">2.26.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 22.2222%;">
@@ -2178,7 +2259,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_25"><a class="anchor" href="#_responses_25"></a><a class="link" href="#_responses_25">2.25.2. Responses</a></h4>
+<h4 id="_responses_26"><a class="anchor" href="#_responses_26"></a><a class="link" href="#_responses_26">2.26.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10%;">
@@ -2202,7 +2283,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_5"><a class="anchor" href="#_consumes_5"></a><a class="link" href="#_consumes_5">2.25.3. Consumes</a></h4>
+<h4 id="_consumes_5"><a class="anchor" href="#_consumes_5"></a><a class="link" href="#_consumes_5">2.26.3. Consumes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2212,7 +2293,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_produces_24"><a class="anchor" href="#_produces_24"></a><a class="link" href="#_produces_24">2.25.4. Produces</a></h4>
+<h4 id="_produces_25"><a class="anchor" href="#_produces_25"></a><a class="link" href="#_produces_25">2.26.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2223,9 +2304,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route80"><a class="anchor" href="#_route80"></a><a class="link" href="#_route80">2.26. POST /v2/loop/updateOperationalPolicies/{loopName}</a></h3>
+<h3 id="_route82"><a class="anchor" href="#_route82"></a><a class="link" href="#_route82">2.27. POST /v2/loop/updateOperationalPolicies/{loopName}</a></h3>
 <div class="sect3">
-<h4 id="_parameters_20"><a class="anchor" href="#_parameters_20"></a><a class="link" href="#_parameters_20">2.26.1. Parameters</a></h4>
+<h4 id="_parameters_21"><a class="anchor" href="#_parameters_21"></a><a class="link" href="#_parameters_21">2.27.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 22.2222%;">
@@ -2256,78 +2337,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_26"><a class="anchor" href="#_responses_26"></a><a class="link" href="#_responses_26">2.26.2. Responses</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_loop">Loop</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_consumes_6"><a class="anchor" href="#_consumes_6"></a><a class="link" href="#_consumes_6">2.26.3. Consumes</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_produces_25"><a class="anchor" href="#_produces_25"></a><a class="link" href="#_produces_25">2.26.4. Produces</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_route77"><a class="anchor" href="#_route77"></a><a class="link" href="#_route77">2.27. GET /v2/loop/{loopName}</a></h3>
-<div class="sect3">
-<h4 id="_parameters_21"><a class="anchor" href="#_parameters_21"></a><a class="link" href="#_parameters_21">2.27.1. Parameters</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 22.2222%;">
-<col style="width: 33.3333%;">
-<col style="width: 44.4445%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">Type</th>
-<th class="tableblock halign-left valign-middle">Name</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>loopName</strong><br>
-<em>required</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
 <h4 id="_responses_27"><a class="anchor" href="#_responses_27"></a><a class="link" href="#_responses_27">2.27.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -2352,7 +2361,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_26"><a class="anchor" href="#_produces_26"></a><a class="link" href="#_produces_26">2.27.3. Produces</a></h4>
+<h4 id="_consumes_6"><a class="anchor" href="#_consumes_6"></a><a class="link" href="#_consumes_6">2.27.3. Consumes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_produces_26"><a class="anchor" href="#_produces_26"></a><a class="link" href="#_produces_26">2.27.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2363,7 +2382,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route103"><a class="anchor" href="#_route103"></a><a class="link" href="#_route103">2.28. POST /v2/policyToscaModels</a></h3>
+<h3 id="_route79"><a class="anchor" href="#_route79"></a><a class="link" href="#_route79">2.28. GET /v2/loop/{loopName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_22"><a class="anchor" href="#_parameters_22"></a><a class="link" href="#_parameters_22">2.28.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -2381,8 +2400,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>body</strong><br>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>loopName</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
@@ -2408,23 +2427,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_policymodel">PolicyModel</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_loop">Loop</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_7"><a class="anchor" href="#_consumes_7"></a><a class="link" href="#_consumes_7">2.28.3. Consumes</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>plain/text</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_produces_27"><a class="anchor" href="#_produces_27"></a><a class="link" href="#_produces_27">2.28.4. Produces</a></h4>
+<h4 id="_produces_27"><a class="anchor" href="#_produces_27"></a><a class="link" href="#_produces_27">2.28.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2435,46 +2444,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route102"><a class="anchor" href="#_route102"></a><a class="link" href="#_route102">2.29. GET /v2/policyToscaModels</a></h3>
+<h3 id="_route106"><a class="anchor" href="#_route106"></a><a class="link" href="#_route106">2.29. POST /v2/policyToscaModels</a></h3>
 <div class="sect3">
-<h4 id="_responses_29"><a class="anchor" href="#_responses_29"></a><a class="link" href="#_responses_29">2.29.1. Responses</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_policymodel">PolicyModel</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_produces_28"><a class="anchor" href="#_produces_28"></a><a class="link" href="#_produces_28">2.29.2. Produces</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get"><a class="anchor" href="#_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get"></a><a class="link" href="#_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get">2.30. GET /v2/policyToscaModels/yaml/{policyModelType}/{policyModelVersion}</a></h3>
-<div class="sect3">
-<h4 id="_parameters_23"><a class="anchor" href="#_parameters_23"></a><a class="link" href="#_parameters_23">2.30.1. Parameters</a></h4>
+<h4 id="_parameters_23"><a class="anchor" href="#_parameters_23"></a><a class="link" href="#_parameters_23">2.29.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 22.2222%;">
@@ -2490,14 +2462,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyModelType</strong><br>
-<em>required</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyModelVersion</strong><br>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Body</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>body</strong><br>
 <em>required</em></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
@@ -2505,7 +2471,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_30"><a class="anchor" href="#_responses_30"></a><a class="link" href="#_responses_30">2.30.2. Responses</a></h4>
+<h4 id="_responses_29"><a class="anchor" href="#_responses_29"></a><a class="link" href="#_responses_29">2.29.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10%;">
@@ -2523,13 +2489,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_policymodel">PolicyModel</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_29"><a class="anchor" href="#_produces_29"></a><a class="link" href="#_produces_29">2.30.3. Produces</a></h4>
+<h4 id="_consumes_7"><a class="anchor" href="#_consumes_7"></a><a class="link" href="#_consumes_7">2.29.3. Consumes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>plain/text</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_produces_28"><a class="anchor" href="#_produces_28"></a><a class="link" href="#_produces_28">2.29.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2540,7 +2516,44 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_v2_policytoscamodels_policymodeltype_policymodelversion_get"><a class="anchor" href="#_v2_policytoscamodels_policymodeltype_policymodelversion_get"></a><a class="link" href="#_v2_policytoscamodels_policymodeltype_policymodelversion_get">2.31. GET /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a></h3>
+<h3 id="_route105"><a class="anchor" href="#_route105"></a><a class="link" href="#_route105">2.30. GET /v2/policyToscaModels</a></h3>
+<div class="sect3">
+<h4 id="_responses_30"><a class="anchor" href="#_responses_30"></a><a class="link" href="#_responses_30">2.30.1. Responses</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_policymodel">PolicyModel</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_29"><a class="anchor" href="#_produces_29"></a><a class="link" href="#_produces_29">2.30.2. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get"><a class="anchor" href="#_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get"></a><a class="link" href="#_v2_policytoscamodels_yaml_policymodeltype_policymodelversion_get">2.31. GET /v2/policyToscaModels/yaml/{policyModelType}/{policyModelVersion}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_24"><a class="anchor" href="#_parameters_24"></a><a class="link" href="#_parameters_24">2.31.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -2591,7 +2604,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_policymodel">PolicyModel</a></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
 </tr>
 </tbody>
 </table>
@@ -2608,9 +2621,77 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route104"><a class="anchor" href="#_route104"></a><a class="link" href="#_route104">2.32. PUT /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a></h3>
+<h3 id="_v2_policytoscamodels_policymodeltype_policymodelversion_get"><a class="anchor" href="#_v2_policytoscamodels_policymodeltype_policymodelversion_get"></a><a class="link" href="#_v2_policytoscamodels_policymodeltype_policymodelversion_get">2.32. GET /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_25"><a class="anchor" href="#_parameters_25"></a><a class="link" href="#_parameters_25">2.32.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyModelType</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>policyModelVersion</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_32"><a class="anchor" href="#_responses_32"></a><a class="link" href="#_responses_32">2.32.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_policymodel">PolicyModel</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_31"><a class="anchor" href="#_produces_31"></a><a class="link" href="#_produces_31">2.32.3. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_route107"><a class="anchor" href="#_route107"></a><a class="link" href="#_route107">2.33. PUT /v2/policyToscaModels/{policyModelType}/{policyModelVersion}</a></h3>
+<div class="sect3">
+<h4 id="_parameters_26"><a class="anchor" href="#_parameters_26"></a><a class="link" href="#_parameters_26">2.33.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 22.2222%;">
@@ -2647,7 +2728,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_responses_32"><a class="anchor" href="#_responses_32"></a><a class="link" href="#_responses_32">2.32.2. Responses</a></h4>
+<h4 id="_responses_33"><a class="anchor" href="#_responses_33"></a><a class="link" href="#_responses_33">2.33.2. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10%;">
@@ -2671,7 +2752,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_consumes_8"><a class="anchor" href="#_consumes_8"></a><a class="link" href="#_consumes_8">2.32.3. Consumes</a></h4>
+<h4 id="_consumes_8"><a class="anchor" href="#_consumes_8"></a><a class="link" href="#_consumes_8">2.33.3. Consumes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2681,7 +2762,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_produces_31"><a class="anchor" href="#_produces_31"></a><a class="link" href="#_produces_31">2.32.4. Produces</a></h4>
+<h4 id="_produces_32"><a class="anchor" href="#_produces_32"></a><a class="link" href="#_produces_32">2.33.4. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2692,9 +2773,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_route108"><a class="anchor" href="#_route108"></a><a class="link" href="#_route108">2.33. GET /v2/templates</a></h3>
+<h3 id="_route111"><a class="anchor" href="#_route111"></a><a class="link" href="#_route111">2.34. GET /v2/templates</a></h3>
 <div class="sect3">
-<h4 id="_responses_33"><a class="anchor" href="#_responses_33"></a><a class="link" href="#_responses_33">2.33.1. Responses</a></h4>
+<h4 id="_responses_34"><a class="anchor" href="#_responses_34"></a><a class="link" href="#_responses_34">2.34.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10%;">
@@ -2718,7 +2799,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_32"><a class="anchor" href="#_produces_32"></a><a class="link" href="#_produces_32">2.33.2. Produces</a></h4>
+<h4 id="_produces_33"><a class="anchor" href="#_produces_33"></a><a class="link" href="#_produces_33">2.34.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2729,9 +2810,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_v2_templates_names_get"><a class="anchor" href="#_v2_templates_names_get"></a><a class="link" href="#_v2_templates_names_get">2.34. GET /v2/templates/names</a></h3>
+<h3 id="_v2_templates_names_get"><a class="anchor" href="#_v2_templates_names_get"></a><a class="link" href="#_v2_templates_names_get">2.35. GET /v2/templates/names</a></h3>
 <div class="sect3">
-<h4 id="_responses_34"><a class="anchor" href="#_responses_34"></a><a class="link" href="#_responses_34">2.34.1. Responses</a></h4>
+<h4 id="_responses_35"><a class="anchor" href="#_responses_35"></a><a class="link" href="#_responses_35">2.35.1. Responses</a></h4>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 10%;">
@@ -2755,7 +2836,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 <div class="sect3">
-<h4 id="_produces_33"><a class="anchor" href="#_produces_33"></a><a class="link" href="#_produces_33">2.34.2. Produces</a></h4>
+<h4 id="_produces_34"><a class="anchor" href="#_produces_34"></a><a class="link" href="#_produces_34">2.35.2. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -2766,69 +2847,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect2">
-<h3 id="_v2_templates_templatename_get"><a class="anchor" href="#_v2_templates_templatename_get"></a><a class="link" href="#_v2_templates_templatename_get">2.35. GET /v2/templates/{templateName}</a></h3>
-<div class="sect3">
-<h4 id="_parameters_26"><a class="anchor" href="#_parameters_26"></a><a class="link" href="#_parameters_26">2.35.1. Parameters</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 22.2222%;">
-<col style="width: 33.3333%;">
-<col style="width: 44.4445%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">Type</th>
-<th class="tableblock halign-left valign-middle">Name</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>templateName</strong><br>
-<em>required</em></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_responses_35"><a class="anchor" href="#_responses_35"></a><a class="link" href="#_responses_35">2.35.2. Responses</a></h4>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 10%;">
-<col style="width: 70%;">
-<col style="width: 20%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-middle">HTTP Code</th>
-<th class="tableblock halign-left valign-middle">Description</th>
-<th class="tableblock halign-left valign-middle">Schema</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_looptemplate">LoopTemplate</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect3">
-<h4 id="_produces_34"><a class="anchor" href="#_produces_34"></a><a class="link" href="#_produces_34">2.35.3. Produces</a></h4>
-<div class="ulist">
-<ul>
-<li>
-<p><code>application/json</code></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_v2_templates_templatename_svgrepresentation_get"><a class="anchor" href="#_v2_templates_templatename_svgrepresentation_get"></a><a class="link" href="#_v2_templates_templatename_svgrepresentation_get">2.36. GET /v2/templates/{templateName}/svgRepresentation</a></h3>
+<h3 id="_v2_templates_templatename_get"><a class="anchor" href="#_v2_templates_templatename_get"></a><a class="link" href="#_v2_templates_templatename_get">2.36. GET /v2/templates/{templateName}</a></h3>
 <div class="sect3">
 <h4 id="_parameters_27"><a class="anchor" href="#_parameters_27"></a><a class="link" href="#_parameters_27">2.36.1. Parameters</a></h4>
 <table class="tableblock frame-all grid-all stretch">
@@ -2873,13 +2892,75 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tr>
 <td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
 <td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
-<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><a href="#_looptemplate">LoopTemplate</a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
 <h4 id="_produces_35"><a class="anchor" href="#_produces_35"></a><a class="link" href="#_produces_35">2.36.3. Produces</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>application/json</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_v2_templates_templatename_svgrepresentation_get"><a class="anchor" href="#_v2_templates_templatename_svgrepresentation_get"></a><a class="link" href="#_v2_templates_templatename_svgrepresentation_get">2.37. GET /v2/templates/{templateName}/svgRepresentation</a></h3>
+<div class="sect3">
+<h4 id="_parameters_28"><a class="anchor" href="#_parameters_28"></a><a class="link" href="#_parameters_28">2.37.1. Parameters</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4445%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">Type</th>
+<th class="tableblock halign-left valign-middle">Name</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>Path</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>templateName</strong><br>
+<em>required</em></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_responses_37"><a class="anchor" href="#_responses_37"></a><a class="link" href="#_responses_37">2.37.2. Responses</a></h4>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 70%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-middle">HTTP Code</th>
+<th class="tableblock halign-left valign-middle">Description</th>
+<th class="tableblock halign-left valign-middle">Schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-middle"><p class="tableblock"><strong>200</strong></p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">Output type</p></td>
+<td class="tableblock halign-left valign-middle"><p class="tableblock">string</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_produces_36"><a class="anchor" href="#_produces_36"></a><a class="link" href="#_produces_36">2.37.3. Produces</a></h4>
 <div class="ulist">
 <ul>
 <li>

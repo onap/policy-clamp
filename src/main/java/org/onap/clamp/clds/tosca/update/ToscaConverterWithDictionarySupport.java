@@ -32,6 +32,7 @@ import org.onap.clamp.clds.tosca.update.parser.metadata.ToscaMetadataParser;
 import org.onap.clamp.clds.tosca.update.parser.metadata.ToscaMetadataParserWithDictionarySupport;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
 import org.onap.clamp.clds.util.JsonUtils;
+import org.onap.clamp.loop.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,15 +64,18 @@ public class ToscaConverterWithDictionarySupport {
      *
      * @param toscaFile          The tosca file as String
      * @param policyTypeToDecode The policy type to decode
+     * @param serviceModel       The service model associated so that the clamp enrichment could be done if required by
+     *                           the tosca model
      * @return A json object being a json schema
      */
-    public JsonObject convertToscaToJsonSchemaObject(String toscaFile, String policyTypeToDecode) {
+    public JsonObject convertToscaToJsonSchemaObject(String toscaFile, String policyTypeToDecode,
+                                                     Service serviceModel) {
         try {
             return new JsonTemplateManager(toscaFile,
                     clampProperties.getFileContent("tosca.converter.default.datatypes"),
                     clampProperties.getFileContent("tosca.converter.json.schema.templates"))
                     .getJsonSchemaForPolicyType(policyTypeToDecode, Boolean.parseBoolean(clampProperties.getStringValue(
-                            "tosca.converter.dictionary.support.enabled")) ? metadataParser : null);
+                            "tosca.converter.dictionary.support.enabled")) ? metadataParser : null, serviceModel);
         } catch (IOException | UnknownComponentException e) {
             logger.error("Unable to convert the tosca properly, exception caught during the decoding",
                     e);
@@ -85,9 +89,10 @@ public class ToscaConverterWithDictionarySupport {
      *
      * @param toscaFile          The tosca file as String
      * @param policyTypeToDecode The policy type to decode
+     * @param serviceModel       The service Model so that clamp enrichment could be done if required by tosca model
      * @return A String containing the json schema
      */
-    public String convertToscaToJsonSchemaString(String toscaFile, String policyTypeToDecode) {
-        return JsonUtils.GSON.toJson(this.convertToscaToJsonSchemaObject(toscaFile, policyTypeToDecode));
+    public String convertToscaToJsonSchemaString(String toscaFile, String policyTypeToDecode, Service serviceModel) {
+        return JsonUtils.GSON.toJson(this.convertToscaToJsonSchemaObject(toscaFile, policyTypeToDecode, serviceModel));
     }
 }

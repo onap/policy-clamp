@@ -148,7 +148,7 @@ public class PolicyModelsService {
     public void createPolicyInDbIfNeeded(PolicyModel policyModel) {
         if (!policyModelsRepository.existsById(
             new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
-            policyModelsRepository.save(policyModel);
+            policyModelsRepository.saveAndFlush(policyModel);
         }
     }
 
@@ -173,7 +173,7 @@ public class PolicyModelsService {
                 JsonObject supportedPdpJson = new JsonObject();
                 supportedPdpJson.add("supportedPdpGroups", supportedPdpGroups);
                 policyModel.setPolicyPdpGroup(supportedPdpJson);
-                policyModelsRepository.save(policyModel);
+                policyModelsRepository.saveAndFlush(policyModel);
             }
         }
     }
