@@ -47,6 +47,7 @@ public class DcaeComponent extends ExternalComponent {
     private static final String DEPLOYMENT_PARAMETER = "dcaeDeployParameters";
     private static final String DCAE_SERVICETYPE_ID = "serviceTypeId";
     private static final String DCAE_INPUTS = "inputs";
+    private static final String SINGLE_BLUEPRINT_POLICYID = "loop template blueprint";
 
     private String name;
 
@@ -131,7 +132,7 @@ public class DcaeComponent extends ExternalComponent {
      */
     public static String getDeployPayload(Loop loop) {
         JsonObject globalProp = loop.getGlobalPropertiesJson();
-        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER);
+        JsonObject deploymentProp = globalProp.getAsJsonObject(DEPLOYMENT_PARAMETER).getAsJsonObject(SINGLE_BLUEPRINT_POLICYID);
 
         String serviceTypeId = loop.getLoopTemplate().getDcaeBlueprintId();
 

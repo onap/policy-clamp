@@ -75,14 +75,14 @@ export default class DeployLoopModal extends React.Component {
 	}
 
 	handleClose(){
+		this.setState({ show: false });
 		this.props.history.push('/');
 	}
+
 	handleSave() {
 		const loopName = this.props.loopCache.getLoopName();
 		// save the global propserties
 		LoopService.updateGlobalProperties(loopName, this.state.temporaryPropertiesJson).then(resp => {
-			this.setState({ show: false });
-
 			LoopActionService.performAction(loopName, "deploy").then(pars => {
 				this.props.showAlert("Action deploy successfully performed");
 				// refresh status and update loop logs
@@ -94,16 +94,16 @@ export default class DeployLoopModal extends React.Component {
 				this.refreshStatus(loopName);
 			});
 		});
+		this.setState({ show: false });
+		this.props.history.push('/');
 	}
 
 	refreshStatus(loopName) {
 		LoopActionService.refreshStatus(loopName).then(data => {
 			this.props.updateLoopFunction(data);
-			this.props.history.push('/');
 		})
 		.catch(error => {
 			this.props.showAlert("Refresh status failed");
-			this.props.history.push('/');
 		});
 	}
 	handleChange(event) {

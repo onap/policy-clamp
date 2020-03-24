@@ -47,7 +47,7 @@ public class DcaeComponentTest {
     private Loop createTestLoop() {
         Loop loopTest = new Loop("ControlLoopTest", "<xml></xml>");
         loopTest.setGlobalPropertiesJson(
-                new Gson().fromJson("{\"dcaeDeployParameters\":" + "{\"policy_id\": \"name\"}}", JsonObject.class));
+                new Gson().fromJson("{\"dcaeDeployParameters\":{\"loop template blueprint\": {\"policy_id\": \"name\"}}}", JsonObject.class));
         loopTest.setLastComputedState(LoopState.DESIGN);
         loopTest.setDcaeDeploymentId("123456789");
         loopTest.setDcaeDeploymentStatusUrl("http4://localhost:8085");
