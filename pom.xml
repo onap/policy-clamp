@@ -99,7 +99,7 @@
 		<docker.skip.tag>true</docker.skip.tag>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
 		<python.http.proxy.param />
-		<tomcat.version>9.0.27</tomcat.version>
+		<tomcat.version>9.0.33</tomcat.version>
 		<ui.react.src>ui-react</ui.react.src>
 		<ui.react.lib.src>ui-react-lib</ui.react.lib.src>
 		<npm.publish.url>https://nexus3.onap.org/repository/npm.snapshot/</npm.publish.url>
