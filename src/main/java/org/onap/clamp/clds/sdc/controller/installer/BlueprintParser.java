@@ -48,7 +48,7 @@ public class BlueprintParser {
     static final String TCA = "TCA";
     private static final String NODE_TEMPLATES = "node_templates";
     private static final String DCAE_NODES = "dcae.nodes.";
-    private static final String DCAE_NODES_POLICY = "dcae.nodes.policy";
+    private static final String DCAE_NODES_POLICY = ".nodes.policy";
     private static final String TYPE = "type";
     private static final String PROPERTIES = "properties";
     private static final String NAME = "name";

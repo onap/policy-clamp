@@ -89,7 +89,7 @@ public class BlueprintInputParametersTest {
     }
 
     @Test
-    public void getDeploymentParametersinJsonSingleBlueprintTest() throws IOException, SdcToscaParserException {
+    public void getDeploymentParametersInJsonSingleBlueprintTest() throws IOException, SdcToscaParserException {
         Loop loop = Mockito.mock(Loop.class);
 
         MicroServicePolicy umService1 = Mockito.mock(MicroServicePolicy.class);

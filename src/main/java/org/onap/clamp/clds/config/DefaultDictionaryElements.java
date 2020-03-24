@@ -47,7 +47,7 @@ public class DefaultDictionaryElements {
         preProvisionDefaultOperations();
     }
 
-    private void preProvisionDefaultActors () {
+    private void preProvisionDefaultActors() {
         // Set up dictionary elements
         Dictionary actorDictionary = new Dictionary();
         actorDictionary.setName("DefaultActors");
@@ -92,7 +92,7 @@ public class DefaultDictionaryElements {
         dictionaryService.saveOrUpdateDictionary(actorDictionary);
     }
 
-    private void preProvisionDefaultOperations () {
+    private void preProvisionDefaultOperations() {
         // Set up dictionary elements
         Dictionary operationDictionary = new Dictionary();
         operationDictionary.setName("DefaultOperations");
