@@ -40,7 +40,6 @@ export { default as CreateLoopModal } from './src/components/dialogs/Loop/Create
 export { default as OperationalPolicyModal } from './src/components/dialogs/OperationalPolicy/OperationalPolicyModal';
 export { default as PerformActions } from './src/components/dialogs/PerformActions';
 export { default as RefreshStatus } from './src/components/dialogs/RefreshStatus';
-export { default as TemplateMenuService } from './src/api/TemplateMenuService';
 export { default as UserInfoModal } from './src/components/dialogs/UserInfoModal';
 export { default as UserService } from './src/api/UserService';
 export { default as ViewBlueprintMicroServiceTemplatesModal } from './src/components/dialogs/Tosca/ViewBlueprintMicroServiceTemplatesModal';
