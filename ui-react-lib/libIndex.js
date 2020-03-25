@@ -42,5 +42,4 @@ export { default as PerformActions } from './src/components/dialogs/PerformActio
 export { default as RefreshStatus } from './src/components/dialogs/RefreshStatus';
 export { default as UserInfoModal } from './src/components/dialogs/UserInfoModal';
 export { default as UserService } from './src/api/UserService';
-export { default as ViewBlueprintMicroServiceTemplatesModal } from './src/components/dialogs/Tosca/ViewBlueprintMicroServiceTemplatesModal';
 export { default as ViewToscaPolicyModal } from './src/components/dialogs/Tosca/ViewToscaPolicyModal';
