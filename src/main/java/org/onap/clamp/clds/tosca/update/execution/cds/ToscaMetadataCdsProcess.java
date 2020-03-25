@@ -43,31 +43,34 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     @Override
     public void executeProcess(String parameters, JsonObject childObject, Service serviceModel) {
         switch (parameters) {
+            case "actor":
+                JsonArray jsonArray = new JsonArray();
+                jsonArray.add("CDS");
+                addToJsonArray(childObject, "enum", jsonArray);
+                break;
             case "payload":
-                childObject.add("anyOf", generatePayload(serviceModel));
+                generatePayload(childObject, serviceModel);
                 break;
             case "operation":
-                childObject.add("enum", generateOperation(serviceModel));
+                generateOperation(childObject, serviceModel);
                 break;
         }
     }
 
-    private static JsonArray generatePayload(Service serviceModel) {
-        JsonArray schemaAnyOf = new JsonArray();
-        schemaAnyOf.addAll(generatePayloadPerResource("VF", serviceModel));
-        schemaAnyOf.addAll(generatePayloadPerResource("PNF", serviceModel));
-        return schemaAnyOf;
+    private static void generatePayload(JsonObject childObject, Service serviceModel) {
+        generatePayloadPerResource(childObject, "VF", serviceModel);
+        generatePayloadPerResource(childObject, "PNF", serviceModel);
     }
 
-    private static JsonArray generateOperation(Service serviceModel) {
-        JsonArray schemaEnum = new JsonArray();
-        schemaEnum.addAll(generateOperationPerResource("VF", serviceModel));
-        schemaEnum.addAll(generateOperationPerResource("PNF", serviceModel));
-        return schemaEnum;
+    private static void generateOperation(JsonObject childObject, Service serviceModel) {
+        generateOperationPerResource(childObject, "VF", serviceModel);
+        generateOperationPerResource(childObject, "PNF", serviceModel);
     }
 
-    private static JsonArray generateOperationPerResource(String resourceName, Service serviceModel) {
+    private static void generateOperationPerResource(JsonObject childObject, String resourceName,
+                                                     Service serviceModel) {
         JsonArray schemaEnum = new JsonArray();
+        JsonArray schemaTitle = new JsonArray();
         for (Map.Entry<String, JsonElement> entry : serviceModel.getResourceDetails().getAsJsonObject(resourceName)
                 .entrySet()) {
             JsonObject controllerProperties = entry.getValue().getAsJsonObject()
@@ -75,14 +78,23 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
             if (controllerProperties != null) {
                 for (String workflowsEntry : controllerProperties.getAsJsonObject("workflows").keySet()) {
                     schemaEnum.add(workflowsEntry);
+                    schemaTitle.add(workflowsEntry + " (CDS operation)");
                 }
             }
         }
-        return schemaEnum;
+        addToJsonArray(childObject, "enum", schemaEnum);
+        if (childObject.get("options") == null) {
+            JsonObject optionsSection = new JsonObject();
+            childObject.add("options", optionsSection);
+        }
+        addToJsonArray(childObject.getAsJsonObject("options"), "enum_titles", schemaTitle);
+
     }
 
-    private static JsonArray generatePayloadPerResource(String resourceName, Service serviceModel) {
+    private static void generatePayloadPerResource(JsonObject childObject, String resourceName,
+                                                   Service serviceModel) {
         JsonArray schemaAnyOf = new JsonArray();
+
         for (Map.Entry<String, JsonElement> entry : serviceModel.getResourceDetails().getAsJsonObject(resourceName)
                 .entrySet()) {
             JsonObject controllerProperties = entry.getValue().getAsJsonObject()
@@ -98,7 +110,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                 }
             }
         }
-        return schemaAnyOf;
+        addToJsonArray(childObject, "enum", schemaAnyOf);
     }
 
     private static JsonObject createPayloadProperty(JsonObject workFlow, JsonObject controllerProperties) {
@@ -109,5 +121,14 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         payloadResult.addProperty("mode", "async");
         payloadResult.add("data", workFlow.getAsJsonObject("inputs"));
         return payloadResult;
+    }
+
+    private static void addToJsonArray(JsonObject childObject, String section, JsonArray value) {
+        if (childObject.getAsJsonArray(section) != null) {
+            childObject.getAsJsonArray(section).addAll(value);
+        }
+        else {
+            childObject.add(section, value);
+        }
     }
 }

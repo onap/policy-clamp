@@ -32,8 +32,6 @@ import javax.annotation.PostConstruct;
 import org.onap.clamp.clds.tosca.update.execution.cds.ToscaMetadataCdsProcess;
 import org.onap.clamp.clds.tosca.update.execution.target.ToscaMetadataTargetProcess;
 import org.onap.clamp.loop.service.Service;
-import org.onap.clamp.tosca.Dictionary;
-import org.onap.clamp.tosca.DictionaryElement;
 import org.onap.clamp.tosca.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -73,38 +71,5 @@ public class ToscaMetadataExecutor {
     public void init() {
         mapOfProcesses.put("CDS", new ToscaMetadataCdsProcess());
         mapOfProcesses.put("CSAR_RESOURCES", new ToscaMetadataTargetProcess());
-
-        preProvisionDictionaryTable();
     }
-
-    private void preProvisionDictionaryTable() {
-        // Set up dictionary elements
-        Dictionary actorDictionary = new Dictionary();
-        actorDictionary.setName("DefaultActor");
-        actorDictionary.setSecondLevelDictionary(0);
-        actorDictionary.setSubDictionaryType("");
-
-        DictionaryElement elementSo = new DictionaryElement();
-        elementSo.setName("SO");
-        elementSo.setShortName("SO");
-        elementSo.setType("string");
-        elementSo.setDescription("SO component");
-        actorDictionary.addDictionaryElements(elementSo);
-
-        DictionaryElement elementSdnc = new DictionaryElement();
-        elementSdnc.setName("SDNC");
-        elementSdnc.setShortName("SDNC");
-        elementSdnc.setType("string");
-        elementSdnc.setDescription("SDNC component");
-        actorDictionary.addDictionaryElements(elementSdnc);
-
-        DictionaryElement elementCds = new DictionaryElement();
-        elementCds.setName("CDS");
-        elementCds.setShortName("CDS");
-        elementCds.setType("string");
-        elementCds.setDescription("CDS component");
-        actorDictionary.addDictionaryElements(elementCds);
-
-        dictionaryService.saveOrUpdateDictionary(actorDictionary);
-   }
 }

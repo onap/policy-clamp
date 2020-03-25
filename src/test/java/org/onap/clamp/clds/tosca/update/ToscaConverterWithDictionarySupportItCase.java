@@ -41,10 +41,12 @@ import org.onap.clamp.tosca.DictionaryService;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Application.class)
+@ActiveProfiles(profiles = "clamp-default,clamp-default-user,default-dictionary-elements")
 public class ToscaConverterWithDictionarySupportItCase {
 
     @Autowired
@@ -108,7 +110,8 @@ public class ToscaConverterWithDictionarySupportItCase {
 
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("tosca/new-converter/tosca_metadata_clamp_possible_values.yaml"),
+                        ResourceFileUtil
+                                .getResourceAsString("tosca/new-converter/tosca_metadata_clamp_possible_values.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
 

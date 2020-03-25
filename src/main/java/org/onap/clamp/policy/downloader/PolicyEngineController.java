@@ -61,7 +61,7 @@ public class PolicyEngineController {
         this.policyEngineServices = policyEngineService;
     }
 
-    @Scheduled(fixedRate = 120000)
+    @Scheduled(fixedRate = 300000)
     public synchronized void synchronizeAllPolicies() {
         policyEngineServices.synchronizeAllPolicies();
         lastInstantExecuted = Instant.now();

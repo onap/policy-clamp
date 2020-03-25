@@ -76,8 +76,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<eelf.core.version>1.0.0</eelf.core.version>
-		<camel.version>2.24.0</camel.version>
-		<springboot.version>2.2.0.RELEASE</springboot.version>
+		<camel.version>2.25.0</camel.version>
+		<springboot.version>2.2.5.RELEASE</springboot.version>
 
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -878,9 +878,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!-- Temporary fix -->
-				<version>1.5.13.RELEASE</version>
-				<!-- <version>${springboot.version}</version> -->
+				<version>${springboot.version}</version>
 				<executions>
 					<execution>
 						<goals>
