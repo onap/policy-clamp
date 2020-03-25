@@ -1232,6 +1232,7 @@
 						</goals>
 						<phase>deploy</phase>
 						<configuration>
+							<skip>true</skip>
 							<workingDirectory>${project.build.directory}/${ui.react.lib.src}</workingDirectory>
 							<arguments>publish</arguments>
 						</configuration>
