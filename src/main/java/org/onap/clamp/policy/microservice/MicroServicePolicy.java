@@ -128,7 +128,9 @@ public class MicroServicePolicy extends Policy implements Serializable {
     public MicroServicePolicy(Loop loop, Service service, LoopElementModel loopElementModel,
                               ToscaConverterWithDictionarySupport toscaConverter) {
         this(Policy.generatePolicyName("MICROSERVICE", service.getName(), service.getVersion(),
-                RandomStringUtils.randomAlphanumeric(3), RandomStringUtils.randomAlphanumeric(3)),
+                loopElementModel.getPolicyModels().first().getPolicyAcronym() + '_'
+                        + loopElementModel.getPolicyModels().first().getVersion(),
+                RandomStringUtils.randomAlphanumeric(3)),
                 loopElementModel.getPolicyModels().first(), false, new JsonObject(), loopElementModel, null, null);
         this.updateJsonRepresentation(toscaConverter, service);
     }

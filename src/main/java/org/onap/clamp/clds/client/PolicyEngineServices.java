@@ -30,6 +30,7 @@ import com.google.gson.JsonObject;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
@@ -153,13 +154,14 @@ public class PolicyEngineServices {
         logger.info("Downloading the policy model " + policyType + "/" + policyVersion);
         DumperOptions options = new DumperOptions();
         options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
-        options.setIndent(2);
+        options.setIndent(4);
         options.setPrettyFlow(true);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        return (new Yaml(options)).dump(callCamelRoute(
+        Yaml yamlParser = new Yaml(options);
+        return yamlParser.dump((Map<String, Object>) yamlParser.load(callCamelRoute(
                 ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
                         .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model",
-                "Get one policy"));
+                "Get one policy")));
     }
 
     /**

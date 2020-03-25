@@ -27,10 +27,8 @@
 package org.onap.clamp.loop.deploy;
 
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
 import java.util.LinkedHashSet;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -44,9 +42,15 @@ import org.onap.sdc.tosca.parser.exceptions.SdcToscaParserException;
 
 public class BlueprintInputParametersTest {
 
+    /**
+     * getDeploymentParametersinJsonMultiBlueprintsTest.
+     *
+     * @throws IOException             in case of failure
+     * @throws SdcToscaParserException in case of failure
+     */
     @Test
     public void getDeploymentParametersinJsonMultiBlueprintsTest() throws IOException, SdcToscaParserException {
-        Loop loop = Mockito.mock(Loop.class);
+
 
         MicroServicePolicy umService1 = Mockito.mock(MicroServicePolicy.class);
         Mockito.when(umService1.getName()).thenReturn("testName1");
@@ -72,10 +76,11 @@ public class BlueprintInputParametersTest {
         Mockito.when(loopElement3.getBlueprint()).thenReturn(blueprint3);
         Mockito.when(umService3.getLoopElementModel()).thenReturn(loopElement3);
 
-        LinkedHashSet<MicroServicePolicy> umServiceSet = new LinkedHashSet<MicroServicePolicy>();
+        LinkedHashSet<MicroServicePolicy> umServiceSet = new LinkedHashSet<>();
         umServiceSet.add(umService1);
         umServiceSet.add(umService2);
         umServiceSet.add(umService3);
+        Loop loop = Mockito.mock(Loop.class);
         Mockito.when(loop.getMicroServicePolicies()).thenReturn(umServiceSet);
 
         LoopTemplate template = Mockito.mock(LoopTemplate.class);
@@ -85,9 +90,16 @@ public class BlueprintInputParametersTest {
         JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(loop);
 
         Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson),
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/deployment-parameters-multi-blueprints.json"));
+                ResourceFileUtil.getResourceAsString(
+                        "example/sdc/expected-result/deployment-parameters-multi-blueprints.json"));
     }
 
+    /**
+     * getDeploymentParametersInJsonSingleBlueprintTest.
+     *
+     * @throws IOException In case of failure
+     * @throws SdcToscaParserException In case of failure
+     */
     @Test
     public void getDeploymentParametersInJsonSingleBlueprintTest() throws IOException, SdcToscaParserException {
         Loop loop = Mockito.mock(Loop.class);
@@ -107,6 +119,7 @@ public class BlueprintInputParametersTest {
         JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(loop);
 
         Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson),
-            ResourceFileUtil.getResourceAsString("example/sdc/expected-result/deployment-parameters-single-blueprint.json"));
+                ResourceFileUtil.getResourceAsString(
+                        "example/sdc/expected-result/deployment-parameters-single-blueprint.json"));
     }
 }

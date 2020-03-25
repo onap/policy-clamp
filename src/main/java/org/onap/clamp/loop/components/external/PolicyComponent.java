@@ -28,15 +28,12 @@ import com.att.eelf.configuration.EELFManager;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-
 import javax.persistence.Transient;
-
 import org.apache.camel.Exchange;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
@@ -82,11 +79,11 @@ public class PolicyComponent extends ExternalComponent {
      * @return The json, payload to send
      */
     public static String createPoliciesPayloadPdpGroup(Loop loop) {
-        HashMap<String,HashMap<String, List<JsonObject>>> pdpGroupMap = new HashMap <String,HashMap<String, List<JsonObject>>>();
+        HashMap<String, HashMap<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
             pdpGroupMap = updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
-                  opPolicy.getName(),
-                  opPolicy.getPolicyModel().getVersion(), pdpGroupMap);
+                    opPolicy.getName(),
+                    opPolicy.getPolicyModel().getVersion(), pdpGroupMap);
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
@@ -96,13 +93,17 @@ public class PolicyComponent extends ExternalComponent {
         }
 
         String payload = new GsonBuilder().setPrettyPrinting().create()
-              .toJson(generateActivatePdpGroupPayload(pdpGroupMap));
+                .toJson(generateActivatePdpGroupPayload(pdpGroupMap));
         logger.info("PdpGroup policy payload: " + payload);
         return payload;
     }
 
-    private static HashMap<String,HashMap<String, List<JsonObject>>> updatePdpGroupMap (String pdpGroup, String pdpSubGroup, String policyName,
-        String policyModelVersion, HashMap<String,HashMap<String, List<JsonObject>>> pdpGroupMap){
+    private static HashMap<String, HashMap<String, List<JsonObject>>> updatePdpGroupMap(String pdpGroup,
+                                                                                        String pdpSubGroup,
+                                                                                        String policyName,
+                                                                                        String policyModelVersion,
+                                                                                        HashMap<String, HashMap<String,
+                                                                                                List<JsonObject>>> pdpGroupMap) {
 
         JsonObject policyJson = new JsonObject();
         policyJson.addProperty("name", policyName);
@@ -110,14 +111,16 @@ public class PolicyComponent extends ExternalComponent {
         HashMap<String, List<JsonObject>> pdpSubGroupMap;
         List<JsonObject> policyList;
         if (pdpGroupMap.get(pdpGroup) == null) {
-            pdpSubGroupMap = new HashMap <String, List<JsonObject>>();
+            pdpSubGroupMap = new HashMap<String, List<JsonObject>>();
             policyList = new LinkedList<JsonObject>();
-        } else {
+        }
+        else {
             pdpSubGroupMap = pdpGroupMap.get(pdpGroup);
             if (pdpSubGroupMap.get(pdpSubGroup) == null) {
                 policyList = new LinkedList<JsonObject>();
-            } else {
-                policyList = (List<JsonObject>)pdpSubGroupMap.get(pdpSubGroup);
+            }
+            else {
+                policyList = (List<JsonObject>) pdpSubGroupMap.get(pdpSubGroup);
             }
         }
         policyList.add(policyJson);
@@ -127,7 +130,8 @@ public class PolicyComponent extends ExternalComponent {
         return pdpGroupMap;
     }
 
-    private static JsonObject generateActivatePdpGroupPayload(HashMap<String,HashMap<String, List<JsonObject>>> pdpGroupMap) {
+    private static JsonObject generateActivatePdpGroupPayload(
+            HashMap<String, HashMap<String, List<JsonObject>>> pdpGroupMap) {
         JsonArray payloadArray = new JsonArray();
         for (Entry<String, HashMap<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
             JsonObject pdpGroupNode = new JsonObject();
@@ -181,16 +185,18 @@ public class PolicyComponent extends ExternalComponent {
         ExternalComponentState newState = NOT_SENT;
         if (found && deployed) {
             newState = SENT_AND_DEPLOYED;
-        } else if (found) {
+        }
+        else if (found) {
             newState = SENT;
-        } else if (deployed) {
+        }
+        else if (deployed) {
             newState = IN_ERROR;
         }
         return newState;
     }
 
     private static ExternalComponentState mergeStates(ExternalComponentState oldState,
-            ExternalComponentState newState) {
+                                                      ExternalComponentState newState) {
         return (oldState.compareTo(newState) < 0) ? newState : oldState;
     }
 
@@ -201,7 +207,6 @@ public class PolicyComponent extends ExternalComponent {
      * this method is called multiple times from the camel route and must be reset
      * for a new global policy state retrieval. The state to compute the global
      * policy state is stored in this class.
-     * 
      */
     @Override
     public ExternalComponentState computeState(Exchange camelExchange) {
