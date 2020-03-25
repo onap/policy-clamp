@@ -1,0 +1,5 @@
+---
+distribution_type: 'maven'
+version: '5.0.0'
+project: 'clamp'
+log_dir: 'clamp-maven-stage-master/359/'
