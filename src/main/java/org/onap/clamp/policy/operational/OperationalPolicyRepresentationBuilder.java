@@ -165,7 +165,7 @@ public class OperationalPolicyRepresentationBuilder {
     }
 
     /**
-     * Create an anyOf array of possible structure we may have for Target
+     * Create an anyOf array of possible structure we may have for Target.
      *
      * @param modelJson The service object
      * @return A JsonArray with everything inside
@@ -177,7 +177,7 @@ public class OperationalPolicyRepresentationBuilder {
         return targetOneOfStructure;
     }
 
-    public static JsonArray createAnyOfArrayForCdsRecipe(Service modelJson) {
+    private static JsonArray createAnyOfArrayForCdsRecipe(Service modelJson) {
         JsonArray anyOfStructure = new JsonArray();
         anyOfStructure.addAll(createAnyOfCdsRecipe(modelJson.getResourceDetails().getAsJsonObject("VF")));
         anyOfStructure.addAll(createAnyOfCdsRecipe(modelJson.getResourceDetails().getAsJsonObject("PNF")));

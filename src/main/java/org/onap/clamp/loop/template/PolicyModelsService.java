@@ -145,11 +145,8 @@ public class PolicyModelsService {
      * @param policyModel The policyModel to save
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void createPolicyInDbIfNeeded(PolicyModel policyModel) {
-        if (!policyModelsRepository.existsById(
-            new PolicyModelId(policyModel.getPolicyModelType(), policyModel.getVersion()))) {
-            policyModelsRepository.saveAndFlush(policyModel);
-        }
+    public PolicyModel savePolicyModelInNewTransaction(PolicyModel policyModel) {
+            return policyModelsRepository.saveAndFlush(policyModel);
     }
 
     /**

@@ -27,7 +27,6 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,10 +37,12 @@ import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.template.PolicyModel;
+import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsService;
 import org.onap.clamp.policy.pdpgroup.PdpGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 
@@ -91,7 +92,14 @@ public class PolicyEngineServices {
      * @return A PolicyModel created from policyEngine data
      */
     public PolicyModel createPolicyModelFromPolicyEngine(String policyType, String policyVersion) {
-        return new PolicyModel(policyType, this.downloadOnePolicy(policyType, policyVersion), policyVersion);
+        if (!policyModelsService.existsById(
+                new PolicyModelId(policyType, policyVersion))) {
+            return policyModelsService.savePolicyModelInNewTransaction(
+                    new PolicyModel(policyType, this.downloadOnePolicy(policyType, policyVersion), policyVersion));
+        }
+        logger.info("Skipping policy model download as it exists already in the database " + policyType
+                + "/" + policyVersion);
+        return null;
     }
 
     /**
@@ -118,11 +126,9 @@ public class PolicyEngineServices {
 
         LinkedHashMap<String, Object> policyTypesMap = (LinkedHashMap<String, Object>) loadedYaml
                 .get("policy_types");
-        policyTypesMap.entrySet().stream().forEach(entryPolicyType -> {
-            policyModelsService.createPolicyInDbIfNeeded(
-                    createPolicyModelFromPolicyEngine(entryPolicyType.getKey(),
-                            ((String) ((LinkedHashMap<String, Object>) entryPolicyType.getValue()).get("version"))));
-        });
+        policyTypesMap.forEach((key, value) ->
+                this.createPolicyModelFromPolicyEngine(key,
+                        ((String) ((LinkedHashMap<String, Object>) value).get("version"))));
     }
 
     /**
@@ -144,9 +150,16 @@ public class PolicyEngineServices {
      * @return A string with the whole policy tosca model
      */
     public String downloadOnePolicy(String policyType, String policyVersion) {
-        return callCamelRoute(ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
+        logger.info("Downloading the policy model " + policyType + "/" + policyVersion);
+        DumperOptions options = new DumperOptions();
+        options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
+        options.setIndent(2);
+        options.setPrettyFlow(true);
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        return (new Yaml(options)).dump(callCamelRoute(
+                ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
                         .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model",
-                "Get one policy");
+                "Get one policy"));
     }
 
     /**
@@ -167,9 +180,8 @@ public class PolicyEngineServices {
         List<PdpGroup> pdpGroupList = new LinkedList<>();
         JsonArray itemsArray = (JsonArray) jsonObj.get("groups");
 
-        Iterator it = itemsArray.iterator();
-        while (it.hasNext()) {
-            JsonObject item = (JsonObject) it.next();
+        for (com.google.gson.JsonElement jsonElement : itemsArray) {
+            JsonObject item = (JsonObject) jsonElement;
             PdpGroup pdpGroup = JsonUtils.GSON.fromJson(item.toString(), PdpGroup.class);
             pdpGroupList.add(pdpGroup);
         }
@@ -182,7 +194,8 @@ public class PolicyEngineServices {
             Exchange exchangeResponse = camelContext.createProducerTemplate().send(camelFlow, exchange);
             if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
                 return (String) exchangeResponse.getIn().getBody();
-            } else {
+            }
+            else {
                 logger.info(logMsg + " query " + retryInterval + "ms before retrying ...");
                 // wait for a while and try to connect to DCAE again
                 try {
