@@ -791,6 +791,7 @@
 				<version>1.0</version>
 				<executions>
 					<execution>
+						<id>docker-tags</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>execute</goal>
@@ -799,14 +800,8 @@
 							<source>${project.basedir}/src/main/script/TagVersion.groovy</source>
 						</configuration>
 					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.groovy.maven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<version>1.0</version>
-				<executions>
 					<execution>
+						<id>npm-repos-selection</id>
 						<phase>validate</phase>
 						<goals>
 							<goal>execute</goal>
