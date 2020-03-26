@@ -1,5 +1,4 @@
-<configuration scan="true" scanPeriod="60 seconds"
-	debug="true">
+<configuration debug="true">
 	<springProperty name="logbackFilePath"
 		source="clamp.config.logback.path" />
 	<springProperty name="logbackFileName"
@@ -17,6 +16,4 @@
 			<include file="${logbackFilePath}/${logbackFileName}" />
 		</else>
 	</if>
-
-
 </configuration>
