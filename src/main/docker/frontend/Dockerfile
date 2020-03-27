@@ -49,7 +49,19 @@ COPY --from=build /app/build /usr/share/nginx/html
 COPY --from=build /app/ssl /etc/ssl
 RUN rm /etc/nginx/conf.d/default.conf
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
-COPY nginx/nginx.conf /etc/nginx/conf.d
-EXPOSE 443
+
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+
+WORKDIR /app
+
+RUN chown -R clamp:onap /app && chmod -R 755 /app && \
+        chown -R clamp:onap /var/cache/nginx && \
+        chown -R clamp:onap /var/log/nginx && \
+        chown -R clamp:onap /etc/nginx/conf.d
+RUN touch /var/run/nginx.pid && \
+        chown -R clamp:onap /var/run/nginx.pid
+
 USER clamp
+EXPOSE 2443
 CMD ["nginx", "-g", "daemon off;"]
