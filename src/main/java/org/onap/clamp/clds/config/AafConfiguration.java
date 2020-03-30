@@ -54,11 +54,11 @@ public class AafConfiguration {
     public FilterRegistrationBean cadiFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(cadiFilter());
-        registration.addUrlPatterns("/restservices/clds/v1/clds/*");
-        registration.addUrlPatterns("/restservices/clds/v1/cldsTempate/*");
-        registration.addUrlPatterns("/restservices/clds/v1/tosca/*");
-        registration.addUrlPatterns("/restservices/clds/v1/dictionary/*");
         registration.addUrlPatterns("/restservices/clds/v1/user/*");
+        registration.addUrlPatterns("/restservices/clds/v2/dictionary/*");
+        registration.addUrlPatterns("/restservices/clds/v2/templates/*");
+        registration.addUrlPatterns("/restservices/clds/v2/clampInformation/*");
+        registration.addUrlPatterns("/restservices/clds/v2/policyToscaModels/*");
         registration.addUrlPatterns("/restservices/clds/v2/loop/*");
         registration.setName("cadiFilter");
         registration.setOrder(0);
