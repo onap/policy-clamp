@@ -3,32 +3,20 @@
   "type": "object",
   "description": "Operational policies for Apex PDP",
   "required": [
-    "id",
-    "timeout",
     "abatement",
-    "trigger",
     "operations",
+    "trigger",
+    "timeout",
+    "id",
     "engineServiceParameters",
-    "eventInputParameters",
-    "eventOutputParameters"
+    "eventOutputParameters",
+    "eventInputParameters"
   ],
   "properties": {
-    "id": {
-      "type": "string",
-      "description": "The unique control loop id."
-    },
-    "timeout": {
-      "type": "integer",
-      "description": "Overall timeout for executing all the operations. This timeout should equal or exceed the total\ntimeout for each operation listed.\n"
-    },
     "abatement": {
       "type": "boolean",
       "description": "Whether an abatement event message will be expected for the control loop from DCAE.",
-      "default": false
-    },
-    "trigger": {
-      "type": "string",
-      "description": "Initial operation to execute upon receiving an Onset event message for the Control Loop."
+      "default": "false"
     },
     "operations": {
       "type": "array",
@@ -40,88 +28,158 @@
         "required": [
           "id",
           "operation",
-          "timeout",
-          "retries"
+          "retries",
+          "timeout"
         ],
         "properties": {
+          "failure_retries": {
+            "type": "string",
+            "description": "Points to the operation to invoke when the current operation has exceeded its max retries.",
+            "default": "final_failure_retries"
+          },
           "id": {
             "type": "string",
             "description": "Unique identifier for the operation"
           },
-          "description": {
+          "failure_timeout": {
             "type": "string",
-            "description": "A user-friendly description of the intent for the operation"
+            "description": "Points to the operation to invoke when the time out for the operation occurs.",
+            "default": "final_failure_timeout"
+          },
+          "failure": {
+            "type": "string",
+            "description": "Points to the operation to invoke on Actor operation failure.",
+            "default": "final_failure"
           },
           "operation": {
             "title": "onap.datatype.controlloop.Actor",
             "type": "object",
             "description": "An actor/operation/target definition",
             "required": [
+              "target",
               "actor",
-              "operation",
-              "target"
+              "operation"
             ],
             "properties": {
-              "actor": {
-                "type": "string",
-                "description": "The actor performing the operation.",
+              "payload": {
+                "type": "object",
+                "description": "Name/value pairs of payload information passed by Policy to the actor",
                 "enum": [
-                  "SDNR",
-                  "SDNC",
-                  "VFC",
-                  "SO",
-                  "APPC",
-                  "CDS"
-                ],
-                "options": {
-                  "enum_titles": [
-                    "SDNR",
-                    "SDNC",
-                    "VFC",
-                    "SO",
-                    "APPC"
-                  ]
-                }
-              },
-              "operation": {
-                "type": "string",
-                "description": "The operation the actor is performing.",
-                "enum": [
-                  "BandwidthOnDemand",
-                  "VF Module Delete",
-                  "Reroute",
-                  "VF Module Create",
-                  "ModifyConfig",
-                  "Rebuild",
-                  "Restart",
-                  "Migrate",
-                  "Health-Check",
-                  "resource-assignment",
-                  "activate",
-                  "activate-restconf",
-                  "activate-cli",
-                  "assign-activate",
-                  "imperative-test-wf"
-                ],
-                "options": {
-                  "enum_titles": [
-                    "BandwidthOnDemand (SDNC operation)",
-                    "VF Module Delete (SO operation)",
-                    "Reroute (SDNC operation)",
-                    "VF Module Create (SO operation)",
-                    "ModifyConfig (APPC/VFC operation)",
-                    "Rebuild (APPC operation)",
-                    "Restart (APPC operation)",
-                    "Migrate (APPC operation)",
-                    "Health-Check (APPC operation)",
-                    "resource-assignment (CDS operation)",
-                    "activate (CDS operation)",
-                    "activate-restconf (CDS operation)",
-                    "activate-cli (CDS operation)",
-                    "assign-activate (CDS operation)",
-                    "imperative-test-wf (CDS operation)"
-                  ]
-                }
+                  {
+                    "title": "resource-assignment",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "activate",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "activate-restconf",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "activate-cli",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "assign-activate",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "title": "imperative-test-wf",
+                    "properties": {
+                      "artifact_name": "baseconfiguration",
+                      "artifact_version": "1.0.0",
+                      "mode": "async",
+                      "data": {
+                        "resource-assignment-properties": {
+                          "request-id": "",
+                          "service-instance-id": "",
+                          "vnf-id": "",
+                          "action-name": "",
+                          "scope-type": "",
+                          "hostname": "",
+                          "vnf_name": ""
+                        }
+                      }
+                    }
+                  }
+                ]
               },
               "target": {
                 "title": "onap.datatype.controlloop.Target",
@@ -131,16 +189,6 @@
                   "targetType"
                 ],
                 "properties": {
-                  "targetType": {
-                    "type": "string",
-                    "description": "Category for the target type",
-                    "enum": [
-                      "VNF",
-                      "VM",
-                      "VFMODULE",
-                      "PNF"
-                    ]
-                  },
                   "entityIds": {
                     "type": "object",
                     "description": "Map of values that identify the resource. If none are provided, it is assumed that the\nentity that generated the ONSET event will be the target.\n",
@@ -321,180 +369,128 @@
                         }
                       }
                     ]
+                  },
+                  "targetType": {
+                    "type": "string",
+                    "description": "Category for the target type",
+                    "enum": [
+                      "VNF",
+                      "VM",
+                      "VFMODULE",
+                      "PNF"
+                    ]
                   }
                 }
               },
-              "payload": {
-                "type": "object",
-                "description": "Name/value pairs of payload information passed by Policy to the actor",
+              "actor": {
+                "type": "string",
+                "description": "The actor performing the operation.",
                 "enum": [
-                  {
-                    "title": "resource-assignment",
-                    "properties": {
-                      "artifact_name": "baseconfiguration",
-                      "artifact_version": "1.0.0",
-                      "mode": "async",
-                      "data": {
-                        "resource-assignment-properties": {
-                          "request-id": "",
-                          "service-instance-id": "",
-                          "vnf-id": "",
-                          "action-name": "",
-                          "scope-type": "",
-                          "hostname": "",
-                          "vnf_name": ""
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "title": "activate",
-                    "properties": {
-                      "artifact_name": "baseconfiguration",
-                      "artifact_version": "1.0.0",
-                      "mode": "async",
-                      "data": {
-                        "resource-assignment-properties": {
-                          "request-id": "",
-                          "service-instance-id": "",
-                          "vnf-id": "",
-                          "action-name": "",
-                          "scope-type": "",
-                          "hostname": "",
-                          "vnf_name": ""
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "title": "activate-restconf",
-                    "properties": {
-                      "artifact_name": "baseconfiguration",
-                      "artifact_version": "1.0.0",
-                      "mode": "async",
-                      "data": {
-                        "resource-assignment-properties": {
-                          "request-id": "",
-                          "service-instance-id": "",
-                          "vnf-id": "",
-                          "action-name": "",
-                          "scope-type": "",
-                          "hostname": "",
-                          "vnf_name": ""
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "title": "activate-cli",
-                    "properties": {
-                      "artifact_name": "baseconfiguration",
-                      "artifact_version": "1.0.0",
-                      "mode": "async",
-                      "data": {
-                        "resource-assignment-properties": {
-                          "request-id": "",
-                          "service-instance-id": "",
-                          "vnf-id": "",
-                          "action-name": "",
-                          "scope-type": "",
-                          "hostname": "",
-                          "vnf_name": ""
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "title": "assign-activate",
-                    "properties": {
-                      "artifact_name": "baseconfiguration",
-                      "artifact_version": "1.0.0",
-                      "mode": "async",
-                      "data": {
-                        "resource-assignment-properties": {
-                          "request-id": "",
-                          "service-instance-id": "",
-                          "vnf-id": "",
-                          "action-name": "",
-                          "scope-type": "",
-                          "hostname": "",
-                          "vnf_name": ""
-                        }
-                      }
-                    }
-                  },
-                  {
-                    "title": "imperative-test-wf",
-                    "properties": {
-                      "artifact_name": "baseconfiguration",
-                      "artifact_version": "1.0.0",
-                      "mode": "async",
-                      "data": {
-                        "resource-assignment-properties": {
-                          "request-id": "",
-                          "service-instance-id": "",
-                          "vnf-id": "",
-                          "action-name": "",
-                          "scope-type": "",
-                          "hostname": "",
-                          "vnf_name": ""
-                        }
-                      }
-                    }
-                  }
-                ]
+                  "SDNR",
+                  "SDNC",
+                  "VFC",
+                  "SO",
+                  "APPC",
+                  "CDS"
+                ],
+                "options": {
+                  "enum_titles": [
+                    "SDNR",
+                    "SDNC",
+                    "VFC",
+                    "SO",
+                    "APPC"
+                  ]
+                }
+              },
+              "operation": {
+                "type": "string",
+                "description": "The operation the actor is performing.",
+                "enum": [
+                  "BandwidthOnDemand",
+                  "VF Module Delete",
+                  "Reroute",
+                  "VF Module Create",
+                  "ModifyConfig",
+                  "Rebuild",
+                  "Restart",
+                  "Migrate",
+                  "Health-Check",
+                  "resource-assignment",
+                  "activate",
+                  "activate-restconf",
+                  "activate-cli",
+                  "assign-activate",
+                  "imperative-test-wf"
+                ],
+                "options": {
+                  "enum_titles": [
+                    "BandwidthOnDemand (SDNC operation)",
+                    "VF Module Delete (SO operation)",
+                    "Reroute (SDNC operation)",
+                    "VF Module Create (SO operation)",
+                    "ModifyConfig (APPC/VFC operation)",
+                    "Rebuild (APPC operation)",
+                    "Restart (APPC operation)",
+                    "Migrate (APPC operation)",
+                    "Health-Check (APPC operation)",
+                    "resource-assignment (CDS operation)",
+                    "activate (CDS operation)",
+                    "activate-restconf (CDS operation)",
+                    "activate-cli (CDS operation)",
+                    "assign-activate (CDS operation)",
+                    "imperative-test-wf (CDS operation)"
+                  ]
+                }
               }
             }
           },
-          "timeout": {
-            "type": "integer",
-            "description": "The amount of time for the actor to perform the operation."
+          "failure_guard": {
+            "type": "string",
+            "description": "Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.",
+            "default": "final_failure_guard"
           },
           "retries": {
             "type": "integer",
             "description": "The number of retries the actor should attempt to perform the operation.",
-            "default": 0
+            "default": "0"
           },
-          "success": {
-            "type": "string",
-            "description": "Points to the operation to invoke on success. A value of \"final_success\" indicates and end to the operation.",
-            "default": "final_success"
-          },
-          "failure": {
-            "type": "string",
-            "description": "Points to the operation to invoke on Actor operation failure.",
-            "default": "final_failure"
-          },
-          "failure_timeout": {
-            "type": "string",
-            "description": "Points to the operation to invoke when the time out for the operation occurs.",
-            "default": "final_failure_timeout"
-          },
-          "failure_retries": {
-            "type": "string",
-            "description": "Points to the operation to invoke when the current operation has exceeded its max retries.",
-            "default": "final_failure_retries"
+          "timeout": {
+            "type": "integer",
+            "description": "The amount of time for the actor to perform the operation."
           },
           "failure_exception": {
             "type": "string",
             "description": "Points to the operation to invoke when the current operation causes an exception.",
             "default": "final_failure_exception"
           },
-          "failure_guard": {
+          "description": {
             "type": "string",
-            "description": "Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.",
-            "default": "final_failure_guard"
+            "description": "A user-friendly description of the intent for the operation"
+          },
+          "success": {
+            "type": "string",
+            "description": "Points to the operation to invoke on success. A value of \"final_success\" indicates and end to the operation.",
+            "default": "final_success"
           }
         }
       }
     },
+    "trigger": {
+      "type": "string",
+      "description": "Initial operation to execute upon receiving an Onset event message for the Control Loop."
+    },
+    "timeout": {
+      "type": "integer",
+      "description": "Overall timeout for executing all the operations. This timeout should equal or exceed the total\ntimeout for each operation listed.\n"
+    },
+    "id": {
+      "type": "string",
+      "description": "The unique control loop id."
+    },
     "engineServiceParameters": {
       "type": "string",
       "description": "The engine parameters like name, instanceCount, policy implementation, parameters etc."
-    },
-    "eventInputParameters": {
-      "type": "string",
-      "description": "The event input parameters."
     },
     "eventOutputParameters": {
       "type": "string",
@@ -503,6 +499,10 @@
     "javaProperties": {
       "type": "string",
       "description": "Name/value pairs of properties to be set for APEX if needed."
+    },
+    "eventInputParameters": {
+      "type": "string",
+      "description": "The event input parameters."
     }
   }
 }

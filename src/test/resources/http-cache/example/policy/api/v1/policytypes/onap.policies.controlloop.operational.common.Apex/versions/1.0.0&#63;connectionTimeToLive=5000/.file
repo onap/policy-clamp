@@ -1,162 +1,360 @@
 tosca_definitions_version: tosca_simple_yaml_1_1_0
 policy_types:
-    onap.policies.controlloop.operational.common.Apex:
-        derived_from: onap.policies.controlloop.operational.Common
-        type_version: 1.0.0
-        version: 1.0.0
-        description: Operational policies for Apex PDP
-        properties:
-            engineServiceParameters:
-                type: string
-                description: The engine parameters like name, instanceCount, policy implementation, parameters etc.
-                required: true
-            eventInputParameters:
-                type: string
-                description: The event input parameters.
-                required: true
-            eventOutputParameters:
-                type: string
-                description: The event output parameters.
-                required: true
-            javaProperties:
-                type: string
-                description: Name/value pairs of properties to be set for APEX if needed.
-                required: false
     onap.policies.controlloop.operational.Common:
-        derived_from: tosca.policies.Root
-        version: 1.0.0
-        description: |
-            Operational Policy for Control Loop execution. Originated in Frankfurt to support TOSCA Compliant
-            Policy Types. This does NOT support the legacy Policy YAML policy type.
         properties:
-            id:
-                type: string
-                description: The unique control loop id.
+            abatement:
+                name: abatement
+                type: boolean
+                typeVersion: 0.0.0
+                description: Whether an abatement event message will be expected for
+                    the control loop from DCAE.
+                default: 'false'
                 required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            operations:
+                name: operations
+                type: list
+                typeVersion: 0.0.0
+                description: List of operations to be performed when Control Loop
+                    is triggered.
+                required: true
+                constraints: [
+                    ]
+                entry_schema:
+                    type: onap.datatype.controlloop.Operation
+                    typeVersion: 0.0.0
+                    constraints: [
+                        ]
+                metadata: {
+                    }
+            trigger:
+                name: trigger
+                type: string
+                typeVersion: 0.0.0
+                description: Initial operation to execute upon receiving an Onset
+                    event message for the Control Loop.
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
             timeout:
+                name: timeout
                 type: integer
+                typeVersion: 0.0.0
                 description: |
                     Overall timeout for executing all the operations. This timeout should equal or exceed the total
                     timeout for each operation listed.
                 required: true
-            abatement:
-                type: boolean
-                description: Whether an abatement event message will be expected for the control loop from DCAE.
-                required: true
-                default: false
-            trigger:
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            id:
+                name: id
                 type: string
-                description: Initial operation to execute upon receiving an Onset event message for the Control Loop.
+                typeVersion: 0.0.0
+                description: The unique control loop id.
                 required: true
-            operations:
-                type: list
-                description: List of operations to be performed when Control Loop is triggered.
-                required: true
-                entry_schema:
-                    type: onap.datatype.controlloop.Operation
-data_types:
-    onap.datatype.controlloop.Target:
-        derived_from: tosca.datatypes.Root
-        description: Definition for a entity in A&AI to perform a control loop operation on
+                constraints: [
+                    ]
+                metadata: {
+                    }
+        name: onap.policies.controlloop.operational.Common
+        version: 1.0.0
+        derived_from: tosca.policies.Root
+        metadata: {
+            }
+        description: |
+            Operational Policy for Control Loop execution. Originated in Frankfurt to support TOSCA Compliant
+            Policy Types. This does NOT support the legacy Policy YAML policy type.
+    onap.policies.controlloop.operational.common.Apex:
         properties:
-            targetType:
+            engineServiceParameters:
+                name: engineServiceParameters
                 type: string
-                description: Category for the target type
+                typeVersion: 0.0.0
+                description: The engine parameters like name, instanceCount, policy
+                    implementation, parameters etc.
                 required: true
-                constraints:
-                - valid_values: [VNF, VM, VFMODULE, PNF]
-            entityIds:
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            eventOutputParameters:
+                name: eventOutputParameters
+                type: string
+                typeVersion: 0.0.0
+                description: The event output parameters.
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            javaProperties:
+                name: javaProperties
+                type: string
+                typeVersion: 0.0.0
+                description: Name/value pairs of properties to be set for APEX if
+                    needed.
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            eventInputParameters:
+                name: eventInputParameters
+                type: string
+                typeVersion: 0.0.0
+                description: The event input parameters.
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+        name: onap.policies.controlloop.operational.common.Apex
+        version: 1.0.0
+        derived_from: onap.policies.controlloop.operational.Common
+        metadata: {
+            }
+        description: Operational policies for Apex PDP
+data_types:
+    onap.datatype.controlloop.Actor:
+        constraints: [
+            ]
+        properties:
+            payload:
+                name: payload
                 type: map
+                typeVersion: 0.0.0
+                description: Name/value pairs of payload information passed by Policy
+                    to the actor
+                required: false
+                constraints: [
+                    ]
+                entry_schema:
+                    type: string
+                    typeVersion: 0.0.0
+                    constraints: [
+                        ]
+                metadata:
+                    clamp_possible_values: ClampExecution:CDS/payload
+            target:
+                name: target
+                type: onap.datatype.controlloop.Target
+                typeVersion: 0.0.0
+                description: The resource the operation should be performed on.
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            actor:
+                name: actor
+                type: string
+                typeVersion: 0.0.0
+                description: The actor performing the operation.
+                required: true
+                constraints: [
+                    ]
+                metadata:
+                    clamp_possible_values: Dictionary:DefaultActors,ClampExecution:CDS/actor
+            operation:
+                name: operation
+                type: string
+                typeVersion: 0.0.0
+                description: The operation the actor is performing.
+                required: true
+                constraints: [
+                    ]
+                metadata:
+                    clamp_possible_values: Dictionary:DefaultOperations, ClampExecution:CDS/operation
+        name: onap.datatype.controlloop.Actor
+        version: 0.0.0
+        derived_from: tosca.datatypes.Root
+        metadata: {
+            }
+        description: An actor/operation/target definition
+    onap.datatype.controlloop.Operation:
+        constraints: [
+            ]
+        properties:
+            failure_retries:
+                name: failure_retries
+                type: string
+                typeVersion: 0.0.0
+                description: Points to the operation to invoke when the current operation
+                    has exceeded its max retries.
+                default: final_failure_retries
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            id:
+                name: id
+                type: string
+                typeVersion: 0.0.0
+                description: Unique identifier for the operation
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            failure_timeout:
+                name: failure_timeout
+                type: string
+                typeVersion: 0.0.0
+                description: Points to the operation to invoke when the time out for
+                    the operation occurs.
+                default: final_failure_timeout
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            failure:
+                name: failure
+                type: string
+                typeVersion: 0.0.0
+                description: Points to the operation to invoke on Actor operation
+                    failure.
+                default: final_failure
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            operation:
+                name: operation
+                type: onap.datatype.controlloop.Actor
+                typeVersion: 0.0.0
+                description: The definition of the operation to be performed.
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            failure_guard:
+                name: failure_guard
+                type: string
+                typeVersion: 0.0.0
+                description: Points to the operation to invoke when the current operation
+                    is blocked due to guard policy enforcement.
+                default: final_failure_guard
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            retries:
+                name: retries
+                type: integer
+                typeVersion: 0.0.0
+                description: The number of retries the actor should attempt to perform
+                    the operation.
+                default: '0'
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            timeout:
+                name: timeout
+                type: integer
+                typeVersion: 0.0.0
+                description: The amount of time for the actor to perform the operation.
+                required: true
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            failure_exception:
+                name: failure_exception
+                type: string
+                typeVersion: 0.0.0
+                description: Points to the operation to invoke when the current operation
+                    causes an exception.
+                default: final_failure_exception
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            description:
+                name: description
+                type: string
+                typeVersion: 0.0.0
+                description: A user-friendly description of the intent for the operation
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+            success:
+                name: success
+                type: string
+                typeVersion: 0.0.0
+                description: Points to the operation to invoke on success. A value
+                    of "final_success" indicates and end to the operation.
+                default: final_success
+                required: false
+                constraints: [
+                    ]
+                metadata: {
+                    }
+        name: onap.datatype.controlloop.Operation
+        version: 0.0.0
+        derived_from: tosca.datatypes.Root
+        metadata: {
+            }
+        description: An operation supported by an actor
+    onap.datatype.controlloop.Target:
+        constraints: [
+            ]
+        properties:
+            entityIds:
+                name: entityIds
+                type: map
+                typeVersion: 0.0.0
                 description: |
                     Map of values that identify the resource. If none are provided, it is assumed that the
                     entity that generated the ONSET event will be the target.
                 required: false
+                constraints: [
+                    ]
+                entry_schema:
+                    type: string
+                    typeVersion: 0.0.0
+                    constraints: [
+                        ]
                 metadata:
                     clamp_possible_values: ClampExecution:CSAR_RESOURCES
-                entry_schema:
-                    type: string
-
-    onap.datatype.controlloop.Actor:
+            targetType:
+                name: targetType
+                type: string
+                typeVersion: 0.0.0
+                description: Category for the target type
+                required: true
+                constraints:
+                -   valid_values:
+                    - VNF
+                    - VM
+                    - VFMODULE
+                    - PNF
+                metadata: {
+                    }
+        name: onap.datatype.controlloop.Target
+        version: 0.0.0
         derived_from: tosca.datatypes.Root
-        description: An actor/operation/target definition
-        properties:
-            actor:
-                type: string
-                description: The actor performing the operation.
-                required: true
-                metadata:
-                    clamp_possible_values: Dictionary:DefaultActors,ClampExecution:CDS/actor
-            operation:
-                type: string
-                description: The operation the actor is performing.
-                required: true
-                metadata:
-                    clamp_possible_values: Dictionary:DefaultOperations,ClampExecution:CDS/operation
-            target:
-                type: onap.datatype.controlloop.Target
-                description: The resource the operation should be performed on.
-                required: true
-            payload:
-                type: map
-                description: Name/value pairs of payload information passed by Policy to the actor
-                required: false
-                metadata:
-                    clamp_possible_values: ClampExecution:CDS/payload
-                entry_schema:
-                    type: string
-
-    onap.datatype.controlloop.Operation:
-        derived_from: tosca.datatypes.Root
-        description: An operation supported by an actor
-        properties:
-            id:
-                type: string
-                description: Unique identifier for the operation
-                required: true
-            description:
-                type: string
-                description: A user-friendly description of the intent for the operation
-                required: false
-            operation:
-                type: onap.datatype.controlloop.Actor
-                description: The definition of the operation to be performed.
-                required: true
-            timeout:
-                type: integer
-                description: The amount of time for the actor to perform the operation.
-                required: true
-            retries:
-                type: integer
-                description: The number of retries the actor should attempt to perform the operation.
-                required: true
-                default: 0
-            success:
-                type: string
-                description: Points to the operation to invoke on success. A value of "final_success" indicates and end to the operation.
-                required: false
-                default: final_success
-            failure:
-                type: string
-                description: Points to the operation to invoke on Actor operation failure.
-                required: false
-                default: final_failure
-            failure_timeout:
-                type: string
-                description: Points to the operation to invoke when the time out for the operation occurs.
-                required: false
-                default: final_failure_timeout
-            failure_retries:
-                type: string
-                description: Points to the operation to invoke when the current operation has exceeded its max retries.
-                required: false
-                default: final_failure_retries
-            failure_exception:
-                type: string
-                description: Points to the operation to invoke when the current operation causes an exception.
-                required: false
-                default: final_failure_exception
-            failure_guard:
-                type: string
-                description: Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.
-                required: false
-                default: final_failure_guard
+        metadata: {
+            }
+        description: Definition for a entity in A&AI to perform a control loop operation
+            on
+name: ToscaServiceTemplateSimple
+version: 1.0.0
+metadata: {
+    }
