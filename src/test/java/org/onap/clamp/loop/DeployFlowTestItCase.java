@@ -72,7 +72,7 @@ public class DeployFlowTestItCase {
     @Transactional
     public void deployWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
         Loop loopTest = createLoop("ControlLoopTest", "<xml></xml>", "yamlcontent",
-                "{\"dcaeDeployParameters\":{\"loop template blueprint\": {\"policy_id\": \"name\"}}}",
+                "{\"dcaeDeployParameters\":{\"uniqueBlueprintParameters\": {\"policy_id\": \"name\"}}}",
                 "UUID-blueprint");
         LoopTemplate template = new LoopTemplate();
         template.setName("templateName");

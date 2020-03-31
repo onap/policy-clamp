@@ -24,13 +24,12 @@
 package org.onap.clamp.loop.deploy;
 
 import com.google.gson.JsonObject;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.components.external.DcaeComponent;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.yaml.snakeyaml.Yaml;
 
@@ -44,8 +43,8 @@ public class DcaeDeployParameters {
         Set<MicroServicePolicy> microServiceList = loop.getMicroServicePolicies();
 
         for (MicroServicePolicy microService : microServiceList) {
-                deploymentParamMap.put(microService.getName(),
-                        generateDcaeDeployParameter(microService));
+            deploymentParamMap.put(microService.getName(),
+                    generateDcaeDeployParameter(microService));
         }
         return deploymentParamMap;
     }
@@ -55,7 +54,7 @@ public class DcaeDeployParameters {
                 microService.getName());
     }
 
-    private static JsonObject generateDcaeDeployParameter(String blueprint, String tabName) {
+    private static JsonObject generateDcaeDeployParameter(String blueprint, String policyId) {
         JsonObject deployJsonBody = new JsonObject();
         Yaml yaml = new Yaml();
         Map<String, Object> inputsNodes = ((Map<String, Object>) ((Map<String, Object>) yaml
@@ -64,25 +63,29 @@ public class DcaeDeployParameters {
             Object defaultValue = ((Map<String, Object>) elem.getValue()).get("default");
             if (defaultValue != null) {
                 addPropertyToNode(deployJsonBody, elem.getKey(), defaultValue);
-            } else {
+            }
+            else {
                 deployJsonBody.addProperty(elem.getKey(), "");
             }
         });
-        // For Dublin only one micro service is expected
-        deployJsonBody.addProperty("policy_id", tabName);
+        deployJsonBody.addProperty("policy_id", policyId);
         return deployJsonBody;
     }
 
     private static void addPropertyToNode(JsonObject node, String key, Object value) {
         if (value instanceof String) {
             node.addProperty(key, (String) value);
-        } else if (value instanceof Number) {
+        }
+        else if (value instanceof Number) {
             node.addProperty(key, (Number) value);
-        } else if (value instanceof Boolean) {
+        }
+        else if (value instanceof Boolean) {
             node.addProperty(key, (Boolean) value);
-        } else if (value instanceof Character) {
+        }
+        else if (value instanceof Character) {
             node.addProperty(key, (Character) value);
-        } else {
+        }
+        else {
             node.addProperty(key, JsonUtils.GSON.toJson(value));
         }
     }
@@ -96,9 +99,14 @@ public class DcaeDeployParameters {
         JsonObject globalProperties = new JsonObject();
         JsonObject deployParamJson = new JsonObject();
         if (loop.getLoopTemplate().getUniqueBlueprint()) {
-            String tabName = "loop template blueprint";
-            deployParamJson.add(tabName, generateDcaeDeployParameter(loop.getLoopTemplate().getBlueprint(), tabName));
-        } else {
+            // Normally the unique blueprint could contain multiple microservices but then we can't guess
+            // the policy id params that will be used, so here we expect only one by default.
+            deployParamJson.add(DcaeComponent.UNIQUE_BLUEPRINT_PARAMETERS,
+                    generateDcaeDeployParameter(loop.getLoopTemplate().getBlueprint(),
+                            ((MicroServicePolicy) loop.getMicroServicePolicies().toArray()[0]).getName()));
+
+        }
+        else {
             LinkedHashMap<String, JsonObject> deploymentParamMap = init(loop);
             for (Map.Entry<String, JsonObject> mapElement : deploymentParamMap.entrySet()) {
                 deployParamJson.add(mapElement.getKey(), mapElement.getValue());
