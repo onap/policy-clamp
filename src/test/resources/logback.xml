@@ -78,10 +78,14 @@
    
     <logger
         name="ch.qos.logback.classic"
-        level="INFO" />
+        level="INFO" >
+        <appender-ref ref="STDOUT" />
+    </logger>
     <logger
         name="ch.qos.logback.core"
-        level="INFO" />
+        level="INFO" >
+        <appender-ref ref="STDOUT" />
+    </logger>
 
     <!-- logback jms appenders & loggers definition ends here -->
 

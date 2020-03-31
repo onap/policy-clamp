@@ -53,7 +53,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(DefaultUserConfiguration.class);
-    protected static final EELFLogger metricsLogger = EELFManager.getInstance().getMetricsLogger();
+
     private static final String SETUP_WEB_USERS_EXCEPTION_MSG = "Exception occurred during the "
             + " setup of the Web users in memory";
     @Autowired

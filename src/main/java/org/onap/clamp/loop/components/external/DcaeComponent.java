@@ -23,6 +23,8 @@
 
 package org.onap.clamp.loop.components.external;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
 
 import java.util.Iterator;
@@ -30,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.Transient;
 import org.apache.camel.Exchange;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -42,6 +45,9 @@ import org.onap.clamp.loop.Loop;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 
 public class DcaeComponent extends ExternalComponent {
+
+    @Transient
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(DcaeComponent.class);
 
     private static final String DCAE_DEPLOYMENT_PREFIX = "CLAMP_";
     private static final String DEPLOYMENT_PARAMETER = "dcaeDeployParameters";
@@ -142,6 +148,7 @@ public class DcaeComponent extends ExternalComponent {
         if (deploymentProp != null) {
             rootObject.add(DCAE_INPUTS, deploymentProp);
         }
+        logger.info("DCAE Deploy payload for unique blueprint: " + rootObject.toString());
         return rootObject.toString();
     }
 
@@ -164,6 +171,7 @@ public class DcaeComponent extends ExternalComponent {
         if (deploymentProp != null) {
             rootObject.add(DCAE_INPUTS, deploymentProp);
         }
+        logger.info("DCAE Deploy payload for multiple blueprints: " + rootObject.toString());
         return rootObject.toString();
     }
 
@@ -176,6 +184,7 @@ public class DcaeComponent extends ExternalComponent {
     public static String getUndeployPayload(Loop loop) {
         JsonObject rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, loop.getLoopTemplate().getDcaeBlueprintId());
+        logger.info("DCAE Undeploy payload for unique blueprint: " + rootObject.toString());
         return rootObject.toString();
     }
 
@@ -188,6 +197,7 @@ public class DcaeComponent extends ExternalComponent {
     public static String getUndeployPayload(MicroServicePolicy policy) {
         JsonObject rootObject = new JsonObject();
         rootObject.addProperty(DCAE_SERVICETYPE_ID, policy.getDcaeBlueprintId());
+        logger.info("DCAE Undeploy payload for multiple blueprints: " + rootObject.toString());
         return rootObject.toString();
     }
 
