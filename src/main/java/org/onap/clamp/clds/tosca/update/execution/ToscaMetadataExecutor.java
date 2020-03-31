@@ -51,7 +51,7 @@ public class ToscaMetadataExecutor {
     private Map<String, ToscaMetadataProcess> mapOfProcesses = new HashMap<>();
 
     /**
-     * This method executes the required process specified in processInfo
+     * This method executes the required process specified in processInfo.
      *
      * @param processInfo  A String containing the process to execute, like "cds/param1:value1/param2:value2"
      * @param childObject  The jsonObject
@@ -61,7 +61,8 @@ public class ToscaMetadataExecutor {
         String[] processParameters = (processInfo + "/ ").split("/");
         logger.info("Executing the Tosca clamp process " + processParameters[0] + " with parameters "
                 + processParameters[1].trim());
-        mapOfProcesses.get(processParameters[0].trim()).executeProcess(processParameters[1].trim(), childObject, serviceModel);
+        mapOfProcesses.get(processParameters[0].trim())
+                .executeProcess(processParameters[1].trim(), childObject, serviceModel);
     }
 
     /**

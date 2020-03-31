@@ -1,9 +1,9 @@
 {
   "dcaeDeployParameters": {
-    "loop template blueprint": {
+    "uniqueBlueprintParameters": {
       "location_id": "",
       "service_id": "",
-      "policy_id": "loop template blueprint"
+      "policy_id": "testName1"
     }
   }
 }

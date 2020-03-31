@@ -47,13 +47,15 @@ public class DcaeComponentTest {
     private Loop createTestLoop() {
         Loop loopTest = new Loop("ControlLoopTest", "<xml></xml>");
         loopTest.setGlobalPropertiesJson(
-                new Gson().fromJson("{\"dcaeDeployParameters\":{\"loop template blueprint\": {\"policy_id\": \"name\"}}}", JsonObject.class));
+                new Gson().fromJson(
+                        "{\"dcaeDeployParameters\":{\"uniqueBlueprintParameters\": {\"policy_id\": \"name\"}}}",
+                        JsonObject.class));
         loopTest.setLastComputedState(LoopState.DESIGN);
         loopTest.setDcaeDeploymentId("123456789");
         loopTest.setDcaeDeploymentStatusUrl("http4://localhost:8085");
 
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", new PolicyModel("policy1",
-                "tosca_definitions_version: tosca_simple_yaml_1_0_0","1.0.0"), true,
+                "tosca_definitions_version: tosca_simple_yaml_1_0_0", "1.0.0"), true,
                 new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null, null, null);
         microServicePolicy.setConfigurationsJson(new Gson().fromJson("{\"param1\":\"value1\"}", JsonObject.class));
 
@@ -67,6 +69,7 @@ public class DcaeComponentTest {
 
     /**
      * Test the DcaeReponse roughly.
+     *
      * @throws IOException In case of issues
      */
     @Test
@@ -166,7 +169,8 @@ public class DcaeComponentTest {
 
     /**
      * Test the Converter to DcaeInventoryResponse method.
-     * @throws IOException In case of failure
+     *
+     * @throws IOException    In case of failure
      * @throws ParseException In case of failure
      */
     @Test
