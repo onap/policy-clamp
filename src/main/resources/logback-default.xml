@@ -58,16 +58,12 @@
 		</encoder>
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-			<fileNamePattern>${outputDirectory}/clamp/error.%d{yyyy-MM-dd}.%i.log.zip
+			<fileNamePattern>${logDirectory}/error.%d{yyyy-MM-dd}.%i.log.zip
 			</fileNamePattern>
 			<maxFileSize>50MB</maxFileSize>
-			<maxHistory>30</maxHistory>
-			<totalSizeCap>10GB</totalSizeCap>
+			<maxHistory>20</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>10MB</maxFileSize>
-		</triggeringPolicy>
 	</appender>
 
 	<appender
@@ -81,11 +77,11 @@
 		</encoder>
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-			<fileNamePattern>${outputDirectory}/clamp/debug.%d{yyyy-MM-dd}.%i.log.zip
+			<fileNamePattern>${logDirectory}/debug.%d{yyyy-MM-dd}.%i.log.zip
 			</fileNamePattern>
 			<maxFileSize>50MB</maxFileSize>
-			<maxHistory>30</maxHistory>
-			<totalSizeCap>10GB</totalSizeCap>
+			<maxHistory>20</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
 	</appender>
 
@@ -100,15 +96,13 @@
 			</pattern>
 		</encoder>
 		<rollingPolicy
-			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<maxIndex>10</maxIndex>
-			<FileNamePattern>${logDirectory}/audit.%i.log.zip
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${logDirectory}/audit.%d{yyyy-MM-dd}.%i.log.zip
 			</FileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>20</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>10MB</maxFileSize>
-		</triggeringPolicy>
 	</appender>
 	<appender
 		name="asyncEELFAudit"
@@ -127,16 +121,15 @@
 				%msg%n</pattern>
 		</encoder>
 		<rollingPolicy
-			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<maxIndex>10</maxIndex>
-			<FileNamePattern>${logDirectory}/metric.%i.log.zip
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${logDirectory}/metric.%d{yyyy-MM-dd}.%i.log.zip
 			</FileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>20</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>10MB</maxFileSize>
-		</triggeringPolicy>
 	</appender>
+
 	<appender
 		name="asyncEELFMetrics"
 		class="ch.qos.logback.classic.AsyncAppender">
@@ -155,16 +148,15 @@
 			</pattern>
 		</encoder>
 		<rollingPolicy
-			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<maxIndex>10</maxIndex>
-			<FileNamePattern>${logDirectory}/security.%i.log.zip
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${logDirectory}/security.%d{yyyy-MM-dd}.%i.log.zip
 			</FileNamePattern>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>20</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>10MB</maxFileSize>
-		</triggeringPolicy>
 	</appender>
+
 	<appender
 		name="asyncEELFSecurity"
 		class="ch.qos.logback.classic.AsyncAppender">
@@ -177,39 +169,34 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 		</filter>
-		<file>${logDirectory}/Audit-${lrmRVer}-${lrmRO}-${Pid}.log</file>
+		<file>${logDirectory}/Audits.log</file>
 		<rollingPolicy
-			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>${logDirectory}/Audit-${lrmRVer}-${lrmRO}-${Pid}.%i.log.zip
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${logDirectory}/Audits-%d{yyyy-MM-dd}.%i.log.zip
 			</fileNamePattern>
-			<minIndex>1</minIndex>
-			<maxIndex>9</maxIndex>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>20</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>5MB</maxFileSize>
-		</triggeringPolicy>
 		<encoder>
 			<pattern>"%d [%thread] %-5level %logger{1024} - %msg%n"</pattern>
 		</encoder>
 	</appender>
+
 	<appender
 		name="perfLogs"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 		</filter>
-		<file>${logDirectory}/Perform-${lrmRVer}-${lrmRO}-${Pid}.log</file>
+		<file>${logDirectory}/Perform.log</file>
 		<rollingPolicy
-			class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>${logDirectory}/Perform-${lrmRVer}-${lrmRO}-${Pid}.%i.log.zip
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${logDirectory}/Perform--%d{yyyy-MM-dd}.%i.log.zip
 			</fileNamePattern>
-			<minIndex>1</minIndex>
-			<maxIndex>9</maxIndex>
+			<maxFileSize>50MB</maxFileSize>
+			<maxHistory>20</maxHistory>
+			<totalSizeCap>1GB</totalSizeCap>
 		</rollingPolicy>
-		<triggeringPolicy
-			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-			<maxFileSize>5MB</maxFileSize>
-		</triggeringPolicy>
 		<encoder>
 			<pattern>"%d [%thread] %-5level %logger{1024} - %msg%n"</pattern>
 		</encoder>
@@ -221,18 +208,29 @@
 		<appender-ref ref="DEBUG" />
 	</logger>
 	<logger
+			name="org.hibernate"
+			level="INFO">
+		<appender-ref ref="DEBUG" />
+	</logger>
+	<logger
+			name="org.apache.camel.Tracing"
+			level="INFO">
+		<appender-ref ref="DEBUG" />
+	</logger>
+
+	<logger
 		name="org.apache"
-		level="DEBUG">
+		level="INFO">
 		<appender-ref ref="DEBUG" />
 	</logger>
 	<!-- Spring related loggers -->
 	<logger
 		name="org.springframework"
-		level="DEBUG">
+		level="INFO">
 		<appender-ref ref="DEBUG" />
 	</logger>
 
-	<!-- CLDS related loggers -->
+	<!-- CLAMP related loggers -->
 	<logger
 		name="org.onap.clamp"
 		level="DEBUG">
@@ -240,7 +238,6 @@
 		<appender-ref ref="DEBUG" />
 	</logger>
 
-	<!-- CLDS related loggers -->
 	<logger
 		name="com.att.eelf.error"
 		level="OFF">

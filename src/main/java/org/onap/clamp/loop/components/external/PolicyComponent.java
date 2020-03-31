@@ -81,13 +81,13 @@ public class PolicyComponent extends ExternalComponent {
     public static String createPoliciesPayloadPdpGroup(Loop loop) {
         HashMap<String, HashMap<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
-            pdpGroupMap = updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
+            updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
                     opPolicy.getName(),
                     opPolicy.getPolicyModel().getVersion(), pdpGroupMap);
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
-            pdpGroupMap = updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(),
+            updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(),
                     msPolicy.getName(),
                     msPolicy.getPolicyModel().getVersion(), pdpGroupMap);
         }
@@ -98,13 +98,12 @@ public class PolicyComponent extends ExternalComponent {
         return payload;
     }
 
-    private static HashMap<String, HashMap<String, List<JsonObject>>> updatePdpGroupMap(String pdpGroup,
-                                                                                        String pdpSubGroup,
-                                                                                        String policyName,
-                                                                                        String policyModelVersion,
-                                                                                        HashMap<String, HashMap<String,
-                                                                                                List<JsonObject>>> pdpGroupMap) {
-
+    private static void updatePdpGroupMap(String pdpGroup,
+                                          String pdpSubGroup,
+                                          String policyName,
+                                          String policyModelVersion,
+                                          HashMap<String, HashMap<String,
+                                                  List<JsonObject>>> pdpGroupMap) {
         JsonObject policyJson = new JsonObject();
         policyJson.addProperty("name", policyName);
         policyJson.addProperty("version", policyModelVersion);
@@ -126,8 +125,6 @@ public class PolicyComponent extends ExternalComponent {
         policyList.add(policyJson);
         pdpSubGroupMap.put(pdpSubGroup, policyList);
         pdpGroupMap.put(pdpGroup, pdpSubGroupMap);
-
-        return pdpGroupMap;
     }
 
     private static JsonObject generateActivatePdpGroupPayload(
@@ -170,9 +167,7 @@ public class PolicyComponent extends ExternalComponent {
         List<String> policyNamesList = new ArrayList<>();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
             policyNamesList.add(opPolicy.getName());
-            for (String guardName : opPolicy.createGuardPolicyPayloads().keySet()) {
-                policyNamesList.add(guardName);
-            }
+            policyNamesList.addAll(opPolicy.createGuardPolicyPayloads().keySet());
         }
         for (MicroServicePolicy microServicePolicy : loop.getMicroServicePolicies()) {
             policyNamesList.add(microServicePolicy.getName());
