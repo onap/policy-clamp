@@ -110,17 +110,38 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                 }
             }
         }
-        addToJsonArray(childObject, "enum", schemaAnyOf);
+        addToJsonArray(childObject, "anyOf", schemaAnyOf);
     }
 
     private static JsonObject createPayloadProperty(JsonObject workFlow, JsonObject controllerProperties) {
         JsonObject payloadResult = new JsonObject();
 
-        payloadResult.addProperty("artifact_name", controllerProperties.get("sdnc_model_name").getAsString());
-        payloadResult.addProperty("artifact_version", controllerProperties.get("sdnc_model_version").getAsString());
-        payloadResult.addProperty("mode", "async");
-        payloadResult.add("data", workFlow.getAsJsonObject("inputs"));
+        payloadResult.add("artifact_name",
+                createAnyOfJsonProperty("artifact_name", controllerProperties.get("sdnc_model_name").getAsString()));
+        payloadResult.add("artifact_version",
+                createAnyOfJsonProperty("artifact_version",
+                        controllerProperties.get("sdnc_model_version").getAsString()));
+        payloadResult.add("mode", createAnyOfJsonProperty("mode", "async"));
+
+        payloadResult.add("data", createAnyOfJsonObject("data", workFlow.getAsJsonObject("inputs")));
         return payloadResult;
+    }
+
+    private static JsonObject createAnyOfJsonProperty(String name, String defaultValue) {
+        JsonObject result = new JsonObject();
+        result.addProperty("title", name);
+        result.addProperty("type", "string");
+        result.addProperty("default", defaultValue);
+        result.addProperty("readOnly", "True");
+        return result;
+    }
+
+    private static JsonObject createAnyOfJsonObject(String name, JsonObject allProperties) {
+        JsonObject result = new JsonObject();
+        result.addProperty("title", name);
+        result.addProperty("type", "object");
+        result.add("properties", allProperties);
+        return result;
     }
 
     private static void addToJsonArray(JsonObject childObject, String section, JsonArray value) {
