@@ -28,12 +28,12 @@ describe('Verify OpenLoopModal', () => {
 
   beforeEach(() => {
       fetch.resetMocks();
-          fetch.mockResponseOnce(JSON.stringify([
+      fetch.mockResponse(JSON.stringify([
         "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca",
         "LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3",
         "LOOP_gmtAS_v1_0_ResourceInstanceName2_tca_2"
       ]));
-  })
+  });
 
     it('Test the render method', () => {
 
@@ -44,11 +44,11 @@ describe('Verify OpenLoopModal', () => {
   it('Onchange event', () => {
     const event = {value: 'LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3'};
     const component = shallow(<OpenLoopModal/>);
-
     component.find('StateManager').simulate('change', event);
     component.update();
     expect(component.state('chosenLoopName')).toEqual("LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3");
   });
+
 
   it('Test handleClose', () => {
     const historyMock = { push: jest.fn() }; 

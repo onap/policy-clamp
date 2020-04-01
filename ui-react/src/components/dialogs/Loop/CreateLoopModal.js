@@ -34,6 +34,14 @@ import TemplateService from '../../../api/TemplateService';
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
+const LoopViewSvgDivStyled = styled.div`
+	overflow: hidden;
+	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
+	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+	margin-left: auto;
+	margin-right:auto;
+	text-align: center;
+`
 
 export default class CreateLoopModal extends React.Component {
 	constructor(props, context) {
@@ -46,6 +54,7 @@ export default class CreateLoopModal extends React.Component {
 		this.handleDropdownListChange = this.handleDropdownListChange.bind(this);
 		this.state = {
 			show: true,
+			content: '',
 			chosenTemplateName: '',
 			modelName: '',
 			templateNames: []
@@ -63,6 +72,13 @@ export default class CreateLoopModal extends React.Component {
 
 	handleDropdownListChange(e) {
 		this.setState({ chosenTemplateName: e.value });
+		TemplateService.getBlueprintMicroServiceTemplates(e.value).then(svgXml => {
+			if (svgXml.length !== 0) {
+				this.setState({ content: svgXml })
+			} else {
+				this.setState({ content: 'Error1' })
+			}
+		})
 	}
 
 	getTemplateNames() {
@@ -77,7 +93,7 @@ export default class CreateLoopModal extends React.Component {
 			alert("A model name is required");
 			return;
 		}
-		console.info("Create Model " + this.state.modelName + ", Template " + this.state.chosenTemplateName + " is chosen");
+		console.debug("Create Model " + this.state.modelName + ", Template " + this.state.chosenTemplateName + " is chosen");
 		this.setState({ show: false });
 		LoopService.createLoop("LOOP_" + this.state.modelName, this.state.chosenTemplateName).then(text => {
 			console.debug("CreateLoop response received: ", text);
@@ -92,18 +108,17 @@ export default class CreateLoopModal extends React.Component {
 		.catch(error => {
 			console.debug("Create Loop failed");
 		});
-
 	}
 
 	handleModelName = event => {
-    	this.setState({
-      		modelName: event.target.value
-    	})
+		this.setState({
+			modelName: event.target.value
+		})
 	}
 
 	render() {
 		return (
-			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose}>
+			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
 					<Modal.Title>Create Model</Modal.Title>
 				</Modal.Header>
@@ -113,6 +128,10 @@ export default class CreateLoopModal extends React.Component {
 						<Col sm="10">
 							<Select onChange={this.handleDropdownListChange} options={this.state.templateNames} />
 						</Col>
+					</Form.Group>
+					<Form.Group controlId="formPlaintextEmail">
+						<LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }} value={this.state.content} >
+						</LoopViewSvgDivStyled>
 					</Form.Group>
 					<Form.Group controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Model Name:</Form.Label>
@@ -127,7 +146,6 @@ export default class CreateLoopModal extends React.Component {
 					<Button variant="primary" type="submit" onClick={this.handleCreate}>Create</Button>
 				</Modal.Footer>
 			</ModalStyled>
-
 		);
 	}
 }

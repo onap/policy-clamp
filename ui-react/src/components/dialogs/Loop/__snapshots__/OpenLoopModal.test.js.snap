@@ -4,7 +4,7 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
 <Styled(Bootstrap(Modal))
   onHide={[Function]}
   show={true}
-  size="lg"
+  size="xl"
 >
   <ModalHeader
     closeButton={true}
@@ -45,6 +45,18 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
           options={Array []}
         />
       </Col>
+    </FormGroup>
+    <FormGroup
+      controlId="formPlaintextEmail"
+    >
+      <styled.div
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "",
+          }
+        }
+        value=""
+      />
     </FormGroup>
     <FormGroup
       controlId="formBasicChecbox"

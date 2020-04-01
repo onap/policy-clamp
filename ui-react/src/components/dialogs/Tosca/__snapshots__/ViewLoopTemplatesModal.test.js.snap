@@ -140,12 +140,16 @@ exports[`Verify ViewLoopTemplatesModal Test the tosca model view render method 1
       }
       title="View Blueprint MicroService Templates"
     />
-    <div>
-      <styled.textarea
-        onChange={[Function]}
+    <styled.div>
+      <styled.div
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "Please select a loop template to display it",
+          }
+        }
         value="Please select a loop template to display it"
       />
-    </div>
+    </styled.div>
   </ModalBody>
   <ModalFooter>
     <Button
