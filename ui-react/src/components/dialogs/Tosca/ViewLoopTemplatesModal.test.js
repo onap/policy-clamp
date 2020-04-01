@@ -77,7 +77,6 @@ describe('Verify ViewLoopTemplatesModal', () => {
 		}),
 		100
 		);
-		new Promise(resolve => setTimeout(resolve, 200));
 		const component = shallow(<ViewLoopTemplatesModal/>);
 		expect(myMockFunc.mock.calls.length).toBe(1);
 	});

@@ -82,7 +82,6 @@ describe('Verify ViewToscaPolicyModal', () => {
       }),
     100
   );
-	new Promise(resolve => setTimeout(resolve, 200));
 	const component = shallow(<ViewToscaPolicyModal/>);
 	expect(myMockFunc.mock.calls.length).toBe(1);
 	});

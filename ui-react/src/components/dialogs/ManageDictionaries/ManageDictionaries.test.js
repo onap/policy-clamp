@@ -78,7 +78,6 @@ describe('Verify ManageDictionaries', () => {
 		}),
 		100
 		);
-		new Promise(resolve => setTimeout(resolve, 200));
 		const component = shallow(<ManageDictionaries />);
 		expect(myMockFunc.mock.calls.length).toBe(1);
 	});
