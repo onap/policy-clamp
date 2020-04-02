@@ -113,7 +113,7 @@ export default class ViewLoopTemplatesModal extends React.Component {
 
 	getBlueprintMicroServiceTemplate(templateName) {
 	    if (typeof templateName !== "undefined") {
-		    TemplateService.getBlueprintMicroServiceTemplate(templateName).then(svgXml => {
+		    TemplateService.getBlueprintMicroServiceTemplateSvg(templateName).then(svgXml => {
 				if (svgXml.length !== 0) {
 					this.setState({ content: svgXml })
 				} else {

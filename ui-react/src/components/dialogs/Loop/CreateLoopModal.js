@@ -72,7 +72,7 @@ export default class CreateLoopModal extends React.Component {
 
 	handleDropdownListChange(e) {
 		this.setState({ chosenTemplateName: e.value });
-		TemplateService.getBlueprintMicroServiceTemplates(e.value).then(svgXml => {
+		TemplateService.getBlueprintMicroServiceTemplateSvg(e.value).then(svgXml => {
 			if (svgXml.length !== 0) {
 				this.setState({ content: svgXml })
 			} else {

@@ -55,19 +55,19 @@ export default class TemplateService {
 	        });
 	    }
 
-	static getBlueprintMicroServiceTemplate(templateName) {
+	static getBlueprintMicroServiceTemplateSvg(templateName) {
 	  	return fetch('/restservices/clds/v2/templates/' + templateName + ' /svgRepresentation', { method: 'GET', credentials: 'same-origin', })
 			.then(function (response) {
-			console.debug("getBlueprintMicroServiceTemplate response received: ", response.status);
+			console.debug("getBlueprintMicroServiceTemplateSvg response received: ", response.status);
 			if (response.ok) {
 				return response.text();
 			} else {
-				console.error("getBlueprintMicroServiceTemplates query failed");
+				console.error("getBlueprintMicroServiceTemplateSvg query failed");
 				return {};
 			}
 		})
 		.catch(function (error) {
-			console.error("getBlueprintMicroServiceTemplate error received", error);
+			console.error("getBlueprintMicroServiceTemplateSvg error received", error);
 			return {};
 		});
 	}
