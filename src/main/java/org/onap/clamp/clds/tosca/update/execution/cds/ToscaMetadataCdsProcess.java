@@ -60,6 +60,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     private static void generatePayload(JsonObject childObject, Service serviceModel) {
         generatePayloadPerResource(childObject, "VF", serviceModel);
         generatePayloadPerResource(childObject, "PNF", serviceModel);
+        addToJsonArray(childObject, "anyOf", createBlankEntry());
     }
 
     private static void generateOperation(JsonObject childObject, Service serviceModel) {
@@ -111,6 +112,15 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
             }
         }
         addToJsonArray(childObject, "anyOf", schemaAnyOf);
+    }
+
+    private static JsonArray createBlankEntry() {
+        JsonArray result = new JsonArray();
+        JsonObject blankObject = new JsonObject();
+        blankObject.addProperty("title", "User defined");
+        blankObject.add("properties", new JsonObject());
+        result.add(blankObject);
+        return result;
     }
 
     private static JsonObject createPayloadProperty(JsonObject workFlow, JsonObject controllerProperties) {

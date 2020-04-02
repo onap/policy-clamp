@@ -170,7 +170,8 @@
                           "description": "Version number associated with the threshold"
                         }
                       }
-                    }
+                    },
+                    "format": "tabs-top"
                   },
                   "context": {
                     "type": "string",
@@ -212,7 +213,8 @@
                     }
                   }
                 }
-              }
+              },
+              "format": "tabs-top"
             }
           }
         }

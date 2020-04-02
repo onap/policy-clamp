@@ -259,6 +259,7 @@ public class ToscaConverterToJsonSchema {
                                 JsonObject componentAsItem = child.getJsonSchemaOfToscaElement(nameComponent);
                                 if (currentPropertyJsonTemplate.hasFields("properties")) {
                                     propertiesInJson.add("items", componentAsItem);
+                                    propertiesInJson.addProperty("format", "tabs-top");
                                 }
                                 break;
                         }
@@ -271,6 +272,7 @@ public class ToscaConverterToJsonSchema {
                                 this.extractSpecificFieldFromMap(toscaElementProperty, "entry_schema");
                         itemContainer.addProperty("type", valueInEntrySchema);
                         propertiesInJson.add("items", itemContainer);
+                        propertiesInJson.addProperty("format", "tabs-top");
                     }
                     // MAP Case, for now nothing
 
