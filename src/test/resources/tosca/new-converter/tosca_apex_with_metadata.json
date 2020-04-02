@@ -292,6 +292,10 @@
                         }
                       }
                     }
+                  },
+                  {
+                    "title": "User defined",
+                    "properties": {}
                   }
                 ]
               },
@@ -588,7 +592,8 @@
             "default": "final_success"
           }
         }
-      }
+      },
+      "format": "tabs-top"
     },
     "trigger": {
       "type": "string",
