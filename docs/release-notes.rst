@@ -1,9 +1,64 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright (c) 2017-2019 AT&T Intellectual Property.  All rights reserved.
+.. Copyright (c) 2017-2020 AT&T Intellectual Property.  All rights reserved.
 
 Release Notes
 =============
+
+Version: 5.0.1
+--------------
+
+:Release Date: 2020-04-02
+
+**New Features**
+
+The Frankfurt release is the seventh release of the Control Loop Automation Management Platform (CLAMP).
+
+The main goal of the Frankfurt release was to:
+
+    - implementing a new Control Loop creation flow: Self Serve Control Loop(partially done will be continued in next release).
+    - Add Tosca policy-model support for Operational Policies definitions.
+    - Add integration to CDS for Actor/Action selection.
+    - Move from SearchGuard to OpenDistro.
+    - Document(high level) current upgrade component strategy (TSC must have).
+    - SECCOM Perform Software Composition Analysis - Vulnerability tables (TSC must have).
+    - SECCOM Password removal from OOM HELM charts (TSC must have).
+    - SECCOM Password removal from OOM HELM charts (TSC must have).
+    - SECCOM HTTPS communication vs. HTTP (TSC must have)
+
+**Bug Fixes**
+
+	- The full list of implemented user stories and epics is available on `Frankfurt CLAMP M1 release planning <https://wiki.onap.org/display/DW/CLAMP+R6+-+M1+Release+Planning>`_
+	  
+
+**Known Issues**
+
+
+**Security Notes**
+
+*Fixed Security Issues*
+
+*Known Security Issues*
+
+*Known Vulnerabilities in Used Modules*
+
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release.
+
+Quick Links:
+ 	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
+
+ 	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
+
+**Upgrade Notes**
+
+    New Docker Containers are available. the list of containers composing this release are below:
+    - clamp-backend-filebeat-onap: docker.elastic.co/beats/filebeat 5.5.0
+    - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.2
+    - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.2
+    - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.3
+    - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.3
+    - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
+
 
 Version: 4.1.3
 --------------
