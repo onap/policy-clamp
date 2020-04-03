@@ -50,6 +50,7 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.onap.clamp.clds.config.LegacyOperationalPolicyController;
 import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
@@ -228,7 +229,8 @@ public class OperationalPolicy extends Policy implements Serializable {
     }
 
     public Boolean isLegacy() {
-        return (this.getPolicyModel() != null) && this.getPolicyModel().getPolicyModelType().contains("legacy");
+        return (this.getPolicyModel() != null) && this.getPolicyModel().getPolicyModelType().contains(
+                LegacyOperationalPolicyController.OPERATIONAL_POLICY_LEGACY);
     }
 
     /**

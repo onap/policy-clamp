@@ -32,12 +32,12 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile("legacy-operational-policy")
-public class LegacyOperationalPolicy {
+public class LegacyOperationalPolicyController {
 
     @Autowired
     PolicyModelsService policyModelService;
 
-    public static final String OPERATIONAL_POLICY_LEGACY = "onap.policies.operational.legacy";
+    public static final String OPERATIONAL_POLICY_LEGACY = "onap.policies.controlloop.Operational";
 
     @PostConstruct
     public void init() {
