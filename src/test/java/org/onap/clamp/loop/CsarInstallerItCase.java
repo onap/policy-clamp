@@ -42,7 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.Application;
-import org.onap.clamp.clds.config.LegacyOperationalPolicy;
+import org.onap.clamp.clds.config.LegacyOperationalPolicyController;
 import org.onap.clamp.clds.exception.sdc.controller.BlueprintParserException;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
@@ -164,7 +164,7 @@ public class CsarInstallerItCase {
     @Transactional
     public void testPolicyModelAddedAtStartup() {
         assertThat(policyModelsRepository.findByPolicyModelType(
-                LegacyOperationalPolicy.OPERATIONAL_POLICY_LEGACY).get(0)).isNotNull();
+                LegacyOperationalPolicyController.OPERATIONAL_POLICY_LEGACY).get(0)).isNotNull();
     }
 
     @Test
