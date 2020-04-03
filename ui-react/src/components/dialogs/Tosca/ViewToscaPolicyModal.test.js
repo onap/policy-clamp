@@ -78,7 +78,7 @@ describe('Verify ViewToscaPolicyModal', () => {
 		setTimeout(
     () =>
       myMockFunc().catch(e => {
-        console.log(e);
+        console.info(e);
       }),
     100
   );

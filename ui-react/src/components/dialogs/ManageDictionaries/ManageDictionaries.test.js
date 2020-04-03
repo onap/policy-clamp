@@ -74,7 +74,7 @@ describe('Verify ManageDictionaries', () => {
 	it('Test API Rejection', () => {
 		const myMockFunc  = fetch.mockImplementationOnce(() => Promise.reject('error'));
 		setTimeout( () => myMockFunc().catch(e => {
-			console.log(e);
+			console.info(e);
 		}),
 		100
 		);
