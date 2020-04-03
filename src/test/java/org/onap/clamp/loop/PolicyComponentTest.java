@@ -263,6 +263,10 @@ public class PolicyComponentTest {
                 new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null, "pdpGroup1", "pdpSubgroup1");
         loopTest.addMicroServicePolicy(microServicePolicy);
 
+        MicroServicePolicy microServicePolicy2 = new MicroServicePolicy("configPolicyTest2", policyModel1, true,
+                new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null, "pdpGroup2", "pdpSubgroup1");
+        loopTest.addMicroServicePolicy(microServicePolicy2);
+
         PolicyModel policyModel2 = new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0");
         OperationalPolicy opPolicy =
                 new OperationalPolicy("opPolicy", new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class),
@@ -280,5 +284,7 @@ public class PolicyComponentTest {
         String expectedRes = ResourceFileUtil.getResourceAsString("tosca/pdp-group-policy-payload.json");
 
         assertThat(payload).isEqualTo(expectedRes);
+
+        assertThat(PolicyComponent.listPolicyNamesPdpGroup(loopTest)).containsExactlyInAnyOrder("opPolicy","configPolicyTest","configPolicyTest2");
     }
 }

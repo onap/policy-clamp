@@ -27,6 +27,16 @@
               "version": "1.0.0"
             }
           ]
+        },
+        {
+          "pdpType": "pdpSubgroup1",
+          "action": "POST",
+          "policies": [
+            {
+              "name": "configPolicyTest2",
+              "version": "1.0.0"
+            }
+          ]
         }
       ]
     }

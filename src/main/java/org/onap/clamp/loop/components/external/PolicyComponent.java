@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import javax.persistence.Transient;
 import org.apache.camel.Exchange;
@@ -53,7 +54,7 @@ public class PolicyComponent extends ExternalComponent {
     public static final ExternalComponentState SENT_AND_DEPLOYED = new ExternalComponentState("SENT_AND_DEPLOYED",
             "The policies defined have been created and deployed on the policy engine", 10);
     public static final ExternalComponentState UNKNOWN = new ExternalComponentState("UNKNOWN",
-            "The current status is not clear. Need to regresh the status to get the current status.", 0);
+            "The current status is not clear. Need to refresh the status to get the current status.", 0);
 
     /**
      * Default constructor.
@@ -79,7 +80,7 @@ public class PolicyComponent extends ExternalComponent {
      * @return The json, payload to send
      */
     public static String createPoliciesPayloadPdpGroup(Loop loop) {
-        HashMap<String, HashMap<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
+        Map<String, Map<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
             updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
                     opPolicy.getName(),
@@ -102,21 +103,21 @@ public class PolicyComponent extends ExternalComponent {
                                           String pdpSubGroup,
                                           String policyName,
                                           String policyModelVersion,
-                                          HashMap<String, HashMap<String,
+                                          Map<String, Map<String,
                                                   List<JsonObject>>> pdpGroupMap) {
         JsonObject policyJson = new JsonObject();
         policyJson.addProperty("name", policyName);
         policyJson.addProperty("version", policyModelVersion);
-        HashMap<String, List<JsonObject>> pdpSubGroupMap;
+        Map<String, List<JsonObject>> pdpSubGroupMap;
         List<JsonObject> policyList;
         if (pdpGroupMap.get(pdpGroup) == null) {
-            pdpSubGroupMap = new HashMap<String, List<JsonObject>>();
-            policyList = new LinkedList<JsonObject>();
+            pdpSubGroupMap = new HashMap<>();
+            policyList = new LinkedList<>();
         }
         else {
             pdpSubGroupMap = pdpGroupMap.get(pdpGroup);
             if (pdpSubGroupMap.get(pdpSubGroup) == null) {
-                policyList = new LinkedList<JsonObject>();
+                policyList = new LinkedList<>();
             }
             else {
                 policyList = (List<JsonObject>) pdpSubGroupMap.get(pdpSubGroup);
@@ -128,18 +129,17 @@ public class PolicyComponent extends ExternalComponent {
     }
 
     private static JsonObject generateActivatePdpGroupPayload(
-            HashMap<String, HashMap<String, List<JsonObject>>> pdpGroupMap) {
+            Map<String, Map<String, List<JsonObject>>> pdpGroupMap) {
         JsonArray payloadArray = new JsonArray();
-        for (Entry<String, HashMap<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
+        for (Entry<String, Map<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
             JsonObject pdpGroupNode = new JsonObject();
             JsonArray subPdpArray = new JsonArray();
             pdpGroupNode.addProperty("name", pdpGroupInfo.getKey());
             pdpGroupNode.add("deploymentSubgroups", subPdpArray);
 
-            JsonObject pdpSubGroupNode = new JsonObject();
-            subPdpArray.add(pdpSubGroupNode);
-
             for (Entry<String, List<JsonObject>> pdpSubGroupInfo : pdpGroupInfo.getValue().entrySet()) {
+                JsonObject pdpSubGroupNode = new JsonObject();
+                subPdpArray.add(pdpSubGroupNode);
                 pdpSubGroupNode.addProperty("pdpType", pdpSubGroupInfo.getKey());
                 pdpSubGroupNode.addProperty("action", "POST");
 
@@ -172,6 +172,7 @@ public class PolicyComponent extends ExternalComponent {
         for (MicroServicePolicy microServicePolicy : loop.getMicroServicePolicies()) {
             policyNamesList.add(microServicePolicy.getName());
         }
+        logger.info("Policies that will be removed from PDP:  " + policyNamesList);
         return policyNamesList;
     }
 
