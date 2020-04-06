@@ -114,27 +114,50 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       render={[Function]}
     />
     <GlobalStyleComponent />
-    <Alert
-      closeLabel="Close alert"
-      dismissible={true}
-      onClose={[Function]}
-      show={false}
-      transition={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "defaultProps": Object {
-            "appear": false,
-            "in": false,
-            "mountOnEnter": false,
-            "timeout": 300,
-            "unmountOnExit": false,
-          },
-          "displayName": "Fade",
-          "render": [Function],
+    <div>
+      <Alert
+        closeLabel="Close alert"
+        dismissible={true}
+        onClose={[Function]}
+        show={false}
+        transition={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "defaultProps": Object {
+              "appear": false,
+              "in": false,
+              "mountOnEnter": false,
+              "timeout": 300,
+              "unmountOnExit": false,
+            },
+            "displayName": "Fade",
+            "render": [Function],
+          }
         }
-      }
-      variant="danger"
-    />
+        variant="success"
+      />
+      <Alert
+        closeLabel="Close alert"
+        dismissible={true}
+        onClose={[Function]}
+        show={false}
+        transition={
+          Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "defaultProps": Object {
+              "appear": false,
+              "in": false,
+              "mountOnEnter": false,
+              "timeout": 300,
+              "unmountOnExit": false,
+            },
+            "displayName": "Fade",
+            "render": [Function],
+          }
+        }
+        variant="danger"
+      />
+    </div>
     <Navbar
       collapseOnSelect={false}
       expand={true}

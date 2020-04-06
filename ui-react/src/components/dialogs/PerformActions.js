@@ -52,12 +52,12 @@ export default class PerformActions extends React.Component {
 		const loopName = this.state.loopName;
 
 		LoopActionService.performAction(loopName, action).then(pars => {
-			this.props.showAlert("Action " + action + " successfully performed");
+			this.props.showSucAlert("Action " + action + " successfully performed");
 			// refresh status and update loop logs
 			this.refreshStatus(loopName);
 		})
 		.catch(error => {
-			this.props.showAlert("Action " + action + " failed");
+			this.props.showFailAlert("Action " + action + " failed");
 			// refresh status and update loop logs
 			this.refreshStatus(loopName);
 		});

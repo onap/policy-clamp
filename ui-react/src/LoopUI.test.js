@@ -66,7 +66,8 @@ describe('Verify LoopUI', () => {
 		const component = shallow(<LoopUI />)
 		component.setState({
 			loopName: "testLoopName",
-			showAlert: false 
+			showSucAlert: false,
+			showFailAlert: false 
 		});
 		await flushPromises();
 		expect(component).toMatchSnapshot();
@@ -158,15 +159,22 @@ describe('Verify LoopUI', () => {
 
 	test('Test alert methods', () => {
 		const component = shallow(<LoopUI />)
-		expect(component.state('showAlert')).toEqual(false);
+		expect(component.state('showSucAlert')).toEqual(false);
 
 		const instance = component.instance();
-		instance.showAlert("testAlert");
-		expect(component.state('showAlert')).toEqual(true);
+		instance.showSucAlert("testAlert");
+		expect(component.state('showSucAlert')).toEqual(true);
+		expect(component.state('showFailAlert')).toEqual(false);
 		expect(component.state('showMessage')).toEqual("testAlert");
 
 		instance.disableAlert();
 			
-		expect(component.state('showAlert')).toEqual(false);
+		expect(component.state('showSucAlert')).toEqual(false);
+		expect(component.state('showFailAlert')).toEqual(false);
+
+		instance.showFailAlert("testAlert2");
+		expect(component.state('showSucAlert')).toEqual(false);
+		expect(component.state('showFailAlert')).toEqual(true);
+		expect(component.state('showMessage')).toEqual("testAlert2");
 	})
 });
