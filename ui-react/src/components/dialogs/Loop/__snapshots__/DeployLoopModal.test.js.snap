@@ -56,6 +56,7 @@ exports[`Verify DeployLoopModal Test the render method 1`] = `
       </Styled(FormGroup)>
     </Tab>
   </Tabs>
+  <div />
   <ModalFooter>
     <Button
       active={false}
