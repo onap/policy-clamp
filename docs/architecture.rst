@@ -1,6 +1,7 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
 .. Copyright (c) 2017-2018 AT&T Intellectual Property.  All rights reserved.
+.. _architecture:
 
 Clamp in ONAP Architecture
 --------------------------
