@@ -40,78 +40,204 @@
 						"resource-assignment": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": "",
-									"service-instance-id": "",
-									"vnf-id": "",
-									"action-name": "",
-									"scope-type": "",
-									"hostname": "",
-									"vnf_name": ""
+									"request-id": {
+										"type": "string",
+										"required": true
+									},
+									"service-instance-id": {
+										"type": "string",
+										"required": true
+									},
+									"vnf-id": {
+										"type": "string",
+										"required": true
+									},
+									"action-name": {
+										"type": "string",
+										"required": true
+									},
+									"scope-type": {
+										"type": "string",
+										"required": true
+									},
+									"hostname": {
+										"type": "string",
+										"required": true
+									},
+									"vnf_name": {
+										"type": "string",
+										"required": true
+									}
 								}
 							}
 						},
 						"activate": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": "",
-									"service-instance-id": "",
-									"vnf-id": "",
-									"action-name": "",
-									"scope-type": "",
-									"hostname": "",
-									"vnf_name": ""
+									"request-id": {
+										"type": "string",
+										"required": true
+									},
+									"service-instance-id": {
+										"type": "string",
+										"required": true
+									},
+									"vnf-id": {
+										"type": "string",
+										"required": true
+									},
+									"action-name": {
+										"type": "string",
+										"required": true
+									},
+									"scope-type": {
+										"type": "string",
+										"required": true
+									},
+									"hostname": {
+										"type": "string",
+										"required": true
+									},
+									"vnf_name": {
+										"type": "string",
+										"required": true
+									}
 								}
 							}
 						},
 						"activate-restconf": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": "",
-									"service-instance-id": "",
-									"vnf-id": "",
-									"action-name": "",
-									"scope-type": "",
-									"hostname": "",
-									"vnf_name": ""
+									"request-id": {
+										"type": "string",
+										"required": true
+									},
+									"service-instance-id": {
+										"type": "string",
+										"required": true
+									},
+									"vnf-id": {
+										"type": "string",
+										"required": true
+									},
+									"action-name": {
+										"type": "string",
+										"required": true
+									},
+									"scope-type": {
+										"type": "string",
+										"required": true
+									},
+									"hostname": {
+										"type": "string",
+										"required": true
+									},
+									"vnf_name": {
+										"type": "string",
+										"required": true
+									}
 								}
 							}
 						},
 						"activate-cli": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": "",
-									"service-instance-id": "",
-									"vnf-id": "",
-									"action-name": "",
-									"scope-type": "",
-									"hostname": "",
-									"vnf_name": ""
+									"request-id": {
+										"type": "string",
+										"required": true
+									},
+									"service-instance-id": {
+										"type": "string",
+										"required": true
+									},
+									"vnf-id": {
+										"type": "string",
+										"required": true
+									},
+									"action-name": {
+										"type": "string",
+										"required": true
+									},
+									"scope-type": {
+										"type": "string",
+										"required": true
+									},
+									"hostname": {
+										"type": "string",
+										"required": true
+									},
+									"vnf_name": {
+										"type": "string",
+										"required": true
+									}
 								}
 							}
 						},
 						"assign-activate": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": "",
-									"service-instance-id": "",
-									"vnf-id": "",
-									"action-name": "",
-									"scope-type": "",
-									"hostname": "",
-									"vnf_name": ""
+									"request-id": {
+										"type": "string",
+										"required": true
+									},
+									"service-instance-id": {
+										"type": "string",
+										"required": true
+									},
+									"vnf-id": {
+										"type": "string",
+										"required": true
+									},
+									"action-name": {
+										"type": "string",
+										"required": true
+									},
+									"scope-type": {
+										"type": "string",
+										"required": true
+									},
+									"hostname": {
+										"type": "string",
+										"required": true
+									},
+									"vnf_name": {
+										"type": "string",
+										"required": true
+									}
 								}
 							}
 						},
 						"imperative-test-wf": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": "",
-									"service-instance-id": "",
-									"vnf-id": "",
-									"action-name": "",
-									"scope-type": "",
-									"hostname": "",
-									"vnf_name": ""
+									"request-id": {
+										"type": "string",
+										"required": true
+									},
+									"service-instance-id": {
+										"type": "string",
+										"required": true
+									},
+									"vnf-id": {
+										"type": "string",
+										"required": true
+									},
+									"action-name": {
+										"type": "string",
+										"required": true
+									},
+									"scope-type": {
+										"type": "string",
+										"required": true
+									},
+									"hostname": {
+										"type": "string",
+										"required": true
+									},
+									"vnf_name": {
+										"type": "string",
+										"required": true
+									}
 								}
 							}
 						} 
