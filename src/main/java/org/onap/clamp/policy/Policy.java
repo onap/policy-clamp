@@ -284,4 +284,6 @@ public abstract class Policy extends AuditEntity {
                 .append(blueprintFilename.replaceAll(".yaml", ""));
         return buffer.toString().replace('.', '_').replaceAll(" ", "");
     }
+
+    public abstract Boolean isLegacy();
 }

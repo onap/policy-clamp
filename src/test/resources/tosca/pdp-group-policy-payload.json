@@ -23,6 +23,14 @@
           "action": "POST",
           "policies": [
             {
+              "name": "opLegacyPolicy",
+              "version": "1.0.0"
+            },
+            {
+              "name": "guard1",
+              "version": "1.0.0"
+            },
+            {
               "name": "opPolicy",
               "version": "1.0.0"
             }

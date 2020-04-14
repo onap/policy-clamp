@@ -28,7 +28,6 @@ import com.att.eelf.configuration.EELFManager;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,25 +75,33 @@ public class PolicyComponent extends ExternalComponent {
     /**
      * Generates the Json that must be sent to policy to add all policies to Active
      * PDP group.
-     *
+     * @param loop the loop object
+     * @param action POST (to add policy to group) or DELETE (to delete policy from group)
      * @return The json, payload to send
      */
-    public static String createPoliciesPayloadPdpGroup(Loop loop) {
+    public static String createPoliciesPayloadPdpGroup(Loop loop, String action) {
         Map<String, Map<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
             updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
                     opPolicy.getName(),
-                    opPolicy.getPolicyModel().getVersion(), pdpGroupMap);
+                    "1.0.0", pdpGroupMap);
+            if (opPolicy.isLegacy()) {
+                for (String guardName:opPolicy.createGuardPolicyPayloads().keySet()) {
+                    updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
+                            guardName,
+                            "1.0.0", pdpGroupMap);
+                }
+            }
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
             updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(),
                     msPolicy.getName(),
-                    msPolicy.getPolicyModel().getVersion(), pdpGroupMap);
+                    "1.0.0", pdpGroupMap);
         }
 
         String payload = new GsonBuilder().setPrettyPrinting().create()
-                .toJson(generateActivatePdpGroupPayload(pdpGroupMap));
+                .toJson(generateActivatePdpGroupPayload(pdpGroupMap, action));
         logger.info("PdpGroup policy payload: " + payload);
         return payload;
     }
@@ -102,12 +109,12 @@ public class PolicyComponent extends ExternalComponent {
     private static void updatePdpGroupMap(String pdpGroup,
                                           String pdpSubGroup,
                                           String policyName,
-                                          String policyModelVersion,
+                                          String policyVersion,
                                           Map<String, Map<String,
                                                   List<JsonObject>>> pdpGroupMap) {
         JsonObject policyJson = new JsonObject();
         policyJson.addProperty("name", policyName);
-        policyJson.addProperty("version", policyModelVersion);
+        policyJson.addProperty("version", policyVersion);
         Map<String, List<JsonObject>> pdpSubGroupMap;
         List<JsonObject> policyList;
         if (pdpGroupMap.get(pdpGroup) == null) {
@@ -129,7 +136,7 @@ public class PolicyComponent extends ExternalComponent {
     }
 
     private static JsonObject generateActivatePdpGroupPayload(
-            Map<String, Map<String, List<JsonObject>>> pdpGroupMap) {
+            Map<String, Map<String, List<JsonObject>>> pdpGroupMap, String action) {
         JsonArray payloadArray = new JsonArray();
         for (Entry<String, Map<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
             JsonObject pdpGroupNode = new JsonObject();
@@ -141,7 +148,7 @@ public class PolicyComponent extends ExternalComponent {
                 JsonObject pdpSubGroupNode = new JsonObject();
                 subPdpArray.add(pdpSubGroupNode);
                 pdpSubGroupNode.addProperty("pdpType", pdpSubGroupInfo.getKey());
-                pdpSubGroupNode.addProperty("action", "POST");
+                pdpSubGroupNode.addProperty("action", action);
 
                 JsonArray policyArray = new JsonArray();
                 pdpSubGroupNode.add("policies", policyArray);
@@ -155,25 +162,6 @@ public class PolicyComponent extends ExternalComponent {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("groups", payloadArray);
         return jsonObject;
-    }
-
-    /**
-     * Generates the list of policy names that must be send/remove to/from active
-     * PDP group.
-     *
-     * @return A list of policy names
-     */
-    public static List<String> listPolicyNamesPdpGroup(Loop loop) {
-        List<String> policyNamesList = new ArrayList<>();
-        for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
-            policyNamesList.add(opPolicy.getName());
-            policyNamesList.addAll(opPolicy.createGuardPolicyPayloads().keySet());
-        }
-        for (MicroServicePolicy microServicePolicy : loop.getMicroServicePolicies()) {
-            policyNamesList.add(microServicePolicy.getName());
-        }
-        logger.info("Policies that will be removed from PDP:  " + policyNamesList);
-        return policyNamesList;
     }
 
     private static ExternalComponentState findNewState(boolean found, boolean deployed) {

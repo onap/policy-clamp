@@ -24,7 +24,6 @@
 package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -32,6 +31,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.onap.clamp.clds.config.LegacyOperationalPolicyController;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.components.external.ExternalComponentState;
 import org.onap.clamp.loop.components.external.PolicyComponent;
@@ -267,7 +267,8 @@ public class PolicyComponentTest {
                 new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null, "pdpGroup2", "pdpSubgroup1");
         loopTest.addMicroServicePolicy(microServicePolicy2);
 
-        PolicyModel policyModel2 = new PolicyModel("onap.policies.controlloop.Operational", null, "1.0.0");
+        PolicyModel policyModel2 = new PolicyModel(LegacyOperationalPolicyController.OPERATIONAL_POLICY_LEGACY, null,
+                "1.0.0");
         OperationalPolicy opPolicy =
                 new OperationalPolicy("opPolicy", new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class),
                         new Gson().fromJson("{\"jsonschema\":\"schema\"}", JsonObject.class), policyModel2, null,
@@ -275,16 +276,22 @@ public class PolicyComponentTest {
                         "pdpSubgroup2");
 
         loopTest.addOperationalPolicy(opPolicy);
+        OperationalPolicy opLegacyPolicy =
+                new OperationalPolicy("opLegacyPolicy", new Gson().fromJson(
+                        "{\"guard_policies\":[{\"policy-id\":\"guard1\"}]}", JsonObject.class),
+                        new Gson().fromJson("{\"jsonschema\":\"schema\"}", JsonObject.class), policyModel2, null,
+                        "pdpGroup2",
+                        "pdpSubgroup2");
+
+        loopTest.addOperationalPolicy(opLegacyPolicy);
 
         LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", "svg", 1, null);
         loopTemplate.setDcaeBlueprintId("UUID-blueprint");
         loopTest.setLoopTemplate(loopTemplate);
 
-        String payload = PolicyComponent.createPoliciesPayloadPdpGroup(loopTest);
+        String payload = PolicyComponent.createPoliciesPayloadPdpGroup(loopTest, "POST");
         String expectedRes = ResourceFileUtil.getResourceAsString("tosca/pdp-group-policy-payload.json");
 
         assertThat(payload).isEqualTo(expectedRes);
-
-        assertThat(PolicyComponent.listPolicyNamesPdpGroup(loopTest)).containsExactlyInAnyOrder("opPolicy","configPolicyTest","configPolicyTest2");
     }
 }
