@@ -63,7 +63,8 @@ describe('Verify DeployLoopModal', () => {
 		const flushPromises = () => new Promise(setImmediate);
 		const historyMock = { push: jest.fn() };
 		const updateLoopFunction = jest.fn();
-		const showAlert = jest.fn();
+		const showSucAlert = jest.fn();
+		const showFailAlert = jest.fn();
 		const handleSave = jest.spyOn(DeployLoopModal.prototype,'handleSave');
 		LoopService.updateGlobalProperties = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
@@ -88,7 +89,7 @@ describe('Verify DeployLoopModal', () => {
 		});
 
 		const component = shallow(<DeployLoopModal history={historyMock} 
-						loopCache={loopCache} updateLoopFunction={updateLoopFunction} showAlert={showAlert} />)
+						loopCache={loopCache} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
 
 		component.find('[variant="primary"]').prop('onClick')();
 		await flushPromises();

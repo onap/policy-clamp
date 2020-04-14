@@ -44,12 +44,12 @@ export default class RefreshStatus extends React.Component {
 	componentDidMount() {
 		// refresh status and update loop logs
 		LoopActionService.refreshStatus(this.state.loopName).then(data => {
-			this.props.showAlert("Status successfully refreshed");
+			this.props.showSucAlert("Status successfully refreshed");
 			this.props.updateLoopFunction(data);
 			this.props.history.push('/');
 		})
 		.catch(error => {
-			this.props.showAlert("Status refreshing failed");
+			this.props.showFailAlert("Status refreshing failed");
 			this.props.history.push('/');
 		});
 	}

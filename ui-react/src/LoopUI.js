@@ -109,7 +109,8 @@ export default class LoopUI extends React.Component {
 		userName: null,
 		loopName: OnapConstants.defaultLoopName,
 		loopCache: new LoopCache({}),
-		showAlert: false
+		showSucAlert: false,
+		showFailAlert: false
 	};
 
 	constructor() {
@@ -119,7 +120,8 @@ export default class LoopUI extends React.Component {
 		this.updateLoopCache = this.updateLoopCache.bind(this);
 		this.loadLoop = this.loadLoop.bind(this);
 		this.closeLoop = this.closeLoop.bind(this);
-		this.showAlert =  this.showAlert.bind(this);
+		this.showSucAlert =  this.showSucAlert.bind(this);
+		this.showFailAlert =  this.showFailAlert.bind(this);
 		this.disableAlert =  this.disableAlert.bind(this);
 	}
 
@@ -168,9 +170,14 @@ export default class LoopUI extends React.Component {
 
 	renderAlertBar() {
 		return (
-				<Alert variant="danger" show={this.state.showAlert} onClose={this.disableAlert} dismissible>
+			<div>
+				<Alert variant="success" show={this.state.showSucAlert} onClose={this.disableAlert} dismissible>
 					{this.state.showMessage}
 				</Alert>
+				<Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
+					{this.state.showMessage}
+				</Alert>
+			</div>
 		);
 	}
 
@@ -223,12 +230,16 @@ export default class LoopUI extends React.Component {
 		console.info(this.state.loopName+" loop loaded successfully");
 	}
 
-	showAlert(message) {
-		this.setState ({ showAlert: true, showMessage:message });
+	showSucAlert(message) {
+		this.setState ({ showSucAlert: true, showMessage:message });
 	}
 
+	showFailAlert(message) {
+		this.setState ({ showFailAlert: true, showMessage:message });
+	}
+ 
 	disableAlert() {
-		this.setState ({ showAlert: false });
+		this.setState ({ showSucAlert: false, showFailAlert: false });
 	}
 
 	loadLoop(loopName) {
@@ -258,7 +269,7 @@ export default class LoopUI extends React.Component {
 				<Route path="/ViewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
 				<Route path="/ManageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
 				<Route path="/operationalPolicyModal"
-					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
+					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
 				<Route path="/policyModal/:policyInstanceType/:policyName" render={(routeProps) => (<PolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/configurationPolicyModal/:policyName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/createLoop" render={(routeProps) => (<CreateLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
@@ -268,13 +279,13 @@ export default class LoopUI extends React.Component {
 
 				<Route path="/userInfo" render={(routeProps) => (<UserInfoModal {...routeProps} />)} />
 				<Route path="/closeLoop" render={this.closeLoop} />
-				<Route path="/submit" render={(routeProps) => (<PerformAction {...routeProps} loopAction="submit" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
-				<Route path="/stop" render={(routeProps) => (<PerformAction {...routeProps} loopAction="stop" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
-				<Route path="/restart" render={(routeProps) => (<PerformAction {...routeProps} loopAction="restart" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
-				<Route path="/delete" render={(routeProps) => (<PerformAction {...routeProps} loopAction="delete" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
-				<Route path="/undeploy" render={(routeProps) => (<PerformAction {...routeProps} loopAction="undeploy" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
-				<Route path="/deploy" render={(routeProps) => (<DeployLoopModal {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
-				<Route path="/refreshStatus" render={(routeProps) => (<RefreshStatus {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showAlert={this.showAlert}/>)} />
+				<Route path="/submit" render={(routeProps) => (<PerformAction {...routeProps} loopAction="submit" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
+				<Route path="/stop" render={(routeProps) => (<PerformAction {...routeProps} loopAction="stop" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
+				<Route path="/restart" render={(routeProps) => (<PerformAction {...routeProps} loopAction="restart" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
+				<Route path="/delete" render={(routeProps) => (<PerformAction {...routeProps} loopAction="delete" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
+				<Route path="/undeploy" render={(routeProps) => (<PerformAction {...routeProps} loopAction="undeploy" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
+				<Route path="/deploy" render={(routeProps) => (<DeployLoopModal {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
+				<Route path="/refreshStatus" render={(routeProps) => (<RefreshStatus {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
 				<Route path="/logout" render={this.logout} />
 				<GlobalClampStyle />
 					{this.renderAlertBar()}

@@ -35,9 +35,10 @@ describe('Verify RefreshStatus', () => {
 	it('Test refresh status failed', async () => {
 		const flushPromises = () => new Promise(setImmediate);
 		const historyMock = { push: jest.fn() };
-		const showAlert = jest.fn();
+		const showSucAlert = jest.fn();
+		const showFailAlert = jest.fn();
 
-		const component = shallow(<RefreshStatus loopCache={loopCache} history={historyMock} showAlert={showAlert} />)
+		const component = shallow(<RefreshStatus loopCache={loopCache} history={historyMock} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
 		await flushPromises();
 		component.update();
 
@@ -48,7 +49,8 @@ describe('Verify RefreshStatus', () => {
 		const flushPromises = () => new Promise(setImmediate);
 		const historyMock = { push: jest.fn() };
 		const updateLoopFunction = jest.fn();
-		const showAlert = jest.fn();
+		const showSucAlert = jest.fn();
+		const showFailAlert = jest.fn();
 
 		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
@@ -59,7 +61,7 @@ describe('Verify RefreshStatus', () => {
 		});
 
 		const component = shallow(<RefreshStatus loopCache={loopCache} 
-						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showAlert={showAlert} />)
+						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
 		await flushPromises();
 		component.update();
 

@@ -84,12 +84,12 @@ export default class DeployLoopModal extends React.Component {
 		// save the global propserties
 		LoopService.updateGlobalProperties(loopName, this.state.temporaryPropertiesJson).then(resp => {
 			LoopActionService.performAction(loopName, "deploy").then(pars => {
-				this.props.showAlert("Action deploy successfully performed");
+				this.props.showSucAlert("Action deploy successfully performed");
 				// refresh status and update loop logs
 				this.refreshStatus(loopName);
 			})
 			.catch(error => {
-				this.props.showAlert("Action deploy failed");
+				this.props.showFailAlert("Action deploy failed");
 				// refresh status and update loop logs
 				this.refreshStatus(loopName);
 			});
@@ -103,7 +103,7 @@ export default class DeployLoopModal extends React.Component {
 			this.props.updateLoopFunction(data);
 		})
 		.catch(error => {
-			this.props.showAlert("Refresh status failed");
+			this.props.showFailAlert("Refresh status failed");
 		});
 	}
 	handleChange(event) {
