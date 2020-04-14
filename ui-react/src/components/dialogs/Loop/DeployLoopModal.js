@@ -29,6 +29,12 @@ import Form from 'react-bootstrap/Form';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 import styled from 'styled-components';
+import Spinner from 'react-bootstrap/Spinner'
+
+const StyledSpinnerDiv = styled.div`
+	justify-content: center !important;
+	display: flex !important;
+`;
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
@@ -48,6 +54,7 @@ export default class DeployLoopModal extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.refreshStatus = this.refreshStatus.bind(this);
 		this.renderDeployParam = this.renderDeployParam.bind(this);
+		this.renderSpinner = this.renderSpinner.bind(this);
 
 		const propertiesJson = JSON.parse(JSON.stringify(this.props.loopCache.getGlobalProperties()));
 		this.state = {
@@ -79,9 +86,24 @@ export default class DeployLoopModal extends React.Component {
 		this.props.history.push('/');
 	}
 
+	renderSpinner() {
+		if (this.state.deploying) {
+			return (
+				<StyledSpinnerDiv>
+					<Spinner animation="border" role="status">
+						<span className="sr-only">Loading...</span>
+					</Spinner>
+				</StyledSpinnerDiv>
+			);
+		} else {
+			return (<div></div>);
+		}
+	}
+
 	handleSave() {
 		const loopName = this.props.loopCache.getLoopName();
 		// save the global propserties
+		this.setState({ deploying: true });
 		LoopService.updateGlobalProperties(loopName, this.state.temporaryPropertiesJson).then(resp => {
 			LoopActionService.performAction(loopName, "deploy").then(pars => {
 				this.props.showSucAlert("Action deploy successfully performed");
@@ -94,16 +116,18 @@ export default class DeployLoopModal extends React.Component {
 				this.refreshStatus(loopName);
 			});
 		});
-		this.setState({ show: false });
-		this.props.history.push('/');
 	}
 
 	refreshStatus(loopName) {
 		LoopActionService.refreshStatus(loopName).then(data => {
 			this.props.updateLoopFunction(data);
+			this.setState({ show: false, deploying: false });
+			this.props.history.push('/');
 		})
 		.catch(error => {
 			this.props.showFailAlert("Refresh status failed");
+			this.setState({ show: false, deploying: false  });
+			this.props.history.push('/');
 		});
 	}
 	handleChange(event) {
@@ -144,6 +168,7 @@ export default class DeployLoopModal extends React.Component {
 						<Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
 						{this.renderDeployParamTabs()}
 						</Tabs>
+						{this.renderSpinner()}
 						<Modal.Footer>
 							<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
 							<Button variant="primary" type="submit" onClick={this.handleSave}>Deploy</Button>
