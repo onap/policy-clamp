@@ -24,13 +24,17 @@
 
 package org.onap.clamp.policy.operational;
 
+import static org.onap.clamp.clds.tosca.update.execution.cds.ToscaMetadataCdsProcess.createInputPropertiesForPayload;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.util.Map.Entry;
+
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
 import org.onap.clamp.loop.service.Service;
@@ -70,7 +74,7 @@ public class OperationalPolicyRepresentationBuilder {
 
             for (JsonElement actor : actors) {
                 if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get("title").getAsString())) {
-                    actor.getAsJsonObject().get("properties").getAsJsonObject().get("type").getAsJsonObject()
+                    actor.getAsJsonObject().get("properties").getAsJsonObject().get("recipe").getAsJsonObject()
                             .get("anyOf").getAsJsonArray()
                             .addAll(createAnyOfArrayForCdsRecipe(modelJson));
                 }
@@ -195,8 +199,9 @@ public class OperationalPolicyRepresentationBuilder {
                 for (Entry<String, JsonElement> workflowsEntry : workflows.entrySet()) {
                     JsonObject obj = new JsonObject();
                     obj.addProperty("title", workflowsEntry.getKey());
+                    obj.addProperty("type", "object");
                     obj.add("properties", createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
-                            controllerProperties));
+                            controllerProperties, workflowsEntry.getKey()));
                     schemaArray.add(obj);
                 }
 
@@ -205,26 +210,27 @@ public class OperationalPolicyRepresentationBuilder {
         return schemaArray;
     }
 
-    private static JsonObject createPayloadProperty(JsonObject workFlow, JsonObject controllerProperties) {
-        JsonObject type = new JsonObject();
-        type.addProperty("title", "Payload (YAML)");
-        type.addProperty("type", "string");
-        type.addProperty("default", createDefaultStringForPayload(workFlow, controllerProperties));
-        type.addProperty("format", "textarea");
+    private static JsonObject createPayloadProperty(JsonObject workFlow,
+                                                    JsonObject controllerProperties, String workFlowName) {
+        JsonObject payload = new JsonObject();
+        payload.addProperty("title", "Payload (YAML)");
+        payload.addProperty("type", "object");
+        payload.add("properties", createInputPropertiesForPayload(workFlow,
+                                                                  controllerProperties));
         JsonObject properties = new JsonObject();
-        properties.add("type", type);
+        properties.add("recipe", createRecipeForCdsWorkflow(workFlowName));
+        properties.add("payload", payload);
         return properties;
     }
 
-    private static String createDefaultStringForPayload(JsonObject workFlow, JsonObject controllerProperties) {
-        String artifactName = controllerProperties.get("sdnc_model_name").toString();
-        String artifactVersion = controllerProperties.get("sdnc_model_version").toString();
-        String data = workFlow.getAsJsonObject("inputs").toString();
-        StringBuilder builder = new StringBuilder("'").append("artifact_name : ").append(artifactName).append("\n")
-                .append("artifact_version : ").append(artifactVersion).append("\n")
-                .append("mode : async").append("\n")
-                .append("data : ").append("'").append("\\").append("'").append(data).append("\\").append("'")
-                .append("'");
-        return builder.toString();
+    private static JsonObject createRecipeForCdsWorkflow(String workflow) {
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("title", "recipe");
+        recipe.addProperty("type", "string");
+        recipe.addProperty("default", workflow);
+        JsonObject options = new JsonObject();
+        options.addProperty("hidden", true);
+        recipe.add("options", options);
+        return recipe;
     }
 }

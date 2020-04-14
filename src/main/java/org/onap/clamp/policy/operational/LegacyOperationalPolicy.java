@@ -201,11 +201,13 @@ public class LegacyOperationalPolicy {
             policy.getAsJsonObject().remove(ACTOR);
             String actorStr = actor.getAsJsonObject().get(ACTOR).getAsString();
             policy.getAsJsonObject().addProperty(ACTOR, actorStr);
-            policy.getAsJsonObject().addProperty(RECIPE, getRecipe(actor));
 
             if ("CDS".equalsIgnoreCase(actorStr)) {
-                addPayloadAttributes(actor.getAsJsonObject(ACTOR).getAsJsonObject(RECIPE), policy);
+                policy.getAsJsonObject().addProperty(RECIPE, getRecipe(actor));
+                addCdsPayloadAttributes(actor.getAsJsonObject(RECIPE), policy);
             } else {
+                policy.getAsJsonObject().addProperty(RECIPE,
+                                                     actor.getAsJsonObject().get(RECIPE).getAsString());
                 addPayloadAttributes(actor, policy);
             }
         }
@@ -226,7 +228,20 @@ public class LegacyOperationalPolicy {
         }
     }
 
+    private static void addCdsPayloadAttributes(JsonObject jsonObject,
+                                             JsonElement policy) {
+        JsonElement payloadElem = jsonObject.getAsJsonObject().get(PAYLOAD);
+        JsonObject payloadObject = payloadElem != null ?
+                payloadElem.getAsJsonObject() : null;
+        if (payloadObject != null) {
+            policy.getAsJsonObject().add(PAYLOAD,
+                                         payloadObject);
+        } else {
+            policy.getAsJsonObject().addProperty(PAYLOAD, "");
+        }
+    }
+
     private static String getRecipe(JsonObject actor) {
-        return actor.getAsJsonObject().get("type").getAsString();
+        return actor.getAsJsonObject().get("recipe").getAsJsonObject().get("recipe").getAsString();
     }
 }

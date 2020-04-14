@@ -26,7 +26,10 @@ package org.onap.clamp.clds.tosca.update.execution.cds;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.util.Map;
+import java.util.Set;
+
 import org.onap.clamp.clds.tosca.update.execution.ToscaMetadataProcess;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.tosca.DictionaryService;
@@ -58,9 +61,11 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     }
 
     private static void generatePayload(JsonObject childObject, Service serviceModel) {
-        generatePayloadPerResource(childObject, "VF", serviceModel);
-        generatePayloadPerResource(childObject, "PNF", serviceModel);
-        addToJsonArray(childObject, "anyOf", createBlankEntry());
+        JsonArray schemaAnyOf = new JsonArray();
+        schemaAnyOf.addAll(createBlankEntry());
+        schemaAnyOf.addAll(generatePayloadPerResource("VF", serviceModel));
+        schemaAnyOf.addAll(generatePayloadPerResource("PNF", serviceModel));
+        addToJsonArray(childObject, "anyOf", schemaAnyOf);
     }
 
     private static void generateOperation(JsonObject childObject, Service serviceModel) {
@@ -92,8 +97,8 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
 
     }
 
-    private static void generatePayloadPerResource(JsonObject childObject, String resourceName,
-                                                   Service serviceModel) {
+    private static JsonArray generatePayloadPerResource(String resourceName,
+                                                        Service serviceModel) {
         JsonArray schemaAnyOf = new JsonArray();
 
         for (Map.Entry<String, JsonElement> entry : serviceModel.getResourceDetails().getAsJsonObject(resourceName)
@@ -105,13 +110,14 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                         .entrySet()) {
                     JsonObject obj = new JsonObject();
                     obj.addProperty("title", workflowsEntry.getKey());
-                    obj.add("properties", createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
-                            controllerProperties));
+                    obj.add("properties",
+                            createInputPropertiesForPayload(workflowsEntry.getValue().getAsJsonObject(),
+                                                            controllerProperties));
                     schemaAnyOf.add(obj);
                 }
             }
         }
-        addToJsonArray(childObject, "anyOf", schemaAnyOf);
+        return schemaAnyOf;
     }
 
     private static JsonArray createBlankEntry() {
@@ -121,20 +127,6 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         blankObject.add("properties", new JsonObject());
         result.add(blankObject);
         return result;
-    }
-
-    private static JsonObject createPayloadProperty(JsonObject workFlow, JsonObject controllerProperties) {
-        JsonObject payloadResult = new JsonObject();
-
-        payloadResult.add("artifact_name",
-                createAnyOfJsonProperty("artifact_name", controllerProperties.get("sdnc_model_name").getAsString()));
-        payloadResult.add("artifact_version",
-                createAnyOfJsonProperty("artifact_version",
-                        controllerProperties.get("sdnc_model_version").getAsString()));
-        payloadResult.add("mode", createAnyOfJsonProperty("mode", "async"));
-
-        payloadResult.add("data", createAnyOfJsonObject("data", workFlow.getAsJsonObject("inputs")));
-        return payloadResult;
     }
 
     private static JsonObject createAnyOfJsonProperty(String name, String defaultValue) {
@@ -157,9 +149,73 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     private static void addToJsonArray(JsonObject childObject, String section, JsonArray value) {
         if (childObject.getAsJsonArray(section) != null) {
             childObject.getAsJsonArray(section).addAll(value);
-        }
-        else {
+        } else {
             childObject.add(section, value);
         }
+    }
+
+    /**
+     * Returns the properties of payload based on the cds work flows.
+     *
+     * @param workFlow cds work flows to update payload
+     * @param controllerProperties cds properties to get blueprint name and
+     *                            version
+     * @return returns the properties of payload
+     */
+    public static JsonObject createInputPropertiesForPayload(JsonObject workFlow,
+                                                             JsonObject controllerProperties) {
+        String artifactName = controllerProperties.get("sdnc_model_name").getAsString();
+        String artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
+        JsonObject inputs = workFlow.getAsJsonObject("inputs");
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("artifact_name", createAnyOfJsonProperty(
+                "artifact name", artifactName));
+        jsonObject.add("artifact_version", createAnyOfJsonProperty(
+                "artifact version", artifactVersion));
+        jsonObject.add("mode", createCdsInputProperty(
+                "mode", "string", "async"));
+        jsonObject.add("data", createDataProperty(inputs));
+
+        return jsonObject;
+    }
+
+    private static JsonObject createDataProperty(JsonObject inputs) {
+        JsonObject data = new JsonObject();
+        data.addProperty("title", "data");
+        data.add("properties", addDataFields(inputs));
+        return data;
+    }
+
+    private static JsonObject addDataFields(JsonObject inputs) {
+        JsonObject jsonObject = new JsonObject();
+        Set<Map.Entry<String, JsonElement>> entrySet = inputs.entrySet();
+        for (Map.Entry<String, JsonElement> entry : entrySet) {
+            String key = entry.getKey();
+            JsonObject inputProperty = inputs.getAsJsonObject(key);
+            if (inputProperty.get("type") == null) {
+                jsonObject.add(entry.getKey(),
+                               createAnyOfJsonObject(key,
+                                                     addDataFields(entry.getValue().getAsJsonObject())));
+            } else {
+                jsonObject.add(entry.getKey(),
+                               createCdsInputProperty(key,
+                                                      inputProperty.get("type").getAsString(),
+                                                      null));
+            }
+        }
+        return jsonObject;
+    }
+
+    private static JsonObject createCdsInputProperty(String title,
+                                                     String type,
+                                                     String defaultValue) {
+        JsonObject property = new JsonObject();
+        property.addProperty("title", title);
+        property.addProperty("type", type);
+        if (defaultValue != null) {
+            property.addProperty("default", defaultValue);
+        }
+        property.addProperty("format", "textarea");
+        return property;
     }
 }

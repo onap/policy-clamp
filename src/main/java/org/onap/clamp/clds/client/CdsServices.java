@@ -136,7 +136,7 @@ public class CdsServices {
             if (isComplexType(type, dataTypes)) {
                 inputObject.add(key, handleComplexType(type, dataTypes));
             } else {
-                inputObject.addProperty(key, "");
+                inputObject.add(key, entry.getValue());
             }
         }
         return inputObject;
