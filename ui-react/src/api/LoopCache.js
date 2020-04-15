@@ -219,4 +219,11 @@ export default class LoopCache {
 	getComponentStates() {
 		return this.loopJsonCache.components;
 	}
+
+	getTemplateName() {
+	    if (this.loopJsonCache["loopTemplate"] !== undefined) {
+        			return this.loopJsonCache["loopTemplate"].name;
+        }
+	    return null;
+	}
 }

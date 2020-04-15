@@ -13,6 +13,8 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       "fontNormal": "black",
       "fontSize": "16px",
       "fontWarning": "#eb238e",
+      "loopLogsHeaderBackgroundColor": "white",
+      "loopLogsHeaderFontColor": "black",
       "loopViewerBackgroundColor": "white",
       "loopViewerFontColor": "yellow",
       "loopViewerHeaderBackgroundColor": "#337ab7",
@@ -199,6 +201,8 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       <styled.div>
         Loop Viewer - 
         Empty (NO loop loaded yet)
+         - (
+        )
       </styled.div>
       <styled.div>
         <withRouter(LoopViewSvg)

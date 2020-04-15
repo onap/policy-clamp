@@ -87,6 +87,9 @@ export const DefaultClampTheme = {
 	loopViewerHeaderBackgroundColor: '#337ab7',
 	loopViewerHeaderFontColor: 'white',
 
+    loopLogsHeaderBackgroundColor:  'white',
+    loopLogsHeaderFontColor: 'black',
+
 	menuBackgroundColor: 'white',
 	menuFontColor: 'black',
 	menuHighlightedBackgroundColor: '#337ab7',

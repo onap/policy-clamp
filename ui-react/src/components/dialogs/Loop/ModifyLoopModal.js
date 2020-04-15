@@ -174,7 +174,7 @@ export default class ModifyLoopModal extends React.Component {
 
 	render() {
 		return (
-			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose}>
+			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static">
 				<Modal.Header closeButton>
 					<Modal.Title>Modify Loop Operational Policies</Modal.Title>
 				</Modal.Header>

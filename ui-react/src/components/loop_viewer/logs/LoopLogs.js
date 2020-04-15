@@ -26,9 +26,9 @@ import LoopCache from '../../../api/LoopCache';
 import styled from 'styled-components';
 
 const LoopLogsHeaderDivStyled = styled.div`
-	background-color: ${props => props.theme.loopViewerHeaderBackgroundColor};
+	background-color: ${props => props.theme.loopLogsHeaderBackgroundColor};
 	padding: 10px 10px;
-	color: ${props => props.theme.loopViewerHeaderFontColor};
+	color: ${props => props.theme.loopLogsHeaderFontColor};
 `
 const TableStyled = styled(Table)`
     

@@ -2,6 +2,7 @@
 
 exports[`Verify ManageDictionaries Test API Successful 1`] = `
 <Styled(Bootstrap(Modal))
+  backdrop="static"
   onHide={[Function]}
   show={true}
   size="xl"

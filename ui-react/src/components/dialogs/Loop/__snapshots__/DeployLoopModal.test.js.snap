@@ -2,6 +2,7 @@
 
 exports[`Verify DeployLoopModal Test the render method 1`] = `
 <Styled(Bootstrap(Modal))
+  backdrop="static"
   onHide={[Function]}
   show={true}
   size="lg"

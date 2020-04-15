@@ -195,7 +195,7 @@ export default class LoopUI extends React.Component {
 	renderLoopViewHeader() {
 		return (
 			<LoopViewHeaderDivStyled>
-				Loop Viewer - {this.state.loopName}
+				Loop Viewer - {this.state.loopName} - ({this.state.loopCache.getTemplateName()})
 			</LoopViewHeaderDivStyled>
 		);
 	}

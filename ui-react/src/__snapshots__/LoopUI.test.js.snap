@@ -176,6 +176,8 @@ exports[`Verify LoopUI Test the render method 1`] = `
     <styled.div>
       Loop Viewer - 
       testLoopName
+       - (
+      )
     </styled.div>
     <styled.div>
       <withRouter(LoopViewSvg)
