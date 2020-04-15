@@ -157,6 +157,11 @@ public class MicroServicePolicy extends Policy implements Serializable {
                         this.getPolicyModel().getPolicyModelType(), serviceModel));
     }
 
+    @Override
+    public Boolean isLegacy() {
+        return false;
+    }
+
     public Boolean getShared() {
         return shared;
     }
