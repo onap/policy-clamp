@@ -91,7 +91,7 @@ public class MicroServicePolicyService implements PolicyService<MicroServicePoli
                                            String deploymentUrl) {
         microServicePolicy.setDcaeDeploymentId(deploymentId);
         microServicePolicy.setDcaeDeploymentStatusUrl(deploymentUrl);
-        microServiceRepository.save(microServicePolicy);
+        microServiceRepository.saveAndFlush(microServicePolicy);
     }
 
 

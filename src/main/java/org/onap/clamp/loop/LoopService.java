@@ -98,7 +98,7 @@ public class LoopService {
     public void updateDcaeDeploymentFields(Loop loop, String deploymentId, String deploymentUrl) {
         loop.setDcaeDeploymentId(deploymentId);
         loop.setDcaeDeploymentStatusUrl(deploymentUrl);
-        loopsRepository.save(loop);
+        loopsRepository.saveAndFlush(loop);
     }
 
     public void updateLoopState(Loop loop, String newState) {
