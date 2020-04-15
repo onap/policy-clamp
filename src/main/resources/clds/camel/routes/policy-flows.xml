@@ -260,7 +260,7 @@
 				</setHeader>
 				<choice>
 					<when>
-						<simple>${body.isLegacy()} == true</simple>
+						<simple>${exchangeProperty[policy].isLegacy()} == true</simple>
 						<setProperty propertyName="policyVersion">
 							<simple>1</simple>
 						</setProperty>
