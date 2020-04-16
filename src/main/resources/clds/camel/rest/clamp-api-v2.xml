@@ -770,15 +770,29 @@
 				</doTry>
 			</route>
 		</put>
-		<put uri="/v2/loop/removeOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}" outType="org.onap.clamp.loop.Loop" produces="application/json">
+		<put uri="/v2/loop/removeOperationaPolicy/{loopName}/policyModel/{policyType}/{policyVersion}/{policyName}" outType="org.onap.clamp.loop.Loop" produces="application/json">
 			<route>
-				<removeHeaders pattern="*" excludePattern="loopName|policyType|policyVersion" />
+				<removeHeaders pattern="*" excludePattern="loopName|policyType|policyVersion|policyName" />
 				<doTry>
 					<to
 							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'REMOVE operational Policy')" />
 					<to
 							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
+					<setProperty propertyName="policyName">
+						<simple>${header.policyName}</simple>
+					</setProperty>
+					<setProperty propertyName="policy">
+						<simple>${exchangeProperty[loopObject].getOperationalPolicy(header.policyName)}</simple>
+					</setProperty>
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">false</simple>
+					</setProperty>
+					<to uri="direct:remove-one-policy-from-active-pdp-group" />
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">false</simple>
+					</setProperty>
+					<to uri="direct:delete-policy" />
 					<to
 							uri="bean:org.onap.clamp.loop.LoopController?method=removeOperationalPolicy(${header.loopName},${header.policyType},${header.policyVersion})" />
 					<to

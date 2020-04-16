@@ -240,8 +240,8 @@ export default class LoopService {
 			});
 	}
 
-	static removeOperationalPolicyType(loopName, policyType, policyVersion) {
-		return fetch('/restservices/clds/v2/loop/removeOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion , {
+	static removeOperationalPolicyType(loopName, policyType, policyVersion, policyName) {
+		return fetch('/restservices/clds/v2/loop/removeOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion + '/' + policyName , {
 			method: 'PUT',
 			headers: {
 				"Content-Type": "application/json"

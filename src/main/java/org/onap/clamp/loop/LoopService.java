@@ -131,7 +131,7 @@ public class LoopService {
      *
      * @param loopName      The loop name
      * @param policyType    The policy model type
-     * @param policyVersion The policy model  version
+     * @param policyVersion The policy model version
      * @return The loop modified
      */
     Loop removeOperationalPolicy(String loopName, String policyType, String policyVersion) {

@@ -137,11 +137,11 @@ public class LoopController {
     }
 
     /**
-     * This method remove an operational policy to a loop instance.
+     * This method removes an operational policy from a loop instance.
      *
      * @param loopName      The loop name
      * @param policyType    The policy model type
-     * @param policyVersion The policy model  version
+     * @param policyVersion The policy model version
      * @return The loop modified
      */
     public Loop removeOperationalPolicy(String loopName, String policyType, String policyVersion) {

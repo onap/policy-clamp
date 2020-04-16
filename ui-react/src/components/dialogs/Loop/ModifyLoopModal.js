@@ -78,6 +78,10 @@ export default class ModifyLoopModal extends React.Component {
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
+			{ title: "Policy Name", field: "policyName",
+             	cellStyle: cellStyle,
+                headerStyle: headerStyle
+            },
 			{ title: "Version", field: "version",
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
@@ -90,7 +94,7 @@ export default class ModifyLoopModal extends React.Component {
 				cellStyle: cellStyle,
 				headerStyle: headerStyle
 			},
-             { title: "Add", field: "updatedDate", editable: 'never',
+             { title: "Created Date", field: "createdDate", editable: 'never',
              	cellStyle: cellStyle,
              	headerStyle: headerStyle
              }
@@ -128,7 +132,9 @@ export default class ModifyLoopModal extends React.Component {
 		var operationalPolicies = this.state.loopCache.getOperationalPolicies();
 		var selectedPolicyModels = [];
 		for (var policy in operationalPolicies) {
-			selectedPolicyModels.push(operationalPolicies[policy]["policyModel"]);
+		    var newRow = operationalPolicies[policy]["policyModel"];
+		    newRow.add("policyName", operationalPolicies[policy].name);
+			selectedPolicyModels.push(newRow);
 		}
 
 		PolicyToscaService.getToscaPolicyModels().then(allToscaModels => {
@@ -167,7 +173,7 @@ export default class ModifyLoopModal extends React.Component {
 	}
 
 	handleRemove() {
-		LoopService.removeOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version);
+		LoopService.removeOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version,this.state.selectedRowData.policyName);
 		this.props.loadLoopFunction(this.state.loopCache.getLoopName());
 		this.handleClose();
 	}
@@ -203,7 +209,7 @@ export default class ModifyLoopModal extends React.Component {
 					<Tab eventKey="remove" title="Remove Operational Policies">
 						<Modal.Body>
 							<MaterialTable
-							title={"Already added Tosca Policy Models"}
+							title={"Tosca Policy Models already added"}
 							data={this.state.selectedPolicyModelsData}
 							columns={this.state.toscaColumns}
 							icons={this.state.tableIcons}

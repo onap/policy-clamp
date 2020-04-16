@@ -331,6 +331,36 @@ public class Loop extends AuditEntity implements Serializable {
     }
 
     /**
+     * Return the operationalPolicy object with the opPolicyName.
+     *
+     * @param opPolicyName The operationalPolicy name
+     * @return The OperationalPolicy object found in loop object
+     */
+    public OperationalPolicy getOperationalPolicy(String opPolicyName) {
+        for (OperationalPolicy operationalPolicy : this.getOperationalPolicies()) {
+            if (operationalPolicy.getName().equals(opPolicyName)) {
+                return operationalPolicy;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Return the microServicePolicy object with the msPolicyName.
+     *
+     * @param msPolicyName The microServicePolicy name
+     * @return The MicroServicePolicy object found in loop object
+     */
+    public MicroServicePolicy getMicroServicePolicy(String msPolicyName) {
+        for (MicroServicePolicy microServicePolicy : this.getMicroServicePolicies()) {
+            if (microServicePolicy.getName().equals(msPolicyName)) {
+                return microServicePolicy;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Generate the loop name.
      *
      * @param serviceName       The service name
