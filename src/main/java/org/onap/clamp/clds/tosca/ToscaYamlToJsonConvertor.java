@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.onap.clamp.clds.config.ClampProperties;
+import org.onap.clamp.tosca.Dictionary;
 import org.onap.clamp.tosca.DictionaryElement;
 import org.onap.clamp.tosca.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +143,13 @@ public class ToscaYamlToJsonConvertor {
         parseNodeAndDataType(loadedYaml, nodeTypes, dataNodes);
         populateJsonEditorObject(loadedYaml, nodeTypes, dataNodes, jsonParentObject, jsonTempObject,
             modelTypeToUse);
+
+        String headerTemplate = getValueFromMetadata(validateAndConvertToJson(yamlString),
+            ToscaSchemaConstants.METADATA_HEADER_TEMPLATE);
+        if (headerTemplate != null) {
+            jsonParentObject.put(JsonEditorSchemaConstants.HEADER_TEMPLATE,
+                JsonEditorSchemaConstants.HEADER_TEMPLATE_VALUE);
+        }
         if (jsonTempObject.length() > 0) {
             jsonParentObject = jsonTempObject;
         }
@@ -234,7 +242,7 @@ public class ToscaYamlToJsonConvertor {
                                         jsonTempObject.put(JsonEditorSchemaConstants.ITEMS,
                                             jsonParentObject);
                                         jsonTempObject.put(JsonEditorSchemaConstants.FORMAT,
-                                            JsonEditorSchemaConstants.CUSTOM_KEY_FORMAT_TABS_TOP);
+                                            JsonEditorSchemaConstants.CUSTOM_KEY_FORMAT_TABS);
                                         jsonTempObject.put(JsonEditorSchemaConstants.UNIQUE_ITEMS,
                                             JsonEditorSchemaConstants.TRUE);
                                     }
@@ -652,12 +660,43 @@ public class ToscaYamlToJsonConvertor {
 
                     Optional.ofNullable(cldsDictionaryElements).get().stream().forEach(c -> {
                         JSONObject jsonObject = new JSONObject();
+                        if (c.getSubDictionary() != null) {
+                            Dictionary subDictionary =
+                                dictionaryService.getDictionary(c.getSubDictionary());
+                            if (subDictionary != null
+                                && !subDictionary.getDictionaryElements().isEmpty()) {
+
+                                jsonObject.put(JsonEditorSchemaConstants.CUSTOM_KEY_FORMAT_INPUT,
+                                    JsonEditorSchemaConstants.FORMAT_SELECT);
+
+                                List<String> shortNames = new ArrayList<>();
+                                subDictionary.getDictionaryElements().stream().forEach(c1 -> {
+                                    shortNames.add(c1.getShortName());
+                                });
+                                jsonObject.put(JsonEditorSchemaConstants.VALUES, shortNames);
+                            }
+                        }
                         jsonObject.put(JsonEditorSchemaConstants.TYPE, getJsonType(c.getType()));
+
                         if (c.getType() != null
-                            && c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_STRING)) {
+                            && (c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_STRING)
+                                || c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_DATE_TIME)
+                                || c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_MAP))) {
                             jsonObject.put(JsonEditorSchemaConstants.MIN_LENGTH, 1);
 
+                            if (c.getType().equalsIgnoreCase(ToscaSchemaConstants.TYPE_DATE_TIME)) {
+                                jsonObject.put(JsonEditorSchemaConstants.PLUGIN,
+                                    JsonEditorSchemaConstants.DATE_TIME_PICKER);
+                                jsonObject.put(JsonEditorSchemaConstants.INPUT_EVENT,
+                                    JsonEditorSchemaConstants.DP_CHANGE);
+                                JSONObject formatJsonObject = new JSONObject();
+                                formatJsonObject.put(JsonEditorSchemaConstants.FORMAT,
+                                    JsonEditorSchemaConstants.DATE_TIME_FORMAT);
+                                jsonObject.put(JsonEditorSchemaConstants.VALIDATION,
+                                    formatJsonObject);
+                            }
                         }
+
                         jsonObject.put(JsonEditorSchemaConstants.ID, c.getName());
                         jsonObject.put(JsonEditorSchemaConstants.LABEL, c.getShortName());
                         jsonObject.put(JsonEditorSchemaConstants.OPERATORS, subCldsDictionaryNames);
@@ -678,32 +717,44 @@ public class ToscaYamlToJsonConvertor {
             String dictionaryKey = dictionaryReference.substring(
                 dictionaryReference.indexOf(ToscaSchemaConstants.DICTIONARY) + 11,
                 dictionaryReference.length());
+
             if (dictionaryKey != null) {
-                List<DictionaryElement> cldsDictionaryElements =
-                    dictionaryService.getDictionary(dictionaryKey).getDictionaryElements().stream()
-                        .collect(Collectors.toList());
-                if (cldsDictionaryElements != null) {
-                    List<String> cldsDictionaryNames = new ArrayList<>();
-                    List<String> cldsDictionaryFullNames = new ArrayList<>();
-                    cldsDictionaryElements.stream().forEach(c -> {
-                        // Json type will be translated before Policy creation
-                        if (c.getType() != null && !c.getType().equalsIgnoreCase("json")) {
-                            cldsDictionaryFullNames.add(c.getName());
+                if (dictionaryKey.contains(ToscaSchemaConstants.TYPE_USER_DEFINED)) {
+                    childObject.put(JsonEditorSchemaConstants.ENUM, new ArrayList<>());
+                    // Add Enum titles for generated translated values during
+                    // JSON instance generation
+                    JSONObject enumTitles = new JSONObject();
+                    enumTitles.put(JsonEditorSchemaConstants.ENUM_TITLES, new ArrayList<>());
+                    childObject.put(JsonEditorSchemaConstants.OPTIONS, enumTitles);
+                } else {
+                    List<DictionaryElement> cldsDictionaryElements =
+                        dictionaryService.getDictionary(dictionaryKey).getDictionaryElements()
+                            .stream().collect(Collectors.toList());
+                    if (cldsDictionaryElements != null) {
+                        List<String> cldsDictionaryNames = new ArrayList<>();
+                        List<String> cldsDictionaryFullNames = new ArrayList<>();
+                        cldsDictionaryElements.stream().forEach(c -> {
+                            // Json type will be translated before Policy creation
+                            if (c.getType() != null && !c.getType().equalsIgnoreCase("json")) {
+                                cldsDictionaryFullNames.add(c.getName());
+                            }
+                            cldsDictionaryNames.add(c.getShortName());
+                        });
+
+                        if (!cldsDictionaryFullNames.isEmpty()) {
+                            childObject.put(JsonEditorSchemaConstants.ENUM,
+                                cldsDictionaryFullNames);
+                            // Add Enum titles for generated translated values during JSON instance
+                            // generation
+                            JSONObject enumTitles = new JSONObject();
+                            enumTitles.put(JsonEditorSchemaConstants.ENUM_TITLES,
+                                cldsDictionaryNames);
+                            childObject.put(JsonEditorSchemaConstants.OPTIONS, enumTitles);
+                        } else {
+                            childObject.put(JsonEditorSchemaConstants.ENUM, cldsDictionaryNames);
                         }
-                        cldsDictionaryNames.add(c.getShortName());
-                    });
 
-                    if (!cldsDictionaryFullNames.isEmpty()) {
-                        childObject.put(JsonEditorSchemaConstants.ENUM, cldsDictionaryFullNames);
-                        // Add Enum titles for generated translated values during JSON instance
-                        // generation
-                        JSONObject enumTitles = new JSONObject();
-                        enumTitles.put(JsonEditorSchemaConstants.ENUM_TITLES, cldsDictionaryNames);
-                        childObject.put(JsonEditorSchemaConstants.OPTIONS, enumTitles);
-                    } else {
-                        childObject.put(JsonEditorSchemaConstants.ENUM, cldsDictionaryNames);
                     }
-
                 }
             }
         }
@@ -711,10 +762,15 @@ public class ToscaYamlToJsonConvertor {
 
     private String getJsonType(String toscaType) {
         String jsonType = null;
-        if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_INTEGER)) {
+        if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_INTEGER)
+            || toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_NUMBER)) {
             jsonType = JsonEditorSchemaConstants.TYPE_INTEGER;
+        } else if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_DATE_TIME)) {
+            jsonType = JsonEditorSchemaConstants.TYPE_DATE_TIME;
         } else if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_LIST)) {
             jsonType = JsonEditorSchemaConstants.TYPE_ARRAY;
+        } else if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_MAP)) {
+            jsonType = JsonEditorSchemaConstants.TYPE_MAP;
         } else {
             jsonType = JsonEditorSchemaConstants.TYPE_STRING;
         }

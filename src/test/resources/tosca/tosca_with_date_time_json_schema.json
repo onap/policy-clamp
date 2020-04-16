@@ -178,15 +178,6 @@
                               "qschema":{
                                  "filters":[
                                     {
-                                       "operators":[
-                                          "equals"
-                                       ],
-                                       "minLength":1,
-                                       "id":"alarmCondition",
-                                       "label":"alarmCondition",
-                                       "type":"string"
-                                    },
-                                    {
                                        "plugin":"datetimepicker",
                                        "operators":[
                                           "equals"

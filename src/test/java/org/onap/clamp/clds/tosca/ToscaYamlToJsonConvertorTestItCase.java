@@ -57,7 +57,7 @@ public class ToscaYamlToJsonConvertorTestItCase {
      * Schema.
      *
      * @throws IOException In case of issue when opening the tosca yaml file and
-     *                     converted json file
+     *         converted json file
      */
     @Test
     public final void testParseToscaYaml() throws IOException {
@@ -65,11 +65,11 @@ public class ToscaYamlToJsonConvertorTestItCase {
         ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
 
         String parsedJsonSchema =
-                convertor.parseToscaYaml(toscaModelYaml, "onap.policies.monitoring.cdap.tca.hi.lo.app");
+            convertor.parseToscaYaml(toscaModelYaml, "onap.policies.monitoring.cdap.tca.hi.lo.app");
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(
-                ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json.json"),
-                parsedJsonSchema, true);
+            ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json.json"),
+            parsedJsonSchema, true);
     }
 
     /**
@@ -77,20 +77,20 @@ public class ToscaYamlToJsonConvertorTestItCase {
      * based on JSON Editor Schema.
      *
      * @throws IOException In case of issue when opening the tosca yaml file and
-     *                     converted json file
+     *         converted json file
      */
     @Test
     public final void testParseToscaYamlWithConstraints() throws IOException {
         String toscaModelYaml =
-                ResourceFileUtil.getResourceAsString("tosca/tosca-with-constraints.yaml");
+            ResourceFileUtil.getResourceAsString("tosca/tosca-with-constraints.yaml");
         ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
 
         String parsedJsonSchema =
-                convertor.parseToscaYaml(toscaModelYaml, "onap.policies.monitoring.example.app");
+            convertor.parseToscaYaml(toscaModelYaml, "onap.policies.monitoring.example.app");
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(
-                ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-constraints.json"),
-                parsedJsonSchema, true);
+            ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-constraints.json"),
+            parsedJsonSchema, true);
     }
 
     /**
@@ -98,20 +98,20 @@ public class ToscaYamlToJsonConvertorTestItCase {
      * conversion based on JSON Editor Schema.
      *
      * @throws IOException In case of issue when opening the tosca yaml file and
-     *                     converted json file
+     *         converted json file
      */
     @Test
     public final void testParseToscaYamlWithTypes() throws IOException {
         String toscaModelYaml =
-                ResourceFileUtil.getResourceAsString("tosca/tosca-with-datatypes.yaml");
+            ResourceFileUtil.getResourceAsString("tosca/tosca-with-datatypes.yaml");
         ToscaYamlToJsonConvertor convertor = new ToscaYamlToJsonConvertor();
 
         String parsedJsonSchema =
-                convertor.parseToscaYaml(toscaModelYaml, "onap.policies.monitoring.example.app");
+            convertor.parseToscaYaml(toscaModelYaml, "onap.policies.monitoring.example.app");
         assertNotNull(parsedJsonSchema);
         JSONAssert.assertEquals(
-                ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-datatypes.json"),
-                parsedJsonSchema, true);
+            ResourceFileUtil.getResourceAsString("tosca/policy-yaml-to-json-with-datatypes.json"),
+            parsedJsonSchema, true);
     }
 
     /**
@@ -119,11 +119,35 @@ public class ToscaYamlToJsonConvertorTestItCase {
      * parameters which defines the Tosca Policy name and its short name.
      *
      * @throws IOException In case of issue when opening the tosca yaml file and
-     *                     converted json file
+     *         converted json file
      */
     @Test
     @Transactional
     public final void testMetadataClampPossibleValues() throws IOException {
+        setupDictionary();
+        String toscaModelYaml =
+            ResourceFileUtil.getResourceAsString("tosca/tosca_metadata_clamp_possible_values.yaml");
+
+        JsonObject jsonObject = toscaYamlToJsonConvertor.validateAndConvertToJson(toscaModelYaml);
+        assertNotNull(jsonObject);
+        String policyModelType = toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
+            ToscaSchemaConstants.METADATA_POLICY_MODEL_TYPE);
+        String acronym = toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
+            ToscaSchemaConstants.METADATA_ACRONYM);
+        String parsedJsonSchema =
+            toscaYamlToJsonConvertor.parseToscaYaml(toscaModelYaml, policyModelType);
+
+        assertNotNull(parsedJsonSchema);
+        assertEquals("onap.policies.monitoring.cdap.tca.hi.lo.app", policyModelType);
+        assertEquals("tca", acronym);
+        JSONAssert.assertEquals(
+            ResourceFileUtil
+                .getResourceAsString("tosca/tosca_metadata_clamp_possible_values_json_schema.json"),
+            parsedJsonSchema, true);
+
+    }
+
+    private void setupDictionary() {
 
         // Set up dictionary elements
         Dictionary dictionaryTest = new Dictionary();
@@ -150,6 +174,15 @@ public class ToscaYamlToJsonConvertorTestItCase {
         element1.setDescription("Alarm Condition");
         dictionaryTest1.addDictionaryElements(element1);
 
+        dictionaryTest1 = dictionaryService.saveOrUpdateDictionary(dictionaryTest1);
+
+        DictionaryElement element3 = new DictionaryElement();
+        element3.setName("timeEpoch");
+        element3.setShortName("timeEpoch");
+        element3.setType("datetime");
+        element3.setDescription("Time Epoch");
+        dictionaryTest1.addDictionaryElements(element3);
+
         dictionaryService.saveOrUpdateDictionary(dictionaryTest1);
 
         Dictionary dictionaryTest2 = new Dictionary();
@@ -159,30 +192,10 @@ public class ToscaYamlToJsonConvertorTestItCase {
         DictionaryElement element2 = new DictionaryElement();
         element2.setName("equals");
         element2.setShortName("equals");
-        element2.setType("string");
+        element2.setType("string|datetime");
         element2.setDescription("equals");
         dictionaryTest2.addDictionaryElements(element2);
         dictionaryService.saveOrUpdateDictionary(dictionaryTest2);
-
-        String toscaModelYaml =
-                ResourceFileUtil.getResourceAsString("tosca/tosca_metadata_clamp_possible_values.yaml");
-
-        JsonObject jsonObject = toscaYamlToJsonConvertor.validateAndConvertToJson(toscaModelYaml);
-        assertNotNull(jsonObject);
-        String policyModelType = toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-                ToscaSchemaConstants.METADATA_POLICY_MODEL_TYPE);
-        String acronym = toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-                ToscaSchemaConstants.METADATA_ACRONYM);
-        String parsedJsonSchema =
-                toscaYamlToJsonConvertor.parseToscaYaml(toscaModelYaml, policyModelType);
-
-        assertNotNull(parsedJsonSchema);
-        assertEquals("onap.policies.monitoring.cdap.tca.hi.lo.app", policyModelType);
-        assertEquals("tca", acronym);
-        JSONAssert.assertEquals(
-                ResourceFileUtil
-                        .getResourceAsString("tosca/tosca_metadata_clamp_possible_values_json_schema.json"),
-                parsedJsonSchema, true);
     }
 
 }

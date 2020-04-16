@@ -1,7 +1,7 @@
 {
 	"schema": {
 		"uniqueItems": "true",
-		"format": "tabs-top",
+		"format": "tabs",
 		"type": "array",
 		"title": "Thresholds",
 		"items": {

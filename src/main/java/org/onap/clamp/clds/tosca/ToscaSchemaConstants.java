@@ -30,8 +30,11 @@ public class ToscaSchemaConstants {
     public static final String TYPE_MAP = "map";
     public static final String TYPE_STRING = "string";
     public static final String TYPE_INTEGER = "integer";
+    public static final String TYPE_NUMBER = "number";
+    public static final String TYPE_DATE_TIME = "datetime";
     public static final String TYPE_FLOAT = "float";
     public static final String TYPE_BOOLEAN = "boolean";
+    public static final String TYPE_USER_DEFINED = "userDefined";
 
     // Key elements in Tosca
     public static final String NODE_TYPES = "policy_types";
@@ -46,6 +49,8 @@ public class ToscaSchemaConstants {
     public static final String METADATA = "metadata";
     public static final String METADATA_POLICY_MODEL_TYPE = "policy_model_type";
     public static final String METADATA_ACRONYM = "acronym";
+    public static final String METADATA_ELEMENT_NAME = "element_name";
+    public static final String METADATA_HEADER_TEMPLATE = "header_template";
     public static final String METADATA_CLAMP_POSSIBLE_VALUES = "clamp_possible_values";
 
     // Constraints
