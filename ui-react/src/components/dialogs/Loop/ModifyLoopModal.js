@@ -133,7 +133,7 @@ export default class ModifyLoopModal extends React.Component {
 		var selectedPolicyModels = [];
 		for (var policy in operationalPolicies) {
 		    var newRow = operationalPolicies[policy]["policyModel"];
-		    newRow.add("policyName", operationalPolicies[policy].name);
+		    newRow["policyName"] = operationalPolicies[policy].name;
 			selectedPolicyModels.push(newRow);
 		}
 

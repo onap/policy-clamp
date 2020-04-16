@@ -74,6 +74,10 @@ export default class PolicyModal extends React.Component {
 
 		if (errors.length !== 0) {
 			console.error("Errors detected during policy data validation ", errors);
+			this.setState({
+            		showFailAlert: true,
+            		showMessage: "Errors detected during policy data validation " + errors
+            });
 			return;
 		}
 		else {
