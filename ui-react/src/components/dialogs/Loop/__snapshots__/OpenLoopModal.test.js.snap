@@ -3,6 +3,7 @@
 exports[`Verify OpenLoopModal Test the render method 1`] = `
 <Styled(Bootstrap(Modal))
   backdrop="static"
+  keyboard={false}
   onHide={[Function]}
   show={true}
   size="xl"
@@ -33,7 +34,7 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
         sm="2"
         srOnly={false}
       >
-        Model Name
+        Model Name:
       </FormLabel>
       <Col
         sm="10"
@@ -48,18 +49,52 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
       </Col>
     </FormGroup>
     <FormGroup
-      controlId="formPlaintextEmail"
-    >
-      <styled.div
-        dangerouslySetInnerHTML={
-          Object {
-            "__html": "",
-          }
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
         }
-        value=""
-      />
+      }
+      controlId="formSvgPreview"
+      style={
+        Object {
+          "alignItems": "center",
+        }
+      }
+    >
+      <FormLabel
+        column={true}
+        sm="2"
+        srOnly={false}
+      >
+        Model Preview:
+      </FormLabel>
+      <Col
+        sm="10"
+      >
+        <styled.svg
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "",
+            }
+          }
+          value=""
+        />
+      </Col>
     </FormGroup>
     <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
       controlId="formBasicChecbox"
     >
       <FormCheck
@@ -71,9 +106,14 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
         type="checkbox"
       >
         <FormCheckLabel>
-          Read Only
+          Read Only Mode:
         </FormCheckLabel>
         <Styled(FormCheckInput)
+          style={
+            Object {
+              "marginLeft": "3.5em",
+            }
+          }
           type="checkbox"
         />
       </FormCheck>

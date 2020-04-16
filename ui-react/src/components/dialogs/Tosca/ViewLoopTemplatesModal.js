@@ -38,16 +38,24 @@ import MaterialTable from "material-table";
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
-const LoopViewSvgDivStyled = styled.div`
-	overflow: hidden;
+const LoopViewSvgDivStyled = styled.svg`
+	overflow-x: scroll;
 	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
 	border-color: ${props => (props.theme.loopViewerHeaderColor)};
-	margin-left: auto;
+	margin-top: 3em;
+	margin-left: 2em;
 	margin-right:auto;
 	text-align: center;
-	margin-top: 20px;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	
 `
 const SvgContainerDivStyled = styled.div`
+	display: flex;
+	align-items: center;
 	border: 1px solid;
 `
 
@@ -133,7 +141,7 @@ export default class ViewLoopTemplatesModal extends React.Component {
 
 	render() {
     return (
-    		<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static">
+    		<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static"  keyboard={false}>
     			<Modal.Header closeButton>
     			</Modal.Header>
     			<Modal.Body>

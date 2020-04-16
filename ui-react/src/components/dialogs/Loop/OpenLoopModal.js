@@ -37,13 +37,20 @@ const ModalStyled = styled(Modal)`
 const CheckBoxStyled = styled(FormCheck.Input)`
 	margin-left:3rem;
 `
-const LoopViewSvgDivStyled = styled.div`
-	overflow: hidden;
+const LoopViewSvgDivStyled = styled.svg`
+	overflow-x: scroll;
+	display: flex;
+	flex-direction: row;
 	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
 	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+	margin-top: 2em;
 	margin-left: auto;
 	margin-right:auto;
+	margin-bottom: -3em;
 	text-align: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
 `
 
 export default class OpenLoopModal extends React.Component {
@@ -54,6 +61,7 @@ export default class OpenLoopModal extends React.Component {
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.handleDropdownListChange = this.handleDropdownListChange.bind(this);
+		this.showReadOnly = props.showReadOnly ? props.showReadOnly : true;
 		this.state = {
 			show: true,
 			chosenLoopName: '',
@@ -101,28 +109,34 @@ export default class OpenLoopModal extends React.Component {
 
 	render() {
 		return (
-			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static">
+			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
 				<Modal.Header closeButton>
 					<Modal.Title>Open Model</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form.Group as={Row} controlId="formPlaintextEmail">
-						<Form.Label column sm="2">Model Name</Form.Label>
+						<Form.Label column sm="2">Model Name:</Form.Label>
 						<Col sm="10">
 							<Select onChange={this.handleDropdownListChange}
 							options={this.state.loopNames} />
 						</Col>
 					</Form.Group>
-					<Form.Group controlId="formPlaintextEmail">
-                         <LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }}   value={this.state.content} >
-                         </LoopViewSvgDivStyled>
-                    </Form.Group>
-					<Form.Group controlId="formBasicChecbox">
-						<Form.Check>
-							<FormCheck.Label>Read Only</FormCheck.Label>
-							<CheckBoxStyled type="checkbox" />
-						</Form.Check>
+					<Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
+						<Form.Label column sm="2">Model Preview:</Form.Label>
+						<Col sm="10">
+                         				<LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }}
+								value={this.state.content} >
+							</LoopViewSvgDivStyled>
+						</Col>
 					</Form.Group>
+					{this.showReadOnly === true ?
+						<Form.Group as={Row} controlId="formBasicChecbox">
+							<Form.Check>
+								<FormCheck.Label>Read Only Mode:</FormCheck.Label>
+								<CheckBoxStyled style={{marginLeft: '3.5em'}} type="checkbox" />
+							</Form.Check>
+						</Form.Group>
+					: null}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>

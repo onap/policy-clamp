@@ -3,6 +3,7 @@
 exports[`Verify ViewLoopTemplatesModal Test the tosca model view render method 1`] = `
 <Styled(Bootstrap(Modal))
   backdrop="static"
+  keyboard={false}
   onHide={[Function]}
   show={true}
   size="xl"
@@ -142,7 +143,7 @@ exports[`Verify ViewLoopTemplatesModal Test the tosca model view render method 1
       title="View Blueprint MicroService Templates"
     />
     <styled.div>
-      <styled.div
+      <styled.svg
         dangerouslySetInnerHTML={
           Object {
             "__html": "Please select a loop template to display it",

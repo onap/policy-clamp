@@ -86,14 +86,14 @@ export default class UploadToscaPolicyModal extends React.Component {
 
 	render() {
 		return (
-			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose} backdrop="static">
+			<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose} backdrop="static"  keyboard={false} >
 				<Modal.Header closeButton>
 					<Modal.Title>Upload Tosca Model</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Col sm="10">
-						<input style={{display: 'none'}} type="file" name="file" accept=".yaml" onChange={this.fileSelectedHandler}
+						<input style={{display: 'none'}} type="file" name="file" accept=".yaml,.yml" onChange={this.fileSelectedHandler}
 							ref={fileInput => this.fileInput = fileInput}/>
 						<button onClick={() => this.fileInput.click()}>Pick Tosca File</button>
 							<Alert variant="secondary">

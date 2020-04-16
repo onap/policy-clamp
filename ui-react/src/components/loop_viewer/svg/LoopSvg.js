@@ -27,14 +27,20 @@ import { withRouter } from "react-router-dom";
 import LoopService from '../../../api/LoopService';
 import LoopComponentConverter from './LoopComponentConverter';
 
-const LoopViewSvgDivStyled = styled.div`
-	overflow: hidden;
+const LoopViewSvgDivStyled = styled.svg`
+	display: flex;
+	flex-direction: row;
+	overflow-x: scroll;
 	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
 	border: 1px solid;
 	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+	margin-top: 1em;
 	margin-left: auto;
 	margin-right:auto;
-	text-align: center;
+	margin-bottom: -3em;
+	align-items: center;
+	height: 100%;
+	width: 100%;
 
 `
 

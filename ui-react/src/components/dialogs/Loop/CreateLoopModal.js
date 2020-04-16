@@ -34,13 +34,20 @@ import TemplateService from '../../../api/TemplateService';
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
-const LoopViewSvgDivStyled = styled.div`
-	overflow: hidden;
+const LoopViewSvgDivStyled = styled.svg`
+	display: flex;
+	flex-direction: row;
+	overflow-x: scroll;
 	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
 	border-color: ${props => (props.theme.loopViewerHeaderColor)};
+	margin-top: 3em;
 	margin-left: auto;
 	margin-right:auto;
+	margin-bottom: -1em;
 	text-align: center;
+	align-items: center;
+	height: 100%;
+	width: 100%;
 `
 
 export default class CreateLoopModal extends React.Component {
@@ -118,24 +125,28 @@ export default class CreateLoopModal extends React.Component {
 
 	render() {
 		return (
-			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static">
+			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
 				<Modal.Header closeButton>
 					<Modal.Title>Create Model</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<Form.Group as={Row} controlId="formPlaintextEmail">
-						<Form.Label column sm="2">Template Name</Form.Label>
+						<Form.Label column sm="2">Template Name:</Form.Label>
 						<Col sm="10">
 							<Select onChange={this.handleDropdownListChange} options={this.state.templateNames} />
 						</Col>
 					</Form.Group>
-					<Form.Group controlId="formPlaintextEmail">
-						<LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }} value={this.state.content} >
-						</LoopViewSvgDivStyled>
-					</Form.Group>
-					<Form.Group controlId="formPlaintextEmail">
+                                        <Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
+                                                <Form.Label column sm="2">Model Preview:</Form.Label>
+                                                <Col sm="10">
+                                                        <LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }}
+                                                                value={this.state.content} >
+                                                        </LoopViewSvgDivStyled>
+                                                </Col>
+                                        </Form.Group>
+					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Model Name:</Form.Label>
-						<input type="text" style={{width: '50%'}}
+						<input type="text" style={{width: '50%', marginLeft: '1em' }}
 							value={this.state.modelName}
 							onChange={this.handleModelName}
 						/>

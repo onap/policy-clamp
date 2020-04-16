@@ -161,7 +161,7 @@ export default class DeployLoopModal extends React.Component {
 	}
 	render() {
 		return (
-					<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose} backdrop="static">
+					<ModalStyled size="lg" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
 						<Modal.Header closeButton>
 							<Modal.Title>Deployment parameters</Modal.Title>
 						</Modal.Header>

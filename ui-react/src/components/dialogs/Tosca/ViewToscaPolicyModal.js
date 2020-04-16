@@ -139,7 +139,7 @@ export default class ViewToscalPolicyModal extends React.Component {
 
 	render() {
 		return (
-			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static">
+			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false}>
 				<Modal.Header closeButton>
 				</Modal.Header>
 				<Modal.Body>
