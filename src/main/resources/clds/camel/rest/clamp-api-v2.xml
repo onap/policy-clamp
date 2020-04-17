@@ -697,16 +697,14 @@
 					<to uri="direct:load-loop" />
 					<to
 						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET STATUS request','INFO',${exchangeProperty[loopObject]})" />
-					<doTry>
-						<to uri="direct:update-policy-status-for-loop" />
-						<to uri="direct:update-dcae-status-for-loop" />
-						<to uri="direct:update-loop-state" />
+					<to uri="direct:update-policy-status-for-loop" />
+					<to uri="direct:update-dcae-status-for-loop" />
+					<to uri="direct:update-loop-state" />
 
-						<to
+					<to
 							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET STATUS request successfully executed','INFO',${exchangeProperty[loopObject]})" />
-						<to
+					<to
 							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
-					</doTry>
 					<doCatch>
 						<exception>java.lang.Exception</exception>
 						<handled>
@@ -718,17 +716,14 @@
 							 message="GET STATUS request FAILED for loop: ${header.loopName}, ${exception.stacktrace}" />
 						<to
 								uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET STATUS request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})" />
-						<setHeader headerName="CamelHttpResponseCode">
-							<constant>500</constant>
-						</setHeader>
-						<setBody>
-							<simple>GET STATUS request FAILED</simple>
-						</setBody>
 					</doCatch>
 					<doFinally>
 						<setBody>
 							<simple>${exchangeProperty[loopObject]}</simple>
 						</setBody>
+						<setHeader headerName="CamelHttpResponseCode">
+							<constant>200</constant>
+						</setHeader>
 					</doFinally>
 				</doTry>
 			</route>

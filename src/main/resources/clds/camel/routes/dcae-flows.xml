@@ -371,6 +371,17 @@
 				message="Endpoint to query Closed Loop status: ${exchangeProperty[getStatusUrl]}"></log>
 			<toD
 				uri="${exchangeProperty[getStatusUrl]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true" />
+			<doCatch>
+				<exception>java.lang.Exception</exception>
+				<handled>
+					<constant>true</constant>
+				</handled>
+
+				<log loggingLevel="ERROR"
+					 message="GET policy request FAILED for loop: ${header.loopName}, ${exception.stacktrace}" />
+				<to
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET policy request failed, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})" />
+			</doCatch>
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
 				<to
