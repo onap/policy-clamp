@@ -87,8 +87,7 @@
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async",
-                        "format": "textarea"
+                        "default": "async"
                       },
                       "data": {
                         "title": "data",
@@ -99,38 +98,31 @@
                             "properties": {
                               "request-id": {
                                 "title": "request-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "service-instance-id": {
                                 "title": "service-instance-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf-id": {
                                 "title": "vnf-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "action-name": {
                                 "title": "action-name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "scope-type": {
                                 "title": "scope-type",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "hostname": {
                                 "title": "hostname",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf_name": {
                                 "title": "vnf_name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               }
                             }
                           }
@@ -156,8 +148,7 @@
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async",
-                        "format": "textarea"
+                        "default": "async"
                       },
                       "data": {
                         "title": "data",
@@ -168,38 +159,31 @@
                             "properties": {
                               "request-id": {
                                 "title": "request-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "service-instance-id": {
                                 "title": "service-instance-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf-id": {
                                 "title": "vnf-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "action-name": {
                                 "title": "action-name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "scope-type": {
                                 "title": "scope-type",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "hostname": {
                                 "title": "hostname",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf_name": {
                                 "title": "vnf_name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               }
                             }
                           }
@@ -225,8 +209,7 @@
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async",
-                        "format": "textarea"
+                        "default": "async"
                       },
                       "data": {
                         "title": "data",
@@ -237,38 +220,31 @@
                             "properties": {
                               "request-id": {
                                 "title": "request-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "service-instance-id": {
                                 "title": "service-instance-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf-id": {
                                 "title": "vnf-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "action-name": {
                                 "title": "action-name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "scope-type": {
                                 "title": "scope-type",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "hostname": {
                                 "title": "hostname",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf_name": {
                                 "title": "vnf_name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               }
                             }
                           }
@@ -294,8 +270,7 @@
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async",
-                        "format": "textarea"
+                        "default": "async"
                       },
                       "data": {
                         "title": "data",
@@ -306,38 +281,31 @@
                             "properties": {
                               "request-id": {
                                 "title": "request-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "service-instance-id": {
                                 "title": "service-instance-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf-id": {
                                 "title": "vnf-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "action-name": {
                                 "title": "action-name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "scope-type": {
                                 "title": "scope-type",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "hostname": {
                                 "title": "hostname",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf_name": {
                                 "title": "vnf_name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               }
                             }
                           }
@@ -363,8 +331,7 @@
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async",
-                        "format": "textarea"
+                        "default": "async"
                       },
                       "data": {
                         "title": "data",
@@ -375,38 +342,31 @@
                             "properties": {
                               "request-id": {
                                 "title": "request-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "service-instance-id": {
                                 "title": "service-instance-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf-id": {
                                 "title": "vnf-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "action-name": {
                                 "title": "action-name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "scope-type": {
                                 "title": "scope-type",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "hostname": {
                                 "title": "hostname",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf_name": {
                                 "title": "vnf_name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               }
                             }
                           }
@@ -432,8 +392,7 @@
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async",
-                        "format": "textarea"
+                        "default": "async"
                       },
                       "data": {
                         "title": "data",
@@ -444,38 +403,31 @@
                             "properties": {
                               "request-id": {
                                 "title": "request-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "service-instance-id": {
                                 "title": "service-instance-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf-id": {
                                 "title": "vnf-id",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "action-name": {
                                 "title": "action-name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "scope-type": {
                                 "title": "scope-type",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "hostname": {
                                 "title": "hostname",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               },
                               "vnf_name": {
                                 "title": "vnf_name",
-                                "type": "string",
-                                "format": "textarea"
+                                "type": "string"
                               }
                             }
                           }
