@@ -56,6 +56,17 @@
                  message="Endpoint to get policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}"></log>
             <toD
                     uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <doCatch>
+                <exception>java.lang.Exception</exception>
+                <handled>
+                    <constant>true</constant>
+                </handled>
+
+                <log loggingLevel="ERROR"
+                     message="GET policy request FAILED for loop: ${header.loopName}, ${exception.stacktrace}" />
+                <to
+                        uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET policy request failed, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})" />
+            </doCatch>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
@@ -99,6 +110,17 @@
                  message="Endpoint to get policy deployment status: {{clamp.config.policy.pap.url}}/policy/pap/v1/policies/deployed/${exchangeProperty[policyName]}/1.0.0"></log>
             <toD
                     uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/policies/deployed/${exchangeProperty[policyName]}/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <doCatch>
+                <exception>java.lang.Exception</exception>
+                <handled>
+                    <constant>true</constant>
+                </handled>
+
+                <log loggingLevel="ERROR"
+                     message="GET policy request FAILED for loop: ${header.loopName}, ${exception.stacktrace}" />
+                <to
+                        uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET policy request failed, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})" />
+            </doCatch>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
