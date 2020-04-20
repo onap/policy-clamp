@@ -258,7 +258,7 @@
                                 }
                               },
                               "payload": {
-                                "title": "Payload (YAML)",
+                                "title": "Payload",
                                 "type": "object",
                                 "properties": {
                                   "artifact_name": {
@@ -297,15 +297,9 @@
                                           }
                                         }
                                       },
-                                      "resource-assignment-properties": {
-                                        "title": "resource-assignment-properties",
-                                        "type": "object",
-                                        "properties": {
-                                          "private1-prefix-id": {
-                                            "title": "private1-prefix-id",
-                                            "type": "string"
-                                          }
-                                        }
+                                      "private1-prefix-id": {
+                                        "title": "private1-prefix-id",
+                                        "type": "string"
                                       }
                                     }
                                   }

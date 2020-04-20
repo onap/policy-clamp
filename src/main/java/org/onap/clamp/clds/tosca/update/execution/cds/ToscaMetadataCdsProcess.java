@@ -23,9 +23,7 @@
 
 package org.onap.clamp.clds.tosca.update.execution.cds;
 
-import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.PROPERTIES;
 import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.TYPE;
-import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.TYPE_LIST;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -133,20 +131,14 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         return result;
     }
 
-    private static JsonObject createAnyOfJsonProperty(String name, String defaultValue) {
+    private static JsonObject createAnyOfJsonProperty(String name,
+                                                      String defaultValue,
+                                                      boolean readOnlyFlag) {
         JsonObject result = new JsonObject();
         result.addProperty("title", name);
         result.addProperty("type", "string");
         result.addProperty("default", defaultValue);
-        result.addProperty("readOnly", "True");
-        return result;
-    }
-
-    private static JsonObject createAnyOfJsonObject(String name, JsonObject allProperties) {
-        JsonObject result = new JsonObject();
-        result.addProperty("title", name);
-        result.addProperty("type", "object");
-        result.add("properties", allProperties);
+        result.addProperty("readOnly", readOnlyFlag);
         return result;
     }
 
@@ -173,66 +165,37 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         JsonObject inputs = workFlow.getAsJsonObject("inputs");
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("artifact_name", createAnyOfJsonProperty(
-                "artifact name", artifactName));
+                "artifact name", artifactName, true));
         jsonObject.add("artifact_version", createAnyOfJsonProperty(
-                "artifact version", artifactVersion));
-        jsonObject.add("mode", createCdsInputProperty(
-                "mode", "string", "async", null));
+                "artifact version", artifactVersion, true));
+        jsonObject.add("mode", createAnyOfJsonProperty(
+                "mode", "async", false));
         jsonObject.add("data", createDataProperty(inputs));
-
         return jsonObject;
     }
 
     private static JsonObject createDataProperty(JsonObject inputs) {
         JsonObject data = new JsonObject();
         data.addProperty("title", "data");
-        data.add(PROPERTIES, addDataFields(inputs));
+        data.addProperty("type", "string");
+        data.addProperty("format", "textarea");
+        JsonObject defaultValue = new JsonObject();
+        addDefaultValueForData(inputs, defaultValue);
+        data.addProperty("default", defaultValue.toString());
         return data;
     }
 
-    private static JsonObject addDataFields(JsonObject inputs) {
-        JsonObject jsonObject = new JsonObject();
+    private static void addDefaultValueForData(JsonObject inputs,
+                                               JsonObject defaultValue) {
         Set<Map.Entry<String, JsonElement>> entrySet = inputs.entrySet();
         for (Map.Entry<String, JsonElement> entry : entrySet) {
             String key = entry.getKey();
             JsonObject inputProperty = inputs.getAsJsonObject(key);
             if (inputProperty.get(TYPE) == null) {
-                jsonObject.add(entry.getKey(),
-                               createAnyOfJsonObject(key,
-                                                     addDataFields(entry.getValue().getAsJsonObject())));
+                addDefaultValueForData(entry.getValue().getAsJsonObject(), defaultValue);
             } else {
-                jsonObject.add(entry.getKey(),
-                               createCdsInputProperty(key,
-                                                      inputProperty.get("type").getAsString(),
-                                                      null,
-                                                      entry.getValue().getAsJsonObject()));
+                defaultValue.addProperty(entry.getKey(), "");
             }
         }
-        return jsonObject;
-    }
-
-    private static JsonObject createCdsInputProperty(String title,
-                                                     String type,
-                                                     String defaultValue,
-                                                     JsonObject cdsProperty) {
-        JsonObject property = new JsonObject();
-        property.addProperty("title", title);
-
-        if (TYPE_LIST.equalsIgnoreCase(type)) {
-            property.addProperty(TYPE, "array");
-            if (cdsProperty.get(PROPERTIES) != null) {
-                JsonObject listProperties = new JsonObject();
-                listProperties.add(PROPERTIES,
-                                   addDataFields(cdsProperty.get(PROPERTIES).getAsJsonObject()));
-                property.add("items", listProperties);
-            }
-        } else {
-            property.addProperty(TYPE, type);
-        }
-
-        if (defaultValue != null) {
-            property.addProperty("default", defaultValue);
-        }
-        return property;
     }
 }

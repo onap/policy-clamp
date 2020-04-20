@@ -234,6 +234,11 @@ public class LegacyOperationalPolicy {
         JsonObject payloadObject = payloadElem != null ?
                 payloadElem.getAsJsonObject() : null;
         if (payloadObject != null) {
+            /* Since policy expects payload to be map of string,
+               converting data object to string. */
+            JsonObject dataObject = payloadObject.get("data").getAsJsonObject();
+            payloadObject.remove("data");
+            payloadObject.addProperty("data", dataObject.toString());
             policy.getAsJsonObject().add(PAYLOAD,
                                          payloadObject);
         } else {

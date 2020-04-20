@@ -50,17 +50,33 @@ policies:
   payload:
     artifact_name: baseconfiguration
     artifact_version: 1.0.0
-    data:
-      resource-assignment-properties:
-        action-name: action-name
-        hostname: hostname
-        request-id: request-id
-        scope-type: scope-type
-        service-instance-id: service-instance-id
-        vnf-id: vnf-id
-        vnf_name: vnf_name
+    data: '{"resource-assignment-properties":{"request-id":"request-id","service-instance-id":"service-instance-id","vnf-id":"vnf-id","action-name":"action-name","scope-type":"scope-type","hostname":"hostname","vnf_name":"vnf_name"}}'
     mode: async
   recipe: resource-assignment
+  retry: 0
+  success: final_success
+  target:
+    modelCustomizationId: 1bffdc31-a37d-4dee-b65c-dde623a76e52
+    modelInvariantId: ca052563-eb92-4b5b-ad41-9111768ce043
+    modelName: Vloadbalancerms..vpkg..module-1
+    modelVersion: 1
+    modelVersionId: 1e725ccc-b823-4f67-82b9-4f4367070dbc
+    resourceID: Vloadbalancerms..vpkg..module-1
+    type: VFMODULE
+  timeout: 0
+- actor: CDS
+  failure: final_failure
+  failure_exception: final_failure_exception
+  failure_guard: final_failure_guard
+  failure_retries: final_failure_retries
+  failure_timeout: final_failure_timeout
+  id: policy4
+  payload:
+    artifact_name: baseconfiguration
+    artifact_version: 1.0.0
+    data: '{}'
+    mode: async
+  recipe: modify-config
   retry: 0
   success: final_success
   target:
