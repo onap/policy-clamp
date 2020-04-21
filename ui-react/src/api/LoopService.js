@@ -226,18 +226,17 @@ export default class LoopService {
 			credentials: 'same-origin'
 		})
 				.then(function (response) {
-					console.debug("Add Operational Policy response received: ", response.status);
+				console.debug("Add Operational Policy response received: ", response.status);
 				if (response.ok) {
 					return response.json();
 				} else {
-					console.error("Add Operational Policy query failed");
-					return {};
+					return response.text();
 				}
 			})
-			.catch(function (error) {
-				console.error("Add Operational Policy error received", error);
-				return {};
-			});
+			.then(function (object) {
+				console.error("Add Operational Policy query failed");
+				throw new Error(object);
+			})
 	}
 
 	static removeOperationalPolicyType(loopName, policyType, policyVersion, policyName) {
