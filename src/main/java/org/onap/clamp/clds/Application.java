@@ -65,8 +65,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @ComponentScan(basePackages = { "org.onap.clamp" })
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, SecurityAutoConfiguration.class,
-    UserDetailsServiceAutoConfiguration.class })
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class })
 @EnableJpaRepositories(basePackages = { "org.onap.clamp" })
 @EntityScan(basePackages = { "org.onap.clamp" })
 @EnableTransactionManagement

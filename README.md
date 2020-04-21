@@ -41,9 +41,9 @@ Note that all others configurations can be configured in the JSON as well,
 
 ```json
 {
-    "spring.datasource.cldsdb.url": "jdbc:mysql://anotherDB.onap.org:3306/cldsdb4?autoReconnect=true&connectTimeout=10000&socketTimeout=10000&retriesAllDown=3",
-    "spring.datasource.cldsdb.username": "admin",
-    "spring.datasource.cldsdb.password": "password"
+    "spring.datasource.url": "jdbc:mysql://anotherDB.onap.org:3306/cldsdb4?autoReconnect=true&connectTimeout=10000&socketTimeout=10000&retriesAllDown=3",
+    "spring.datasource.username": "admin",
+    "spring.datasource.password": "password"
     
     "clamp.config.dcae.inventory.url": "http://dcaegen2.host:8080",
     "clamp.config.dcae.dispatcher.url": "http://dcaegen2.host:8080",

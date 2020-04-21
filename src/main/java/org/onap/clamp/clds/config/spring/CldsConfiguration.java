@@ -23,13 +23,9 @@
 
 package org.onap.clamp.clds.config.spring;
 
-import javax.sql.DataSource;
-
 import org.onap.clamp.clds.config.ClampProperties;
-import org.onap.clamp.clds.config.EncodedPasswordBasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,16 +40,6 @@ public class CldsConfiguration {
     @Autowired
     private ClampProperties refProp;
 
-    /**
-     * Clds Identity database DataSource configuration.
-     *
-     * @return encoded password data source
-     */
-    @Bean(name = "cldsDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.cldsdb")
-    public DataSource cldsDataSource() {
-        return new EncodedPasswordBasicDataSource();
-    }
 
     /**
      * This loads the file system.properties.
