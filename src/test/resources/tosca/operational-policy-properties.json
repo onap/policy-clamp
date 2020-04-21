@@ -93,6 +93,39 @@
           "modelVersion": "1",
           "modelCustomizationId": "1bffdc31-a37d-4dee-b65c-dde623a76e52"
         }
+      },
+      {
+        "actor": {
+          "actor": "CDS",
+          "recipe": {
+            "recipe": "modify-config",
+            "payload": {
+              "artifact_name": "baseconfiguration",
+              "artifact_version": "1.0.0",
+              "mode": "async",
+              "data": {
+              }
+            }
+          }
+        },
+        "id": "policy4",
+        "retry": "0",
+        "timeout": "0",
+        "success": "final_success",
+        "failure": "final_failure",
+        "failure_timeout": "final_failure_timeout",
+        "failure_retries": "final_failure_retries",
+        "failure_exception": "final_failure_exception",
+        "failure_guard": "final_failure_guard",
+        "target": {
+          "type": "VFMODULE",
+          "resourceID": "Vloadbalancerms..vpkg..module-1",
+          "modelInvariantId": "ca052563-eb92-4b5b-ad41-9111768ce043",
+          "modelVersionId": "1e725ccc-b823-4f67-82b9-4f4367070dbc",
+          "modelName": "Vloadbalancerms..vpkg..module-1",
+          "modelVersion": "1",
+          "modelCustomizationId": "1bffdc31-a37d-4dee-b65c-dde623a76e52"
+        }
       }
     ]
   },

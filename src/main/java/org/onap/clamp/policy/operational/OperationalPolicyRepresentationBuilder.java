@@ -24,8 +24,6 @@
 
 package org.onap.clamp.policy.operational;
 
-import static org.onap.clamp.clds.tosca.update.execution.cds.ToscaMetadataCdsProcess.createInputPropertiesForPayload;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
@@ -33,7 +31,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
@@ -43,6 +43,10 @@ public class OperationalPolicyRepresentationBuilder {
 
     private static final EELFLogger logger =
             EELFManager.getInstance().getLogger(OperationalPolicyRepresentationBuilder.class);
+
+    public static final String PROPERTIES = "properties";
+    public static final String TYPE = "type";
+    public static final String TYPE_LIST = "list";
 
     /**
      * This method generates the operational policy json representation that will be
@@ -213,7 +217,7 @@ public class OperationalPolicyRepresentationBuilder {
     private static JsonObject createPayloadProperty(JsonObject workFlow,
                                                     JsonObject controllerProperties, String workFlowName) {
         JsonObject payload = new JsonObject();
-        payload.addProperty("title", "Payload (YAML)");
+        payload.addProperty("title", "Payload");
         payload.addProperty("type", "object");
         payload.add("properties", createInputPropertiesForPayload(workFlow,
                                                                   controllerProperties));
@@ -232,5 +236,83 @@ public class OperationalPolicyRepresentationBuilder {
         options.addProperty("hidden", true);
         recipe.add("options", options);
         return recipe;
+    }
+
+    /**
+     * Returns the properties of payload based on the cds work flows.
+     *
+     * @param workFlow             cds work flows to update payload
+     * @param controllerProperties cds properties to get blueprint name and
+     *                             version
+     * @return returns the properties of payload
+     */
+    public static JsonObject createInputPropertiesForPayload(JsonObject workFlow,
+                                                             JsonObject controllerProperties) {
+        String artifactName = controllerProperties.get("sdnc_model_name").getAsString();
+        String artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
+        JsonObject inputs = workFlow.getAsJsonObject("inputs");
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.add("artifact_name", createSchemaProperty(
+                "artifact name", "string", artifactName, "True", null));
+        jsonObject.add("artifact_version", createSchemaProperty(
+                "artifact version", "string", artifactVersion, "True", null));
+        jsonObject.add("mode", createCdsInputProperty(
+                "mode", "string", "async" ,null));
+        jsonObject.add("data", createDataProperty(inputs));
+        return jsonObject;
+    }
+
+    private static JsonObject createDataProperty(JsonObject inputs) {
+        JsonObject data = new JsonObject();
+        data.addProperty("title", "data");
+        JsonObject dataObj = new JsonObject();
+        addDataFields(inputs, dataObj);
+        data.add(PROPERTIES, dataObj);
+        return data;
+    }
+
+    private static void addDataFields(JsonObject inputs,
+                                      JsonObject dataObj) {
+        Set<Map.Entry<String, JsonElement>> entrySet = inputs.entrySet();
+        for (Map.Entry<String, JsonElement> entry : entrySet) {
+            String key = entry.getKey();
+            JsonObject inputProperty = inputs.getAsJsonObject(key);
+            if (inputProperty.get(TYPE) == null) {
+                addDataFields(entry.getValue().getAsJsonObject(), dataObj);
+            } else {
+                dataObj.add(entry.getKey(),
+                            createCdsInputProperty(key,
+                                                   inputProperty.get(TYPE).getAsString(),
+                                                   null,
+                                                   entry.getValue().getAsJsonObject()));
+            }
+        }
+    }
+
+    private static JsonObject createCdsInputProperty(String title,
+                                                     String type,
+                                                     String defaultValue,
+                                                     JsonObject cdsProperty) {
+        JsonObject property = new JsonObject();
+        property.addProperty("title", title);
+
+        if (TYPE_LIST.equalsIgnoreCase(type)) {
+            property.addProperty(TYPE, "array");
+            if (cdsProperty.get(PROPERTIES) != null) {
+                JsonObject dataObject = new JsonObject();
+                addDataFields(cdsProperty.get(PROPERTIES).getAsJsonObject(),
+                              dataObject);
+                JsonObject listProperties = new JsonObject();
+                listProperties.add(PROPERTIES, dataObject);
+                property.add("items", listProperties);
+            }
+        } else {
+            property.addProperty(TYPE, type);
+        }
+
+        if (defaultValue != null) {
+            property.addProperty("default", defaultValue);
+        }
+        return property;
     }
 }

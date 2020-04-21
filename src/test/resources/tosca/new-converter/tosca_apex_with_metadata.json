@@ -76,57 +76,25 @@
                         "title": "artifact name",
                         "type": "string",
                         "default": "baseconfiguration",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "artifact_version": {
                         "title": "artifact version",
                         "type": "string",
                         "default": "1.0.0",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async"
+                        "default": "async",
+                        "readOnly": false
                       },
                       "data": {
                         "title": "data",
-                        "properties": {
-                          "resource-assignment-properties": {
-                            "title": "resource-assignment-properties",
-                            "type": "object",
-                            "properties": {
-                              "request-id": {
-                                "title": "request-id",
-                                "type": "string"
-                              },
-                              "service-instance-id": {
-                                "title": "service-instance-id",
-                                "type": "string"
-                              },
-                              "vnf-id": {
-                                "title": "vnf-id",
-                                "type": "string"
-                              },
-                              "action-name": {
-                                "title": "action-name",
-                                "type": "string"
-                              },
-                              "scope-type": {
-                                "title": "scope-type",
-                                "type": "string"
-                              },
-                              "hostname": {
-                                "title": "hostname",
-                                "type": "string"
-                              },
-                              "vnf_name": {
-                                "title": "vnf_name",
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
+                        "type": "string",
+                        "format": "textarea",
+                        "default": "{\"request-id\":\"\",\"service-instance-id\":\"\",\"vnf-id\":\"\",\"action-name\":\"\",\"scope-type\":\"\",\"hostname\":\"\",\"vnf_name\":\"\"}"
                       }
                     }
                   },
@@ -137,57 +105,25 @@
                         "title": "artifact name",
                         "type": "string",
                         "default": "baseconfiguration",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "artifact_version": {
                         "title": "artifact version",
                         "type": "string",
                         "default": "1.0.0",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async"
+                        "default": "async",
+                        "readOnly": false
                       },
                       "data": {
                         "title": "data",
-                        "properties": {
-                          "resource-assignment-properties": {
-                            "title": "resource-assignment-properties",
-                            "type": "object",
-                            "properties": {
-                              "request-id": {
-                                "title": "request-id",
-                                "type": "string"
-                              },
-                              "service-instance-id": {
-                                "title": "service-instance-id",
-                                "type": "string"
-                              },
-                              "vnf-id": {
-                                "title": "vnf-id",
-                                "type": "string"
-                              },
-                              "action-name": {
-                                "title": "action-name",
-                                "type": "string"
-                              },
-                              "scope-type": {
-                                "title": "scope-type",
-                                "type": "string"
-                              },
-                              "hostname": {
-                                "title": "hostname",
-                                "type": "string"
-                              },
-                              "vnf_name": {
-                                "title": "vnf_name",
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
+                        "type": "string",
+                        "format": "textarea",
+                        "default": "{\"request-id\":\"\",\"service-instance-id\":\"\",\"vnf-id\":\"\",\"action-name\":\"\",\"scope-type\":\"\",\"hostname\":\"\",\"vnf_name\":\"\"}"
                       }
                     }
                   },
@@ -198,57 +134,25 @@
                         "title": "artifact name",
                         "type": "string",
                         "default": "baseconfiguration",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "artifact_version": {
                         "title": "artifact version",
                         "type": "string",
                         "default": "1.0.0",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async"
+                        "default": "async",
+                        "readOnly": false
                       },
                       "data": {
                         "title": "data",
-                        "properties": {
-                          "resource-assignment-properties": {
-                            "title": "resource-assignment-properties",
-                            "type": "object",
-                            "properties": {
-                              "request-id": {
-                                "title": "request-id",
-                                "type": "string"
-                              },
-                              "service-instance-id": {
-                                "title": "service-instance-id",
-                                "type": "string"
-                              },
-                              "vnf-id": {
-                                "title": "vnf-id",
-                                "type": "string"
-                              },
-                              "action-name": {
-                                "title": "action-name",
-                                "type": "string"
-                              },
-                              "scope-type": {
-                                "title": "scope-type",
-                                "type": "string"
-                              },
-                              "hostname": {
-                                "title": "hostname",
-                                "type": "string"
-                              },
-                              "vnf_name": {
-                                "title": "vnf_name",
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
+                        "type": "string",
+                        "format": "textarea",
+                        "default": "{\"request-id\":\"\",\"service-instance-id\":\"\",\"vnf-id\":\"\",\"action-name\":\"\",\"scope-type\":\"\",\"hostname\":\"\",\"vnf_name\":\"\"}"
                       }
                     }
                   },
@@ -259,57 +163,25 @@
                         "title": "artifact name",
                         "type": "string",
                         "default": "baseconfiguration",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "artifact_version": {
                         "title": "artifact version",
                         "type": "string",
                         "default": "1.0.0",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async"
+                        "default": "async",
+                        "readOnly": false
                       },
                       "data": {
                         "title": "data",
-                        "properties": {
-                          "resource-assignment-properties": {
-                            "title": "resource-assignment-properties",
-                            "type": "object",
-                            "properties": {
-                              "request-id": {
-                                "title": "request-id",
-                                "type": "string"
-                              },
-                              "service-instance-id": {
-                                "title": "service-instance-id",
-                                "type": "string"
-                              },
-                              "vnf-id": {
-                                "title": "vnf-id",
-                                "type": "string"
-                              },
-                              "action-name": {
-                                "title": "action-name",
-                                "type": "string"
-                              },
-                              "scope-type": {
-                                "title": "scope-type",
-                                "type": "string"
-                              },
-                              "hostname": {
-                                "title": "hostname",
-                                "type": "string"
-                              },
-                              "vnf_name": {
-                                "title": "vnf_name",
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
+                        "type": "string",
+                        "format": "textarea",
+                        "default": "{\"request-id\":\"\",\"service-instance-id\":\"\",\"vnf-id\":\"\",\"action-name\":\"\",\"scope-type\":\"\",\"hostname\":\"\",\"vnf_name\":\"\"}"
                       }
                     }
                   },
@@ -320,57 +192,25 @@
                         "title": "artifact name",
                         "type": "string",
                         "default": "baseconfiguration",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "artifact_version": {
                         "title": "artifact version",
                         "type": "string",
                         "default": "1.0.0",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async"
+                        "default": "async",
+                        "readOnly": false
                       },
                       "data": {
                         "title": "data",
-                        "properties": {
-                          "resource-assignment-properties": {
-                            "title": "resource-assignment-properties",
-                            "type": "object",
-                            "properties": {
-                              "request-id": {
-                                "title": "request-id",
-                                "type": "string"
-                              },
-                              "service-instance-id": {
-                                "title": "service-instance-id",
-                                "type": "string"
-                              },
-                              "vnf-id": {
-                                "title": "vnf-id",
-                                "type": "string"
-                              },
-                              "action-name": {
-                                "title": "action-name",
-                                "type": "string"
-                              },
-                              "scope-type": {
-                                "title": "scope-type",
-                                "type": "string"
-                              },
-                              "hostname": {
-                                "title": "hostname",
-                                "type": "string"
-                              },
-                              "vnf_name": {
-                                "title": "vnf_name",
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
+                        "type": "string",
+                        "format": "textarea",
+                        "default": "{\"request-id\":\"\",\"service-instance-id\":\"\",\"vnf-id\":\"\",\"action-name\":\"\",\"scope-type\":\"\",\"hostname\":\"\",\"vnf_name\":\"\"}"
                       }
                     }
                   },
@@ -381,57 +221,25 @@
                         "title": "artifact name",
                         "type": "string",
                         "default": "baseconfiguration",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "artifact_version": {
                         "title": "artifact version",
                         "type": "string",
                         "default": "1.0.0",
-                        "readOnly": "True"
+                        "readOnly": true
                       },
                       "mode": {
                         "title": "mode",
                         "type": "string",
-                        "default": "async"
+                        "default": "async",
+                        "readOnly": false
                       },
                       "data": {
                         "title": "data",
-                        "properties": {
-                          "resource-assignment-properties": {
-                            "title": "resource-assignment-properties",
-                            "type": "object",
-                            "properties": {
-                              "request-id": {
-                                "title": "request-id",
-                                "type": "string"
-                              },
-                              "service-instance-id": {
-                                "title": "service-instance-id",
-                                "type": "string"
-                              },
-                              "vnf-id": {
-                                "title": "vnf-id",
-                                "type": "string"
-                              },
-                              "action-name": {
-                                "title": "action-name",
-                                "type": "string"
-                              },
-                              "scope-type": {
-                                "title": "scope-type",
-                                "type": "string"
-                              },
-                              "hostname": {
-                                "title": "hostname",
-                                "type": "string"
-                              },
-                              "vnf_name": {
-                                "title": "vnf_name",
-                                "type": "string"
-                              }
-                            }
-                          }
-                        }
+                        "type": "string",
+                        "format": "textarea",
+                        "default": "{\"request-id\":\"\",\"service-instance-id\":\"\",\"vnf-id\":\"\",\"action-name\":\"\",\"scope-type\":\"\",\"hostname\":\"\",\"vnf_name\":\"\"}"
                       }
                     }
                   }
