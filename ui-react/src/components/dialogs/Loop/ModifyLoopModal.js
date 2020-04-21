@@ -37,7 +37,7 @@ import Search from '@material-ui/icons/Search';
 import LoopService from '../../../api/LoopService';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-
+import Alert from 'react-bootstrap/Alert';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
@@ -65,6 +65,7 @@ export default class ModifyLoopModal extends React.Component {
 		toscaPolicyModelsData: [],
 		selectedPolicyModelsData: [],
 		key: 'add',
+		showFailAlert: false,
 		toscaColumns: [
 			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
 				cellStyle: cellStyle,
@@ -160,10 +161,25 @@ export default class ModifyLoopModal extends React.Component {
 		this.props.history.push('/');
 	}
 
+	renderAlert() {
+		return (
+			<div>
+				<Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
+					{this.state.showMessage}
+				</Alert>
+			</div>
+		);
+	}
+
 	handleAdd() {
-		LoopService.addOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version);
-		this.props.loadLoopFunction(this.state.loopCache.getLoopName());
-		this.handleClose();
+		LoopService.addOperationalPolicyType(this.state.loopCache.getLoopName(),this.state.selectedRowData.policyModelType,this.state.selectedRowData.version)
+		.then(pars => {
+			this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+			this.handleClose();
+		})
+		.catch(error => {
+			this.setState({ showFailAlert: true, showMessage: "Adding failed with error: " + error.message});
+		});
 	}
 
 	handleRemove() {
@@ -192,13 +208,14 @@ export default class ModifyLoopModal extends React.Component {
 								rowStyle: rowData => ({
 									backgroundColor: (this.state.selectedRowData !== {} && this.state.selectedRowData.tableData !== undefined
 									&& this.state.selectedRowData.tableData.id === rowData.tableData.id) ? '#EEE' : '#FFF'
-								})
+									})
 							}}
 							/>
 							<div>
 								<TextModal value={this.state.content} onChange={this.handleYamlContent}/>
 							</div>
 						</Modal.Body>
+						{this.renderAlert()}
 					</Tab>
 					<Tab eventKey="remove" title="Remove Operational Policies">
 						<Modal.Body>
