@@ -34,6 +34,7 @@ import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.ExchangeBuilder;
+import org.onap.clamp.clds.exception.cds.CdsParametersException;
 import org.onap.clamp.clds.model.cds.CdsBpWorkFlowListResponse;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.LoggingUtils;
@@ -117,7 +118,7 @@ public class CdsServices {
         return null;
     }
 
-    private JsonObject parseCdsResponse(String response) {
+    protected JsonObject parseCdsResponse(String response) {
         JsonObject root = JsonParser.parseString(response).getAsJsonObject();
         JsonObject inputs = root.getAsJsonObject("workFlowData").getAsJsonObject("inputs");
         JsonObject dataTypes = root.getAsJsonObject("dataTypes");
@@ -135,11 +136,32 @@ public class CdsServices {
             String type = inputProperty.get("type").getAsString();
             if (isComplexType(type, dataTypes)) {
                 inputObject.add(key, handleComplexType(type, dataTypes));
+            } else if (type.equalsIgnoreCase("list")) {
+                inputObject.add(key, handleListType(key, inputProperty,
+                                                    dataTypes));
             } else {
                 inputObject.add(key, entry.getValue());
             }
         }
         return inputObject;
+    }
+
+    private JsonObject handleListType(String propertyName,
+                                      JsonObject inputProperty,
+                                      JsonObject dataTypes) {
+        if (inputProperty.get("entry_schema") != null) {
+            String type = inputProperty.get("entry_schema").getAsJsonObject().get(
+                            "type").getAsString();
+            if (dataTypes.get(type) != null) {
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("type", "list");
+                jsonObject.add("properties", handleComplexType(type, dataTypes));
+                return jsonObject;
+            } else {
+                return inputProperty;
+            }
+        }
+        throw new CdsParametersException("Entry schema is null for " + propertyName);
     }
 
     private JsonObject handleComplexType(String key, JsonObject dataTypes) {

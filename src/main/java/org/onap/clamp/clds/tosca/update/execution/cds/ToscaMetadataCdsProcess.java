@@ -23,6 +23,10 @@
 
 package org.onap.clamp.clds.tosca.update.execution.cds;
 
+import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.PROPERTIES;
+import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.TYPE;
+import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.TYPE_LIST;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -173,7 +177,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         jsonObject.add("artifact_version", createAnyOfJsonProperty(
                 "artifact version", artifactVersion));
         jsonObject.add("mode", createCdsInputProperty(
-                "mode", "string", "async"));
+                "mode", "string", "async", null));
         jsonObject.add("data", createDataProperty(inputs));
 
         return jsonObject;
@@ -182,7 +186,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
     private static JsonObject createDataProperty(JsonObject inputs) {
         JsonObject data = new JsonObject();
         data.addProperty("title", "data");
-        data.add("properties", addDataFields(inputs));
+        data.add(PROPERTIES, addDataFields(inputs));
         return data;
     }
 
@@ -192,7 +196,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
         for (Map.Entry<String, JsonElement> entry : entrySet) {
             String key = entry.getKey();
             JsonObject inputProperty = inputs.getAsJsonObject(key);
-            if (inputProperty.get("type") == null) {
+            if (inputProperty.get(TYPE) == null) {
                 jsonObject.add(entry.getKey(),
                                createAnyOfJsonObject(key,
                                                      addDataFields(entry.getValue().getAsJsonObject())));
@@ -200,7 +204,8 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                 jsonObject.add(entry.getKey(),
                                createCdsInputProperty(key,
                                                       inputProperty.get("type").getAsString(),
-                                                      null));
+                                                      null,
+                                                      entry.getValue().getAsJsonObject()));
             }
         }
         return jsonObject;
@@ -208,14 +213,26 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
 
     private static JsonObject createCdsInputProperty(String title,
                                                      String type,
-                                                     String defaultValue) {
+                                                     String defaultValue,
+                                                     JsonObject cdsProperty) {
         JsonObject property = new JsonObject();
         property.addProperty("title", title);
-        property.addProperty("type", type);
+
+        if (TYPE_LIST.equalsIgnoreCase(type)) {
+            property.addProperty(TYPE, "array");
+            if (cdsProperty.get(PROPERTIES) != null) {
+                JsonObject listProperties = new JsonObject();
+                listProperties.add(PROPERTIES,
+                                   addDataFields(cdsProperty.get(PROPERTIES).getAsJsonObject()));
+                property.add("items", listProperties);
+            }
+        } else {
+            property.addProperty(TYPE, type);
+        }
+
         if (defaultValue != null) {
             property.addProperty("default", defaultValue);
         }
-        property.addProperty("format", "textarea");
         return property;
     }
 }
