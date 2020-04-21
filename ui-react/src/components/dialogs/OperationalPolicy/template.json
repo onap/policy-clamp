@@ -3,21 +3,6 @@
 		{
 			"name": "OPERATIONAL_LOOP_NAME",
 			"configurationsJson": {
-				"guard_policies": {
-					"guard.minmax.new": {
-						"recipe": "",
-						"clname": "LOOP_NAME",
-						"actor": "",
-						"targets": "",
-						"min": "",
-						"max": "",
-						"limit": "",
-						"timeUnits": "",
-						"timeWindow": "",
-						"guardActiveStart": "00:00:00Z",
-						"guardActiveEnd": "00:00:01Z"
-					}
-				},
 				"operational_policy": {
 					"controlLoop": {
 						"trigger_policy": "new",

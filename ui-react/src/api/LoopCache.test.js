@@ -34,7 +34,6 @@ describe('Verify LoopCache functions', () => {
       const opPolicy = [{
         "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
         "configurationsJson": {
-          "guard_policies": {},
           "operational_policy": {
             "controlLoop": {},
             "policies": []
@@ -51,7 +50,6 @@ describe('Verify LoopCache functions', () => {
       const opPolicy = [{
         "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
         "configurationsJson": {
-          "guard_policies": {},
           "operational_policy": {
             "controlLoop": {},
             "policies": []
@@ -157,7 +155,7 @@ describe('Verify LoopCache functions', () => {
           "id": 1,
           "logType": "INFO",
           "logComponent": "CLAMP",
-          "message": "Operational and Guard policies UPDATED",
+          "message": "Operational policies UPDATED",
           "logInstant": "2019-07-08T09:44:37Z"
         }
       ];
@@ -196,7 +194,6 @@ describe('Verify LoopCache functions', () => {
 
     it('updateOperationalPolicyProperties', () => {
       const newOpPolicy = {
-          "guard_policies": {},
           "operational_policy": {
             "controlLoop": {},
             "policies": []

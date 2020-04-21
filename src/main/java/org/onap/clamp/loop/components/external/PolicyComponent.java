@@ -85,13 +85,6 @@ public class PolicyComponent extends ExternalComponent {
             updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
                     opPolicy.getName(),
                     "1.0.0", pdpGroupMap);
-            if (opPolicy.isLegacy()) {
-                for (String guardName:opPolicy.createGuardPolicyPayloads().keySet()) {
-                    updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
-                            guardName,
-                            "1.0.0", pdpGroupMap);
-                }
-            }
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
@@ -186,7 +179,7 @@ public class PolicyComponent extends ExternalComponent {
 
     /**
      * This is a method that expect the results of the queries getPolicy and
-     * getPolicyDeployed for a unique policy (op,guard, config, etc ...). It
+     * getPolicyDeployed for a unique policy (op, config, etc ...). It
      * re-computes the global policy state for each policy results given. Therefore
      * this method is called multiple times from the camel route and must be reset
      * for a new global policy state retrieval. The state to compute the global

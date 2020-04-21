@@ -59,30 +59,4 @@ public class OperationalPolicyPayloadTest {
         assertThat(LegacyOperationalPolicy.createPolicyPayloadYamlLegacy(jsonConfig.get("operational_policy")))
                 .isEqualTo(ResourceFileUtil.getResourceAsString("tosca/operational-policy-payload-legacy.yaml"));
     }
-
-    @Test
-    public void testGuardPolicyEmptyPayloadConstruction() throws IOException {
-        JsonObject jsonConfig = new GsonBuilder().create().fromJson(
-                ResourceFileUtil.getResourceAsString("tosca/operational-policy-no-guard-properties.json"),
-                JsonObject.class);
-        OperationalPolicy policy = new OperationalPolicy("testPolicy", jsonConfig, null, null, null, null, null);
-        Map<String, String> guardsMap = policy.createGuardPolicyPayloads();
-        assertThat(guardsMap).isEmpty();
-        assertThat(guardsMap.entrySet()).isEmpty();
-    }
-
-    @Test
-    public void testGuardPolicyPayloadConstruction() throws IOException {
-        JsonObject jsonConfig = new GsonBuilder().create().fromJson(
-                ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), JsonObject.class);
-        OperationalPolicy policy = new OperationalPolicy("testPolicy", jsonConfig, null, null, null, null, null);
-
-        Map<String, String> guardsMap = policy.createGuardPolicyPayloads();
-
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/guard1-policy-payload.json"),
-                guardsMap.get("guard.minmax.new"), false);
-
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/guard2-policy-payload.json"),
-                guardsMap.get("guard.frequency.new"), false);
-    }
 }

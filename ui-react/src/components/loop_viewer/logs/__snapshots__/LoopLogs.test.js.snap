@@ -51,7 +51,7 @@ exports[`Verify LoopLogs Test the render method 1`] = `
             "logComponent": "CLAMP",
             "logInstant": "2019-07-08T09:44:37Z",
             "logType": "INFO",
-            "message": "Operational and Guard policies UPDATED",
+            "message": "Operational policies UPDATED",
           }
         }
       />

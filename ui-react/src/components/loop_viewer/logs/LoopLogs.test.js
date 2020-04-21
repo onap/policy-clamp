@@ -34,7 +34,7 @@ describe('Verify LoopLogs', () => {
 				"id": 1,
 				"logType": "INFO",
 				"logComponent": "CLAMP",
-				"message": "Operational and Guard policies UPDATED",
+				"message": "Operational policies UPDATED",
 				"logInstant": "2019-07-08T09:44:37Z"
 			}
 		]
@@ -51,14 +51,14 @@ describe('Verify LoopLogs', () => {
 				"id": 1,
 				"logType": "INFO",
 				"logComponent": "CLAMP",
-				"message": "Operational and Guard policies UPDATED",
+				"message": "Operational policies UPDATED",
 				"logInstant": "2019-07-08T09:44:37Z"
 			},
 			{
 				"id": 2,
 				"logType": "INFO",
 				"logComponent": "CLAMP",
-				"message": "Operational and Guard policies UPDATED",
+				"message": "Operational policies UPDATED",
 				"logInstant": "2019-07-08T09:44:50Z"
 			}
 			]

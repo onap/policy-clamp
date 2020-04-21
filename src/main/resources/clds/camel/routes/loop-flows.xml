@@ -87,32 +87,8 @@
 				<constant>null</constant>
 			</setBody>
 			<log loggingLevel="INFO"
-				message="Processing Micro Service Policy: ${exchangeProperty[policyName]} of type ${exchangeProperty[policyType]}" />
+				message="Processing Operational Policy: ${exchangeProperty[policyName]} of type ${exchangeProperty[policyType]}" />
 			<to uri="direct:verify-one-policy" />
-			<log loggingLevel="INFO"
-				message="Processing all GUARD policies defined in loop ${exchangeProperty[loopObject].getName()}" />
-			<split>
-				<simple>${exchangeProperty[operationalPolicy].createGuardPolicyPayloads().entrySet()}
-				</simple>
-				<setProperty propertyName="policyName">
-					<simple>${body.getKey()}</simple>
-				</setProperty>
-				<setProperty propertyName="policyType">
-					<simple>onap.policies.controlloop.Guard</simple>
-				</setProperty>
-				<setProperty propertyName="policyTypeVersion">
-					<simple>1.0.0</simple>
-				</setProperty>
-				<setProperty propertyName="policyVersion">
-					<simple>1</simple>
-				</setProperty>
-				<setBody>
-					<constant>null</constant>
-				</setBody>
-				<log loggingLevel="INFO"
-					message="Processing Guard Policy: ${exchangeProperty[policyName]} of type ${exchangeProperty[policyType]}" />
-				<to uri="direct:verify-one-policy" />
-			</split>
 		</split>
 		<setProperty propertyName="policyState">
 			<simple> ${exchangeProperty[policyComponent].getState()}

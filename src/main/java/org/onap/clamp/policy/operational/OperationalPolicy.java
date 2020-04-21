@@ -293,25 +293,4 @@ public class OperationalPolicy extends Policy implements Serializable {
             return super.createPolicyPayload();
         }
     }
-
-    /**
-     * Return a map containing all Guard policies indexed by Guard policy Name.
-     *
-     * @return The Guards map
-     */
-    public Map<String, String> createGuardPolicyPayloads() {
-        Map<String, String> result = new HashMap<>();
-
-        if (this.getConfigurationsJson() != null) {
-            JsonElement guardsList = this.getConfigurationsJson().get("guard_policies");
-            if (guardsList != null) {
-                for (JsonElement guardElem : guardsList.getAsJsonArray()) {
-                    result.put(guardElem.getAsJsonObject().get("policy-id").getAsString(),
-                            new GsonBuilder().create().toJson(guardElem));
-                }
-            }
-        }
-        logger.info("Guard policy payload: " + result);
-        return result;
-    }
 }

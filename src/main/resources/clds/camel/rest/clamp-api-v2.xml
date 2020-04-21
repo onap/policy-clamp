@@ -157,7 +157,7 @@
 					<to
 						uri="bean:org.onap.clamp.loop.LoopController?method=updateOperationalPolicies(${header.loopName},${header.OperationalPoliciesArray})" />
 					<to
-						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational and Guard policies UPDATED','INFO',${exchangeProperty[loopObject]})" />
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('Operational policies UPDATED','INFO',${exchangeProperty[loopObject]})" />
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
 					<doCatch>
@@ -532,29 +532,6 @@
 
 						<to uri="direct:delete-policy" />
 						<to uri="direct:create-policy" />
-						<choice>
-							<when>
-								<simple>${exchangeProperty['policy'].isLegacy()} == true
-								</simple>
-								<log loggingLevel="INFO"
-									message="Processing all GUARD policies (LEGACY) defined in loop ${exchangeProperty[loopObject].getName()}" />
-								<split>
-									<simple>${exchangeProperty[operationalPolicy].createGuardPolicyPayloads().entrySet()}
-									</simple>
-									<setProperty propertyName="guardPolicy">
-										<simple>${body}</simple>
-									</setProperty>
-									<log loggingLevel="INFO"
-										message="Processing Guard Policy: ${exchangeProperty[guardPolicy].getKey()}" />
-
-									<setProperty propertyName="raiseHttpExceptionFlag">
-										<simple resultType="java.lang.Boolean">false</simple>
-									</setProperty>
-									<to uri="direct:delete-guard-policy" />
-									<to uri="direct:create-guard-policy" />
-								</split>
-							</when>
-						</choice>
 					</split>
 
 					<delay>
@@ -634,27 +611,6 @@
 							<simple resultType="java.lang.Boolean">false</simple>
 						</setProperty>
 						<to uri="direct:delete-policy" />
-						<choice>
-							<when>
-								<simple>${exchangeProperty['policy'].isLegacy()} == true
-								</simple>
-								<log loggingLevel="INFO"
-									message="Deleting all GUARD policies (LEGACY) defined in loop ${exchangeProperty[loopObject].getName()}" />
-								<split>
-									<simple>${exchangeProperty[operationalPolicy].createGuardPolicyPayloads().entrySet()}
-									</simple>
-									<setProperty propertyName="guardPolicy">
-										<simple>${body}</simple>
-									</setProperty>
-									<log loggingLevel="INFO"
-										message="Deleting Guard Policy: ${exchangeProperty[guardPolicy].getKey()}" />
-									<setProperty propertyName="raiseHttpExceptionFlag">
-										<simple resultType="java.lang.Boolean">false</simple>
-									</setProperty>
-									<to uri="direct:delete-guard-policy" />
-								</split>
-							</when>
-						</choice>
 					</split>
 					<to
 						uri="bean:org.onap.clamp.loop.LoopController?method=deleteLoop(${header.loopName})" />
@@ -759,8 +715,9 @@
 							<constant>500</constant>
 						</setHeader>
 						<setBody>
-							<simple>ADD Operational policy request FAILED</simple>
+							<simple>ADD Operational policy request FAILED for loop: ${header.loopName}, ${exception.message}"</simple>
 						</setBody>
+						
 					</doCatch>
 				</doTry>
 			</route>

@@ -94,7 +94,7 @@ public class LoopControllerTestItCase {
     public void testUpdateOperationalPolicies() {
         saveTestLoopToDb();
         String policy = "[{\"name\":\"OPERATIONAL_CLholmes31_v1_0_vFW_PG_T10_k8s-holmes-rules\","
-                + "\"configurationsJson\":{\"guard_policies\":{},"
+                + "\"configurationsJson\":{"
                 + "\"operational_policy\":{\"controlLoop\":{\"trigger_policy\":\"unique-policy-id-1-modifyConfig\","
                 + "\"timeout\":\"3600\",\"abatement\":\"false\","
                 + "\"controlLoopName\":\"LOOP_CLholmes31_v1_0_vFW_PG_T10_k8s-holmes-rules\"},"
