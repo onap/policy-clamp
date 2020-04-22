@@ -21,7 +21,7 @@
  */
 
 
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
@@ -30,7 +30,6 @@ import MaterialTable, {MTableToolbar} from "material-table";
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
-import { forwardRef }  from 'react';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';
@@ -204,7 +203,7 @@ export default class ManageDictionaries extends React.Component {
 					cellStyle: cellStyle,
 					headerStyle: headerStyle
 				 },
-				 {  
+				 {
 				    title: "Sub-Dictionary", field: "subDictionary",
 				      editComponent: props => (
 						 <div>
@@ -214,7 +213,7 @@ export default class ManageDictionaries extends React.Component {
 				    cellStyle: cellStyle,
 				    headerStyle: headerStyle
 				 },
-				{     
+				{   
 					title: "Updated By", field: "updatedBy", editable: 'never',
 					cellStyle: cellStyle,
 					headerStyle: headerStyle
@@ -294,7 +293,7 @@ export default class ManageDictionaries extends React.Component {
         var dictionaryElements = [];
         if (event.target.files[0].type === 'text/csv' ) {
             if (event.target.files && event.target.files[0]) {
-                let reader = new FileReader();
+                const reader = new FileReader();
                 reader.onload = function(e) {
                     var dictElems = reader.result.split('\n');
                     var jsonObj = [];
@@ -312,7 +311,6 @@ export default class ManageDictionaries extends React.Component {
                     const mandatoryKeys = [ 'Element Short Name', 'Element Name', 'Element Type' ];
                     const validTypes = ['string','number','datetime','json','map'];
                     if (!dictElems){
-                        
                         text.setState({validData: false});
                     } else if (headers.length !== dictKeys.length){
                         text.setState({validImport: false});
@@ -373,7 +371,7 @@ export default class ManageDictionaries extends React.Component {
         }
 
     }
-    
+   
     render() {
         return (
             <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
@@ -440,7 +438,7 @@ export default class ManageDictionaries extends React.Component {
                 new Promise((resolve, reject) => {
                                 setTimeout(() => {
                                     {
-                                        let data = this.state.dictionaryNames;
+                                        const data = this.state.dictionaryNames;
                     const index = data.indexOf(oldData);
                     data.splice(index, 1);
                     this.setState({ data }, () => resolve());

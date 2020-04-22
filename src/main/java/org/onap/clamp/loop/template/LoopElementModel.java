@@ -75,8 +75,8 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     @Column(columnDefinition = "MEDIUMTEXT", name = "blueprint_yaml")
     private String blueprint;
 
-    public static String MICRO_SERVICE_TYPE = "MICRO_SERVICE_TYPE";
-    public static String OPERATIONAL_POLICY_TYPE = "OPERATIONAL_POLICY_TYPE";
+    public static final String MICRO_SERVICE_TYPE = "MICRO_SERVICE_TYPE";
+    public static final String OPERATIONAL_POLICY_TYPE = "OPERATIONAL_POLICY_TYPE";
     /**
      * The type of element.
      */

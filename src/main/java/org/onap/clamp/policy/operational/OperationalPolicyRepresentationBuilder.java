@@ -45,8 +45,18 @@ public class OperationalPolicyRepresentationBuilder {
             EELFManager.getInstance().getLogger(OperationalPolicyRepresentationBuilder.class);
 
     public static final String PROPERTIES = "properties";
+    public static final String ITEMS = "items";
+    public static final String ANY_OF = "anyOf";
+    public static final String TITLE = "title";
+    public static final String RECIPE = "recipe";
+    public static final String DEFAULT = "default";
+    public static final String STRING = "string";
     public static final String TYPE = "type";
     public static final String TYPE_LIST = "list";
+
+    private OperationalPolicyRepresentationBuilder() {
+    	throw new IllegalStateException("This is Utility class, not supposed to be initiated.");
+    }
 
     /**
      * This method generates the operational policy json representation that will be
@@ -65,21 +75,21 @@ public class OperationalPolicyRepresentationBuilder {
                     ResourceFileUtil
                             .getResourceAsString("clds/json-schema/operational_policies/operational_policy.json"),
                     JsonObject.class);
-            jsonSchema.get("properties").getAsJsonObject()
-                    .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
-                    .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("target")
-                    .getAsJsonObject().get("anyOf").getAsJsonArray().addAll(createAnyOfArray(modelJson, true));
+            jsonSchema.get(PROPERTIES).getAsJsonObject()
+                    .get("operational_policy").getAsJsonObject().get(PROPERTIES).getAsJsonObject().get("policies")
+                    .getAsJsonObject().get(ITEMS).getAsJsonObject().get(PROPERTIES).getAsJsonObject().get("target")
+                    .getAsJsonObject().get(ANY_OF).getAsJsonArray().addAll(createAnyOfArray(modelJson, true));
 
             // update CDS recipe and payload information to schema
-            JsonArray actors = jsonSchema.get("properties").getAsJsonObject()
-                    .get("operational_policy").getAsJsonObject().get("properties").getAsJsonObject().get("policies")
-                    .getAsJsonObject().get("items").getAsJsonObject().get("properties").getAsJsonObject().get("actor")
-                    .getAsJsonObject().get("anyOf").getAsJsonArray();
+            JsonArray actors = jsonSchema.get(PROPERTIES).getAsJsonObject()
+                    .get("operational_policy").getAsJsonObject().get(PROPERTIES).getAsJsonObject().get("policies")
+                    .getAsJsonObject().get(ITEMS).getAsJsonObject().get(PROPERTIES).getAsJsonObject().get("actor")
+                    .getAsJsonObject().get(ANY_OF).getAsJsonArray();
 
             for (JsonElement actor : actors) {
-                if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get("title").getAsString())) {
-                    actor.getAsJsonObject().get("properties").getAsJsonObject().get("recipe").getAsJsonObject()
-                            .get("anyOf").getAsJsonArray()
+                if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get(TITLE).getAsString())) {
+                    actor.getAsJsonObject().get(PROPERTIES).getAsJsonObject().get(RECIPE).getAsJsonObject()
+                            .get(ANY_OF).getAsJsonArray()
                             .addAll(createAnyOfArrayForCdsRecipe(modelJson));
                 }
             }
@@ -93,9 +103,9 @@ public class OperationalPolicyRepresentationBuilder {
     private static JsonObject createSchemaProperty(String title, String type, String defaultValue, String readOnlyFlag,
                                                    String[] enumArray) {
         JsonObject property = new JsonObject();
-        property.addProperty("title", title);
-        property.addProperty("type", type);
-        property.addProperty("default", defaultValue);
+        property.addProperty(TITLE, title);
+        property.addProperty(TYPE, type);
+        property.addProperty(DEFAULT, defaultValue);
         property.addProperty("readOnly", readOnlyFlag);
 
         if (enumArray != null) {
@@ -114,15 +124,15 @@ public class OperationalPolicyRepresentationBuilder {
 
         for (Entry<String, JsonElement> entry : modelVnfs.entrySet()) {
             JsonObject vnfOneOfSchema = new JsonObject();
-            vnfOneOfSchema.addProperty("title", "VNF" + "-" + entry.getKey());
+            vnfOneOfSchema.addProperty(TITLE, "VNF" + "-" + entry.getKey());
             JsonObject properties = new JsonObject();
             if (generateType) {
-                properties.add("type", createSchemaProperty("Type", "string", "VNF", "True", null));
+                properties.add(TYPE, createSchemaProperty("Type", STRING, "VNF", "True", null));
             }
-            properties.add("resourceID", createSchemaProperty("Resource ID", "string",
+            properties.add("resourceID", createSchemaProperty("Resource ID", STRING,
                     modelVnfs.get(entry.getKey()).getAsJsonObject().get("name").getAsString(), "True", null));
 
-            vnfOneOfSchema.add("properties", properties);
+            vnfOneOfSchema.add(PROPERTIES, properties);
             vnfSchemaArray.add(vnfOneOfSchema);
         }
         return vnfSchemaArray;
@@ -134,39 +144,39 @@ public class OperationalPolicyRepresentationBuilder {
 
         for (Entry<String, JsonElement> entry : modelVfModules.entrySet()) {
             JsonObject vfModuleOneOfSchema = new JsonObject();
-            vfModuleOneOfSchema.addProperty("title", "VFMODULE" + "-" + entry.getKey());
+            vfModuleOneOfSchema.addProperty(TITLE, "VFMODULE" + "-" + entry.getKey());
             JsonObject properties = new JsonObject();
             if (generateType) {
-                properties.add("type", createSchemaProperty("Type", "string", "VFMODULE", "True", null));
+                properties.add(TYPE, createSchemaProperty("Type", STRING, "VFMODULE", "True", null));
             }
             properties.add("resourceID",
-                    createSchemaProperty("Resource ID", "string",
+                    createSchemaProperty("Resource ID", STRING,
                             modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelName").getAsString(),
                             "True", null));
             properties.add("modelInvariantId",
-                    createSchemaProperty("Model Invariant Id (ModelInvariantUUID)", "string",
+                    createSchemaProperty("Model Invariant Id (ModelInvariantUUID)", STRING,
                             modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelInvariantUUID")
                                     .getAsString(),
                             "True", null));
             properties.add("modelVersionId",
-                    createSchemaProperty("Model Version Id (ModelUUID)", "string",
+                    createSchemaProperty("Model Version Id (ModelUUID)", STRING,
                             modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelUUID").getAsString(),
                             "True", null));
             properties.add("modelName",
-                    createSchemaProperty("Model Name", "string",
+                    createSchemaProperty("Model Name", STRING,
                             modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelName").getAsString(),
                             "True", null));
-            properties.add("modelVersion", createSchemaProperty("Model Version", "string",
+            properties.add("modelVersion", createSchemaProperty("Model Version", STRING,
                     modelVfModules.get(entry.getKey()).getAsJsonObject().get("vfModuleModelVersion").getAsString(),
                     "True", null));
             properties
                     .add("modelCustomizationId",
-                            createSchemaProperty("Customization ID", "string",
+                            createSchemaProperty("Customization ID", STRING,
                                     modelVfModules.get(entry.getKey()).getAsJsonObject()
                                             .get("vfModuleModelCustomizationUUID").getAsString(), "True",
                                     null));
 
-            vfModuleOneOfSchema.add("properties", properties);
+            vfModuleOneOfSchema.add(PROPERTIES, properties);
             vfModuleOneOfSchemaArray.add(vfModuleOneOfSchema);
         }
         return vfModuleOneOfSchemaArray;
@@ -202,9 +212,9 @@ public class OperationalPolicyRepresentationBuilder {
                 JsonObject workflows = controllerProperties.getAsJsonObject("workflows");
                 for (Entry<String, JsonElement> workflowsEntry : workflows.entrySet()) {
                     JsonObject obj = new JsonObject();
-                    obj.addProperty("title", workflowsEntry.getKey());
-                    obj.addProperty("type", "object");
-                    obj.add("properties", createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
+                    obj.addProperty(TITLE, workflowsEntry.getKey());
+                    obj.addProperty(TYPE, "object");
+                    obj.add(PROPERTIES, createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
                             controllerProperties, workflowsEntry.getKey()));
                     schemaArray.add(obj);
                 }
@@ -217,21 +227,21 @@ public class OperationalPolicyRepresentationBuilder {
     private static JsonObject createPayloadProperty(JsonObject workFlow,
                                                     JsonObject controllerProperties, String workFlowName) {
         JsonObject payload = new JsonObject();
-        payload.addProperty("title", "Payload");
-        payload.addProperty("type", "object");
-        payload.add("properties", createInputPropertiesForPayload(workFlow,
+        payload.addProperty(TITLE, "Payload");
+        payload.addProperty(TYPE, "object");
+        payload.add(PROPERTIES, createInputPropertiesForPayload(workFlow,
                                                                   controllerProperties));
         JsonObject properties = new JsonObject();
-        properties.add("recipe", createRecipeForCdsWorkflow(workFlowName));
+        properties.add(RECIPE, createRecipeForCdsWorkflow(workFlowName));
         properties.add("payload", payload);
         return properties;
     }
 
     private static JsonObject createRecipeForCdsWorkflow(String workflow) {
         JsonObject recipe = new JsonObject();
-        recipe.addProperty("title", "recipe");
-        recipe.addProperty("type", "string");
-        recipe.addProperty("default", workflow);
+        recipe.addProperty(TITLE, RECIPE);
+        recipe.addProperty(TYPE, STRING);
+        recipe.addProperty(DEFAULT, workflow);
         JsonObject options = new JsonObject();
         options.addProperty("hidden", true);
         recipe.add("options", options);
@@ -253,18 +263,18 @@ public class OperationalPolicyRepresentationBuilder {
         JsonObject inputs = workFlow.getAsJsonObject("inputs");
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("artifact_name", createSchemaProperty(
-                "artifact name", "string", artifactName, "True", null));
+                "artifact name", STRING, artifactName, "True", null));
         jsonObject.add("artifact_version", createSchemaProperty(
-                "artifact version", "string", artifactVersion, "True", null));
+                "artifact version", STRING, artifactVersion, "True", null));
         jsonObject.add("mode", createCdsInputProperty(
-                "mode", "string", "async" ,null));
+                "mode", STRING, "async" ,null));
         jsonObject.add("data", createDataProperty(inputs));
         return jsonObject;
     }
 
     private static JsonObject createDataProperty(JsonObject inputs) {
         JsonObject data = new JsonObject();
-        data.addProperty("title", "data");
+        data.addProperty(TITLE, "data");
         JsonObject dataObj = new JsonObject();
         addDataFields(inputs, dataObj);
         data.add(PROPERTIES, dataObj);
@@ -294,7 +304,7 @@ public class OperationalPolicyRepresentationBuilder {
                                                      String defaultValue,
                                                      JsonObject cdsProperty) {
         JsonObject property = new JsonObject();
-        property.addProperty("title", title);
+        property.addProperty(TITLE, title);
 
         if (TYPE_LIST.equalsIgnoreCase(type)) {
             property.addProperty(TYPE, "array");
@@ -304,14 +314,14 @@ public class OperationalPolicyRepresentationBuilder {
                               dataObject);
                 JsonObject listProperties = new JsonObject();
                 listProperties.add(PROPERTIES, dataObject);
-                property.add("items", listProperties);
+                property.add(ITEMS, listProperties);
             }
         } else {
             property.addProperty(TYPE, type);
         }
 
         if (defaultValue != null) {
-            property.addProperty("default", defaultValue);
+            property.addProperty(DEFAULT, defaultValue);
         }
         return property;
     }
