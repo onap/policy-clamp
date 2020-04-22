@@ -23,9 +23,7 @@
 package org.onap.clamp.clds.client;
 
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
-
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;

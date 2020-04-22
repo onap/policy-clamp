@@ -28,22 +28,15 @@ import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.TYPE;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import java.util.Map;
 import java.util.Set;
-
 import org.onap.clamp.clds.tosca.update.execution.ToscaMetadataProcess;
 import org.onap.clamp.loop.service.Service;
-import org.onap.clamp.tosca.DictionaryService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class is there to add the JsonObject for CDS in the json Schema according to what is found in the Tosca model.
  */
 public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
-
-    @Autowired
-    private DictionaryService dictionaryService;
 
     @Override
     public void executeProcess(String parameters, JsonObject childObject, Service serviceModel) {
@@ -59,6 +52,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
             case "operation":
                 generateOperation(childObject, serviceModel);
                 break;
+            default:
         }
     }
 
@@ -83,7 +77,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                 .entrySet()) {
             JsonObject controllerProperties = entry.getValue().getAsJsonObject()
                     .getAsJsonObject("controllerProperties");
-            if (controllerProperties != null) {
+            if (controllerProperties != null && controllerProperties.getAsJsonObject("workflows") != null) {
                 for (String workflowsEntry : controllerProperties.getAsJsonObject("workflows").keySet()) {
                     schemaEnum.add(workflowsEntry);
                     schemaTitle.add(workflowsEntry + " (CDS operation)");
@@ -107,7 +101,7 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                 .entrySet()) {
             JsonObject controllerProperties = entry.getValue().getAsJsonObject()
                     .getAsJsonObject("controllerProperties");
-            if (controllerProperties != null) {
+            if (controllerProperties != null && controllerProperties.getAsJsonObject("workflows") != null) {
                 for (Map.Entry<String, JsonElement> workflowsEntry : controllerProperties.getAsJsonObject("workflows")
                         .entrySet()) {
                     JsonObject obj = new JsonObject();

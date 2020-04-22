@@ -40,6 +40,7 @@ import org.onap.clamp.clds.sdc.controller.installer.BlueprintMicroService;
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintParser;
 import org.onap.clamp.clds.sdc.controller.installer.ChainGenerator;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
+import org.onap.clamp.loop.cds.CdsDataInstaller;
 import org.onap.clamp.loop.service.CsarServiceInstaller;
 import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
@@ -79,6 +80,9 @@ public class CsarInstaller {
     private CsarServiceInstaller csarServiceInstaller;
 
     @Autowired
+    private CdsDataInstaller cdsDataInstaller;
+
+    @Autowired
     private PolicyEngineServices policyEngineServices;
 
     /**
@@ -113,7 +117,10 @@ public class CsarInstaller {
     public void installTheCsar(CsarHandler csar)
             throws SdcArtifactInstallerException, InterruptedException, BlueprintParserException {
         logger.info("Installing the CSAR " + csar.getFilePath());
-        installTheLoopTemplates(csar, csarServiceInstaller.installTheService(csar));
+        Service associatedService = csarServiceInstaller.installTheService(csar);
+        cdsDataInstaller.installCdsServiceProperties(csar, associatedService);
+
+        installTheLoopTemplates(csar, associatedService);
         logger.info("Successfully installed the CSAR " + csar.getFilePath());
     }
 

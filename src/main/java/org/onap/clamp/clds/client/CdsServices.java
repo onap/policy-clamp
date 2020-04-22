@@ -84,8 +84,11 @@ public class CdsServices {
             Date startTime = new Date();
             LoggingUtils.setTimeContext(startTime, new Date());
             return JsonUtils.GSON_JPA_MODEL.fromJson(cdsResponse, CdsBpWorkFlowListResponse.class);
+        } else {
+            logger.error("CDS getBlueprintWorkflowList FAILED");
+            return null;
         }
-        return null;
+
     }
 
     /**
@@ -114,8 +117,10 @@ public class CdsServices {
             Date startTime = new Date();
             LoggingUtils.setTimeContext(startTime, new Date());
             return parseCdsResponse(cdsResponse);
+        } else {
+            logger.error("CDS getWorkflowInputProperties FAILED");
+            return null;
         }
-        return null;
     }
 
     protected JsonObject parseCdsResponse(String response) {

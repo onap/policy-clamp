@@ -15,6 +15,15 @@
                  message="Endpoint to query workflows from CDS : {{clamp.config.cds.url}}/api/v1/blueprint-model/workflows/blueprint-name/${exchangeProperty[blueprintName]}/version/${exchangeProperty[blueprintVersion]}"></log>
             <toD uri="{{clamp.config.cds.url}}/api/v1/blueprint-model/workflows/blueprint-name/${exchangeProperty[blueprintName]}/version/${exchangeProperty[blueprintVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.cds.userName}}&amp;authPassword={{clamp.config.cds.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
+            <doCatch>
+                <exception>java.lang.Exception</exception>
+                <handled>
+                    <constant>true</constant>
+                </handled>
+
+                <log loggingLevel="ERROR"
+                     message="GET CDS request FAILED: ${exception.stacktrace}" />
+            </doCatch>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
@@ -37,6 +46,15 @@
                  message="Endpoint to query input properties for workflow from CDS : {{clamp.config.cds.url}}/api/v1/blueprint-model/workflow-spec"></log>
             <toD uri="{{clamp.config.cds.url}}/api/v1/blueprint-model/workflow-spec?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.cds.userName}}&amp;authPassword={{clamp.config.cds.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
+            <doCatch>
+                <exception>java.lang.Exception</exception>
+                <handled>
+                    <constant>true</constant>
+                </handled>
+
+                <log loggingLevel="ERROR"
+                     message="GET CDS workflow input request FAILED: ${exception.stacktrace}" />
+            </doCatch>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
