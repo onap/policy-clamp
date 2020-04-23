@@ -25,14 +25,12 @@ package org.onap.clamp.clds.config.sdc;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import com.google.gson.JsonObject;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.apache.commons.codec.DecoderException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
 import org.onap.clamp.clds.util.CryptoUtils;
