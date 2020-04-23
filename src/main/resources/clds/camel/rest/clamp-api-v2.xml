@@ -283,7 +283,9 @@
 							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
 					<to
-							uri="bean:org.onap.clamp.loop.LoopController?method=refreshMicroServicePolicyJsonRepresentation(${exchangeProperty[loopObject]},${header.microServicePolicyName}})" />
+							uri="bean:org.onap.clamp.loop.cds.CdsDataInstaller?method=updateCdsServiceProperties(${exchangeProperty[loopObject].getModelService()})" />
+					<to
+							uri="bean:org.onap.clamp.loop.LoopController?method=refreshMicroServicePolicyJsonRepresentation(${exchangeProperty[loopObject]},${header.microServicePolicyName})" />
 					<log loggingLevel="INFO"
 						 message="REFRESH Micro Service policy request successfully executed for loop: ${header.loopName}" />
 					<to
@@ -324,7 +326,9 @@
 						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')" />
 					<to uri="direct:load-loop" />
 					<to
-						uri="bean:org.onap.clamp.loop.LoopController?method=refreshOperationalPolicyJsonRepresentation(${exchangeProperty[loopObject]},${header.operationalPolicyName}})" />
+							uri="bean:org.onap.clamp.loop.cds.CdsDataInstaller?method=updateCdsServiceProperties(${exchangeProperty[loopObject].getModelService()})" />
+					<to
+						uri="bean:org.onap.clamp.loop.LoopController?method=refreshOperationalPolicyJsonRepresentation(${exchangeProperty[loopObject]},${header.operationalPolicyName})" />
 					<log loggingLevel="INFO"
 						message="REFRESH operational policy request successfully executed for loop: ${header.loopName}" />
 					<to

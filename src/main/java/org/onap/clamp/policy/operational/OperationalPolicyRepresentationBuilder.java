@@ -208,7 +208,7 @@ public class OperationalPolicyRepresentationBuilder {
             JsonObject controllerProperties = entry.getValue().getAsJsonObject()
                     .getAsJsonObject("controllerProperties");
 
-            if (controllerProperties != null) {
+            if (controllerProperties != null && controllerProperties.getAsJsonObject("workflows") != null) {
                 JsonObject workflows = controllerProperties.getAsJsonObject("workflows");
                 for (Entry<String, JsonElement> workflowsEntry : workflows.entrySet()) {
                     JsonObject obj = new JsonObject();

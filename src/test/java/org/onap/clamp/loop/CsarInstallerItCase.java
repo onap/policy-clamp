@@ -50,6 +50,7 @@ import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.loop.cds.CdsDataInstaller;
 import org.onap.clamp.loop.service.ServicesRepository;
 import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.LoopTemplateLoopElementModel;
@@ -180,8 +181,7 @@ public class CsarInstallerItCase {
         CsarHandler csarHandler = new CsarHandler(notificationData, "", "");
         csarHandler
                 .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile());
-        Optional<String> testyaml = csarHandler.getPolicyModelYaml();
-        Assert.assertEquals(testyaml, Optional
+        Assert.assertEquals(csarHandler.getPolicyModelYaml(), Optional
                 .ofNullable(ResourceFileUtil.getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
     }
 
@@ -205,6 +205,10 @@ public class CsarInstallerItCase {
         CsarHandler csar = buildFakeCsarHandler(generatedName);
         csarInstaller.installTheCsar(csar);
         assertThat(serviceRepository.existsById("63cac700-ab9a-4115-a74f-7eac85e3fce0")).isTrue();
+        // We should have CDS info
+        assertThat(serviceRepository.findById("63cac700-ab9a-4115-a74f-7eac85e3fce0").get().getResourceByType("VF")
+                .getAsJsonObject("vLoadBalancerMS 0").getAsJsonObject(
+                        CdsDataInstaller.CONTROLLER_PROPERTIES)).isNotNull();
         assertThat(loopTemplatesRepo.existsById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
                 RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml"))).isTrue();
         assertThat(loopTemplatesRepo.existsById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
