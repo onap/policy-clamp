@@ -128,6 +128,15 @@ public class OperationalPolicyRepresentationBuilder {
         return vnfSchemaArray;
     }
 
+    private static JsonArray createBlankEntry() {
+        JsonArray result = new JsonArray();
+        JsonObject blankObject = new JsonObject();
+        blankObject.addProperty("title", "User defined");
+        blankObject.add("properties", new JsonObject());
+        result.add(blankObject);
+        return result;
+    }
+
     private static JsonArray createVfModuleSchema(Service modelService, boolean generateType) {
         JsonArray vfModuleOneOfSchemaArray = new JsonArray();
         JsonObject modelVfModules = modelService.getResourceByType("VFModule");
@@ -180,6 +189,8 @@ public class OperationalPolicyRepresentationBuilder {
      */
     public static JsonArray createAnyOfArray(Service modelJson, boolean generateType) {
         JsonArray targetOneOfStructure = new JsonArray();
+        // First entry must be user defined
+        targetOneOfStructure.addAll(createBlankEntry());
         targetOneOfStructure.addAll(createVnfSchema(modelJson, generateType));
         targetOneOfStructure.addAll(createVfModuleSchema(modelJson, generateType));
         return targetOneOfStructure;
