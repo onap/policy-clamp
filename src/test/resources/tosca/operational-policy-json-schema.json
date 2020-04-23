@@ -729,6 +729,10 @@
                     }
                   },
                   {
+                    "title": "User defined",
+                    "properties": {}
+                  },
+                  {
                     "title": "VNF-vLoadBalancerMS 0",
                     "properties": {
                       "type": {
