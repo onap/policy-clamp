@@ -309,7 +309,7 @@ public class OperationalPolicyRepresentationBuilder {
 
         if (TYPE_LIST.equalsIgnoreCase(type)) {
             property.addProperty(TYPE, "array");
-            if (cdsProperty.get(PROPERTIES) != null) {
+            if (cdsProperty != null && cdsProperty.get(PROPERTIES) != null) {
                 JsonObject dataObject = new JsonObject();
                 addDataFields(cdsProperty.get(PROPERTIES).getAsJsonObject(),
                               dataObject);
