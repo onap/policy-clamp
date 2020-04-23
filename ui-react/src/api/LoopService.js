@@ -233,9 +233,9 @@ export default class LoopService {
 					return response.text();
 				}
 			})
-			.then(function (object) {
+			.catch(function (error) {
 				console.error("Add Operational Policy query failed");
-				throw new Error(object);
+				throw new Error(error);
 			})
 	}
 
