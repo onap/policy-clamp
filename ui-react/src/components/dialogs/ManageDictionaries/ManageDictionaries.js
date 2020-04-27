@@ -87,11 +87,13 @@ function SubDict(props) {
 	const {onChange} = props;
 	const subDicts = [];
 	subDicts.push('Default');
-	for(var item in dictList) {
-		if(dictList[item].secondLevelDictionary === 1) {
-			subDicts.push(dictList[item].name);
-		}
-	};
+	if (dictList != "undefined"  && dictList.length > 0) {
+        for(var item in dictList) {
+            if(dictList[item].secondLevelDictionary === 1) {
+                subDicts.push(dictList[item].name);
+            }
+        };
+	}
 	subDicts.push('');
  	var optionItems = subDicts.map(
 		(item) => <option key={item}>{item}</option>
