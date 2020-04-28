@@ -130,7 +130,7 @@ public class OperationalPolicyRepresentationBuilder {
                 properties.add(TYPE, createSchemaProperty("Type", STRING, "VNF", "True", null));
             }
             properties.add("resourceID", createSchemaProperty("Resource ID", STRING,
-                    modelVnfs.get(entry.getKey()).getAsJsonObject().get("name").getAsString(), "True", null));
+                    modelVnfs.get(entry.getKey()).getAsJsonObject().get("invariantUUID").getAsString(), "True", null));
 
             vnfOneOfSchema.add(PROPERTIES, properties);
             vnfSchemaArray.add(vnfOneOfSchema);

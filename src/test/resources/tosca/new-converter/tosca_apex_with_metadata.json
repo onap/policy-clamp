@@ -267,7 +267,7 @@
                           "resourceID": {
                             "title": "Resource ID",
                             "type": "string",
-                            "default": "vLoadBalancerMS",
+                            "default": "1a31b9f2-e50d-43b7-89b3-a040250cf506",
                             "readOnly": "True"
                           }
                         }
