@@ -8,6 +8,7 @@
       "policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
     }
   },
+  "loopTemplate": {"name": "loopTemplateTest"},
   "modelService": {
     "serviceDetails": {
       "serviceType": "",
@@ -93,6 +94,8 @@
           "policies": []
         }
       },
+      "pdpGroup": "pdpGroupTest",
+      "pdpSubgroup": "pdpSubgroupTest",
       "jsonRepresentation": {
         "schema": {}
       }
@@ -104,6 +107,9 @@
       "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
       "configurationsJson": {"domain": "measurementsForVfScaling"},
       "shared": false,
+      "pdpGroup": "pdpGroupTest",
+      "pdpSubgroup": "pdpSubgroupTest",
+      "policyModel": {"policyPdpGroup": {"supportedPdpGroups": "supportedPdpGroupsTest"}},
       "jsonRepresentation": {"schema": {}}
     }
   ],

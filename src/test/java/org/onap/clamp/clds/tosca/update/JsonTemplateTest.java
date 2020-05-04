@@ -32,20 +32,38 @@ import org.onap.clamp.clds.tosca.update.templates.JsonTemplateField;
 
 public class JsonTemplateTest extends TestCase {
 
+    JsonTemplate toTest = new JsonTemplate("toTest");
+    List<JsonTemplateField>
+            jsonTemplateFields = new ArrayList<>(
+            Arrays.asList(new JsonTemplateField("type"), new JsonTemplateField("description"),
+                    new JsonTemplateField(
+                            "enum")));
+
     /**
      * Test check failed.
      */
     public void testCheckFields() {
-        JsonTemplate toTest = new JsonTemplate("toTest");
-        List<JsonTemplateField>
-                jsonTemplateFields = new ArrayList<>(
-                Arrays.asList(new JsonTemplateField("type"), new JsonTemplateField("description"),
-                        new JsonTemplateField(
-                                "enum")));
         toTest.setJsonTemplateFields(jsonTemplateFields);
         JsonTemplate reference = new JsonTemplate("toTest");
         reference.setJsonTemplateFields(jsonTemplateFields);
         assertTrue(toTest.checkFields(reference));
     }
 
+    /**
+     * Test other methods.
+     */
+    public void testOtherFields() {
+        toTest.setJsonTemplateFields(jsonTemplateFields);
+        toTest.addField(new JsonTemplateField("moreField"));
+        toTest.setVisibility("moreField", true);
+        toTest.setStatic("moreField", true);
+        toTest.updateValueField("moreField", "testValue");
+        
+        assertTrue(toTest.isVisible("moreField"));
+        assertTrue(toTest.getSpecificField("moreField").getValue().equals("testValue"));
+        assertTrue(toTest.fieldStaticStatus("moreField"));
+        assertTrue(toTest.toString()
+            .equals(" templateFields : [type null null null, description null null null, "
+            + "enum null null null, moreField testValue true true]"));
+    }
 }
