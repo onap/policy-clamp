@@ -51,11 +51,6 @@ committers:
       company: 'ATT'
       id: 'xuegao'
       timezone: 'Europe/Brussels'
-    - name: 'Adam Krysiak'
-      email: 'adam.krysiak@nokia.com'
-      company: 'Nokia'
-      id: 'akrysiak'
-      timezone: 'Europe/Warsaw'
 tsc:
     approval: 'https://lists.onap.org/pipermail/onap-tsc'
     changes:
@@ -71,3 +66,6 @@ tsc:
         - type: 'Removal'
           name: 'Wang Xinyuan1'
           link: 'https://lists.onap.org/g/ONAP-TSC/message/4581'
+        - type: 'Removal'
+          name: 'Adam Krysiak'
+          link: 'https://lists.onap.org/g/ONAP-TSC/message/6306'
