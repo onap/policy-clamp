@@ -94,7 +94,10 @@ To configure operational policies, user has to click the corresponding operation
 
 |clamp-op-policy-box-policy|
 
+Operations and payload for CDS actor is fetched from CDS.
+Clamp receives CDS blueprint name and version information from sdnc_model_name and sdnc_model_version properties in CSAR distributed by SDC and queries CDS to get list of operations and payload for the corresponding CDS blueprint.
 
+|clamp-cds-operation|
 
 Micro-service policy properties
 -------------------------------
@@ -151,3 +154,4 @@ Once deployed on DCAE the status of DCAE goes to *MICROSERVICE_INSTALLED_SUCCESS
 .. |clamp-policy-submitted| image:: images/user-guide/policy-submitted.png
 .. |clamp-deploy-params| image:: images/user-guide/deploy-params.png
 .. |blueprint-node| image:: images/user-guide/blueprint_node_type.png
+.. |clamp-cds-operation| image:: images/user-guide/clamp-cds-operation.png
