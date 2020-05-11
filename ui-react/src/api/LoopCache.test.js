@@ -39,7 +39,9 @@ describe('Verify LoopCache functions', () => {
             "policies": []
           }
         },
-       "jsonRepresentation": {
+        "pdpGroup": "pdpGroupTest",
+        "pdpSubgroup": "pdpSubgroupTest",
+        "jsonRepresentation": {
         "schema": {}
       }
       }];
@@ -54,7 +56,9 @@ describe('Verify LoopCache functions', () => {
             "controlLoop": {},
             "policies": []
           }
-        }
+        },
+        "pdpGroup": "pdpGroupTest",
+        "pdpSubgroup": "pdpSubgroupTest",
       }];
       expect(loopCache.getOperationalPoliciesNoJsonSchema()).toStrictEqual(opPolicy);
     });
@@ -92,6 +96,9 @@ describe('Verify LoopCache functions', () => {
           "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
           "configurationsJson": {"domain": "measurementsForVfScaling"},
           "shared": false,
+          "pdpGroup": "pdpGroupTest",
+          "pdpSubgroup": "pdpSubgroupTest",
+          "policyModel": {"policyPdpGroup": {"supportedPdpGroups": "supportedPdpGroupsTest"}},
           "jsonRepresentation": {"schema": {}}
       };
       expect(loopCache.getMicroServiceForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msJson);
@@ -180,6 +187,84 @@ describe('Verify LoopCache functions', () => {
       expect(loopCache.getComponentStates()).toStrictEqual(component);
     });
 
+    it('getOperationalPolicyForName', () => {
+      const opPolicy = {
+      "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
+      "configurationsJson": {
+        "operational_policy": {
+          "controlLoop": {},
+          "policies": []
+        }
+      },
+      "pdpGroup": "pdpGroupTest",
+      "pdpSubgroup": "pdpSubgroupTest",
+      "jsonRepresentation": {
+        "schema": {}
+      }
+    };
+      expect(loopCache.getOperationalPolicyForName("OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(opPolicy);
+      expect(loopCache.getOperationalPolicyForName("Not_Exist")).toBeNull();
+    });
+
+    it('getOperationalPolicyPropertiesForName', () => {
+      const opPolicyJson = {
+        "operational_policy": {
+          "controlLoop": {},
+          "policies": []
+        }};
+      expect(loopCache.getOperationalPolicyPropertiesForName("OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(opPolicyJson);
+      expect(loopCache.getOperationalPolicyPropertiesForName("Not_Exist")).toBeNull();
+    });
+
+    it('getOperationalPolicyJsonRepresentationForName', () => {
+      const opPolicySchema = {
+        "schema": {}
+      };
+      expect(loopCache.getOperationalPolicyJsonRepresentationForName("OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(opPolicySchema);
+      expect(loopCache.getOperationalPolicyJsonRepresentationForName("Not_Exist")).toBeNull();
+    });
+
+    it('getOperationalPolicySupportedPdpGroup', () => {
+      expect(loopCache.getOperationalPolicySupportedPdpGroup("Not_Exist")).toStrictEqual([]);
+    });
+
+    it('getOperationalPolicyPdpGroup', () => {
+      expect(loopCache.getOperationalPolicyPdpGroup("OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual("pdpGroupTest");
+      expect(loopCache.getOperationalPolicyPdpGroup("Not_Exist")).toBeNull();
+    });
+
+    it('getOperationalPolicyPdpSubgroup', () => {
+      expect(loopCache.getOperationalPolicyPdpSubgroup("OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual("pdpSubgroupTest");
+      expect(loopCache.getOperationalPolicyPdpSubgroup("Not_Exist")).toBeNull();
+    });
+
+    it('getMicroServiceSupportedPdpGroup', () => {
+      expect(loopCache.getMicroServiceSupportedPdpGroup("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual("supportedPdpGroupsTest");
+      expect(loopCache.getMicroServiceSupportedPdpGroup("Not_Exist")).toStrictEqual([]);
+    });
+
+    it('getMicroServicePdpGroup', () => {
+      expect(loopCache.getMicroServicePdpGroup("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual("pdpGroupTest");
+      expect(loopCache.getMicroServicePdpGroup("Not_Exist")).toBeNull();
+    });
+
+    it('getMicroServicePdpSubgroup', () => {
+      expect(loopCache.getMicroServicePdpSubgroup("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual("pdpSubgroupTest");
+      expect(loopCache.getMicroServicePdpSubgroup("Not_Exist")).toBeNull();
+    });
+
+    it('getMicroServiceJsonRepresentationForName', () => {
+      const msPolicySchema = {
+        "schema": {}
+      };
+      expect(loopCache.getMicroServiceJsonRepresentationForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(msPolicySchema);
+      expect(loopCache.getMicroServiceJsonRepresentationForName("Not_Exist")).toBeNull();
+    });
+
+    it('getTemplateName', () => {
+      expect(loopCache.getTemplateName()).toStrictEqual("loopTemplateTest");
+    });
+
     it('updateGlobalProperties', () => {
       const newGlobalProps = {
         "dcaeDeployParameters": {
@@ -207,5 +292,14 @@ describe('Verify LoopCache functions', () => {
       const newMsPolicyProperties = {"domain": "measurementsForVfScalingNew"};
       loopCache.updateMicroServiceProperties("TCA_h2NMX_v1_0_ResourceInstanceName1_tca", newMsPolicyProperties);
       expect(loopCache.getMicroServicePropertiesForName("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual(newMsPolicyProperties);
+    });
+
+    it('updateMicroServicePdpGroup', () => {
+      const newMsPolicyProperties = {"domain": "measurementsForVfScalingNew"};
+      loopCache.updateMicroServicePdpGroup("TCA_h2NMX_v1_0_ResourceInstanceName1_tca", "pdpGroupTest1", "pdpSubgroupTest1");
+      expect(loopCache.getMicroServicePdpGroup("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual("pdpGroupTest1");
+      expect(loopCache.getMicroServicePdpGroup("Not_Exist")).toBeNull();
+      expect(loopCache.getMicroServicePdpSubgroup("TCA_h2NMX_v1_0_ResourceInstanceName1_tca")).toStrictEqual("pdpSubgroupTest1");
+      expect(loopCache.getMicroServicePdpSubgroup("Not_Exist")).toBeNull();
     });
  });

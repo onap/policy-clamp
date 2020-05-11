@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify CreateLoopModal Test the render method 1`] = `
+<Styled(Bootstrap(Modal))
+  backdrop="static"
+  keyboard={false}
+  onHide={[Function]}
+  show={true}
+  size="xl"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Create Model
+    </ModalTitle>
+  </ModalHeader>
+  <ModalBody>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
+      controlId="formPlaintextEmail"
+    >
+      <FormLabel
+        column={true}
+        sm="2"
+        srOnly={false}
+      >
+        Template Name:
+      </FormLabel>
+      <Col
+        sm="10"
+      >
+        <StateManager
+          defaultInputValue=""
+          defaultMenuIsOpen={false}
+          defaultValue={null}
+          onChange={[Function]}
+          options={Array []}
+        />
+      </Col>
+    </FormGroup>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
+      controlId="formSvgPreview"
+      style={
+        Object {
+          "alignItems": "center",
+        }
+      }
+    >
+      <FormLabel
+        column={true}
+        sm="2"
+        srOnly={false}
+      >
+        Model Preview:
+      </FormLabel>
+      <Col
+        sm="10"
+      >
+        <styled.svg
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "",
+            }
+          }
+          value=""
+        />
+      </Col>
+    </FormGroup>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
+      controlId="formPlaintextEmail"
+    >
+      <FormLabel
+        column={true}
+        sm="2"
+        srOnly={false}
+      >
+        Model Name:
+      </FormLabel>
+      <input
+        onChange={[Function]}
+        style={
+          Object {
+            "marginLeft": "1em",
+            "width": "50%",
+          }
+        }
+        type="text"
+        value=""
+      />
+    </FormGroup>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="null"
+      variant="secondary"
+    >
+      Cancel
+    </Button>
+    <Button
+      active={false}
+      disabled={false}
+      onClick={[Function]}
+      type="submit"
+      variant="primary"
+    >
+      Create
+    </Button>
+  </ModalFooter>
+</Styled(Bootstrap(Modal))>
+`;
