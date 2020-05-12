@@ -9,7 +9,7 @@ Release Notes
 Version: 5.0.1
 --------------
 
-:Release Date: 2020-04-02
+:Release Date: 2020-05-12
 
 **New Features**
 
@@ -54,8 +54,8 @@ Quick Links:
 
     New Docker Containers are available. the list of containers composing this release are below:
     - clamp-backend-filebeat-onap: docker.elastic.co/beats/filebeat 5.5.0
-    - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.2
-    - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.2
+    - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.6
+    - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.6
     - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.3
     - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.3
     - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
