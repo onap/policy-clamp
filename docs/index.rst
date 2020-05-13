@@ -95,7 +95,7 @@ Installation
 ------------
 A [docker-compose example file](extra/docker/clamp/docker-compose.yml) can be found under the [extra/docker/clamp/ folder](extra/docker/).
 
-Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a pre-populated database and a CLAMP instance available on [http://localhost:8080/designer/index.html](http://localhost:8080/designer/index.html).
+Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a pre-populated database and a CLAMP instance available on [https://localhost:3000](https://localhost:3000).
 
 Configuration
 -------------
@@ -178,7 +178,7 @@ If the sdcAddress is not specified or not available (connection failure) the mes
 Administration
 --------------
 
-A user can access CLAMP UI at the following URL : https://localhost:443/designer/index.html.
+A user can access CLAMP UI at the following URL : https://localhost:3000.
 (in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
 For OOM, the URL is https://<host-ip>:30258
 
