@@ -49,7 +49,7 @@ public class ImageBuilder {
     private static final int CIRCLE_RADIUS = 17;
 
     ImageBuilder(SVGGraphics2D svgGraphics2D, DocumentBuilder documentBuilder, Point startingPoint, int baseLength,
-            int rectHeight) {
+                 int rectHeight) {
         this.g2d = svgGraphics2D;
         this.documentBuilder = documentBuilder;
         this.currentPoint = new Point(startingPoint);
@@ -57,13 +57,13 @@ public class ImageBuilder {
         this.rectHeight = rectHeight;
     }
 
-    ImageBuilder rectangle(String dataElementId, RectTypes rectType, String text) {
+    ImageBuilder rectangle(String dataElementId, RectTypes rectType, String boxText, String groupingId, String uiData) {
         Point next = new Point(currentPoint.x + baseLength, currentPoint.y);
         Point point = coordinatesForRectangle(currentPoint, next);
 
-        handleBasedOnRectType(rectType, text, point, baseLength, rectHeight);
+        handleBasedOnRectType(rectType, boxText, point, baseLength, rectHeight);
 
-        documentBuilder.pushChangestoDocument(g2d, dataElementId);
+        documentBuilder.pushChangestoDocument(g2d, dataElementId, groupingId, uiData);
         currentPoint = next;
         return this;
     }

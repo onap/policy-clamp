@@ -33,6 +33,8 @@ public class DocumentBuilder {
     private final Document documentFactory;
 
     static final String DATA_ELEMENT_ID_ATTRIBUTE = "data-element-id";
+    static final String DATA_ELEMENT_GROUPING_ATTRIBUTE = "data-grouping-id";
+    static final String DATA_FOR_UI_ATTRIBUTE = "data-for-ui";
 
     DocumentBuilder(Document groupingDocument, Document documentFactory) {
         this.groupingDocument = groupingDocument;
@@ -40,10 +42,20 @@ public class DocumentBuilder {
     }
 
     void pushChangestoDocument(SVGGraphics2D g2d, String dataElementId) {
+        pushChangestoDocument(g2d, dataElementId,null,null);
+    }
+
+    void pushChangestoDocument(SVGGraphics2D g2d, String dataElementId, String dataGroupingId, String dataForUI) {
         Element element =
             this.documentFactory.createElementNS(SVGGraphics2D.SVG_NAMESPACE_URI,
                 SVGGraphics2D.SVG_G_TAG);
         element.setAttribute(DATA_ELEMENT_ID_ATTRIBUTE, dataElementId);
+        if (dataGroupingId != null) {
+            element.setAttribute(DATA_ELEMENT_GROUPING_ATTRIBUTE, dataGroupingId);
+        }
+        if (dataForUI != null) {
+            element.setAttribute(DATA_FOR_UI_ATTRIBUTE, dataForUI);
+        }
         g2d.getRoot(element);
         Node node = this.groupingDocument.importNode(element, true);
         this.groupingDocument.getDocumentElement().appendChild(node);

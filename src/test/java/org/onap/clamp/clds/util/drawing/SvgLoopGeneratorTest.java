@@ -24,12 +24,12 @@
 package org.onap.clamp.clds.util.drawing;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.onap.clamp.loop.Loop;
+import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
@@ -37,14 +37,17 @@ import org.xml.sax.SAXException;
 
 public class SvgLoopGeneratorTest {
     private Loop getLoop() {
+
+        LoopElementModel msModel = new LoopElementModel("testMs", LoopElementModel.MICRO_SERVICE_TYPE, "");
         MicroServicePolicy ms1 =
                 new MicroServicePolicy("ms1", new PolicyModel("org.onap.ms1", "", "1.0.0", "short.ms1"),
-                        false,null,null,null,null);
+                        false,null,msModel,null,null);
         MicroServicePolicy ms2 =
                 new MicroServicePolicy("ms2", new PolicyModel("org.onap.ms2", "", "1.0.0", "short.ms2"),
-                        false, null,null,null,null);
+                        false, null,msModel,null,null);
+        LoopElementModel opModel = new LoopElementModel("testOp", LoopElementModel.OPERATIONAL_POLICY_TYPE, "");
         OperationalPolicy opPolicy = new OperationalPolicy("OperationalPolicy", new JsonObject(),new JsonObject(),
-                new PolicyModel("org.onap.opolicy", null, "1.0.0", "short.OperationalPolicy"), null, null, null);
+                new PolicyModel("org.onap.opolicy", null, "1.0.0", "short.OperationalPolicy"), opModel, null, null);
         Loop loop = new Loop();
         loop.addMicroServicePolicy(ms1);
         loop.addMicroServicePolicy(ms2);
@@ -66,6 +69,10 @@ public class SvgLoopGeneratorTest {
         assertThat(xml).contains(">VES<");
         assertThat(xml).contains("data-element-id=\"ms1\"");
         assertThat(xml).contains("data-element-id=\"ms2\"");
+        assertThat(xml).contains("data-grouping-id=\"testMs\"");
+        assertThat(xml).contains("data-grouping-id=\"testOp\"");
+        assertThat(xml).contains("data-for-ui=\"testMs\"");
+        assertThat(xml).contains("data-for-ui=\"testOp\"");
         assertThat(xml).contains(">short.ms1<");
         assertThat(xml).contains(">short.ms2<");
         assertThat(xml).contains("data-element-id=\"OperationalPolicy\"");

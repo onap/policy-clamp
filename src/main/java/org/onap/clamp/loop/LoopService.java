@@ -120,9 +120,10 @@ public class LoopService {
         PolicyModel policyModel = policyModelsService.getPolicyModel(policyType, policyVersion);
         Set<OperationalPolicy> opPolicySet = loop.getOperationalPolicies();
         for (OperationalPolicy opPolicy : opPolicySet) {
-        	if (opPolicy.getPolicyModel().equals(policyModel)) {
-        		throw new IllegalArgumentException("This type of Operational Policy is already added to the loop. Please choose another one.");
-        	}
+            if (opPolicy.getPolicyModel().equals(policyModel)) {
+                throw new IllegalArgumentException(
+                        "This type of Operational Policy is already added to the loop. Please choose another one.");
+            }
         }
         if (policyModel == null) {
             return null;

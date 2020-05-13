@@ -79,14 +79,18 @@ public class Painter {
     private void doTheActualDrawing(String collector, Set<MicroServicePolicy> microServices,
                                     Set<OperationalPolicy> policies,
                                     ImageBuilder ib) {
-        ib.circle("start-circle", SLIM_LINE).arrow().rectangle(collector, RectTypes.COLECTOR, collector);
+        ib.circle("start-circle", SLIM_LINE).arrow().rectangle(collector, RectTypes.COLECTOR, collector, null, null);
 
         for (MicroServicePolicy ms : microServices) {
             ib.arrow().rectangle(ms.getName(),
-                    RectTypes.MICROSERVICE, ms.getPolicyModel().getPolicyAcronym());
+                    RectTypes.MICROSERVICE, ms.getPolicyModel().getPolicyAcronym(),
+                    ms.getLoopElementModel() != null ? ms.getLoopElementModel().getName() : null,
+                    ms.getLoopElementModel() != null ? ms.getLoopElementModel().getName() : null);
         }
         for (OperationalPolicy policy : policies) {
-            ib.arrow().rectangle(policy.getName(), RectTypes.POLICY, policy.getPolicyModel().getPolicyAcronym());
+            ib.arrow().rectangle(policy.getName(), RectTypes.POLICY, policy.getPolicyModel().getPolicyAcronym(),
+                    policy.getLoopElementModel() != null ? policy.getLoopElementModel().getName() : null,
+                    policy.getLoopElementModel() != null ? policy.getLoopElementModel().getName() : null);
         }
         ib.arrow().circle("stop-circle", THICK_LINE);
     }
