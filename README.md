@@ -101,7 +101,7 @@ If the sdcAddress is not specified or not available (connection failure) the mes
 
 A [docker-compose example file](extra/docker/clamp/docker-compose.yml) can be found under the [extra/docker/clamp/ folder](extra/docker/).
 
-Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a prepopullated database and a clamp instance available on [http://localhost:8080/designer/index.html](http://localhost:8080/designer/index.html).
+Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a prepopullated database and a clamp instance available on [https://localhost:3000](https://localhost:3000).
 
 
 ### Logs
