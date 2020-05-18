@@ -24,6 +24,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import ViewLoopTemplatesModal from './ViewLoopTemplatesModal';
 import { mount } from 'enzyme';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 describe('Verify ViewLoopTemplatesModal', () => {
 	beforeEach(() => {
@@ -128,7 +129,7 @@ describe('Verify ViewLoopTemplatesModal', () => {
 					}
 				});
 			});
-			const component = mount(<ViewLoopTemplatesModal/>);
+			const component = mount(<Router><ViewLoopTemplatesModal/></Router>);
 			expect(component.find('[className="MuiSelect-icon MuiTablePagination-selectIcon"]')).toBeTruthy();
 		});
 		

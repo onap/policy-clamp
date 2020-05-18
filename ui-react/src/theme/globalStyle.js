@@ -51,12 +51,6 @@ export const GlobalClampStyle = createGlobalStyle`
 		margin-top: 1px;
 	}
 
-	svg {
-		overflow: hidden;
-		width: 100%;
-		height: 100%;
-	}
-
 	label {
 		font-family: ${props => props.theme.fontFamily};
 		font-size: ${props => props.theme.fontSize};
@@ -68,6 +62,7 @@ export const GlobalClampStyle = createGlobalStyle`
 		font-size: ${props => props.theme.fontSize};
 		font-weight: bold;
 	}
+
 `
 
 export const DefaultClampTheme = {

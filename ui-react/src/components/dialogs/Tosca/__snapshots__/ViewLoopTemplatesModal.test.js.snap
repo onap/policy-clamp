@@ -86,16 +86,7 @@ exports[`Verify ViewLoopTemplatesModal Test the tosca model view render method 1
           },
         ]
       }
-      data={
-        Object {
-          "allowedLoopType": "CLOSED",
-          "index": "1",
-          "maximumInstancesAllowed": 1,
-          "modelService.serviceDetails.name": "MTCA",
-          "name": "MTCA version 1",
-          "updatedDate": "2019-09-06 19:09:42",
-        }
-      }
+      data={Array []}
       icons={
         Object {
           "FirstPage": Object {
@@ -142,16 +133,15 @@ exports[`Verify ViewLoopTemplatesModal Test the tosca model view render method 1
       }
       title="View Blueprint MicroService Templates"
     />
-    <styled.div>
-      <styled.svg
-        dangerouslySetInnerHTML={
-          Object {
-            "__html": "Please select a loop template to display it",
-          }
+    <withRouter(SvgGenerator)
+      clickable={false}
+      generatedFrom="TEMPLATE"
+      loopCache={
+        LoopCache {
+          "loopJsonCache": Object {},
         }
-        value="Please select a loop template to display it"
-      />
-    </styled.div>
+      }
+    />
   </ModalBody>
   <ModalFooter>
     <Button

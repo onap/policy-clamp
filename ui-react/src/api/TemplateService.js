@@ -21,57 +21,24 @@
  */
 
 export default class TemplateService {
-	static getTemplateNames() {
-		return fetch('/restservices/clds/v2/templates/names', { method: 'GET', credentials: 'same-origin' })
-			.then(function (response) {
-				console.debug("GetTemplateNames response received: ", response.status);
-				if (response.ok) {
-					return response.json();
-				} else {
-					console.error("GetTemplateNames query failed");
-					return {};
-				}
-			})
-			.catch(function (error) {
-				console.error("GetTemplateNames error received", error);
-				return {};
-			});
-	}
 
-	static getBlueprintMicroServiceTemplates() {
+	static getAllLoopTemplates() {
 	    return fetch('restservices/clds/v2/templates', { method: 'GET', credentials: 'same-origin', })
 	        .then(function (response) {
-	            console.debug("getBlueprintMicroServiceTemplates response received: ", response.status);
+	            console.debug("getAllLoopTemplates response received: ", response.status);
 	            if (response.ok) {
 	                return response.json();
 	            } else {
-	                console.error("getBlueprintMicroServiceTemplates query failed");
+	                console.error("getAllLoopTemplates query failed");
 	                return {};
 	            }
 	        })
 	        .catch(function (error) {
-	            console.error("getBlueprintMicroServiceTemplates error received", error);
+	            console.error("getAllLoopTemplates error received", error);
 	            return {};
 	        });
 	    }
 
-	static getBlueprintMicroServiceTemplateSvg(templateName) {
-	  	return fetch('/restservices/clds/v2/templates/' + templateName + ' /svgRepresentation', { method: 'GET', credentials: 'same-origin', })
-			.then(function (response) {
-			console.debug("getBlueprintMicroServiceTemplateSvg response received: ", response.status);
-			if (response.ok) {
-				return response.text();
-			} else {
-				console.error("getBlueprintMicroServiceTemplateSvg query failed");
-				return {};
-			}
-		})
-		.catch(function (error) {
-			console.error("getBlueprintMicroServiceTemplateSvg error received", error);
-			return {};
-		});
-	}
-	
 	static getDictionary() {
 	    return fetch('restservices/clds/v2/dictionary/', { method: 'GET', credentials: 'same-origin', })
 	      .then(function (response) {

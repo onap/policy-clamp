@@ -25,6 +25,7 @@ import { mount } from 'enzyme';
 import PolicyModal from './PolicyModal';
 import LoopCache from '../../../api/LoopCache';
 import LoopService from '../../../api/LoopService';
+import OnapConstant from '../../../utils/OnapConstants';
 
 describe('Verify PolicyModal', () => {
     beforeEach(() => {
@@ -54,7 +55,7 @@ describe('Verify PolicyModal', () => {
     const loopCache = new LoopCache(loopCacheStr);
     const historyMock = { push: jest.fn() };
     const flushPromises = () => new Promise(setImmediate);
-    const match = {params: {policyName:"OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca", policyInstanceType: "OPERATIONAL-POLICY"}}
+    const match = {params: {policyName:"OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca", policyInstanceType: OnapConstant.operationalPolicyType}}
         
     it('Test handleClose', () => {
       const handleClose = jest.spyOn(PolicyModal.prototype,'handleClose');

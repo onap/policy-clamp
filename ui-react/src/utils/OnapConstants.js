@@ -24,7 +24,9 @@
 // Maintain a list of ONAP CLAMP UI "constants" that can be used by any componenet within CLAMP
 
 const OnapConstants = {
-	defaultLoopName: "Empty (NO loop loaded yet)"
+	defaultLoopName: "Empty (NO loop loaded yet)",
+	microServiceType: "MICRO-SERVICE-POLICY",
+	operationalPolicyType: "OPERATIONAL_POLICY_TYPE"
 };
 
 export default OnapConstants;

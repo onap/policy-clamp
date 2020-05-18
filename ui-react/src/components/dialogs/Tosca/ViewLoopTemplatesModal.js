@@ -34,29 +34,11 @@ import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import MaterialTable from "material-table";
+import LoopCache from '../../../api/LoopCache';
+import SvgGenerator from '../../loop_viewer/svg/SvgGenerator';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
-`
-const LoopViewSvgDivStyled = styled.svg`
-	overflow-x: scroll;
-	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
-	border-color: ${props => (props.theme.loopViewerHeaderColor)};
-	margin-top: 3em;
-	margin-left: 2em;
-	margin-right:auto;
-	text-align: center;
-	height: 100%;
-	width: 100%;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	
-`
-const SvgContainerDivStyled = styled.div`
-	display: flex;
-	align-items: center;
-	border: 1px solid;
 `
 
 const cellStyle = { border: '1px solid black' };
@@ -68,7 +50,8 @@ export default class ViewLoopTemplatesModal extends React.Component {
         show: true,
 		content: 'Please select a loop template to display it',
 		selectedRow: -1,
-		loopTemplateData: [],
+		loopTemplatesData: [],
+		fakeLoopCacheWithTemplate: new LoopCache({}),
 		loopTemplateColumnsDefinition: [
 			{ title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
 				cellStyle: cellStyle,
@@ -109,29 +92,27 @@ export default class ViewLoopTemplatesModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 		this.handleClose = this.handleClose.bind(this);
-		this.getBlueprintMicroServiceTemplate = this.getBlueprintMicroServiceTemplate.bind(this);
-		this.getBlueprintMicroServiceTemplates();
+		this.getLoopTemplate = this.getLoopTemplate.bind(this);
+		this.getAllLoopTemplates();
 	}
 
-	getBlueprintMicroServiceTemplates() {
-		TemplateService.getBlueprintMicroServiceTemplates().then(loopTemplateData => {
-		this.setState({ loopTemplateData: loopTemplateData })
+	getAllLoopTemplates() {
+		TemplateService.getAllLoopTemplates().then(templatesData => {
+		    this.setState({ loopTemplatesData: templatesData })
 		});
 	}
 
-	getBlueprintMicroServiceTemplate(templateName) {
-	    if (typeof templateName !== "undefined") {
-		    TemplateService.getBlueprintMicroServiceTemplateSvg(templateName).then(svgXml => {
-				if (svgXml.length !== 0) {
-					this.setState({ content: svgXml })
-				} else {
-					this.setState({ content: 'Please select a loop template to view the details' })
-
-				}
-			});
+	getLoopTemplate(templateIdInDataArray) {
+	    if (typeof templateIdInDataArray !== "undefined") {
+	        this.setState({ fakeLoopCacheWithTemplate:
+                new LoopCache({
+                    "loopTemplate":this.state.loopTemplatesData[templateIdInDataArray],
+                    "name": "fakeLoop"
+                })
+	        })
 		} else {
-          	this.setState({ content: 'Please select a loop template to view the details' })
-          	}
+          	this.setState({ fakeLoopCacheWithTemplate: new LoopCache({}) })
+        }
     }
 
 	handleClose() {
@@ -147,21 +128,18 @@ export default class ViewLoopTemplatesModal extends React.Component {
     			<Modal.Body>
     			   <MaterialTable
     				  title={"View Blueprint MicroService Templates"}
-    				  data={this.state.loopTemplateData}
+    				  data={this.state.loopTemplatesData}
 					  columns={this.state.loopTemplateColumnsDefinition}
 					  icons={this.state.tableIcons}
-    			      onRowClick={(event, rowData) => {this.getBlueprintMicroServiceTemplate(rowData.name);this.setState({selectedRow: rowData.tableData.id})}}
+    			      onRowClick={(event, rowData) => {this.getLoopTemplate(rowData.tableData.id);this.setState({selectedRow: rowData.tableData.id})}}
 					  options={{
 					      headerStyle:rowHeaderStyle,
 					      rowStyle: rowData => ({
 					      backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
                           })
                       }}
-                  />
-	              <SvgContainerDivStyled>
-		            <LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }} value={this.state.content} >
-					</LoopViewSvgDivStyled>
-	              </SvgContainerDivStyled>
+                />
+	            <SvgGenerator loopCache={this.state.fakeLoopCacheWithTemplate} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_TEMPLATE}/>
                 </Modal.Body>
                 <Modal.Footer>
                 	<Button variant="secondary" onClick={this.handleClose}>Close</Button>

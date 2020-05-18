@@ -23,6 +23,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import OpenLoopModal from './OpenLoopModal';
+import LoopService from '../../../api/LoopService';
 
 describe('Verify OpenLoopModal', () => {
 
@@ -41,10 +42,19 @@ describe('Verify OpenLoopModal', () => {
     expect(component).toMatchSnapshot();
   });
 
-  it('Onchange event', () => {
+  it('Onchange event', async () => {
+    const flushPromises = () => new Promise(setImmediate);
+    LoopService.getLoop = jest.fn().mockImplementation(() => {
+  		return Promise.resolve({
+  			ok: true,
+  			status: 200,
+  			json: () => {}
+  		});
+  	});
     const event = {value: 'LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3'};
     const component = shallow(<OpenLoopModal/>);
     component.find('StateManager').simulate('change', event);
+    await flushPromises();
     component.update();
     expect(component.state('chosenLoopName')).toEqual("LOOP_gmtAS_v1_0_ResourceInstanceName1_tca_3");
   });

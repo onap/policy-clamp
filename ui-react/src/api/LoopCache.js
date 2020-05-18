@@ -221,9 +221,32 @@ export default class LoopCache {
 	}
 
 	getTemplateName() {
-	    if (this.loopJsonCache["loopTemplate"] !== undefined) {
-        			return this.loopJsonCache["loopTemplate"].name;
+	    if (this.getLoopTemplate() !== undefined) {
+        			return this.getLoopTemplate().name;
         }
 	    return null;
+	}
+
+	getLoopTemplate() {
+		return this.loopJsonCache["loopTemplate"];
+	}
+
+	isOpenLoopTemplate() {
+		var loopTemplate = this.getLoopTemplate();
+		if(loopTemplate != null && loopTemplate["allowedLoopType"] === "OPEN") {
+			return true;
+		}
+		return false;
+	}
+
+	getAllLoopElementModels() {
+	    var loopTemplate = this.getLoopTemplate();
+	    var loopElementModels = [];
+	    if(loopTemplate != null) {
+	        for (var element of loopTemplate['loopElementModelsUsed']) {
+	            loopElementModels.push(element['loopElementModel'])
+	        }
+	    }
+	    return loopElementModels;
 	}
 }

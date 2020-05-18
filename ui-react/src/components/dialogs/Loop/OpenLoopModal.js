@@ -30,27 +30,14 @@ import Col from 'react-bootstrap/Col';
 import FormCheck from 'react-bootstrap/FormCheck'
 import styled from 'styled-components';
 import LoopService from '../../../api/LoopService';
+import SvgGenerator from '../../loop_viewer/svg/SvgGenerator';
+import LoopCache from '../../../api/LoopCache';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
 const CheckBoxStyled = styled(FormCheck.Input)`
 	margin-left:3rem;
-`
-const LoopViewSvgDivStyled = styled.svg`
-	overflow-x: scroll;
-	display: flex;
-	flex-direction: row;
-	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
-	border-color: ${props => (props.theme.loopViewerHeaderColor)};
-	margin-top: 2em;
-	margin-left: auto;
-	margin-right:auto;
-	margin-bottom: -3em;
-	text-align: center;
-	align-items: center;
-	height: 100%;
-	width: 100%;
 `
 
 export default class OpenLoopModal extends React.Component {
@@ -60,13 +47,13 @@ export default class OpenLoopModal extends React.Component {
 		this.getLoopNames = this.getLoopNames.bind(this);
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
-		this.handleDropdownListChange = this.handleDropdownListChange.bind(this);
+		this.handleDropDownListChange = this.handleDropDownListChange.bind(this);
 		this.showReadOnly = props.showReadOnly ? props.showReadOnly : true;
 		this.state = {
 			show: true,
 			chosenLoopName: '',
 			loopNames: [],
-			content:''
+			loopCacheOpened: new LoopCache({})
 		};
 	}
 
@@ -79,14 +66,12 @@ export default class OpenLoopModal extends React.Component {
 		this.props.history.push('/');
 	}
 
-	handleDropdownListChange(e) {
-		this.setState({ chosenLoopName: e.value });
-		LoopService.getSvg(e.value).then(svgXml => {
-			if (svgXml.length !== 0) {
-				this.setState({ content: svgXml })
-			} else {
-				this.setState({ content: 'Error1' })
-			}
+	handleDropDownListChange(e) {
+        LoopService.getLoop(e.value).then(loop => {
+            this.setState({
+                chosenLoopName: e.value,
+                loopCacheOpened: new LoopCache(loop)
+             });
 		});
 	}
 
@@ -95,9 +80,7 @@ export default class OpenLoopModal extends React.Component {
 		    if (Object.entries(loopNames).length !== 0) {
 		        const loopOptions = loopNames.filter(loopName => loopName!=='undefined').map((loopName) => { return { label: loopName, value: loopName } });
             	this.setState({ loopNames: loopOptions })
-
 		    }
-
 		});
 	}
 
@@ -117,20 +100,18 @@ export default class OpenLoopModal extends React.Component {
 					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Model Name:</Form.Label>
 						<Col sm="10">
-							<Select onChange={this.handleDropdownListChange}
+							<Select onChange={this.handleDropDownListChange}
 							options={this.state.loopNames} />
 						</Col>
 					</Form.Group>
 					<Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
 						<Form.Label column sm="2">Model Preview:</Form.Label>
 						<Col sm="10">
-                         				<LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }}
-								value={this.state.content} >
-							</LoopViewSvgDivStyled>
+						    <SvgGenerator loopCache={this.state.loopCacheOpened} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE}/>
 						</Col>
 					</Form.Group>
 					{this.showReadOnly === true ?
-						<Form.Group as={Row} controlId="formBasicChecbox">
+						<Form.Group as={Row} controlId="formBasicCheckbox">
 							<Form.Check>
 								<FormCheck.Label>Read Only Mode:</FormCheck.Label>
 								<CheckBoxStyled style={{marginLeft: '3.5em'}} type="checkbox" />
