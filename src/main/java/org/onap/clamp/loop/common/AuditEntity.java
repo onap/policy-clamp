@@ -24,14 +24,11 @@
 package org.onap.clamp.loop.common;
 
 import com.google.gson.annotations.Expose;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -40,7 +37,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 /**
  * This class is the parent of the hibernate entities requiring to be audited.
- *
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -72,20 +68,21 @@ public class AuditEntity {
 
     /**
      * createdDate setter.
-     * 
+     *
      * @param createdDate The created Date object
      */
     public void setCreatedDate(Instant createdDate) {
         if (createdDate != null) {
             this.createdDate = createdDate.truncatedTo(ChronoUnit.SECONDS);
-        } else {
+        }
+        else {
             this.createdDate = null;
         }
     }
 
     /**
      * updatedDate getter.
-     * 
+     *
      * @return the updatedDate
      */
     public Instant getUpdatedDate() {
@@ -94,20 +91,21 @@ public class AuditEntity {
 
     /**
      * updatedDate setter.
-     * 
+     *
      * @param updatedDate updatedDate to set
      */
     public void setUpdatedDate(Instant updatedDate) {
         if (updatedDate != null) {
             this.updatedDate = updatedDate.truncatedTo(ChronoUnit.SECONDS);
-        } else {
+        }
+        else {
             this.updatedDate = null;
         }
     }
 
     /**
      * updatedBy getter.
-     * 
+     *
      * @return the updatedBy
      */
     public String getUpdatedBy() {
@@ -116,7 +114,7 @@ public class AuditEntity {
 
     /**
      * updatedBy setter.
-     * 
+     *
      * @param updatedBy the updatedBy
      */
     public void setUpdatedBy(String updatedBy) {
@@ -125,7 +123,7 @@ public class AuditEntity {
 
     /**
      * createdBy getter.
-     * 
+     *
      * @return the createdBy
      */
     public String getCreatedBy() {
@@ -134,7 +132,7 @@ public class AuditEntity {
 
     /**
      * createdBy setter.
-     * 
+     *
      * @param createdBy the createdBy to set
      */
     public void setCreatedBy(String createdBy) {

@@ -86,7 +86,7 @@ public class LoopControllerTestItCase {
     }
 
     private Loop createTestLoop(String loopName, String loopBlueprint, String loopSvg) {
-        return new Loop(loopName, loopSvg);
+        return new Loop(loopName);
     }
 
     @Test
@@ -146,14 +146,6 @@ public class LoopControllerTestItCase {
                 JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class), null, null, null);
         loopController.updateMicroservicePolicy(EXAMPLE_LOOP_NAME, policy);
         assertThat(microServicePolicyService.isExisting("policyName")).isTrue();
-    }
-
-    @Test
-    @Transactional
-    public void testGetSvgRepresentation() {
-        saveTestLoopToDb();
-        String svgRepresentation = loopController.getSvgRepresentation(EXAMPLE_LOOP_NAME);
-        assertThat(svgRepresentation).isEqualTo("representation");
     }
 
     @Test

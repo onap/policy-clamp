@@ -37,8 +37,8 @@ import org.onap.clamp.loop.template.PolicyModel;
 public class LoopTemplateLoopElementModelTest {
 
     private LoopElementModel loopElementModel = getLoopElementModel("yaml", "microService1",
-        getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"));
-    private LoopTemplate loopTemplate = getLoopTemplate("templateName", "yaml", "svg", 1);
+            getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1"));
+    private LoopTemplate loopTemplate = getLoopTemplate("templateName", "yaml", 1);
 
     private LoopElementModel getLoopElementModel(String yaml, String name, PolicyModel policyModel) {
         LoopElementModel model = new LoopElementModel();
@@ -54,9 +54,8 @@ public class LoopTemplateLoopElementModelTest {
         return new PolicyModel(policyType, policyModelTosca, version, policyAcronym);
     }
 
-    private LoopTemplate getLoopTemplate(String name, String blueprint, String svgRepresentation,
-                                         Integer maxInstancesAllowed) {
-        LoopTemplate template = new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
+    private LoopTemplate getLoopTemplate(String name, String blueprint, Integer maxInstancesAllowed) {
+        LoopTemplate template = new LoopTemplate(name, blueprint, maxInstancesAllowed, null);
         template.addLoopElementModel(loopElementModel);
         return template;
     }

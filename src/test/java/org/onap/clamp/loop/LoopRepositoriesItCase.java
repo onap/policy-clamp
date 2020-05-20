@@ -106,9 +106,9 @@ public class LoopRepositoriesItCase {
         return new PolicyModel(policyType, policyModelTosca, version, policyAcronym);
     }
 
-    private LoopTemplate getLoopTemplates(String name, String blueprint, String svgRepresentation, String createdBy,
+    private LoopTemplate getLoopTemplates(String name, String blueprint, String createdBy,
                                           Integer maxInstancesAllowed) {
-        LoopTemplate template = new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
+        LoopTemplate template = new LoopTemplate(name, blueprint, maxInstancesAllowed, null);
         template.addLoopElementModel(getLoopElementModel("yaml", "microService1", "org.onap.policy.drools", createdBy,
                 getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools")));
         template.addLoopElementModel(getLoopElementModel("yaml", "oppolicy1", "org.onap.policy.drools.legacy",
@@ -117,16 +117,15 @@ public class LoopRepositoriesItCase {
         return template;
     }
 
-    private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
+    private Loop getLoop(String name, String blueprint, String globalPropertiesJson,
                          String dcaeId, String dcaeUrl, String dcaeBlueprintId) {
         Loop loop = new Loop();
         loop.setName(name);
-        loop.setSvgRepresentation(svgRepresentation);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
         loop.setDcaeDeploymentId(dcaeId);
         loop.setDcaeDeploymentStatusUrl(dcaeUrl);
-        loop.setLoopTemplate(getLoopTemplates("templateName", "yaml", "svg", "toto", 1));
+        loop.setLoopTemplate(getLoopTemplates("templateName", "yaml", "toto", 1));
         return loop;
     }
 
@@ -149,7 +148,7 @@ public class LoopRepositoriesItCase {
     @Transactional
     public void crudTest() {
         // Setup
-        Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+        Loop loopTest = getLoop("ControlLoopTest", "yamlcontent", "{\"testname\":\"testvalue\"}",
                 "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy("{\"type\":\"GUARD\"}", "GuardOpPolicyTest",
                 getPolicyModel("org.onap.policy.drools.legacy", "yaml", "1.0.0", "DroolsLegacy"));
@@ -217,7 +216,7 @@ public class LoopRepositoriesItCase {
 
         // Attempt an update
         ((LoopLog) loopInDbRetrieved.getLoopLogs().toArray()[0]).setLogInstant(Instant.now());
-        loopInDbRetrieved.setSvgRepresentation("");
+        loopInDbRetrieved.setLastComputedState(LoopState.RUNNING);
         Loop loopInDbRetrievedUpdated = loopRepository.saveAndFlush(loopInDbRetrieved);
         // Loop loopInDbRetrievedUpdated =
         // loopRepository.findById(loopTest.getName()).get();

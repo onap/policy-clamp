@@ -49,17 +49,6 @@ public class LoopTemplatesService {
         return loopTemplatesRepository.save(loopTemplate);
     }
 
-
-    /**
-     * Get the SVG representation of the loopTemplate.
-     *
-     * @param templateName The loopTemplate name
-     * @return The SVG representation in xml
-     */
-    public String getSvgRepresentation(String templateName) {
-        return loopTemplatesRepository.findById(templateName).orElse(new LoopTemplate()).getSvgRepresentation();
-    }
-
     public List<String> getLoopTemplateNames() {
         return loopTemplatesRepository.getAllLoopTemplateNames();
     }

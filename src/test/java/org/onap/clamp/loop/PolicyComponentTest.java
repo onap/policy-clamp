@@ -256,7 +256,7 @@ public class PolicyComponentTest {
      */
     @Test
     public void createPoliciesPayloadPdpGroupTest() throws IOException {
-        Loop loopTest = new Loop("ControlLoopTest", "<xml></xml>");
+        Loop loopTest = new Loop("ControlLoopTest");
         PolicyModel policyModel1 = new PolicyModel("onap.policies.monitoring.test", null, "1.0.0");
 
         MicroServicePolicy microServicePolicy = new MicroServicePolicy("configPolicyTest", policyModel1, true,
@@ -285,7 +285,7 @@ public class PolicyComponentTest {
 
         loopTest.addOperationalPolicy(opLegacyPolicy);
 
-        LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", "svg", 1, null);
+        LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", 1, null);
         loopTemplate.setDcaeBlueprintId("UUID-blueprint");
         loopTest.setLoopTemplate(loopTemplate);
 

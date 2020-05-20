@@ -66,12 +66,12 @@ public class DeployFlowTestItCase {
      * This method tests a deployment a single blueprint.
      *
      * @throws JsonSyntaxException In case of issues
-     * @throws IOException In case of issues
+     * @throws IOException         In case of issues
      */
     @Test
     @Transactional
     public void deployWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
-        Loop loopTest = createLoop("ControlLoopTest", "<xml></xml>", "yamlcontent",
+        Loop loopTest = createLoop("ControlLoopTest", "yamlcontent",
                 "{\"dcaeDeployParameters\":{\"uniqueBlueprintParameters\": {\"policy_id\": \"name\"}}}",
                 "UUID-blueprint");
         LoopTemplate template = new LoopTemplate();
@@ -97,12 +97,12 @@ public class DeployFlowTestItCase {
      * This method tests the deployment of multiple separated  blueprints.
      *
      * @throws JsonSyntaxException In case of issues
-     * @throws IOException In case of issues
+     * @throws IOException         In case of issues
      */
     @Test
     @Transactional
     public void deployWithMultipleBlueprintTest() throws JsonSyntaxException, IOException {
-        Loop loopTest2 = createLoop("ControlLoopTest2", "<xml></xml>", "yamlcontent", "{\"dcaeDeployParameters\": {"
+        Loop loopTest2 = createLoop("ControlLoopTest2", "yamlcontent", "{\"dcaeDeployParameters\": {"
                 + "\"microService1\": {\"location_id\": \"\", \"policy_id\": \"TCA_ResourceInstanceName1_tca\"},"
                 + "\"microService2\": {\"location_id\": \"\", \"policy_id\": \"TCA_ResourceInstanceName2_tca\"}"
                 + "}}", "UUID-blueprint");
@@ -135,12 +135,12 @@ public class DeployFlowTestItCase {
      * This method tests the undeployment of a single blueprint.
      *
      * @throws JsonSyntaxException In case of issues
-     * @throws IOException In case of issues
+     * @throws IOException         In case of issues
      */
     @Test
     @Transactional
     public void undeployWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
-        Loop loopTest = createLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+        Loop loopTest = createLoop("ControlLoopTest", "yamlcontent", "{\"testname\":\"testvalue\"}",
                 "UUID-blueprint");
         LoopTemplate template = new LoopTemplate();
         template.setName("templateName");
@@ -166,12 +166,12 @@ public class DeployFlowTestItCase {
      * This method tests the undeployment of multiple separated blueprints.
      *
      * @throws JsonSyntaxException In case of issues
-     * @throws IOException In case of issues
+     * @throws IOException         In case of issues
      */
     @Test
     @Transactional
     public void undeployWithMultipleBlueprintTest() throws JsonSyntaxException, IOException {
-        Loop loopTest2 = createLoop("ControlLoopTest2", "<xml></xml>", "yamlcontent", "{\"dcaeDeployParameters\": {"
+        Loop loopTest2 = createLoop("ControlLoopTest2", "yamlcontent", "{\"dcaeDeployParameters\": {"
                 + "\"microService1\": {\"location_id\": \"\", \"policy_id\": \"TCA_ResourceInstanceName1_tca\"},"
                 + "\"microService2\": {\"location_id\": \"\", \"policy_id\": \"TCA_ResourceInstanceName2_tca\"}"
                 + "}}", "UUID-blueprint");
@@ -205,12 +205,12 @@ public class DeployFlowTestItCase {
      * This method tests the DCAE get status for a single blueprint.
      *
      * @throws JsonSyntaxException In case of issues
-     * @throws IOException In case of issues
+     * @throws IOException         In case of issues
      */
     @Test
     @Transactional
     public void getStatusWithSingleBlueprintTest() throws JsonSyntaxException, IOException {
-        Loop loopTest = createLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+        Loop loopTest = createLoop("ControlLoopTest", "yamlcontent", "{\"testname\":\"testvalue\"}",
                 "UUID-blueprint");
         LoopTemplate template = new LoopTemplate();
         template.setName("templateName");
@@ -241,12 +241,12 @@ public class DeployFlowTestItCase {
      * This method tests the dcae get status for multiple blueprints.
      *
      * @throws JsonSyntaxException In case of issues
-     * @throws IOException In case of issues
+     * @throws IOException         In case of issues
      */
     @Test
     @Transactional
     public void getStatusWithMultipleBlueprintTest() throws JsonSyntaxException, IOException {
-        Loop loopTest = createLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+        Loop loopTest = createLoop("ControlLoopTest", "yamlcontent", "{\"testname\":\"testvalue\"}",
                 "UUID-blueprint");
         LoopTemplate template = new LoopTemplate();
         template.setName("templateName");
@@ -271,9 +271,9 @@ public class DeployFlowTestItCase {
         camelContext.createProducerTemplate().send("direct:update-dcae-status-for-loop", myCamelExchange);
 
         assertThat(loopTest.getComponent("DCAE_configPolicyTest").getState().getStateName())
-            .isEqualTo("BLUEPRINT_DEPLOYED");
+                .isEqualTo("BLUEPRINT_DEPLOYED");
         assertThat(loopTest.getComponent("DCAE_configPolicyTest2").getState().getStateName())
-            .isEqualTo("BLUEPRINT_DEPLOYED");
+                .isEqualTo("BLUEPRINT_DEPLOYED");
 
         Loop loopAfterTest = loopService.getLoop("ControlLoopTest");
         assertThat(loopAfterTest.getComponents().size()).isEqualTo(3);
@@ -283,18 +283,18 @@ public class DeployFlowTestItCase {
         assertThat(loopTest.getComponent("DCAE_configPolicyTest2")).isNotNull();
     }
 
-    private Loop createLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
-            String dcaeBlueprintId) throws JsonSyntaxException, IOException {
-        Loop loop = new Loop(name, svgRepresentation);
+    private Loop createLoop(String name, String blueprint, String globalPropertiesJson,
+                            String dcaeBlueprintId) throws JsonSyntaxException, IOException {
+        Loop loop = new Loop(name);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
         return loop;
     }
 
     private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
-            String policyTosca, String jsonProperties, boolean shared) {
+                                                     String policyTosca, String jsonProperties, boolean shared) {
 
-        PolicyModel policyModel = new PolicyModel(modelType, policyTosca,"1.0.0");
+        PolicyModel policyModel = new PolicyModel(modelType, policyTosca, "1.0.0");
         policyModelsService.saveOrUpdatePolicyModel(policyModel);
         MicroServicePolicy microService = new MicroServicePolicy(name, policyModel,
                 shared,
@@ -305,8 +305,9 @@ public class DeployFlowTestItCase {
     }
 
     private MicroServicePolicy getMicroServicePolicy(String name, String modelType, String jsonRepresentation,
-            String policyTosca, String jsonProperties, boolean shared, String deploymengId,
-            String deploymentStatusUrl) {
+                                                     String policyTosca, String jsonProperties, boolean shared,
+                                                     String deploymengId,
+                                                     String deploymentStatusUrl) {
         MicroServicePolicy microService = getMicroServicePolicy(name, modelType, jsonRepresentation, policyTosca,
                 jsonProperties, shared);
 

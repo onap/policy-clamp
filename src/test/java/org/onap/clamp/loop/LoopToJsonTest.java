@@ -27,7 +27,6 @@ package org.onap.clamp.loop;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -37,7 +36,6 @@ import java.util.Random;
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtil;
-import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
@@ -46,7 +44,6 @@ import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 public class LoopToJsonTest {
 
@@ -54,13 +51,13 @@ public class LoopToJsonTest {
 
     private OperationalPolicy getOperationalPolicy(String configJson, String name) {
         return new OperationalPolicy(name, null, gson.fromJson(configJson, JsonObject.class),
-                getPolicyModel("org.onap.policy.drools.legacy", "yaml", "1.0.0", "Drools", "type1"), null,null,null);
+                getPolicyModel("org.onap.policy.drools.legacy", "yaml", "1.0.0", "Drools", "type1"), null, null, null);
     }
 
-    private Loop getLoop(String name, String svgRepresentation, String blueprint, String globalPropertiesJson,
+    private Loop getLoop(String name, String blueprint, String globalPropertiesJson,
                          String dcaeId, String dcaeUrl, String dcaeBlueprintId)
             throws JsonSyntaxException, IOException {
-        Loop loop = new Loop(name, svgRepresentation);
+        Loop loop = new Loop(name);
         loop.setGlobalPropertiesJson(new Gson().fromJson(globalPropertiesJson, JsonObject.class));
         loop.setLastComputedState(LoopState.DESIGN);
         loop.setDcaeDeploymentId(dcaeId);
@@ -91,9 +88,8 @@ public class LoopToJsonTest {
         return new PolicyModel(policyType, policyModelTosca, version, policyAcronym);
     }
 
-    private LoopTemplate getLoopTemplate(String name, String blueprint, String svgRepresentation,
-                                         Integer maxInstancesAllowed) {
-        LoopTemplate template = new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
+    private LoopTemplate getLoopTemplate(String name, String blueprint, Integer maxInstancesAllowed) {
+        LoopTemplate template = new LoopTemplate(name, blueprint, maxInstancesAllowed, null);
         template.addLoopElementModel(getLoopElementModel("yaml", "microService1",
                 getPolicyModel("org.onap.policy.drools", "yaml", "1.0.0", "Drools", "type1")));
         return template;
@@ -107,11 +103,12 @@ public class LoopToJsonTest {
 
     /**
      * This tests a GSON encode/decode.
+     *
      * @throws IOException In case of failure
      */
     @Test
     public void loopGsonTest() throws IOException {
-        Loop loopTest = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+        Loop loopTest = getLoop("ControlLoopTest", "yamlcontent", "{\"testname\":\"testvalue\"}",
                 "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy(
                 ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
@@ -122,7 +119,7 @@ public class LoopToJsonTest {
         loopTest.addMicroServicePolicy(microServicePolicy);
         LoopLog loopLog = getLoopLog(LogType.INFO, "test message", loopTest);
         loopTest.addLog(loopLog);
-        LoopTemplate loopTemplate = getLoopTemplate("templateName", "yaml", "svg", 1);
+        LoopTemplate loopTemplate = getLoopTemplate("templateName", "yaml", 1);
         loopTest.setLoopTemplate(loopTemplate);
 
         String jsonSerialized = JsonUtils.GSON_JPA_MODEL.toJson(loopTest);
@@ -136,8 +133,7 @@ public class LoopToJsonTest {
                 .isEqualToComparingFieldByField(loopTest.getComponent("DCAE").getState());
         assertThat(loopTestDeserialized.getComponent("POLICY").getState()).isEqualToComparingOnlyGivenFields(
                 loopTest.getComponent("POLICY").getState(), "stateName", "description");
-        // svg and blueprint not exposed so wont be deserialized
-        assertThat(loopTestDeserialized.getSvgRepresentation()).isEqualTo(null);
+        // blueprint not exposed so wont be deserialized
 
         assertThat(loopTestDeserialized.getOperationalPolicies()).containsExactly(opPolicy);
         assertThat(loopTestDeserialized.getMicroServicePolicies()).containsExactly(microServicePolicy);
@@ -156,7 +152,7 @@ public class LoopToJsonTest {
      */
     @Test
     public void loopServiceTest() throws IOException {
-        Loop loopTest2 = getLoop("ControlLoopTest", "<xml></xml>", "yamlcontent", "{\"testname\":\"testvalue\"}",
+        Loop loopTest2 = getLoop("ControlLoopTest", "yamlcontent", "{\"testname\":\"testvalue\"}",
                 "123456789", "https://dcaetest.org", "UUID-blueprint");
 
         JsonObject jsonModel = new GsonBuilder().create()

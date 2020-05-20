@@ -51,7 +51,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
-import org.onap.clamp.clds.util.drawing.SvgLoopGenerator;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.components.external.DcaeComponent;
@@ -87,9 +86,6 @@ public class Loop extends AuditEntity implements Serializable {
     @Expose
     @Column(name = "dcae_deployment_status_url")
     private String dcaeDeploymentStatusUrl;
-
-    @Column(columnDefinition = "MEDIUMTEXT", name = "svg_representation")
-    private String svgRepresentation;
 
     @Expose
     @Type(type = "json")
@@ -145,9 +141,8 @@ public class Loop extends AuditEntity implements Serializable {
     /**
      * Constructor.
      */
-    public Loop(String name, String svgRepresentation) {
+    public Loop(String name) {
         this.name = name;
-        this.svgRepresentation = svgRepresentation;
         this.lastComputedState = LoopState.DESIGN;
         this.globalPropertiesJson = new JsonObject();
         initializeExternalComponents();
@@ -160,7 +155,7 @@ public class Loop extends AuditEntity implements Serializable {
      * @param loopTemplate The loop template from which a new loop instance must be created
      */
     public Loop(String name, LoopTemplate loopTemplate, ToscaConverterWithDictionarySupport toscaConverter) {
-        this(name, "");
+        this(name);
         this.setLoopTemplate(loopTemplate);
         this.setModelService(loopTemplate.getModelService());
         loopTemplate.getLoopElementModelsUsed().forEach(element -> {
@@ -199,14 +194,6 @@ public class Loop extends AuditEntity implements Serializable {
 
     void setDcaeDeploymentStatusUrl(String dcaeDeploymentStatusUrl) {
         this.dcaeDeploymentStatusUrl = dcaeDeploymentStatusUrl;
-    }
-
-    public String getSvgRepresentation() {
-        return svgRepresentation;
-    }
-
-    void setSvgRepresentation(String svgRepresentation) {
-        this.svgRepresentation = svgRepresentation;
     }
 
     public LoopState getLastComputedState() {
@@ -251,37 +238,31 @@ public class Loop extends AuditEntity implements Serializable {
 
     /**
      * This method adds an operational policy to the loop.
-     * It re-computes the Svg as well.
      *
      * @param opPolicy the operationalPolicy to add
      */
     public void addOperationalPolicy(OperationalPolicy opPolicy) {
         operationalPolicies.add(opPolicy);
         opPolicy.setLoop(this);
-        this.setSvgRepresentation(SvgLoopGenerator.getSvgImage(this));
     }
 
     /**
      * This method removes an operational policy to the loop.
-     * It re-computes the Svg as well.
      *
      * @param opPolicy the operationalPolicy to add
      */
     public void removeOperationalPolicy(OperationalPolicy opPolicy) {
         operationalPolicies.remove(opPolicy);
-        this.setSvgRepresentation(SvgLoopGenerator.getSvgImage(this));
     }
 
     /**
      * This method adds an micro service policy to the loop.
-     * It re-computes the Svg as well.
      *
      * @param microServicePolicy the micro service to add
      */
     public void addMicroServicePolicy(MicroServicePolicy microServicePolicy) {
         microServicePolicies.add(microServicePolicy);
         microServicePolicy.getUsedByLoops().add(this);
-        this.setSvgRepresentation(SvgLoopGenerator.getSvgImage(this));
     }
 
     public void addLog(LoopLog log) {

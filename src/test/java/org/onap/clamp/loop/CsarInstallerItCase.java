@@ -219,7 +219,6 @@ public class CsarInstallerItCase {
         // set
         LoopTemplate loopTemplate = loopTemplatesRepo.findById(LoopTemplate.generateLoopTemplateName(generatedName,
                 "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")).get();
-        assertThat(loopTemplate.getSvgRepresentation()).startsWith("<svg ");
         assertThat(loopTemplate.getLoopElementModelsUsed()).hasSize(1);
         assertThat(loopTemplate.getModelService().getServiceUuid()).isEqualTo("63cac700-ab9a-4115-a74f-7eac85e3fce0");
         JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"),
