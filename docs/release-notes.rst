@@ -6,8 +6,8 @@
 Release Notes
 =============
 
-Version: 5.0.1
---------------
+Version: 5.0.1 (Frankfurt)
+--------------------------
 
 :Release Date: 2020-05-12
 
@@ -30,7 +30,7 @@ The main goal of the Frankfurt release was to:
 **Bug Fixes**
 
 	- The full list of implemented user stories and epics is available on `Frankfurt CLAMP M1 release planning <https://wiki.onap.org/display/DW/CLAMP+R6+-+M1+Release+Planning>`_
-	  
+	- The full list of issues(bugs) solved, is available on `CLAMP R6 - Frankfurt list of solved issues(bugs) <https://wiki.onap.org/pages/viewpage.action?pageId=84648915>`_
 
 **Known Issues**
 
@@ -61,8 +61,8 @@ Quick Links:
     - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
 
 
-Version: 4.1.3
---------------
+Version: 4.1.3 (El-Alto)
+------------------------
 
 :Release Date: 2019-10-11
 
@@ -109,8 +109,8 @@ Quick Links:
     New Docker Containers are available.
 
 
-Version: 4.1.0
---------------
+Version: 4.1.0 (El-Alto Early Drop)
+-----------------------------------
 
 :Release Date: 2019-08-19
 
@@ -157,8 +157,8 @@ Quick Links:
 
 
 
-Version: 4.0.5
---------------
+Version: 4.0.5 (Dublin)
+-----------------------
 
 :Release Date: 2019-06-06
 
@@ -240,8 +240,8 @@ none
 one documentation issue was fixed, this issue does not require a new docker image:
     - `CLAMP-257 <https://jira.onap.org/browse/CLAMP-257>`_ User Manual for CLAMP : nothing on readthedocs.
 
-Version: 3.0.3
---------------
+Version: 3.0.3 (Casablanca)
+---------------------------
 
 :Release Date: 2018-11-30
 
@@ -296,8 +296,8 @@ Quick Links:
 
     https://wiki.onap.org/display/DW/CLAMP+videos
 
-Version: 2.0.2
---------------
+Version: 2.0.2 (Beijing)
+------------------------
 
 :Release Date: 2018-06-07
 
@@ -352,8 +352,8 @@ Quick Links:
 
     CLAMP Dashboard is now implemented, allows to monitor Closed Loops that are running by retrieving CL events on DMAAP.
 
-Version: 1.1.0
---------------
+Version: 1.1.0 (Amsterdam)
+--------------------------
 
 :Release Date: 2017-11-16
 
