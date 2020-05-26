@@ -75,13 +75,14 @@ exports[`Verify CreateLoopModal Test the render method 1`] = `
       <Col
         sm="10"
       >
-        <styled.svg
-          dangerouslySetInnerHTML={
-            Object {
-              "__html": "",
+        <withRouter(SvgGenerator)
+          clickable={false}
+          generatedFrom="TEMPLATE"
+          loopCache={
+            LoopCache {
+              "loopJsonCache": Object {},
             }
           }
-          value=""
         />
       </Col>
     </FormGroup>

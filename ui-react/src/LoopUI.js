@@ -29,7 +29,7 @@ import logo from './logo.png';
 import { GlobalClampStyle } from './theme/globalStyle.js';
 import OnapConstants from './utils/OnapConstants';
 
-import LoopSvg from './components/loop_viewer/svg/LoopSvg';
+import SvgGenerator from './components/loop_viewer/svg/SvgGenerator';
 import LoopLogs from './components/loop_viewer/logs/LoopLogs';
 import LoopStatus from './components/loop_viewer/status/LoopStatus';
 import UserService from './api/UserService';
@@ -203,7 +203,7 @@ export default class LoopUI extends React.Component {
 	renderLoopViewBody() {
 		return (
 			<LoopViewBodyDivStyled>
-				<LoopSvg loopCache={this.state.loopCache} />
+				<SvgGenerator loopCache={this.state.loopCache} clickable={true} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE}/>
 				<LoopStatus loopCache={this.state.loopCache}/>
 				<LoopLogs loopCache={this.state.loopCache} />
 			</LoopViewBodyDivStyled>

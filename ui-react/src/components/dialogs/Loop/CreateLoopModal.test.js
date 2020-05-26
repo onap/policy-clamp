@@ -30,8 +30,8 @@ describe('Verify CreateLoopModal', () => {
 
   it('Test the render method', async () => {
 	const flushPromises = () => new Promise(setImmediate);
-    TemplateService.getTemplateNames = jest.fn().mockImplementation(() => {
-    	return Promise.resolve(["template1","template2"]);
+    TemplateService.getAllLoopTemplates = jest.fn().mockImplementation(() => {
+    	return Promise.resolve([{"name":"template1"},{"name":"template2"}]);
 	});
 	
 	const component = shallow(<CreateLoopModal/>);
@@ -39,31 +39,26 @@ describe('Verify CreateLoopModal', () => {
 	await flushPromises();
 	component.update();
 		
-    expect(component.state('templateNames')).toStrictEqual([{"label": "template1", "value": "template1"}, {"label": "template2", "value": "template2"}]);
+    expect(component.state('templateNames')).toStrictEqual([{"label": "template1", "value": "template1", "templateObject": {"name": "template1"}}, {"label": "template2", "value": "template2","templateObject": {"name": "template2"}}]);
   });
 
   it('handleDropdownListChange event', async () => {
   	const flushPromises = () => new Promise(setImmediate);
-    const event = {value: 'template1'};
-    TemplateService.getBlueprintMicroServiceTemplateSvg = jest.fn().mockImplementation(() => {
-		return Promise.resolve("");
-	});
 
     const component = shallow(<CreateLoopModal/>);
-    component.find('StateManager').simulate('change', event);
+    component.find('StateManager').simulate('change', {value: 'template1', templateObject: {"name":"template1"} });
     await flushPromises();
     component.update();
     expect(component.state('chosenTemplateName')).toEqual("template1");
-    expect(component.state('content')).toEqual("Error1");
-    
-    TemplateService.getBlueprintMicroServiceTemplateSvg = jest.fn().mockImplementation(() => {
-		return Promise.resolve("svgContentTest");
-	});
-	component.find('StateManager').simulate('change', {value: 'template2'});
+    expect(component.state('fakeLoopCacheWithTemplate').getLoopTemplate()['name']).toEqual("template1");
+    expect(component.state('fakeLoopCacheWithTemplate').getLoopName()).toEqual("fakeLoop");
+
+	component.find('StateManager').simulate('change',{value: 'template2', templateObject: {"name":"template2"} });
     await flushPromises();
     component.update();
     expect(component.state('chosenTemplateName')).toEqual("template2");
-    expect(component.state('content')).toEqual("svgContentTest");
+    expect(component.state('fakeLoopCacheWithTemplate').getLoopTemplate()['name']).toEqual("template2");
+    expect(component.state('fakeLoopCacheWithTemplate').getLoopName()).toEqual("fakeLoop");
   });
 
 

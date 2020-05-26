@@ -33,6 +33,7 @@ import LoopService from '../../../api/LoopService';
 import LoopCache from '../../../api/LoopCache';
 import JSONEditor from '@json-editor/json-editor';
 import Alert from 'react-bootstrap/Alert';
+import OnapConstant from '../../../utils/OnapConstants';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
@@ -66,6 +67,9 @@ export default class PolicyModal extends React.Component {
 		this.createJsonEditor = this.createJsonEditor.bind(this);
 		this.handleRefresh = this.handleRefresh.bind(this);
 		this.disableAlert =  this.disableAlert.bind(this);
+		this.renderPdpGroupDropDown = this.renderPdpGroupDropDown.bind(this);
+		this.renderOpenLoopMessage = this.renderOpenLoopMessage.bind(this);
+		this.renderModalTitle = this.renderModalTitle.bind(this);
 	}
 
 	handleSave() {
@@ -82,7 +86,7 @@ export default class PolicyModal extends React.Component {
 		}
 		else {
 			console.info("NO validation errors found in policy data");
-			if (this.state.policyInstanceType === 'MICRO-SERVICE-POLICY') {
+			if (this.state.policyInstanceType === OnapConstant.microServiceType) {
                 this.state.loopCache.updateMicroServiceProperties(this.state.policyName, editorData);
                 this.state.loopCache.updateMicroServicePdpGroup(this.state.policyName, this.state.chosenPdpGroup, this.state.chosenPdpSubgroup);
                 LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.policyName)).then(resp => {
@@ -90,7 +94,7 @@ export default class PolicyModal extends React.Component {
                     this.props.history.push('/');
                     this.props.loadLoopFunction(this.state.loopCache.getLoopName());
                 });
-			} else if (this.state.policyInstanceType === 'OPERATIONAL-POLICY') {
+			} else if (this.state.policyInstanceType === OnapConstant.operationalPolicyType) {
 				this.state.loopCache.updateOperationalPolicyProperties(this.state.policyName, editorData);
 				this.state.loopCache.updateOperationalPolicyPdpGroup(this.state.policyName, this.state.chosenPdpGroup, this.state.chosenPdpSubgroup);
 				LoopService.setOperationalPolicyProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getOperationalPolicies()).then(resp => {
@@ -154,13 +158,13 @@ export default class PolicyModal extends React.Component {
 		var editorData = {};
 		var pdpGroupValues = {};
 		var chosenPdpGroupValue, chosenPdpSubgroupValue;
-		if (this.state.policyInstanceType === 'MICRO-SERVICE-POLICY') {
+		if (this.state.policyInstanceType === OnapConstant.microServiceType) {
 			toscaModel = this.state.loopCache.getMicroServiceJsonRepresentationForName(this.state.policyName);
 			editorData = this.state.loopCache.getMicroServicePropertiesForName(this.state.policyName);
 			pdpGroupValues = this.state.loopCache.getMicroServiceSupportedPdpGroup(this.state.policyName);
 			chosenPdpGroupValue = this.state.loopCache.getMicroServicePdpGroup(this.state.policyName);
 			chosenPdpSubgroupValue = this.state.loopCache.getMicroServicePdpSubgroup(this.state.policyName);
-		} else if (this.state.policyInstanceType === 'OPERATIONAL-POLICY') {
+		} else if (this.state.policyInstanceType === OnapConstant.operationalPolicyType) {
 			toscaModel = this.state.loopCache.getOperationalPolicyJsonRepresentationForName(this.state.policyName);
 			editorData = this.state.loopCache.getOperationalPolicyPropertiesForName(this.state.policyName);
 			pdpGroupValues = this.state.loopCache.getOperationalPolicySupportedPdpGroup(this.state.policyName);
@@ -207,7 +211,7 @@ export default class PolicyModal extends React.Component {
 
 	handleRefresh() {
 		var newLoopCache, toscaModel, editorData;
-		if (this.state.policyInstanceType === 'MICRO-SERVICE-POLICY') {
+		if (this.state.policyInstanceType === OnapConstant.microServiceType) {
 			LoopService.refreshMicroServicePolicyJson(this.state.loopCache.getLoopName(),this.state.policyName).then(data => {
 				newLoopCache =  new LoopCache(data);
 				toscaModel = newLoopCache.getMicroServiceJsonRepresentationForName(this.state.policyName);
@@ -227,7 +231,7 @@ export default class PolicyModal extends React.Component {
 					showMessage: "Refreshing of UI failed"
 				});
 			});
-		} else if (this.state.policyInstanceType === 'OPERATIONAL-POLICY') {
+		} else if (this.state.policyInstanceType === OnapConstant.operationalPolicyType) {
 			LoopService.refreshOperationalPolicyJson(this.state.loopCache.getLoopName(),this.state.policyName).then(data => {
 				var newLoopCache =  new LoopCache(data);
 				toscaModel = newLoopCache.getOperationalPolicyJsonRepresentationForName(this.state.policyName);
@@ -254,11 +258,60 @@ export default class PolicyModal extends React.Component {
 		this.setState ({ showSucAlert: false, showFailAlert: false });
 	}
 
+	renderPdpGroupDropDown() {
+		if(this.state.policyInstanceType !== OnapConstant.operationalPolicyType || !this.state.loopCache.isOpenLoopTemplate()) {
+			return (
+				<Form.Group as={Row} controlId="formPlaintextEmail">
+					<Form.Label column sm="2">Pdp Group Info</Form.Label>
+					<Col sm="3">
+						<Select value={{ label: this.state.chosenPdpGroup, value: this.state.chosenPdpGroup }} onChange={this.handlePdpGroupChange} options={this.state.pdpGroupList} />
+					</Col>
+					<Col sm="3">
+						<Select value={{ label: this.state.chosenPdpSubgroup, value: this.state.chosenPdpSubgroup }} onChange={this.handlePdpSubgroupChange} options={this.state.pdpSubgroupList} />
+					</Col>
+				</Form.Group>
+			);
+		}
+	}
+
+    renderOpenLoopMessage() {
+    	if(this.state.policyInstanceType === OnapConstant.operationalPolicyType && this.state.loopCache.isOpenLoopTemplate()) {
+    		return (
+   				"Operational Policy cannot be configured as only Open Loop is supported for this Template!"
+   			);
+   		}
+    }
+
+	renderModalTitle() {
+		return (
+				<Modal.Title>Edit the policy</Modal.Title>
+		);
+	}
+
+	renderButton() {
+	    var allElement = [(<Button variant="secondary" onClick={this.handleClose}>
+                                   				Close
+                         </Button>)];
+		if(this.state.policyInstanceType !== OnapConstant.operationalPolicyType || !this.state.loopCache.isOpenLoopTemplate()) {
+             allElement.push((
+                <Button variant="primary" disabled={this.readOnly} onClick={this.handleSave}>
+                                Save Changes
+                </Button>
+             ));
+             allElement.push((
+                <Button variant="primary" disabled={this.readOnly} onClick={this.handleRefresh}>
+                                Refresh
+                </Button>
+             ));
+		}
+		return allElement;
+	}
+
 	render() {
 		return (
-			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose } backdrop="static">
+			<ModalStyled size="xl" backdrop="static" keyboard={false} show={this.state.show} onHide={this.handleClose}>
 				<Modal.Header closeButton>
-					<Modal.Title>Edit the policy</Modal.Title>
+					{this.renderModalTitle()}
 				</Modal.Header>
 				<Alert variant="success" show={this.state.showSucAlert} onClose={this.disableAlert} dismissible>
 					{this.state.showMessage}
@@ -267,30 +320,14 @@ export default class PolicyModal extends React.Component {
 					{this.state.showMessage}
 				</Alert>
 				<Modal.Body>
+					{this.renderOpenLoopMessage()}
 					<div id="editor" />
-					<Form.Group as={Row} controlId="formPlaintextEmail">
-						<Form.Label column sm="2">Pdp Group Info</Form.Label>
-						<Col sm="3">
-							<Select value={{ label: this.state.chosenPdpGroup, value: this.state.chosenPdpGroup }} onChange={this.handlePdpGroupChange} options={this.state.pdpGroupList} />
-						</Col>
-						<Col sm="3">
-							<Select value={{ label: this.state.chosenPdpSubgroup, value: this.state.chosenPdpSubgroup }} onChange={this.handlePdpSubgroupChange} options={this.state.pdpSubgroupList} />
-						</Col>
-					</Form.Group>
+					{this.renderPdpGroupDropDown()}
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={this.handleClose}>
-						Close
-					</Button>
-					<Button variant="primary" onClick={this.handleSave}>
-						Save Changes
-					</Button>
-					<Button variant="primary" onClick={this.handleRefresh}>
-						Refresh
-					</Button>
+					{this.renderButton()}
 				</Modal.Footer>
 			</ModalStyled>
-
 		);
 	}
 }

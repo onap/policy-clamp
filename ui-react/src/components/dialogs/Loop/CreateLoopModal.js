@@ -30,46 +30,33 @@ import Col from 'react-bootstrap/Col';
 import styled from 'styled-components';
 import LoopService from '../../../api/LoopService';
 import TemplateService from '../../../api/TemplateService';
+import LoopCache from '../../../api/LoopCache';
+import SvgGenerator from '../../loop_viewer/svg/SvgGenerator';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
-`
-const LoopViewSvgDivStyled = styled.svg`
-	display: flex;
-	flex-direction: row;
-	overflow-x: scroll;
-	background-color: ${props => (props.theme.loopViewerBackgroundColor)};
-	border-color: ${props => (props.theme.loopViewerHeaderColor)};
-	margin-top: 3em;
-	margin-left: auto;
-	margin-right:auto;
-	margin-bottom: -1em;
-	text-align: center;
-	align-items: center;
-	height: 100%;
-	width: 100%;
 `
 
 export default class CreateLoopModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 
-		this.getTemplateNames = this.getTemplateNames.bind(this);
+		this.getAllLoopTemplates = this.getAllLoopTemplates.bind(this);
 		this.handleCreate = this.handleCreate.bind(this);
 		this.handleModelName = this.handleModelName.bind(this);
 		this.handleClose = this.handleClose.bind(this);
-		this.handleDropdownListChange = this.handleDropdownListChange.bind(this);
+		this.handleDropDownListChange = this.handleDropDownListChange.bind(this);
 		this.state = {
 			show: true,
-			content: '',
 			chosenTemplateName: '',
 			modelName: '',
-			templateNames: []
+			templateNames: [],
+			fakeLoopCacheWithTemplate: new LoopCache({})
 		};
 	}
 
 	componentWillMount() {
-		this.getTemplateNames();
+		this.getAllLoopTemplates();
 	}
 
 	handleClose() {
@@ -77,21 +64,26 @@ export default class CreateLoopModal extends React.Component {
 		this.props.history.push('/');
 	}
 
-	handleDropdownListChange(e) {
-		this.setState({ chosenTemplateName: e.value });
-		TemplateService.getBlueprintMicroServiceTemplateSvg(e.value).then(svgXml => {
-			if (svgXml.length !== 0) {
-				this.setState({ content: svgXml })
-			} else {
-				this.setState({ content: 'Error1' })
-			}
-		})
+	handleDropDownListChange(e) {
+	    if (typeof e.value !== "undefined") {
+	        this.setState({
+	        fakeLoopCacheWithTemplate:
+                new LoopCache({
+                    "loopTemplate":e.templateObject,
+                    "name": "fakeLoop"
+                }),
+                chosenTemplateName: e.value
+	        })
+		} else {
+          	this.setState({ fakeLoopCacheWithTemplate: new LoopCache({}) })
+        }
 	}
 
-	getTemplateNames() {
-		TemplateService.getTemplateNames().then(templateNames => {
-			const templateOptions = templateNames.map((templateName) => { return { label: templateName, value: templateName } });
-			this.setState({ templateNames: templateOptions })
+	getAllLoopTemplates() {
+		TemplateService.getAllLoopTemplates().then(templatesData => {
+		    const templateOptions = templatesData.map((templateData) => { return { label: templateData.name, value: templateData.name, templateObject: templateData } });
+            this.setState({
+                templateNames: templateOptions })
 		});
 	}
 
@@ -133,17 +125,15 @@ export default class CreateLoopModal extends React.Component {
 					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Template Name:</Form.Label>
 						<Col sm="10">
-							<Select onChange={this.handleDropdownListChange} options={this.state.templateNames} />
+							<Select onChange={this.handleDropDownListChange} options={this.state.templateNames} />
 						</Col>
 					</Form.Group>
-                                        <Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
-                                                <Form.Label column sm="2">Model Preview:</Form.Label>
-                                                <Col sm="10">
-                                                        <LoopViewSvgDivStyled dangerouslySetInnerHTML={{ __html: this.state.content }}
-                                                                value={this.state.content} >
-                                                        </LoopViewSvgDivStyled>
-                                                </Col>
-                                        </Form.Group>
+                    <Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
+                    <Form.Label column sm="2">Model Preview:</Form.Label>
+                        <Col sm="10">
+                            <SvgGenerator loopCache={this.state.fakeLoopCacheWithTemplate} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_TEMPLATE}/>
+                        </Col>
+                    </Form.Group>
 					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Model Name:</Form.Label>
 						<input type="text" style={{width: '50%', marginLeft: '1em' }}

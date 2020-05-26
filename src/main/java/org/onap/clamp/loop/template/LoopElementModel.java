@@ -80,6 +80,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     /**
      * The type of element.
      */
+    @Expose
     @Column(nullable = false, name = "loop_element_type")
     private String loopElementType;
 

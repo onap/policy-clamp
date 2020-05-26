@@ -75,13 +75,14 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
       <Col
         sm="10"
       >
-        <styled.svg
-          dangerouslySetInnerHTML={
-            Object {
-              "__html": "",
+        <withRouter(SvgGenerator)
+          clickable={false}
+          generatedFrom="INSTANCE"
+          loopCache={
+            LoopCache {
+              "loopJsonCache": Object {},
             }
           }
-          value=""
         />
       </Col>
     </FormGroup>
@@ -95,7 +96,7 @@ exports[`Verify OpenLoopModal Test the render method 1`] = `
           "render": [Function],
         }
       }
-      controlId="formBasicChecbox"
+      controlId="formBasicCheckbox"
     >
       <FormCheck
         disabled={false}
