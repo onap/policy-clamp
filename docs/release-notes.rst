@@ -33,6 +33,7 @@ The main goal of the Frankfurt release was to:
 	- The full list of issues(bugs) solved, is available on `CLAMP R6 - Frankfurt list of solved issues(bugs) <https://wiki.onap.org/pages/viewpage.action?pageId=84648915>`_
 
 **Known Issues**
+    - `CLAMP-856 <https://jira.onap.org/browse/CLAMP-856>`_ CLAMP should not display all CDS workflow properties
 
 
 **Security Notes**
