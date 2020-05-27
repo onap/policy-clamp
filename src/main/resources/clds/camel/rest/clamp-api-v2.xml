@@ -66,39 +66,6 @@
 				</doTry>
 			</route>
 		</get>
-		<get uri="/v2/loop/svgRepresentation/{loopName}"
-			outType="java.lang.String" produces="application/xml">
-			<route>
-				<removeHeaders pattern="*" excludePattern="loopName" />
-				<doTry>
-					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get SVG Representation')" />
-					<to
-						uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','read')" />
-					<to
-						uri="bean:org.onap.clamp.loop.LoopController?method=getSvgRepresentation(${header.loopName})" />
-					<to
-						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
-					<doCatch>
-						<exception>java.lang.Exception</exception>
-						<handled>
-							<constant>true</constant>
-						</handled>
-						<to
-								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
-						<log loggingLevel="ERROR"
-							 message="GET SVG request failed for loop: ${header.loopName}, ${exception.stacktrace}" />
-
-						<setHeader headerName="CamelHttpResponseCode">
-							<constant>500</constant>
-						</setHeader>
-						<setBody>
-							<simple>GET SVG For loop FAILED</simple>
-						</setBody>
-					</doCatch>
-				</doTry>
-			</route>
-		</get>
 
 		<post uri="/v2/loop/updateGlobalProperties/{loopName}"
 			type="com.google.gson.JsonObject" consumes="application/json"
@@ -1323,38 +1290,6 @@
 						</setHeader>
 						<setBody>
 							<simple>GET All Template names FAILED</simple>
-						</setBody>
-					</doCatch>
-				</doTry>
-			</route>
-		</get>
-		<get uri="/v2/templates/{templateName}/svgRepresentation"
-			 outType="java.lang.String" produces="application/xml">
-			<route>
-				<removeHeaders pattern="*" excludePattern="templateName" />
-				<doTry>
-					<to
-							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Get SVG Representation for Loop template')" />
-					<to
-							uri="bean:org.onap.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')" />
-					<to
-							uri="bean:org.onap.clamp.loop.template.LoopTemplatesService?method=getSvgRepresentation(${header.templateName})" />
-					<to
-							uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=endLog()" />
-					<doCatch>
-						<exception>java.lang.Exception</exception>
-						<handled>
-							<constant>true</constant>
-						</handled>
-						<to
-								uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=errorLog()" />
-						<log loggingLevel="ERROR"
-							 message="GET SVG for template failed for template: ${header.templateName},  ${exception.stacktrace}" />
-						<setHeader headerName="CamelHttpResponseCode">
-							<constant>500</constant>
-						</setHeader>
-						<setBody>
-							<simple>GET SVG for Template FAILED</simple>
 						</setBody>
 					</doCatch>
 				</doTry>

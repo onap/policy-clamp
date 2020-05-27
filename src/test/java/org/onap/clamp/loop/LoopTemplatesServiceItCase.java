@@ -55,7 +55,7 @@ public class LoopTemplatesServiceItCase {
     private static final String VERSION = "1.0.0";
 
     private LoopElementModel getLoopElementModel(String yaml, String name, String loopElementType,
-        String createdBy, PolicyModel policyModel) {
+                                                 String createdBy, PolicyModel policyModel) {
         LoopElementModel model = new LoopElementModel(name, loopElementType, yaml);
         model.setBlueprint("");
         model.setDcaeBlueprintId("");
@@ -64,16 +64,15 @@ public class LoopTemplatesServiceItCase {
     }
 
     private PolicyModel getPolicyModel(String policyType, String policyModelTosca, String version,
-        String policyAcronym, String createdBy) {
+                                       String policyAcronym, String createdBy) {
         return new PolicyModel(policyType, policyModelTosca, version, policyAcronym);
     }
 
-    private LoopTemplate getLoopTemplate(String name, String blueprint, String svgRepresentation,
-        String createdBy, Integer maxInstancesAllowed) {
+    private LoopTemplate getLoopTemplate(String name, String blueprint, String createdBy, Integer maxInstancesAllowed) {
         LoopTemplate template =
-            new LoopTemplate(name, blueprint, svgRepresentation, maxInstancesAllowed, null);
+                new LoopTemplate(name, blueprint, maxInstancesAllowed, null);
         template.addLoopElementModel(getLoopElementModel("yaml", "microService1", "MicroService",
-            createdBy, getPolicyModel(POLICY_MODEL_TYPE_1, "yaml", VERSION, "MS1", createdBy)));
+                createdBy, getPolicyModel(POLICY_MODEL_TYPE_1, "yaml", VERSION, "MS1", createdBy)));
         template.setAllowedLoopType(LoopType.OPEN);
         return template;
     }
@@ -81,9 +80,9 @@ public class LoopTemplatesServiceItCase {
     @Test
     @Transactional
     public void shouldSaveOrUpdateLoopTemplate() {
-        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "svg", "xyz", -1);
+        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "xyz", -1);
         LoopTemplate actualLoopTemplate =
-            loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
+                loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
 
         assertNotNull(actualLoopTemplate);
         assertThat(loopTemplate.getName()).isEqualTo("TemplateName");
@@ -92,8 +91,8 @@ public class LoopTemplatesServiceItCase {
 
     @Test
     @Transactional
-    public void shouldReturnAllLoopemplates() {
-        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "svg", "xyz", -1);
+    public void shouldReturnAllLoopTemplates() {
+        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "xyz", -1);
         loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
         List<LoopTemplate> loopTemplateList = loopTemplatesService.getAllLoopTemplates();
 
@@ -102,8 +101,8 @@ public class LoopTemplatesServiceItCase {
 
     @Test
     @Transactional
-    public void shouldReturnLoopemplateNames() {
-        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "svg", "xyz", -1);
+    public void shouldReturnLoopTemplateNames() {
+        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "xyz", -1);
         loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
         List<String> loopTemplateNames = loopTemplatesService.getLoopTemplateNames();
 
@@ -113,8 +112,8 @@ public class LoopTemplatesServiceItCase {
 
     @Test
     @Transactional
-    public void shouldReturnLoopemplate() {
-        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "svg", "xyz", -1);
+    public void shouldReturnLoopTemplate() {
+        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "xyz", -1);
         loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
         LoopTemplate actualLoopTemplate = loopTemplatesService.getLoopTemplate("TemplateName");
 
@@ -122,33 +121,22 @@ public class LoopTemplatesServiceItCase {
         assertThat(loopTemplate).isEqualTo(actualLoopTemplate);
         assertThat(loopTemplate.getName()).isEqualTo(actualLoopTemplate.getName());
         assertThat(loopTemplate.getMaximumInstancesAllowed())
-            .isEqualTo(actualLoopTemplate.getMaximumInstancesAllowed());
+                .isEqualTo(actualLoopTemplate.getMaximumInstancesAllowed());
         SortedSet<LoopTemplateLoopElementModel> loopElementModelsUsed =
-            loopTemplate.getLoopElementModelsUsed();
+                loopTemplate.getLoopElementModelsUsed();
         LoopTemplateLoopElementModel loopTemplateLoopElementModel = loopElementModelsUsed.first();
         assertThat(loopTemplateLoopElementModel.getLoopElementModel().getName())
-            .isEqualTo("microService1");
+                .isEqualTo("microService1");
         assertThat(loopTemplateLoopElementModel.getLoopTemplate().getName())
-            .isEqualTo("TemplateName");
+                .isEqualTo("TemplateName");
         assertNull(actualLoopTemplate.getBlueprint());
         assertNull(actualLoopTemplate.getModelService());
     }
 
     @Test
     @Transactional
-    public void shouldReturnLoopemplateSvg() {
-        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "svg", "xyz", -1);
-        loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
-        String svgRepresentation = loopTemplatesService.getSvgRepresentation("TemplateName");
-
-        assertNotNull(svgRepresentation);
-        assertThat(svgRepresentation).isEqualTo(loopTemplate.getSvgRepresentation());
-    }
-
-    @Test
-    @Transactional
-    public void shouldDeleteLoopemplate() {
-        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "svg", "xyz", -1);
+    public void shouldDeleteLoopTemplate() {
+        LoopTemplate loopTemplate = getLoopTemplate("TemplateName", null, "xyz", -1);
         loopTemplatesService.saveOrUpdateLoopTemplate(loopTemplate);
         loopTemplatesService.deleteLoopTemplate("TemplateName");
         LoopTemplate actualLoopTemplate = loopTemplatesService.getLoopTemplate("TemplateName");

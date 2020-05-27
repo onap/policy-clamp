@@ -169,17 +169,6 @@ public class LoopController {
     }
 
     /**
-     * Get the SVG representation of the loop.
-     *
-     * @param loopName The loop name
-     * @return The SVG representation
-     */
-    public String getSvgRepresentation(String loopName) {
-        Loop loop = loopService.getLoop(loopName);
-        return loop != null ? loop.getSvgRepresentation() : null;
-    }
-
-    /**
      * Refresh the Operational Policy Json representation of the loop.
      *
      * @param loop                  The loop

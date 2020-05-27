@@ -39,7 +39,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import org.hibernate.annotations.SortNatural;
-import org.onap.clamp.clds.util.drawing.SvgLoopGenerator;
 import org.onap.clamp.loop.common.AuditEntity;
 import org.onap.clamp.loop.service.Service;
 
@@ -68,9 +67,6 @@ public class LoopTemplate extends AuditEntity implements Serializable {
      */
     @Column(columnDefinition = "MEDIUMTEXT", name = "blueprint_yaml")
     private String blueprint;
-
-    @Column(columnDefinition = "MEDIUMTEXT", name = "svg_representation")
-    private String svgRepresentation;
 
     @Expose
     @OneToMany(
@@ -164,24 +160,6 @@ public class LoopTemplate extends AuditEntity implements Serializable {
     }
 
     /**
-     * svgRepresentation getter.
-     *
-     * @return the svgRepresentation
-     */
-    public String getSvgRepresentation() {
-        return svgRepresentation;
-    }
-
-    /**
-     * svgRepresentation setter.
-     *
-     * @param svgRepresentation the svgRepresentation to set
-     */
-    public void setSvgRepresentation(String svgRepresentation) {
-        this.svgRepresentation = svgRepresentation;
-    }
-
-    /**
      * loopElementModelsUsed getter.
      *
      * @return the loopElementModelsUsed
@@ -260,7 +238,6 @@ public class LoopTemplate extends AuditEntity implements Serializable {
                 new LoopTemplateLoopElementModel(this, loopElementModel, listPosition);
         this.loopElementModelsUsed.add(jointEntry);
         loopElementModel.getUsedByLoopTemplates().add(jointEntry);
-        this.setSvgRepresentation(SvgLoopGenerator.getSvgImage(this));
     }
 
     /**
@@ -303,16 +280,13 @@ public class LoopTemplate extends AuditEntity implements Serializable {
      * @param name                The loop template name id
      * @param blueprint           The blueprint containing all microservices (legacy
      *                            case)
-     * @param svgRepresentation   The svg representation of that loop template
      * @param maxInstancesAllowed The maximum number of instances that can be
      *                            created from that template
      * @param service             The service associated to that loop template
      */
-    public LoopTemplate(String name, String blueprint, String svgRepresentation,
-                        Integer maxInstancesAllowed, Service service) {
+    public LoopTemplate(String name, String blueprint, Integer maxInstancesAllowed, Service service) {
         this.name = name;
         this.setBlueprint(blueprint);
-        this.svgRepresentation = svgRepresentation;
 
         this.maximumInstancesAllowed = maxInstancesAllowed;
         this.modelService = service;

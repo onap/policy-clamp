@@ -78,8 +78,7 @@ public class LoopServiceTestItCase {
     public void shouldCreateEmptyLoop() {
         // given
         String loopBlueprint = "blueprint";
-        String loopSvg = "representation";
-        Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, loopBlueprint, loopSvg);
+        Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, loopBlueprint);
         testLoop.setGlobalPropertiesJson(JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
         testLoop.setLastComputedState(LoopState.DESIGN);
 
@@ -90,7 +89,6 @@ public class LoopServiceTestItCase {
         assertThat(actualLoop).isNotNull();
         assertThat(actualLoop).isEqualTo(loopsRepository.findById(actualLoop.getName()).get());
         assertThat(actualLoop.getName()).isEqualTo(EXAMPLE_LOOP_NAME);
-        assertThat(actualLoop.getSvgRepresentation()).isEqualTo(loopSvg);
         assertThat(actualLoop.getGlobalPropertiesJson().getAsJsonPrimitive("testName").getAsString())
                 .isEqualTo("testValue");
     }
@@ -183,7 +181,7 @@ public class LoopServiceTestItCase {
     }
 
     private void saveTestLoopToDb() {
-        Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, "blueprint", "representation");
+        Loop testLoop = createTestLoop(EXAMPLE_LOOP_NAME, "blueprint");
         testLoop.setGlobalPropertiesJson(JsonUtils.GSON.fromJson(EXAMPLE_JSON, JsonObject.class));
         LoopTemplate template = new LoopTemplate();
         template.setName("testTemplate");
@@ -376,7 +374,7 @@ public class LoopServiceTestItCase {
         assertThat(microServicePolicyService.isExisting("policyName")).isTrue();
     }
 
-    private Loop createTestLoop(String loopName, String loopBlueprint, String loopSvg) {
-        return new Loop(loopName, loopSvg);
+    private Loop createTestLoop(String loopName, String loopBlueprint) {
+        return new Loop(loopName);
     }
 }

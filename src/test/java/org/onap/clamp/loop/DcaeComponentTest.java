@@ -45,7 +45,7 @@ import org.onap.clamp.policy.microservice.MicroServicePolicy;
 public class DcaeComponentTest {
 
     private Loop createTestLoop() {
-        Loop loopTest = new Loop("ControlLoopTest", "<xml></xml>");
+        Loop loopTest = new Loop("ControlLoopTest");
         loopTest.setGlobalPropertiesJson(
                 new Gson().fromJson(
                         "{\"dcaeDeployParameters\":{\"uniqueBlueprintParameters\": {\"policy_id\": \"name\"}}}",
@@ -60,7 +60,7 @@ public class DcaeComponentTest {
         microServicePolicy.setConfigurationsJson(new Gson().fromJson("{\"param1\":\"value1\"}", JsonObject.class));
 
         loopTest.addMicroServicePolicy(microServicePolicy);
-        LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", "svg", 1, null);
+        LoopTemplate loopTemplate = new LoopTemplate("test", "yaml", 1, null);
         loopTemplate.setDcaeBlueprintId("UUID-blueprint");
         loopTest.setLoopTemplate(loopTemplate);
 
