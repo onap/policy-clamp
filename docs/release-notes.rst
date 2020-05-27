@@ -53,13 +53,14 @@ Quick Links:
 
 **Upgrade Notes**
 
-    New Docker Containers are available. the list of containers composing this release are below:
-    - clamp-backend-filebeat-onap: docker.elastic.co/beats/filebeat 5.5.0
-    - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.6
-    - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.6
-    - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.3
-    - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.3
-    - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
+    - The Upgrade strategy for Frankfurt can be found here:`<https://wiki.onap.org/display/DW/Frankfurt+CLAMP+Container+upgrade+strategy>`_
+    - New Docker Containers are available. the list of containers composing this release are below:
+      - clamp-backend-filebeat-onap: docker.elastic.co/beats/filebeat 5.5.0
+      - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.6
+      - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.6
+      - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.3
+      - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.3
+      - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
 
 
 Version: 4.1.3 (El-Alto)
