@@ -73,18 +73,23 @@ public class CdsDataInstaller {
             for (NodeTemplate nodeTemplate : csar.getSdcCsarHelper().getServiceNodeTemplateBySdcType(type)) {
                 // get cds artifact information and save in resources Prop
                 if (SdcTypes.PNF == type || SdcTypes.VF == type) {
-                    JsonObject controllerProperties = createCdsArtifactProperties(nodeTemplate.getPropertyValue(
-                            SDNC_MODEL_NAME).toString(),
-                            nodeTemplate.getPropertyValue(SDNC_MODEL_VERSION).toString());
+                    JsonObject controllerProperties = createCdsArtifactProperties(
+                            String.valueOf(nodeTemplate.getPropertyValue(SDNC_MODEL_NAME)),
+                            String.valueOf(nodeTemplate.getPropertyValue(SDNC_MODEL_VERSION)));
                     if (controllerProperties != null) {
                         resourcesPropByType.getAsJsonObject(nodeTemplate.getName())
                                 .add(CONTROLLER_PROPERTIES, controllerProperties);
+                        logger.info("Successfully installed the CDS data in Service");
+                    }
+                    else {
+                        logger.warn("Skipping CDS data installation in Service, as sdnc_model_name and "
+                                + "sdnc_model_version are not provided in the CSAR");
                     }
                 }
             }
         }
         serviceRepository.save(service);
-        logger.info("Successfully installed the CDS data in Service");
+
         return service;
     }
 
@@ -129,7 +134,8 @@ public class CdsDataInstaller {
      * @return Returns CDS artifacts information
      */
     private JsonObject createCdsArtifactProperties(String sdncModelName, String sdncModelVersion) {
-        if (sdncModelName != null && sdncModelVersion != null) {
+        if (sdncModelName != null && !"null".equals(sdncModelName)
+                && sdncModelVersion != null && !"null".equals(sdncModelVersion)) {
             JsonObject controllerProperties = new JsonObject();
             controllerProperties.addProperty(SDNC_MODEL_NAME, sdncModelName);
             controllerProperties.addProperty(SDNC_MODEL_VERSION, sdncModelVersion);

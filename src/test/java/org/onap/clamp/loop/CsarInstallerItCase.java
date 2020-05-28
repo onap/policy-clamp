@@ -77,7 +77,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller,legacy-operational-policy")
 public class CsarInstallerItCase {
 
-    private static final String CSAR_ARTIFACT_NAME = "example/sdc/service_Vloadbalancerms_csar.csar";
+    private static final String CSAR_ARTIFACT_NAME_CDS = "example/sdc/service_Vloadbalancerms_cds.csar";
+    private static final String CSAR_ARTIFACT_NAME_NO_CDS = "example/sdc/service_Vloadbalancerms_no_cds.csar";
     private static final String INVARIANT_SERVICE_UUID = "4cc5b45a-1f63-4194-8100-cd8e14248c92";
     private static final String INVARIANT_RESOURCE1_UUID = "07e266fc-49ab-4cd7-8378-ca4676f1b9ec";
     private static final String INVARIANT_RESOURCE2_UUID = "023a3f0d-1161-45ff-b4cf-8918a8ccf3ad";
@@ -112,7 +113,8 @@ public class CsarInstallerItCase {
         return blueprintArtifact;
     }
 
-    private CsarHandler buildFakeCsarHandler(String generatedName) throws IOException, SdcToscaParserException {
+    private CsarHandler buildFakeCsarHandler(String generatedName, String csarFileName) throws IOException,
+            SdcToscaParserException {
         // Create fake notification
         INotificationData notificationData = Mockito.mock(INotificationData.class);
         Mockito.when(notificationData.getServiceVersion()).thenReturn("1.0");
@@ -151,7 +153,7 @@ public class CsarInstallerItCase {
         // Create helper based on real csar to test policy yaml and global properties
         // set
         SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
-        String path = Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile();
+        String path = Thread.currentThread().getContextClassLoader().getResource(csarFileName).getFile();
         ISdcCsarHelper sdcHelper = factory.getSdcCsarHelper(path);
         Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(sdcHelper);
 
@@ -180,7 +182,7 @@ public class CsarInstallerItCase {
 
         CsarHandler csarHandler = new CsarHandler(notificationData, "", "");
         csarHandler
-                .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME).getFile());
+                .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME_CDS).getFile());
         Assert.assertEquals(csarHandler.getPolicyModelYaml(), Optional
                 .ofNullable(ResourceFileUtil.getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
     }
@@ -190,7 +192,19 @@ public class CsarInstallerItCase {
     public void testIsCsarAlreadyDeployedTca() throws SdcArtifactInstallerException, SdcToscaParserException,
             CsarHandlerException, IOException, InterruptedException, BlueprintParserException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
-        CsarHandler csarHandler = buildFakeCsarHandler(generatedName);
+        CsarHandler csarHandler = buildFakeCsarHandler(generatedName, CSAR_ARTIFACT_NAME_CDS);
+        assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isFalse();
+        csarInstaller.installTheCsar(csarHandler);
+        assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isTrue();
+    }
+
+    @Test
+    @Transactional
+    public void testWithoutCdsTca() throws SdcArtifactInstallerException, SdcToscaParserException,
+            CsarHandlerException, IOException, InterruptedException, BlueprintParserException {
+        String generatedName = RandomStringUtils.randomAlphanumeric(5);
+        CsarHandler csarHandler = buildFakeCsarHandler(generatedName, CSAR_ARTIFACT_NAME_NO_CDS);
+
         assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isFalse();
         csarInstaller.installTheCsar(csarHandler);
         assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isTrue();
@@ -202,7 +216,7 @@ public class CsarInstallerItCase {
     public void testInstallTheCsarTca() throws SdcArtifactInstallerException, SdcToscaParserException,
             CsarHandlerException, IOException, JSONException, InterruptedException, BlueprintParserException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
-        CsarHandler csar = buildFakeCsarHandler(generatedName);
+        CsarHandler csar = buildFakeCsarHandler(generatedName, CSAR_ARTIFACT_NAME_CDS);
         csarInstaller.installTheCsar(csar);
         assertThat(serviceRepository.existsById("63cac700-ab9a-4115-a74f-7eac85e3fce0")).isTrue();
         // We should have CDS info
