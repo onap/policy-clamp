@@ -40,8 +40,6 @@ import { Route } from 'react-router-dom'
 import CreateLoopModal from './components/dialogs/Loop/CreateLoopModal';
 import OpenLoopModal from './components/dialogs/Loop/OpenLoopModal';
 import ModifyLoopModal from './components/dialogs/Loop/ModifyLoopModal';
-import OperationalPolicyModal from './components/dialogs/OperationalPolicy/OperationalPolicyModal';
-import ConfigurationPolicyModal from './components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
 import PolicyModal from './components/dialogs/Policy/PolicyModal';
 import LoopPropertiesModal from './components/dialogs/Loop/LoopPropertiesModal';
 import UserInfoModal from './components/dialogs/UserInfoModal';
@@ -268,10 +266,7 @@ export default class LoopUI extends React.Component {
 				<Route path="/viewToscaPolicyModal" render={(routeProps) => (<ViewToscaPolicyModal {...routeProps} />)} />
 				<Route path="/ViewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
 				<Route path="/ManageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
-				<Route path="/operationalPolicyModal"
-					render={(routeProps) => (<OperationalPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
 				<Route path="/policyModal/:policyInstanceType/:policyName" render={(routeProps) => (<PolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
-				<Route path="/configurationPolicyModal/:policyName" render={(routeProps) => (<ConfigurationPolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
 				<Route path="/createLoop" render={(routeProps) => (<CreateLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
 				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
 				<Route path="/loopProperties" render={(routeProps) => (<LoopPropertiesModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
