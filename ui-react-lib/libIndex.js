@@ -22,30 +22,31 @@
  */
 
 export { default as ConfigurationPolicyModal } from './src/components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
-export { default as PolicyModal } from './src/components/dialogs/Policy/PolicyModal';
+export { default as CreateLoopModal } from './src/components/dialogs/Loop/CreateLoopModal';
+export { default as CreateLoopModal } from './src/components/dialogs/Loop/CreateLoopModal';
 export { default as DeployLoopModal } from './src/components/dialogs/Loop/DeployLoopModal';
 export { default as LoopActionService } from './src/api/LoopActionService';
 export { default as LoopCache }  from './src/api/LoopCache';
-export { default as LoopComponentConverter } from './src/components/loop_viewer/svg/LoopComponentConverter';
 export { default as LoopLogs } from './src/components/loop_viewer/logs/LoopLogs';
 export { default as LoopPropertiesModal } from './src/components/dialogs/Loop/LoopPropertiesModal';
 export { default as LoopService } from './src/api/LoopService';
 export { default as LoopStatus } from './src/components/loop_viewer/status/LoopStatus';
-export { default as LoopSvg } from './src/components/loop_viewer/svg/LoopSvg';
 export { default as LoopUI } from './src/LoopUI';
 export { default as ManageDictionaries } from './src/components/dialogs/ManageDictionaries/ManageDictionaries';
 export { default as MenuBar } from './src/components/menu/MenuBar';
 export { default as ModifyLoopModal } from './src/components/dialogs/Loop/ModifyLoopModal';
 export { default as NotFound } from './src/NotFound';
+export { default as OnapConstants } from './src/utils/OnapConstants';
 export { default as OpenLoopModal } from './src/components/dialogs/Loop/OpenLoopModal';
-export { default as CreateLoopModal } from './src/components/dialogs/Loop/CreateLoopModal';
 export { default as OperationalPolicyModal } from './src/components/dialogs/OperationalPolicy/OperationalPolicyModal';
 export { default as PerformActions } from './src/components/dialogs/PerformActions';
+export { default as PolicyModal } from './src/components/dialogs/Policy/PolicyModal';
 export { default as PolicyToscaService } from './src/api/PolicyToscaService';
 export { default as RefreshStatus } from './src/components/dialogs/RefreshStatus';
+export { default as SvgGenerator } from './src/components/loop_viewer/svg/SvgGenerator';
 export { default as TemplateService } from './src/api/TemplateService';
+export { default as UploadToscaPolicyModal } from './src/components/dialogs/Tosca/UploadToscaPolicyModal';
 export { default as UserInfoModal } from './src/components/dialogs/UserInfoModal';
 export { default as UserService } from './src/api/UserService';
-export { default as UploadToscaPolicyModal } from './src/components/dialogs/Tosca/UploadToscaPolicyModal';
 export { default as ViewLoopTemplatesModal } from './src/components/dialogs/Tosca/ViewLoopTemplatesModal';
 export { default as ViewToscaPolicyModal } from './src/components/dialogs/Tosca/ViewToscaPolicyModal';

@@ -1264,6 +1264,26 @@
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>3.7.0.1746</version>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>             
+                <executions>  
+                    <execution>
+                        <id>libIndexCheck</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>bash</executable>
+                    <arguments>
+                        <argument>${project.basedir}/src/main/script/checkLibIndex.sh</argument>
+                    </arguments>
+                </configuration>
+          </plugin>
 		</plugins>
 	</build>
 </project>
