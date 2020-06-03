@@ -68,7 +68,6 @@
         blueprint_yaml MEDIUMTEXT,
         dcae_blueprint_id varchar(255),
         maximum_instances_allowed integer,
-        svg_representation MEDIUMTEXT,
         unique_blueprint boolean default false,
         service_uuid varchar(255),
         primary key (name)
@@ -91,7 +90,6 @@
         dcae_deployment_status_url varchar(255),
         global_properties_json json,
         last_computed_state varchar(255) not null,
-        svg_representation MEDIUMTEXT,
         loop_template_name varchar(255) not null,
         service_uuid varchar(255),
         primary key (name)
