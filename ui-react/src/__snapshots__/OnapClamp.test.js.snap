@@ -103,10 +103,6 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       path="/refreshStatus"
       render={[Function]}
     />
-    <Route
-      path="/logout"
-      render={[Function]}
-    />
     <GlobalStyleComponent />
     <div>
       <Alert
@@ -182,11 +178,6 @@ exports[`Verify OnapClamp Test the render method 1`] = `
         <Styled(Link)
           to="/userInfo"
         />
-        <Styled(Link)
-          to="/logout/"
-        >
-           (logout)
-        </Styled(Link)>
       </NavbarText>
     </Navbar>
     <styled.div>

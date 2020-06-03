@@ -47,31 +47,6 @@ export default class UserService {
 			return UserService.notLoggedUserName;
 		});
 	}
-	
-	static logout() {
-		return fetch('/restservices/clds/v1/user/logout', {
-			method: 'POST',
-			credentials: 'same-origin'
-		})
-		.then(function (response) {
-			console.debug("logout response received, status code:", response.status);
-			if (response.ok) {
-				return response.text();
-			} else {
-				console.error("logout response is nok");
-				return UserService.notLoggedUserName;
-			}
-		})
-		.then(function (data) {
-			console.info ("User disconnected:",data)
-			return data;
-		})
-		.catch(function(error) {
-			console.warn("logout error received, user set to: ",UserService.notLoggedUserName);
-			console.error("logout error:",error);
-			return UserService.notLoggedUserName;
-		});
-	}
 
 	static getUserInfo() {
 		return fetch('/restservices/clds/v2/clampInformation', {

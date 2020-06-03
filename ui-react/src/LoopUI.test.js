@@ -83,15 +83,6 @@ describe('Verify LoopUI', () => {
 		expect(historyMock.push.mock.calls[0]).toEqual([ '/']);
 	})
 
-	test('Test logout method', async () => {
-		const flushPromises = () => new Promise(setImmediate);
-		const component = shallow(<LoopUI />)
-		const instance = component.instance();
-		instance.logout();
-		await flushPromises();
-		expect(component.state('userName')).toEqual("testUser");
-	})
-
 	test('Test loadLoop method refresh suc', async () => {
 		const historyMock = { push: jest.fn() };
 		LoopService.getLoop = jest.fn().mockImplementation(() => {

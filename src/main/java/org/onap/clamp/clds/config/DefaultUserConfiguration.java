@@ -74,9 +74,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) {
         try {
             http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
-                    .authenticated().anyRequest().permitAll().and().logout()
-                    .logoutUrl("/restservices/clds/v1/user/logout").logoutSuccessUrl("/index.html")
-                    .invalidateHttpSession(true).deleteCookies("JSESSIONID").and().sessionManagement()
+                    .authenticated().anyRequest().permitAll().and().sessionManagement()
                     .maximumSessions(1);
 
         } catch (Exception e) {

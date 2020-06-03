@@ -76,10 +76,6 @@ exports[`Verify LoopUI Test the render method 1`] = `
     path="/refreshStatus"
     render={[Function]}
   />
-  <Route
-    path="/logout"
-    render={[Function]}
-  />
   <GlobalStyleComponent />
   <div>
     <Alert
@@ -156,11 +152,6 @@ exports[`Verify LoopUI Test the render method 1`] = `
         to="/userInfo"
       >
         testUser
-      </Styled(Link)>
-      <Styled(Link)
-        to="/logout/"
-      >
-         (logout)
       </Styled(Link)>
     </NavbarText>
   </Navbar>
