@@ -21,8 +21,6 @@
  *
  */
 
-export { default as ConfigurationPolicyModal } from './src/components/dialogs/ConfigurationPolicy/ConfigurationPolicyModal';
-export { default as CreateLoopModal } from './src/components/dialogs/Loop/CreateLoopModal';
 export { default as CreateLoopModal } from './src/components/dialogs/Loop/CreateLoopModal';
 export { default as DeployLoopModal } from './src/components/dialogs/Loop/DeployLoopModal';
 export { default as LoopActionService } from './src/api/LoopActionService';
@@ -38,7 +36,6 @@ export { default as ModifyLoopModal } from './src/components/dialogs/Loop/Modify
 export { default as NotFound } from './src/NotFound';
 export { default as OnapConstants } from './src/utils/OnapConstants';
 export { default as OpenLoopModal } from './src/components/dialogs/Loop/OpenLoopModal';
-export { default as OperationalPolicyModal } from './src/components/dialogs/OperationalPolicy/OperationalPolicyModal';
 export { default as PerformActions } from './src/components/dialogs/PerformActions';
 export { default as PolicyModal } from './src/components/dialogs/Policy/PolicyModal';
 export { default as PolicyToscaService } from './src/api/PolicyToscaService';
