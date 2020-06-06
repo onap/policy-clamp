@@ -206,7 +206,7 @@ In that case, the credentials should be specified in `src/main/resources/clds/cl
 
 Passwords should be hashed using Bcrypt :
 ```
-# pip3 install bcrypt  # if you don't have the bcrypt python lib installed, should be done once.
+# pip3 install --no-cache-dir bcrypt  # if you don't have the bcrypt python lib installed, should be done once.
 # python3 -c 'import bcrypt; print(bcrypt.hashpw("password".encode(), bcrypt.gensalt(rounds=10, prefix=b"2a")))'
 ```
 
