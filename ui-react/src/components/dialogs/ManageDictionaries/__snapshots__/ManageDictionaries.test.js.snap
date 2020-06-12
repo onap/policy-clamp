@@ -88,7 +88,6 @@ exports[`Verify ManageDictionaries Test API Successful 1`] = `
           },
         ]
       }
-      data={Array []}
       editable={
         Object {
           "onRowAdd": [Function],
