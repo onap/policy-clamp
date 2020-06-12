@@ -79,26 +79,6 @@ export default class LoopService {
 			});
 	}
 
-	static getSvg(loopName) {
-		return fetch('/restservices/clds/v2/loop/svgRepresentation/' + loopName, {
-			method: 'GET',
-			credentials: 'same-origin'
-		})
-			.then(function (response) {
-				console.debug("svgRepresentation response received: ", response.status);
-				if (response.ok) {
-					return response.text();
-				} else {
-					console.error("svgRepresentation query failed");
-					return "";
-				}
-			})
-			.catch(function (error) {
-				console.error("svgRepresentation error received", error);
-				return "";
-			});
-	}
-
 	static setMicroServiceProperties(loopName, jsonData) {
 		return fetch('/restservices/clds/v2/loop/updateMicroservicePolicy/' + loopName, {
 			method: 'POST',
