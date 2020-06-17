@@ -60,10 +60,10 @@ describe('Verify ManageDictionaries', () => {
 				json: () => {
 					return Promise.resolve({
 						"name": "vtest",
-            "secondLevelDictionary": "1",
+						"secondLevelDictionary": "1",
 						"subDictionaryType": "string",
-        		"updatedBy": "test",
-            "updatedDate": "05-07-2019 19:09:42"
+						"updatedBy": "test",
+						"updatedDate": "05-07-2019 19:09:42"
 					});
 				}
 			});
@@ -90,10 +90,10 @@ describe('Verify ManageDictionaries', () => {
 				json: () => {
 					return Promise.resolve({
 						"name": "vtest",
-	          "secondLevelDictionary": "1",
+						"secondLevelDictionary": "1",
 						"subDictionaryType": "string",
-	       		"updatedBy": "test",
-	          "updatedDate": "05-07-2019 19:09:42"
+						"updatedBy": "test",
+						"updatedDate": "05-07-2019 19:09:42"
 					});
 				}
 			});
@@ -103,12 +103,33 @@ describe('Verify ManageDictionaries', () => {
 	});
 
 	test('Test get dictionaryNames/dictionaryElements, add/delete dictionary functions', async () => {
+		const dictionaries = [
+			{
+				name: "DefaultActors",
+				secondLevelDictionary: 0,
+				subDictionaryType: "",
+				dictionaryElements: [
+      					{
+        					"shortName": "SDNR",
+        					"name": "SDNR Change",
+        					"description": "SDNR component",
+        					"type": "string",
+        					"createdDate": "2020-06-07T18:57:18.130858Z",
+        					"updatedDate": "2020-06-11T13:10:52.239282Z",
+        					"updatedBy": "admin"
+      					}
+    				],
+    				createdDate: "2020-06-07T22:21:08.428742Z",
+    				updatedDate: "2020-06-10T00:41:49.122908Z",
+    				updatedBy: "Not found"
+  			}
+		];
 		const historyMock = { push: jest.fn() };
 		TemplateMenuService.getDictionary = jest.fn().mockImplementation(() => {
-			return Promise.resolve("test");
+			return Promise.resolve(dictionaries);
 		});
 		TemplateMenuService.getDictionaryElements = jest.fn().mockImplementation(() => {
-			return Promise.resolve({dictionaryElements:"testitem"});
+			return Promise.resolve(dictionaries[0]);
 		});
 		TemplateMenuService.insDictionary = jest.fn().mockImplementation(() => {
 			return Promise.resolve(200);
@@ -118,33 +139,40 @@ describe('Verify ManageDictionaries', () => {
 		});
 		const flushPromises = () => new Promise(setImmediate);
 		const component = shallow(<ManageDictionaries history={historyMock} />)
-		component.setState({ newDict: {
-			"name": "test",
-			"secondLevelDictionary": "0",
-			"subDictionaryType": "string"
-			}
-		});
-		component.setState({ delData: {
-			"name": "test",
-			"secondLevelDictionary": "0",
-			"subDictionaryType": "string"
-			}
-		});
 		const instance = component.instance();
-		instance.getDictionaryElements("test");
+		instance.getDictionaryElements("DefaultActors");
 		instance.clickHandler();
-		instance.addDictionary();
-		instance.deleteDictionary();
+		instance.addReplaceDictionaryRequest();
+		instance.deleteDictionaryRequest();
 		await flushPromises();
-		expect(component.state('dictionaryNames')).toEqual("test");
-		expect(component.state('dictionaryElements')).toEqual("testitem");
-		expect(component.state('dictNameFlag')).toEqual(false);
+		expect(component.state('dictionaries')).toEqual(dictionaries);
 	});
 
 	test('Test adding and deleting dictionaryelements', async () => {
 		const historyMock = { push: jest.fn() };
+		const dictionaries = [
+			{
+				name: "DefaultActors",
+				secondLevelDictionary: 0,
+				subDictionaryType: "",
+				dictionaryElements: [
+      					{
+        					"shortName": "SDNR",
+        					"name": "SDNR Change",
+        					"description": "SDNR component",
+        					"type": "string",
+        					"createdDate": "2020-06-07T18:57:18.130858Z",
+        					"updatedDate": "2020-06-11T13:10:52.239282Z",
+        					"updatedBy": "admin"
+      					}
+    				],
+    				createdDate: "2020-06-07T22:21:08.428742Z",
+    				updatedDate: "2020-06-10T00:41:49.122908Z",
+    				updatedBy: "Not found"
+  			}
+		];
 		TemplateMenuService.getDictionary = jest.fn().mockImplementation(() => {
-			return Promise.resolve("test");
+			return Promise.resolve(dictionaries);
 		});
 		TemplateMenuService.insDictionaryElements = jest.fn().mockImplementation(() => {
 			return Promise.resolve(200);
@@ -154,23 +182,11 @@ describe('Verify ManageDictionaries', () => {
 		});
 		const flushPromises = () => new Promise(setImmediate);
 		const component = shallow(<ManageDictionaries history={historyMock}/>)
-		component.setState({ newDictItem: {
-			"name": "test",
-			"dictionaryElements" : {
-				"shortName": "shorttest",
-				}
-		}});
-		component.setState({ delDictItem: {
-			"name": "test",
-			"dictionaryElements" : {
-				"shortName": "shortTest",
-				}
-		}});
 		const instance = component.instance();
-		instance.addDictionary();
-		instance.deleteDictionary();
+		instance.addReplaceDictionaryRequest({ name: "EventDictionary", secondLevelDictionary: "0", subDictionaryType: "string"} );
+		instance.deleteDictionaryRequest('EventDictionary');
 		await flushPromises();
-		expect(component.state('dictionaryNames')).toEqual("test");
+		expect(component.state('currentSelectedDictionary')).toEqual(null);
 	});
 
 	it('Test handleClose', () => {
@@ -181,10 +197,10 @@ describe('Verify ManageDictionaries', () => {
 				json: () => {
 					return Promise.resolve({
 						"name": "vtest",
-		      	"secondLevelDictionary": "1",
+						"secondLevelDictionary": "1",
 						"subDictionaryType": "string",
-		      	"updatedBy": "test",
-		      	"updatedDate": "05-07-2019 19:09:42"
+						"updatedBy": "test",
+						"updatedDate": "05-07-2019 19:09:42"
 					});
 				}
 			});

@@ -21,6 +21,7 @@
  *
  */
 
+export { default as CsvToJson } from './src/utils/CsvToJson';
 export { default as CreateLoopModal } from './src/components/dialogs/Loop/CreateLoopModal';
 export { default as DeployLoopModal } from './src/components/dialogs/Loop/DeployLoopModal';
 export { default as LoopActionService } from './src/api/LoopActionService';
