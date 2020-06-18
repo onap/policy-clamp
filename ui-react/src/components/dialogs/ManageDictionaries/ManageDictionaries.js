@@ -74,7 +74,9 @@ const ColPullLeftStyled = styled(Col)`
 const cellStyle = { border: '1px solid black' };
 const headerStyle = { backgroundColor: '#ddd',	border: '2px solid black'	};
 const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
+
 let dictList = [];
+let subDictFlag = false;
 
 function SelectSubDictType(props) {
 	const {onChange} = props;
@@ -90,9 +92,10 @@ function SelectSubDictType(props) {
 		SelectedDictTypes = SelectedDictTypes.slice(0,-1);
 		onChange(SelectedDictTypes);
 	}
+	// When the subDictFlag is true, we need to disable selection of element "type"
 	return(
 		<div>
-			<select multiple={true}  onChange={selectedValues}>
+			<select disabled={subDictFlag} multiple={true} onChange={selectedValues}>
 				<option value="string">string</option>
 				<option value="number">number</option>
 				<option value="datetime">datetime</option>
@@ -100,66 +103,75 @@ function SelectSubDictType(props) {
 				<option value="json">json</option>
 			</select>
 		</div>
-	)
+	);
 }
 
 function SubDict(props) {
 	const {onChange} = props;
 	const subDicts = [];
-	subDicts.push('Default');
+	subDicts.push('none');
 	if (dictList !== undefined  && dictList.length > 0) {
-	let item;
-        for(item in dictList) {
-            if(dictList[item].secondLevelDictionary === 1) {
-                subDicts.push(dictList[item].name);
-            }
-        };
+		let item;
+        	for(item in dictList) {
+            		if(dictList[item].secondLevelDictionary === 1) {
+                		subDicts.push(dictList[item].name);
+            		}
+        	}
 	}
-	subDicts.push('');
- 	let optionItems = subDicts.map(
-		(item) => <option key={item}>{item}</option>
-	  );
+	let optionItems = [];
+	for (let i=0; i<subDicts.length; ++i) {
+		if (i === 0) {
+			optionItems.push(<option selected key={subDicts[i]}>{subDicts[i]}</option>);
+		} else {
+			optionItems.push(<option key={subDicts[i]}>{subDicts[i]}</option>);
+		}
+	}
+
  	function selectedValue (e) {
 		onChange(e.target.value);
 	}
+	// When the subDictFlag is true, we need to disable selection of
+	// the sub-dictionary flag
 	return(
-		<select onChange={selectedValue} >
-			{optionItems}
-		</select>
-	)
+			<select disabled={subDictFlag} onChange={selectedValue} >
+				{optionItems}
+			</select>
+	);
 }
 
 export default class ManageDictionaries extends React.Component {
 	constructor(props, context) {
 		super(props, context);
-		this.handleClose = this.handleClose.bind(this);
+		this.addDictionaryElementRow = this.addDictionaryElementRow.bind(this);
+		this.addDictionaryRow = this.addDictionaryRow.bind(this);
+		this.addReplaceDictionaryRequest = this.addReplaceDictionaryRequest.bind(this);
 		this.clickHandler = this.clickHandler.bind(this);
+		this.deleteDictionaryElementRow = this.deleteDictionaryElementRow.bind(this);
+		this.deleteDictionaryRequest = this.deleteDictionaryRequest.bind(this);
+		this.deleteDictionaryRow = this.deleteDictionaryRow.bind(this);
+		this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
 		this.getDictionaries = this.getDictionaries.bind(this);
 		this.getDictionaryElements = this.getDictionaryElements.bind(this);
-		this.addReplaceDictionaryRequest = this.addReplaceDictionaryRequest.bind(this);
-		this.deleteDictionaryRequest = this.deleteDictionaryRequest.bind(this);
-		this.updateDictionaryElementsRequest = this.updateDictionaryElementsRequest.bind(this);
-		this.addDictionaryRow = this.addDictionaryRow.bind(this);
-		this.updateDictionaryRow = this.updateDictionaryRow.bind(this);
-		this.deleteDictionaryRow = this.deleteDictionaryRow.bind(this);
-		this.addDictionaryElementRow = this.addDictionaryElementRow.bind(this);
-		this.deleteDictionaryElementRow = this.deleteDictionaryElementRow.bind(this);
+		this.handleClose = this.handleClose.bind(this);
+		this.handleDictionaryRowClick = this.handleDictionaryRowClick.bind(this);
+		this.importCsvData = this.importCsvData.bind(this);
 		this.updateDictionaryElementRow = this.updateDictionaryElementRow.bind(this);
-		this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
+		this.updateDictionaryElementsRequest = this.updateDictionaryElementsRequest.bind(this);
+		this.updateDictionaryRow = this.updateDictionaryRow.bind(this);
+		this.readOnly = props.readOnly !== undefined ? props.readOnly : false;
 		this.state = {
 			show: true,
-			selectedFile: '',
 			currentSelectedDictionary: null,
 			exportFilename: '',
 			content: null,
 			dictionaryElements: [],
 			tableIcons: {
 				Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-				Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-				Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
 				Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
 				DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
 				Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+				Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+				Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
 				Export: forwardRef((props, ref) => <VerticalAlignBottomIcon {...props} ref={ref} />),
 				Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
 				FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
@@ -226,10 +238,10 @@ export default class ManageDictionaries extends React.Component {
 					headerStyle: headerStyle
 				},
 				{
-				    title: "Sub-Dictionary", field: "subDictionary",
-				      editComponent: props => (
+					title: "Sub-Dictionary", field: "subDictionary",
+					editComponent: props => (
 						 <div>
-							 <SubDict  value={props.value} onChange={props.onChange} />
+							 <SubDict value={props.value} onChange={props.onChange} />
 						 </div>
 				      ),
 				    cellStyle: cellStyle,
@@ -256,14 +268,19 @@ export default class ManageDictionaries extends React.Component {
 	getDictionaries() {
 		TemplateMenuService.getDictionary().then(arrayOfdictionaries => {
 			this.setState({ dictionaries: arrayOfdictionaries, currentSelectedDictionary: null })
+			// global variable setting used functional components in this file
+			dictList = arrayOfdictionaries;
+		}).catch(() => {
+			console.error('Failed to retrieve dictionaries');
+			this.setState({ dictionaries: [], currentSelectedDictionary: null })
 		});
 	}
 
 	getDictionaryElements(dictionaryName) {
 		TemplateMenuService.getDictionaryElements(dictionaryName).then(dictionaryElements => {
-			dictList = this.state.dictionaries;
 			this.setState({ dictionaryElements: dictionaryElements.dictionaryElements} );
-		});
+			this.setState({ currentSelectDictionary: dictionaryName });
+		}).catch(() => console.error('Failed to retrieve dictionary elements'))
 	}
 
 	clickHandler(rowData) {
@@ -277,27 +294,33 @@ export default class ManageDictionaries extends React.Component {
 
 	addReplaceDictionaryRequest(dictionaryEntry) {
 		TemplateMenuService.insDictionary(dictionaryEntry)
-		.then(resp => {})
-		.then(() => {this.getDictionaries()});
+		.then(resp => {
+			this.getDictionaries();
+		})
+		.catch(() => console.error('Failed to insert new dictionary elements'));
 	}
 
 	updateDictionaryElementsRequest(dictElements) {
 		let reqData = { "name": this.state.currentSelectedDictionary, 'dictionaryElements': dictElements };
 		TemplateMenuService.insDictionaryElements(reqData)
-		.then(resp => {})
-		.then(() => { this.getDictionaryElements(this.state.currentSelectedDictionary) });
+		.then(resp => { this.getDictionaryElements(this.state.currentSelectedDictionary) })
+		.catch(() => console.error('Failed to update dictionary elements'));
 	}
 
 	deleteDictionaryRequest(dictionaryName) {
 		TemplateMenuService.deleteDictionary(dictionaryName)
-		.then(resp => { this.getDictionaries() });
+		.then(resp => {
+			this.getDictionaries();
+		})
+		.catch(() => console.error('Failed to delete dictionary'));
 	}
 
 	deleteDictionaryElementRequest(dictionaryName, elemenetShortName) {
 		TemplateMenuService.deleteDictionaryElements({ 'name': dictionaryName, 'shortName': elemenetShortName })
 		.then(resp => {
 			this.getDictionaryElements(dictionaryName);
-		});
+		})
+		.catch(() => console.error('Failed to delete dictionary elements'));
 	}
 
 	fileSelectedHandler = (event) => {
@@ -306,83 +329,94 @@ export default class ManageDictionaries extends React.Component {
 			if (event.target.files && event.target.files[0]) {
 				const reader = new FileReader();
 				reader.onload = (e) => {
-
-				const jsonKeyNames = [ 'shortName', 'name', 'description', 'type', 'subDictionary' ];
-				const userHeaderNames = [ 'Element Short Name', 'Element Name', 'Element Description', 'Element Type', 'Sub-Dictionary'  ];
-				const mandatory = [ true, true, true, true, false ];
-				const validTypes = ['string','number','datetime','json','map'];
-
-				let result = CsvToJson(reader.result, ',', '||||', userHeaderNames, jsonKeyNames, mandatory);
-
-				let errorMessages = result.errorMessages;
-				let jsonObjArray = result.jsonObjArray;
-
-				let validTypesErrorMesg = '';
-
-				for (let i=0; i < validTypes.length; ++i) {
-					if (i === 0) {
-						validTypesErrorMesg = validTypes[i];
-					} else {
-						validTypesErrorMesg += ',' + validTypes[i];
-					}
-				}
-
-				if (errorMessages !== '') {
-					alert(errorMessages);
-					return;
-				}
-
-				// Perform further checks on data that is now in JSON form
-                    		let subDictionaries = [];
-
-				// NOTE: dictList is a global variable  maintained faithfully
-				//       by the getDictionaries() method outside this import
-				//       functionality.
-				let item;
-                    		for (item in dictList) {
-					if (dictList[item].secondLevelDictionary === 1) {
-						subDictionaries.push(dictList[item].name);
-					}
-				};
-
-				// Check for valid Sub-Dictionary and Element Type values
-				subDictionaries = subDictionaries.toString();
-				let row = 2;
-				let dictElem;
-				for (dictElem of jsonObjArray) {
-					let itemKey;
-					for (itemKey in dictElem){
-						let value = dictElem[itemKey].trim();
-						let keyIndex = jsonKeyNames.indexOf(itemKey);
-						if (itemKey === 'shortName' && /[^a-zA-Z0-9-_.]/.test(value)) {
-							errorMessages += '\n' + userHeaderNames[keyIndex] +
-								' at row #' + row +
-								' can only contain alphanumeric characters and periods, hyphens or underscores';
-						}
-						if (itemKey === 'type' && validTypes.indexOf(value) < 0) {
-							errorMessages += '\nInvalid value of "' + value + '" for "' + userHeaderNames[keyIndex] + '" at row #' + row;
-							errorMessages += '\nValid types are: ' + validTypesErrorMesg;
-						}
-						if (value !== "" && itemKey === 'subDictionary' && subDictionaries.indexOf(value) < 0) {
-							errorMessages += '\nInvalid Sub-Dictionary value of "' + value + '" at row #' + row;
-                            }
-                        }
-					++row;
-                    }
-					if (errorMessages) {
+					let errorMessages = this.importCsvData(reader.result);
+					if (errorMessages !== '') {
 						alert(errorMessages);
-						return;
 					}
-
-					// We made it through all the checks. Send it to back end
-					this.updateDictionaryElementsRequest(jsonObjArray);
 				}
 				reader.readAsText(event.target.files[0]);
 			}
-			this.setState({selectedFile: event.target.files[0]})
 		} else {
 			alert('Please upload .csv extention files only.');
 		}
+	}
+
+	importCsvData(rawCsvData) {
+
+		const jsonKeyNames = [ 'shortName', 'name', 'description', 'type', 'subDictionary' ];
+		const userHeaderNames = [ 'Element Short Name', 'Element Name', 'Element Description', 'Element Type', 'Sub-Dictionary'  ];
+		const validTypes = ['string','number','datetime','json','map'];
+
+		let mandatory;
+
+		if (subDictFlag) {
+			mandatory = [ true, true, true, false, false ];
+		} else {
+			mandatory = [ true, true, true, true, false ];
+		}
+
+		let result = CsvToJson(rawCsvData, ',', '||||', userHeaderNames, jsonKeyNames, mandatory);
+
+		let errorMessages = result.errorMessages;
+		let jsonObjArray = result.jsonObjArray;
+
+		let validTypesErrorMesg = '';
+
+		for (let i=0; i < validTypes.length; ++i) {
+			if (i === 0) {
+				validTypesErrorMesg = validTypes[i];
+			} else {
+				validTypesErrorMesg += ',' + validTypes[i];
+			}
+		}
+
+		if (errorMessages !== '') {
+			return errorMessages;
+		}
+
+		// Perform further checks on data that is now in JSON form
+		let subDictionaries = [];
+
+		// NOTE: dictList is a global variable  maintained faithfully
+		//       by the getDictionaries() method outside this import
+		//       functionality.
+		let item;
+		for (item in dictList) {
+			if (dictList[item].secondLevelDictionary === 1) {
+				subDictionaries.push(dictList[item].name);
+			}
+		};
+
+		// Check for valid Sub-Dictionary and Element Type values
+		subDictionaries = subDictionaries.toString();
+		let row = 2;
+		let dictElem;
+		for (dictElem of jsonObjArray) {
+			let itemKey;
+			for (itemKey in dictElem){
+				let value = dictElem[itemKey].trim();
+				let keyIndex = jsonKeyNames.indexOf(itemKey);
+				if (itemKey === 'shortName' && /[^a-zA-Z0-9-_.]/.test(value)) {
+					errorMessages += '\n' + userHeaderNames[keyIndex] +
+						' at row #' + row +
+						' can only contain alphanumeric characters and periods, hyphens or underscores';
+				}
+				if (itemKey === 'type' && validTypes.indexOf(value) < 0) {
+					errorMessages += '\nInvalid value of "' + value + '" for "' + userHeaderNames[keyIndex] + '" at row #' + row;
+					errorMessages += '\nValid types are: ' + validTypesErrorMesg;
+				}
+				if (value !== "" && itemKey === 'subDictionary' && subDictionaries.indexOf(value) < 0) {
+					errorMessages += '\nInvalid Sub-Dictionary value of "' + value + '" at row #' + row;
+				}
+			}
+			++row;
+		}
+		if (errorMessages === '') {
+			// We made it through all the checks. Send it to back end
+			this.updateDictionaryElementsRequest(jsonObjArray);
+		}
+
+		return errorMessages;
 	}
 
 	addDictionaryRow(newData) {
@@ -392,13 +426,13 @@ export default class ManageDictionaries extends React.Component {
 					if (/[^a-zA-Z0-9-_.]/.test(newData.name)) {
 						validData = false;
 						alert('Please enter alphanumeric input. Only allowed special characters are:(period, hyphen, underscore)');
-						reject(() => {});
+						reject();
 					}
 					for (let i = 0; i < this.state.dictionaries.length; i++) {
 						if (this.state.dictionaries[i].name === newData.name) {
 							validData = false;
 							alert(newData.name + ' dictionary name already exists')
-							reject(() => {});
+							reject();
 						}
 					}
 					if (validData) {
@@ -410,13 +444,14 @@ export default class ManageDictionaries extends React.Component {
 	}
 
 
-	updateDictionaryRow(oldData, newData) {
+	updateDictionaryRow(newData, oldData) {
 		let validData = true;
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				if (/[^a-zA-Z0-9-_.]/.test(newData.name)) {
 					validData = false;
 					alert('Please enter alphanumberic input. Only allowed special characters are:(period, hyphen, underscore)');
+					reject();
 				}
 				if (validData) {
 					this.addReplaceDictionaryRequest(newData);
@@ -427,7 +462,7 @@ export default class ManageDictionaries extends React.Component {
 	}
 
 	deleteDictionaryRow(oldData) {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				this.deleteDictionaryRequest(oldData.name);
 				resolve();
@@ -439,53 +474,63 @@ export default class ManageDictionaries extends React.Component {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				let dictionaryElements = this.state.dictionaryElements;
-				let errorMessage = '';
+				let errorMessages = '';
 				for (let i = 0; i < this.state.dictionaryElements.length; i++) {
 					if (this.state.dictionaryElements[i].shortName === newData.shortName) {
 						alert('Short Name "' + newData.shortName + '" already exists');
-						reject(() => {});
+						reject("");
 					}
 				}
-				if (newData.shortName !== '' && /[^a-zA-Z0-9-_.]/.test(newData.shortName)) {
-					errorMessage += '\nShort Name is limited to alphanumeric characters and also period, hyphen, and underscore';
+				// MaterialTable returns no property at all if the user has not touched a
+				// new column, so we want to add the property with an emptry string
+				// for several cases if that is the case to simplify other checks.
+				if (newData.description === undefined) {
+					newData.description = "";
+				}
+				if (newData.subDictionary === undefined) {
+					newData.subDictionary = null;
+				}
+				if (newData.type === undefined) {
+					newData.type = "";
+				}
+				if (!newData.shortName && /[^a-zA-Z0-9-_.]/.test(newData.shortName)) {
+					errorMessages += '\nShort Name is limited to alphanumeric characters and also period, hyphen, and underscore';
 				}
 				if (!newData.shortName){
-					errorMessage += '\nShort Name must be specified';
+					errorMessages += '\nShort Name must be specified';
 				}
 				if (!newData.name){
-					errorMessage += '\nElement Name must be specified';
+					errorMessages += '\nElement Name must be specified';
 				}
-				if (!newData.type){
-					errorMessage += '\nElement Type must be specified';
+				if (!newData.type && !subDictFlag){
+					errorMessages += '\nElement Type must be specified';
 				}
-				if (!newData.description){
-					errorMessage += '\nElement Description must be specified';
-				}
-				if (errorMessage === '') {
+				if (errorMessages === '') {
 					dictionaryElements.push(newData);
-					this.updateDictionaryElementsRequest(dictionaryElements);
+					this.updateDictionaryElementsRequest([newData]);
 					resolve();
 				} else {
-					alert(errorMessage);
-					reject(() => {});
+					alert(errorMessages);
+					reject("");
 				}
 			}, 1000);
 		});
 	}
 
 	updateDictionaryElementRow(newData, oldData) {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				let dictionaryElements = this.state.dictionaryElements;
 				let validData =  true;
 				if (!newData.type) {
 					validData = false;
 					alert('Element Type cannot be null');
+					reject();
 				}
 				if (validData) {
 					const index = dictionaryElements.indexOf(oldData);
 					dictionaryElements[index] = newData;
-					this.updateDictionaryElementsRequest(dictionaryElements);
+					this.updateDictionaryElementsRequest([newData]);
 				}
 				resolve();
 			}, 1000);
@@ -502,6 +547,15 @@ export default class ManageDictionaries extends React.Component {
 		});
 	}
 
+	handleDictionaryRowClick(event, rowData) {
+		subDictFlag = rowData.secondLevelDictionary === 1 ? true : false;
+		this.setState({
+			currentSelectedDictionary : rowData.name,
+			exportFilename: rowData.name
+		})
+		this.getDictionaryElements(rowData.name);
+	}
+
 	render() {
 		return (
 			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
@@ -509,70 +563,69 @@ export default class ManageDictionaries extends React.Component {
 					<Modal.Title>Manage Dictionaries</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{this.state.currentSelectedDictionary === null ? <MaterialTable
-                        	title={"Dictionary List"}
-                        	data={this.state.dictionaries}
-                        	columns={this.state.dictColumns}
-                        	icons={this.state.tableIcons}
-                        	onRowClick={(event, rowData) => {
-								this.setState({
-									currentSelectedDictionary : rowData.name,
-									exportFilename: rowData.name
-								})
-								this.getDictionaryElements(rowData.name);
-							}}
-                        	options={{
-                            	headerStyle: rowHeaderStyle,
-                        	}}
-                        	editable={{
-                            	onRowAdd: this.addDictionaryRow,
-                            	onRowUpdate: this.updateDictionaryRow,
-                            	onRowDelete: this.deleteDictionaryRow
-							}}
+					{this.state.currentSelectedDictionary === null ?
+						<MaterialTable
+                        				title={"Dictionary List"}
+                        				data={this.state.dictionaries}
+                        				columns={this.state.dictColumns}
+                        				icons={this.state.tableIcons}
+                        				onRowClick={this.handleDictionaryRowClick}
+                        				options={{
+								headerStyle: rowHeaderStyle,
+                        				}}
+                        				editable={!this.readOnly ?
+								{
+									onRowAdd: this.addDictionaryRow,
+									onRowUpdate: this.updateDictionaryRow,
+									onRowDelete: this.deleteDictionaryRow
+								} : undefined }
 						/> : null
-                    }
-                    {this.state.currentSelectedDictionary !== null ? <MaterialTable
-                        title={'Dictionary Elements List for "' + this.state.currentSelectedDictionary + '"'}
-                        data={this.state.dictionaryElements}
-                        columns={this.state.dictElementColumns}
-                        icons={this.state.tableIcons}
-                        options={{
-							exportAllData: true,
-                            exportButton: true,
-                            exportFileName: this.state.exportFilename,
-                            headerStyle:{backgroundColor:'white',  fontSize: '15pt', text: 'bold', border: '1px solid black'}
-                        }}
-                        components={{
-                            Toolbar: props => (
-								<Row>
-									<Col sm="11">
-                                    	<MTableToolbarStyled {...props} />
-									</Col>
-									<ColPullLeftStyled sm="1">
-                                        <Tooltip title="Import" placement = "bottom">
-                                        <IconButton aria-label="import" onClick={() => this.fileUpload.click()}>
-                                        	<VerticalAlignTopIcon />
-                                        </IconButton>
-                                        </Tooltip>
-                                		<input type="file" ref={(fileUpload) => {this.fileUpload = fileUpload;}}
-											style={{ visibility: 'hidden', width: '1px' }} onChange={this.fileSelectedHandler} />
-									</ColPullLeftStyled>
-                                </Row>
-                            )
-                        }}
-                        editable={{
-                            onRowAdd: this.addDictionaryElementRow,
-                            onRowUpdate: this.updateDictionaryElementRow,
-                            onRowDelete: this.deleteDictionaryElementRow
-                        }}
-                        /> : null
-                    }
-                    {this.state.currentSelectedDictionary !== null ? <button onClick={this.clickHandler} style={{marginTop: '25px'}}>Go Back to Dictionaries List</button>:""}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" type="null" onClick={this.handleClose}>Close</Button>
-                </Modal.Footer>
-            </ModalStyled>
-        );
-    }
+					}
+					{this.state.currentSelectedDictionary !== null ?
+						<MaterialTable
+                        				title={'Dictionary Elements List for ' + (subDictFlag ? 'Sub-Dictionary "' : '"') + this.state.currentSelectedDictionary + '"'}
+                        				data={this.state.dictionaryElements}
+                        				columns={this.state.dictElementColumns}
+                        				icons={this.state.tableIcons}
+                        				options={{
+								exportAllData: true,
+								exportButton: true,
+								exportFileName: this.state.exportFilename,
+								headerStyle:{backgroundColor:'white',  fontSize: '15pt', text: 'bold', border: '1px solid black'}
+                        				}}
+                        				components={{
+								Toolbar: props => (
+									<Row>
+										<Col sm="11">
+											<MTableToolbarStyled {...props} />
+										</Col>
+										<ColPullLeftStyled sm="1">
+											<Tooltip title="Import" placement = "bottom">
+												<IconButton aria-label="import" disabled={this.readOnly} onClick={() => this.fileUpload.click()}>
+													<VerticalAlignTopIcon />
+												</IconButton>
+											</Tooltip>
+                                							<input type="file" ref={(fileUpload) => {this.fileUpload = fileUpload;}}
+												style={{ visibility: 'hidden', width: '1px' }} onChange={this.fileSelectedHandler} />
+										</ColPullLeftStyled>
+									</Row>
+                            					)
+                        				}}
+                        				editable={!this.readOnly ?
+								{
+                            						onRowAdd: this.addDictionaryElementRow,
+                            						onRowUpdate: this.updateDictionaryElementRow,
+                            						onRowDelete: this.deleteDictionaryElementRow
+                        					} : undefined
+							 }
+						/> : null
+					}
+					{this.state.currentSelectedDictionary !== null ? <button onClick={this.clickHandler} style={{marginTop: '25px'}}>Go Back to Dictionaries List</button>:""}
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" type="null" onClick={this.handleClose}>Close</Button>
+				</Modal.Footer>
+			</ModalStyled>
+		);
+	}
 }
