@@ -38,7 +38,7 @@ CLAMP uses the API's exposed by the following ONAP components:
 - SDC : REST based interface exposed by the SDC, Distribution of service to DCAE
 - DCAE: REST based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
 - Policy: REST based interface, Policy engine target both XACML and Drools PDP, Policy Engine trigger operations to App-C/VF-C/SDN-C
-- CDS: REST based interface, to retrieve list of actors/actions at runtime.
+- CDS: REST based interface, to retrieve list of operations/actions with their corresponding payload at runtime for Operational Policies where the field 'actor' is 'CDS'.
 
 Delivery
 --------
