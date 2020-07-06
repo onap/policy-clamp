@@ -38,6 +38,8 @@ describe('Verify PerformActions', () => {
 		const updateLoopFunction = jest.fn();
 		const showSucAlert = jest.fn();
 		const showFailAlert = jest.fn();
+		const setBusyLoading = jest.fn();
+		const clearBusyLoading = jest.fn();
 		
 		LoopActionService.refreshStatus = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
@@ -47,7 +49,7 @@ describe('Verify PerformActions', () => {
 			});
 		});
 		const component = shallow(<PerformActions loopCache={loopCache} 
-					loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
+					loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} setBusyLoading={setBusyLoading} clearBusyLoading={clearBusyLoading}/>)
 		await flushPromises();
 		component.update();
 
@@ -60,6 +62,8 @@ describe('Verify PerformActions', () => {
 		const updateLoopFunction = jest.fn();
 		const showSucAlert = jest.fn();
 		const showFailAlert = jest.fn();
+		const setBusyLoading = jest.fn();
+		const clearBusyLoading = jest.fn();
 
 		LoopActionService.performAction = jest.fn().mockImplementation(() => {
 			return Promise.resolve({
@@ -76,7 +80,7 @@ describe('Verify PerformActions', () => {
 			});
 		});
 		const component = shallow(<PerformActions loopCache={loopCache} 
-						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} />)
+						loopAction="submit" history={historyMock} updateLoopFunction={updateLoopFunction} showSucAlert={showSucAlert} showFailAlert={showFailAlert} setBusyLoading={setBusyLoading} clearBusyLoading={clearBusyLoading}/>)
 		await flushPromises();
 		component.update();
 
