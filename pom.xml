@@ -547,6 +547,18 @@
 			<version>2.0.4</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.github.docker-java</groupId>
+			<artifactId>docker-java-core</artifactId>
+			<version>3.2.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.docker-java</groupId>
+			<artifactId>docker-java</artifactId>
+			<version>3.2.1</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -850,6 +862,7 @@
 								<portName>docker.mariadb.port.host</portName>
 								<portName>docker.http-cache.port.host</portName>
 								<portName>clamp.it.tests.http-redirected</portName>
+								<portName>clamp.it.tests.robotframework.http</portName>
 								<portName>clamp.it.tests.https</portName>
 								<portName>clamp.it.tests.http</portName>
 							</portNames>
@@ -902,7 +915,7 @@
 								<include>**/*ItCase.java</include>
 							</includes>
 							<forkCount>1C</forkCount>
-							<reuseForks>true</reuseForks>
+							<reuseForks>false</reuseForks>
 							<useSystemClassLoader>false</useSystemClassLoader>
 							<argLine>${failsafeArgLine}</argLine>
 						</configuration>
