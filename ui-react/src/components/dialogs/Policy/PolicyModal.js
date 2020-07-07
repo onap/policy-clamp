@@ -34,9 +34,14 @@ import LoopCache from '../../../api/LoopCache';
 import JSONEditor from '@json-editor/json-editor';
 import Alert from 'react-bootstrap/Alert';
 import OnapConstant from '../../../utils/OnapConstants';
+import OnapUtils from '../../../utils/OnapUtils';
 
 const ModalStyled = styled(Modal)`
 	background-color: transparent;
+`
+
+const DivWhiteSpaceStyled = styled.div`
+	white-space: pre;
 `
 
 export default class PolicyModal extends React.Component {
@@ -70,40 +75,47 @@ export default class PolicyModal extends React.Component {
 		this.renderPdpGroupDropDown = this.renderPdpGroupDropDown.bind(this);
 		this.renderOpenLoopMessage = this.renderOpenLoopMessage.bind(this);
 		this.renderModalTitle = this.renderModalTitle.bind(this);
+		this.readOnly = props.readOnly !== undefined ? props.readOnly : false;
 	}
 
 	handleSave() {
-		var errors = this.state.jsonEditor.validate();
 		var editorData = this.state.jsonEditor.getValue();
+		var errors = this.state.jsonEditor.validate();
+		errors = errors.concat(this.customValidation(editorData, this.state.loopCache.getTemplateName()));
 
 		if (errors.length !== 0) {
 			console.error("Errors detected during policy data validation ", errors);
 			this.setState({
-            		showFailAlert: true,
-            		showMessage: "Errors detected during policy data validation " + errors
-            });
+				showFailAlert: true,
+				showMessage: 'Errors detected during policy data validation:\n' + OnapUtils.jsonEditorErrorFormatter(errors)
+			});
 			return;
 		}
 		else {
 			console.info("NO validation errors found in policy data");
 			if (this.state.policyInstanceType === OnapConstant.microServiceType) {
-                this.state.loopCache.updateMicroServiceProperties(this.state.policyName, editorData);
-                this.state.loopCache.updateMicroServicePdpGroup(this.state.policyName, this.state.chosenPdpGroup, this.state.chosenPdpSubgroup);
-                LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.policyName)).then(resp => {
-                    this.setState({ show: false });
-                    this.props.history.push('/');
-                    this.props.loadLoopFunction(this.state.loopCache.getLoopName());
-                });
+				this.state.loopCache.updateMicroServiceProperties(this.state.policyName, editorData);
+				this.state.loopCache.updateMicroServicePdpGroup(this.state.policyName, this.state.chosenPdpGroup, this.state.chosenPdpSubgroup);
+				LoopService.setMicroServiceProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getMicroServiceForName(this.state.policyName)).then(resp => {
+					this.setState({ show: false });
+					this.props.history.push('/');
+					this.props.loadLoopFunction(this.state.loopCache.getLoopName());
+				});
 			} else if (this.state.policyInstanceType === OnapConstant.operationalPolicyType) {
 				this.state.loopCache.updateOperationalPolicyProperties(this.state.policyName, editorData);
 				this.state.loopCache.updateOperationalPolicyPdpGroup(this.state.policyName, this.state.chosenPdpGroup, this.state.chosenPdpSubgroup);
 				LoopService.setOperationalPolicyProperties(this.state.loopCache.getLoopName(), this.state.loopCache.getOperationalPolicies()).then(resp => {
 					this.setState({ show: false });
-				this.props.history.push('/');
+					this.props.history.push('/');
 					this.props.loadLoopFunction(this.state.loopCache.getLoopName());
 				});
 			}
 		}
+	}
+
+	customValidation(editorData, templateName) {
+		// method for sub-classes to override with customized validation
+		return [];
 	}
 
 	handleClose() {
@@ -113,6 +125,15 @@ export default class PolicyModal extends React.Component {
 
 	componentDidMount() {
 		this.renderJsonEditor();
+	}
+
+	componentDidUpdate() {
+		if (this.state.showSucAlert === true || this.state.showFailAlert === true) {
+			let modalElement = document.getElementById("policyModal")
+			if (modalElement) {
+				modalElement.scrollTo(0, 0);
+			}
+		}
 	}
 
     createJsonEditor(toscaModel, editorData) {
@@ -313,12 +334,16 @@ export default class PolicyModal extends React.Component {
 				<Modal.Header closeButton>
 					{this.renderModalTitle()}
 				</Modal.Header>
-				<Alert variant="success" show={this.state.showSucAlert} onClose={this.disableAlert} dismissible>
-					{this.state.showMessage}
-				</Alert>
-				<Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
-					{this.state.showMessage}
-				</Alert>
+                                <Alert variant="success" show={this.state.showSucAlert} onClose={this.disableAlert} dismissible>
+                                        <DivWhiteSpaceStyled>
+                                                {this.state.showMessage}
+                                        </DivWhiteSpaceStyled>
+                                </Alert>
+                                <Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
+                                        <DivWhiteSpaceStyled>
+                                                {this.state.showMessage}
+                                        </DivWhiteSpaceStyled>
+                                </Alert>
 				<Modal.Body>
 					{this.renderOpenLoopMessage()}
 					<div id="editor" />

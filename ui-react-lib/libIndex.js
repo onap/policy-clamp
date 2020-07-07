@@ -36,6 +36,7 @@ export { default as MenuBar } from './src/components/menu/MenuBar';
 export { default as ModifyLoopModal } from './src/components/dialogs/Loop/ModifyLoopModal';
 export { default as NotFound } from './src/NotFound';
 export { default as OnapConstants } from './src/utils/OnapConstants';
+export { default as OnapUtils } from './src/utils/OnapUtils';
 export { default as OpenLoopModal } from './src/components/dialogs/Loop/OpenLoopModal';
 export { default as PerformActions } from './src/components/dialogs/PerformActions';
 export { default as PolicyModal } from './src/components/dialogs/Policy/PolicyModal';
