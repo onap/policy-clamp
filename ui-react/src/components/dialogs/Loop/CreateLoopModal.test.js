@@ -29,16 +29,18 @@ import TemplateService from '../../../api/TemplateService';
 describe('Verify CreateLoopModal', () => {
 
   it('Test the render method', async () => {
-	const flushPromises = () => new Promise(setImmediate);
+    const flushPromises = () => new Promise(setImmediate);
     TemplateService.getAllLoopTemplates = jest.fn().mockImplementation(() => {
-    	return Promise.resolve([{"name":"template1"},{"name":"template2"}]);
-	});
-	
-	const component = shallow(<CreateLoopModal/>);
+      return Promise.resolve([{"name":"template1"},{"name":"template2"}]);
+    });
+    TemplateService.getLoopNames = jest.fn().mockImplementation(() => {
+      return Promise.resolve([]);
+    });
+
+    const component = shallow(<CreateLoopModal/>);
     expect(component).toMatchSnapshot();
-	await flushPromises();
-	component.update();
-		
+    await flushPromises();
+    component.update();
     expect(component.state('templateNames')).toStrictEqual([{"label": "template1", "value": "template1", "templateObject": {"name": "template1"}}, {"label": "template2", "value": "template2","templateObject": {"name": "template2"}}]);
   });
 
@@ -61,16 +63,21 @@ describe('Verify CreateLoopModal', () => {
     expect(component.state('fakeLoopCacheWithTemplate').getLoopName()).toEqual("fakeLoop");
   });
 
-
-
-  it('handleModelName event', () => {
+  it('handleModelName event', async () => {
+    const flushPromises = () => new Promise(setImmediate);
+    TemplateService.getAllLoopTemplates = jest.fn().mockImplementation(() => {
+      return Promise.resolve([{"name":"template1"},{"name":"template2"}]);
+    });
+    TemplateService.getLoopNames = jest.fn().mockImplementation(() => {
+      return Promise.resolve([]);
+    });
     const event = {target: {value : "model1"} };
     const component = shallow(<CreateLoopModal/>);
+    await flushPromises();
     component.find('input').simulate('change', event);
     component.update();
     expect(component.state('modelName')).toEqual("model1");
   });
-
 
   it('Test handleClose', () => {
     const historyMock = { push: jest.fn() }; 

@@ -130,6 +130,8 @@ export default class LoopUI extends React.Component {
 		this.setBusyLoading = this.setBusyLoading.bind(this);
 		this.clearBusyLoading = this.clearBusyLoading.bind(this);
 		this.isBusyLoading = this.isBusyLoading.bind(this);
+		this.renderGlobalStyle = this.renderGlobalStyle.bind(this);
+		this.renderSvg = this.renderSvg.bind(this);
 	}
 
 	componentWillMount() {
@@ -198,10 +200,15 @@ export default class LoopUI extends React.Component {
 		);
 	}
 
+	renderSvg() {
+		return (
+			<SvgGenerator loopCache={this.state.loopCache} clickable={true} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE} isBusyLoading={this.isBusyLoading}/>
+		)
+	}
 	renderLoopViewBody() {
 		return (
 			<LoopViewBodyDivStyled>
-				<SvgGenerator loopCache={this.state.loopCache} clickable={true} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE} isBusyLoading={this.isBusyLoading}/>
+				{this.renderSvg()}
 				<LoopStatus loopCache={this.state.loopCache}/>
 				<LoopLogs loopCache={this.state.loopCache} />
 			</LoopViewBodyDivStyled>
@@ -223,10 +230,20 @@ export default class LoopUI extends React.Component {
 	}
 
 	updateLoopCache(loopJson) {
-		this.setState({ loopCache: new LoopCache(loopJson) });
-		this.setState({ loopName: this.state.loopCache.getLoopName() });
+
+		// If call with an empty object for loopJson, this is a reset to empty
+		// from someplace like PerformActions for the case where we are "deleting"
+		// a Control Loop model. Set the loopName to the default.
+
+		if (loopJson === null) {
+			this.setState({ loopName: OnapConstants.defaultLoopName });
+			this.setState({ loopCache: new LoopCache({}) });
+		} else {
+			this.setState({ loopCache: new LoopCache(loopJson) });
+			this.setState({ loopName: this.state.loopCache.getLoopName() });
+		}
 		console.info(this.state.loopName+" loop loaded successfully");
-	}
+        }
 
 	showSucAlert(message) {
 		this.setState ({ showSucAlert: true, showMessage:message });
@@ -369,6 +386,13 @@ export default class LoopUI extends React.Component {
 		);
 	}
 
+        renderGlobalStyle() {
+                return (
+                        <GlobalClampStyle />
+                );
+        };
+
+
 	renderSpinner() {
 		if (this.isBusyLoading()) {
 			return (
@@ -386,7 +410,7 @@ export default class LoopUI extends React.Component {
 	render() {
 		return (
 				<StyledMainDiv id="main_div">
-					<GlobalClampStyle />
+					{this.renderGlobalStyle()}
 					{this.renderRoutes()}
 					{this.renderSpinner()}
 					{this.renderAlertBar()}

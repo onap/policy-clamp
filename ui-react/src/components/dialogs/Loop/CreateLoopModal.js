@@ -37,6 +37,10 @@ const ModalStyled = styled(Modal)`
 	background-color: transparent;
 `
 
+const ErrMsgStyled = styled.div`
+	color: red;
+`
+
 export default class CreateLoopModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
@@ -46,17 +50,20 @@ export default class CreateLoopModal extends React.Component {
 		this.handleModelName = this.handleModelName.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.handleDropDownListChange = this.handleDropDownListChange.bind(this);
+		this.renderSvg = this.renderSvg.bind(this);
 		this.state = {
 			show: true,
 			chosenTemplateName: '',
+			modelInputErrMsg: '',
 			modelName: '',
 			templateNames: [],
 			fakeLoopCacheWithTemplate: new LoopCache({})
 		};
 	}
 
-	componentWillMount() {
-		this.getAllLoopTemplates();
+	async componentDidMount() {
+		await this.getAllLoopTemplates();
+		await this.getModelNames();
 	}
 
 	handleClose() {
@@ -87,6 +94,17 @@ export default class CreateLoopModal extends React.Component {
 		});
 	}
 
+	getModelNames() {
+		TemplateService.getLoopNames().then(loopNames => {
+			if (!loopNames) {
+				loopNames = [];
+			}
+			// Remove LOOP_ prefix
+			let trimmedLoopNames = loopNames.map(str => str.replace('LOOP_', ''));
+			this.setState({ modelNames: trimmedLoopNames });
+		});
+	}
+
 	handleCreate() {
 		if (!this.state.modelName) {
 			alert("A model name is required");
@@ -109,10 +127,25 @@ export default class CreateLoopModal extends React.Component {
 		});
 	}
 
-	handleModelName = event => {
-		this.setState({
-			modelName: event.target.value
-		})
+	handleModelName(event) {
+		if (this.state.modelNames.includes(event.target.value)) {
+			this.setState({
+				modelInputErrMsg: 'A model named "' + event.target.value + '" already exists. Please pick another name.',
+				modelName: event.target.value
+			});
+			return;
+		} else {
+			this.setState({
+				modelInputErrMsg: '',
+				modelName: event.target.value
+			});
+		}
+	}
+
+	renderSvg() {
+		return (
+			<SvgGenerator loopCache={this.state.fakeLoopCacheWithTemplate} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_TEMPLATE}/>
+		);
 	}
 
 	render() {
@@ -131,15 +164,20 @@ export default class CreateLoopModal extends React.Component {
                     <Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
                     <Form.Label column sm="2">Model Preview:</Form.Label>
                         <Col sm="10">
-                            <SvgGenerator loopCache={this.state.fakeLoopCacheWithTemplate} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_TEMPLATE}/>
+                            {this.renderSvg()}
                         </Col>
                     </Form.Group>
 					<Form.Group as={Row} controlId="formPlaintextEmail">
 						<Form.Label column sm="2">Model Name:</Form.Label>
-						<input type="text" style={{width: '50%', marginLeft: '1em' }}
+						<input sm="5" type="text" style={{width: '50%', marginLeft: '1em' }}
 							value={this.state.modelName}
 							onChange={this.handleModelName}
 						/>
+						<span sm="5"/>
+					</Form.Group>
+					<Form.Group as={Row} controlId="formPlaintextEmail">
+						<Form.Label column sm="2"> </Form.Label>
+						<ErrMsgStyled>{this.state.modelInputErrMsg}</ErrMsgStyled>
 					</Form.Group>
 				</Modal.Body>
 				<Modal.Footer>

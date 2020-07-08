@@ -28,11 +28,12 @@ import OnapConstant from '../../../utils/OnapConstants';
 
 const DivStyled = styled.div`
 	overflow-x: scroll;
+	  display: flex;
     width: 100%;
     height: 100%;
 `
 
-const emptySvg = (<svg> <text x="20" y="40">No LOOP (SVG)</text> </svg>);
+const emptySvg = (<svg> <text x="60" y="40">No LOOP (SVG)</text> </svg>);
 
 class SvgGenerator extends React.Component {
     boxWidth = 200;
@@ -228,11 +229,14 @@ class SvgGenerator extends React.Component {
     render() {
         var allTheElements = this.renderSvg();
         var svgWidth = this.boxWidth*allTheElements.length;
-        var svgHeight = this.boxHeight+100;
+        var svgHeight = this.boxHeight+50;
         return (
+
             <DivStyled onClick={this.handleSvgClick} >
-                <svg height={svgHeight} width={svgWidth}  preserveAspectRatio="none">
+                <svg height={svgHeight} width={svgWidth}  viewBox="0,0,{svgWidth},{svgHeight}" preserveAspectRatio="none">
+									<svg x="-50" y="25">
                     {allTheElements}
+									</svg>
                 </svg>
             </DivStyled>
         );

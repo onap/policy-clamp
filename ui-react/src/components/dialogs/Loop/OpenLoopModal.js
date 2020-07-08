@@ -48,7 +48,8 @@ export default class OpenLoopModal extends React.Component {
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleClose = this.handleClose.bind(this);
 		this.handleDropDownListChange = this.handleDropDownListChange.bind(this);
-		this.showReadOnly = props.showReadOnly ? props.showReadOnly : true;
+		this.renderSvg = this.renderSvg.bind(this);
+		this.showReadOnly = props.showReadOnly !== undefined ? props.showReadOnly : true;
 		this.state = {
 			show: true,
 			chosenLoopName: '',
@@ -90,6 +91,12 @@ export default class OpenLoopModal extends React.Component {
 		this.props.loadLoopFunction(this.state.chosenLoopName);
 	}
 
+	renderSvg() {
+		return(
+				<SvgGenerator loopCache={this.state.loopCacheOpened} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE}/>
+		);
+	}
+
 	render() {
 		return (
 			<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false} >
@@ -107,7 +114,7 @@ export default class OpenLoopModal extends React.Component {
 					<Form.Group as={Row} style={{alignItems: 'center'}} controlId="formSvgPreview">
 						<Form.Label column sm="2">Model Preview:</Form.Label>
 						<Col sm="10">
-						    <SvgGenerator loopCache={this.state.loopCacheOpened} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE}/>
+						    {this.renderSvg()}
 						</Col>
 					</Form.Group>
 					{this.showReadOnly === true ?

@@ -92,6 +92,7 @@ export default class ViewLoopTemplatesModal extends React.Component {
 	constructor(props, context) {
 		super(props, context);
 		this.handleClose = this.handleClose.bind(this);
+		this.renderSvg = this.renderSvg.bind(this);
 		this.getLoopTemplate = this.getLoopTemplate.bind(this);
 		this.getAllLoopTemplates();
 	}
@@ -120,6 +121,12 @@ export default class ViewLoopTemplatesModal extends React.Component {
 		this.props.history.push('/')
 	}
 
+	renderSvg() {
+		return(
+			<SvgGenerator loopCache={this.state.fakeLoopCacheWithTemplate} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_TEMPLATE}/>
+		)
+	}
+
 	render() {
     return (
     		<ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static"  keyboard={false}>
@@ -139,7 +146,7 @@ export default class ViewLoopTemplatesModal extends React.Component {
                           })
                       }}
                 />
-	            <SvgGenerator loopCache={this.state.fakeLoopCacheWithTemplate} clickable={false} generatedFrom={SvgGenerator.GENERATED_FROM_TEMPLATE}/>
+	            {this.renderSvg()}
                 </Modal.Body>
                 <Modal.Footer>
                 	<Button variant="secondary" onClick={this.handleClose}>Close</Button>

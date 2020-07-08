@@ -107,6 +107,7 @@ exports[`Verify CreateLoopModal Test the render method 1`] = `
       </FormLabel>
       <input
         onChange={[Function]}
+        sm="5"
         style={
           Object {
             "marginLeft": "1em",
@@ -116,6 +117,30 @@ exports[`Verify CreateLoopModal Test the render method 1`] = `
         type="text"
         value=""
       />
+      <span
+        sm="5"
+      />
+    </FormGroup>
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
+      controlId="formPlaintextEmail"
+    >
+      <FormLabel
+        column={true}
+        sm="2"
+        srOnly={false}
+      >
+         
+      </FormLabel>
+      <styled.div />
     </FormGroup>
   </ModalBody>
   <ModalFooter>

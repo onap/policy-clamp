@@ -22,6 +22,23 @@
 
 export default class TemplateService {
 
+        static getLoopNames() {
+                return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin' })
+                        .then(function (response) {
+                                console.debug("getLoopNames response received: ", response.status);
+                                if (response.ok) {
+                                        return response.json();
+                                } else {
+                                        console.error("getLoopNames query failed");
+                                        return {};
+                                }
+                        })
+                        .catch(function (error) {
+                                console.error("getLoopNames error received", error);
+                                return {};
+                        });
+        }
+
 	static getAllLoopTemplates() {
 	    return fetch('restservices/clds/v2/templates', { method: 'GET', credentials: 'same-origin', })
 	        .then(function (response) {
