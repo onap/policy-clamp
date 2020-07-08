@@ -52,12 +52,18 @@ import PerformAction from './components/dialogs/PerformActions';
 import RefreshStatus from './components/dialogs/RefreshStatus';
 import DeployLoopModal from './components/dialogs/Loop/DeployLoopModal';
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 
 import { Link } from 'react-router-dom';
 
 const StyledMainDiv = styled.div`
 	background-color: ${props => props.theme.backgroundColor};
 `
+
+const StyledSpinnerDiv = styled.div`
+	justify-content: center !important;
+	display: flex !important;
+`;
 
 const ProjectNameStyled = styled.a`
 	vertical-align: middle;
@@ -108,7 +114,8 @@ export default class LoopUI extends React.Component {
 		loopName: OnapConstants.defaultLoopName,
 		loopCache: new LoopCache({}),
 		showSucAlert: false,
-		showFailAlert: false
+		showFailAlert: false,
+		busyLoadingCount: 0
 	};
 
 	constructor() {
@@ -120,6 +127,9 @@ export default class LoopUI extends React.Component {
 		this.showSucAlert =  this.showSucAlert.bind(this);
 		this.showFailAlert =  this.showFailAlert.bind(this);
 		this.disableAlert =  this.disableAlert.bind(this);
+		this.setBusyLoading = this.setBusyLoading.bind(this);
+		this.clearBusyLoading = this.clearBusyLoading.bind(this);
+		this.isBusyLoading = this.isBusyLoading.bind(this);
 	}
 
 	componentWillMount() {
@@ -191,7 +201,7 @@ export default class LoopUI extends React.Component {
 	renderLoopViewBody() {
 		return (
 			<LoopViewBodyDivStyled>
-				<SvgGenerator loopCache={this.state.loopCache} clickable={true} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE}/>
+				<SvgGenerator loopCache={this.state.loopCache} clickable={true} generatedFrom={SvgGenerator.GENERATED_FROM_INSTANCE} isBusyLoading={this.isBusyLoading}/>
 				<LoopStatus loopCache={this.state.loopCache}/>
 				<LoopLogs loopCache={this.state.loopCache} />
 			</LoopViewBodyDivStyled>
@@ -225,23 +235,42 @@ export default class LoopUI extends React.Component {
 	showFailAlert(message) {
 		this.setState ({ showFailAlert: true, showMessage:message });
 	}
- 
+
 	disableAlert() {
 		this.setState ({ showSucAlert: false, showFailAlert: false });
 	}
 
 	loadLoop(loopName) {
+		this.setBusyLoading();
 		LoopService.getLoop(loopName).then(loop => {
 			console.debug("Updating loopCache");
 			LoopActionService.refreshStatus(loopName).then(data => {
 				this.updateLoopCache(data);
+				this.clearBusyLoading();
 				this.props.history.push('/');
 			})
 			.catch(error => {
 				this.updateLoopCache(loop);
+				this.clearBusyLoading();
 				this.props.history.push('/');
 			});
 		});
+	}
+
+	setBusyLoading() {
+		this.setState((state,props) => ({ busyLoadingCount: ++state.busyLoadingCount }));
+	}
+
+	clearBusyLoading() {
+		this.setState((state,props) => ({ busyLoadingCount: --state.busyLoadingCount }));
+	}
+
+	isBusyLoading() {
+		if (this.state.busyLoadingCount === 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	closeLoop() {
@@ -249,29 +278,117 @@ export default class LoopUI extends React.Component {
 		this.props.history.push('/');
 	}
 
-	render() {
-		return (
-				<StyledMainDiv id="main_div">
+	renderRoutes() {
+		return(
+			<React.Fragment>
 				<Route path="/uploadToscaPolicyModal" render={(routeProps) => (<UploadToscaPolicyModal {...routeProps} />)} />
 				<Route path="/viewToscaPolicyModal" render={(routeProps) => (<ViewToscaPolicyModal {...routeProps} />)} />
 				<Route path="/ViewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
 				<Route path="/ManageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
-				<Route path="/policyModal/:policyInstanceType/:policyName" render={(routeProps) => (<PolicyModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
-				<Route path="/createLoop" render={(routeProps) => (<CreateLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
-				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps} loadLoopFunction={this.loadLoop} />)} />
-				<Route path="/loopProperties" render={(routeProps) => (<LoopPropertiesModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
-				<Route path="/modifyLoop" render={(routeProps) => (<ModifyLoopModal {...routeProps} loopCache={this.getLoopCache()} loadLoopFunction={this.loadLoop}/>)} />
+
+				<Route path="/policyModal/:policyInstanceType/:policyName" render={(routeProps) => (<PolicyModal {...routeProps}
+					loopCache={this.getLoopCache()}
+					loadLoopFunction={this.loadLoop}/>)}
+				/>
+				<Route path="/createLoop" render={(routeProps) => (<CreateLoopModal {...routeProps}
+					loadLoopFunction={this.loadLoop} />)}
+				/>
+				<Route path="/openLoop" render={(routeProps) => (<OpenLoopModal {...routeProps}
+					loadLoopFunction={this.loadLoop} />)}
+				/>
+				<Route path="/loopProperties" render={(routeProps) => (<LoopPropertiesModal {...routeProps}
+					loopCache={this.getLoopCache()}
+					loadLoopFunction={this.loadLoop}/>)}
+				/>
+				<Route path="/modifyLoop" render={(routeProps) => (<ModifyLoopModal {...routeProps}
+					loopCache={this.getLoopCache()}
+					loadLoopFunction={this.loadLoop}/>)}
+				/>
 
 				<Route path="/userInfo" render={(routeProps) => (<UserInfoModal {...routeProps} />)} />
 				<Route path="/closeLoop" render={this.closeLoop} />
-				<Route path="/submit" render={(routeProps) => (<PerformAction {...routeProps} loopAction="submit" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
-				<Route path="/stop" render={(routeProps) => (<PerformAction {...routeProps} loopAction="stop" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
-				<Route path="/restart" render={(routeProps) => (<PerformAction {...routeProps} loopAction="restart" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
-				<Route path="/delete" render={(routeProps) => (<PerformAction {...routeProps} loopAction="delete" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
-				<Route path="/undeploy" render={(routeProps) => (<PerformAction {...routeProps} loopAction="undeploy" loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
-				<Route path="/deploy" render={(routeProps) => (<DeployLoopModal {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
-				<Route path="/refreshStatus" render={(routeProps) => (<RefreshStatus {...routeProps} loopCache={this.getLoopCache()} updateLoopFunction={this.updateLoopCache} showSucAlert={this.showSucAlert} showFailAlert={this.showFailAlert}/>)} />
-				<GlobalClampStyle />
+
+				<Route path="/submit" render={(routeProps) => (<PerformAction {...routeProps}
+					loopAction="submit"
+					loopCache={this.getLoopCache()}
+					updateLoopFunction={this.updateLoopCache}
+					showSucAlert={this.showSucAlert}
+					showFailAlert={this.showFailAlert}
+					setBusyLoading={this.setBusyLoading}
+					clearBusyLoading={this.clearBusyLoading}/>)}
+				/>
+				<Route path="/stop" render={(routeProps) => (<PerformAction {...routeProps}
+					loopAction="stop"
+					loopCache={this.getLoopCache()}
+					updateLoopFunction={this.updateLoopCache}
+					showSucAlert={this.showSucAlert}
+					showFailAlert={this.showFailAlert}
+					setBusyLoading={this.setBusyLoading}
+					clearBusyLoading={this.clearBusyLoading}/>)}
+				/>
+				<Route path="/restart" render={(routeProps) => (<PerformAction {...routeProps}
+					loopAction="restart"
+					loopCache={this.getLoopCache()}
+					updateLoopFunction={this.updateLoopCache}
+					showSucAlert={this.showSucAlert}
+					showFailAlert={this.showFailAlert}
+					setBusyLoading={this.setBusyLoading}
+					clearBusyLoading={this.clearBusyLoading}/>)}
+				/>
+				<Route path="/delete" render={(routeProps) => (<PerformAction {...routeProps}
+					loopAction="delete"
+					loopCache={this.getLoopCache()}
+					updateLoopFunction={this.updateLoopCache}
+					showSucAlert={this.showSucAlert}
+					showFailAlert={this.showFailAlert}
+					setBusyLoading={this.setBusyLoading}
+					clearBusyLoading={this.clearBusyLoading}/>)}
+				/>
+				<Route path="/undeploy" render={(routeProps) => (<PerformAction {...routeProps}
+					loopAction="undeploy"
+					loopCache={this.getLoopCache()}
+					updateLoopFunction={this.updateLoopCache}
+					showSucAlert={this.showSucAlert}
+					showFailAlert={this.showFailAlert}
+					setBusyLoading={this.setBusyLoading}
+					clearBusyLoading={this.clearBusyLoading}/>)}
+				/>
+				<Route path="/deploy" render={(routeProps) => (<DeployLoopModal {...routeProps}
+					loopCache={this.getLoopCache()}
+					updateLoopFunction={this.updateLoopCache}
+					showSucAlert={this.showSucAlert}
+					showFailAlert={this.showFailAlert}/>)}
+				/>
+				<Route path="/refreshStatus" render={(routeProps) => (<RefreshStatus {...routeProps}
+					loopCache={this.getLoopCache()}
+					updateLoopFunction={this.updateLoopCache}
+					showSucAlert={this.showSucAlert}
+					showFailAlert={this.showFailAlert}/>)}
+				/>
+			</React.Fragment>
+		);
+	}
+
+	renderSpinner() {
+		if (this.isBusyLoading()) {
+			return (
+				<StyledSpinnerDiv>
+					<Spinner animation="border" role="status">
+						<span className="sr-only">Loading...</span>
+					</Spinner>
+				</StyledSpinnerDiv>
+			);
+		} else {
+			return (<div></div>);
+		}
+	}
+
+	render() {
+		return (
+				<StyledMainDiv id="main_div">
+					<GlobalClampStyle />
+					{this.renderRoutes()}
+					{this.renderSpinner()}
 					{this.renderAlertBar()}
 					{this.renderNavBar()}
 					{this.renderLoopViewer()}

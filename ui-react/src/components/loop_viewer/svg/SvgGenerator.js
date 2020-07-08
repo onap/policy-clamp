@@ -70,13 +70,15 @@ class SvgGenerator extends React.Component {
 	}
 
 	handleSvgClick(event) {
-	    if (this.state.clickable) {
-            console.debug("svg click event received");
-            var elementName = event.target.parentNode.getAttribute('policyId');
-            console.info("SVG element clicked", elementName);
-            if (elementName !== null) {
-                this.props.history.push("/policyModal/"+event.target.parentNode.getAttribute('policyType')+"/"+elementName);
-            }
+		console.debug("svg click event received");
+		if (this.state.clickable) {
+			var elementName = event.target.parentNode.getAttribute('policyId');
+			console.info("SVG element clicked", elementName);
+			// Only allow movement to policy editing IF there busyLoadingCOunt is 0,
+			// meaning we are not waiting for refreshStatus to complete, for example
+			if (elementName !== null && !this.props.isBusyLoading()) {
+				this.props.history.push("/policyModal/"+event.target.parentNode.getAttribute('policyType')+"/"+elementName);
+			}
 		}
 	}
 

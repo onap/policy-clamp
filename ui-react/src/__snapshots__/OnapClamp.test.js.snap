@@ -31,6 +31,7 @@ exports[`Verify OnapClamp Test the render method 1`] = `
   <styled.div
     id="main_div"
   >
+    <GlobalStyleComponent />
     <Route
       path="/uploadToscaPolicyModal"
       render={[Function]}
@@ -103,7 +104,7 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       path="/refreshStatus"
       render={[Function]}
     />
-    <GlobalStyleComponent />
+    <div />
     <div>
       <Alert
         closeLabel="Close alert"
@@ -191,6 +192,7 @@ exports[`Verify OnapClamp Test the render method 1`] = `
         <withRouter(SvgGenerator)
           clickable={true}
           generatedFrom="INSTANCE"
+          isBusyLoading={[Function]}
           loopCache={
             LoopCache {
               "loopJsonCache": Object {},

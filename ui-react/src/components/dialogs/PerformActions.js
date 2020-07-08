@@ -22,24 +22,19 @@
  */
 import React from 'react';
 import LoopActionService from '../../api/LoopActionService';
-import Spinner from 'react-bootstrap/Spinner'
-import styled from 'styled-components';
 
-const StyledSpinnerDiv = styled.div`
-	justify-content: center !important;
-	display: flex !important;
-`;
 
 export default class PerformActions extends React.Component {
 	state = {
 		loopName: this.props.loopCache.getLoopName(),
 		loopAction: this.props.loopAction
 	};
+
 	constructor(props, context) {
 		super(props, context);
-
 		this.refreshStatus = this.refreshStatus.bind(this);
 	}
+
 	componentWillReceiveProps(newProps) {
 		this.setState({
 			loopName: newProps.loopCache.getLoopName(),
@@ -51,35 +46,50 @@ export default class PerformActions extends React.Component {
 		const action = this.state.loopAction;
 		const loopName = this.state.loopName;
 
-		LoopActionService.performAction(loopName, action).then(pars => {
+		if (action === 'delete') {
+			if (window.confirm('You are about to remove Control Loop Model "' + loopName +
+					'". Select OK to continue with deletion or Cancel to keep the model.') === false) {
+				return;
+			}
+		}
+
+		this.props.setBusyLoading(); // Alert top level to start block user clicks
+
+		LoopActionService.performAction(loopName, action)
+		.then(pars => {
 			this.props.showSucAlert("Action " + action + " successfully performed");
-			// refresh status and update loop logs
-			this.refreshStatus(loopName);
+			if (action === 'delete') {
+				this.props.updateLoopFunction(null);
+				this.props.history.push('/');
+			} else {
+				// refresh status and update loop logs
+				this.refreshStatus(loopName);
+			}
 		})
 		.catch(error => {
 			this.props.showFailAlert("Action " + action + " failed");
 			// refresh status and update loop logs
 			this.refreshStatus(loopName);
-		});
-
+		})
+		.finally(() => this.props.clearBusyLoading());
 	}
 
 	refreshStatus(loopName) {
-		LoopActionService.refreshStatus(loopName).then(data => {
+
+		this.props.setBusyLoading();
+
+		LoopActionService.refreshStatus(loopName)
+		.then(data => {
 			this.props.updateLoopFunction(data);
 			this.props.history.push('/');
 		})
-			.catch(error => {
+		.catch(error => {
 			this.props.history.push('/');
-		});
+		})
+		.finally(() => this.props.clearBusyLoading());
 	}
 
 	render() {
-		return (
-			<StyledSpinnerDiv>
-				<Spinner animation="border" role="status">
-				</Spinner>
-			</StyledSpinnerDiv>
-		);
+		return null;
 	}
 }
