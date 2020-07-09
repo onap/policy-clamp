@@ -160,6 +160,7 @@ public class DeployFlowTestItCase {
 
         Loop loopAfterTest = loopService.getLoop("ControlLoopTest");
         assertThat(loopAfterTest.getDcaeDeploymentStatusUrl().contains("/uninstall")).isTrue();
+        assertThat(loopAfterTest.getDcaeDeploymentId()).isNull();
     }
 
     /**
@@ -196,6 +197,8 @@ public class DeployFlowTestItCase {
         Set<MicroServicePolicy> policyList = loopAfterTest.getMicroServicePolicies();
         for (MicroServicePolicy policy : policyList) {
             assertThat(policy.getDcaeDeploymentStatusUrl().contains("/uninstall")).isTrue();
+            assertThat(policy.getDcaeDeploymentId()).isNull();
+            
         }
         assertThat(loopAfterTest.getDcaeDeploymentStatusUrl()).isNull();
         assertThat(loopAfterTest.getDcaeDeploymentId()).isNull();

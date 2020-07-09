@@ -239,7 +239,7 @@
 								method="getStatusUrl(${exchangeProperty[dcaeResponse]})" />
 						</setProperty>
 						<to
-							uri="bean:org.onap.clamp.policy.microservice.MicroServicePolicyService?method=updateDcaeDeploymentFields(${exchangeProperty[microServicePolicy]},${exchangeProperty[microServicePolicy].getDcaeDeploymentId()},${exchangeProperty[dcaeStatusUrl]})" />
+							uri="bean:org.onap.clamp.policy.microservice.MicroServicePolicyService?method=updateDcaeDeploymentFields(${exchangeProperty[microServicePolicy]},null,${exchangeProperty[dcaeStatusUrl]})" />
 						<to
 							uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO','DCAE',${exchangeProperty[loopObject]})" />
 					</when>
@@ -322,7 +322,7 @@
 							method="getStatusUrl(${exchangeProperty[dcaeResponse]})" />
 					</setProperty>
 					<to
-						uri="bean:org.onap.clamp.loop.LoopService?method=updateDcaeDeploymentFields(${exchangeProperty[loopObject]},${exchangeProperty[loopObject].getDcaeDeploymentId()},${exchangeProperty[dcaeStatusUrl]})" />
+						uri="bean:org.onap.clamp.loop.LoopService?method=updateDcaeDeploymentFields(${exchangeProperty[loopObject]},null,${exchangeProperty[dcaeStatusUrl]})" />
 					<doFinally>
 						<to uri="direct:reset-raise-http-exception-flag" />
 						<to
@@ -378,9 +378,9 @@
 				</handled>
 
 				<log loggingLevel="ERROR"
-					 message="GET policy request FAILED for loop: ${header.loopName}, ${exception.stacktrace}" />
+					 message="GET DCAE deployment request FAILED for loop: ${header.loopName}, ${exception.stacktrace}" />
 				<to
-						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET policy request failed, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})" />
+						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('GET DCAE deployment request failed, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})" />
 			</doCatch>
 			<doFinally>
 				<to uri="direct:reset-raise-http-exception-flag" />
