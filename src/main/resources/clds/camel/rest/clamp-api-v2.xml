@@ -200,6 +200,9 @@
 				<doTry>
 					<log loggingLevel="INFO"
 						message="DCAE DEPLOY request for loop: ${header.loopName}" />
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">true</simple>
+					</setProperty>
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'DCAE DEPLOY request')" />
 					<to
@@ -330,6 +333,9 @@
 				<doTry>
 					<log loggingLevel="INFO"
 						message="DCAE UNDEPLOY request for loop: ${header.loopName}" />
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">true</simple>
+					</setProperty>
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'DCAE UNDEPLOY request')" />
 					<to
@@ -373,6 +379,9 @@
 				<doTry>
 					<log loggingLevel="INFO"
 						message="STOP request for loop: ${header.loopName}" />
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">true</simple>
+					</setProperty>
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'STOP request')" />
 					<to
@@ -416,6 +425,9 @@
 				<doTry>
 					<log loggingLevel="INFO"
 						message="RESTART request for loop: ${header.loopName}" />
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">true</simple>
+					</setProperty>
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'RESTART request')" />
 					<to
@@ -460,6 +472,9 @@
 				<doTry>
 					<log loggingLevel="INFO"
 						message="POLICY SUBMIT request for loop: ${header.loopName}" />
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">true</simple>
+					</setProperty>
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*, 'POLICY SUBMIT request')" />
 					<to
@@ -544,6 +559,9 @@
 				<doTry>
 					<log loggingLevel="INFO"
 						message="DELETE request for loop: ${header.loopName}" />
+					<setProperty propertyName="raiseHttpExceptionFlag">
+						<simple resultType="java.lang.Boolean">true</simple>
+					</setProperty>
 					<to
 						uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=startLog(*,'DELETE request')" />
 					<to
