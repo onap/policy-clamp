@@ -48,6 +48,7 @@ export default class LoopPropertiesModal extends React.Component {
 		this.renderDcaeParameters = this.renderDcaeParameters.bind(this);
 		this.renderAllParameters = this.renderAllParameters.bind(this);
 		this.getDcaeParameters = this.getDcaeParameters.bind(this);
+		this.readOnly = props.readOnly !== undefined ? props.readOnly : false;
 	}
 
 	componentWillReceiveProps(newProps) {
@@ -109,7 +110,7 @@ export default class LoopPropertiesModal extends React.Component {
 					{this.renderAllParameters()}
 				<Modal.Footer>
 					<Button variant="secondary" type="null" onClick={this.handleClose}>Cancel</Button>
-					<Button variant="primary" type="submit" onClick={this.handleSave}>Save Changes</Button>
+					<Button variant="primary" type="submit" disabled={this.readOnly}  onClick={this.handleSave}>Save Changes</Button>
 				</Modal.Footer>
 			</ModalStyled>
 		);
