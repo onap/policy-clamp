@@ -31,6 +31,19 @@
 	<property
 		name="debugPattern"
 		value="%nopexception${p_tim}|${p_lvl}|${p_mdc}|${p_exc}|%msg%n" />
+		
+	<property
+		name="errorPattern"
+		value="%X{EntryTimestamp}|%X{RequestID}|%thread|%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}||||%msg%n" />
+		
+	<property
+		name="auditPattern"
+		value="%X{EntryTimestamp}|%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}|%X{RequestID}|%X{ServiceInstanceId}|%thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDesc}|%X{InstanceUUID}|%.-5level|%X{Severity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}||||%marker|%mdc|||%msg%n" />
+		
+	<property
+		name="metricPattern"
+		value="%X{InvokeTimestamp}|%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}|%X{RequestID}|%X{ServiceInstanceId}|%thread||%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDesc}|%X{InstanceUUID}|%.-5level|%X{Severity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}||||%X{TargetVirtualEntity}|%marker|%mdc|||%msg%n" />
+
 
 	<!-- Example evaluator filter applied against console appender -->
 	<appender
@@ -48,13 +61,15 @@
 	<appender
 		name="ERROR"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-			<level>INFO</level>
-		</filter>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
 		<file>${logDirectory}/error.log</file>
 		<append>true</append>
 		<encoder>
-			<pattern>${defaultPattern}</pattern>
+			<pattern>${errorPattern}</pattern>
 		</encoder>
 		<rollingPolicy
 			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -89,11 +104,18 @@
 	<appender
 		name="AUDIT"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>ENTRY</marker>
+                <marker>EXIT</marker>
+            </evaluator>
+            <onMismatch>DENY</onMismatch>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
 		<file>${logDirectory}/audit.log</file>
 		<append>true</append>
 		<encoder>
-			<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
-			</pattern>
+			<pattern>${auditPattern}</pattern>
 		</encoder>
 		<rollingPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -114,11 +136,18 @@
 	<appender
 		name="METRIC"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
+                <marker>INVOKE</marker>
+                <marker>INVOKE-RETURN</marker>
+            </evaluator>
+            <onMismatch>DENY</onMismatch>
+            <onMatch>ACCEPT</onMatch>
+        </filter>
 		<file>${logDirectory}/metric.log</file>
 		<append>true</append>
 		<encoder>
-			<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{TargetEntity}|%X{TargetServiceName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{TargetVirtualEntity}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|
-				%msg%n</pattern>
+			<pattern>${metricPattern}</pattern>
 		</encoder>
 		<rollingPolicy
 				class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
@@ -144,7 +173,7 @@
 		<file>${logDirectory}/security.log</file>
 		<append>true</append>
 		<encoder>
-			<pattern>%X{BeginTimestamp}|%X{EndTimestamp}|%X{RequestId}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
+			<pattern>%X{EntryTimestamp}|%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX,UTC}|%X{RequestID}|%X{ServiceInstanceId}|%.20thread|%X{VirtualServerName}|%X{ServiceName}|%X{PartnerName}|%X{StatusCode}|%X{ResponseCode}|%X{ResponseDescription}|%X{InstanceUUID}|%.-5level|%X{AlertSeverity}|%X{ServerIPAddress}|%X{ElapsedTime}|%X{ServerFQDN}|%X{RemoteHost}|%X{ClassName}|%X{Unused}|%X{ProcessKey}|%X{CustomField1}|%X{CustomField2}|%X{CustomField3}|%X{CustomField4}|%msg%n
 			</pattern>
 		</encoder>
 		<rollingPolicy
@@ -293,5 +322,8 @@
 	<root level="DEBUG">
 		<appender-ref ref="DEBUG" />
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="AUDIT" />
+        <appender-ref ref="METRIC" />
+        <appender-ref ref="ERROR" />
 	</root>
 </included>

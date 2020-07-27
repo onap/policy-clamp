@@ -47,9 +47,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationController {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(AuthorizationController.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getMetricsLogger();
-    protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
+    protected static final EELFLogger logger =
+        EELFManager.getInstance().getLogger(AuthorizationController.class);
+    protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
+    protected static final EELFLogger securityLogger =
+        EELFManager.getInstance().getSecurityLogger();
 
     // By default we'll set it to a default handler
     @Autowired
@@ -66,11 +68,12 @@ public class AuthorizationController {
         }
         if ((securityContext.getAuthentication().getPrincipal()) instanceof String) {
             // anonymous case
-            return ((String)securityContext.getAuthentication().getPrincipal());
+            return ((String) securityContext.getAuthentication().getPrincipal());
         } else {
             return ((UserDetails) securityContext.getAuthentication().getPrincipal()).getUsername();
         }
     }
+
     /**
      * Get the principal name.
      *
@@ -89,11 +92,12 @@ public class AuthorizationController {
      * Insert authorize the api based on the permission.
      *
      * @param camelExchange The Camel Exchange object containing the properties
-     * @param typeVar       The type of the permissions
-     * @param instanceVar   The instance of the permissions. e.g. dev
-     * @param action        The action of the permissions. e.g. read
+     * @param typeVar The type of the permissions
+     * @param instanceVar The instance of the permissions. e.g. dev
+     * @param action The action of the permissions. e.g. read
      */
-    public void authorize(Exchange camelExchange, String typeVar, String instanceVar, String action) {
+    public void authorize(Exchange camelExchange, String typeVar, String instanceVar,
+        String action) {
         String type = refProp.getStringValue(PERM_PREFIX + typeVar);
         String instance = refProp.getStringValue(PERM_INSTANCE);
 
@@ -121,7 +125,7 @@ public class AuthorizationController {
 
     /**
      * Insert authorize the api based on the permission.
-     * 
+     *
      * @param inPermission Security permission in input
      * @return True if user is permitted
      */
@@ -131,18 +135,19 @@ public class AuthorizationController {
         // check if the user has the permission key or the permission key with a
         // combination of all instance and/or all action.
         if (hasRole(inPermission.getKey()) || hasRole(inPermission.getKeyAllInstance())) {
-            auditLogger.info("{} authorized because user has permission with * for instance: {}", principalName,
-                    inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for instance: {}",
+                principalName, inPermission.getKey().replace("|", ":"));
             return true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
         } else if (hasRole(inPermission.getKeyAllInstanceAction())) {
-            auditLogger.info("{} authorized because user has permission with * for instance and * for action: {}",
-                    principalName, inPermission.getKey());
+            auditLogger.info(
+                "{} authorized because user has permission with * for instance and * for action: {}",
+                principalName, inPermission.getKey().replace("|", ":"));
             return true;
         } else if (hasRole(inPermission.getKeyAllAction())) {
-            auditLogger.info("{} authorized because user has permission with * for action: {}", principalName,
-                    inPermission.getKey());
+            auditLogger.info("{} authorized because user has permission with * for action: {}",
+                principalName, inPermission.getKey().replace("|", ":"));
             return true;
         } else {
             return false;

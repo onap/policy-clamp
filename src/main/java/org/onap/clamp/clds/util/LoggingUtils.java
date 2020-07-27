@@ -23,8 +23,6 @@
 
 package org.onap.clamp.clds.util;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URLConnection;
@@ -42,6 +40,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import org.onap.clamp.authorization.AuthorizationController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.slf4j.event.Level;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,15 +51,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * time context, ...
  */
 public class LoggingUtils {
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(LoggingUtils.class);
+
+    protected static final Logger logger = LoggerFactory.getLogger(LoggingUtils.class);
 
     private static final DateFormat DATE_FORMAT = createDateFormat();
+
+    private static final String DATE_FORMATTER_ISO = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
     /** String constant for messages <tt>ENTERING</tt>, <tt>EXITING</tt>, etc. */
     private static final String EMPTY_MESSAGE = "";
 
     /** Logger delegate. */
-    private EELFLogger mlogger;
+    private Logger mlogger;
 
     /** Automatic UUID, overrideable per adapter or per invocation. */
     private static UUID sInstanceUUID = UUID.randomUUID();
@@ -67,7 +70,7 @@ public class LoggingUtils {
     /**
      * Constructor.
      */
-    public LoggingUtils(final EELFLogger loggerP) {
+    public LoggingUtils(final Logger loggerP) {
         this.mlogger = checkNotNull(loggerP);
     }
 
@@ -81,7 +84,7 @@ public class LoggingUtils {
         MDC.put("RequestId", UUID.randomUUID().toString());
         MDC.put("ServiceName", service);
         MDC.put("PartnerName", partner);
-        //Defaulting to HTTP/1.1 protocol
+        // Defaulting to HTTP/1.1 protocol
         MDC.put("Protocol", "HTTP/1.1");
         try {
             MDC.put("ServerFQDN", InetAddress.getLocalHost().getCanonicalHostName());
@@ -176,26 +179,28 @@ public class LoggingUtils {
      * @param serviceName service name
      */
     public void entering(HttpServletRequest request, String serviceName) {
-        MDC.clear();
+        // MDC.clear();
         checkNotNull(request);
         // Extract MDC values from standard HTTP headers.
-        final String requestId = defaultToUuid(request.getHeader(OnapLogConstants.Headers.REQUEST_ID));
-        final String invocationId = defaultToUuid(request.getHeader(OnapLogConstants.Headers.INVOCATION_ID));
-        final String partnerName = defaultToEmpty(request.getHeader(OnapLogConstants.Headers.PARTNER_NAME));
+        final String requestId =
+            defaultToUuid(request.getHeader(OnapLogConstants.Headers.REQUEST_ID));
+        final String invocationId =
+            defaultToUuid(request.getHeader(OnapLogConstants.Headers.INVOCATION_ID));
+        final String partnerName =
+            defaultToEmpty(request.getHeader(OnapLogConstants.Headers.PARTNER_NAME));
 
         // Default the partner name to the user name used to login to clamp
         if (partnerName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(OnapLogConstants.Mdcs.PARTNER_NAME,
-                    AuthorizationController.getPrincipalName(SecurityContextHolder.getContext()));
+                AuthorizationController.getPrincipalName(SecurityContextHolder.getContext()));
         }
 
         // Set standard MDCs. Override this entire method if you want to set
         // others, OR set them BEFORE or AFTER the invocation of #entering,
         // depending on where you need them to appear, OR extend the
         // ServiceDescriptor to add them.
-        MDC.put(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP,
-            ZonedDateTime.now(ZoneOffset.UTC)
-            .format(DateTimeFormatter.ISO_INSTANT));
+        MDC.put(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP, ZonedDateTime.now(ZoneOffset.UTC)
+            .format(DateTimeFormatter.ofPattern(DATE_FORMATTER_ISO)));
         MDC.put(OnapLogConstants.Mdcs.REQUEST_ID, requestId);
         MDC.put(OnapLogConstants.Mdcs.INVOCATION_ID, invocationId);
         MDC.put(OnapLogConstants.Mdcs.CLIENT_IP_ADDRESS, defaultToEmpty(request.getRemoteAddr()));
@@ -204,43 +209,52 @@ public class LoggingUtils {
 
         // Default the service name to the requestURI, in the event that
         // no value has been provided.
-        if (serviceName == null
-                || serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
+        if (serviceName == null || serviceName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(OnapLogConstants.Mdcs.SERVICE_NAME, request.getRequestURI());
         } else {
             MDC.put(OnapLogConstants.Mdcs.SERVICE_NAME, serviceName);
         }
 
-        this.mlogger.info(OnapLogConstants.Markers.ENTRY);
+        // Set the Response Status code to in progress
+        MDC.put(OnapLogConstants.Mdcs.RESPONSE_STATUS_CODE,
+            OnapLogConstants.ResponseStatus.INPROGRESS.toString());
+        setElapsedTime();
+
+        this.mlogger.info(OnapLogConstants.Markers.ENTRY, "Entering");
     }
 
     /**
      * Report <tt>EXITING</tt> marker.
      *
-
+     *
      * @param code response code
      * @param descrption response description
      * @param severity response severity
      * @param status response status code
      */
-    public void exiting(String code, String descrption, Level severity, OnapLogConstants.ResponseStatus status) {
+    public void exiting(int code, String descrption, Level severity,
+        OnapLogConstants.ResponseStatus status) {
         try {
+
             MDC.put(OnapLogConstants.Mdcs.RESPONSE_CODE, defaultToEmpty(code));
             MDC.put(OnapLogConstants.Mdcs.RESPONSE_DESCRIPTION, defaultToEmpty(descrption));
             MDC.put(OnapLogConstants.Mdcs.RESPONSE_SEVERITY, defaultToEmpty(severity));
             MDC.put(OnapLogConstants.Mdcs.RESPONSE_STATUS_CODE, defaultToEmpty(status));
 
-            ZonedDateTime startTime = ZonedDateTime.parse(MDC.get(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP),
-                DateTimeFormatter.ISO_INSTANT.withZone(ZoneOffset.UTC));
-            ZonedDateTime endTime = ZonedDateTime.now(ZoneOffset.UTC);
-            MDC.put(OnapLogConstants.Mdcs.END_TIMESTAMP, endTime.format(DateTimeFormatter.ISO_INSTANT));
-            long duration = ChronoUnit.MILLIS.between(startTime, endTime);
-            MDC.put(OnapLogConstants.Mdcs.ELAPSED_TIMESTAMP, String.valueOf(duration)); 
-            this.mlogger.info(OnapLogConstants.Markers.EXIT);
-        }
-        finally {
+            setElapsedTime();
+            this.mlogger.info(OnapLogConstants.Markers.EXIT, "Exiting");
+        } finally {
             MDC.clear();
         }
+    }
+
+    private void setElapsedTime() {
+        ZonedDateTime startTime =
+            ZonedDateTime.parse(MDC.get(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP),
+                DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneOffset.UTC));
+        ZonedDateTime endTime = ZonedDateTime.now(ZoneOffset.UTC);
+        long duration = ChronoUnit.MILLIS.between(startTime, endTime);
+        MDC.put(OnapLogConstants.Mdcs.ELAPSED_TIME, String.valueOf(duration));
     }
 
     /**
@@ -262,7 +276,8 @@ public class LoggingUtils {
      * @param targetServiceName The target service name
      * @return The HTTP url connection
      */
-    public HttpURLConnection invoke(final HttpURLConnection con, String targetEntity, String targetServiceName) {
+    public HttpURLConnection invoke(final HttpURLConnection con, String targetEntity,
+        String targetServiceName) {
         return this.invokeGeneric(con, targetEntity, targetServiceName);
     }
 
@@ -281,8 +296,8 @@ public class LoggingUtils {
         // Log INVOKE*, with the invocationID as the message body.
         // (We didn't really want this kind of behavior in the standard,
         // but is it worse than new, single-message MDC?)
-        this.mlogger.info(OnapLogConstants.Markers.INVOKE);
-        this.mlogger.info(OnapLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
+        this.mlogger.info(OnapLogConstants.Markers.INVOKE, "INVOKE");
+        this.mlogger.info(OnapLogConstants.Markers.INVOKE_SYNCHRONOUS + "{" + invocationId + "}");
     }
 
     /**
@@ -294,7 +309,8 @@ public class LoggingUtils {
      * @param targetServiceName The target service name
      * @return The HTTPS url connection
      */
-    public HttpsURLConnection invokeHttps(final HttpsURLConnection con, String targetEntity, String targetServiceName) {
+    public HttpsURLConnection invokeHttps(final HttpsURLConnection con, String targetEntity,
+        String targetServiceName) {
         return this.invokeGeneric(con, targetEntity, targetServiceName);
     }
 
@@ -302,8 +318,10 @@ public class LoggingUtils {
      * Report pending invocation with <tt>INVOKE-RETURN</tt> marker.
      */
     public void invokeReturn() {
+        MDC.put(OnapLogConstants.Mdcs.RESPONSE_STATUS_CODE,
+            OnapLogConstants.ResponseStatus.COMPLETE.toString());
         // Add the Invoke-return marker and clear the needed MDC
-        this.mlogger.info(OnapLogConstants.Markers.INVOKE_RETURN);
+        this.mlogger.info(OnapLogConstants.Markers.INVOKE_RETURN, "INVOKE-RETURN");
         invokeReturnContext();
     }
 
@@ -358,9 +376,8 @@ public class LoggingUtils {
         MDC.put(OnapLogConstants.Mdcs.TARGET_ENTITY, defaultToEmpty(targetEntity));
         MDC.put(OnapLogConstants.Mdcs.TARGET_SERVICE_NAME, defaultToEmpty(targetServiceName));
         MDC.put(OnapLogConstants.Mdcs.INVOCATIONID_OUT, invocationId);
-        MDC.put(OnapLogConstants.Mdcs.INVOKE_TIMESTAMP,
-            ZonedDateTime.now(ZoneOffset.UTC)
-            .format(DateTimeFormatter.ISO_INSTANT));
+        MDC.put(OnapLogConstants.Mdcs.INVOKE_TIMESTAMP, ZonedDateTime.now(ZoneOffset.UTC)
+            .format(DateTimeFormatter.ofPattern(DATE_FORMATTER_ISO)));
     }
 
     /**
@@ -371,26 +388,27 @@ public class LoggingUtils {
         MDC.remove(OnapLogConstants.Mdcs.TARGET_SERVICE_NAME);
         MDC.remove(OnapLogConstants.Mdcs.INVOCATIONID_OUT);
         MDC.remove(OnapLogConstants.Mdcs.INVOKE_TIMESTAMP);
+        MDC.remove(OnapLogConstants.Mdcs.RESPONSE_STATUS_CODE);
     }
 
-    private <T extends URLConnection> T invokeGeneric(final T con, String targetEntity, String targetServiceName) {
+    private <T extends URLConnection> T invokeGeneric(final T con, String targetEntity,
+        String targetServiceName) {
         final String invocationId = UUID.randomUUID().toString();
 
         // Set standard HTTP headers on (southbound request) builder.
         con.setRequestProperty(OnapLogConstants.Headers.REQUEST_ID,
-                defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.REQUEST_ID)));
-        con.setRequestProperty(OnapLogConstants.Headers.INVOCATION_ID,
-                invocationId);
+            defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.REQUEST_ID)));
+        con.setRequestProperty(OnapLogConstants.Headers.INVOCATION_ID, invocationId);
         con.setRequestProperty(OnapLogConstants.Headers.PARTNER_NAME,
-                defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.PARTNER_NAME)));
+            defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.PARTNER_NAME)));
 
         invokeContext(targetEntity, targetServiceName, invocationId);
 
         // Log INVOKE*, with the invocationID as the message body.
         // (We didn't really want this kind of behavior in the standard,
         // but is it worse than new, single-message MDC?)
-        this.mlogger.info(OnapLogConstants.Markers.INVOKE);
-        this.mlogger.info(OnapLogConstants.Markers.INVOKE_SYNC + "{" + invocationId + "}");
+        this.mlogger.info(OnapLogConstants.Markers.INVOKE, "");
+        this.mlogger.info(OnapLogConstants.Markers.INVOKE_SYNCHRONOUS + "{" + invocationId + "}");
         return con;
     }
 }

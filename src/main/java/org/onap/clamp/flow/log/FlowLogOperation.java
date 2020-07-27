@@ -23,14 +23,12 @@
 
 package org.onap.clamp.flow.log;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.apache.camel.Exchange;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.OnapLogConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,8 +40,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FlowLogOperation {
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(FlowLogOperation.class);
-    protected static final EELFLogger auditLogger = EELFManager.getInstance().getMetricsLogger();
+    protected static final Logger logger = LoggerFactory.getLogger(FlowLogOperation.class);
     private LoggingUtils util = new LoggingUtils(logger);
 
     @Autowired
@@ -57,7 +54,8 @@ public class FlowLogOperation {
      */
     public void startLog(Exchange exchange, String serviceDesc) {
         util.entering(request, serviceDesc);
-        exchange.setProperty(OnapLogConstants.Headers.REQUEST_ID, util.getProperties(OnapLogConstants.Mdcs.REQUEST_ID));
+        exchange.setProperty(OnapLogConstants.Headers.REQUEST_ID,
+            util.getProperties(OnapLogConstants.Mdcs.REQUEST_ID));
         exchange.setProperty(OnapLogConstants.Headers.INVOCATION_ID,
             util.getProperties(OnapLogConstants.Mdcs.INVOCATION_ID));
         exchange.setProperty(OnapLogConstants.Headers.PARTNER_NAME,
@@ -68,14 +66,15 @@ public class FlowLogOperation {
      * Generate the exiting log.
      */
     public void endLog() {
-        util.exiting(HttpStatus.OK.toString(), "Successful", Level.INFO, OnapLogConstants.ResponseStatus.COMPLETED);
+        util.exiting(HttpStatus.OK.value(), "Successful", Level.INFO,
+            OnapLogConstants.ResponseStatus.COMPLETE);
     }
 
     /**
      * Generate the error exiting log.
      */
     public void errorLog() {
-        util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Failed", Level.INFO,
+        util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Failed", Level.INFO,
             OnapLogConstants.ResponseStatus.ERROR);
     }
 

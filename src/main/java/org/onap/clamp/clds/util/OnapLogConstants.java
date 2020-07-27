@@ -23,6 +23,9 @@
 
 package org.onap.clamp.clds.util;
 
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
 /**
  * Constants for standard ONAP headers, MDCs, etc.
  */
@@ -41,6 +44,11 @@ public final class OnapLogConstants {
         throw new UnsupportedOperationException();
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Inner classes.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Marker constants.
@@ -48,19 +56,35 @@ public final class OnapLogConstants {
     public static final class Markers {
 
         /** Marker reporting invocation. */
-        public static final String INVOKE = "INVOKE";
+        public static final Marker INVOKE = MarkerFactory.getMarker("INVOKE");
+
+        /** Marker reporting invocation return. */
+        public static final Marker INVOKE_RETURN = MarkerFactory.getMarker("INVOKE-RETURN");
 
         /** Marker reporting synchronous invocation. */
-        public static final String INVOKE_RETURN = "INVOKE-RETURN";
+        public static final Marker INVOKE_SYNCHRONOUS = build("INVOKE", "SYNCHRONOUS");
 
-        /** Marker reporting synchronous invocation. */
-        public static final String INVOKE_SYNC = "INVOKE-SYNCHRONOUS";
+        /** Marker reporting asynchronous invocation. */
+        public static final Marker INVOKE_ASYNCHRONOUS = build("INVOKE", "ASYNCHRONOUS");
 
         /** Marker reporting entry into a component. */
-        public static final String ENTRY = "ENTRY";
+        public static final Marker ENTRY = MarkerFactory.getMarker("ENTRY");
 
         /** Marker reporting exit from a component. */
-        public static final String EXIT = "EXIT";
+        public static final Marker EXIT = MarkerFactory.getMarker("EXIT");
+
+        /**
+         * Build nested, detached marker.
+         *
+         * @param m1 top token.
+         * @param m2 sub-token.
+         * @return detached Marker.
+         */
+        private static Marker build(final String m1, final String m2) {
+            final Marker marker = MarkerFactory.getDetachedMarker(m1);
+            marker.add(MarkerFactory.getDetachedMarker(m2));
+            return marker;
+        }
 
         /**
          * Hide and forbid construction.
@@ -80,10 +104,14 @@ public final class OnapLogConstants {
         /** MDC correlating messages for an invocation. */
         public static final String INVOCATION_ID = "InvocationID";
 
+        public static final String SERVER_INVOCATION_ID = "ServerInvocationId";
+
+        public static final String CLIENT_INVOCATION_ID = "ClientInvocationId";
+
         /** MDC correlating messages for a logical transaction. */
         public static final String REQUEST_ID = "RequestID";
 
-        /** MDC recording calling service. */
+        /** MDC recording calling partner name. */
         public static final String PARTNER_NAME = "PartnerName";
 
         /** MDC recording current service. */
@@ -96,36 +124,63 @@ public final class OnapLogConstants {
         public static final String INVOCATIONID_OUT = "InvocationIDOut";
 
         /** MDC recording target entity. */
-        public static final String TARGET_ENTITY = "TargetEngity";
+        public static final String TARGET_ENTITY = "TargetEntity";
 
-        /** MDC recording current service instance. */
-        public static final String INSTANCE_UUID = "InstanceUUID";
+        /** MDC recording target element. */
+        public static final String TARGET_ELEMENT = "TargetElement";
+
+        /** MDC recording current service instance id. */
+        public static final String SERVICE_INSTANCE_ID = "ServiceInstanceID";
+
+        /** MDC recording current instance id. */
+        public static final String INSTANCE_UUID = "InstanceID";
 
         // Network. ////////////////////////////////////////////////////////////
 
         /** MDC recording caller address. */
         public static final String CLIENT_IP_ADDRESS = "ClientIPAddress";
 
-        /** MDC recording server address. */
+        /** MDC recording server IP address. */
+        public static final String SERVER_IP_ADDRESS = "ServerIPAddress";
+
+        /** MDC recording server FQDN. */
         public static final String SERVER_FQDN = "ServerFQDN";
+
+        /** MDC recording virtual server name. */
+        public static final String VIRTUAL_SERVER_NAME = "VirtualServerName";
+
+        /** MDC recording context name. */
+        public static final String CONTEXT_NAME = "ContextName";
 
         /**
          * MDC recording timestamp at the start of the current request,
          * with the same scope as {@link #REQUEST_ID}.
          *
-         * <p>Open issues:
+         * <p>
+         * Open issues:
          * <ul>
-         *     <ul>Easily confused with {@link #INVOKE_TIMESTAMP}.</ul>
-         *     <ul>No mechanism for propagation between components, e.g. via HTTP headers.</ul>
-         *     <ul>Whatever mechanism we define, it's going to be costly.</ul>
+         * <ul>
+         * Easily confused with {@link #INVOKE_TIMESTAMP}.
+         * </ul>
+         * <ul>
+         * No mechanism for propagation between components, e.g. via HTTP headers.
+         * </ul>
+         * <ul>
+         * Whatever mechanism we define, it's going to be costly.
+         * </ul>
          * </ul>
          * </p>
-         * */
+         */
         public static final String ENTRY_TIMESTAMP = "EntryTimestamp";
-        public static final String END_TIMESTAMP = "EndTimestamp";
-        public static final String ELAPSED_TIMESTAMP = "ElapsedTime";
+
         /** MDC recording timestamp at the start of the current invocation. */
         public static final String INVOKE_TIMESTAMP = "InvokeTimestamp";
+
+        /** MDC recording elapsed time. */
+        public static final String ELAPSED_TIME = "ElapsedTime";
+
+        /** MDC recording log timestamp. */
+        public static final String LOG_TIMESTAMP = "LogTimestamp";
 
         // Outcomes. ///////////////////////////////////////////////////////////
 
@@ -133,13 +188,19 @@ public final class OnapLogConstants {
         public static final String RESPONSE_CODE = "ResponseCode";
 
         /** MDC reporting outcome description. */
-        public static final String RESPONSE_DESCRIPTION = "ResponseDescription";
+        public static final String RESPONSE_DESCRIPTION = "ResponseDesc";
 
-        /** MDC reporting outcome error level. */
+        /** MDC reporting severity */
         public static final String RESPONSE_SEVERITY = "Severity";
 
-        /** MDC reporting outcome error level. */
+        /** MDC reporting response status code */
         public static final String RESPONSE_STATUS_CODE = "StatusCode";
+
+        /** MDC recording error code. */
+        public static final String ERROR_CODE = "ErrorCode";
+
+        /** MDC recording error description. */
+        public static final String ERROR_DESC = "ErrorDesc";
 
         // Unsorted. ///////////////////////////////////////////////////////////
 
@@ -159,7 +220,7 @@ public final class OnapLogConstants {
         /** HTTP <tt>X-ONAP-RequestID</tt> header. */
         public static final String REQUEST_ID = "X-ONAP-RequestID";
 
-        /** HTTP <tt>X-ONAP-InvocationID</tt> header. */
+        /** HTTP <tt>X-InvocationID</tt> header. */
         public static final String INVOCATION_ID = "X-ONAP-InvocationID";
 
         /** HTTP <tt>X-ONAP-PartnerName</tt> header. */
@@ -185,9 +246,59 @@ public final class OnapLogConstants {
     public enum ResponseStatus {
 
         /** Success. */
-        COMPLETED,
+        COMPLETE,
 
         /** Not. */
         ERROR,
+
+        /** In Progress. */
+        INPROGRESS
     }
+
+    /**
+     * Synchronous or asynchronous execution, for setting invocation marker.
+     */
+    public enum InvocationMode {
+
+        /** Synchronous, blocking. */
+        SYNCHRONOUS("SYNCHRONOUS", Markers.INVOKE_SYNCHRONOUS),
+
+        /** Asynchronous, non-blocking. */
+        ASYNCHRONOUS("ASYNCHRONOUS", Markers.INVOKE_ASYNCHRONOUS);
+
+        /** Enum value. */
+        private String mString;
+
+        /** Corresponding marker. */
+        private Marker mMarker;
+
+        /**
+         * Construct enum.
+         *
+         * @param s enum value.
+         * @param m corresponding Marker.
+         */
+        InvocationMode(final String s, final Marker m) {
+            this.mString = s;
+            this.mMarker = m;
+        }
+
+        /**
+         * Get Marker for enum.
+         *
+         * @return Marker.
+         */
+        public Marker getMarker() {
+            return this.mMarker;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString() {
+            return this.mString;
+        }
+    }
+
 }

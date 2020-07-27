@@ -22,15 +22,13 @@
 
 package org.onap.clamp.clds.service;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 import java.util.Date;
-
 import org.onap.clamp.clds.model.CldsHealthCheck;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.clds.util.OnapLogConstants;
 import org.onap.clamp.loop.LoopController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +44,7 @@ public class CldsHealthcheckService {
     @Autowired
     private LoopController loopController;
 
-    protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CldsHealthcheckService.class);
+    protected static final Logger logger = LoggerFactory.getLogger(CldsHealthcheckService.class);
 
     /**
      * REST service that retrieves clds healthcheck information.
@@ -64,16 +62,19 @@ public class CldsHealthcheckService {
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("UP");
             cldsHealthCheck.setDescription("OK");
-            LoggingUtils.setResponseContext("0", "Get healthcheck success", this.getClass().getName());
-            util.exiting("200", "Healthcheck success", Level.INFO, OnapLogConstants.ResponseStatus.COMPLETED);
+            LoggingUtils.setResponseContext("0", "Get healthcheck success",
+                this.getClass().getName());
+            util.exiting(HttpStatus.OK.value(), "Healthcheck success", Level.INFO,
+                OnapLogConstants.ResponseStatus.COMPLETE);
         } catch (Exception e) {
             logger.error("CLAMP application Heath check failed", e);
-            LoggingUtils.setResponseContext("999", "Get healthcheck failed", this.getClass().getName());
+            LoggingUtils.setResponseContext("999", "Get healthcheck failed",
+                this.getClass().getName());
             cldsHealthCheck.setHealthCheckComponent("CLDS-APP");
             cldsHealthCheck.setHealthCheckStatus("DOWN");
             cldsHealthCheck.setDescription("NOT-OK");
-            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.toString(), "Healthcheck failed", Level.INFO,
-                    OnapLogConstants.ResponseStatus.ERROR);
+            util.exiting(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Healthcheck failed", Level.INFO,
+                OnapLogConstants.ResponseStatus.ERROR);
         }
         return cldsHealthCheck;
     }
