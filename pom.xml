@@ -938,7 +938,7 @@
 					<apiVersion>1.35</apiVersion>
 					<images>
 						<image>
-							<name>library/mariadb:10.3.12</name>
+							<name>docker.io/mariadb:10.3.12</name>
 							<alias>mariadb</alias>
 							<run>
 								<env>
@@ -967,7 +967,7 @@
 							</run>
 						</image>
 						<image>
-							<name>library/python:2-slim</name>
+							<name>docker.io/python:2-slim</name>
 							<alias>python</alias>
 							<run>
 								<hostname>python</hostname>
