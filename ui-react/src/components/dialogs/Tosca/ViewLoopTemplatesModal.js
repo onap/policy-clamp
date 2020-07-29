@@ -99,7 +99,13 @@ export default class ViewLoopTemplatesModal extends React.Component {
 
 	getAllLoopTemplates() {
 		TemplateService.getAllLoopTemplates().then(templatesData => {
-		    this.setState({ loopTemplatesData: templatesData })
+			// replace -1 in maximumInstancesAllowed with more meaningful 'No Limit'
+			for (let item in templatesData) {
+				if (templatesData[item].maximumInstancesAllowed === -1) {
+					templatesData[item].maximumInstancesAllowed = 'No Limit';
+				}
+			} 
+			this.setState({ loopTemplatesData: templatesData })
 		});
 	}
 
