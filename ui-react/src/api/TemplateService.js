@@ -23,7 +23,7 @@
 export default class TemplateService {
 
         static getLoopNames() {
-                return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin' })
+                return fetch(window.location.pathname + 'restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin' })
                         .then(function (response) {
                                 console.debug("getLoopNames response received: ", response.status);
                                 if (response.ok) {
@@ -40,7 +40,7 @@ export default class TemplateService {
         }
 
 	static getAllLoopTemplates() {
-	    return fetch('restservices/clds/v2/templates', { method: 'GET', credentials: 'same-origin', })
+	    return fetch(window.location.pathname + 'restservices/clds/v2/templates', { method: 'GET', credentials: 'same-origin', })
 	        .then(function (response) {
 	            console.debug("getAllLoopTemplates response received: ", response.status);
 	            if (response.ok) {
@@ -57,7 +57,7 @@ export default class TemplateService {
 	    }
 
 	static getDictionary() {
-	    return fetch('restservices/clds/v2/dictionary/', { method: 'GET', credentials: 'same-origin', })
+	    return fetch(window.location.pathname + 'restservices/clds/v2/dictionary/', { method: 'GET', credentials: 'same-origin', })
 	      .then(function (response) {
 	        console.debug("getDictionary response received: ", response.status);
 	        if (response.ok) {
@@ -74,7 +74,7 @@ export default class TemplateService {
 	  }
 
 	  static getDictionaryElements(dictionaryName) {
-	    return fetch('restservices/clds/v2/dictionary/' + dictionaryName, {
+	    return fetch(window.location.pathname + 'restservices/clds/v2/dictionary/' + dictionaryName, {
 	      method: 'GET',
 	      headers: {
 	        "Content-Type": "application/json",
@@ -98,7 +98,7 @@ export default class TemplateService {
 
 	  static insDictionary(jsonData) {
 	    console.log("dictionaryName is", jsonData.name)
-	    return fetch('/restservices/clds/v2/dictionary/', {
+	    return fetch(window.location.pathname + 'restservices/clds/v2/dictionary/', {
 	      method: 'PUT',
 	      credentials: 'same-origin',
 	      headers: {
@@ -124,7 +124,7 @@ export default class TemplateService {
 
 	  static insDictionaryElements(jsonData) {
 	    console.log("dictionaryName is", jsonData.name)
-	    return fetch('/restservices/clds/v2/dictionary/' + jsonData.name, {
+	    return fetch(window.location.pathname + 'restservices/clds/v2/dictionary/' + jsonData.name, {
 	      method: 'PUT',
 	      credentials: 'same-origin',
 	      headers: {
@@ -150,7 +150,7 @@ export default class TemplateService {
 
 	  static deleteDictionary(dictionaryName) {
 	    console.log("inside templaemenu service", dictionaryName)
-	    return fetch('restservices/clds/v2/dictionary/' + dictionaryName, {
+	    return fetch(window.location.pathname + 'restservices/clds/v2/dictionary/' + dictionaryName, {
 	      method: 'DELETE',
 	      headers: {
 	        "Content-Type": "application/json",
@@ -173,7 +173,7 @@ export default class TemplateService {
 	  }
 
 	  static deleteDictionaryElements(dictionaryData) {
-	    return fetch('restservices/clds/v2/dictionary/' + dictionaryData.name + '/elements/' + dictionaryData.shortName , {
+	    return fetch(window.location.pathname + 'restservices/clds/v2/dictionary/' + dictionaryData.name + '/elements/' + dictionaryData.shortName , {
 	      method: 'DELETE',
 	      headers: {
 	        "Content-Type": "application/json",
