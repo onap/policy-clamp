@@ -58,7 +58,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "clamp-default,clamp-default-user,clamp-sdc-controller")
+@ActiveProfiles({"clamp-default","clamp-default-user","clamp-sdc-controller"})
 public class SdcSingleControllerItCase {
 
     private static final String CSAR_ARTIFACT_NAME = "testArtifact.csar";
