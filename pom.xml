@@ -76,8 +76,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<eelf.core.version>1.0.0</eelf.core.version>
-		<camel.version>2.25.0</camel.version>
-		<springboot.version>2.2.6.RELEASE</springboot.version>
+		<camel.version>2.25.2</camel.version>
+		<springboot.version>2.2.9.RELEASE</springboot.version>
 
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -327,10 +327,6 @@
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-ext</artifactId>
 				</exclusion>
-				<exclusion>
-					<groupId>com.fasterxml.jackson.core</groupId>
-					<artifactId>jackson-databind</artifactId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -437,10 +433,6 @@
 			<version>2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
@@ -510,6 +502,12 @@
 			<groupId>org.onap.sdc.sdc-tosca</groupId>
 			<artifactId>sdc-tosca</artifactId>
 			<version>1.5.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.yaml</groupId>
@@ -552,6 +550,12 @@
 			<artifactId>docker-java-core</artifactId>
 			<version>3.2.1</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.github.docker-java</groupId>
@@ -938,7 +942,7 @@
 					<apiVersion>1.35</apiVersion>
 					<images>
 						<image>
-							<name>docker.io/mariadb:10.3.12</name>
+							<name>docker.io/mariadb:10.5.4</name>
 							<alias>mariadb</alias>
 							<run>
 								<env>
@@ -952,8 +956,8 @@
 									</bind>
 								</volumes>
 								<wait>
-									<log>socket: '/var/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution</log>
-									<time>600000</time>
+									<log>socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution</log>
+									<time>300000</time>
 									<exec>
 										<preStop>/docker-entrypoint-initdb.d/dump/backup-data-only.sh</preStop>
 									</exec>

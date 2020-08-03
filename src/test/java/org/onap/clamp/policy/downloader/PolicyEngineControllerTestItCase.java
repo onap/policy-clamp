@@ -45,7 +45,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-@ActiveProfiles(profiles = "clamp-default,clamp-policy-controller")
+@ActiveProfiles({"clamp-default","clamp-policy-controller"})
 public class PolicyEngineControllerTestItCase {
 
     @Autowired
