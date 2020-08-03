@@ -457,6 +457,11 @@
 		</dependency>
 		<!-- Other dependencies to fix nexus IQ reported vulnerabilities -->
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.14</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 			<version>5.2.3.RELEASE</version>
