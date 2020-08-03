@@ -22,7 +22,7 @@
 
 export default class PolicyToscaService {
   static getToscaPolicyModels() {
-    return fetch('restservices/clds/v2/policyToscaModels', { method: 'GET', credentials: 'same-origin' })
+    return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels', { method: 'GET', credentials: 'same-origin' })
       .then(function (response) {
         console.debug("getToscaPolicyModels response received: ", response.status);
         if (response.ok) {
@@ -39,7 +39,7 @@ export default class PolicyToscaService {
   }
 
   static getToscaPolicyModelYaml(policyModelType, policyModelVersion) {
-		return fetch('/restservices/clds/v2/policyToscaModels/yaml/' + policyModelType + "/" + policyModelVersion, {
+		return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/yaml/' + policyModelType + "/" + policyModelVersion, {
 			method: 'GET',
 			credentials: 'same-origin'
 		})
@@ -59,7 +59,7 @@ export default class PolicyToscaService {
  }
 
  static getToscaPolicyModel(policyModelType, policyModelVersion) {
- 		return fetch('/restservices/clds/v2/policyToscaModels/' + policyModelType + "/" + policyModelVersion, {
+ 		return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/' + policyModelType + "/" + policyModelVersion, {
  			method: 'GET',
  			credentials: 'same-origin'
  		})
@@ -79,7 +79,7 @@ export default class PolicyToscaService {
   }
 
   static createPolicyModelFromToscaModel(jsonData) {
-       return fetch('/restservices/clds/v2/policyToscaModels', {
+       return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels', {
            method: 'POST',
            credentials: 'same-origin',
            headers: {
@@ -107,7 +107,7 @@ export default class PolicyToscaService {
      }
 
      static updatePolicyModelTosca(policyModelType, policyModelVersion, jsonData) {
-         return fetch('/restservices/clds/v2/policyToscaModels/' + policyModelType + '/' + policyModelVersion, {
+         return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/' + policyModelType + '/' + policyModelVersion, {
              method: 'PUT',
              credentials: 'same-origin',
              headers: {

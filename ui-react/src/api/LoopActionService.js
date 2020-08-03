@@ -26,7 +26,7 @@ export default class LoopActionService{
 	static performAction(cl_name, uiAction) {
 		console.info("LoopActionService perform action: " + uiAction + " closedloopName=" + cl_name);
 		const svcAction = uiAction.toLowerCase();
- 		return fetch("/restservices/clds/v2/loop/" + svcAction + "/" + cl_name, {
+ 		return fetch(window.location.pathname + "restservices/clds/v2/loop/" + svcAction + "/" + cl_name, {
  				method: 'PUT',
  				credentials: 'same-origin'
  			})
@@ -51,7 +51,7 @@ export default class LoopActionService{
 	static refreshStatus(cl_name) {
 		console.info("Refresh the status for closedloopName=" + cl_name);
 
-		return fetch("/restservices/clds/v2/loop/getstatus/" + cl_name, {
+		return fetch(window.location.pathname + "restservices/clds/v2/loop/getstatus/" + cl_name, {
 			method: 'GET',
 			credentials: 'same-origin'
 		})

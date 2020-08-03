@@ -24,7 +24,7 @@
 export default class UserService {
 	static notLoggedUserName='Anonymous';
 	static login() {
-		return fetch('/restservices/clds/v1/user/getUser', {
+		return fetch(window.location.pathname + 'restservices/clds/v1/user/getUser', {
 				method: 'GET',
 				credentials: 'same-origin'
 			})
@@ -49,7 +49,7 @@ export default class UserService {
 	}
 
 	static getUserInfo() {
-		return fetch('/restservices/clds/v2/clampInformation', {
+		return fetch(window.location.pathname + 'restservices/clds/v2/clampInformation', {
 				method: 'GET',
 				credentials: 'same-origin'
 			})

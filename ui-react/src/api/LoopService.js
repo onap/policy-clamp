@@ -22,7 +22,7 @@
 
 export default class LoopService {
 	static getLoopNames() {
-		return fetch('/restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin' })
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/getAllNames', { method: 'GET', credentials: 'same-origin' })
 			.then(function (response) {
 				console.debug("GetLoopNames response received: ", response.status);
 				if (response.ok) {
@@ -39,7 +39,7 @@ export default class LoopService {
 	}
 
 	static createLoop(loopName, templateName) {
-		return fetch('/restservices/clds/v2/loop/create/' + loopName + '?templateName=' + templateName, {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/create/' + loopName + '?templateName=' + templateName, {
 			method: 'POST',
 			headers: {
 				"Content-Type": "application/json"
@@ -57,7 +57,7 @@ export default class LoopService {
 	}
 
 	static getLoop(loopName) {
-		return fetch('/restservices/clds/v2/loop/' + loopName, {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/' + loopName, {
 			method: 'GET',
 			headers: {
 				"Content-Type": "application/json"
@@ -80,7 +80,7 @@ export default class LoopService {
 	}
 
 	static setMicroServiceProperties(loopName, jsonData) {
-		return fetch('/restservices/clds/v2/loop/updateMicroservicePolicy/' + loopName, {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/updateMicroservicePolicy/' + loopName, {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {
@@ -104,7 +104,7 @@ export default class LoopService {
 	}
 	
 	static setOperationalPolicyProperties(loopName, jsonData) {
-		return fetch('/restservices/clds/v2/loop/updateOperationalPolicies/' + loopName, {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/updateOperationalPolicies/' + loopName, {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {
@@ -128,7 +128,7 @@ export default class LoopService {
 	}
 
 	static updateGlobalProperties(loopName, jsonData) {
-		return fetch('/restservices/clds/v2/loop/updateGlobalProperties/' + loopName, {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/updateGlobalProperties/' + loopName, {
 			method: 'POST',
 			credentials: 'same-origin',
 			headers: {
@@ -152,7 +152,7 @@ export default class LoopService {
 	}
 
 	static refreshOperationalPolicyJson(loopName,operationalPolicyName) {
-		return fetch('/restservices/clds/v2/loop/refreshOperationalPolicyJsonSchema/' + loopName + '/' + operationalPolicyName, {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/refreshOperationalPolicyJsonSchema/' + loopName + '/' + operationalPolicyName, {
 			method: 'PUT',
 			headers: {
 				"Content-Type": "application/json"
@@ -175,7 +175,7 @@ export default class LoopService {
 	}
 
 		static refreshMicroServicePolicyJson(loopName,microServicePolicyName) {
-    		return fetch('/restservices/clds/v2/loop/refreshMicroServicePolicyJsonSchema/' + loopName + '/' + microServicePolicyName, {
+    		return fetch(window.location.pathname + 'restservices/clds/v2/loop/refreshMicroServicePolicyJsonSchema/' + loopName + '/' + microServicePolicyName, {
     			method: 'PUT',
     			headers: {
     				"Content-Type": "application/json"
@@ -198,7 +198,7 @@ export default class LoopService {
     }
 
 	static addOperationalPolicyType(loopName, policyType, policyVersion) {
-		return fetch('/restservices/clds/v2/loop/addOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion , {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/addOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion , {
 			method: 'PUT',
 			headers: {
 				"Content-Type": "application/json"
@@ -220,7 +220,7 @@ export default class LoopService {
 	}
 
 	static removeOperationalPolicyType(loopName, policyType, policyVersion, policyName) {
-		return fetch('/restservices/clds/v2/loop/removeOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion + '/' + policyName , {
+		return fetch(window.location.pathname + 'restservices/clds/v2/loop/removeOperationaPolicy/' + loopName + '/policyModel/' + policyType +'/' + policyVersion + '/' + policyName , {
 			method: 'PUT',
 			headers: {
 				"Content-Type": "application/json"
