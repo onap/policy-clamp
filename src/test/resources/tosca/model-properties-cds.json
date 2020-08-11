@@ -62,16 +62,19 @@
 									}
 								},
 								"resource-assignment-properties": {
-									"private1-prefix-id": {
-										"description": "",
-										"required": false,
-										"type": "string",
-										"status": "",
-										"constraints": [
-											{}
-										],
-										"entry_schema": {
-											"type": ""
+									"type": "object",
+									"properties": {
+										"private1-prefix-id": {
+											"description": "",
+											"required": false,
+											"type": "string",
+											"status": "",
+											"constraints": [
+												{}
+											],
+											"entry_schema": {
+												"type": ""
+											}
 										}
 									}
 								}

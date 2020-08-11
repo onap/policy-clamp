@@ -24,6 +24,7 @@
 package org.onap.clamp.clds.tosca.update.execution.cds;
 
 import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.TYPE;
+import static org.onap.clamp.clds.tosca.ToscaSchemaConstants.TYPE_LIST;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -108,7 +109,8 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                     obj.addProperty("title", workflowsEntry.getKey());
                     obj.add("properties",
                             createInputPropertiesForPayload(workflowsEntry.getValue().getAsJsonObject(),
-                                                            controllerProperties));
+                                                            controllerProperties,
+                                                            workflowsEntry.getKey()));
                     schemaAnyOf.add(obj);
                 }
             }
@@ -150,10 +152,12 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
      * @param workFlow cds work flows to update payload
      * @param controllerProperties cds properties to get blueprint name and
      *                            version
+     * @param workFlowName work flow name
      * @return returns the properties of payload
      */
     public static JsonObject createInputPropertiesForPayload(JsonObject workFlow,
-                                                             JsonObject controllerProperties) {
+                                                             JsonObject controllerProperties,
+                                                             String workFlowName) {
         String artifactName = controllerProperties.get("sdnc_model_name").getAsString();
         String artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
         JsonObject inputs = workFlow.getAsJsonObject("inputs");
@@ -164,32 +168,53 @@ public class ToscaMetadataCdsProcess extends ToscaMetadataProcess {
                 "artifact version", artifactVersion, true));
         jsonObject.add("mode", createAnyOfJsonProperty(
                 "mode", "async", false));
-        jsonObject.add("data", createDataProperty(inputs));
+        jsonObject.add("data", createDataProperty(inputs, workFlowName));
         return jsonObject;
     }
 
-    private static JsonObject createDataProperty(JsonObject inputs) {
+    private static JsonObject createDataProperty(JsonObject inputs, String workFlowName) {
         JsonObject data = new JsonObject();
         data.addProperty("title", "data");
         data.addProperty("type", "string");
         data.addProperty("format", "textarea");
         JsonObject defaultValue = new JsonObject();
-        addDefaultValueForData(inputs, defaultValue);
+        addDefaultValueForData(inputs, defaultValue, workFlowName);
         data.addProperty("default", defaultValue.toString());
         return data;
     }
 
     private static void addDefaultValueForData(JsonObject inputs,
-                                               JsonObject defaultValue) {
+                                               JsonObject defaultValue,
+                                               String workFlowName) {
         Set<Map.Entry<String, JsonElement>> entrySet = inputs.entrySet();
         for (Map.Entry<String, JsonElement> entry : entrySet) {
             String key = entry.getKey();
             JsonObject inputProperty = inputs.getAsJsonObject(key);
-            if (inputProperty.get(TYPE) == null) {
-                addDefaultValueForData(entry.getValue().getAsJsonObject(), defaultValue);
+            if (key.equalsIgnoreCase(workFlowName + "-properties")) {
+                addDefaultValueForData(entry.getValue().getAsJsonObject().get("properties")
+                        .getAsJsonObject(), defaultValue, workFlowName);
+            } else if ("object".equalsIgnoreCase(inputProperty.get(TYPE).getAsString())) {
+                JsonObject object = new JsonObject();
+                addDefaultValueForData(entry.getValue().getAsJsonObject().get("properties")
+                        .getAsJsonObject(), object, workFlowName);
+                defaultValue.add(entry.getKey(), object);
+            } else if (TYPE_LIST.equalsIgnoreCase(inputProperty.get(TYPE).getAsString())) {
+                defaultValue.add(entry.getKey(), handleListType(entry.getValue().getAsJsonObject(), workFlowName));
             } else {
                 defaultValue.addProperty(entry.getKey(), "");
             }
         }
+    }
+
+    private static JsonArray handleListType(JsonObject inputs,
+                                            String workFlowName) {
+
+        JsonObject object = new JsonObject();
+        if (inputs.get("properties") != null) {
+            addDefaultValueForData(inputs.get("properties").getAsJsonObject(), object, workFlowName);
+        }
+        JsonArray arr = new JsonArray();
+        arr.add(object);
+        return arr;
     }
 }

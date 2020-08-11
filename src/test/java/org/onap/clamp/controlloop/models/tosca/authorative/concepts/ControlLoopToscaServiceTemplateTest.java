@@ -20,14 +20,15 @@
 
 package org.onap.clamp.controlloop.models.tosca.authorative.concepts;
 
-import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
 
 public class ControlLoopToscaServiceTemplateTest {
 
-  @Test
-  public void testClassDef() {
-    ControlLoopToscaServiceTemplate serviceTemplate = new ControlLoopToscaServiceTemplate();
-    assertNotNull("ControlLoopToscaServiceTemplate is Not null", serviceTemplate);
-  }
+    @Test
+    public void testClassDef() {
+        ControlLoopToscaServiceTemplate serviceTemplate = new ControlLoopToscaServiceTemplate();
+        assertNotNull("ControlLoopToscaServiceTemplate is Not null", serviceTemplate);
+    }
 }

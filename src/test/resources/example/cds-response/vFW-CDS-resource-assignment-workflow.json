@@ -45,6 +45,7 @@
           "description": "",
           "required": false,
           "type": "string",
+          "input-param": true,
           "status": "",
           "constraints": [
             {}
@@ -64,6 +65,7 @@
           "description": "",
           "required": false,
           "type": "string",
+          "input-param": true,
           "status": "",
           "constraints": [
             {}

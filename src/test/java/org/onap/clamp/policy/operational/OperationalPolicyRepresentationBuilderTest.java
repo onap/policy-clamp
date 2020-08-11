@@ -37,8 +37,8 @@ public class OperationalPolicyRepresentationBuilderTest {
 
     @Test
     public void testOperationalPolicyPayloadConstruction() throws IOException {
-        JsonObject jsonModel = new GsonBuilder().create()
-                .fromJson(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"), JsonObject.class);
+        JsonObject jsonModel = new GsonBuilder().create().fromJson(ResourceFileUtil
+                .getResourceAsString("tosca/model-properties-operational-policy.json"), JsonObject.class);
         Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
                 jsonModel.get("resourceDetails").getAsJsonObject(), "1.0");
 

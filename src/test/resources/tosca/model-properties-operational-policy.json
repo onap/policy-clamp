@@ -78,7 +78,7 @@
 						},
 						"activate": {
 							"inputs": {
-								"resource-assignment-properties": {
+								"activate-properties": {
 									"type": "object",
 									"properties": {
 										"request-id": {
@@ -117,7 +117,7 @@
 						},
 						"activate-restconf": {
 							"inputs": {
-								"resource-assignment-properties": {
+								"activate-restconf-properties": {
 									"type": "object",
 									"properties": {
 										"request-id": {
@@ -156,7 +156,7 @@
 						},
 						"activate-cli": {
 							"inputs": {
-								"resource-assignment-properties": {
+								"activate-cli-properties": {
 									"type": "object",
 									"properties": {
 										"request-id": {
@@ -195,7 +195,7 @@
 						},
 						"assign-activate": {
 							"inputs": {
-								"resource-assignment-properties": {
+								"assign-activate-properties": {
 									"type": "object",
 									"properties": {
 										"request-id": {
@@ -234,7 +234,7 @@
 						},
 						"imperative-test-wf": {
 							"inputs": {
-								"resource-assignment-properties": {
+								"imperative-test-wf-properties": {
 									"type": "object",
 									"properties": {
 										"request-id": {
