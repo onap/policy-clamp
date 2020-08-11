@@ -53,6 +53,8 @@ public class OperationalPolicyRepresentationBuilder {
     public static final String STRING = "string";
     public static final String TYPE = "type";
     public static final String TYPE_LIST = "list";
+    public static final String TYPE_OBJECT = "object";
+    public static final String TYPE_ARRAY = "array";
 
     private OperationalPolicyRepresentationBuilder() {
     	throw new IllegalStateException("This is Utility class, not supposed to be initiated.");
@@ -240,8 +242,8 @@ public class OperationalPolicyRepresentationBuilder {
         JsonObject payload = new JsonObject();
         payload.addProperty(TITLE, "Payload");
         payload.addProperty(TYPE, "object");
-        payload.add(PROPERTIES, createInputPropertiesForPayload(workFlow,
-                                                                  controllerProperties));
+        payload.add(PROPERTIES, createInputPropertiesForPayload(workFlow, controllerProperties,
+                                                                workFlowName));
         JsonObject properties = new JsonObject();
         properties.add(RECIPE, createRecipeForCdsWorkflow(workFlowName));
         properties.add("payload", payload);
@@ -265,10 +267,12 @@ public class OperationalPolicyRepresentationBuilder {
      * @param workFlow             cds work flows to update payload
      * @param controllerProperties cds properties to get blueprint name and
      *                             version
+     * @param workFlowName         work flow name
      * @return returns the properties of payload
      */
     public static JsonObject createInputPropertiesForPayload(JsonObject workFlow,
-                                                             JsonObject controllerProperties) {
+                                                             JsonObject controllerProperties,
+                                                             String workFlowName) {
         String artifactName = controllerProperties.get("sdnc_model_name").getAsString();
         String artifactVersion = controllerProperties.get("sdnc_model_version").getAsString();
         JsonObject inputs = workFlow.getAsJsonObject("inputs");
@@ -279,33 +283,33 @@ public class OperationalPolicyRepresentationBuilder {
                 "artifact version", STRING, artifactVersion, "True", null));
         jsonObject.add("mode", createCdsInputProperty(
                 "mode", STRING, "async" ,null));
-        jsonObject.add("data", createDataProperty(inputs));
+        jsonObject.add("data", createDataProperty(inputs, workFlowName));
         return jsonObject;
     }
 
-    private static JsonObject createDataProperty(JsonObject inputs) {
+    private static JsonObject createDataProperty(JsonObject inputs, String workflowName) {
         JsonObject data = new JsonObject();
         data.addProperty(TITLE, "data");
         JsonObject dataObj = new JsonObject();
-        addDataFields(inputs, dataObj);
+        addDataFields(inputs, dataObj, workflowName);
         data.add(PROPERTIES, dataObj);
         return data;
     }
 
     private static void addDataFields(JsonObject inputs,
-                                      JsonObject dataObj) {
+                                      JsonObject dataObj,
+                                      String workFlowName) {
         Set<Map.Entry<String, JsonElement>> entrySet = inputs.entrySet();
         for (Map.Entry<String, JsonElement> entry : entrySet) {
             String key = entry.getKey();
             JsonObject inputProperty = inputs.getAsJsonObject(key);
-            if (inputProperty.get(TYPE) == null) {
-                addDataFields(entry.getValue().getAsJsonObject(), dataObj);
+            if (key.equalsIgnoreCase(workFlowName + "-properties")) {
+                addDataFields(entry.getValue().getAsJsonObject().get("properties").getAsJsonObject(),
+                        dataObj, workFlowName);
             } else {
                 dataObj.add(entry.getKey(),
-                            createCdsInputProperty(key,
-                                                   inputProperty.get(TYPE).getAsString(),
-                                                   null,
-                                                   entry.getValue().getAsJsonObject()));
+                        createCdsInputProperty(key, inputProperty.get(TYPE).getAsString(),null,
+                                entry.getValue().getAsJsonObject()));
             }
         }
     }
@@ -318,15 +322,15 @@ public class OperationalPolicyRepresentationBuilder {
         property.addProperty(TITLE, title);
 
         if (TYPE_LIST.equalsIgnoreCase(type)) {
-            property.addProperty(TYPE, "array");
+            property.addProperty(TYPE, TYPE_ARRAY);
             if (cdsProperty != null && cdsProperty.get(PROPERTIES) != null) {
-                JsonObject dataObject = new JsonObject();
-                addDataFields(cdsProperty.get(PROPERTIES).getAsJsonObject(),
-                              dataObject);
                 JsonObject listProperties = new JsonObject();
-                listProperties.add(PROPERTIES, dataObject);
+                listProperties.add(PROPERTIES, getProperties(cdsProperty.get(PROPERTIES).getAsJsonObject()));
                 property.add(ITEMS, listProperties);
             }
+        } else if (TYPE_OBJECT.equalsIgnoreCase(type)) {
+            property.addProperty(TYPE, TYPE_OBJECT);
+            property.add(PROPERTIES, getProperties(cdsProperty.get(PROPERTIES).getAsJsonObject()));
         } else {
             property.addProperty(TYPE, type);
         }
@@ -335,5 +339,14 @@ public class OperationalPolicyRepresentationBuilder {
             property.addProperty(DEFAULT, defaultValue);
         }
         return property;
+    }
+
+    private static JsonObject getProperties(JsonObject inputProperties) {
+        if (inputProperties == null) {
+            return null;
+        }
+        JsonObject dataObject = new JsonObject();
+        addDataFields(inputProperties, dataObject, null);
+        return dataObject;
     }
 }

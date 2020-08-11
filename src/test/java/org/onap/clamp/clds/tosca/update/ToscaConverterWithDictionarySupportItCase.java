@@ -128,7 +128,7 @@ public class ToscaConverterWithDictionarySupportItCase {
     @Transactional
     public final void testMetadataClampPossibleValueWithExecutor() throws IOException, UnknownComponentException {
         Service service = new Service(ResourceFileUtil.getResourceAsString("tosca/service-details.json"),
-                ResourceFileUtil.getResourceAsString("tosca/resource-details.json"));
+                ResourceFileUtil.getResourceAsString("tosca/resource-details-cds.json"));
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
                         ResourceFileUtil.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"

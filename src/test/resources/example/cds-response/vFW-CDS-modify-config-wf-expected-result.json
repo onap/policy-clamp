@@ -1,57 +1,29 @@
 {
   "inputs": {
-    "resolution-key": {
-      "required": true,
-      "type": "string"
-    },
     "modify-config-properties": {
-      "vpg_onap_private_ip_0": {
-        "description": "",
-        "required": false,
-        "type": "string",
-        "status": "",
-        "constraints": [
-          {}
-        ],
-        "entry_schema": {
-          "type": ""
+      "type": "object",
+      "properties": {
+        "service-instance-id": {
+          "type": "string",
+          "input-param": true
+        },
+        "update-active-streams": {
+          "description": "",
+          "required": false,
+          "type": "string",
+          "input-param": true,
+          "status": "",
+          "constraints": [
+            {}
+          ],
+          "entry_schema": {
+            "type": "dt-data"
+          }
+        },
+        "generic-vnf.vnf-id": {
+          "type": "string",
+          "input-param": true
         }
-      },
-      "service-instance.service-instance-id": {
-        "type": "string"
-      },
-      "vnf-id": {
-        "type": "string"
-      },
-      "data": {
-        "description": "",
-        "required": false,
-        "type": "string",
-        "status": "",
-        "constraints": [
-          {}
-        ],
-        "entry_schema": {
-          "type": "dt-data"
-        }
-      },
-      "service-instance-id": {
-        "type": "string"
-      },
-      "update-active-streams": {
-        "description": "",
-        "required": false,
-        "type": "string",
-        "status": "",
-        "constraints": [
-          {}
-        ],
-        "entry_schema": {
-          "type": "dt-data"
-        }
-      },
-      "generic-vnf.vnf-id": {
-        "type": "string"
       }
     }
   }

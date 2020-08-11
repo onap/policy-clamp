@@ -24,33 +24,38 @@
 						"resource-assignment": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": {
-										"type": "string",
-										"required": true
-									},
-									"service-instance-id": {
-										"type": "string",
-										"required": true
-									},
-									"vnf-id": {
-										"type": "string",
-										"required": true
-									},
-									"action-name": {
-										"type": "string",
-										"required": true
-									},
-									"scope-type": {
-										"type": "string",
-										"required": true
-									},
-									"hostname": {
-										"type": "string",
-										"required": true
-									},
-									"vnf_name": {
-										"type": "string",
-										"required": true
+									"type": "object",
+									"properties": {
+										"request-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"service-instance-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"hostname": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"request-info": {
+											"type": "object",
+											"properties": {
+												"prop1": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												},
+												"prop2": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												}
+											}
+										}
 									}
 								}
 							}
@@ -58,33 +63,38 @@
 						"activate": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": {
-										"type": "string",
-										"required": true
-									},
-									"service-instance-id": {
-										"type": "string",
-										"required": true
-									},
-									"vnf-id": {
-										"type": "string",
-										"required": true
-									},
-									"action-name": {
-										"type": "string",
-										"required": true
-									},
-									"scope-type": {
-										"type": "string",
-										"required": true
-									},
-									"hostname": {
-										"type": "string",
-										"required": true
-									},
-									"vnf_name": {
-										"type": "string",
-										"required": true
+									"type": "object",
+									"properties": {
+										"request-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"service-instance-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"hostname": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"request-info": {
+											"type": "object",
+											"properties": {
+												"prop1": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												},
+												"prop2": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												}
+											}
+										}
 									}
 								}
 							}
@@ -92,33 +102,38 @@
 						"activate-restconf": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": {
-										"type": "string",
-										"required": true
-									},
-									"service-instance-id": {
-										"type": "string",
-										"required": true
-									},
-									"vnf-id": {
-										"type": "string",
-										"required": true
-									},
-									"action-name": {
-										"type": "string",
-										"required": true
-									},
-									"scope-type": {
-										"type": "string",
-										"required": true
-									},
-									"hostname": {
-										"type": "string",
-										"required": true
-									},
-									"vnf_name": {
-										"type": "string",
-										"required": true
+									"type": "object",
+									"properties": {
+										"request-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"service-instance-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"hostname": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"request-info": {
+											"type": "object",
+											"properties": {
+												"prop1": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												},
+												"prop2": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												}
+											}
+										}
 									}
 								}
 							}
@@ -126,33 +141,38 @@
 						"activate-cli": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": {
-										"type": "string",
-										"required": true
-									},
-									"service-instance-id": {
-										"type": "string",
-										"required": true
-									},
-									"vnf-id": {
-										"type": "string",
-										"required": true
-									},
-									"action-name": {
-										"type": "string",
-										"required": true
-									},
-									"scope-type": {
-										"type": "string",
-										"required": true
-									},
-									"hostname": {
-										"type": "string",
-										"required": true
-									},
-									"vnf_name": {
-										"type": "string",
-										"required": true
+									"type": "object",
+									"properties": {
+										"request-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"service-instance-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"hostname": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"request-info": {
+											"type": "object",
+											"properties": {
+												"prop1": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												},
+												"prop2": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												}
+											}
+										}
 									}
 								}
 							}
@@ -160,33 +180,38 @@
 						"assign-activate": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": {
-										"type": "string",
-										"required": true
-									},
-									"service-instance-id": {
-										"type": "string",
-										"required": true
-									},
-									"vnf-id": {
-										"type": "string",
-										"required": true
-									},
-									"action-name": {
-										"type": "string",
-										"required": true
-									},
-									"scope-type": {
-										"type": "string",
-										"required": true
-									},
-									"hostname": {
-										"type": "string",
-										"required": true
-									},
-									"vnf_name": {
-										"type": "string",
-										"required": true
+									"type": "object",
+									"properties": {
+										"request-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"service-instance-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"hostname": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"request-info": {
+											"type": "object",
+											"properties": {
+												"prop1": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												},
+												"prop2": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												}
+											}
+										}
 									}
 								}
 							}
@@ -194,33 +219,38 @@
 						"imperative-test-wf": {
 							"inputs": {
 								"resource-assignment-properties": {
-									"request-id": {
-										"type": "string",
-										"required": true
-									},
-									"service-instance-id": {
-										"type": "string",
-										"required": true
-									},
-									"vnf-id": {
-										"type": "string",
-										"required": true
-									},
-									"action-name": {
-										"type": "string",
-										"required": true
-									},
-									"scope-type": {
-										"type": "string",
-										"required": true
-									},
-									"hostname": {
-										"type": "string",
-										"required": true
-									},
-									"vnf_name": {
-										"type": "string",
-										"required": true
+									"type": "object",
+									"properties": {
+										"request-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"service-instance-id": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"hostname": {
+											"type": "string",
+											"required": true,
+											"input-param": true
+										},
+										"request-info": {
+											"type": "object",
+											"properties": {
+												"prop1": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												},
+												"prop2": {
+													"required": true,
+													"type": "string",
+													"input-param": true
+												}
+											}
+										}
 									}
 								}
 							}

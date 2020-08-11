@@ -34,11 +34,13 @@
             "properties": {
                 "request-id": {
                     "required": true,
-                    "type": "string"
+                    "type": "string",
+                    "input-param": true
                 },
                 "service-instance-id": {
                     "required": true,
-                    "type": "string"
+                    "type": "string",
+                    "input-param": true
                 },
                 "vnf-id": {
                     "required": true,
@@ -54,11 +56,37 @@
                 },
                 "hostname": {
                     "required": true,
-                    "type": "string"
+                    "type": "string",
+                    "input-param": true
+                },
+                "request-info": {
+                    "required": true,
+                    "type": "dt-request-info-properties",
+                    "input-param": true
                 },
                 "vnf_name": {
                     "required": true,
                     "type": "string"
+                }
+            },
+            "constraints": null,
+            "derived_from": "tosca.datatypes.Dynamic"
+        },
+        "dt-request-info-properties": {
+            "description": "This is Dynamically generated data type for workflow activate",
+            "version": "1.0.0",
+            "metadata": null,
+            "attributes": null,
+            "properties": {
+                "prop1": {
+                    "required": true,
+                    "type": "string",
+                    "input-param": true
+                },
+                "prop2": {
+                    "required": true,
+                    "type": "string",
+                    "input-param": true
                 }
             },
             "constraints": null,

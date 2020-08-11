@@ -22,6 +22,8 @@
 
 package org.onap.clamp.clds.client;
 
+import static java.lang.Boolean.parseBoolean;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonElement;
@@ -51,6 +53,10 @@ public class CdsServices {
     CamelContext camelContext;
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(CdsServices.class);
+
+    private static final String TYPE = "type";
+    private static final String PROPERTIES = "properties";
+    private static final String LIST = "list";
 
     /**
      * Constructor.
@@ -129,53 +135,78 @@ public class CdsServices {
         JsonObject dataTypes = root.getAsJsonObject("dataTypes");
 
         JsonObject workFlowProperties = new JsonObject();
-        workFlowProperties.add("inputs", getInputProperties(inputs, dataTypes));
+        workFlowProperties.add("inputs", getInputProperties(inputs, dataTypes, new JsonObject()));
         return workFlowProperties;
     }
 
-    private JsonObject getInputProperties(JsonObject inputs, JsonObject dataTypes) {
-        JsonObject inputObject = new JsonObject();
+    private JsonObject getInputProperties(JsonObject inputs, JsonObject dataTypes,
+                                          JsonObject inputObject) {
+        if (inputs == null) {
+            return inputObject;
+        }
+
         for (Map.Entry<String, JsonElement> entry : inputs.entrySet()) {
             String key = entry.getKey();
             JsonObject inputProperty = inputs.getAsJsonObject(key);
-            String type = inputProperty.get("type").getAsString();
+            String type = inputProperty.get(TYPE).getAsString();
             if (isComplexType(type, dataTypes)) {
                 inputObject.add(key, handleComplexType(type, dataTypes));
-            } else if (type.equalsIgnoreCase("list")) {
-                inputObject.add(key, handleListType(key, inputProperty,
-                                                    dataTypes));
-            } else {
+            } else if (LIST.equalsIgnoreCase(type)) {
+                handleListType(key, inputProperty, dataTypes, inputObject);
+            } else if (isInputParam(inputProperty)) {
                 inputObject.add(key, entry.getValue());
             }
         }
         return inputObject;
     }
 
-    private JsonObject handleListType(String propertyName,
+    private void handleListType(String propertyName,
                                       JsonObject inputProperty,
-                                      JsonObject dataTypes) {
-        if (inputProperty.get("entry_schema") != null) {
-            String type = inputProperty.get("entry_schema").getAsJsonObject().get(
-                            "type").getAsString();
-            if (dataTypes.get(type) != null) {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("type", "list");
-                jsonObject.add("properties", handleComplexType(type, dataTypes));
-                return jsonObject;
-            } else {
-                return inputProperty;
-            }
+                                      JsonObject dataTypes,
+                                      JsonObject inputObject) {
+        if (inputProperty.get("entry_schema") == null) {
+            throw new CdsParametersException("Entry schema is null for " + propertyName);
         }
-        throw new CdsParametersException("Entry schema is null for " + propertyName);
+
+        String type = inputProperty.get("entry_schema").getAsJsonObject().get(
+                TYPE).getAsString();
+        if (dataTypes.get(type) != null) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(TYPE, LIST);
+            jsonObject.add(PROPERTIES, getPropertiesObject(type, dataTypes));
+            inputObject.add(propertyName, jsonObject);
+        } else if (isInputParam(inputProperty)) {
+            inputObject.add(propertyName, inputProperty);
+        }
     }
 
     private JsonObject handleComplexType(String key, JsonObject dataTypes) {
-        JsonObject properties = dataTypes.get(key).getAsJsonObject().get("properties").getAsJsonObject();
-        return getInputProperties(properties, dataTypes);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(TYPE, "object");
+        jsonObject.add(PROPERTIES, getPropertiesObject(key, dataTypes));
+        return jsonObject;
+    }
+
+    private JsonObject getPropertiesObject(String key, JsonObject dataTypes) {
+        JsonObject properties = dataTypes.get(key).getAsJsonObject().get(PROPERTIES).getAsJsonObject();
+        JsonObject object = new JsonObject();
+        getInputProperties(properties, dataTypes, object);
+        return object;
     }
 
     private boolean isComplexType(String type, JsonObject dataTypes) {
+        if (dataTypes == null) {
+            return false;
+        }
         return dataTypes.get(type) != null;
+    }
+
+    private boolean isInputParam(JsonObject inputProperty) {
+        JsonElement inputParam = inputProperty.get("input-param");
+        if (inputParam == null) {
+            return false;
+        }
+        return parseBoolean(inputParam.getAsString());
     }
 
     /**

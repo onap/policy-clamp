@@ -51,12 +51,14 @@
           }
         },
         "service-instance-id": {
-          "type": "string"
+          "type": "string",
+          "input-param": true
         },
         "update-active-streams": {
           "description": "",
           "required": false,
           "type": "string",
+          "input-param": true,
           "status": "",
           "constraints": [
             {}
@@ -66,7 +68,8 @@
           }
         },
         "generic-vnf.vnf-id": {
-          "type": "string"
+          "type": "string",
+          "input-param": true
         }
       },
       "derived_from": "tosca.datatypes.Dynamic"

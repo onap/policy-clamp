@@ -288,25 +288,23 @@
                                         "title": "service-instance-id",
                                         "type": "string"
                                       },
-                                      "vnf-id": {
-                                        "title": "vnf-id",
-                                        "type": "string"
-                                      },
-                                      "action-name": {
-                                        "title": "action-name",
-                                        "type": "string"
-                                      },
-                                      "scope-type": {
-                                        "title": "scope-type",
-                                        "type": "string"
-                                      },
                                       "hostname": {
                                         "title": "hostname",
                                         "type": "string"
                                       },
-                                      "vnf_name": {
-                                        "title": "vnf_name",
-                                        "type": "string"
+                                      "request-info": {
+                                        "title": "request-info",
+                                        "type": "object",
+                                        "properties": {
+                                          "prop1": {
+                                            "title": "prop1",
+                                            "type": "string"
+                                          },
+                                          "prop2": {
+                                            "title": "prop2",
+                                            "type": "string"
+                                          }
+                                        }
                                       }
                                     }
                                   }
@@ -358,25 +356,23 @@
                                         "title": "service-instance-id",
                                         "type": "string"
                                       },
-                                      "vnf-id": {
-                                        "title": "vnf-id",
-                                        "type": "string"
-                                      },
-                                      "action-name": {
-                                        "title": "action-name",
-                                        "type": "string"
-                                      },
-                                      "scope-type": {
-                                        "title": "scope-type",
-                                        "type": "string"
-                                      },
                                       "hostname": {
                                         "title": "hostname",
                                         "type": "string"
                                       },
-                                      "vnf_name": {
-                                        "title": "vnf_name",
-                                        "type": "string"
+                                      "request-info": {
+                                        "title": "request-info",
+                                        "type": "object",
+                                        "properties": {
+                                          "prop1": {
+                                            "title": "prop1",
+                                            "type": "string"
+                                          },
+                                          "prop2": {
+                                            "title": "prop2",
+                                            "type": "string"
+                                          }
+                                        }
                                       }
                                     }
                                   }
@@ -428,25 +424,23 @@
                                         "title": "service-instance-id",
                                         "type": "string"
                                       },
-                                      "vnf-id": {
-                                        "title": "vnf-id",
-                                        "type": "string"
-                                      },
-                                      "action-name": {
-                                        "title": "action-name",
-                                        "type": "string"
-                                      },
-                                      "scope-type": {
-                                        "title": "scope-type",
-                                        "type": "string"
-                                      },
                                       "hostname": {
                                         "title": "hostname",
                                         "type": "string"
                                       },
-                                      "vnf_name": {
-                                        "title": "vnf_name",
-                                        "type": "string"
+                                      "request-info": {
+                                        "title": "request-info",
+                                        "type": "object",
+                                        "properties": {
+                                          "prop1": {
+                                            "title": "prop1",
+                                            "type": "string"
+                                          },
+                                          "prop2": {
+                                            "title": "prop2",
+                                            "type": "string"
+                                          }
+                                        }
                                       }
                                     }
                                   }
@@ -498,25 +492,23 @@
                                         "title": "service-instance-id",
                                         "type": "string"
                                       },
-                                      "vnf-id": {
-                                        "title": "vnf-id",
-                                        "type": "string"
-                                      },
-                                      "action-name": {
-                                        "title": "action-name",
-                                        "type": "string"
-                                      },
-                                      "scope-type": {
-                                        "title": "scope-type",
-                                        "type": "string"
-                                      },
                                       "hostname": {
                                         "title": "hostname",
                                         "type": "string"
                                       },
-                                      "vnf_name": {
-                                        "title": "vnf_name",
-                                        "type": "string"
+                                      "request-info": {
+                                        "title": "request-info",
+                                        "type": "object",
+                                        "properties": {
+                                          "prop1": {
+                                            "title": "prop1",
+                                            "type": "string"
+                                          },
+                                          "prop2": {
+                                            "title": "prop2",
+                                            "type": "string"
+                                          }
+                                        }
                                       }
                                     }
                                   }
@@ -568,25 +560,23 @@
                                         "title": "service-instance-id",
                                         "type": "string"
                                       },
-                                      "vnf-id": {
-                                        "title": "vnf-id",
-                                        "type": "string"
-                                      },
-                                      "action-name": {
-                                        "title": "action-name",
-                                        "type": "string"
-                                      },
-                                      "scope-type": {
-                                        "title": "scope-type",
-                                        "type": "string"
-                                      },
                                       "hostname": {
                                         "title": "hostname",
                                         "type": "string"
                                       },
-                                      "vnf_name": {
-                                        "title": "vnf_name",
-                                        "type": "string"
+                                      "request-info": {
+                                        "title": "request-info",
+                                        "type": "object",
+                                        "properties": {
+                                          "prop1": {
+                                            "title": "prop1",
+                                            "type": "string"
+                                          },
+                                          "prop2": {
+                                            "title": "prop2",
+                                            "type": "string"
+                                          }
+                                        }
                                       }
                                     }
                                   }
@@ -638,25 +628,23 @@
                                         "title": "service-instance-id",
                                         "type": "string"
                                       },
-                                      "vnf-id": {
-                                        "title": "vnf-id",
-                                        "type": "string"
-                                      },
-                                      "action-name": {
-                                        "title": "action-name",
-                                        "type": "string"
-                                      },
-                                      "scope-type": {
-                                        "title": "scope-type",
-                                        "type": "string"
-                                      },
                                       "hostname": {
                                         "title": "hostname",
                                         "type": "string"
                                       },
-                                      "vnf_name": {
-                                        "title": "vnf_name",
-                                        "type": "string"
+                                      "request-info": {
+                                        "title": "request-info",
+                                        "type": "object",
+                                        "properties": {
+                                          "prop1": {
+                                            "title": "prop1",
+                                            "type": "string"
+                                          },
+                                          "prop2": {
+                                            "title": "prop2",
+                                            "type": "string"
+                                          }
+                                        }
                                       }
                                     }
                                   }
