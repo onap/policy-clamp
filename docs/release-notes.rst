@@ -6,6 +6,48 @@
 Release Notes
 =============
 
+Version: 5.0.7 (Frankfurt maintenance release tag 6.0.0)
+--------------------------------------------------------
+
+:Release Date: 2020-08-17
+
+**Bug Fixes**
+
+	- `CLAMP-878 <https://jira.onap.org/browse/CLAMP-885>`_ Clamp backend pod fails with mariaDB server error
+	- `CLAMP-885 <https://jira.onap.org/browse/CLAMP-885>`_ CLAMP update documentation
+
+**Known Issues**
+    - `CLAMP-856 <https://jira.onap.org/browse/CLAMP-856>`_ CLAMP should not display all CDS workflow properties
+    - Other more minor issues are captured in the following page:`CLAMP known Frankfurt issues <https://wiki.onap.org/display/DW/CLAMP+R6+-+Frankfurt+known+issues%28bugs%29+-+to+be+solved+in+futur+Releases>`_
+
+**Security Notes**
+
+N/A
+
+*Fixed Security Issues*
+
+*Known Security Issues*
+
+*Known Vulnerabilities in Used Modules*
+
+CLAMP code has been formally scanned during build time using NexusIQ and all Critical vulnerabilities have been addressed, items that remain open have been assessed for risk and actions to be taken in future release.
+
+Quick Links:
+ 	- `CLAMP project page <https://wiki.onap.org/display/DW/CLAMP+Project>`_
+ 	- `Passing Badge information for CLAMP <https://bestpractices.coreinfrastructure.org/en/projects/1197>`_
+
+**Upgrade Notes**
+
+    - The Upgrade strategy for Frankfurt can be found here:`<https://wiki.onap.org/display/DW/Frankfurt+CLAMP+Container+upgrade+strategy>`_
+    - New Docker Containers are available. the list of containers composing this release are below:
+
+       - clamp-backend-filebeat-onap: docker.elastic.co/beats/filebeat 5.5.0
+       - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.7
+       - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.7
+       - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.3
+       - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.3
+       - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
+
 Version: 5.0.1 (Frankfurt)
 --------------------------
 
@@ -34,7 +76,6 @@ The main goal of the Frankfurt release was to:
 
 **Known Issues**
     - `CLAMP-856 <https://jira.onap.org/browse/CLAMP-856>`_ CLAMP should not display all CDS workflow properties
-    - Other more minor issues are captured in the following page:`CLAMP known Frankfurt issues <https://wiki.onap.org/display/DW/CLAMP+R6+-+Frankfurt+known+issues%28bugs%29+-+to+be+solved+in+futur+Releases>`_
 
 **Security Notes**
 
@@ -55,13 +96,12 @@ Quick Links:
 
     - The Upgrade strategy for Frankfurt can be found here:`<https://wiki.onap.org/display/DW/Frankfurt+CLAMP+Container+upgrade+strategy>`_
     - New Docker Containers are available. the list of containers composing this release are below:
-
-       - clamp-backend-filebeat-onap: docker.elastic.co/beats/filebeat 5.5.0
-       - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.7
-       - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.7
-       - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.3
-       - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.3
-       - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
+      - clamp-backend-filebeat-onap: docker.elastic.co/beats/filebeat 5.5.0
+      - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.0.6
+      - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.0.6
+      - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.3
+      - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.3
+      - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.3
 
 
 Version: 4.1.3 (El-Alto)
