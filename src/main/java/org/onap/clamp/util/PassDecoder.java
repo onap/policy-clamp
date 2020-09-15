@@ -24,12 +24,10 @@ package org.onap.clamp.util;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.onap.aaf.cadi.Symm;
 import org.onap.clamp.clds.util.ResourceFileUtils;
 
