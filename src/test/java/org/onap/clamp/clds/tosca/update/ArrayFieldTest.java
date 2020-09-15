@@ -31,7 +31,7 @@ import org.onap.clamp.clds.tosca.update.elements.ArrayField;
 import org.onap.clamp.clds.tosca.update.elements.ToscaElement;
 import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 
 public class ArrayFieldTest extends TestCase {
 
@@ -41,10 +41,10 @@ public class ArrayFieldTest extends TestCase {
      * @throws IOException in case of failure
      */
     public void testDeploy() throws IOException {
-        JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(ResourceFileUtil.getResourceAsString(
-                "tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),ResourceFileUtil.getResourceAsString(
+        JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(ResourceFileUtils.getResourceAsString(
+                "tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"), ResourceFileUtils.getResourceAsString(
                 "clds/tosca-converter/default-tosca-types.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Actor");
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("actor");
         ArrayField arrayParser = new ArrayField((ArrayList<Object>) toscaElementProperty.getItems().get("default"));

@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.util.Random;
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.log.LogType;
 import org.onap.clamp.loop.log.LoopLog;
 import org.onap.clamp.loop.service.Service;
@@ -111,7 +111,7 @@ public class LoopToJsonTest {
         Loop loopTest = getLoop("ControlLoopTest", "yamlcontent", "{\"testname\":\"testvalue\"}",
                 "123456789", "https://dcaetest.org", "UUID-blueprint");
         OperationalPolicy opPolicy = this.getOperationalPolicy(
-                ResourceFileUtil.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
+                ResourceFileUtils.getResourceAsString("tosca/operational-policy-properties.json"), "GuardOpPolicyTest");
         loopTest.addOperationalPolicy(opPolicy);
         MicroServicePolicy microServicePolicy = getMicroServicePolicy("configPolicyTest", "",
                 "{\"configtype\":\"json\"}", "tosca_definitions_version: tosca_simple_yaml_1_0_0",
@@ -156,7 +156,7 @@ public class LoopToJsonTest {
                 "123456789", "https://dcaetest.org", "UUID-blueprint");
 
         JsonObject jsonModel = new GsonBuilder().create()
-                .fromJson(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"), JsonObject.class);
+                .fromJson(ResourceFileUtils.getResourceAsString("tosca/model-properties.json"), JsonObject.class);
         Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
                 jsonModel.get("resourceDetails").getAsJsonObject(), "1.0");
         loopTest2.setModelService(service);

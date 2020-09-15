@@ -32,7 +32,7 @@ import org.apache.camel.Message;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.config.LegacyOperationalPolicyController;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.components.external.ExternalComponentState;
 import org.onap.clamp.loop.components.external.PolicyComponent;
 import org.onap.clamp.loop.template.LoopTemplate;
@@ -290,7 +290,7 @@ public class PolicyComponentTest {
         loopTest.setLoopTemplate(loopTemplate);
 
         String payload = PolicyComponent.createPoliciesPayloadPdpGroup(loopTest, "POST");
-        String expectedRes = ResourceFileUtil.getResourceAsString("tosca/pdp-group-policy-payload.json");
+        String expectedRes = ResourceFileUtils.getResourceAsString("tosca/pdp-group-policy-payload.json");
 
         assertThat(payload).isEqualTo(expectedRes);
     }

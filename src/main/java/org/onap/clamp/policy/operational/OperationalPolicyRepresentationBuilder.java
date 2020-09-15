@@ -36,7 +36,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.service.Service;
 
 public class OperationalPolicyRepresentationBuilder {
@@ -74,7 +74,7 @@ public class OperationalPolicyRepresentationBuilder {
         JsonObject jsonSchema = null;
         try {
             jsonSchema = JsonUtils.GSON.fromJson(
-                    ResourceFileUtil
+                    ResourceFileUtils
                             .getResourceAsString("clds/json-schema/operational_policies/operational_policy.json"),
                     JsonObject.class);
             jsonSchema.get(PROPERTIES).getAsJsonObject()

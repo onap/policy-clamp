@@ -33,7 +33,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.Loop;
 import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.LoopTemplate;
@@ -56,7 +56,7 @@ public class BlueprintInputParametersTest {
         Mockito.when(umService1.getName()).thenReturn("testName1");
 
         LoopElementModel loopElement = Mockito.mock(LoopElementModel.class);
-        String blueprint1 = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml");
+        String blueprint1 = ResourceFileUtils.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml");
         Mockito.when(loopElement.getBlueprint()).thenReturn(blueprint1);
         Mockito.when(umService1.getLoopElementModel()).thenReturn(loopElement);
 
@@ -64,7 +64,7 @@ public class BlueprintInputParametersTest {
         Mockito.when(umService2.getName()).thenReturn("testName2");
 
         LoopElementModel loopElement2 = Mockito.mock(LoopElementModel.class);
-        String blueprint2 = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca_2.yaml");
+        String blueprint2 = ResourceFileUtils.getResourceAsString("example/sdc/blueprint-dcae/tca_2.yaml");
         Mockito.when(loopElement2.getBlueprint()).thenReturn(blueprint2);
         Mockito.when(umService2.getLoopElementModel()).thenReturn(loopElement2);
 
@@ -72,7 +72,7 @@ public class BlueprintInputParametersTest {
         Mockito.when(umService3.getName()).thenReturn("testName3");
 
         LoopElementModel loopElement3 = Mockito.mock(LoopElementModel.class);
-        String blueprint3 = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca_3.yaml");
+        String blueprint3 = ResourceFileUtils.getResourceAsString("example/sdc/blueprint-dcae/tca_3.yaml");
         Mockito.when(loopElement3.getBlueprint()).thenReturn(blueprint3);
         Mockito.when(umService3.getLoopElementModel()).thenReturn(loopElement3);
 
@@ -90,7 +90,7 @@ public class BlueprintInputParametersTest {
         JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(loop);
 
         Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson),
-                ResourceFileUtil.getResourceAsString(
+                ResourceFileUtils.getResourceAsString(
                         "example/sdc/expected-result/deployment-parameters-multi-blueprints.json"));
     }
 
@@ -112,14 +112,14 @@ public class BlueprintInputParametersTest {
 
         LoopTemplate template = Mockito.mock(LoopTemplate.class);
         Mockito.when(template.getUniqueBlueprint()).thenReturn(true);
-        String blueprint = ResourceFileUtil.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml");
+        String blueprint = ResourceFileUtils.getResourceAsString("example/sdc/blueprint-dcae/tca.yaml");
         Mockito.when(template.getBlueprint()).thenReturn(blueprint);
         Mockito.when(loop.getLoopTemplate()).thenReturn(template);
 
         JsonObject paramJson = DcaeDeployParameters.getDcaeDeploymentParametersInJson(loop);
 
         Assert.assertEquals(JsonUtils.GSON_JPA_MODEL.toJson(paramJson),
-                ResourceFileUtil.getResourceAsString(
+                ResourceFileUtils.getResourceAsString(
                         "example/sdc/expected-result/deployment-parameters-single-blueprint.json"));
     }
 }

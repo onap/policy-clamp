@@ -72,6 +72,6 @@ public class JsonUtilsTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionFileNotExists() throws IOException {
-        ResourceFileUtil.getResourceAsString("example/notExist.json");
+        ResourceFileUtils.getResourceAsString("example/notExist.json");
     }
 }

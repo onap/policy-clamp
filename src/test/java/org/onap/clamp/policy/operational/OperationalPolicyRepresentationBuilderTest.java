@@ -29,7 +29,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 import org.junit.Test;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.service.Service;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -37,7 +37,7 @@ public class OperationalPolicyRepresentationBuilderTest {
 
     @Test
     public void testOperationalPolicyPayloadConstruction() throws IOException {
-        JsonObject jsonModel = new GsonBuilder().create().fromJson(ResourceFileUtil
+        JsonObject jsonModel = new GsonBuilder().create().fromJson(ResourceFileUtils
                 .getResourceAsString("tosca/model-properties-operational-policy.json"), JsonObject.class);
         Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
                 jsonModel.get("resourceDetails").getAsJsonObject(), "1.0");
@@ -46,14 +46,14 @@ public class OperationalPolicyRepresentationBuilderTest {
 
         assertThat(jsonSchema).isNotNull();
 
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/operational-policy-json-schema.json"),
+        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("tosca/operational-policy-json-schema.json"),
                 new GsonBuilder().create().toJson(jsonSchema), false);
     }
 
     @Test
     public void testOperationalPolicyPayloadConstructionForCds() throws IOException {
         JsonObject jsonModel = new GsonBuilder().create()
-                .fromJson(ResourceFileUtil.getResourceAsString("tosca/model-properties-cds.json"), JsonObject.class);
+                .fromJson(ResourceFileUtils.getResourceAsString("tosca/model-properties-cds.json"), JsonObject.class);
         Service service = new Service(jsonModel.get("serviceDetails").getAsJsonObject(),
                 jsonModel.get("resourceDetails").getAsJsonObject(),
                 "1.0");
@@ -61,7 +61,7 @@ public class OperationalPolicyRepresentationBuilderTest {
         JsonObject jsonSchema = OperationalPolicyRepresentationBuilder.generateOperationalPolicySchema(service);
         assertThat(jsonSchema).isNotNull();
         JSONAssert.assertEquals(
-                ResourceFileUtil.getResourceAsString("tosca/operational-policy-cds-payload-with-list.json"),
+                ResourceFileUtils.getResourceAsString("tosca/operational-policy-cds-payload-with-list.json"),
                 new GsonBuilder().create().toJson(jsonSchema), false);
     }
 }

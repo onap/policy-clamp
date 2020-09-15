@@ -30,7 +30,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.util.PassDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -52,45 +52,42 @@ public class SslConfig {
 
     @Bean
     WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatCustomizer(ServerProperties serverProperties,
-            ResourceLoader resourceLoader) {
+                                                                               ResourceLoader resourceLoader) {
         return (tomcat) -> tomcat.setSslStoreProvider(new SslStoreProvider() {
             @Override
-            public KeyStore getKeyStore() throws KeyStoreException, 
+            public KeyStore getKeyStore() throws KeyStoreException,
                     NoSuchAlgorithmException, CertificateException, IOException {
                 KeyStore keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
-                String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"), 
-                    env.getProperty("clamp.config.keyFile"));
-                String keyStore = env.getProperty("server.ssl.key-store");
-                InputStream is = ResourceFileUtil.getResourceAsStream(keyStore.replaceAll("classpath:", ""));
-                keystore.load(is, password.toCharArray());
+                String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
+                        env.getProperty("clamp.config.keyFile"));
+                keystore.load(ResourceFileUtils.getResourceAsStream(env.getProperty("server.ssl.key-store")),
+                        password.toCharArray());
                 return keystore;
             }
 
             @Override
-            public KeyStore getTrustStore() throws KeyStoreException, 
+            public KeyStore getTrustStore() throws KeyStoreException,
                     NoSuchAlgorithmException, CertificateException, IOException {
-                    KeyStore truststore = KeyStore.getInstance("JKS");
-                    String password = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"), 
-                            env.getProperty("clamp.config.keyFile"));
-                    truststore.load(
-                        Thread.currentThread().getContextClassLoader()
-                            .getResourceAsStream(env.getProperty("server.ssl.trust-store")
-                                .replaceAll("classpath:", "")),
-                            password.toCharArray());
-                    return truststore;
+                KeyStore truststore = KeyStore.getInstance("JKS");
+                String password = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"),
+                        env.getProperty("clamp.config.keyFile"));
+                truststore.load(
+                        ResourceFileUtils.getResourceAsStream(env.getProperty("server.ssl.trust-store")),
+                        password.toCharArray());
+                return truststore;
             }
         });
     }
 
     @Bean
     WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatSslCustomizer(ServerProperties serverProperties,
-            ResourceLoader resourceLoader) {
+                                                                                  ResourceLoader resourceLoader) {
         return (tomcat) -> tomcat.setSsl(new Ssl() {
             @Override
             public String getKeyPassword() {
-                    String password = PassDecoder.decode(env.getProperty("server.ssl.key-password"), 
-                            env.getProperty("clamp.config.keyFile"));
-                    return password;
+                String password = PassDecoder.decode(env.getProperty("server.ssl.key-password"),
+                        env.getProperty("clamp.config.keyFile"));
+                return password;
             }
         });
     }

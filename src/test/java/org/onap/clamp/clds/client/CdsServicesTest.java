@@ -26,29 +26,29 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 public class CdsServicesTest {
 
     @Test
     public void testParseCdsListTypeProperties() throws IOException {
-        String cdsResponse = ResourceFileUtil
+        String cdsResponse = ResourceFileUtils
                 .getResourceAsString("example/cds-response/vFW-CDS-resource-assignment-workflow.json");
         CdsServices services = new CdsServices();
         JsonObject output = services.parseCdsResponse(cdsResponse);
-        JSONAssert.assertEquals(ResourceFileUtil
+        JSONAssert.assertEquals(ResourceFileUtils
                 .getResourceAsString("example/cds-response/vFW-CDS-resource-assignment-wf-expected-result.json"),
                         JsonUtils.GSON.toJson(output), true);
     }
 
     @Test
     public void testParseCdsResponse() throws IOException {
-        String cdsResponse = ResourceFileUtil
+        String cdsResponse = ResourceFileUtils
                 .getResourceAsString("example/cds-response/vFW-CDS-modify-config-workflow.json");
         CdsServices services = new CdsServices();
         JsonObject output = services.parseCdsResponse(cdsResponse);
-        JSONAssert.assertEquals(ResourceFileUtil
+        JSONAssert.assertEquals(ResourceFileUtils
                 .getResourceAsString("example/cds-response/vFW-CDS-modify-config-wf-expected-result.json"),
                         JsonUtils.GSON.toJson(output), true);
     }

@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.onap.aaf.cadi.Symm;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 
 /**
  * PassDecoder for decrypting the truststore and keystore password.
@@ -44,12 +44,12 @@ public class PassDecoder {
 
     /**
      * Decode the password.
-     * 
+     *
      * @param encryptedPass The encrypted password
-     * @param keyFile       The key file name in String
+     * @param keyFileName       The key file name in String
      */
-    public static String decode(String encryptedPass, String keyFile) {
-        if (null == keyFile) {
+    public static String decode(String encryptedPass, String keyFileName) {
+        if (null == keyFileName) {
             logger.debug("Key file is not defined, thus password will not be decrypted");
             return encryptedPass;
         }
@@ -58,16 +58,7 @@ public class PassDecoder {
             return null;
         }
         try {
-            InputStream is;
-            if (keyFile.contains("classpath:")) {
-                is = ResourceFileUtil.getResourceAsStream(keyFile.replaceAll("classpath:", ""));
-            } else {
-                File key = new File(keyFile);
-                is = new FileInputStream(key);
-            }
-            Symm symm = Symm.obtain(is);
-
-            return symm.depass(encryptedPass);
+            return Symm.obtain(ResourceFileUtils.getResourceAsStream(keyFileName)).depass(encryptedPass);
         } catch (IOException e) {
             logger.error("Exception occurred during the key decryption", e);
             return null;

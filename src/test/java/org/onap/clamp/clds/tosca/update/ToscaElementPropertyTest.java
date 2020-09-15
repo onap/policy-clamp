@@ -32,7 +32,7 @@ import org.onap.clamp.clds.tosca.update.elements.ToscaElement;
 import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplate;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 
 public class ToscaElementPropertyTest extends TestCase {
     public ToscaElementPropertyTest() throws IOException {
@@ -45,9 +45,9 @@ public class ToscaElementPropertyTest extends TestCase {
      */
     public void testParseArray() throws IOException {
         JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(
-                ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPoliciesEXTENTED.yaml"),
+                ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Actor");
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("actor");
         JsonArray toTest =
@@ -62,9 +62,9 @@ public class ToscaElementPropertyTest extends TestCase {
      */
     public void testAddConstraintsAsJson() throws IOException {
         JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(
-                ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-                ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
+                ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         ToscaElement toscaElement =
                 jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.operation.Failure");
         ToscaElementProperty toscaElementProperty = toscaElement.getProperties().get("category");
