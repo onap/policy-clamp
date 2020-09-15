@@ -157,7 +157,7 @@ public final class CryptoUtils {
             if (encryptionKey != null && encryptionKey.trim().length() > 0) {
                 return getSecretKeySpec(encryptionKey);
             } else {
-                props.load(ResourceFileUtil.getResourceAsStream(propertiesFileName));
+                props.load(ResourceFileUtils.getResourceAsStream(propertiesFileName));
                 return getSecretKeySpec(props.getProperty(KEY_PARAM));
             }
         } catch (IOException | DecoderException e) {

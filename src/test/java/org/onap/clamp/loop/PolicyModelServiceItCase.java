@@ -37,7 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.Application;
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.loop.template.PolicyModelId;
 import org.onap.clamp.loop.template.PolicyModelsRepository;
@@ -125,7 +125,7 @@ public class PolicyModelServiceItCase {
     @Transactional
     public void shouldCreatePolicyModelFromTosca() throws IOException {
         String toscaModelYaml =
-            ResourceFileUtil.getResourceAsString("tosca/tosca_with_metadata.yaml");
+            ResourceFileUtils.getResourceAsString("tosca/tosca_with_metadata.yaml");
         PolicyModel policyModel = policyModelsService.createNewPolicyModelFromTosca(toscaModelYaml);
 
         assertThat(policyModelsService.getAllPolicyModels()).contains(policyModel);
@@ -143,10 +143,10 @@ public class PolicyModelServiceItCase {
     @Transactional
     public void shouldUpdatePolicyModel() throws IOException {
         String toscaModelYaml =
-            ResourceFileUtil.getResourceAsString("tosca/tosca_with_metadata.yaml");
+            ResourceFileUtils.getResourceAsString("tosca/tosca_with_metadata.yaml");
         PolicyModel policyModel = policyModelsService.createNewPolicyModelFromTosca(toscaModelYaml);
         String newToscaModelYaml =
-            ResourceFileUtil.getResourceAsString("tosca/tosca_metadata_clamp_possible_values.yaml");
+            ResourceFileUtils.getResourceAsString("tosca/tosca_metadata_clamp_possible_values.yaml");
 
         PolicyModel updatedPolicyModel = policyModelsService.updatePolicyModelTosca(
             policyModel.getPolicyModelType(), policyModel.getVersion(), newToscaModelYaml);

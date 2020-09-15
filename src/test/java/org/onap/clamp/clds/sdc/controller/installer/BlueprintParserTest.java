@@ -43,7 +43,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.clamp.clds.exception.sdc.controller.BlueprintParserException;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 public class BlueprintParserTest {
@@ -70,25 +70,25 @@ public class BlueprintParserTest {
      */
     @BeforeClass
     public static void loadBlueprints() throws IOException {
-        microServiceTheWholeBlueprintValid = ResourceFileUtil
+        microServiceTheWholeBlueprintValid = ResourceFileUtils
                 .getResourceAsString("clds/blueprint-with-microservice-chain.yaml");
 
-        newMicroServiceBlueprint = ResourceFileUtil.getResourceAsString("clds/new-microservice.yaml");
+        newMicroServiceBlueprint = ResourceFileUtils.getResourceAsString("clds/new-microservice.yaml");
 
-        String microServiceBlueprintInvalid = ResourceFileUtil
+        String microServiceBlueprintInvalid = ResourceFileUtils
                 .getResourceAsString("clds/single-microservice-fragment-invalid.yaml");
         jsonObjectBlueprintInvalid = yamlToJson(microServiceBlueprintInvalid);
-        String microServiceBlueprintWithoutName = ResourceFileUtil
+        String microServiceBlueprintWithoutName = ResourceFileUtils
                 .getResourceAsString("clds/single-microservice-fragment-without-name.yaml");
         jsonObjectBlueprintWithoutName = yamlToJson(microServiceBlueprintWithoutName);
-        String microServiceBlueprintWithoutProperties = ResourceFileUtil
+        String microServiceBlueprintWithoutProperties = ResourceFileUtils
                 .getResourceAsString("clds/single-microservice-fragment-without-properties.yaml");
         jsonObjectBlueprintWithoutProperties = yamlToJson(microServiceBlueprintWithoutProperties);
-        String microServiceBlueprintValidWithVersion = ResourceFileUtil
+        String microServiceBlueprintValidWithVersion = ResourceFileUtils
                 .getResourceAsString("clds/single-microservice-fragment-valid-with-version.yaml");
         jsonObjectBlueprintValidWithVersion = yamlToJson(microServiceBlueprintValidWithVersion);
 
-        String microServiceBlueprintWithoutRelationships = ResourceFileUtil
+        String microServiceBlueprintWithoutRelationships = ResourceFileUtils
                 .getResourceAsString("clds/single-microservice-fragment-without-relationships.yaml");
         jsonObjectBlueprintWithoutRelationships = yamlToJson(microServiceBlueprintWithoutRelationships);
 

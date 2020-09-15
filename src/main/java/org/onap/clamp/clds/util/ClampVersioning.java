@@ -51,7 +51,7 @@ public class ClampVersioning {
     public static String getCldsVersionFromProps() {
         String cldsVersion = "";
         Properties props = new Properties();
-        try (InputStream resourceStream = ResourceFileUtil.getResourceAsStream(RESOURCE_NAME)) {
+        try (InputStream resourceStream = ResourceFileUtils.getResourceAsStream(RESOURCE_NAME)) {
             props.load(resourceStream);
             cldsVersion = props.getProperty(CLDS_VERSION_PROPERTY);
         } catch (Exception ex) {

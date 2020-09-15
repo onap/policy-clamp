@@ -39,14 +39,13 @@ import java.util.Enumeration;
 
 import org.apache.catalina.connector.Connector;
 import org.onap.clamp.clds.util.ClampVersioning;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.util.PassDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -111,7 +110,7 @@ public class Application extends SpringBootServletInitializer {
      */
     @Bean
     public ServletRegistrationBean camelServletRegistrationBean() throws IOException {
-        eelfLogger.info(ResourceFileUtil.getResourceAsString("boot-message.txt") + "(v"
+        eelfLogger.info(ResourceFileUtils.getResourceAsString("boot-message.txt") + "(v"
                 + ClampVersioning.getCldsVersionFromProps() + ")" + System.getProperty("line.separator")
                 + getSslExpirationDate());
         ServletRegistrationBean registration = new ServletRegistrationBean(new ClampServlet(), "/restservices/clds/*");
@@ -161,7 +160,7 @@ public class Application extends SpringBootServletInitializer {
                 String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
                         env.getProperty("clamp.config.keyFile"));
                 String keyStore = env.getProperty("server.ssl.key-store");
-                InputStream is = ResourceFileUtil.getResourceAsStream(keyStore.replaceAll("classpath:", ""));
+                InputStream is = ResourceFileUtils.getResourceAsStream(keyStore.replaceAll("classpath:", ""));
                 keystore.load(is, password.toCharArray());
 
                 Enumeration<String> aliases = keystore.aliases();

@@ -48,6 +48,7 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.onap.clamp.clds.util.ClampVersioning;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.util.PassDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -65,7 +66,7 @@ public class CamelConfiguration extends RouteBuilder {
     private void configureDefaultSslProperties() throws IOException {
         if (env.getProperty("server.ssl.trust-store") != null) {
             URL storeResource = Thread.currentThread().getContextClassLoader()
-                .getResource(env.getProperty("server.ssl.trust-store").replaceAll("classpath:", ""));
+                .getResource(env.getProperty("server.ssl.trust-store").replaceFirst("classpath:", ""));
             System.setProperty("javax.net.ssl.trustStore", storeResource.getPath());
             String keyFile = env.getProperty("clamp.config.keyFile");
             String trustStorePass = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"),
@@ -74,7 +75,7 @@ public class CamelConfiguration extends RouteBuilder {
             System.setProperty("javax.net.ssl.trustStoreType", "jks");
             System.setProperty("ssl.TrustManagerFactory.algorithm", "PKIX");
             storeResource = Thread.currentThread().getContextClassLoader()
-                .getResource(env.getProperty("server.ssl.key-store").replaceAll("classpath:", ""));
+                .getResource(env.getProperty("server.ssl.key-store").replaceFirst("classpath:", ""));
             System.setProperty("javax.net.ssl.keyStore", storeResource.getPath());
 
             String keyStorePass = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
@@ -91,8 +92,7 @@ public class CamelConfiguration extends RouteBuilder {
             String keyFile = env.getProperty("clamp.config.keyFile");
             String password = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"), keyFile);
             truststore.load(
-                Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream(env.getProperty("server.ssl.trust-store").replaceAll("classpath:", "")),
+                    ResourceFileUtils.getResourceAsStream(env.getProperty("server.ssl.trust-store")),
                     password.toCharArray());
 
             TrustManagerFactory trustFactory = TrustManagerFactory.getInstance("PKIX");

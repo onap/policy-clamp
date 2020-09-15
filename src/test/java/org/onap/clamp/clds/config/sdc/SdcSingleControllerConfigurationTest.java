@@ -36,7 +36,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.onap.clamp.clds.exception.sdc.controller.SdcParametersException;
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 
 /**
  * This class tests the SDC Controller config.
@@ -51,7 +51,7 @@ public class SdcSingleControllerConfigurationTest {
     public static SdcSingleControllerConfiguration loadControllerConfiguration(String fileName,
         String sdcControllerName) {
 
-        InputStreamReader streamReader = new InputStreamReader(ResourceFileUtil.getResourceAsStream(fileName),
+        InputStreamReader streamReader = new InputStreamReader(ResourceFileUtils.getResourceAsStream(fileName),
             StandardCharsets.UTF_8);
         JsonObject jsonNode = JsonUtils.GSON.fromJson(streamReader, JsonObject.class);
 

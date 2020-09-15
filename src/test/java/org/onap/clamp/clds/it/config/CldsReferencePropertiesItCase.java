@@ -29,7 +29,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.onap.clamp.clds.config.ClampProperties;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -59,7 +59,7 @@ public class CldsReferencePropertiesItCase {
      */
     @Test
     public void testGetFileContent() throws IOException {
-        String users = ResourceFileUtil.getResourceAsString("clds/clds-users.json");
+        String users = ResourceFileUtils.getResourceAsString("clds/clds-users.json");
         assertEquals(users, refProp.getFileContent("files.cldsUsers"));
         // Test composite key
         assertEquals(users, refProp.getFileContent("files", "cldsUsers"));

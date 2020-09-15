@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.onap.aaf.cadi.config.Config;
 import org.onap.aaf.cadi.filter.CadiFilter;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -102,6 +102,9 @@ public class ClampCadiFilter extends CadiFilter {
     @Value("${clamp.config.cadi.cadiX509Issuers:#{null}}")
     private String cadiX509Issuers;
 
+    @Value("${clamp.config.caCerts:#{null}}")
+    private String caCertsPath;
+
     private void checkIfNullProperty(String key, String value) {
         /*
          * When value is null, so not defined in application.properties set nothing in
@@ -153,7 +156,7 @@ public class ClampCadiFilter extends CadiFilter {
                                 URLDecoder.decode(certHeader, StandardCharsets.UTF_8.toString()).getBytes()));
                 X509Certificate caCert = (X509Certificate) certificateFactory
                         .generateCertificate(new ByteArrayInputStream(
-                                ResourceFileUtil.getResourceAsString("clds/aaf/ssl/ca-certs.pem").getBytes()));
+                                ResourceFileUtils.getResourceAsString(this.caCertsPath).getBytes()));
 
                 X509Certificate[] certifArray = ((X509Certificate[]) request
                         .getAttribute("javax.servlet.request.X509Certificate"));

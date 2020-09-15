@@ -31,14 +31,14 @@ import org.onap.clamp.clds.tosca.update.elements.ToscaElement;
 import org.onap.clamp.clds.tosca.update.elements.ToscaElementProperty;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplate;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 
 public class ConstraintTest extends TestCase {
 
     JsonTemplateManager jsonTemplateManager = new JsonTemplateManager(
-            ResourceFileUtil.getResourceAsString("tosca/new-converter/constraints.yaml"),
-            ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-            ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+            ResourceFileUtils.getResourceAsString("tosca/new-converter/constraints.yaml"),
+            ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+            ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
 
     ToscaElement toscaElement = jsonTemplateManager.getToscaElements().get("onap.datatype.controlloop.Operation");
 

@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
 import org.junit.Assert;
@@ -49,7 +50,7 @@ import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerExceptio
 import org.onap.clamp.clds.sdc.controller.installer.BlueprintArtifact;
 import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.cds.CdsDataInstaller;
 import org.onap.clamp.loop.service.ServicesRepository;
 import org.onap.clamp.loop.template.LoopTemplate;
@@ -74,7 +75,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-@ActiveProfiles({"clamp-default","clamp-default-user","clamp-sdc-controller","legacy-operational-policy"})
+@ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller", "legacy-operational-policy"})
 public class CsarInstallerItCase {
 
     private static final String CSAR_ARTIFACT_NAME_CDS = "example/sdc/service_Vloadbalancerms_cds.csar";
@@ -106,7 +107,7 @@ public class CsarInstallerItCase {
         Mockito.when(resource.getResourceInvariantUUID()).thenReturn(invariantResourceUuid);
         BlueprintArtifact blueprintArtifact = Mockito.mock(BlueprintArtifact.class);
         Mockito.when(blueprintArtifact.getDcaeBlueprint())
-                .thenReturn(ResourceFileUtil.getResourceAsString(blueprintFilePath));
+                .thenReturn(ResourceFileUtils.getResourceAsString(blueprintFilePath));
         Mockito.when(blueprintArtifact.getBlueprintArtifactName()).thenReturn(artifactName);
         Mockito.when(blueprintArtifact.getBlueprintInvariantServiceUuid()).thenReturn(invariantServiceUuid);
         Mockito.when(blueprintArtifact.getResourceAttached()).thenReturn(resource);
@@ -159,7 +160,7 @@ public class CsarInstallerItCase {
 
         // Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
         Mockito.when(csarHandler.getPolicyModelYaml())
-                .thenReturn(Optional.ofNullable(ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml")));
+                .thenReturn(Optional.ofNullable(ResourceFileUtils.getResourceAsString("tosca/tosca_example.yaml")));
         return csarHandler;
     }
 
@@ -182,9 +183,10 @@ public class CsarInstallerItCase {
 
         CsarHandler csarHandler = new CsarHandler(notificationData, "", "");
         csarHandler
-                .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME_CDS).getFile());
+                .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME_CDS).
+                        getFile());
         Assert.assertEquals(csarHandler.getPolicyModelYaml(), Optional
-                .ofNullable(ResourceFileUtil.getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
+                .ofNullable(ResourceFileUtils.getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
     }
 
     @Test
@@ -235,11 +237,11 @@ public class CsarInstallerItCase {
                 "1.0", RESOURCE_INSTANCE_NAME_RESOURCE1, "tca.yaml")).get();
         assertThat(loopTemplate.getLoopElementModelsUsed()).hasSize(1);
         assertThat(loopTemplate.getModelService().getServiceUuid()).isEqualTo("63cac700-ab9a-4115-a74f-7eac85e3fce0");
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/model-properties.json"),
+        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("tosca/model-properties.json"),
                 JsonUtils.GSON_JPA_MODEL.toJson(loopTemplate.getModelService()), true);
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/service-details.json"),
+        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("tosca/service-details.json"),
                 JsonUtils.GSON_JPA_MODEL.toJson(loopTemplate.getModelService().getServiceDetails()), true);
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/resource-details.json"),
+        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("tosca/resource-details.json"),
                 JsonUtils.GSON_JPA_MODEL.toJson(loopTemplate.getModelService().getResourceDetails()), true);
         assertThat(((LoopTemplateLoopElementModel) (loopTemplate.getLoopElementModelsUsed().toArray()[0]))
                 .getLoopElementModel().getName()).isNotEmpty();

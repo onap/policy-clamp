@@ -27,7 +27,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import org.junit.Test;
 import org.onap.clamp.clds.util.JsonUtils;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.skyscreamer.jsonassert.JSONAssert;
 
@@ -37,10 +37,10 @@ public class MicroServicePayloadTest {
     public void testPayloadConstruction() throws IOException {
         MicroServicePolicy policy = new MicroServicePolicy("testPolicy", new PolicyModel(
                 "onap.policies.monitoring.cdap.tca.hi.lo.app",
-            ResourceFileUtil.getResourceAsString("tosca/tosca_example.yaml"),"1.0.0"), false,null,null, null,null);
+            ResourceFileUtils.getResourceAsString("tosca/tosca_example.yaml"),"1.0.0"), false,null,null, null,null);
         policy.setConfigurationsJson(JsonUtils.GSON.fromJson(
-            ResourceFileUtil.getResourceAsString("tosca/micro-service-policy-properties.json"), JsonObject.class));
-        JSONAssert.assertEquals(ResourceFileUtil.getResourceAsString("tosca/micro-service-policy-payload.json"),
+            ResourceFileUtils.getResourceAsString("tosca/micro-service-policy-properties.json"), JsonObject.class));
+        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("tosca/micro-service-policy-payload.json"),
             policy.createPolicyPayload(), false);
     }
 }

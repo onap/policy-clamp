@@ -42,7 +42,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.sdc.api.notification.IArtifactInfo;
 import org.onap.sdc.api.notification.INotificationData;
 import org.onap.sdc.api.notification.IResourceInstance;
@@ -112,14 +112,14 @@ public class CsarHandlerTest {
     private IDistributionClientDownloadResult buildFakeSdcResut() throws IOException {
         IDistributionClientDownloadResult resultArtifact = Mockito.mock(IDistributionClientDownloadResult.class);
         Mockito.when(resultArtifact.getArtifactPayload()).thenReturn(
-            IOUtils.toByteArray(ResourceFileUtil.getResourceAsStream("example/sdc/service-Simsfoimap0112.csar")));
+            IOUtils.toByteArray(ResourceFileUtils.getResourceAsStream("example/sdc/service-Simsfoimap0112.csar")));
         return resultArtifact;
     }
 
     private IDistributionClientDownloadResult buildFakeSdcResultWithoutPolicyModel() throws IOException {
         IDistributionClientDownloadResult resultArtifact = Mockito.mock(IDistributionClientDownloadResult.class);
         Mockito.when(resultArtifact.getArtifactPayload()).thenReturn(
-            IOUtils.toByteArray(ResourceFileUtil.getResourceAsStream("example/sdc/service-without-policy.csar")));
+            IOUtils.toByteArray(ResourceFileUtils.getResourceAsStream("example/sdc/service-without-policy.csar")));
         return resultArtifact;
     }
 

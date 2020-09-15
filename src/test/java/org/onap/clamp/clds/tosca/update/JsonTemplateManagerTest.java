@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplate;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplateField;
 import org.onap.clamp.clds.tosca.update.templates.JsonTemplateManager;
-import org.onap.clamp.clds.util.ResourceFileUtil;
+import org.onap.clamp.clds.util.ResourceFileUtils;
 
 public class JsonTemplateManagerTest extends TestCase {
 
@@ -44,11 +44,11 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testLaunchTranslationTca() throws IOException, UnknownComponentException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
+                        ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
                                 + ".policies.monitoring.cdap.tca.hi.lo.app/versions/1.0.0&#63;"
-                                + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
+                                + "connectionTimeToLive=5000/.file"), ResourceFileUtils.getResourceAsString(
                         "clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.monitoring.cdap.tca.hi.lo.app";
         jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
@@ -62,11 +62,11 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testLaunchTranslationFrequencyLimiter() throws IOException, UnknownComponentException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
+                        ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
                                 + ".policies.controlloop.guard.common.FrequencyLimiter/versions/1.0.0&#63;"
-                                + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
+                                + "connectionTimeToLive=5000/.file"), ResourceFileUtils.getResourceAsString(
                         "clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.guard.common.FrequencyLimiter";
         jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
@@ -80,11 +80,11 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testLaunchTranslationApex() throws IOException, UnknownComponentException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
+                        ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
                                 + ".policies.controlloop.operational.common.Apex/versions/1.0.0&#63;"
-                                + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
+                                + "connectionTimeToLive=5000/.file"), ResourceFileUtils.getResourceAsString(
                         "clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.operational.common.Apex";
         jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
@@ -98,11 +98,11 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testLaunchTranslationDrools() throws IOException, UnknownComponentException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
+                        ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
                                 + ".policies.controlloop.operational.common.Drools/versions/1.0.0&#63;"
-                                + "connectionTimeToLive=5000/.file"), ResourceFileUtil.getResourceAsString(
+                                + "connectionTimeToLive=5000/.file"), ResourceFileUtils.getResourceAsString(
                         "clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.operational.common.Drools";
         jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
@@ -117,9 +117,9 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testLaunchTranslation() throws IOException, UnknownComponentException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         String componentName = "onap.policies.controlloop.operational.common.Drools";
         jsonTemplateManager.getJsonSchemaForPolicyType(componentName, null, null);
     }
@@ -132,9 +132,9 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testAddTemplate() throws IOException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         int count = jsonTemplateManager.getJsonSchemaTemplates().size();
         List<JsonTemplateField>
                 jsonTemplateFields =
@@ -154,9 +154,9 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testRemoveTemplate() throws IOException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         int count = jsonTemplateManager.getJsonSchemaTemplates().size();
         jsonTemplateManager.removeTemplate("string");
         assertNotSame(count, jsonTemplateManager.getJsonSchemaTemplates().size());
@@ -170,9 +170,9 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testUpdateTemplate() throws IOException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         int count = jsonTemplateManager.getJsonSchemaTemplates().get("integer").getJsonTemplateFields().size();
         jsonTemplateManager.updateTemplate("integer", new JsonTemplateField("type"), false);
         assertNotSame(count,
@@ -187,9 +187,9 @@ public class JsonTemplateManagerTest extends TestCase {
     public void testHasTemplate() throws IOException {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
-                        ResourceFileUtil.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
-                        ResourceFileUtil.getResourceAsString("clds/tosca-converter/templates.json"));
+                        ResourceFileUtils.getResourceAsString("tosca/new-converter/sampleOperationalPolicies.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
+                        ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
         boolean has = true;
         List<JsonTemplateField> jsonTemplateFieldsString =
                 new ArrayList<>(Arrays.asList(new JsonTemplateField("type"), new JsonTemplateField("description"),
