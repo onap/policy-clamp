@@ -29,7 +29,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-
 import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.util.PassDecoder;
 import org.springframework.beans.factory.annotation.Autowired;

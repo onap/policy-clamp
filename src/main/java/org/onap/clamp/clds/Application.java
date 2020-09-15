@@ -27,7 +27,6 @@ package org.onap.clamp.clds;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -36,7 +35,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-
 import org.apache.catalina.connector.Connector;
 import org.onap.clamp.clds.util.ClampVersioning;
 import org.onap.clamp.clds.util.ResourceFileUtils;
