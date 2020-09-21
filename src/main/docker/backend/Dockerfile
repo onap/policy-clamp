@@ -21,7 +21,7 @@
 #
 ###
 
-FROM onap/policy-jdk-debian:2.0.1
+FROM onap/integration-java11:7.1.0
 
 MAINTAINER "The Onap Team"
 LABEL Description="This immage contains alpine, openjdk 11 and clamp"
@@ -33,17 +33,6 @@ ENV HTTPS_PROXY=$https_proxy
 ENV http_proxy=$HTTP_PROXY
 ENV https_proxy=$HTTPS_PROXY
 
-RUN addgroup onap
-RUN useradd -g onap clamp
-VOLUME /opt/clamp/config
-RUN mkdir /var/log/onap
-RUN chmod a+rwx /var/log/onap
+VOLUME /app/config
 
-COPY onap-clamp-backend/clamp.jar /opt/clamp/app.jar
-RUN chmod 700 /opt/clamp/app.jar
-
-RUN chown -R clamp:onap /opt/clamp
-
-USER clamp
-WORKDIR /opt/clamp/
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-Xms256m", "-Xmx1g", "-jar" ,"./app.jar"]
+COPY onap-clamp-backend/clamp.jar /app/app.jar
