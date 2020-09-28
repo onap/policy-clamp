@@ -23,7 +23,6 @@
 
 package org.onap.clamp.loop;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -31,7 +30,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.onap.clamp.clds.config.LegacyOperationalPolicyController;
 import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.components.external.ExternalComponentState;
 import org.onap.clamp.loop.components.external.PolicyComponent;
@@ -39,6 +37,8 @@ import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PolicyComponentTest {
 
@@ -267,7 +267,7 @@ public class PolicyComponentTest {
                 new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class), null, "pdpGroup2", "pdpSubgroup1");
         loopTest.addMicroServicePolicy(microServicePolicy2);
 
-        PolicyModel policyModel2 = new PolicyModel(LegacyOperationalPolicyController.OPERATIONAL_POLICY_LEGACY, null,
+        PolicyModel policyModel2 = new PolicyModel("onap.policies.monitoring.test2", null,
                 "1.0.0");
         OperationalPolicy opPolicy =
                 new OperationalPolicy("opPolicy", new Gson().fromJson("{\"configtype\":\"json\"}", JsonObject.class),

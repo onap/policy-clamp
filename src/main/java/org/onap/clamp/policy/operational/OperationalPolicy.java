@@ -26,19 +26,10 @@ package org.onap.clamp.policy.operational;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -50,7 +41,6 @@ import javax.persistence.Transient;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
-import org.onap.clamp.clds.config.LegacyOperationalPolicyController;
 import org.onap.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
 import org.onap.clamp.dao.model.jsontype.StringJsonUserType;
 import org.onap.clamp.loop.Loop;
@@ -58,8 +48,6 @@ import org.onap.clamp.loop.service.Service;
 import org.onap.clamp.loop.template.LoopElementModel;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.Policy;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
 
 @Entity
 @Table(name = "operational_policies")
@@ -139,10 +127,9 @@ public class OperationalPolicy extends Policy implements Serializable {
      * @param service        The loop service
      * @param policyModel    The policy model
      * @param toscaConverter The tosca converter that must be used to create the Json representation
-     * @throws IOException In case of issues with the legacy files (generated from resource files
      */
     public OperationalPolicy(Loop loop, Service service, PolicyModel policyModel,
-                             ToscaConverterWithDictionarySupport toscaConverter) throws IOException {
+                             ToscaConverterWithDictionarySupport toscaConverter) {
         this(Policy.generatePolicyName("OPERATIONAL", service.getName(), service.getVersion(),
                 policyModel.getPolicyAcronym() + '_' + policyModel.getVersion(),
                 RandomStringUtils.randomAlphanumeric(3)),
@@ -182,18 +169,12 @@ public class OperationalPolicy extends Policy implements Serializable {
             if (this.getPolicyModel() == null) {
                 return;
             }
-            if (this.isLegacy()) {
-                // Op policy Legacy case
-                LegacyOperationalPolicy.preloadConfiguration(this.getConfigurationsJson(), this.loop);
-                this.setJsonRepresentation(OperationalPolicyRepresentationBuilder
-                        .generateOperationalPolicySchema(this.loop.getModelService()));
-            }
-            else {
-                // Generic Case
-                this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(
-                        this.getPolicyModel().getPolicyModelTosca(),
-                        this.getPolicyModel().getPolicyModelType(), serviceModel));
-            }
+
+            // Generic Case
+            this.setJsonRepresentation(toscaConverter.convertToscaToJsonSchemaObject(
+                    this.getPolicyModel().getPolicyModelTosca(),
+                    this.getPolicyModel().getPolicyModelType(), serviceModel));
+
         }
     }
 
@@ -221,76 +202,17 @@ public class OperationalPolicy extends Policy implements Serializable {
             if (other.name != null) {
                 return false;
             }
-        }
-        else if (!name.equals(other.name)) {
-            return false;
+        } else {
+            if (!name.equals(other.name)) {
+                return false;
+            }
         }
         return true;
     }
 
-    public Boolean isLegacy() {
-        return (this.getPolicyModel() != null) && this.getPolicyModel().getPolicyModelType().contains(
-                LegacyOperationalPolicyController.OPERATIONAL_POLICY_LEGACY);
-    }
-
-    /**
-     * Create policy Yaml from json defined here.
-     *
-     * @return A string containing Yaml
-     */
-    public String createPolicyPayloadYaml() {
-        JsonObject policyPayloadResult = new JsonObject();
-
-        policyPayloadResult.addProperty("tosca_definitions_version", "tosca_simple_yaml_1_0_0");
-
-        JsonObject topologyTemplateNode = new JsonObject();
-        policyPayloadResult.add("topology_template", topologyTemplateNode);
-
-        JsonArray policiesArray = new JsonArray();
-        topologyTemplateNode.add("policies", policiesArray);
-
-        JsonObject operationalPolicy = new JsonObject();
-        policiesArray.add(operationalPolicy);
-
-        JsonObject operationalPolicyDetails = new JsonObject();
-        operationalPolicy.add(this.name, operationalPolicyDetails);
-        operationalPolicyDetails.addProperty("type", "onap.policies.controlloop.Operational");
-        operationalPolicyDetails.addProperty("version", "1.0.0");
-
-        JsonObject metadata = new JsonObject();
-        operationalPolicyDetails.add("metadata", metadata);
-        metadata.addProperty("policy-id", this.name);
-
-        operationalPolicyDetails.add("properties", LegacyOperationalPolicy
-                .reworkActorAttributes(this.getConfigurationsJson().get("operational_policy").deepCopy()));
-
-        DumperOptions options = new DumperOptions();
-        options.setIndent(2);
-        options.setPrettyFlow(true);
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        Gson gson = new GsonBuilder().create();
-
-        return (new Yaml(options)).dump(gson.fromJson(gson.toJson(policyPayloadResult), Map.class));
-    }
-
     @Override
     public String createPolicyPayload() throws UnsupportedEncodingException {
-        if (isLegacy()) {
-            // Now using the legacy payload fo Dublin
-            JsonObject payload = new JsonObject();
-            payload.addProperty("policy-id", this.getName());
-            payload.addProperty("content",
-                    URLEncoder.encode(
-                            LegacyOperationalPolicy
-                                    .createPolicyPayloadYamlLegacy(
-                                            this.getConfigurationsJson().get("operational_policy")),
-                            StandardCharsets.UTF_8.toString()));
-            String opPayload = new GsonBuilder().setPrettyPrinting().create().toJson(payload);
-            logger.info("Operational policy payload: " + opPayload);
-            return opPayload;
-        }
-        else {
-            return super.createPolicyPayload();
-        }
+        return super.createPolicyPayload();
+
     }
 }
