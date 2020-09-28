@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.transaction.Transactional;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
 import org.junit.Assert;
@@ -43,7 +42,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.onap.clamp.clds.Application;
-import org.onap.clamp.clds.config.LegacyOperationalPolicyController;
 import org.onap.clamp.clds.exception.sdc.controller.BlueprintParserException;
 import org.onap.clamp.clds.exception.sdc.controller.CsarHandlerException;
 import org.onap.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
@@ -75,7 +73,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)
-@ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller", "legacy-operational-policy"})
+@ActiveProfiles({"clamp-default", "clamp-default-user", "clamp-sdc-controller"})
 public class CsarInstallerItCase {
 
     private static final String CSAR_ARTIFACT_NAME_CDS = "example/sdc/service_Vloadbalancerms_cds.csar";
@@ -162,13 +160,6 @@ public class CsarInstallerItCase {
         Mockito.when(csarHandler.getPolicyModelYaml())
                 .thenReturn(Optional.ofNullable(ResourceFileUtils.getResourceAsString("tosca/tosca_example.yaml")));
         return csarHandler;
-    }
-
-    @Test
-    @Transactional
-    public void testPolicyModelAddedAtStartup() {
-        assertThat(policyModelsRepository.findByPolicyModelType(
-                LegacyOperationalPolicyController.OPERATIONAL_POLICY_LEGACY).get(0)).isNotNull();
     }
 
     @Test
