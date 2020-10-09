@@ -55,7 +55,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to get policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doCatch>
                 <exception>java.lang.Exception</exception>
                 <handled>
@@ -109,7 +109,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to get policy deployment status: {{clamp.config.policy.pap.url}}/policy/pap/v1/policies/deployed/${exchangeProperty[policyName]}/1.0.0"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/policies/deployed/${exchangeProperty[policyName]}/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/policies/deployed/${exchangeProperty[policyName]}/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doCatch>
                 <exception>java.lang.Exception</exception>
                 <handled>
@@ -161,7 +161,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to get all policy models: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -195,7 +195,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to get policy model: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelName]}/versions/${exchangeProperty[policyModelVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelName]}/versions/${exchangeProperty[policyModelVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelName]}/versions/${exchangeProperty[policyModelVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -236,7 +236,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to create policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
@@ -285,7 +285,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to delete policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies/${exchangeProperty[policy].getName()}/versions/${exchangeProperty[policyVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies/${exchangeProperty[policy].getName()}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies/${exchangeProperty[policy].getName()}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -336,7 +336,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -386,7 +386,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to remove policies from PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -427,7 +427,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to get policy model: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -464,7 +464,7 @@
             <log loggingLevel="INFO"
                  message="Endpoint to delete policy from PDP Group: {{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectionTimeToLive=5000&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies/${exchangeProperty[policyName]}/versions/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <setProperty propertyName="logMessage">
                 <simple>${exchangeProperty[policyName]} PDP Group removal status
                 </simple>

@@ -132,8 +132,7 @@ public class ToscaConverterWithDictionarySupportItCase {
         JsonTemplateManager jsonTemplateManager =
                 new JsonTemplateManager(
                         ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policytypes/onap"
-                                + ".policies.controlloop.operational.common.Apex/versions/1.0"
-                                + ".0&#63;connectionTimeToLive=5000/.file"),
+                                + ".policies.controlloop.operational.common.Apex/versions/1.0.0/.file"),
                         ResourceFileUtils.getResourceAsString("clds/tosca-converter/default-tosca-types.yaml"),
                         ResourceFileUtils.getResourceAsString("clds/tosca-converter/templates.json"));
 
