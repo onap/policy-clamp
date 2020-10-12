@@ -43,6 +43,7 @@ import org.onap.clamp.clds.sdc.controller.installer.CsarHandler;
 import org.onap.clamp.clds.util.LoggingUtils;
 import org.onap.clamp.loop.CsarInstaller;
 import org.onap.sdc.api.IDistributionClient;
+import org.onap.sdc.api.consumer.IComponentDoneStatusMessage;
 import org.onap.sdc.api.consumer.IDistributionStatusMessage;
 import org.onap.sdc.api.consumer.INotificationCallback;
 import org.onap.sdc.api.notification.IArtifactInfo;
@@ -160,7 +161,8 @@ public class SdcSingleController {
      * @param distributionClient the distribution client
      */
     public SdcSingleController(ClampProperties clampProp, CsarInstaller csarInstaller,
-            SdcSingleControllerConfiguration sdcSingleConfig, IDistributionClient distributionClient) {
+                               SdcSingleControllerConfiguration sdcSingleConfig,
+                               IDistributionClient distributionClient) {
         this.distributionClient = distributionClient;
         isSdcClientAutoManaged = (distributionClient == null);
         this.sdcConfig = sdcSingleConfig;
@@ -228,7 +230,8 @@ public class SdcSingleController {
     }
 
     private void sendAllNotificationForCsarHandler(INotificationData notificationData, CsarHandler csar,
-            NotificationType notificationType, DistributionStatusEnum distributionStatus, String errorMessage) {
+                                                   NotificationType notificationType,
+                                                   DistributionStatusEnum distributionStatus, String errorMessage) {
         if (csar != null) {
             // Notify for the CSAR
             this.sendSdcNotification(notificationType, csar.getArtifactElement().getArtifactURL(),
@@ -277,28 +280,34 @@ public class SdcSingleController {
                 csarInstaller.installTheCsar(csar);
                 sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
                         DistributionStatusEnum.DEPLOY_OK, null);
+                this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_OK, null);
             }
         } catch (SdcArtifactInstallerException | SdcToscaParserException e) {
             logger.error("SdcArtifactInstallerException exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
                     DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
+            this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_ERROR, e.getMessage());
         } catch (SdcDownloadException | CsarHandlerException e) {
             logger.error("SdcDownloadException exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DOWNLOAD,
                     DistributionStatusEnum.DOWNLOAD_ERROR, e.getMessage());
+            this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_ERROR, e.getMessage());
         } catch (InterruptedException e) {
             logger.error("Interrupt exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
                     DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
+            this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_ERROR, e.getMessage());
             Thread.currentThread().interrupt();
         } catch (BlueprintParserException e) {
             logger.error("BlueprintParser exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
                     DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
+            this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_ERROR, e.getMessage());
         } catch (RuntimeException e) {
             logger.error("Unexpected exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
                     DistributionStatusEnum.DEPLOY_ERROR, e.getMessage());
+            this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_ERROR, e.getMessage());
         } finally {
             this.changeControllerStatus(SdcSingleControllerStatus.IDLE);
         }
@@ -341,7 +350,8 @@ public class SdcSingleController {
     }
 
     private void sendSdcNotification(NotificationType notificationType, String artifactUrl, String consumerId,
-            String distributionId, DistributionStatusEnum status, String errorReason, long timestamp) {
+                                     String distributionId, DistributionStatusEnum status, String errorReason,
+                                     long timestamp) {
         String event = "Sending " + notificationType.name() + "(" + status.name() + ")"
                 + " notification to SDC for artifact:" + artifactUrl;
         if (errorReason != null) {
@@ -368,6 +378,43 @@ public class SdcSingleController {
             logger.warn("Unable to send the SDC Notification (" + action + ") due to an exception", e);
         }
         logger.info("SDC Notification sent successfully(" + action + ")");
+    }
+
+    private void sendComponentStatus(INotificationData notificationData, DistributionStatusEnum status,
+                                     String errorReason) {
+        try {
+            IComponentDoneStatusMessage message = new IComponentDoneStatusMessage() {
+
+                @Override public String getDistributionID() {
+                    return notificationData.getDistributionID();
+                }
+
+                @Override public String getConsumerID() {
+                    return sdcConfig.getConsumerID();
+                }
+
+                @Override public long getTimestamp() {
+                    return System.currentTimeMillis();
+                }
+
+                @Override public DistributionStatusEnum getStatus() {
+                    return status;
+                }
+
+                @Override public String getComponentName() {
+                    return sdcConfig.getUser();
+                }
+            };
+
+            if (errorReason != null) {
+                this.distributionClient.sendComponentDoneStatus(message, errorReason);
+            } else {
+                this.distributionClient.sendComponentDoneStatus(message);
+            }
+        } catch (RuntimeException e) {
+            logger.warn("Unable to send the SDC Notification (" + status.name() + ") due to an exception", e);
+        }
+        logger.info("SDC Notification sent successfully(" + status.name() + ")");
     }
 
     private void sendDownloadStatus(IDistributionStatusMessage message, String errorReason) {
