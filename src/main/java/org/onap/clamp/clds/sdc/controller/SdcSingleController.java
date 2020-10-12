@@ -280,8 +280,8 @@ public class SdcSingleController {
                 csarInstaller.installTheCsar(csar);
                 sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
                         DistributionStatusEnum.DEPLOY_OK, null);
-                this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_OK, null);
             }
+            this.sendComponentStatus(notificationData, DistributionStatusEnum.COMPONENT_DONE_OK, null);
         } catch (SdcArtifactInstallerException | SdcToscaParserException e) {
             logger.error("SdcArtifactInstallerException exception caught during the notification processing", e);
             sendAllNotificationForCsarHandler(notificationData, csar, NotificationType.DEPLOY,
