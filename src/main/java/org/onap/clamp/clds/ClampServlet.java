@@ -28,9 +28,11 @@ package org.onap.clamp.clds;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
+import fj.data.Array;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -69,16 +71,11 @@ public class ClampServlet extends CamelHttpTransportServlet {
 
     private static List<SecureServicePermission> permissionList;
 
-    private synchronized Class loadDynamicAuthenticationClass() {
-        try {
-            String authenticationObject = WebApplicationContextUtils.getWebApplicationContext(getServletContext())
-                    .getEnvironment().getProperty(AUTHENTICATION_CLASS);
-            return Class.forName(authenticationObject);
-        } catch (ClassNotFoundException e) {
-            logger.error(
-                    "Exception caught when attempting to create associated class of config:" + AUTHENTICATION_CLASS, e);
-            return Object.class;
-        }
+    private synchronized String[] loadDynamicAuthenticationClasses() {
+        String[] authenticationObjects = WebApplicationContextUtils.getWebApplicationContext(getServletContext())
+                .getEnvironment().getProperty(AUTHENTICATION_CLASS).split(",");
+        Arrays.stream(authenticationObjects).forEach(className -> className.trim());
+        return authenticationObjects;
     }
 
     private synchronized List<SecureServicePermission> getPermissionList() {
@@ -115,7 +112,8 @@ public class ClampServlet extends CamelHttpTransportServlet {
     @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response) {
         Principal principal = request.getUserPrincipal();
-        if (loadDynamicAuthenticationClass().isInstance(principal)) {
+        if (principal != null && Arrays.stream(loadDynamicAuthenticationClasses())
+                .anyMatch(className -> className.equals(principal.getName()))) {
             // When AAF is enabled, there is a need to provision the permissions to Spring
             // system
             List<GrantedAuthority> grantedAuths = new ArrayList<>();

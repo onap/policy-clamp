@@ -42,4 +42,4 @@ COPY --chown=onap:onap onap-clamp-backend/clamp.jar /opt/clamp/app.jar
 
 USER onap
 WORKDIR /opt/clamp/
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom", "-jar" ,"./app.jar"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=75","-jar" ,"./app.jar"]
