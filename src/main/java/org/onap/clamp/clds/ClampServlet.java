@@ -113,7 +113,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
     protected void doService(HttpServletRequest request, HttpServletResponse response) {
         Principal principal = request.getUserPrincipal();
         if (principal != null && Arrays.stream(loadDynamicAuthenticationClasses())
-                .anyMatch(className -> className.equals(principal.getName()))) {
+                .anyMatch(className -> className.equals(principal.getClass().getName()))) {
             // When AAF is enabled, there is a need to provision the permissions to Spring
             // system
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
