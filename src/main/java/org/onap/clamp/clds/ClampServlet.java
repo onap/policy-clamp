@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -71,11 +73,10 @@ public class ClampServlet extends CamelHttpTransportServlet {
 
     private static List<SecureServicePermission> permissionList;
 
-    private synchronized String[] loadDynamicAuthenticationClasses() {
-        String[] authenticationObjects = WebApplicationContextUtils.getWebApplicationContext(getServletContext())
-                .getEnvironment().getProperty(AUTHENTICATION_CLASS).split(",");
-        Arrays.stream(authenticationObjects).forEach(className -> className.trim());
-        return authenticationObjects;
+    private synchronized List<String> loadDynamicAuthenticationClasses() {
+        return Arrays.stream(WebApplicationContextUtils.getWebApplicationContext(getServletContext())
+                .getEnvironment().getProperty(AUTHENTICATION_CLASS).split(",")).map(className -> className.trim())
+                .collect(Collectors.toList());
     }
 
     private synchronized List<SecureServicePermission> getPermissionList() {
@@ -112,7 +113,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
     @Override
     protected void doService(HttpServletRequest request, HttpServletResponse response) {
         Principal principal = request.getUserPrincipal();
-        if (principal != null && Arrays.stream(loadDynamicAuthenticationClasses())
+        if (principal != null && loadDynamicAuthenticationClasses().stream()
                 .anyMatch(className -> className.equals(principal.getClass().getName()))) {
             // When AAF is enabled, there is a need to provision the permissions to Spring
             // system
