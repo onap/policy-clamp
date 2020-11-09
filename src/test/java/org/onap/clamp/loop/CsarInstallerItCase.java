@@ -112,6 +112,48 @@ public class CsarInstallerItCase {
         return blueprintArtifact;
     }
 
+    private CsarHandler buildBadFakeCsarHandler(String generatedName, String csarFileName) throws IOException,
+            SdcToscaParserException {
+
+        // Build a Bad csar because the blueprint contains a link to a microservice that does not exist in the emulator
+        // Create fake notification
+        INotificationData notificationData = Mockito.mock(INotificationData.class);
+        Mockito.when(notificationData.getServiceVersion()).thenReturn("1.0");
+        // Create fake resource in notification
+        CsarHandler csarHandler = Mockito.mock(CsarHandler.class);
+        List<IResourceInstance> listResources = new ArrayList<>();
+        Mockito.when(notificationData.getResources()).thenReturn(listResources);
+        Map<String, BlueprintArtifact> blueprintMap = new HashMap<>();
+        Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
+        // Create fake blueprint artifact 1 on resource1
+        BlueprintArtifact blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1,
+                INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca-guilin.yaml", "tca-guilin.yaml",
+                INVARIANT_SERVICE_UUID);
+        listResources.add(blueprintArtifact.getResourceAttached());
+        blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
+
+        // Build fake csarhandler
+        Mockito.when(csarHandler.getSdcNotification()).thenReturn(notificationData);
+        // Build fake csar Helper
+        ISdcCsarHelper csarHelper = Mockito.mock(ISdcCsarHelper.class);
+        Metadata data = Mockito.mock(Metadata.class);
+        Mockito.when(data.getValue("name")).thenReturn(generatedName);
+        Mockito.when(notificationData.getServiceName()).thenReturn(generatedName);
+        Mockito.when(csarHelper.getServiceMetadata()).thenReturn(data);
+
+        // Create helper based on real csar to test policy yaml and global properties
+        // set
+        SdcToscaParserFactory factory = SdcToscaParserFactory.getInstance();
+        String path = Thread.currentThread().getContextClassLoader().getResource(csarFileName).getFile();
+        ISdcCsarHelper sdcHelper = factory.getSdcCsarHelper(path);
+        Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(sdcHelper);
+
+        // Mockito.when(csarHandler.getSdcCsarHelper()).thenReturn(csarHelper);
+        Mockito.when(csarHandler.getPolicyModelYaml())
+                .thenReturn(Optional.ofNullable(ResourceFileUtils.getResourceAsString("tosca/tosca_example.yaml")));
+        return csarHandler;
+    }
+
     private CsarHandler buildFakeCsarHandler(String generatedName, String csarFileName) throws IOException,
             SdcToscaParserException {
         // Create fake notification
@@ -203,14 +245,25 @@ public class CsarInstallerItCase {
         assertThat(csarInstaller.isCsarAlreadyDeployed(csarHandler)).isTrue();
     }
 
+    @Test(expected = SdcArtifactInstallerException.class)
+    @Transactional
+    public void testInstallTheBadCsarTca()
+            throws IOException, SdcToscaParserException, InterruptedException, BlueprintParserException,
+            SdcArtifactInstallerException {
+        // This test validates that the blueprint is well rejected because the blueprint contains a link
+        // to a policy that does not exist on the policy engine emulator.
+        String generatedName = RandomStringUtils.randomAlphanumeric(5);
+        csarInstaller.installTheCsar(buildBadFakeCsarHandler(generatedName, CSAR_ARTIFACT_NAME_NO_CDS));
+    }
+
     @Test
     @Transactional
     @Commit
     public void testInstallTheCsarTca() throws SdcArtifactInstallerException, SdcToscaParserException,
             CsarHandlerException, IOException, JSONException, InterruptedException, BlueprintParserException {
         String generatedName = RandomStringUtils.randomAlphanumeric(5);
-        CsarHandler csar = buildFakeCsarHandler(generatedName, CSAR_ARTIFACT_NAME_CDS);
-        csarInstaller.installTheCsar(csar);
+        csarInstaller.installTheCsar(buildFakeCsarHandler(generatedName, CSAR_ARTIFACT_NAME_CDS));
+
         assertThat(serviceRepository.existsById("63cac700-ab9a-4115-a74f-7eac85e3fce0")).isTrue();
         // We should have CDS info
         assertThat(serviceRepository.findById("63cac700-ab9a-4115-a74f-7eac85e3fce0").get().getResourceByType("VF")

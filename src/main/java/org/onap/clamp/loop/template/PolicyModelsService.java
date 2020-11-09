@@ -100,7 +100,7 @@ public class PolicyModelsService {
     public PolicyModel updatePolicyModelTosca(String policyModelType, String policyModelVersion,
         String policyModelTosca) {
         JsonObject jsonObject = toscaYamlToJsonConvertor.validateAndConvertToJson(policyModelTosca);
-        PolicyModel thePolicyModel = getPolicyModelByType(policyModelType, policyModelVersion);
+        PolicyModel thePolicyModel = getPolicyModel(policyModelType, policyModelVersion);
         thePolicyModel.setPolicyAcronym(toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
             ToscaSchemaConstants.METADATA_ACRONYM));
         thePolicyModel.setPolicyModelTosca(policyModelTosca);
@@ -121,10 +121,6 @@ public class PolicyModelsService {
 
     public Iterable<PolicyModel> getAllPolicyModelsByType(String type) {
         return policyModelsRepository.findByPolicyModelType(type);
-    }
-
-    public PolicyModel getPolicyModelByType(String type, String version) {
-        return policyModelsRepository.findById(new PolicyModelId(type, version)).orElse(null);
     }
 
     /**

@@ -152,7 +152,8 @@ public class CsarInstaller {
 
     private LoopTemplate createLoopTemplateFromBlueprint(CsarHandler csar, BlueprintArtifact blueprintArtifact,
                                                          Service service)
-            throws IOException, ParseException, InterruptedException, BlueprintParserException {
+            throws IOException, ParseException, InterruptedException, BlueprintParserException,
+            SdcArtifactInstallerException {
         LoopTemplate newLoopTemplate = new LoopTemplate();
         newLoopTemplate.setBlueprint(blueprintArtifact.getDcaeBlueprint());
         newLoopTemplate.setName(LoopTemplate.generateLoopTemplateName(csar.getSdcNotification().getServiceName(),
@@ -165,30 +166,33 @@ public class CsarInstaller {
             microServicesChain = BlueprintParser.fallbackToOneMicroService();
         }
         newLoopTemplate.setModelService(service);
-        newLoopTemplate.addLoopElementModels(createMicroServiceModels(microServicesChain));
+        newLoopTemplate.addLoopElementModels(createMicroServiceModels(blueprintArtifact, microServicesChain));
         newLoopTemplate.setMaximumInstancesAllowed(0);
         DcaeInventoryResponse dcaeResponse = queryDcaeToGetServiceTypeId(blueprintArtifact);
         newLoopTemplate.setDcaeBlueprintId(dcaeResponse.getTypeId());
         return newLoopTemplate;
     }
 
-    private HashSet<LoopElementModel> createMicroServiceModels(List<BlueprintMicroService> microServicesChain)
-            throws InterruptedException {
+    private HashSet<LoopElementModel> createMicroServiceModels(BlueprintArtifact blueprintArtifact,
+                                                               List<BlueprintMicroService> microServicesChain)
+            throws SdcArtifactInstallerException {
         HashSet<LoopElementModel> newSet = new HashSet<>();
         for (BlueprintMicroService microService : microServicesChain) {
             LoopElementModel loopElementModel =
                     new LoopElementModel(microService.getModelType(), LoopElementModel.MICRO_SERVICE_TYPE,
                             null);
             newSet.add(loopElementModel);
-            loopElementModel.addPolicyModel(getPolicyModel(microService));
+            PolicyModel newPolicyModel = policyEngineServices.createPolicyModelFromPolicyEngine(microService);
+            if (newPolicyModel != null) {
+                loopElementModel.addPolicyModel(newPolicyModel);
+            } else {
+                throw new SdcArtifactInstallerException(
+                        "Unable to find the policy specified in the blueprint " +
+                                blueprintArtifact.getBlueprintArtifactName() + ") on the Policy Engine:" +
+                                microService.getModelType() + "/" + microService.getModelVersion());
+            }
         }
         return newSet;
-    }
-
-    private PolicyModel getPolicyModel(BlueprintMicroService microService) throws InterruptedException {
-        return policyModelsRepository
-                .findById(new PolicyModelId(microService.getModelType(), microService.getModelVersion()))
-                .orElse(policyEngineServices.createPolicyModelFromPolicyEngine(microService));
     }
 
     /**

@@ -87,20 +87,29 @@ public class PolicyEngineServices {
 
     /**
      * This method query Policy engine and create a PolicyModel object with type and version.
+     * If the policy already exist in the db it returns the existing one.
      *
      * @param policyType    The policyType id
      * @param policyVersion The policy version of that type
-     * @return A PolicyModel created from policyEngine data
+     * @return A PolicyModel created from policyEngine data or null if nothing is found on policyEngine
      */
     public PolicyModel createPolicyModelFromPolicyEngine(String policyType, String policyVersion) {
-        if (!policyModelsService.existsById(
-                new PolicyModelId(policyType, policyVersion))) {
-            return policyModelsService.savePolicyModelInNewTransaction(
-                    new PolicyModel(policyType, this.downloadOnePolicy(policyType, policyVersion), policyVersion));
+        PolicyModel policyModelFound = policyModelsService.getPolicyModel(policyType, policyVersion);
+        if (policyModelFound == null) {
+            String policyTosca = this.downloadOnePolicy(policyType, policyVersion);
+            if (policyTosca != null && !policyTosca.isEmpty()) {
+                return policyModelsService.savePolicyModelInNewTransaction(
+                        new PolicyModel(policyType, policyTosca, policyVersion));
+            } else {
+                logger.error("Policy not found in the Policy Engine, returning null: " + policyType
+                        + "/" + policyVersion);
+                return null;
+            }
+        } else {
+            logger.info("Skipping policy model download as it exists already in the database " + policyType
+                    + "/" + policyVersion);
+            return policyModelFound;
         }
-        logger.info("Skipping policy model download as it exists already in the database " + policyType
-                + "/" + policyVersion);
-        return null;
     }
 
     /**
@@ -158,10 +167,17 @@ public class PolicyEngineServices {
         options.setPrettyFlow(true);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yamlParser = new Yaml(options);
-        return yamlParser.dump((Map<String, Object>) yamlParser.load(callCamelRoute(
+        String responseBody = callCamelRoute(
                 ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
                         .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model",
-                "Get one policy")));
+                "Get one policy");
+
+        if (responseBody == null || responseBody.isEmpty()) {
+            logger.warn("getPolicyModel returned by policy engine could not be decoded, as it's null or empty");
+            return null;
+        }
+
+        return yamlParser.dump((Map<String, Object>) yamlParser.load(responseBody));
     }
 
     /**
@@ -196,8 +212,7 @@ public class PolicyEngineServices {
             Exchange exchangeResponse = camelContext.createProducerTemplate().send(camelFlow, exchange);
             if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
                 return (String) exchangeResponse.getIn().getBody();
-            }
-            else {
+            } else {
                 logger.info(logMsg + " query " + retryInterval + "ms before retrying ...");
                 // wait for a while and try to connect to DCAE again
                 try {
