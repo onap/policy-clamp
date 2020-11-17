@@ -47,11 +47,11 @@ Quick Links:
 
     - The Upgrade strategy for Guilin can be found here:`<https://wiki.onap.org/display/DW/Frankfurt+CLAMP+Container+upgrade+strategy>`_
     - New Docker Containers are available. the list of containers composing this release are below:
-      - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.1.5
-      - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.1.5
-      - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.4
-      - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.4
-      - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.4
+       - clamp-backend: nexus3.onap.org:10001/onap/clamp-backend 5.1.5
+       - clamp-frontend: nexus3.onap.org:10001/onap/clamp-frontend 5.1.5
+       - clamp-dash-es: nexus3.onap.org:10001/onap/clamp-dashboard-elasticsearch 5.0.4
+       - clamp-dash-kibana: nexus3.onap.org:10001/onap/clamp-dashboard-kibana 5.0.4
+       - clamp-dash-logstash: nexus3.onap.org:10001/onap/clamp-dashboard-logstash 5.0.4
 
 
 Version: 5.0.7 (Frankfurt maintenance release tag 6.0.0)
