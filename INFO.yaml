@@ -1,0 +1,61 @@
+---
+project: 'policy-clamp'
+project_creation_date: '2020-12-01'
+lifecycle_state: 'Incubation'
+project_category: ''
+project_lead: &onap_releng_ptl
+    name: 'Jim Hahn'
+    email: 'jrh3@att.com'
+    id: 'jrh3'
+    company: 'ATT'
+    timezone: 'America/New_York'
+primary_contact: *onap_releng_ptl
+issue_tracking:
+    type: 'jira'
+    url: 'https://jira.onap.org/projects/POLICY'
+    key: 'POLICY'
+mailing_list:
+    type: 'groups.io'
+    url: 'lists.onap.org'
+    tag: '<[sub-project_name]>'
+realtime_discussion: ''
+meetings:
+    - type: 'zoom'
+      agenda: 'https://wiki.onap.org/pages/viewpage.action?pageId=6589781'
+      url: 'https://wiki.onap.org/display/DW/Policy+Framework+Project'
+      server: 'n/a'
+      channel: 'n/a'
+      repeats: 'weekly'
+      time: '14:00 UTC'
+repositories:
+    - 'policy/clamp'
+committers:
+    - <<: *onap_releng_ptl
+    - name: 'Gervais-Martial Ngueko'
+      email: 'gervais-martial.ngueko@intl.att.com'
+      id: 'osgn422w'
+      company: 'ATT'
+      timezone: 'Europe/Brussels'
+    - name: 'Christophe Closset'
+      email: 'christophe.closset@intl.att.com'
+      company: 'ATT'
+      id: 'ChrisC'
+      timezone: 'Europe/Brussels'
+    - name: 'Eddy Hautot'
+      email: 'eddy.hautot@intl.att.com'
+      company: 'ATT'
+      id: 'ehautot'
+      timezone: 'Europe/Brussels'
+    - name: 'Sebastien Determe'
+      email: 'sebastien.determe@intl.att.com'
+      company: 'ATT'
+      id: 'sebdet'
+      timezone: 'Europe/Brussels'
+    - name: 'Xue Gao'
+      email: 'xue.gao@intl.att.com'
+      company: 'ATT'
+      id: 'xuegao'
+      timezone: 'Europe/Brussels'
+tsc:
+    approval: 'https://lists.onap.org/pipermail/onap-tsc'
+    changes:
