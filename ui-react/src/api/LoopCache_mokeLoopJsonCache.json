@@ -1,0 +1,125 @@
+{
+  "name": "LOOP_Jbv1z_v1_0_ResourceInstanceName1_tca",
+  "dcaeBlueprintId": "typeId-3a942643-a8f7-4e54-b2c1-eea8daba2b17",
+  "globalPropertiesJson": {
+    "dcaeDeployParameters": {
+      "location_id": "",
+      "service_id": "",
+      "policy_id": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca"
+    }
+  },
+  "loopTemplate": {"name": "loopTemplateTest"},
+  "modelService": {
+    "serviceDetails": {
+      "serviceType": "",
+      "namingPolicy": "",
+      "environmentContext": "General_Revenue-Bearing",
+      "serviceEcompNaming": "true",
+      "serviceRole": "",
+      "name": "vLoadBalancerMS",
+      "description": "vLBMS",
+      "invariantUUID": "30ec5b59-4799-48d8-ac5f-1058a6b0e48f",
+      "ecompGeneratedNaming": "true",
+      "category": "Network L4+",
+      "type": "Service",
+      "UUID": "63cac700-ab9a-4115-a74f-7eac85e3fce0",
+      "instantiationType": "A-la-carte"
+    },
+    "resourceDetails": {
+      "CP": {},
+      "VL": {},
+      "VF": {
+        "vLoadBalancerMS 0": {
+          "resourceVendor": "Test",
+          "resourceVendorModelNumber": "",
+          "name": "vLoadBalancerMS",
+          "description": "vLBMS",
+          "invariantUUID": "1a31b9f2-e50d-43b7-89b3-a040250cf506",
+          "subcategory": "Load Balancer",
+          "category": "Application L4+",
+          "type": "VF",
+          "UUID": "b4c4f3d7-929e-4b6d-a1cd-57e952ddc3e6",
+          "version": "1.0",
+          "resourceVendorRelease": "1.0",
+          "customizationUUID": "465246dc-7748-45f4-a013-308d92922552"
+        }
+      },
+      "CR": {},
+      "VFC": {},
+      "PNF": {},
+      "Service": {},
+      "CVFC": {},
+      "Service Proxy": {},
+      "Configuration": {},
+      "AllottedResource": {},
+      "VFModule": {
+        "Vloadbalancerms..vpkg..module-1": {
+          "vfModuleModelInvariantUUID": "ca052563-eb92-4b5b-ad41-9111768ce043",
+          "vfModuleModelVersion": "1",
+          "vfModuleModelName": "Vloadbalancerms..vpkg..module-1",
+          "vfModuleModelUUID": "1e725ccc-b823-4f67-82b9-4f4367070dbc",
+          "vfModuleModelCustomizationUUID": "1bffdc31-a37d-4dee-b65c-dde623a76e52",
+          "min_vf_module_instances": 0,
+          "vf_module_label": "vpkg",
+          "max_vf_module_instances": 1,
+          "vf_module_type": "Expansion",
+          "isBase": false,
+          "initial_count": 0,
+          "volume_group": false
+        }
+      }
+    }
+  },
+  "lastComputedState": "DESIGN",
+  "components": {
+    "POLICY": {
+      "componentState": {
+        "stateName": "NOT_SENT",
+        "description": "The policies defined have NOT yet been created on the policy engine"
+      }
+    },
+    "DCAE": {
+      "componentState": {
+        "stateName": "BLUEPRINT_DEPLOYED",
+        "description": "The DCAE blueprint has been found in the DCAE inventory but not yet instancianted for this loop"
+      }
+    }
+  },
+  "operationalPolicies": [
+    {
+      "name": "OPERATIONAL_h2NMX_v1_0_ResourceInstanceName1_tca",
+      "configurationsJson": {
+        "operational_policy": {
+          "controlLoop": {},
+          "policies": []
+        }
+      },
+      "pdpGroup": "pdpGroupTest",
+      "pdpSubgroup": "pdpSubgroupTest",
+      "jsonRepresentation": {
+        "schema": {}
+      }
+    }
+  ],
+  "microServicePolicies": [
+    {
+      "name": "TCA_h2NMX_v1_0_ResourceInstanceName1_tca",
+      "modelType": "onap.policies.monitoring.cdap.tca.hi.lo.app",
+      "configurationsJson": {"domain": "measurementsForVfScaling"},
+      "shared": false,
+      "pdpGroup": "pdpGroupTest",
+      "pdpSubgroup": "pdpSubgroupTest",
+      "policyModel": {"policyPdpGroup": {"supportedPdpGroups": "supportedPdpGroupsTest"}},
+      "jsonRepresentation": {"schema": {}}
+    }
+  ],
+  "loopLogs": [
+    {
+      "id": 1,
+      "logType": "INFO",
+      "logComponent": "CLAMP",
+      "message": "Operational policies UPDATED",
+      "logInstant": "2019-07-08T09:44:37Z"
+    }
+  ]
+}

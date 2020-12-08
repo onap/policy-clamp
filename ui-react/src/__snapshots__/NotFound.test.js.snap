@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify OnapClamp Test the render method 1`] = `
+<div
+  id="main"
+>
+  <div
+    class="divRow"
+  >
+    <b>
+      Page Not Found!
+    </b>
+  </div>
+  <div
+    class="divRow"
+  >
+    Please cick 
+    <a
+      href="/"
+    >
+      here
+    </a>
+     to go back to the main page.
+  </div>
+</div>
+`;

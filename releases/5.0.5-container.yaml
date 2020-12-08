@@ -1,0 +1,10 @@
+distribution_type: 'container'
+container_release_tag: '5.0.5'
+project: 'clamp'
+log_dir: 'clamp-maven-docker-stage-master/393/'
+ref: 6c42be8a5b9a90c3a2c2907174d4264cf5606ac4
+containers:
+    - name: 'clamp-backend'
+      version: '5.0-STAGING-20200423T085725Z'
+    - name: 'clamp-frontend'
+      version: '5.0-STAGING-20200423T085725Z'

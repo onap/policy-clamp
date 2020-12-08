@@ -1,0 +1,108 @@
+{
+    "schema": {
+        "uniqueItems": "true",
+        "format": "tabs",
+        "type": "array",
+        "title": "Properties with different types",
+        "items": {
+            "type": "object",
+            "title": "Properties with different types",
+            "required": [
+                "memSize"
+            ],
+            "properties": {
+                "cpus": {
+                    "propertyOrder": 1001,
+                    "uniqueItems": "true",
+                    "format": "tabs-top",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [],
+                        "properties": {
+                            "closedLoopControlName": {
+                                "propertyOrder": 1002,
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "domain": {
+                    "propertyOrder": 1009,
+                    "type": "object",
+                    "required": [],
+                    "properties": {
+                        "closedLoopControlName": {
+                            "propertyOrder": 1002,
+                            "type": "string"
+                        }
+                    }
+                },
+                "thresholdValue": {
+                    "propertyOrder": 1007,
+                    "uniqueItems": "true",
+                    "format": "select",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "ports": {
+                    "propertyOrder": 1003,
+                    "type": "object",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "closedLoopEventStatus": {
+                    "propertyOrder": 1004,
+                    "type": "object",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "version": {
+                    "propertyOrder": 1008,
+                    "uniqueItems": "true",
+                    "format": "tabs-top",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": [],
+                        "properties": {
+                            "closedLoopControlName": {
+                                "propertyOrder": 1002,
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "memSize": {
+                    "propertyOrder": 1006,
+                    "required": [],
+                    "properties": {
+                        "name": {
+                            "propertyOrder": 20002,
+                            "required": [
+                                "severity"
+                            ],
+                            "properties": {
+                                "severity": {
+                                    "propertyOrder": 20003,
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "direction": {
+                    "propertyOrder": 1005,
+                    "type": "object",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        }
+    }
+}

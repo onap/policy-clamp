@@ -1,0 +1,20 @@
+target
+.settings
+.classpath
+.project
+.buildpath
+.idea
+*.iml
+ui-react/node_modules
+ui-react/build
+**/.evosuite/
+**/debug-logs/
+*.log
+*.tmp
+
+# emacs working files
+.\#*
+\#*\#
+*~
+auto-save-list
+tramp
