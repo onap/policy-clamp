@@ -158,9 +158,10 @@ public class Service implements Serializable {
             if (other.serviceUuid != null) {
                 return false;
             }
-        }
-        else if (!serviceUuid.equals(other.serviceUuid)) {
-            return false;
+        } else {
+            if (!serviceUuid.equals(other.serviceUuid)) {
+                return false;
+            }
         }
         return true;
     }

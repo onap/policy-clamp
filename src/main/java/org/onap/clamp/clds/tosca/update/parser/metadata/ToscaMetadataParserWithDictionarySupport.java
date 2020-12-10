@@ -58,8 +58,7 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
         if (dictionaryService != null) {
             return parseMetadataPossibleValues(toscaElementProperty.getItems(), dictionaryService, serviceModel,
                     toscaMetadataExecutor);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -163,8 +162,7 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
         if (dictionaryFullNames.size() > 0) {
             if (childObject.get(JsonEditorSchemaConstants.ENUM) != null) {
                 childObject.get(JsonEditorSchemaConstants.ENUM).getAsJsonArray().add(dictionaryFullNames);
-            }
-            else {
+            } else {
                 childObject.add(JsonEditorSchemaConstants.ENUM, dictionaryFullNames);
             }
             // Add Enum titles for generated translated values during JSON instance
@@ -173,17 +171,14 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
             enumTitles.add(JsonEditorSchemaConstants.ENUM_TITLES, dictionaryNames);
             if (childObject.get(JsonEditorSchemaConstants.OPTIONS) != null) {
                 childObject.get(JsonEditorSchemaConstants.OPTIONS).getAsJsonArray().add(enumTitles);
-            }
-            else {
+            } else {
                 childObject.add(JsonEditorSchemaConstants.OPTIONS, enumTitles);
             }
 
-        }
-        else {
+        } else {
             if (childObject.get(JsonEditorSchemaConstants.ENUM) != null) {
                 childObject.get(JsonEditorSchemaConstants.ENUM).getAsJsonArray().add(dictionaryNames);
-            }
-            else {
+            } else {
                 childObject.add(JsonEditorSchemaConstants.ENUM, dictionaryNames);
             }
         }
@@ -196,8 +191,7 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
                         dictionaryReference.length()).split("#");
         if (dictionaryKeyArray.length > 1) {
             processComplexDictionaryElements(dictionaryKeyArray, childObject, dictionaryService);
-        }
-        else {
+        } else {
             processSimpleDictionaryElements(dictionaryKeyArray, childObject, dictionaryService);
         }
     }
@@ -206,11 +200,9 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
         String jsonType = null;
         if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_INTEGER)) {
             jsonType = JsonEditorSchemaConstants.TYPE_INTEGER;
-        }
-        else if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_LIST)) {
+        } else if (toscaType.equalsIgnoreCase(ToscaSchemaConstants.TYPE_LIST)) {
             jsonType = JsonEditorSchemaConstants.TYPE_ARRAY;
-        }
-        else {
+        } else {
             jsonType = JsonEditorSchemaConstants.TYPE_STRING;
         }
         return jsonType;

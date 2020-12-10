@@ -24,7 +24,6 @@
 package org.onap.clamp.clds.config;
 
 import javax.servlet.Filter;
-
 import org.onap.clamp.clds.filter.ClampCadiFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

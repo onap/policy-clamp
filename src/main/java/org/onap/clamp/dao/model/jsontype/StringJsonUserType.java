@@ -24,7 +24,6 @@
 package org.onap.clamp.dao.model.jsontype;
 
 import com.google.gson.JsonObject;
-
 import org.hibernate.type.AbstractSingleColumnStandardBasicType;
 import org.hibernate.type.descriptor.java.JavaTypeDescriptor;
 import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;

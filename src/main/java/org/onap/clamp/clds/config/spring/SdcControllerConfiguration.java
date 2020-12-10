@@ -25,13 +25,10 @@ package org.onap.clamp.clds.config.spring;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcControllersConfiguration;
 import org.onap.clamp.clds.exception.sdc.controller.SdcControllerException;

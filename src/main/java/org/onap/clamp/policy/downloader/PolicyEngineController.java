@@ -25,9 +25,7 @@ package org.onap.clamp.policy.downloader;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.time.Instant;
-
 import org.json.simple.parser.ParseException;
 import org.onap.clamp.clds.client.PolicyEngineServices;
 import org.onap.clamp.loop.template.PolicyModelsRepository;

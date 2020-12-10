@@ -26,7 +26,6 @@ package org.onap.clamp.clds.util;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.io.InputStream;
 import java.util.Properties;
 

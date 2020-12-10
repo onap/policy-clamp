@@ -24,7 +24,6 @@
 package org.onap.clamp.loop.template;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 
 public class PolicyModelId implements Serializable {

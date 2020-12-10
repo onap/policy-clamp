@@ -197,8 +197,7 @@ public class JsonTemplate {
             if (fieldStaticStatus(fieldName)) {
                 String defaultValue = (String) this.getSpecificField(fieldName).getValue();
                 jsonSchema.addProperty(fieldName, defaultValue);
-            }
-            else {
+            } else {
                 jsonSchema.addProperty(fieldName, value);
             }
         }

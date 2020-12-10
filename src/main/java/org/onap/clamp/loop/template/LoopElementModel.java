@@ -212,7 +212,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     }
 
     /**
-     * @param shortName the shortName to set.
+     *  * @param shortName the shortName to set.
      */
     public void setShortName(String shortName) {
         this.shortName = shortName;
@@ -255,11 +255,9 @@ public class LoopElementModel extends AuditEntity implements Serializable {
     public Policy createPolicyInstance(Loop loop, ToscaConverterWithDictionarySupport toscaConverter) {
         if (LoopElementModel.MICRO_SERVICE_TYPE.equals(this.getLoopElementType())) {
             return new MicroServicePolicy(loop, loop.getModelService(), this, toscaConverter);
-        }
-        else if (LoopElementModel.OPERATIONAL_POLICY_TYPE.equals(this.getLoopElementType())) {
+        } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE.equals(this.getLoopElementType())) {
             return new OperationalPolicy(loop, loop.getModelService(), this, toscaConverter);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -288,8 +286,7 @@ public class LoopElementModel extends AuditEntity implements Serializable {
             if (other.name != null) {
                 return false;
             }
-        }
-        else if (!name.equals(other.name)) {
+        } else if (!name.equals(other.name)) {
             return false;
         }
         return true;

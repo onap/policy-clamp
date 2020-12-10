@@ -63,8 +63,7 @@ public class DcaeDeployParameters {
             Object defaultValue = ((Map<String, Object>) elem.getValue()).get("default");
             if (defaultValue != null) {
                 addPropertyToNode(deployJsonBody, elem.getKey(), defaultValue);
-            }
-            else {
+            } else {
                 deployJsonBody.addProperty(elem.getKey(), "");
             }
         });
@@ -75,17 +74,13 @@ public class DcaeDeployParameters {
     private static void addPropertyToNode(JsonObject node, String key, Object value) {
         if (value instanceof String) {
             node.addProperty(key, (String) value);
-        }
-        else if (value instanceof Number) {
+        } else if (value instanceof Number) {
             node.addProperty(key, (Number) value);
-        }
-        else if (value instanceof Boolean) {
+        } else if (value instanceof Boolean) {
             node.addProperty(key, (Boolean) value);
-        }
-        else if (value instanceof Character) {
+        } else if (value instanceof Character) {
             node.addProperty(key, (Character) value);
-        }
-        else {
+        } else {
             node.addProperty(key, JsonUtils.GSON.toJson(value));
         }
     }
@@ -105,8 +100,7 @@ public class DcaeDeployParameters {
                     generateDcaeDeployParameter(loop.getLoopTemplate().getBlueprint(),
                             ((MicroServicePolicy) loop.getMicroServicePolicies().toArray()[0]).getName()));
 
-        }
-        else {
+        } else {
             LinkedHashMap<String, JsonObject> deploymentParamMap = init(loop);
             for (Map.Entry<String, JsonObject> mapElement : deploymentParamMap.entrySet()) {
                 deployParamJson.add(mapElement.getKey(), mapElement.getValue());
