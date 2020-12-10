@@ -32,9 +32,9 @@ public class PolicyModelKeyTest {
 
     @Test
     public void testEqualsMethod() throws IOException {
-        PolicyModelKey key1 = new PolicyModelKey("name1","1.0.0");
-        PolicyModelKey key2 = new PolicyModelKey(null,"1.0.0");
-        PolicyModelKey key3 = new PolicyModelKey("name1",null);
+        PolicyModelKey key1 = new PolicyModelKey("name1", "1.0.0");
+        PolicyModelKey key2 = new PolicyModelKey(null, "1.0.0");
+        PolicyModelKey key3 = new PolicyModelKey("name1", null);
 
         assertThat(key1.equals(null)).isFalse();
         assertThat(key1.equals("key2")).isFalse();
@@ -42,13 +42,13 @@ public class PolicyModelKeyTest {
         assertThat(key2.equals(key1)).isFalse();
         assertThat(key3.equals(key1)).isFalse();
 
-        PolicyModelKey key4 = new PolicyModelKey("name2","1.0.0");
-        PolicyModelKey key5 = new PolicyModelKey("name1","2.0.0");
+        PolicyModelKey key4 = new PolicyModelKey("name2", "1.0.0");
+        PolicyModelKey key5 = new PolicyModelKey("name1", "2.0.0");
         assertThat(key1.equals(key4)).isFalse();
         assertThat(key1.equals(key5)).isFalse();
 
-        PolicyModelKey key6 = new PolicyModelKey("name(.*)","1.0.0");
-        PolicyModelKey key7 = new PolicyModelKey("name1","1.0.0");
+        PolicyModelKey key6 = new PolicyModelKey("name(.*)", "1.0.0");
+        PolicyModelKey key7 = new PolicyModelKey("name1", "1.0.0");
         assertThat(key1.equals(key6)).isTrue();
         assertThat(key1.equals(key7)).isTrue();
     }

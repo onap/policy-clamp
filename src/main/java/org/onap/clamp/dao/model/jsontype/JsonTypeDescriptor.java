@@ -24,9 +24,7 @@
 package org.onap.clamp.dao.model.jsontype;
 
 import com.google.gson.JsonObject;
-
 import java.io.Serializable;
-
 import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.type.descriptor.java.AbstractTypeDescriptor;
 import org.hibernate.type.descriptor.java.ImmutableMutabilityPlan;

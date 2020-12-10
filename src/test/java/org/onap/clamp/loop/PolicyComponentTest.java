@@ -23,6 +23,8 @@
 
 package org.onap.clamp.loop;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -37,8 +39,6 @@ import org.onap.clamp.loop.template.LoopTemplate;
 import org.onap.clamp.loop.template.PolicyModel;
 import org.onap.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.clamp.policy.operational.OperationalPolicy;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class PolicyComponentTest {
 

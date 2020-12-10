@@ -121,7 +121,7 @@ public class AuthorizationControllerItCase {
 
     @Test
     public void testIsUserPermitted() {
-        assertEquals(AuthorizationController.getPrincipalName(sc),"admin");
+        assertEquals(AuthorizationController.getPrincipalName(sc), "admin");
         assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl", "dev", "read")));
         assertTrue(auth.isUserPermitted(new SecureServicePermission("permission-type-cl-manage", "dev", "DEPLOY")));
         assertTrue(auth.isUserPermitted(

@@ -223,7 +223,7 @@ public class LoopTemplate extends AuditEntity implements Serializable {
      * @param loopElementModel The loopElementModel to add
      */
     public void addLoopElementModel(LoopElementModel loopElementModel) {
-        this.addLoopElementModel(loopElementModel,this.loopElementModelsUsed.size());
+        this.addLoopElementModel(loopElementModel, this.loopElementModelsUsed.size());
     }
 
     /**

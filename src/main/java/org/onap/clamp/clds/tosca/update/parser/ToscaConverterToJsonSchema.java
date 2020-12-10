@@ -145,8 +145,7 @@ public class ToscaConverterToJsonSchema {
             if (getToscaElement((String) property.getValue().getItems().get("type")) != null) {
                 jsonSchema.add(property.getValue().getName(),
                         this.getJsonSchemaOfToscaElement((String) property.getValue().getItems().get("type")));
-            }
-            else {
+            } else {
                 jsonSchema.add(property.getValue().getName(), this.complexParse(property.getValue()));
             }
         }
@@ -176,8 +175,7 @@ public class ToscaConverterToJsonSchema {
         String typeProperty = (String) toscaElementProperty.getItems().get("type");
         if (typeProperty.toLowerCase().equals("list") || typeProperty.toLowerCase().equals("map")) {
             currentPropertyJsonTemplate = templates.get("object");
-        }
-        else {
+        } else {
             String propertyType = (String) toscaElementProperty.getItems().get("type");
             currentPropertyJsonTemplate = templates.get(propertyType.toLowerCase());
         }
@@ -264,9 +262,8 @@ public class ToscaConverterToJsonSchema {
                                 break;
                         }
 
-                    }
-                    // Native cases
-                    else if (toscaElementProperty.getItems().get("type").equals("list")) {
+                    } else if (toscaElementProperty.getItems().get("type").equals("list")) {
+                        // Native cases
                         JsonObject itemContainer = new JsonObject();
                         String valueInEntrySchema =
                                 this.extractSpecificFieldFromMap(toscaElementProperty, "entry_schema");

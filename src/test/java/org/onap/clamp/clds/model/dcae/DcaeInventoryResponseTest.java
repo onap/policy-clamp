@@ -26,7 +26,6 @@ package org.onap.clamp.clds.model.dcae;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.TreeSet;
-
 import org.junit.Test;
 
 public class DcaeInventoryResponseTest {

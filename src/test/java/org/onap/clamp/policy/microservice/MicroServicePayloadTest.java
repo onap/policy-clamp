@@ -37,10 +37,11 @@ public class MicroServicePayloadTest {
     public void testPayloadConstruction() throws IOException {
         MicroServicePolicy policy = new MicroServicePolicy("testPolicy", new PolicyModel(
                 "onap.policies.monitoring.cdap.tca.hi.lo.app",
-            ResourceFileUtils.getResourceAsString("tosca/tosca_example.yaml"),"1.0.0"), false,null,null, null,null);
+                ResourceFileUtils.getResourceAsString("tosca/tosca_example.yaml"), "1.0.0"), false, null, null, null,
+                null);
         policy.setConfigurationsJson(JsonUtils.GSON.fromJson(
-            ResourceFileUtils.getResourceAsString("tosca/micro-service-policy-properties.json"), JsonObject.class));
+                ResourceFileUtils.getResourceAsString("tosca/micro-service-policy-properties.json"), JsonObject.class));
         JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("tosca/micro-service-policy-payload.json"),
-            policy.createPolicyPayload(), false);
+                policy.createPolicyPayload(), false);
     }
 }

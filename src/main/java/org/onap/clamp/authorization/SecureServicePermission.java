@@ -83,7 +83,7 @@ public class SecureServicePermission {
     }
 
     /**
-     * Instantiate permission given type from concatenated string
+     * Instantiate permission given type from concatenated string.
      *
      * @param concatenatedString
      *            the string type|instance|action, less than 3 params can be

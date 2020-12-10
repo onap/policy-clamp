@@ -31,10 +31,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 
 import java.security.InvalidKeyException;
-
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;

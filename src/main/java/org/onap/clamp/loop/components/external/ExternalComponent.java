@@ -24,7 +24,6 @@
 package org.onap.clamp.loop.components.external;
 
 import com.google.gson.annotations.Expose;
-
 import org.apache.camel.Exchange;
 
 /**

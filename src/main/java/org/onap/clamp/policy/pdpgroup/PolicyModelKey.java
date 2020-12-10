@@ -24,7 +24,6 @@
 package org.onap.clamp.policy.pdpgroup;
 
 import com.google.gson.annotations.Expose;
-
 import java.io.Serializable;
 
 public class PolicyModelKey implements Serializable {

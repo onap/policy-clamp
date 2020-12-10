@@ -215,9 +215,8 @@ public class CsarInstallerItCase {
         Mockito.when(notificationData.getServiceArtifacts()).thenReturn(serviceArtifactsList);
 
         CsarHandler csarHandler = new CsarHandler(notificationData, "", "");
-        csarHandler
-                .setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME_CDS).
-                        getFile());
+        csarHandler.setFilePath(Thread.currentThread().getContextClassLoader().getResource(CSAR_ARTIFACT_NAME_CDS)
+                        .getFile());
         Assert.assertEquals(csarHandler.getPolicyModelYaml(), Optional
                 .ofNullable(ResourceFileUtils.getResourceAsString("example/sdc/expected-result/policy-data.yaml")));
     }

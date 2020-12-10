@@ -52,8 +52,7 @@ public class JsonTemplateManager {
         if (toscaYamlContent != null && !toscaYamlContent.isEmpty()) {
             this.toscaElements = ToscaElementParser.searchAllToscaElements(toscaYamlContent, nativeToscaDatatypes);
             this.jsonSchemaTemplates = initializeTemplates(jsonSchemaTemplates);
-        }
-        else {
+        } else {
             toscaElements = null;
         }
     }
@@ -111,10 +110,9 @@ public class JsonTemplateManager {
         if (operation
                 && !this.jsonSchemaTemplates.get(nameTemplate).getJsonTemplateFields().contains(jsonTemplateField)) {
             this.jsonSchemaTemplates.get(nameTemplate).addField(jsonTemplateField);
-        }
-        // Operation = false && field is present => remove Field
-        else if (!operation
+        } else if (!operation
                 && this.jsonSchemaTemplates.get(nameTemplate).getJsonTemplateFields().contains(jsonTemplateField)) {
+            // Operation = false && field is present => remove Field
             this.jsonSchemaTemplates.get(nameTemplate).removeField(jsonTemplateField);
         }
     }
@@ -139,8 +137,8 @@ public class JsonTemplateManager {
      * For a given policy type, get a corresponding JsonObject from the tosca model.
      *
      * @param policyType          The policy type in the tosca
-     * @param toscaMetadataParser The MetadataParser class that must be used if metadata section are encountered, if null
-     *                            they will be skipped
+     * @param toscaMetadataParser The MetadataParser class that must be used if metadata section are encountered,
+     *                            if null they will be skipped
      * @return an json object defining the equivalent json schema from the tosca for a given policy type
      */
     public JsonObject getJsonSchemaForPolicyType(String policyType, ToscaMetadataParser toscaMetadataParser,

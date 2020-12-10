@@ -29,12 +29,10 @@ import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.onap.clamp.clds.util.JsonUtils;
 import org.onap.clamp.clds.util.ResourceFileUtils;
 import org.onap.clamp.loop.service.Service;
@@ -57,7 +55,7 @@ public class OperationalPolicyRepresentationBuilder {
     public static final String TYPE_ARRAY = "array";
 
     private OperationalPolicyRepresentationBuilder() {
-    	throw new IllegalStateException("This is Utility class, not supposed to be initiated.");
+        throw new IllegalStateException("This is Utility class, not supposed to be initiated.");
     }
 
     /**
@@ -282,7 +280,7 @@ public class OperationalPolicyRepresentationBuilder {
         jsonObject.add("artifact_version", createSchemaProperty(
                 "artifact version", STRING, artifactVersion, "True", null));
         jsonObject.add("mode", createCdsInputProperty(
-                "mode", STRING, "async" ,null));
+                "mode", STRING, "async", null));
         jsonObject.add("data", createDataProperty(inputs, workFlowName));
         return jsonObject;
     }
@@ -308,7 +306,7 @@ public class OperationalPolicyRepresentationBuilder {
                         dataObj, workFlowName);
             } else {
                 dataObj.add(entry.getKey(),
-                        createCdsInputProperty(key, inputProperty.get(TYPE).getAsString(),null,
+                        createCdsInputProperty(key, inputProperty.get(TYPE).getAsString(), null,
                                 entry.getValue().getAsJsonObject()));
             }
         }

@@ -190,10 +190,10 @@ public final class OnapLogConstants {
         /** MDC reporting outcome description. */
         public static final String RESPONSE_DESCRIPTION = "ResponseDesc";
 
-        /** MDC reporting severity */
+        /** MDC reporting severity. */
         public static final String RESPONSE_SEVERITY = "Severity";
 
-        /** MDC reporting response status code */
+        /** MDC reporting response status code. */
         public static final String RESPONSE_STATUS_CODE = "StatusCode";
 
         /** MDC recording error code. */
@@ -267,20 +267,20 @@ public final class OnapLogConstants {
         ASYNCHRONOUS("ASYNCHRONOUS", Markers.INVOKE_ASYNCHRONOUS);
 
         /** Enum value. */
-        private String mString;
+        private String enumValue;
 
         /** Corresponding marker. */
-        private Marker mMarker;
+        private Marker marker;
 
         /**
          * Construct enum.
          *
-         * @param s enum value.
-         * @param m corresponding Marker.
+         * @param enumValue enum value.
+         * @param marker corresponding Marker.
          */
-        InvocationMode(final String s, final Marker m) {
-            this.mString = s;
-            this.mMarker = m;
+        InvocationMode(final String enumValue, final Marker marker) {
+            this.enumValue = enumValue;
+            this.marker = marker;
         }
 
         /**
@@ -289,7 +289,7 @@ public final class OnapLogConstants {
          * @return Marker.
          */
         public Marker getMarker() {
-            return this.mMarker;
+            return this.marker;
         }
 
         /**
@@ -297,7 +297,7 @@ public final class OnapLogConstants {
          */
         @Override
         public String toString() {
-            return this.mString;
+            return this.enumValue;
         }
     }
 

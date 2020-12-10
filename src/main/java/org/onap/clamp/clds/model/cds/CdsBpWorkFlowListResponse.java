@@ -23,7 +23,6 @@
 package org.onap.clamp.clds.model.cds;
 
 import com.google.gson.annotations.Expose;
-
 import java.util.LinkedList;
 import java.util.List;
 

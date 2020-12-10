@@ -26,12 +26,10 @@ package org.onap.clamp.loop.components.external;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-
 import javax.persistence.Transient;
 import org.apache.camel.Exchange;
 import org.json.simple.JSONArray;
@@ -209,22 +207,37 @@ public class DcaeComponent extends ExternalComponent {
 
         if (dcaeResponse == null) {
             setState(BLUEPRINT_DEPLOYED);
-        } else if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus().equals("succeeded")) {
-            setState(MICROSERVICE_INSTALLED_SUCCESSFULLY);
-        } else if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus().equals("processing")) {
-            setState(PROCESSING_MICROSERVICE_INSTALLATION);
-        } else if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus().equals("failed")) {
-            setState(MICROSERVICE_INSTALLATION_FAILED);
-        } else if (dcaeResponse.getOperationType().equals("uninstall")
-                && dcaeResponse.getStatus().equals("succeeded")) {
-            setState(MICROSERVICE_UNINSTALLED_SUCCESSFULLY);
-        } else if (dcaeResponse.getOperationType().equals("uninstall")
-                && dcaeResponse.getStatus().equals("processing")) {
-            setState(PROCESSING_MICROSERVICE_UNINSTALLATION);
-        } else if (dcaeResponse.getOperationType().equals("uninstall") && dcaeResponse.getStatus().equals("failed")) {
-            setState(MICROSERVICE_UNINSTALLATION_FAILED);
         } else {
-            setState(IN_ERROR);
+            if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus().equals("succeeded")) {
+                setState(MICROSERVICE_INSTALLED_SUCCESSFULLY);
+            } else {
+                if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus()
+                        .equals("processing")) {
+                    setState(PROCESSING_MICROSERVICE_INSTALLATION);
+                } else {
+                    if (dcaeResponse.getOperationType().equals("install") && dcaeResponse.getStatus()
+                            .equals("failed")) {
+                        setState(MICROSERVICE_INSTALLATION_FAILED);
+                    } else {
+                        if (dcaeResponse.getOperationType().equals("uninstall")
+                                && dcaeResponse.getStatus().equals("succeeded")) {
+                            setState(MICROSERVICE_UNINSTALLED_SUCCESSFULLY);
+                        } else {
+                            if (dcaeResponse.getOperationType().equals("uninstall")
+                                    && dcaeResponse.getStatus().equals("processing")) {
+                                setState(PROCESSING_MICROSERVICE_UNINSTALLATION);
+                            } else {
+                                if (dcaeResponse.getOperationType().equals("uninstall") && dcaeResponse.getStatus()
+                                        .equals("failed")) {
+                                    setState(MICROSERVICE_UNINSTALLATION_FAILED);
+                                } else {
+                                    setState(IN_ERROR);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         return this.getState();
     }
