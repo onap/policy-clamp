@@ -1,10 +1,10 @@
 <rests xmlns="http://camel.apache.org/schema/spring">
 	<rest>
 		<get uri="/v1/healthcheck" produces="application/json"
-			outType="org.onap.clamp.clds.model.CldsHealthCheck">
+			outType="org.onap.policy.clamp.clds.model.CldsHealthCheck">
 			<route>
 				<setBody>
-					<method ref="org.onap.clamp.clds.service.CldsHealthcheckService"
+					<method ref="org.onap.policy.clamp.clds.service.CldsHealthcheckService"
 						method="gethealthcheck()" />
 				</setBody>
 				<when>
@@ -18,7 +18,7 @@
 		</get>
 
 		<get uri="/v1/user/getUser" produces="text/plain">
-			<to uri="bean:org.onap.clamp.authorization.UserService?method=getUser()" />
+			<to uri="bean:org.onap.policy.clamp.authorization.UserService?method=getUser()" />
 		</get>
 	</rest>
 </rests>
