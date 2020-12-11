@@ -3,7 +3,7 @@
         <from uri="direct:get-blueprint-workflow-list"/>
         <log loggingLevel="INFO"
              message="Getting blueprint workflow list from CDS"/>
-        <to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting workflow list from CDS')"/>
+        <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting workflow list from CDS')"/>
         <doTry>
             <setHeader headerName="CamelHttpMethod">
                 <constant>GET</constant>
@@ -26,7 +26,7 @@
             </doCatch>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
-                <to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+                <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
             </doFinally>
         </doTry>
     </route>
@@ -34,7 +34,7 @@
         <from uri="direct:get-blueprint-workflow-input-properties"/>
         <log loggingLevel="INFO"
              message="Getting blueprint input properties for workflow"/>
-        <to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting input properties for workflow')"/>
+        <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting input properties for workflow')"/>
         <doTry>
             <setHeader headerName="CamelHttpMethod">
                 <constant>POST</constant>
@@ -57,7 +57,7 @@
             </doCatch>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
-                <to uri="bean:org.onap.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+                <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
             </doFinally>
         </doTry>
     </route>
