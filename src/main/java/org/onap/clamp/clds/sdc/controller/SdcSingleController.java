@@ -26,11 +26,9 @@ package org.onap.clamp.clds.sdc.controller;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import java.util.Date;
 import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
-
 import org.onap.clamp.clds.config.ClampProperties;
 import org.onap.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
 import org.onap.clamp.clds.exception.sdc.controller.BlueprintParserException;

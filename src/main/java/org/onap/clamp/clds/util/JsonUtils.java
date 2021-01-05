@@ -27,9 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.time.Instant;
-
 import org.onap.clamp.authorization.SecureServicePermission;
 import org.onap.clamp.authorization.SecureServicePermissionDeserializer;
 import org.onap.clamp.dao.model.gson.converter.InstantDeserializer;

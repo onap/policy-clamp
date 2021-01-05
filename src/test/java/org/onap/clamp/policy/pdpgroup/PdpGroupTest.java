@@ -27,11 +27,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.junit.Test;
 
 public class PdpGroupTest {

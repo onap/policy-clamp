@@ -26,7 +26,6 @@ package org.onap.clamp.policy.pdpgroup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
-
 import java.util.List;
 
 /**

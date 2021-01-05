@@ -80,8 +80,7 @@ public class CdsDataInstaller {
                         resourcesPropByType.getAsJsonObject(nodeTemplate.getName())
                                 .add(CONTROLLER_PROPERTIES, controllerProperties);
                         logger.info("Successfully installed the CDS data in Service");
-                    }
-                    else {
+                    } else {
                         logger.warn("Skipping CDS data installation in Service, as sdnc_model_name and "
                                 + "sdnc_model_version are not provided in the CSAR");
                     }

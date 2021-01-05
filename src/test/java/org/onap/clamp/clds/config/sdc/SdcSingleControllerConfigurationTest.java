@@ -44,15 +44,17 @@ import org.onap.clamp.clds.util.ResourceFileUtils;
 public class SdcSingleControllerConfigurationTest {
 
     /**
-     * @param fileName file for sdc controller configuration.
+     * This method loads the SDC controller configuration from a file located in the resource folder.
+     *
+     * @param fileName          file for sdc controller configuration.
      * @param sdcControllerName sdc controller name.
      * @return instance of SdcSingleControllerConfiguration.
      */
     public static SdcSingleControllerConfiguration loadControllerConfiguration(String fileName,
-        String sdcControllerName) {
+                                                                               String sdcControllerName) {
 
         InputStreamReader streamReader = new InputStreamReader(ResourceFileUtils.getResourceAsStream(fileName),
-            StandardCharsets.UTF_8);
+                StandardCharsets.UTF_8);
         JsonObject jsonNode = JsonUtils.GSON.fromJson(streamReader, JsonObject.class);
 
         return new SdcSingleControllerConfiguration(jsonNode, sdcControllerName);
@@ -61,7 +63,7 @@ public class SdcSingleControllerConfigurationTest {
     @Test
     public final void testTheInit() throws SdcParametersException, IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-TLS.json",
-            "sdc-controller1");
+                "sdc-controller1");
         assertEquals("User", sdcConfig.getUser());
         assertEquals("ThePassword", sdcConfig.getPassword());
         assertEquals("consumerGroup", sdcConfig.getConsumerGroup());
@@ -72,7 +74,7 @@ public class SdcSingleControllerConfigurationTest {
         assertEquals(30, sdcConfig.getPollingTimeout());
 
         assertThat(SdcSingleControllerConfiguration.SUPPORTED_ARTIFACT_TYPES_LIST)
-            .hasSameSizeAs(sdcConfig.getRelevantArtifactTypes());
+                .hasSameSizeAs(sdcConfig.getRelevantArtifactTypes());
         assertEquals("ThePassword", sdcConfig.getKeyStorePassword());
         assertTrue(sdcConfig.activateServerTLSAuth());
         assertThat(sdcConfig.getMsgBusAddress()).contains("localhost");
@@ -81,7 +83,7 @@ public class SdcSingleControllerConfigurationTest {
     @Test(expected = SdcParametersException.class)
     public final void testAllRequiredParameters() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-TLS.json",
-            "sdc-controller1");
+                "sdc-controller1");
         // No exception should be raised
         sdcConfig.testAllRequiredParameters();
         sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-bad.json", "sdc-controller1");
@@ -91,7 +93,7 @@ public class SdcSingleControllerConfigurationTest {
     @Test
     public final void testAllRequiredParametersEmptyEncrypted() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration(
-            "clds/sdc-controller-config-empty-encrypted.json", "sdc-controller1");
+                "clds/sdc-controller-config-empty-encrypted.json", "sdc-controller1");
         sdcConfig.testAllRequiredParameters();
         assertNull(sdcConfig.getKeyStorePassword());
     }
@@ -99,7 +101,7 @@ public class SdcSingleControllerConfigurationTest {
     @Test
     public final void testConsumerGroupWithNull() throws IOException {
         SdcSingleControllerConfiguration sdcConfig = loadControllerConfiguration("clds/sdc-controller-config-NULL.json",
-            "sdc-controller1");
+                "sdc-controller1");
         assertTrue(sdcConfig.getConsumerGroup() == null);
     }
 }

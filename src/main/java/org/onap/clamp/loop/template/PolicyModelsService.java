@@ -142,7 +142,7 @@ public class PolicyModelsService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public PolicyModel savePolicyModelInNewTransaction(PolicyModel policyModel) {
-            return policyModelsRepository.saveAndFlush(policyModel);
+        return policyModelsRepository.saveAndFlush(policyModel);
     }
 
     /**

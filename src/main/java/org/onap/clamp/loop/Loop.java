@@ -162,8 +162,7 @@ public class Loop extends AuditEntity implements Serializable {
             if (LoopElementModel.MICRO_SERVICE_TYPE.equals(element.getLoopElementModel().getLoopElementType())) {
                 this.addMicroServicePolicy((MicroServicePolicy) element.getLoopElementModel()
                         .createPolicyInstance(this, toscaConverter));
-            }
-            else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
+            } else if (LoopElementModel.OPERATIONAL_POLICY_TYPE
                     .equals(element.getLoopElementModel().getLoopElementType())) {
                 this.addOperationalPolicy((OperationalPolicy) element.getLoopElementModel()
                         .createPolicyInstance(this, toscaConverter));
@@ -381,8 +380,7 @@ public class Loop extends AuditEntity implements Serializable {
             if (other.name != null) {
                 return false;
             }
-        }
-        else if (!name.equals(other.name)) {
+        } else if (!name.equals(other.name)) {
             return false;
         }
         return true;

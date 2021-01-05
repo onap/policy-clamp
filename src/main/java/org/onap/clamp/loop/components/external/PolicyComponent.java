@@ -75,7 +75,8 @@ public class PolicyComponent extends ExternalComponent {
     /**
      * Generates the Json that must be sent to policy to add all policies to Active
      * PDP group.
-     * @param loop the loop object
+     *
+     * @param loop   the loop object
      * @param action POST (to add policy to group) or DELETE (to delete policy from group)
      * @return The json, payload to send
      */
@@ -113,13 +114,11 @@ public class PolicyComponent extends ExternalComponent {
         if (pdpGroupMap.get(pdpGroup) == null) {
             pdpSubGroupMap = new HashMap<>();
             policyList = new LinkedList<>();
-        }
-        else {
+        } else {
             pdpSubGroupMap = pdpGroupMap.get(pdpGroup);
             if (pdpSubGroupMap.get(pdpSubGroup) == null) {
                 policyList = new LinkedList<>();
-            }
-            else {
+            } else {
                 policyList = (List<JsonObject>) pdpSubGroupMap.get(pdpSubGroup);
             }
         }
@@ -162,12 +161,14 @@ public class PolicyComponent extends ExternalComponent {
         ExternalComponentState newState = NOT_SENT;
         if (found && deployed) {
             newState = SENT_AND_DEPLOYED;
-        }
-        else if (found) {
-            newState = SENT;
-        }
-        else if (deployed) {
-            newState = IN_ERROR;
+        } else {
+            if (found) {
+                newState = SENT;
+            } else {
+                if (deployed) {
+                    newState = IN_ERROR;
+                }
+            }
         }
         return newState;
     }

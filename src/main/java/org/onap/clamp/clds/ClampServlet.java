@@ -27,20 +27,17 @@ package org.onap.clamp.clds;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-
 import fj.data.Array;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.onap.clamp.authorization.SecureServicePermission;
 import org.springframework.context.ApplicationContext;

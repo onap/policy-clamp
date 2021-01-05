@@ -39,10 +39,10 @@ public class JsonTemplateFieldTest extends TestCase {
      * Test fieldsEqual method.
      */
     public void testFieldsEqualsMethod() {
-        assertFalse(JsonTemplateField.fieldsEquals(field1,field3));
-        assertFalse(JsonTemplateField.fieldsEquals(field1,field4));
-        assertFalse(JsonTemplateField.fieldsEquals(field1,field5));
-        assertTrue(JsonTemplateField.fieldsEquals(field1,field6));
+        assertFalse(JsonTemplateField.fieldsEquals(field1, field3));
+        assertFalse(JsonTemplateField.fieldsEquals(field1, field4));
+        assertFalse(JsonTemplateField.fieldsEquals(field1, field5));
+        assertTrue(JsonTemplateField.fieldsEquals(field1, field6));
     }
 
     /**

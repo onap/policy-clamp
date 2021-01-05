@@ -25,7 +25,6 @@ package org.onap.clamp.policy;
 
 import java.util.List;
 import java.util.Set;
-
 import org.onap.clamp.loop.Loop;
 
 public interface PolicyService<T extends Policy> {

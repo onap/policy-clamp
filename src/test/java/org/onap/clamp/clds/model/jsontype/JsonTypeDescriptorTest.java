@@ -25,7 +25,6 @@ package org.onap.clamp.clds.model.jsontype;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.gson.JsonObject;
-
 import org.hibernate.HibernateException;
 import org.junit.Test;
 import org.onap.clamp.dao.model.jsontype.JsonTypeDescriptor;
@@ -37,10 +36,10 @@ public class JsonTypeDescriptorTest {
     @Test
     public void testFromString() {
         JsonObject object = new JsonObject();
-        object.addProperty("one","oneValue");
+        object.addProperty("one", "oneValue");
         JsonObject child = new JsonObject();
-        child.addProperty("two","twoValue");
-        object.add("child",child);
+        child.addProperty("two", "twoValue");
+        object.add("child", child);
 
         JsonObject jsonResult = descriptor.fromString("{\"one\":\"oneValue\",\"child\":{\"two\":\"twoValue\"}}");
 
@@ -53,10 +52,10 @@ public class JsonTypeDescriptorTest {
         assertThat(res1).isNull();
 
         JsonObject object = new JsonObject();
-        object.addProperty("one","oneValue");
+        object.addProperty("one", "oneValue");
         JsonObject child = new JsonObject();
-        child.addProperty("two","twoValue");
-        object.add("child",child);
+        child.addProperty("two", "twoValue");
+        object.add("child", child);
         String res2 = descriptor.unwrap(object, String.class, null);
         assertThat(res2.replace("\n", "").replace(" ", ""))
                 .isEqualTo("{\"one\":\"oneValue\",\"child\":{\"two\":\"twoValue\"}}");
@@ -70,7 +69,7 @@ public class JsonTypeDescriptorTest {
     @Test(expected = HibernateException.class)
     public void testUnwrapExpectationThrown() {
         JsonObject object = new JsonObject();
-        object.addProperty("one","oneValue");
+        object.addProperty("one", "oneValue");
 
         descriptor.unwrap(object, Integer.class, null);
     }
@@ -81,10 +80,10 @@ public class JsonTypeDescriptorTest {
         assertThat(res1).isNull();
 
         JsonObject object = new JsonObject();
-        object.addProperty("one","oneValue");
+        object.addProperty("one", "oneValue");
         JsonObject child = new JsonObject();
-        child.addProperty("two","twoValue");
-        object.add("child",child);
+        child.addProperty("two", "twoValue");
+        object.add("child", child);
         JsonObject res2 = descriptor.wrap("{\"one\":\"oneValue\",\"child\":{\"two\":\"twoValue\"}}", null);
         assertThat(res2).isEqualTo(object);
     }

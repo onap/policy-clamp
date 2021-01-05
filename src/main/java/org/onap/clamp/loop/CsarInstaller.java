@@ -187,9 +187,9 @@ public class CsarInstaller {
                 loopElementModel.addPolicyModel(newPolicyModel);
             } else {
                 throw new SdcArtifactInstallerException(
-                        "Unable to find the policy specified in the blueprint " +
-                                blueprintArtifact.getBlueprintArtifactName() + ") on the Policy Engine:" +
-                                microService.getModelType() + "/" + microService.getModelVersion());
+                        "Unable to find the policy specified in the blueprint " + blueprintArtifact
+                                .getBlueprintArtifactName() + ") on the Policy Engine:"
+                                + microService.getModelType() + "/" + microService.getModelVersion());
             }
         }
         return newSet;

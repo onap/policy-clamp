@@ -74,8 +74,7 @@ public class AuditEntity {
     public void setCreatedDate(Instant createdDate) {
         if (createdDate != null) {
             this.createdDate = createdDate.truncatedTo(ChronoUnit.SECONDS);
-        }
-        else {
+        } else {
             this.createdDate = null;
         }
     }
@@ -97,8 +96,7 @@ public class AuditEntity {
     public void setUpdatedDate(Instant updatedDate) {
         if (updatedDate != null) {
             this.updatedDate = updatedDate.truncatedTo(ChronoUnit.SECONDS);
-        }
-        else {
+        } else {
             this.updatedDate = null;
         }
     }
