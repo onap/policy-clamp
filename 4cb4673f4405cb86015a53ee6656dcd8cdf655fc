@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bd93baa0_12eac1fc",
+        "filename": "INFO.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-06T18:17:56Z",
+      "side": 1,
+      "message": "Eddy can be removed, for the others it\u0027s the clamp team so i would say no.\nXue/Chris will still help us. Now i understand that this move is a special case unfortunately.\n\nMay be Martial can be added as well ?",
+      "parentUuid": "77a501ae_8ac67252",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 33
+      },
+      "revId": "4cb4673f4405cb86015a53ee6656dcd8cdf655fc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "57c4040a_8dbf7bbb",
         "filename": "INFO.yaml",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2021-01-06T17:57:47Z",
       "side": 1,
       "message": "usually the tsc approval gets added to the end of list for any modifications.",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "4cb4673f4405cb86015a53ee6656dcd8cdf655fc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7aa19650_7f609618",
+        "filename": "INFO.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-06T18:17:56Z",
+      "side": 1,
+      "message": "Again it\u0027s special case so not sure what can be attached, may be Martial has a link",
+      "parentUuid": "57c4040a_8dbf7bbb",
       "range": {
         "startLine": 79,
         "startChar": 0,
