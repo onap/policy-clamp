@@ -6,8 +6,6 @@
   Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
                               reserved.
   ================================================================================
-  Modifications Copyright (c) 2020 Nordix
-  ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -28,15 +26,16 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.onap.clamp</groupId>
 	<artifactId>clds</artifactId>
-	<version>5.1.1-SNAPSHOT</version>
+	<version>6.0.0-SNAPSHOT</version>
 	<name>clamp</name>
 
 
-	<parent>
-		<groupId>org.onap.oparent</groupId>
-		<artifactId>oparent</artifactId>
-		<version>2.1.0</version>
-	</parent>
+    <parent>
+	    <groupId>org.onap.policy.parent</groupId>
+         <artifactId>integration</artifactId>
+         <version>3.3.0-SNAPSHOT</version>
+         <relativePath />
+    </parent>
 
 	<description>
 	       This is the MAVEN project that builds everything for ONAP CLAMP.
@@ -79,8 +78,7 @@
 
 		<eelf.core.version>1.0.0</eelf.core.version>
 		<camel.version>2.25.2</camel.version>
-		<springboot.version>2.2.9.RELEASE</springboot.version>
-		<policy.models.version>2.3.2-SNAPSHOT</policy.models.version>
+		<springboot.version>2.2.10.RELEASE</springboot.version>
 
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -472,7 +470,7 @@
 		<dependency>
 			<groupId>org.onap.sdc.sdc-distribution-client</groupId>
 			<artifactId>sdc-distribution-client</artifactId>
-			<version>1.3.0</version>
+			<version>1.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.onap.sdc.sdc-tosca</groupId>
@@ -494,18 +492,6 @@
 			<groupId>org.dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>2.1.3</version>
-		</dependency>
-
-		<!-- For TOSCA Controlloop  -->
-		<dependency>
-			<groupId>org.onap.policy.models</groupId>
-			<artifactId>policy-models-base</artifactId>
-			<version>${policy.models.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.onap.policy.models</groupId>
-			<artifactId>policy-models-tosca</artifactId>
-			<version>${policy.models.version}</version>
 		</dependency>
 
 		<!-- TESTING -->

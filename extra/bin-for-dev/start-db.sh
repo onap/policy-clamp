@@ -26,7 +26,7 @@
 docker-compose -f ../docker/clamp/docker-compose.yml up -d db
 
 if [ "$1" = "test" ]; then
-    while ! (docker logs clamp_db_1  2>&1 | grep "socket: '/var/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution" > /dev/null);
+    while ! (docker logs clamp_db_1  2>&1 | grep "socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution" > /dev/null);
     do   
       echo "Waiting Mysql to be up with CLDSDB4 db loaded before loading the TEST DATA ..."
       sleep 3

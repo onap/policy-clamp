@@ -21,7 +21,7 @@
  * 
  */
 
-package org.onap.clamp.clds.maven.scripts
+package org.onap.policy.clamp.clds.maven.scripts
 
 println project.properties['clamp.project.version'];
 

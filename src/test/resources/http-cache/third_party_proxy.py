@@ -179,7 +179,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
      elif self.path.startswith("/dcae-deployments/") and http_type == "PUT":
             print "self.path start with /dcae-deployments/ DEPLOY, generating response json..."
             #jsondata = json.loads(self.data_string)
-            jsonGenerated = "{\"operationType\":\"install\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/install\"}}"
+            jsonGenerated = "{\"operationType\":\"install\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/install?test=test\"}}"
             print "jsonGenerated: " + jsonGenerated
             if not os.path.exists(cached_file_folder):
                 os.makedirs(cached_file_folder, 0777)
@@ -191,7 +191,7 @@ class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
      elif self.path.startswith("/dcae-deployments/") and http_type == "DELETE":
             print "self.path start with /dcae-deployments/ UNDEPLOY, generating response json..."
             #jsondata = json.loads(self.data_string)
-            jsonGenerated = "{\"operationType\":\"uninstall\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/uninstall\"}}"
+            jsonGenerated = "{\"operationType\":\"uninstall\",\"status\":\"processing\",\"links\":{\"status\":\"http:\/\/" + PROXY_ADDRESS + "\/dcae-operationstatus/uninstall?test=test\"}}"
             print "jsonGenerated: " + jsonGenerated
             if not os.path.exists(cached_file_folder):
                 os.makedirs(cached_file_folder, 0777)
