@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc22bd5a_63945e77",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/tosca/update/execution/target/ToscaMetadataTargetProcess.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-06T16:54:37Z",
+      "side": 1,
+      "message": "I missed this file in the checkin because the \"target\" package was suppressed by the .gitigonre target entry.",
+      "revId": "8919b127d277ed5e7d7cb4e9bf8f0bb0252749a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
