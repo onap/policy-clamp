@@ -25,7 +25,7 @@
 FROM node:12.10.0-alpine as build
 WORKDIR /app
 #ENV PATH /app/node_modules/.bin:$PATH
-COPY onap-clamp-frontend/ /app/
+COPY onap-policy-clamp-frontend/ /app/
 RUN npm install --silent
 RUN npm run build
 
