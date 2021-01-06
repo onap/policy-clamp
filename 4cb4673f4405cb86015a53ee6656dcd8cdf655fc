@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77a501ae_8ac67252",
+        "filename": "INFO.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-01-06T17:57:47Z",
+      "side": 1,
+      "message": "shouldn\u0027t some of these names be removed?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 33
+      },
+      "revId": "4cb4673f4405cb86015a53ee6656dcd8cdf655fc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57c4040a_8dbf7bbb",
+        "filename": "INFO.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-01-06T17:57:47Z",
+      "side": 1,
+      "message": "usually the tsc approval gets added to the end of list for any modifications.",
+      "range": {
+        "startLine": 79,
+        "startChar": 0,
+        "endLine": 79,
+        "endChar": 4
+      },
+      "revId": "4cb4673f4405cb86015a53ee6656dcd8cdf655fc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
