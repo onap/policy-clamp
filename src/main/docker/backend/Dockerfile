@@ -33,7 +33,7 @@ ENV HTTPS_PROXY=$https_proxy
 ENV http_proxy=$HTTP_PROXY
 ENV https_proxy=$HTTPS_PROXY
 USER root
-RUN mkdir /opt/policy/clamp
+RUN mkdir -p /opt/policy/clamp
 RUN chown -R onap:onap /opt/policy/clamp
 
 VOLUME /opt/policy/clamp/config
