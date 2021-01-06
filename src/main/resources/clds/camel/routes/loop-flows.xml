@@ -5,7 +5,7 @@
 			<simple>${header.loopName}</simple>
 		</setBody>
 		<setProperty propertyName="loopObject">
-			<method ref="org.onap.clamp.loop.LoopService" method="getLoop" />
+			<method ref="org.onap.policy.clamp.loop.LoopService" method="getLoop" />
 		</setProperty>
 
 		<when>
@@ -67,19 +67,9 @@
 			<setProperty propertyName="policyTypeVersion">
 				<simple>${body.getPolicyModel().getVersion()}</simple>
 			</setProperty>
-			<choice>
-				<when>
-					<simple>${body.isLegacy()} == true</simple>
-					<setProperty propertyName="policyVersion">
-						<simple>1</simple>
-					</setProperty>
-				</when>
-				<otherwise>
-					<setProperty propertyName="policyVersion">
-						<simple>1.0.0</simple>
-					</setProperty>
-				</otherwise>
-			</choice>
+		 	<setProperty propertyName="policyVersion">
+				<simple>1.0.0</simple>
+			</setProperty>
 			<setProperty propertyName="operationalPolicy">
 				<simple>${body}</simple>
 			</setProperty>
@@ -97,7 +87,7 @@
 		<log loggingLevel="INFO"
 			message="Policy state set to: ${exchangeProperty[policyState].getStateName()}" />
 		<to
-			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('Policy state set to: ${exchangeProperty[policyState].getStateName()}','INFO','POLICY',${exchangeProperty[loopObject]})" />
+			uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('Policy state set to: ${exchangeProperty[policyState].getStateName()}','INFO','POLICY',${exchangeProperty[loopObject]})" />
 	</route>
 	<route id="update-dcae-status-for-loop">
 		<from uri="direct:update-dcae-status-for-loop" />
@@ -124,7 +114,7 @@
 						<simple> ${header.CamelHttpResponseCode} == 200 </simple>
 						<convertBodyTo type="java.lang.String" />
 						<setProperty propertyName="dcaeResponse">
-							<method ref="org.onap.clamp.loop.components.external.DcaeComponent"
+							<method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
 								method="convertDcaeResponse(${body})" />
 						</setProperty>
 					</when>
@@ -136,7 +126,7 @@
 				<log loggingLevel="INFO"
 					message="DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - DCAE message: ${exchangeProperty[dcaeResponse].getError()}" />
 				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[loopObject]})" />
+					uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[loopObject]})" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == false
@@ -164,7 +154,7 @@
 							<simple> ${header.CamelHttpResponseCode} == 200 </simple>
 							<convertBodyTo type="java.lang.String" />
 							<setProperty propertyName="dcaeResponse">
-								<method ref="org.onap.clamp.loop.components.external.DcaeComponent"
+								<method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
 									method="convertDcaeResponse(${body})" />
 							</setProperty>
 						</when>
@@ -176,7 +166,7 @@
 					<log loggingLevel="INFO"
 						message="DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - DCAE message: ${exchangeProperty[dcaeResponse].getError()}" />
 					<to
-						uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[microServicePolicy]})" />
+						uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('DCAE state set to: ${exchangeProperty[dcaeState].getStateName()} - message: ${exchangeProperty[dcaeResponse].getError()}','INFO','DCAE',${exchangeProperty[microServicePolicy]})" />
 				</split>>
 			</when>
 		</choice>
@@ -192,7 +182,7 @@
 					== 'NOT_SENT'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'DESIGN')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'DESIGN')" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} == 'IN_ERROR' or
@@ -200,7 +190,7 @@
 					'MICROSERVICE_INSTALLATION_FAILED'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'IN_ERROR')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'IN_ERROR')" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
@@ -208,7 +198,7 @@
 					${exchangeProperty['policyState'].getStateName()} == 'IN_ERROR'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'IN_ERROR')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'IN_ERROR')" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
@@ -216,7 +206,7 @@
 					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'RUNNING')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'RUNNING')" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
@@ -224,7 +214,7 @@
 					${exchangeProperty['policyState'].getStateName()} == 'SENT'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'STOPPED')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'STOPPED')" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
@@ -233,7 +223,7 @@
 					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'SUBMITTED')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'SUBMITTED')" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
@@ -243,7 +233,7 @@
 					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'WAITING')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'WAITING')" />
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
@@ -251,13 +241,13 @@
 					${exchangeProperty['policyState'].getStateName()} != 'NOT_SENT'
 				</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'DEPLOYED')" />
+					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'DEPLOYED')" />
 			</when>
 		</choice>
 		<log loggingLevel="INFO"
 			message="New loop state is: ${exchangeProperty[loopObject].getLastComputedState().toString()}" />
 		<to
-			uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('New loop state is: ${exchangeProperty[loopObject].getLastComputedState().toString()}','INFO',${exchangeProperty[loopObject]})" />
+			uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('New loop state is: ${exchangeProperty[loopObject].getLastComputedState().toString()}','INFO',${exchangeProperty[loopObject]})" />
 
 	</route>
 </routes>
