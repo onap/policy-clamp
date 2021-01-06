@@ -14,11 +14,11 @@
 			<when>
 				<simple>${exchangeProperty[logComponent]} == null</simple>
 				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLog('${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO',${exchangeProperty[loopObject]})" />
+					uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO',${exchangeProperty[loopObject]})" />
 			</when>
 			<otherwise>
 				<to
-					uri="bean:org.onap.clamp.loop.log.LoopLogService?method=addLogForComponent('${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO','${exchangeProperty[logComponent]}',${exchangeProperty[loopObject]})" />
+					uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO','${exchangeProperty[logComponent]}',${exchangeProperty[loopObject]})" />
 				<setProperty propertyName="logComponent">
 					<constant>null</constant>
 				</setProperty>
