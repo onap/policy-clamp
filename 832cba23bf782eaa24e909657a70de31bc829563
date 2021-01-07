@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0037d27_b6d1eb5e",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-07T13:49:51Z",
+      "side": 1,
+      "message": "if no change in 2020, it should probably be:\n\n  2017-2019, 2021",
+      "range": {
+        "startLine": 6,
+        "startChar": 21,
+        "endLine": 6,
+        "endChar": 25
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e09f583c_bb03555b",
+        "filename": "src/main/docker/backend/Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-07T13:49:51Z",
+      "side": 1,
+      "message": "could combine these two commands using \"\u0026\u0026\" to reduce the number of docker layers needed",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 40
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73102cfb_508cf581",
+        "filename": "src/main/docker/frontend/Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-07T13:49:51Z",
+      "side": 1,
+      "message": "could combine these using \"\u0026\u0026\"\n\nsimilar comment in various places below",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 17
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f706c416_a394cf8d",
+        "filename": "src/main/resources/boot-message.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-07T13:49:51Z",
+      "side": 1,
+      "message": "can probably remove these trailing spaces",
+      "range": {
+        "startLine": 21,
+        "startChar": 17,
+        "endLine": 21,
+        "endChar": 37
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
