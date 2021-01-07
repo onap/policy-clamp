@@ -16,6 +16,24 @@
       "revId": "e9e6515c1660ae3249a6db286edb2c120f82dc27",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26b344b7_c951f0e2",
+        "filename": "INFO.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-07T09:25:59Z",
+      "side": 1,
+      "message": "Apologies, copy/paste error in a late night review :-(",
+      "parentUuid": "ef933f75_fc3598cf",
+      "revId": "e9e6515c1660ae3249a6db286edb2c120f82dc27",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
