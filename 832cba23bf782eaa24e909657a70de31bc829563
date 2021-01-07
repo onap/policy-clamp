@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "214c2284_f4ef6a15",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-07T14:08:47Z",
+      "side": 1,
+      "message": "This has been changed in 2020 (nobody has updated it), time to update it i think",
+      "parentUuid": "f0037d27_b6d1eb5e",
+      "range": {
+        "startLine": 6,
+        "startChar": 21,
+        "endLine": 6,
+        "endChar": 25
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e09f583c_bb03555b",
         "filename": "src/main/docker/backend/Dockerfile",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "832cba23bf782eaa24e909657a70de31bc829563",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a236cfe_a99a2c67",
+        "filename": "src/main/docker/backend/Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-07T14:08:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e09f583c_bb03555b",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 40
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fba14b01_9c435801",
+        "filename": "src/main/docker/frontend/Dockerfile",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-07T14:08:47Z",
+      "side": 1,
+      "message": "Indeed, that\u0027s better",
+      "parentUuid": "73102cfb_508cf581",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 17
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f706c416_a394cf8d",
         "filename": "src/main/resources/boot-message.txt",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2021-01-07T13:49:51Z",
       "side": 1,
       "message": "can probably remove these trailing spaces",
+      "range": {
+        "startLine": 21,
+        "startChar": 17,
+        "endLine": 21,
+        "endChar": 37
+      },
+      "revId": "832cba23bf782eaa24e909657a70de31bc829563",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f92c439d_c6ce8041",
+        "filename": "src/main/resources/boot-message.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-07T14:08:47Z",
+      "side": 1,
+      "message": "No they are there on purpose ... the code version and some public certificate infos will be dumped there. This will appear in the logs.",
+      "parentUuid": "f706c416_a394cf8d",
       "range": {
         "startLine": 21,
         "startChar": 17,
