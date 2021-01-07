@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c2cc72c_0b657630",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-07T17:56:42Z",
+      "side": 1,
+      "message": "per Jess, this should probably be 2020-12-03",
+      "range": {
+        "startLine": 3,
+        "startChar": 24,
+        "endLine": 3,
+        "endChar": 34
+      },
+      "revId": "504ecd21f7b402e822cd8daba0982172e97bcfe4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
