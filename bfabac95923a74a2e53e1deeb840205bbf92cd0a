@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c31cc544_7eab056d",
+        "filename": "src/main/docker/backend/Dockerfile",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-07T15:44:00Z",
+      "side": 1,
+      "message": "interesting, I guess that means that some of these arguments were previously being ignored by the jvm",
+      "revId": "bfabac95923a74a2e53e1deeb840205bbf92cd0a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
