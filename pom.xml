@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
-  ONAP CLAMP
+  ONAP POLICY-CLAMP
   ================================================================================
-  Copyright (C) 2017-2019 AT&T Intellectual Property. All rights
+  Copyright (C) 2017-2021 AT&T Intellectual Property. All rights
                               reserved.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +24,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.onap.clamp</groupId>
-	<artifactId>clds</artifactId>
+	<groupId>org.onap.policy</groupId>
+	<artifactId>clamp</artifactId>
 	<version>6.0.0-SNAPSHOT</version>
 	<name>clamp</name>
 
@@ -38,19 +38,19 @@
     </parent>
 
 	<description>
-	       This is the MAVEN project that builds everything for ONAP CLAMP.
+	       This is the MAVEN project that builds everything for ONAP POLICY-CLAMP.
 	       Docker engine is normally requires to perfom all possible tasks (including integration tests)
 
            It can build:
-           - The ONAP CLAMP JAR that contains CLAMP back-end code.
+           - The ONAP POLICY-CLAMP JAR that contains CLAMP back-end code.
            - The DOCKER images for:
-                * CLAMP backend (Java Spring)
-                * CLAMP frontend (Javscript React)
+                * POLICY-CLAMP backend (Java Spring)
+                * POLICY-CLAMP frontend (Javscript React)
 
            It can test:
-            - The CLAMP backend, JAVA unit testing
-            - The CLAMP backend, JAVA integration tests (with Spring + docker mariadb database + docker policy/dcae emulator written in python)
-            - The CLAMP frontend, Javascrip tests (NodeJS(NPM) + JEST + Enzyme fro React)
+            - The POLICY-CLAMP backend, JAVA unit testing
+            - The POLICY-CLAMP backend, JAVA integration tests (with Spring + docker mariadb database + docker policy/dcae emulator written in python)
+            - The POLICY-CLAMP frontend, Javascrip tests (NodeJS(NPM) + JEST + Enzyme fro React)
 
            The test coverage for dev's can be found after a "clean install" build in:
             - Clamp backend: target/jacoco-dev.exec (unit tests + integration tests merged)
@@ -62,7 +62,7 @@
             - mvn clean install -DskipITs=true: Build Clamp backend JAR + unit tests + NPM tests (+coverage for all), it does not require a DOCKER engine
             - mvn clean install -DskipTests -P docker: Build Clamp backend JAR + all docker images
 
-           To start CLAMP (Build it before):
+           To start POLICY-CLAMP (Build it before):
             - Use docker-compose file in ./extra/docker/clamp/docker-compose.yml
             - Use the script located in ./extra/bin/start-backend.sh + start-frontend.sh
             - Use your IDE to use the Jar or start NVM/NPM
@@ -163,17 +163,17 @@
 	<distributionManagement>
 		<repository>
 			<id>ecomp-releases</id>
-			<name>Clamp Release Repository</name>
+			<name>ONAP Release Repository</name>
 			<url>https://nexus.onap.org/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>ecomp-snapshots</id>
-			<name>Clamp Snapshot Repository</name>
+			<name>ONAP Snapshot Repository</name>
 			<url>https://nexus.onap.org/content/repositories/snapshots/</url>
 		</snapshotRepository>
 		<site>
 			<id>ecomp-site</id>
-			<url>dav:https://nexus.onap.org/content/sites/site/org/onap/clamp/${project.version}</url>
+			<url>dav:https://nexus.onap.org/content/sites/site/org/onap/policy/clamp/${project.version}</url>
 		</site>
 	</distributionManagement>
 
@@ -545,7 +545,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>clamp</finalName>
+		<finalName>policy-clamp-backend</finalName>
 
 		<testResources>
 			<testResource>
@@ -664,7 +664,7 @@
 						</goals>
 						<configuration>
 							<packages>
-								<param>org.onap.clamp</param>
+								<param>org.onap.policy.clamp</param>
 							</packages>
 							<dialects>
 								<param>MARIADB53</param>
@@ -827,7 +827,7 @@
 						<configuration>
 							<artifacts>
 								<artifact>
-									<file>${project.build.directory}/clamp-classes.jar</file>
+									<file>${project.build.directory}/policy-clamp-backend-classes.jar</file>
 									<type>jar</type>
 									<classifier>classes</classifier>
 								</artifact>
@@ -983,8 +983,8 @@
 							</run>
 						</image>
 						<image>
-							<name>onap/clamp-backend</name>
-							<alias>onap-clamp-backend</alias>
+							<name>onap/policy-clamp-backend</name>
+							<alias>onap-policy-clamp-backend</alias>
 							<run>
 								<skip>true</skip>
 							</run>
@@ -1000,13 +1000,13 @@
 								<dockerFile>backend/Dockerfile</dockerFile>
 								<assembly>
 									<descriptor>backend/backend-files.xml</descriptor>
-									<name>onap-clamp-backend</name>
+									<name>onap-policy-clamp-backend</name>
 								</assembly>
 							</build>
 						</image>
 						<image>
-							<name>onap/clamp-frontend</name>
-							<alias>onap-clamp-frontend</alias>
+							<name>onap/policy-clamp-frontend</name>
+							<alias>onap-policy-clamp-frontend</alias>
 							<run>
 								<skip>true</skip>
 							</run>
@@ -1022,7 +1022,7 @@
 								<dockerFile>frontend/Dockerfile</dockerFile>
 								<assembly>
 									<descriptor>frontend/frontend-files.xml</descriptor>
-									<name>onap-clamp-frontend</name>
+									<name>onap-policy-clamp-frontend</name>
 								</assembly>
 							</build>
 						</image>
@@ -1069,7 +1069,7 @@
 					<dumpOnExit>true</dumpOnExit>
 					<append>true</append>
 					<includes>
-						<include>org/onap/clamp/**</include>
+						<include>org/onap/policy/clamp/**</include>
 					</includes>
 				</configuration>
 				<executions>

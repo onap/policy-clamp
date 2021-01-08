@@ -2,9 +2,9 @@ version: '3.1'
 
 services:
   clamp-frontend:
-    image: onap/clamp-frontend
+    image: onap/policy-clamp-frontend
     depends_on:
-      - clamp-backend
+      - policy-clamp-backend
     ports:
       - "2443:2443"
   db:
@@ -19,7 +19,7 @@ services:
       - "3306:3306"
 
   clamp-backend:
-    image: onap/clamp-backend
+    image: onap/policy-clamp-backend
     depends_on:
       - db
       - third-party-proxy
