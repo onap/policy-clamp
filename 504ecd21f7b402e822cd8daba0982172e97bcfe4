@@ -46,6 +46,30 @@
       "revId": "504ecd21f7b402e822cd8daba0982172e97bcfe4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1e3d717d_2d8cb8c6",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-08T12:15:02Z",
+      "side": 1,
+      "message": "Thanks!  I believe Seb will address it in the master branch.",
+      "parentUuid": "6f0780a2_f0565aa8",
+      "range": {
+        "startLine": 3,
+        "startChar": 24,
+        "endLine": 3,
+        "endChar": 34
+      },
+      "revId": "504ecd21f7b402e822cd8daba0982172e97bcfe4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
