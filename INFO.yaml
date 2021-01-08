@@ -1,6 +1,6 @@
 ---
 project: 'policy-clamp'
-project_creation_date: '2021-01-06'
+project_creation_date: '2020-12-03'
 lifecycle_state: 'Incubation'
 project_category: ''
 project_lead: &onap_releng_ptl
