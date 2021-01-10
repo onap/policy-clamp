@@ -70,6 +70,30 @@
       "revId": "504ecd21f7b402e822cd8daba0982172e97bcfe4",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "981648ec_527233c3",
+        "filename": "INFO.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-10T15:39:15Z",
+      "side": 1,
+      "message": "Perfect",
+      "parentUuid": "1e3d717d_2d8cb8c6",
+      "range": {
+        "startLine": 3,
+        "startChar": 24,
+        "endLine": 3,
+        "endChar": 34
+      },
+      "revId": "504ecd21f7b402e822cd8daba0982172e97bcfe4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
