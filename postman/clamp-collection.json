@@ -1,0 +1,686 @@
+{
+    "info": {
+        "_postman_id": "05831254-6fad-419f-b10e-ff21cbbd365a",
+        "name": "Policy Framework Administration API",
+        "description": "This collection lists all the Administration API's supported by ONAP Policy Framework. These API's are used to perform administrative operations for managing policies, groups, statistics & health information for all registered PDP engines.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "PAP healthcheck",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/healthcheck",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "healthcheck"
+                    ]
+                },
+                "description": "This is an API to fetch current healthcheck information for the policy-pap component."
+            },
+            "response": []
+        },
+        {
+            "name": "Policy Consolidated healthcheck",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/components/healthcheck",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "components",
+                        "healthcheck"
+                    ]
+                },
+                "description": "This is an API to fetch current healthcheck information for all the policy framework components."
+            },
+            "response": []
+        },
+        {
+            "name": "PdpGroup Query",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps"
+                    ]
+                },
+                "description": "This is an API to fetch details of all PdpGroups currently available in Policy DB."
+            },
+            "response": []
+        },
+        {
+            "name": "PdpGroup State Change",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/groups/defaultGroup?state=ACTIVE",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "groups",
+                        "defaultGroup"
+                    ],
+                    "query": [
+                        {
+                            "key": "state",
+                            "value": "ACTIVE"
+                        }
+                    ]
+                },
+                "description": "This is an API to change the current state of a PdpGroup (example - \"defaultGroup\") resulting in changing state of all the PDP instances registered with the PdpGroup. As of now, the allowed states are ACTIVE and PASSIVE."
+            },
+            "response": []
+        },
+        {
+            "name": "Simple Deploy Policy",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n  \"policies\" : [\r\n    {\r\n      \"policy-id\": \"operational.modifyconfig\",\r\n      \"policy-version\": \"1.0.0\"\r\n    }\r\n    ]\r\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/policies",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "policies"
+                    ]
+                },
+                "description": "This is an API to deploy one or more policies in all available & matching PdpGroups in Policy DB. The match is done based on supported policy types in the PdpSunGroup and the policy type referred by the given policy."
+            },
+            "response": []
+        },
+        {
+            "name": "Simple Undeploy Policy",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/policies/operational.modifyconfig",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "policies",
+                        "operational.modifyconfig"
+                    ]
+                },
+                "description": "This is an API to undeploy one or more policies from all PdpGroups in Policy DB."
+            },
+            "response": []
+        },
+        {
+            "name": "Create/Update PdpGroup",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"groups\": [\n        {\n            \"name\": \"SampleGroup\",\n            \"pdpGroupState\": \"ACTIVE\",\n            \"properties\": {},\n            \"pdpSubgroups\": [\n                {\n                    \"pdpType\": \"apex\",\n                    \"desiredInstanceCount\": 2,\n                    \"properties\": {},\n                    \"supportedPolicyTypes\": [\n                        {\n                            \"name\": \"onap.policies.controlloop.operational.common.Apex\",\n                            \"version\": \"1.0.0\"\n                        }\n                    ],\n                    \"policies\": []\n                },\n                {\n                    \"pdpType\": \"xacml\",\n                    \"desiredInstanceCount\": 1,\n                    \"properties\": {},\n                    \"supportedPolicyTypes\": [\n                        {\n                            \"name\": \"onap.policies.monitoring.*\",\n                            \"version\": \"1.0.0\"\n                        }\n                    ],\n                    \"policies\": []\n                }\n            ]\n        }\n    ]\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/groups/batch",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "groups",
+                        "batch"
+                    ]
+                },
+                "description": "This is a generic API to create/update PdpGroups in Policy DB. However, the supportedPolicyTypes field of PdpSubGroup cannot be changed once created."
+            },
+            "response": []
+        },
+        {
+            "name": "PDPGroup Deploy Policy",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"groups\": [\n        {\n            \"name\": \"defaultGroup\",\n            \"deploymentSubgroups\": [\n                {\n                    \"pdpType\": \"drools\",\n                    \"action\": \"POST\",\n                    \"policies\": [\n                        {\n                            \"name\": \"operational.modifyconfig\",\n                            \"version\": \"1.0.0\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/deployments/batch",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "deployments",
+                        "batch"
+                    ]
+                },
+                "description": "This is an API to deploy one or more policies to the specified PdpGroup, resulting in deployment of policies to all registered PDP instances of that specified PdpGroup."
+            },
+            "response": []
+        },
+        {
+            "name": "PDPGroup Undeploy Policy",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"groups\": [\n        {\n            \"name\": \"defaultGroup\",\n            \"deploymentSubgroups\": [\n                {\n                    \"pdpType\": \"drools\",\n                    \"action\": \"DELETE\",\n                    \"policies\": [\n                        {\n                            \"name\": \"operational.modifyconfig\",\n                            \"version\": \"1.0.0\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}"
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/deployments/batch",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "deployments",
+                        "batch"
+                    ]
+                },
+                "description": "This is an API to undeploy one or more policies from the specified PdpGroup, resulting in removal of policies from all registered PDP instances of that specified PdpGroup."
+            },
+            "response": []
+        },
+        {
+            "name": "Fetch Policy deployment Status",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/policies/deployed/operational.modifyconfig",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "policies",
+                        "deployed",
+                        "operational.modifyconfig"
+                    ]
+                },
+                "description": "This is an API to fetch status of a specific deployed policy in the registered PDP instances."
+            },
+            "response": []
+        },
+        {
+            "name": "Fetch All Policy deployment Status",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/policies/deployed",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "policies",
+                        "deployed"
+                    ]
+                },
+                "description": "This is a generic API to fetch status of all deployed policies in the registered PDP instances."
+            },
+            "response": []
+        },
+        {
+            "name": "Fetch All PDPs Statistics",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/statistics",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "statistics"
+                    ]
+                },
+                "description": "This is an API to fetch current statistics information for the all registered PDP instances."
+            },
+            "response": []
+        },
+        {
+            "name": "Fetch PdpGroup Statistics",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/statistics/defaultGroup",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "statistics",
+                        "defaultGroup"
+                    ]
+                },
+                "description": "This is an API to fetch current statistics information for the all registered PDP instances of the specified PdpGroup (example - \"defaultGroup\")."
+            },
+            "response": []
+        },
+        {
+            "name": "Fetch PdpSubGroup Statistics",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/statistics/defaultGroup/apex",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "statistics",
+                        "defaultGroup",
+                        "apex"
+                    ]
+                },
+                "description": "This is an API to fetch current statistics information for the all registered PDP instances of the specified PdpGroup (example - \"defaultGroup\") & PdpSubgroup (example - \"apex\")."
+            },
+            "response": []
+        },
+        {
+            "name": "Fetch PDP Statistics",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/statistics/defaultGroup/apex/dev-policy-apex-pdp-0",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "statistics",
+                        "defaultGroup",
+                        "apex",
+                        "dev-policy-apex-pdp-0"
+                    ]
+                },
+                "description": "This is an API to fetch current statistics information for the specified PDP instance (example - \"dev-policy-apex-pdp-0\") of the specified PdpGroup (example - \"defaultGroup\") & PdpSubgroup (example - \"apex\")."
+            },
+            "response": []
+        },
+        {
+            "name": "Delete PdpGroup",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "type": "text",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "type": "text",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{POLICY-PAP-URL}}/policy/pap/v1/pdps/groups/SampleGroup",
+                    "host": [
+                        "{{POLICY-PAP-URL}}"
+                    ],
+                    "path": [
+                        "policy",
+                        "pap",
+                        "v1",
+                        "pdps",
+                        "groups",
+                        "SampleGroup"
+                    ]
+                },
+                "description": "This is an API to delete a specific PdpGroup (example - \"SampleGroup\") currently available in Policy DB, resulting in removing all the PDP instances registered with the group."
+            },
+            "response": []
+        }
+    ],
+    "auth": {
+        "type": "basic",
+        "basic": [
+            {
+                "key": "password",
+                "value": "{{PASSWORD}}",
+                "type": "string"
+            },
+            {
+                "key": "username",
+                "value": "{{USER}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "id": "d6987a6d-a224-4288-a7bd-4c1c209a2637",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "id": "731a9aab-e8f2-4dc6-941c-ac7e142c5177",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "id": "bc82ca5c-f667-4118-9da1-e78a9b532b91",
+            "key": "USER",
+            "value": "healthcheck",
+            "type": "string"
+        },
+        {
+            "id": "1c2733ff-2507-49e8-ba07-b0f85ea97914",
+            "key": "PASSWORD",
+            "value": "zb!XztG34",
+            "type": "string"
+        }
+    ],
+    "protocolProfileBehavior": {}
+}

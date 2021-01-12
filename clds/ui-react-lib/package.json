@@ -1,0 +1,54 @@
+{
+	"name": "onap-policy-clamp-ui-lib",
+	"version": "${project.version}",
+	"description": "ONAP Policy Clamp UI Library",
+	"author": "ONAP Policy Team",
+	"license": "Apache-2.0",
+	"publishConfig": {
+		"registry": "${npm.publish.url}"
+	},
+	"main": "dist/index.js",
+	"module": "dist/esindex.js",
+	"scripts": {
+		"build": "rollup -c"
+	},
+	"files": [
+		"dist"
+	],
+	"peerDependencies": {
+		"@json-editor/json-editor": "1.4.0-beta.0",
+		"@material-ui/core": "4.6.0",
+		"@material-ui/icons": "4.5.1",
+		"bootstrap-css-only": "4.3.1",
+		"material-table": "1.53.0",
+		"react": "16.9.0",
+		"react-bootstrap": "1.0.0-beta.14",
+		"react-dom": "16.9.0",
+		"react-router-dom": "5.0.1",
+		"react-scripts": "3.1.1",
+		"react-select": "3.0.8",
+		"rollup": "^1.29.1",
+		"styled-components": "4.3.2"
+	},
+	"devDependencies": {
+		"@babel/cli": "7.7.5",
+		"@babel/core": "7.7.5",
+		"@babel/helper-plugin-utils": "7.0.0",
+		"@babel/plugin-external-helpers": "^7.7.4",
+		"@babel/plugin-proposal-class-properties": "7.5.5",
+		"@babel/plugin-transform-runtime": "7.7.6",
+		"@babel/preset-env": "7.5.5",
+		"@babel/preset-react": "7.0.0",
+		"rollup": "1.29.1",
+		"@rollup/plugin-commonjs": "^11.0.1",
+		"@rollup/plugin-image": "2.0.0",
+		"@rollup/plugin-node-resolve": "7.0.0",
+		"@rollup/plugin-replace": "2.2.1",
+		"@rollup/plugin-url": "4.0.0",
+		"@svgr/rollup": "5.1.0",
+		"babel-plugin-external-helpers": "6.22.0",
+		"rollup-plugin-babel": "4.3.3",
+		"rollup-plugin-peer-deps-external": "2.2.0",
+		"rollup-plugin-postcss": "2.0.3"
+	}
+}
