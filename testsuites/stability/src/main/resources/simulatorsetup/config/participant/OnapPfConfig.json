@@ -1,0 +1,15 @@
+{
+    "name":"OnapPfParameterGroup",
+    "topicParameterGroup": {
+        "topicSources" : [{
+            "topic" : "POLICY-CLAMP-PARTICIPANT",
+            "servers" : [ "message-router" ],
+            "topicCommInfrastructure" : "dmaap"
+        }],
+        "topicSinks" : [{
+            "topic" : "POLICY-CLAMP-PARTICIPANT",
+            "servers" : [ "message-router" ],
+            "topicCommInfrastructure" : "dmaap"
+        }]
+    }
+}
