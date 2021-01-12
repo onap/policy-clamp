@@ -1,0 +1,23 @@
+{
+    "name": "PapGroup",
+    "restServerParameters": {
+        "host": "0.0.0.0",
+        "port": 6969,
+        "userName": "healthcheck",
+        "password": "zb!XztG34",
+        "https": true,
+        "aaf": false
+    },
+    "topicParameterGroup": {
+        "topicSources" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "message-router" ],
+            "topicCommInfrastructure" : "dmaap"
+        }],
+        "topicSinks" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "message-router" ],
+            "topicCommInfrastructure" : "dmaap"
+        }]
+    }
+}
