@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11c74e00_ee555027",
+        "filename": "clds/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 1197,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-12T13:20:52Z",
+      "side": 1,
+      "message": "trailing spaces - same on line 1214",
+      "range": {
+        "startLine": 1197,
+        "startChar": 28,
+        "endLine": 1197,
+        "endChar": 30
+      },
+      "revId": "1b5c90a6a76524571bc093055c4e098a9a69580f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
