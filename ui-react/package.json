@@ -1,8 +1,8 @@
 {
-	"name": "onap-clamp-ui",
+	"name": "onap-policy-clamp-ui",
 	"version": "${project.version}",
-	"description": "ONAP Clamp Loop Designer UI",
-	"author": "ONAP Clamp Team",
+	"description": "ONAP Policy Clamp UI",
+	"author": "ONAP Policy Team",
 	"license": "Apache-2.0",
 	"publishConfig": {
 		"registry": "${npm.publish.url}"
