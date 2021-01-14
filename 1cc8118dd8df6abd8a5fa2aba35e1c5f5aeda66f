@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe492844_fb957ae1",
+        "filename": "clds/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-14T16:58:26Z",
+      "side": 1,
+      "message": "this file should probably be left unmodified",
+      "revId": "1cc8118dd8df6abd8a5fa2aba35e1c5f5aeda66f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
