@@ -64,7 +64,7 @@
 
     <!-- CLDS related loggers -->
     <logger
-        name="org.onap.clamp"
+        name="org.onap.policy.clamp"
         level="DEBUG">
         <appender-ref ref="STDOUT" />
     </logger>
