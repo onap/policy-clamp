@@ -1,8 +1,8 @@
 {
-	"name": "onap-clamp-ui-lib",
+	"name": "onap-policy-clamp-ui-lib",
 	"version": "${project.version}",
-	"description": "ONAP CLAMP UI Reactjs Component Library",
-	"author": "ONAP Clamp Team",
+	"description": "ONAP Policy Clamp UI Library",
+	"author": "ONAP Policy Team",
 	"license": "Apache-2.0",
 	"publishConfig": {
 		"registry": "${npm.publish.url}"

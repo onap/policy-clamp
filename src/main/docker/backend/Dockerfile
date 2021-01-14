@@ -24,7 +24,7 @@
 FROM onap/integration-java11:7.1.0
 
 MAINTAINER "The Onap Team"
-LABEL Description="This image contains alpine, openjdk 11 and clamp"
+LABEL Description="This image contains alpine, openjdk 11 and policy clamp"
 
 ARG http_proxy
 ARG https_proxy
@@ -32,14 +32,16 @@ ENV HTTP_PROXY=$http_proxy
 ENV HTTPS_PROXY=$https_proxy
 ENV http_proxy=$HTTP_PROXY
 ENV https_proxy=$HTTPS_PROXY
+
 USER root
-RUN mkdir /opt/clamp
-RUN chown -R onap:onap /opt/clamp
 
-VOLUME /opt/clamp/config
+RUN mkdir -p /opt/policy/clamp && \
+    chown -R onap:onap /opt/policy/clamp
 
-COPY --chown=onap:onap onap-clamp-backend/clamp.jar /opt/clamp/app.jar
+VOLUME /opt/policy/clamp/config
+
+COPY --chown=onap:onap onap-policy-clamp-backend/policy-clamp-backend.jar /opt/policy/clamp/policy-clamp-backend.jar
 
 USER onap
-WORKDIR /opt/clamp/
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=75","-jar" ,"./app.jar"]
+WORKDIR /opt/policy/clamp/
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-XX:MinRAMPercentage=50.0", "-XX:MaxRAMPercentage=75.0","-jar" ,"./policy-clamp-backend.jar"]
