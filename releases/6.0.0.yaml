@@ -1,0 +1,5 @@
+---
+distribution_type: 'maven'
+version: '6.0.0'
+project: 'policy-clamp'
+log_dir: 'policy-clamp-maven-stage-master/13/'
