@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2d3416a_de8d74c1",
+        "filename": "releases/6.0.0.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-14T21:13:47Z",
+      "side": 1,
+      "message": "is this dashed line ok?",
+      "revId": "fca826a9cd3222f7b2c0958e2d0e641b980d118c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
