@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "628811b1_0a488635",
+        "filename": "releases/6.0.0.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-15T14:18:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed101341_a9e5952d",
+      "revId": "fca826a9cd3222f7b2c0958e2d0e641b980d118c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c836f9f3_9afc2d7e",
         "filename": "releases/6.0.0.yaml",
         "patchSetId": 1
@@ -87,6 +105,24 @@
       "revId": "fca826a9cd3222f7b2c0958e2d0e641b980d118c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6906a47_3d1dffcf",
+        "filename": "releases/6.0.0.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-15T14:18:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "882e6dbf_583c738c",
+      "revId": "fca826a9cd3222f7b2c0958e2d0e641b980d118c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
