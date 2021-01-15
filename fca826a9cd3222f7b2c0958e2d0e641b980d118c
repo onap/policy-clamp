@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ed101341_a9e5952d",
+        "filename": "releases/6.0.0.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-15T09:19:21Z",
+      "side": 1,
+      "message": "It\u0027s the template i received from Jess a while ago .... it has always worked like that",
+      "parentUuid": "e2d3416a_de8d74c1",
+      "revId": "fca826a9cd3222f7b2c0958e2d0e641b980d118c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c836f9f3_9afc2d7e",
         "filename": "releases/6.0.0.yaml",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2021-01-14T22:20:06Z",
       "side": 1,
       "message": "we normally add this after the \"project\" line, though probably isn\u0027t necessary:\n\n  tag_release: false",
+      "revId": "fca826a9cd3222f7b2c0958e2d0e641b980d118c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dafa302d_49c7a453",
+        "filename": "releases/6.0.0.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-15T09:19:21Z",
+      "side": 1,
+      "message": "We do want to use the git tag, why do you want to disable it ? \nWhat is strange is that i see you have introduced that flag in others policy components but the tagging is done anyway ?\nWhat\u0027s the point of that flag then ?",
+      "parentUuid": "c836f9f3_9afc2d7e",
       "revId": "fca826a9cd3222f7b2c0958e2d0e641b980d118c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
