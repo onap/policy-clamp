@@ -24,7 +24,12 @@
                     "desiredInstanceCount": 1,
                     "pdpInstances": [],
                     "pdpType": "drools",
-                    "policies": [],
+                    "policies": [
+                                {
+                                  "name": "OPERATIONAL_vLoadBalancerMS_v1_0_Drools_1_0_0_7xd",
+                                  "version": "1.0.0"
+                                }
+                    ],
                     "properties": {},
                     "supportedPolicyTypes": [
                         {
@@ -64,7 +69,16 @@
                     "desiredInstanceCount": 1,
                     "pdpInstances": [],
                     "pdpType": "xacml",
-                    "policies": [],
+                    "policies": [
+                                {
+                                  "name": "SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP",
+                                  "version": "1.0.0"
+                                },
+                                {
+                                  "name": "MICROSERVICE_vLoadBalancerMS_v1_0_tcagen2_1_0_0_AV0",
+                                  "version": "1.0.0"
+                                }
+                    ],
                     "properties": {},
                     "supportedPolicyTypes": [
                         {
