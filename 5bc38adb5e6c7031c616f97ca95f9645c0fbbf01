@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "536b3c03_fbdc4606",
+        "filename": "packages/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T14:18:24Z",
+      "side": 1,
+      "message": "In the latest patch set I refactored the packaging to reflect clamp.",
+      "parentUuid": "26aaaefa_3e364292",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eed8ab84_85bdc68a",
         "filename": "postman/clamp-collection.json",
         "patchSetId": 7
@@ -159,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "d7fa9873_11617adf",
+        "filename": "testsuites/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T14:18:24Z",
+      "side": 1,
+      "message": "In the latest patch set I have refactored this for CLAMP.",
+      "parentUuid": "f0964097_a72ba270",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "285628fa_e3adc3f7",
         "filename": "testsuites/stability/src/main/resources/testplans/stability.jmx",
         "patchSetId": 7
@@ -188,6 +224,24 @@
       "side": 1,
       "message": "I guess we should have stability tests, this again is a placeholder.",
       "parentUuid": "285628fa_e3adc3f7",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ce497d3_3a10ccf3",
+        "filename": "testsuites/stability/src/main/resources/testplans/stability.jmx",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T14:18:24Z",
+      "side": 1,
+      "message": "Replaced with a placeholder file in the latest patch set.",
+      "parentUuid": "9b3d3186_8b0f0aea",
       "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
