@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f335095_6ac40c4a",
+        "filename": "controlloop/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-18T11:45:09Z",
+      "side": 1,
+      "message": "What do you intend to do here ? Are these jar libraries only ?",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c973ceb2_c976492e",
+        "filename": "controlloop/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-18T11:45:09Z",
+      "side": 1,
+      "message": "Adding dependencies without having any code yet is a good method to obtain useless dep at the beginning 😊",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdf2bcca_eaa08cef",
+        "filename": "packages/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-18T11:45:09Z",
+      "side": 1,
+      "message": "Don\u0027t know yet what to deliver and what to build, so why commit all those stuffs ? (pap related, pap script)",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eed8ab84_85bdc68a",
+        "filename": "postman/clamp-collection.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-18T11:45:09Z",
+      "side": 1,
+      "message": "Not related queries, this should not be committed here",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "677b2893_67beba11",
+        "filename": "testsuites/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-18T11:45:09Z",
+      "side": 1,
+      "message": "Not sure it has an interest to bring that right now, it\u0027s mainly code done for the PAP so ...\nWould be better to remove the testsuite folder right now. You won\u0027t use it anyway 😊",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "285628fa_e3adc3f7",
+        "filename": "testsuites/stability/src/main/resources/testplans/stability.jmx",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-18T11:45:09Z",
+      "side": 1,
+      "message": "Not related code ? 16K lines ? better not to commit that",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
