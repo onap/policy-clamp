@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "dfbb398c_30a40e98",
+        "filename": "controlloop/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T12:07:02Z",
+      "side": 1,
+      "message": "Yes, I agree, my apologies, but we brought in the POM first. This is the POM for the code we are working on.\n\nI felt bringing in the structure and the code all in one go was going to be very difficult for people to review.",
+      "parentUuid": "c973ceb2_c976492e",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fdf2bcca_eaa08cef",
         "filename": "packages/pom.xml",
         "patchSetId": 7
@@ -47,6 +65,24 @@
       "writtenOn": "2021-01-18T11:45:09Z",
       "side": 1,
       "message": "Don\u0027t know yet what to deliver and what to build, so why commit all those stuffs ? (pap related, pap script)",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26aaaefa_3e364292",
+        "filename": "packages/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T12:07:02Z",
+      "side": 1,
+      "message": "This is the way all the repos do the packaging in Policy, I was just using PAP as a template. I guess we are only committing it to the tosca-poc branch. I thought it was better to have it there as a placeholder for the PoC.",
+      "parentUuid": "fdf2bcca_eaa08cef",
       "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -70,6 +106,24 @@
     },
     {
       "key": {
+        "uuid": "73d7619b_3fe6f210",
+        "filename": "postman/clamp-collection.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T12:07:02Z",
+      "side": 1,
+      "message": "Yes, agree. This will be replaced with a collection for the PoC in the next review.",
+      "parentUuid": "eed8ab84_85bdc68a",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "677b2893_67beba11",
         "filename": "testsuites/pom.xml",
         "patchSetId": 7
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "f0964097_a72ba270",
+        "filename": "testsuites/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T12:07:02Z",
+      "side": 1,
+      "message": "We were using PAP as a template for the Policy Framework directories. They are placeholders in the toca-poc repo. We need to decide what to do here.",
+      "parentUuid": "677b2893_67beba11",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "285628fa_e3adc3f7",
         "filename": "testsuites/stability/src/main/resources/testplans/stability.jmx",
         "patchSetId": 7
@@ -98,6 +170,24 @@
       "writtenOn": "2021-01-18T11:45:09Z",
       "side": 1,
       "message": "Not related code ? 16K lines ? better not to commit that",
+      "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b3d3186_8b0f0aea",
+        "filename": "testsuites/stability/src/main/resources/testplans/stability.jmx",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-18T12:07:02Z",
+      "side": 1,
+      "message": "I guess we should have stability tests, this again is a placeholder.",
+      "parentUuid": "285628fa_e3adc3f7",
       "revId": "5bc38adb5e6c7031c616f97ca95f9645c0fbbf01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
