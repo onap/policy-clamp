@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39f10697_1b84b9e8",
+        "filename": "testsuites/stability/src/main/resources/clampsetup/config/clamp/bin/policy-clamp.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-19T13:26:43Z",
+      "side": 1,
+      "message": "clamp",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 17
+      },
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "467b75d9_1d25478e",
+        "filename": "testsuites/stability/src/main/resources/clampsetup/config/clamp/bin/policy-clamp.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-19T13:26:43Z",
+      "side": 1,
+      "message": "CLAMP",
+      "range": {
+        "startLine": 51,
+        "startChar": 32,
+        "endLine": 51,
+        "endChar": 35
+      },
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc695c9b_1f0ef483",
+        "filename": "testsuites/stability/src/main/resources/clampsetup/setup_clamp.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-19T13:26:43Z",
+      "side": 1,
+      "message": "tabs\u003e spaces",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f89c562b_6d202e68",
+        "filename": "testsuites/stability/src/main/resources/simulatorsetup/setup_components.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-19T13:26:43Z",
+      "side": 1,
+      "message": "I think I\u0027d rather see this included in the existing models-simulator and just the config file to control which particular simulators are started.  That should make this test run faster as the docker image for models-simulator is already available",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99147063_5d4ee483",
+        "filename": "testsuites/stability/src/main/resources/simulatorsetup/setup_components.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-19T13:26:43Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af252ff0_925c60ca",
+        "filename": "testsuites/stability/src/main/resources/testplans/participant_sim_startup.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-01-19T13:26:43Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
