@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0c7bdcb1_00b225f4",
+        "filename": "testsuites/stability/src/main/resources/clampsetup/config/clamp/bin/policy-clamp.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-19T15:37:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39f10697_1b84b9e8",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 17
+      },
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "467b75d9_1d25478e",
         "filename": "testsuites/stability/src/main/resources/clampsetup/config/clamp/bin/policy-clamp.sh",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "cb953bfc_0c7f9c77",
+        "filename": "testsuites/stability/src/main/resources/clampsetup/config/clamp/bin/policy-clamp.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-19T15:37:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "467b75d9_1d25478e",
+      "range": {
+        "startLine": 51,
+        "startChar": 32,
+        "endLine": 51,
+        "endChar": 35
+      },
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cc695c9b_1f0ef483",
         "filename": "testsuites/stability/src/main/resources/clampsetup/setup_clamp.sh",
         "patchSetId": 8
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "4caf4463_8e763fd6",
+        "filename": "testsuites/stability/src/main/resources/clampsetup/setup_clamp.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-19T15:37:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc695c9b_1f0ef483",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f89c562b_6d202e68",
         "filename": "testsuites/stability/src/main/resources/simulatorsetup/setup_components.sh",
         "patchSetId": 8
@@ -76,6 +142,24 @@
       "writtenOn": "2021-01-19T13:26:43Z",
       "side": 1,
       "message": "I think I\u0027d rather see this included in the existing models-simulator and just the config file to control which particular simulators are started.  That should make this test run faster as the docker image for models-simulator is already available",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "584281b6_5dbc2574",
+        "filename": "testsuites/stability/src/main/resources/simulatorsetup/setup_components.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-19T15:37:58Z",
+      "side": 1,
+      "message": "It will be a while before we get as far as doing this in the PoC so I wonder could we take this in a future review?",
+      "parentUuid": "f89c562b_6d202e68",
       "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "71e3e99b_a1bd497f",
+        "filename": "testsuites/stability/src/main/resources/simulatorsetup/setup_components.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-19T15:37:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99147063_5d4ee483",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af252ff0_925c60ca",
         "filename": "testsuites/stability/src/main/resources/testplans/participant_sim_startup.sh",
         "patchSetId": 8
@@ -113,6 +215,24 @@
       "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31322ec1_79164f72",
+        "filename": "testsuites/stability/src/main/resources/testplans/participant_sim_startup.sh",
+        "patchSetId": 8
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-19T15:37:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af252ff0_925c60ca",
+      "revId": "0d74d7157d41241dc4ee2cfae407753a0b15a945",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
