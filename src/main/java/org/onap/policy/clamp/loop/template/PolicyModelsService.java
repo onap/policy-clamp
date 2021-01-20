@@ -30,13 +30,18 @@ import java.util.Collections;
 import java.util.List;
 import org.onap.policy.clamp.clds.tosca.ToscaSchemaConstants;
 import org.onap.policy.clamp.clds.tosca.ToscaYamlToJsonConvertor;
-import org.onap.policy.clamp.policy.pdpgroup.PdpGroup;
+import org.onap.policy.clamp.policy.pdpgroup.PdpGroupsAnalyzer;
 import org.onap.policy.clamp.util.SemanticVersioning;
+import org.onap.policy.models.pdp.concepts.PdpGroup;
+import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This class contains the methods to access the policyModel object in db.
+ */
 @Service
 public class PolicyModelsService {
     private final PolicyModelsRepository policyModelsRepository;
@@ -148,26 +153,11 @@ public class PolicyModelsService {
     /**
      * Update the Pdp Group info in Policy Model DB.
      *
-     * @param pdpGroupList The list of Pdp Group info received from Policy Engine
+     * @param pdpGroups The list of Pdp Group info received from Policy Engine
      */
-    public void updatePdpGroupInfo(List<PdpGroup> pdpGroupList) {
-        List<PolicyModel> policyModelList = policyModelsRepository.findAll();
-        for (PolicyModel policyModel : policyModelList) {
-            JsonArray supportedPdpGroups = new JsonArray();
-            for (PdpGroup pdpGroup : pdpGroupList) {
-                JsonObject supportedPdpGroup = pdpGroup.getSupportedSubgroups(
-                    policyModel.getPolicyModelType(), policyModel.getVersion());
-                if (supportedPdpGroup != null) {
-                    supportedPdpGroups.add(supportedPdpGroup);
-                }
-            }
-
-            if (supportedPdpGroups.size() > 0) {
-                JsonObject supportedPdpJson = new JsonObject();
-                supportedPdpJson.add("supportedPdpGroups", supportedPdpGroups);
-                policyModel.setPolicyPdpGroup(supportedPdpJson);
-                policyModelsRepository.saveAndFlush(policyModel);
-            }
-        }
+    public void updatePdpGroupInfo(PdpGroups pdpGroups) {
+        List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
+        PdpGroupsAnalyzer.updatePdpGroup(policyModelsList,pdpGroups);
+        this.policyModelsRepository.saveAll(policyModelsList);
     }
 }
