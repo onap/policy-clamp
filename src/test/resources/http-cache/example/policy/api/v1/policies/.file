@@ -19,7 +19,7 @@
                       "thresholdValue": 200,
                       "closedLoopEventStatus": "ONSET",
                       "closedLoopControlName": "LOOP_test",
-                      "direction": "LESS_OR_ElsQUAL",
+                      "direction": "LESS_OR_EQUAL",
                       "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta"
                     }
                   ],
