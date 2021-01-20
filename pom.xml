@@ -371,6 +371,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!-- Policy dependencies mainly for the models required -->
+		<dependency>
+			<groupId>org.onap.policy.models</groupId>
+			<artifactId>policy-models-pdp</artifactId>
+			<version>2.3.5</version>
+		</dependency>
+
 		<!-- Others dependencies -->
 		<!-- Jaxws is required for AAF -->
 		<dependency>
