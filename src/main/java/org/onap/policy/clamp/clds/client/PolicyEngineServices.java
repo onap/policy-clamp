@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +39,8 @@ import org.onap.policy.clamp.clds.sdc.controller.installer.BlueprintMicroService
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsService;
-import org.onap.policy.clamp.policy.pdpgroup.PdpGroup;
+import org.onap.policy.models.pdp.concepts.PdpGroup;
+import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.DumperOptions;
@@ -50,6 +51,8 @@ import org.yaml.snakeyaml.Yaml;
  * The class implements the communication with the Policy Engine to retrieve
  * policy models (tosca). It mainly delegates the physical calls to Camel
  * engine.
+ * It supports a retry mechanism for these calls, configurations can be specified in the
+ * application.properties "policy.retry.interval"(default 0) and "policy.retry.limit"(default 1).
  */
 @Component
 public class PolicyEngineServices {
@@ -192,18 +195,7 @@ public class PolicyEngineServices {
             return;
         }
 
-        JsonObject jsonObj = JsonUtils.GSON.fromJson(responseBody, JsonObject.class);
-
-        List<PdpGroup> pdpGroupList = new LinkedList<>();
-        JsonArray itemsArray = (JsonArray) jsonObj.get("groups");
-
-        for (com.google.gson.JsonElement jsonElement : itemsArray) {
-            JsonObject item = (JsonObject) jsonElement;
-            PdpGroup pdpGroup = JsonUtils.GSON.fromJson(item.toString(), PdpGroup.class);
-            pdpGroupList.add(pdpGroup);
-        }
-
-        policyModelsService.updatePdpGroupInfo(pdpGroupList);
+        policyModelsService.updatePdpGroupInfo(JsonUtils.GSON.fromJson(responseBody, PdpGroups.class));
     }
 
     private String callCamelRoute(Exchange exchange, String camelFlow, String logMsg) {

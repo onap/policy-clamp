@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019,2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,9 +43,11 @@ import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelId;
 import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
 import org.onap.policy.clamp.loop.template.PolicyModelsService;
-import org.onap.policy.clamp.policy.pdpgroup.PdpGroup;
-import org.onap.policy.clamp.policy.pdpgroup.PdpSubgroup;
-import org.onap.policy.clamp.policy.pdpgroup.PolicyModelKey;
+import org.onap.policy.models.pdp.concepts.PdpGroup;
+import org.onap.policy.models.pdp.concepts.PdpGroups;
+import org.onap.policy.models.pdp.concepts.PdpSubGroup;
+import org.onap.policy.models.pdp.enums.PdpState;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -242,54 +244,54 @@ public class PolicyModelServiceItCase {
     @Test
     @Transactional
     public void shouldAddPdpGroupInfo() {
-        PolicyModel policyModel1 = getPolicyModel(POLICY_MODEL_TYPE_1, "yaml",
-            POLICY_MODEL_TYPE_1_VERSION_1, "TEST", "VARIANT", "user");
-        policyModelsService.saveOrUpdatePolicyModel(policyModel1);
-        PolicyModel policyModel2 = getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
-            POLICY_MODEL_TYPE_2_VERSION_2, "TEST", "VARIANT", "user");
-        policyModelsService.saveOrUpdatePolicyModel(policyModel2);
-        PolicyModel policyModel3 = getPolicyModel(POLICY_MODEL_TYPE_3, "yaml",
-            POLICY_MODEL_TYPE_3_VERSION_1, "TEST", "VARIANT", "user");
-        policyModelsService.saveOrUpdatePolicyModel(policyModel3);
+        policyModelsService.saveOrUpdatePolicyModel(getPolicyModel(POLICY_MODEL_TYPE_1, "yaml",
+                POLICY_MODEL_TYPE_1_VERSION_1, "TEST", "VARIANT", "user"));
+        policyModelsService.saveOrUpdatePolicyModel(getPolicyModel(POLICY_MODEL_TYPE_2, "yaml",
+                POLICY_MODEL_TYPE_2_VERSION_2, "TEST", "VARIANT", "user"));
+        policyModelsService.saveOrUpdatePolicyModel(getPolicyModel(POLICY_MODEL_TYPE_3, "yaml",
+                POLICY_MODEL_TYPE_3_VERSION_1, "TEST", "VARIANT", "user"));
 
-        PolicyModelKey type1 = new PolicyModelKey("org.onap.testos", "1.0.0");
-        PolicyModelKey type2 = new PolicyModelKey("org.onap.testos2", "2.0.0");
+        ToscaPolicyTypeIdentifier type1 = new ToscaPolicyTypeIdentifier("org.onap.testos", "1.0.0");
+        ToscaPolicyTypeIdentifier type2 = new ToscaPolicyTypeIdentifier("org.onap.testos2", "2.0.0");
 
-        PdpSubgroup pdpSubgroup1 = new PdpSubgroup();
+        PdpSubGroup pdpSubgroup1 = new PdpSubGroup();
         pdpSubgroup1.setPdpType("subGroup1");
-        List<PolicyModelKey> pdpTypeList = new LinkedList<PolicyModelKey>();
+        List<ToscaPolicyTypeIdentifier> pdpTypeList = new LinkedList<>();
         pdpTypeList.add(type1);
         pdpTypeList.add(type2);
         pdpSubgroup1.setSupportedPolicyTypes(pdpTypeList);
 
-        PolicyModelKey type3 = new PolicyModelKey("org.onap.testos3", "2.0.0");
-        PdpSubgroup pdpSubgroup2 = new PdpSubgroup();
+        ToscaPolicyTypeIdentifier type3 = new ToscaPolicyTypeIdentifier("org.onap.testos3", "2.0.0");
+        PdpSubGroup pdpSubgroup2 = new PdpSubGroup();
         pdpSubgroup2.setPdpType("subGroup2");
-        List<PolicyModelKey> pdpTypeList2 = new LinkedList<PolicyModelKey>();
+        List<ToscaPolicyTypeIdentifier> pdpTypeList2 = new LinkedList<>();
         pdpTypeList2.add(type2);
         pdpTypeList2.add(type3);
         pdpSubgroup2.setSupportedPolicyTypes(pdpTypeList2);
 
-        List<PdpSubgroup> pdpSubgroupList = new LinkedList<PdpSubgroup>();
+        List<PdpSubGroup> pdpSubgroupList = new LinkedList<>();
         pdpSubgroupList.add(pdpSubgroup1);
 
         PdpGroup pdpGroup1 = new PdpGroup();
         pdpGroup1.setName("pdpGroup1");
-        pdpGroup1.setPdpGroupState("ACTIVE");
+        pdpGroup1.setPdpGroupState(PdpState.ACTIVE);
         pdpGroup1.setPdpSubgroups(pdpSubgroupList);
 
-        List<PdpSubgroup> pdpSubgroupList2 = new LinkedList<PdpSubgroup>();
+        List<PdpSubGroup> pdpSubgroupList2 = new LinkedList<>();
         pdpSubgroupList2.add(pdpSubgroup1);
         pdpSubgroupList2.add(pdpSubgroup2);
         PdpGroup pdpGroup2 = new PdpGroup();
         pdpGroup2.setName("pdpGroup2");
-        pdpGroup2.setPdpGroupState("ACTIVE");
+        pdpGroup2.setPdpGroupState(PdpState.ACTIVE);
         pdpGroup2.setPdpSubgroups(pdpSubgroupList2);
 
-        List<PdpGroup> pdpGroupList = new LinkedList<PdpGroup>();
-        pdpGroupList.add(pdpGroup1);
-        pdpGroupList.add(pdpGroup2);
-        policyModelsService.updatePdpGroupInfo(pdpGroupList);
+        List<PdpGroup> pdpGroupsList = new LinkedList<>();
+        pdpGroupsList.add(pdpGroup1);
+        pdpGroupsList.add(pdpGroup2);
+
+        PdpGroups pdpGroups = new PdpGroups();
+        pdpGroups.setGroups(pdpGroupsList);
+        policyModelsService.updatePdpGroupInfo(pdpGroups);
 
         JsonObject res1 =
             policyModelsService.getPolicyModel("org.onap.testos", "1.0.0").getPolicyPdpGroup();
