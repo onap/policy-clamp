@@ -30,13 +30,18 @@ import java.util.Collections;
 import java.util.List;
 import org.onap.policy.clamp.clds.tosca.ToscaSchemaConstants;
 import org.onap.policy.clamp.clds.tosca.ToscaYamlToJsonConvertor;
-import org.onap.policy.clamp.policy.pdpgroup.PdpGroup;
+import org.onap.policy.clamp.policy.pdpgroup.PdpGroupsAnalyzer;
 import org.onap.policy.clamp.util.SemanticVersioning;
+import org.onap.policy.models.pdp.concepts.PdpGroup;
+import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This class contains the methods to access the policyModel object in db.
+ */
 @Service
 public class PolicyModelsService {
     private final PolicyModelsRepository policyModelsRepository;
@@ -44,7 +49,7 @@ public class PolicyModelsService {
 
     @Autowired
     public PolicyModelsService(PolicyModelsRepository policyModelrepo,
-        ToscaYamlToJsonConvertor convertor) {
+                               ToscaYamlToJsonConvertor convertor) {
         policyModelsRepository = policyModelrepo;
         toscaYamlToJsonConvertor = convertor;
     }
@@ -78,31 +83,31 @@ public class PolicyModelsService {
     public PolicyModel createNewPolicyModelFromTosca(String policyModelTosca) {
         JsonObject jsonObject = toscaYamlToJsonConvertor.validateAndConvertToJson(policyModelTosca);
         String policyModelTypeFromTosca = toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-            ToscaSchemaConstants.METADATA_POLICY_MODEL_TYPE);
+                ToscaSchemaConstants.METADATA_POLICY_MODEL_TYPE);
         Iterable<PolicyModel> models = getAllPolicyModelsByType(policyModelTypeFromTosca);
         Collections.sort((List<PolicyModel>) models);
         PolicyModel newPolicyModel = new PolicyModel(policyModelTypeFromTosca, policyModelTosca,
-            SemanticVersioning.incrementMajorVersion(((ArrayList) models).isEmpty() ? null
-                : ((ArrayList<PolicyModel>) models).get(0).getVersion()),
-            toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-                ToscaSchemaConstants.METADATA_ACRONYM));
+                SemanticVersioning.incrementMajorVersion(((ArrayList) models).isEmpty() ? null
+                        : ((ArrayList<PolicyModel>) models).get(0).getVersion()),
+                toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
+                        ToscaSchemaConstants.METADATA_ACRONYM));
         return saveOrUpdatePolicyModel(newPolicyModel);
     }
 
     /**
      * Update an existing Tosca Policy Model.
      *
-     * @param policyModelType The policy Model type in Tosca yaml
+     * @param policyModelType    The policy Model type in Tosca yaml
      * @param policyModelVersion The policy Version to update
-     * @param policyModelTosca The Policy Model tosca
+     * @param policyModelTosca   The Policy Model tosca
      * @return The Policy Model updated
      */
     public PolicyModel updatePolicyModelTosca(String policyModelType, String policyModelVersion,
-        String policyModelTosca) {
+                                              String policyModelTosca) {
         JsonObject jsonObject = toscaYamlToJsonConvertor.validateAndConvertToJson(policyModelTosca);
         PolicyModel thePolicyModel = getPolicyModel(policyModelType, policyModelVersion);
         thePolicyModel.setPolicyAcronym(toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-            ToscaSchemaConstants.METADATA_ACRONYM));
+                ToscaSchemaConstants.METADATA_ACRONYM));
         thePolicyModel.setPolicyModelTosca(policyModelTosca);
         return saveOrUpdatePolicyModel(thePolicyModel);
     }
@@ -126,13 +131,13 @@ public class PolicyModelsService {
     /**
      * Retrieves the Tosca model Yaml string.
      *
-     * @param type The Policy Model Type
+     * @param type    The Policy Model Type
      * @param version The policy model version
      * @return The Tosca model Yaml string
      */
     public String getPolicyModelTosca(String type, String version) {
         return policyModelsRepository.findById(new PolicyModelId(type, version))
-            .orElse(new PolicyModel()).getPolicyModelTosca();
+                .orElse(new PolicyModel()).getPolicyModelTosca();
     }
 
     /**
@@ -148,26 +153,11 @@ public class PolicyModelsService {
     /**
      * Update the Pdp Group info in Policy Model DB.
      *
-     * @param pdpGroupList The list of Pdp Group info received from Policy Engine
+     * @param pdpGroups The list of Pdp Group info received from Policy Engine
      */
-    public void updatePdpGroupInfo(List<PdpGroup> pdpGroupList) {
-        List<PolicyModel> policyModelList = policyModelsRepository.findAll();
-        for (PolicyModel policyModel : policyModelList) {
-            JsonArray supportedPdpGroups = new JsonArray();
-            for (PdpGroup pdpGroup : pdpGroupList) {
-                JsonObject supportedPdpGroup = pdpGroup.getSupportedSubgroups(
-                    policyModel.getPolicyModelType(), policyModel.getVersion());
-                if (supportedPdpGroup != null) {
-                    supportedPdpGroups.add(supportedPdpGroup);
-                }
-            }
-
-            if (supportedPdpGroups.size() > 0) {
-                JsonObject supportedPdpJson = new JsonObject();
-                supportedPdpJson.add("supportedPdpGroups", supportedPdpGroups);
-                policyModel.setPolicyPdpGroup(supportedPdpJson);
-                policyModelsRepository.saveAndFlush(policyModel);
-            }
-        }
+    public void updatePdpGroupInfo(PdpGroups pdpGroups) {
+        List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
+        PdpGroupsAnalyzer.updatePdpGroup(policyModelsList, pdpGroups);
+        this.policyModelsRepository.saveAll(policyModelsList);
     }
 }
