@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e56e9200_dbc25613",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-21T14:02:07Z",
+      "side": 1,
+      "message": "I checked the release repo, we should not use the snapshot normally\nBut once available i\u0027ll update it",
+      "parentUuid": "195f20c9_1246a4b0",
+      "range": {
+        "startLine": 378,
+        "startChar": 12,
+        "endLine": 378,
+        "endChar": 17
+      },
+      "revId": "34bb362d1f9b6663e4780f77179bf86675db0d05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "53696049_153fbaa1",
         "filename": "src/main/java/org/onap/policy/clamp/clds/client/PolicyEngineServices.java",
         "patchSetId": 8
