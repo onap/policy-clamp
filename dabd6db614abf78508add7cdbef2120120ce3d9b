@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "931f2a65_0372bd78",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.file",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:18:16Z",
+      "side": 1,
+      "message": "Just wondering did you mean to include this file in the review, it\u0027s in a cache directory and it has a name beginning with a period",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cbe1868_dc301ba3",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.header",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:18:16Z",
+      "side": 1,
+      "message": "Same question regarding the hiddden file with a period as its first character.",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "426c4a24_3ff0f927",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.file",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:18:16Z",
+      "side": 1,
+      "message": "Same comment regarding the file name.\n\nThis file is the same as the example in the policy examples module, https://github.com/onap/policy-models/blob/master/models-examples/src/main/resources/policytypes/onap.policies.monitoring.tcagen2.yaml\n\nIs it possible to include that dependency and use the file from the resource bundle rather than checking in another copy of the file?",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0391c36a_0166b6ce",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.header",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:18:16Z",
+      "side": 1,
+      "message": "Same comment regarding hidden file.",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
