@@ -2,6 +2,108 @@
   "comments": [
     {
       "key": {
+        "uuid": "ee13f704_e5c871be",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-21T23:45:08Z",
+      "side": 1,
+      "message": "fro -\u003e from",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20a7058c_7fc24930",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-21T23:45:08Z",
+      "side": 1,
+      "message": "I think these versions had some security issues in the past and needed to migrate to 2.0.0-oss",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a85fa8b_d79883e6",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-21T23:45:08Z",
+      "side": 1,
+      "message": "I think these are picked up from parent poms, if you look at other policy poms, they don\u0027t have the previous sections, just the one below, ecomp-site.   No need to do in this review, since this one is just doing tabs, but I guess should be done at some point.",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4de213d6_db950408",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-21T23:45:08Z",
+      "side": 1,
+      "message": "same comment for these repositories",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00df6fb2_f4f1979c",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/client/PolicyEngineServices.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-21T23:45:08Z",
+      "side": 1,
+      "message": "2021",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62a7566e_0e9afdb4",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/client/PolicyEngineServices.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-21T23:45:08Z",
+      "side": 1,
+      "message": "fyi: we typically use all over this StandardCoder.java to do all the json work .. may be at some point we could resync on this too.",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f866d069_690c088c",
         "filename": "src/main/java/org/onap/policy/clamp/loop/template/PolicyModelsService.java",
         "patchSetId": 11
@@ -19,6 +121,23 @@
         "endLine": 5,
         "endChar": 21
       },
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "894aecb9_08a1c1a2",
+        "filename": "src/test/java/org/onap/policy/clamp/loop/PolicyModelServiceItCase.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-21T23:45:08Z",
+      "side": 1,
+      "message": "2021 - general",
       "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
