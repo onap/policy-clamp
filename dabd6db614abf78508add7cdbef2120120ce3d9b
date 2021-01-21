@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e2002fae_f330aa3f",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.file",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:46:49Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "035d1cfb_066f951e",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8cbe1868_dc301ba3",
         "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.header",
         "patchSetId": 2
@@ -69,6 +87,24 @@
       "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed038eb1_2f9ccc87",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.header",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:46:49Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "10b9ca39_abe68e4e",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -107,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "441e08ec_b211c817",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.file",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:46:49Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f1baa95c_57f05380",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0391c36a_0166b6ce",
         "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.header",
         "patchSetId": 2
@@ -139,6 +193,24 @@
       "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12751992_668c2027",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.header",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T14:46:49Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2ec0284f_fd73663d",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
