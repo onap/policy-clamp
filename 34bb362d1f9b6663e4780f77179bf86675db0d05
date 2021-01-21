@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "195f20c9_1246a4b0",
+        "filename": "pom.xml",
+        "patchSetId": 8
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T13:55:16Z",
+      "side": 1,
+      "message": "The Guilin version is probably fine for you.",
+      "range": {
+        "startLine": 378,
+        "startChar": 12,
+        "endLine": 378,
+        "endChar": 17
+      },
+      "revId": "34bb362d1f9b6663e4780f77179bf86675db0d05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53696049_153fbaa1",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/client/PolicyEngineServices.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-21T13:55:16Z",
+      "side": 1,
+      "message": "Date",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "34bb362d1f9b6663e4780f77179bf86675db0d05",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
