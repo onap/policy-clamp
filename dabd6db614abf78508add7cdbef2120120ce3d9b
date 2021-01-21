@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "035d1cfb_066f951e",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.file",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-21T14:45:19Z",
+      "side": 1,
+      "message": "yep it\u0027s used by the emulator",
+      "parentUuid": "931f2a65_0372bd78",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8cbe1868_dc301ba3",
         "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.header",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2021-01-21T14:18:16Z",
       "side": 1,
       "message": "Same question regarding the hiddden file with a period as its first character.",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10b9ca39_abe68e4e",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.header",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-21T14:45:19Z",
+      "side": 1,
+      "message": "same answer, it\u0027s normal :-)",
+      "parentUuid": "8cbe1868_dc301ba3",
       "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "f1baa95c_57f05380",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.file",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-21T14:45:19Z",
+      "side": 1,
+      "message": "Technically it can be done yes:\n1. Create a git submodule in clamp that would refer to the policy-models repo \n2. Now that clamp has one jar dependency on policy core, we could extract the content of the policy dependency which contains those files ? if it exists ? do you bundle the tosca file in a jar or something we use ?\n3. Why have so many repos instead of some nice folders?? if we had only one repo with everything for policy, that would be easier :-)\n\nAnyway this requires some rework that i will not do right now :-)\n\nWe can create a user story, that makes more sense than ever now that clamp is inside policy",
+      "parentUuid": "426c4a24_3ff0f927",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0391c36a_0166b6ce",
         "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.header",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2021-01-21T14:18:16Z",
       "side": 1,
       "message": "Same comment regarding hidden file.",
+      "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ec0284f_fd73663d",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policytypes/onap.policies.monitoring.tcagen2/versions/1.0.0/.header",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-21T14:45:19Z",
+      "side": 1,
+      "message": "same answer, that\u0027s how the emulator (proxy cache) works",
+      "parentUuid": "0391c36a_0166b6ce",
       "revId": "dabd6db614abf78508add7cdbef2120120ce3d9b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
