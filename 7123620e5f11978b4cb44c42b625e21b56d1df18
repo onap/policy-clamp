@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "68200d10_b2b3a595",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-22T08:35:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee13f704_e5c871be",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20a7058c_7fc24930",
         "filename": "pom.xml",
         "patchSetId": 11
@@ -30,6 +48,24 @@
       "writtenOn": "2021-01-21T23:45:08Z",
       "side": 1,
       "message": "I think these versions had some security issues in the past and needed to migrate to 2.0.0-oss",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f18d162_3ed45b38",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-22T08:35:16Z",
+      "side": 1,
+      "message": "Will do later",
+      "parentUuid": "20a7058c_7fc24930",
       "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "822130c2_98de80b7",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-22T08:35:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9a85fa8b_d79883e6",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4de213d6_db950408",
         "filename": "pom.xml",
         "patchSetId": 11
@@ -67,6 +121,24 @@
       "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "151ea65d_f9c4ccb8",
+        "filename": "pom.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-22T08:35:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4de213d6_db950408",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -98,6 +170,24 @@
       "writtenOn": "2021-01-21T23:45:08Z",
       "side": 1,
       "message": "fyi: we typically use all over this StandardCoder.java to do all the json work .. may be at some point we could resync on this too.",
+      "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7113873_f0e06a52",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/client/PolicyEngineServices.java",
+        "patchSetId": 11
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-22T08:35:16Z",
+      "side": 1,
+      "message": "Yep indeed, we had our own as well as you can see.... this will require more rework",
+      "parentUuid": "62a7566e_0e9afdb4",
       "revId": "7123620e5f11978b4cb44c42b625e21b56d1df18",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
