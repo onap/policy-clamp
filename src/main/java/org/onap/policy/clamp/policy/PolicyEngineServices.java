@@ -21,15 +21,11 @@
  *
  */
 
-package org.onap.policy.clamp.clds.client;
+package org.onap.policy.clamp.policy;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -39,7 +35,6 @@ import org.onap.policy.clamp.clds.sdc.controller.installer.BlueprintMicroService
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsService;
-import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -98,7 +93,7 @@ public class PolicyEngineServices {
     public PolicyModel createPolicyModelFromPolicyEngine(String policyType, String policyVersion) {
         PolicyModel policyModelFound = policyModelsService.getPolicyModel(policyType, policyVersion);
         if (policyModelFound == null) {
-            String policyTosca = this.downloadOnePolicy(policyType, policyVersion);
+            String policyTosca = this.downloadOnePolicyToscaModel(policyType, policyVersion);
             if (policyTosca != null && !policyTosca.isEmpty()) {
                 return policyModelsService.savePolicyModelInNewTransaction(
                         new PolicyModel(policyType, policyTosca, policyVersion));
@@ -130,7 +125,7 @@ public class PolicyEngineServices {
      */
     public void synchronizeAllPolicies() {
         LinkedHashMap<String, Object> loadedYaml;
-        loadedYaml = new Yaml().load(downloadAllPolicies());
+        loadedYaml = new Yaml().load(downloadAllPolicyModels());
         if (loadedYaml == null || loadedYaml.isEmpty()) {
             logger.warn("getAllPolicyType yaml returned by policy engine could not be decoded, as it's null or empty");
             return;
@@ -149,9 +144,9 @@ public class PolicyEngineServices {
      *
      * @return A yaml containing all policy Types and all data types
      */
-    public String downloadAllPolicies() {
+    public String downloadAllPolicyModels() {
         return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models",
-                "Get all policies");
+                "Get all policies models");
     }
 
     /**
@@ -161,8 +156,8 @@ public class PolicyEngineServices {
      * @param policyVersion The policy version
      * @return A string with the whole policy tosca model
      */
-    public String downloadOnePolicy(String policyType, String policyVersion) {
-        logger.info("Downloading the policy model " + policyType + "/" + policyVersion);
+    public String downloadOnePolicyToscaModel(String policyType, String policyVersion) {
+        logger.info("Downloading the policy tosca model " + policyType + "/" + policyVersion);
         DumperOptions options = new DumperOptions();
         options.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
         options.setIndent(4);
@@ -171,11 +166,11 @@ public class PolicyEngineServices {
         Yaml yamlParser = new Yaml(options);
         String responseBody = callCamelRoute(
                 ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
-                        .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-model",
+                        .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-tosca-model",
                 "Get one policy");
 
         if (responseBody == null || responseBody.isEmpty()) {
-            logger.warn("getPolicyModel returned by policy engine could not be decoded, as it's null or empty");
+            logger.warn("getPolicyToscaModel returned by policy engine could not be decoded, as it's null or empty");
             return null;
         }
 

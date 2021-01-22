@@ -23,7 +23,6 @@
 
 package org.onap.policy.clamp.loop.template;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +31,6 @@ import org.onap.policy.clamp.clds.tosca.ToscaSchemaConstants;
 import org.onap.policy.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.policy.clamp.policy.pdpgroup.PdpGroupsAnalyzer;
 import org.onap.policy.clamp.util.SemanticVersioning;
-import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -157,7 +155,7 @@ public class PolicyModelsService {
      */
     public void updatePdpGroupInfo(PdpGroups pdpGroups) {
         List<PolicyModel> policyModelsList = policyModelsRepository.findAll();
-        PdpGroupsAnalyzer.updatePdpGroup(policyModelsList, pdpGroups);
+        PdpGroupsAnalyzer.updatePdpGroupOfPolicyModels(policyModelsList, pdpGroups);
         this.policyModelsRepository.saveAll(policyModelsList);
     }
 }
