@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "801d696f_d75172cb",
+        "filename": "src/test/java/org/onap/policy/clamp/loop/CsarInstallerItCase.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-22T14:55:13Z",
+      "side": 1,
+      "message": "2021, Ericsson ? - general comment",
+      "revId": "d5dde0db1dcb88335a316f5cab441a0c5e1eafb8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b10d3f4_54dd6bce",
+        "filename": "src/test/resources/http-cache/example/policy/api/v1/policies/.file",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-01-22T14:55:13Z",
+      "side": 1,
+      "message": "Do these need to be hidden files under this directory ?  ( .file, etc .. ) - general comment",
+      "revId": "d5dde0db1dcb88335a316f5cab441a0c5e1eafb8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
