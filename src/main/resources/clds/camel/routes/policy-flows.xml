@@ -170,11 +170,11 @@
             </doFinally>
         </doTry>
     </route>
-    <route id="get-policy-model">
-        <from uri="direct:get-policy-model"/>
+    <route id="get-policy-tosca-model">
+        <from uri="direct:get-policy-tosca-model"/>
         <doTry>
             <log loggingLevel="INFO"
-                 message="Getting the policy model: ${exchangeProperty[policyModelName]}/${exchangeProperty[policyModelVersion]}"/>
+                 message="Getting the policy tosca model: ${exchangeProperty[policyModelName]}/${exchangeProperty[policyModelVersion]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policy model')"/>
             <setHeader headerName="CamelHttpMethod">
