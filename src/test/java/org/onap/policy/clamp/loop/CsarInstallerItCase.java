@@ -128,7 +128,7 @@ public class CsarInstallerItCase {
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
         // Create fake blueprint artifact 1 on resource1
         BlueprintArtifact blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1,
-                INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca-guilin.yaml", "tca-guilin.yaml",
+                INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca-bad-policy.yaml", "tca-bad-policy.yaml",
                 INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
@@ -182,6 +182,13 @@ public class CsarInstallerItCase {
         blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1, INVARIANT_RESOURCE1_UUID,
                 "example/sdc/blueprint-dcae/tca_3.yaml", "tca_3.yaml", INVARIANT_SERVICE_UUID);
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
+
+        // Create fake blueprint artifact 3 on resource 1 so that it's possible to
+        // test multiple CL deployment per Service/vnf
+        blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1, INVARIANT_RESOURCE1_UUID,
+                "example/sdc/blueprint-dcae/tca-guilin.yaml", "tca-guilin.yaml", INVARIANT_SERVICE_UUID);
+        blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
+
 
         // Build fake csarhandler
         Mockito.when(csarHandler.getSdcNotification()).thenReturn(notificationData);
@@ -275,6 +282,8 @@ public class CsarInstallerItCase {
                 RESOURCE_INSTANCE_NAME_RESOURCE1, "tca_3.yaml"))).isTrue();
         assertThat(loopTemplatesRepo.existsById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
                 RESOURCE_INSTANCE_NAME_RESOURCE2, "tca_2.yaml"))).isTrue();
+        assertThat(loopTemplatesRepo.existsById(LoopTemplate.generateLoopTemplateName(generatedName, "1.0",
+                RESOURCE_INSTANCE_NAME_RESOURCE1, "tca-guilin.yaml"))).isTrue();
         // Verify now that policy and json representation, global properties are well
         // set
         LoopTemplate loopTemplate = loopTemplatesRepo.findById(LoopTemplate.generateLoopTemplateName(generatedName,
