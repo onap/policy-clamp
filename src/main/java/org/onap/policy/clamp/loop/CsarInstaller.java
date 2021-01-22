@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.json.simple.parser.ParseException;
 import org.onap.policy.clamp.clds.client.DcaeInventoryServices;
-import org.onap.policy.clamp.clds.client.PolicyEngineServices;
 import org.onap.policy.clamp.clds.exception.sdc.controller.BlueprintParserException;
 import org.onap.policy.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.policy.clamp.clds.model.dcae.DcaeInventoryResponse;
@@ -48,6 +47,7 @@ import org.onap.policy.clamp.loop.template.LoopTemplate;
 import org.onap.policy.clamp.loop.template.LoopTemplatesRepository;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
+import org.onap.policy.clamp.policy.PolicyEngineServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
