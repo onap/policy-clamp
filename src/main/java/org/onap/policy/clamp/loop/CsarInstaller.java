@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import org.json.simple.parser.ParseException;
 import org.onap.policy.clamp.clds.client.DcaeInventoryServices;
-import org.onap.policy.clamp.clds.client.PolicyEngineServices;
+import org.onap.policy.clamp.policy.PolicyEngineServices;
 import org.onap.policy.clamp.clds.exception.sdc.controller.BlueprintParserException;
 import org.onap.policy.clamp.clds.exception.sdc.controller.SdcArtifactInstallerException;
 import org.onap.policy.clamp.clds.model.dcae.DcaeInventoryResponse;

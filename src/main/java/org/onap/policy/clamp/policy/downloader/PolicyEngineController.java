@@ -27,7 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import java.time.Instant;
 import org.json.simple.parser.ParseException;
-import org.onap.policy.clamp.clds.client.PolicyEngineServices;
+import org.onap.policy.clamp.policy.PolicyEngineServices;
 import org.onap.policy.clamp.loop.template.PolicyModelsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
