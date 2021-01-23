@@ -25,4 +25,4 @@
 
 # Start Clamp backend in DEBUG mode
 mkdir -p /var/log/onap
-java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999 -jar ../../target/clamp.jar --spring.config.name=application-noaaf
+java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999 -jar ../../target/policy-clamp-backend.jar --spring.config.name=application-noaaf
