@@ -22,7 +22,7 @@
  */
 import LoopCache from '../api/LoopCache';
 
-const json = require('./LoopCache_mokeLoopJsonCache.json');
+const json = require('./LoopCacheMockFile.json');
 
 describe('Verify LoopCache functions', () => {
     const loopCache = new LoopCache(json);

@@ -52,7 +52,7 @@ exports[`Verify MenuBar Test the render method 1`] = `
         }
       }
       disabled={false}
-      to="/ViewLoopTemplatesModal"
+      to="/viewLoopTemplatesModal"
     >
       View All Templates
     </DropdownItem>
@@ -209,9 +209,60 @@ exports[`Verify MenuBar Test the render method 1`] = `
         }
       }
       disabled={false}
-      to="/ManageDictionaries"
+      to="/manageDictionaries"
     >
       Manage Metadata Dictionaries
+    </DropdownItem>
+    <DropdownItem
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "attrs": Array [],
+          "componentStyle": ComponentStyle {
+            "componentId": "sc-bdVaJa",
+            "isStatic": false,
+            "rules": Array [
+              "
+	color: ",
+              [Function],
+              ";
+	background-color: ",
+              [Function],
+              ";
+	font-weight: normal;
+	display: block;
+	width: 100%;
+	padding: .25rem 1.5rem;
+	clear: both;
+	text-align: inherit;
+	white-space: nowrap;
+	border: 0;
+	:hover {
+		text-decoration: none;
+		background-color: ",
+              [Function],
+              ";
+		color:  ",
+              [Function],
+              ";
+	}
+",
+            ],
+          },
+          "displayName": "Styled(Link)",
+          "foldedComponentIds": Array [],
+          "render": [Function],
+          "styledComponentId": "sc-bdVaJa",
+          "target": [Function],
+          "toString": [Function],
+          "warnTooManyClasses": [Function],
+          "withComponent": [Function],
+        }
+      }
+      disabled={false}
+      to="/viewAllPolicies"
+    >
+      View All Policies
     </DropdownItem>
   </Styled(NavDropdown)>
   <Styled(NavDropdown)
