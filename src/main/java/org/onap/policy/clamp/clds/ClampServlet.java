@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -62,6 +62,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
     private static final String PERM_VF = "clamp.config.security.permission.type.filter.vf";
     private static final String PERM_MANAGE = "clamp.config.security.permission.type.cl.manage";
     private static final String PERM_TOSCA = "clamp.config.security.permission.type.tosca";
+    private static final String PERM_POLICIES = "clamp.config.security.permission.type.policies";
     private static final String AUTHENTICATION_CLASS = "clamp.config.security.authentication.class";
     private static final String READ = "read";
     private static final String UPDATE = "update";
@@ -95,8 +96,14 @@ public class ClampServlet extends CamelHttpTransportServlet {
             permissionList.add(SecureServicePermission
                     .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA), cldsPermissionInstance, READ));
             permissionList.add(SecureServicePermission
-                    .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA),
-                            cldsPermissionInstance, UPDATE));
+                    .create(applicationContext.getEnvironment().getProperty(PERM_TOSCA), cldsPermissionInstance,
+                            UPDATE));
+            permissionList.add(SecureServicePermission
+                    .create(applicationContext.getEnvironment().getProperty(PERM_POLICIES), cldsPermissionInstance,
+                            READ));
+            permissionList.add(SecureServicePermission
+                    .create(applicationContext.getEnvironment().getProperty(PERM_POLICIES), cldsPermissionInstance,
+                            UPDATE));
         }
         return permissionList;
     }
