@@ -1317,7 +1317,7 @@
                 </doTry>
             </route>
         </get>
-        <get uri="/v2/policies/list" outType="java.lang.String" produces="application/json">
+        <get uri="/v2/policies/list" outType="com.google.gson.JsonObject" produces="application/json">
             <route>
                 <removeHeaders pattern="*"/>
                 <doTry>
