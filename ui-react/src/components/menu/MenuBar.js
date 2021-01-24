@@ -87,12 +87,13 @@ export default class MenuBar extends React.Component {
 		return (
 				<Navbar.Collapse>
 					<StyledNavDropdown title="Loop Templates">
-							<NavDropdown.Item as={StyledLink} to="/ViewLoopTemplatesModal">View All Templates</NavDropdown.Item>
+							<NavDropdown.Item as={StyledLink} to="/viewLoopTemplatesModal">View All Templates</NavDropdown.Item>
 					</StyledNavDropdown>
 					<StyledNavDropdown title="Policy Models">
                     	    <NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Model</NavDropdown.Item>
                     		<NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
-                            <NavDropdown.Item as={StyledLink} to="/ManageDictionaries">Manage Metadata Dictionaries</NavDropdown.Item>
+                            <NavDropdown.Item as={StyledLink} to="/manageDictionaries">Manage Metadata Dictionaries</NavDropdown.Item>
+                            <NavDropdown.Item as={StyledLink} to="/viewAllPolicies">View All Policies</NavDropdown.Item>
                     </StyledNavDropdown>
 					<StyledNavDropdown title="Loop Instance">
 					        <NavDropdown.Item as={StyledLink} to="/createLoop">Create</NavDropdown.Item>
