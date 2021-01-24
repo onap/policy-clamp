@@ -94,8 +94,8 @@ public class PoliciesPdpMergerTest {
 
     @Test
     public void testUpdatePdpGroupOfPolicyModels() throws IOException {
-        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("clds/policy-merger.json"), PoliciesPdpMerger
-                .mergePoliciesAndPdpGroupStates(
+        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("example/policy/policy-merger.json"),
+                PoliciesPdpMerger.mergePoliciesAndPdpGroupStates(
                         ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policies/.file"),
                         pdpGroupsJson), true);
     }
