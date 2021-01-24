@@ -41,6 +41,7 @@ import CreateLoopModal from './components/dialogs/Loop/CreateLoopModal';
 import OpenLoopModal from './components/dialogs/Loop/OpenLoopModal';
 import ModifyLoopModal from './components/dialogs/Loop/ModifyLoopModal';
 import PolicyModal from './components/dialogs/Policy/PolicyModal';
+import ViewAllPolicies from './components/dialogs/Policy/ViewAllPolicies';
 import LoopPropertiesModal from './components/dialogs/Loop/LoopPropertiesModal';
 import UserInfoModal from './components/dialogs/UserInfoModal';
 import LoopService from './api/LoopService';
@@ -300,9 +301,9 @@ export default class LoopUI extends React.Component {
 			<React.Fragment>
 				<Route path="/uploadToscaPolicyModal" render={(routeProps) => (<UploadToscaPolicyModal {...routeProps} />)} />
 				<Route path="/viewToscaPolicyModal" render={(routeProps) => (<ViewToscaPolicyModal {...routeProps} />)} />
-				<Route path="/ViewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
-				<Route path="/ManageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
-
+				<Route path="/viewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
+				<Route path="/manageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
+                <Route path="/viewAllPolicies" render={(routeProps) => (<ViewAllPolicies {...routeProps} />)} />
 				<Route path="/policyModal/:policyInstanceType/:policyName" render={(routeProps) => (<PolicyModal {...routeProps}
 					loopCache={this.getLoopCache()}
 					loadLoopFunction={this.loadLoop}/>)}
