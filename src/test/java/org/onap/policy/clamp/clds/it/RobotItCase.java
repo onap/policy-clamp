@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,6 +22,8 @@
  */
 
 package org.onap.policy.clamp.clds.it;
+
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -111,6 +113,13 @@ public class RobotItCase {
         } catch (InterruptedException e) {
             throw new Exception("Failed to retrieve logs of container " + id, e);
         }
+
+        copyInputStreamToFile(client.copyArchiveFromContainerCmd(id, "/opt/robotframework/reports/output.xml").exec(),
+                new File("target/robotframework/output.xml"));
+        copyInputStreamToFile(client.copyArchiveFromContainerCmd(id, "/opt/robotframework/reports/log.html").exec(),
+                new File("target/robotframework/log.html"));
+        copyInputStreamToFile(client.copyArchiveFromContainerCmd(id, "/opt/robotframework/reports/report.html").exec(),
+                new File("target/robotframework/report.html"));
         client.stopContainerCmd(id);
     }
 }
