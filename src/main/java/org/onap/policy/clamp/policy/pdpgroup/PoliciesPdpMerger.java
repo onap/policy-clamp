@@ -42,19 +42,22 @@ public class PoliciesPdpMerger {
      * This method extract the content of a policy without knowing the key (policy Id).
      * This JsonElement normally contains only the policy ID then the content,
      * there is only one member in the Json element.
+     * As this is not really practical to use this method remove that
+     * nested Json.
      *
      * @param policyJsonElement The policy as JsonElement
      * @return It return the content as JsonObject
      */
     public static JsonObject getPolicyContentOutOfJsonElement(JsonElement policyJsonElement) {
-        return policyJsonElement.getAsJsonObject()
-                .get(((String) policyJsonElement.getAsJsonObject().keySet().toArray()[0])).getAsJsonObject();
+        mergeJsonElement(policyJsonElement.getAsJsonObject(), policyJsonElement.getAsJsonObject()
+                .remove(((String) policyJsonElement.getAsJsonObject().keySet().toArray()[0])).getAsJsonObject());
+        return policyJsonElement.getAsJsonObject();
     }
 
     /**
      * This method merges 2 JsonElement together. If the jsonToMerge is null nothign is changed.
      *
-     * @param json The initial json that will received the data
+     * @param json        The initial json that will received the data
      * @param jsonToMerge The json that will be added to the first json object
      */
     public static void mergeJsonElement(JsonObject json, JsonObject jsonToMerge) {
@@ -69,16 +72,16 @@ public class PoliciesPdpMerger {
      *
      * @param jsonPoliciesList The Json containing the policies from the PEF
      * @param pdpGroupsJson    The json containing the PDP groups info from the PEF
-     * @return It returns a String containing the policies list enriched with PdpGroup info
+     * @return It returns a JsonObject containing the policies list enriched with PdpGroup info
      */
-    public static String mergePoliciesAndPdpGroupStates(String jsonPoliciesList, String pdpGroupsJson) {
+    public static JsonObject mergePoliciesAndPdpGroupStates(String jsonPoliciesList, String pdpGroupsJson) {
         PdpGroups pdpGroups = JsonUtils.GSON.fromJson(pdpGroupsJson, PdpGroups.class);
         JsonObject policiesListJson =
                 JsonUtils.GSON.fromJson(jsonPoliciesList, JsonObject.class).get("topology_template")
                         .getAsJsonObject();
         StreamSupport.stream(policiesListJson.get("policies").getAsJsonArray().spliterator(), true)
                 .forEach(policyJson -> enrichOnePolicy(pdpGroups, getPolicyContentOutOfJsonElement(policyJson)));
-        return policiesListJson.toString();
+        return policiesListJson;
     }
 
     /**

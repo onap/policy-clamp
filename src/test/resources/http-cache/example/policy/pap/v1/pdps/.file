@@ -16,6 +16,10 @@
                         {
                             "name": "onap.policies.controlloop.Operational",
                             "version": "1.0.0"
+                        },
+                        {
+                          "name": "onap.policies.controlloop.operational.common.*",
+                            "version": "1.0.0"
                         }
                     ]
                 },
@@ -71,10 +75,6 @@
                     "pdpType": "xacml",
                     "policies": [
                                 {
-                                  "name": "SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP",
-                                  "version": "1.0.0"
-                                },
-                                {
                                   "name": "MICROSERVICE_vLoadBalancerMS_v1_0_tcagen2_1_0_0_AV0",
                                   "version": "1.0.0"
                                 }
@@ -84,7 +84,12 @@
                         {
                             "name": "onap.policies.monitoring.*",
                             "version": "1.0.0"
+                        },
+                        {
+                            "name": "onap.policies.Naming",
+                            "version": "1.0.0"
                         }
+
                     ]
                 }
             ],
