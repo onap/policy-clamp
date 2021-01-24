@@ -14,11 +14,15 @@ exports[`Verify LoopUI Test the render method 1`] = `
     render={[Function]}
   />
   <Route
-    path="/ViewLoopTemplatesModal"
+    path="/viewLoopTemplatesModal"
     render={[Function]}
   />
   <Route
-    path="/ManageDictionaries"
+    path="/manageDictionaries"
+    render={[Function]}
+  />
+  <Route
+    path="/viewAllPolicies"
     render={[Function]}
   />
   <Route
