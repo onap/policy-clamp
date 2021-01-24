@@ -1,0 +1,215 @@
+{
+  "policies": [
+    {
+      "MICROSERVICE_vLoadBalancerMS_v1_0_tcagen2_1_0_0_AV0": {
+        "type": "onap.policies.monitoring.tcagen2",
+        "type_version": "1.0.0",
+        "properties": {
+          "tca.policy": {
+            "domain": "measurementsForVfScaling",
+            "metricsPerEventName": [
+              {
+                "policyScope": "DCAE",
+                "thresholds": [
+                  {
+                    "version": "1.0.2",
+                    "severity": "MAJOR",
+                    "thresholdValue": 200,
+                    "closedLoopEventStatus": "ONSET",
+                    "closedLoopControlName": "LOOP_test",
+                    "direction": "LESS_OR_EQUAL",
+                    "fieldPath": "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta"
+                  }
+                ],
+                "eventName": "vLoadBalancer",
+                "policyVersion": "v0.0.1",
+                "controlLoopSchemaType": "VM",
+                "policyName": "DCAE.Config_tca-hi-lo"
+              }
+            ]
+          }
+        },
+        "name": "MICROSERVICE_vLoadBalancerMS_v1_0_tcagen2_1_0_0_AV0",
+        "version": "1.0.0",
+        "metadata": {
+          "policy-id": "MICROSERVICE_vLoadBalancerMS_v1_0_tcagen2_1_0_0_AV0",
+          "policy-version": "1.0.0"
+        },
+        "pdpGroupInfo": {
+          "pdpGroup": "pdpGroup2",
+          "pdpSubGroup": "subGroup2"
+        },
+        "supportedPdpGroups": [
+          {
+            "pdpGroup2": [
+              "subGroup2",
+              "subGroup3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "OPERATIONAL_vLoadBalancerMS_v1_0_Drools_1_0_0_7xd": {
+        "type": "onap.policies.controlloop.operational.common.Drools",
+        "type_version": "1.0.0",
+        "properties": {
+          "abatement": false,
+          "operations": [
+            {
+              "failure_retries": "final_failure_retries",
+              "id": "test1",
+              "failure_timeout": "final_failure_timeout",
+              "failure": "final_failure",
+              "operation": {
+                "payload": {
+                  "artifact_name": "baseconfiguration",
+                  "artifact_version": "1.0.0",
+                  "mode": "async",
+                  "data": "{\"resource-assignment-properties\":{\"request-id\":\"\",\"service-instance-id\":\"\",\"hostname\":\"\",\"request-info\":{\"prop1\":\"\",\"prop2\":\"\"}}}"
+                },
+                "target": {
+                  "entityIds": {
+                    "resourceID": "Vloadbalancerms..vdns..module-3",
+                    "modelInvariantId": "4c10ba9b-f88f-415e-9de3-5d33336047fa",
+                    "modelVersionId": "4fa73b49-8a6c-493e-816b-eb401567b720",
+                    "modelName": "Vloadbalancerms..vdns..module-3",
+                    "modelVersion": "1",
+                    "modelCustomizationId": "bafcdab0-801d-4d81-9ead-f464640a38b1"
+                  },
+                  "targetType": "VNF"
+                },
+                "actor": "SDNR",
+                "operation": "BandwidthOnDemand"
+              },
+              "failure_guard": "final_failure_guard",
+              "retries": 0,
+              "timeout": 0,
+              "failure_exception": "final_failure_exception",
+              "description": "test",
+              "success": "final_success"
+            }
+          ],
+          "trigger": "test1",
+          "timeout": 0,
+          "id": "LOOP_test"
+        },
+        "name": "OPERATIONAL_vLoadBalancerMS_v1_0_Drools_1_0_0_7xd",
+        "version": "1.0.0",
+        "metadata": {
+          "policy-id": "OPERATIONAL_vLoadBalancerMS_v1_0_Drools_1_0_0_7xd",
+          "policy-version": "1.0.0"
+        },
+        "pdpGroupInfo": {
+          "pdpGroup": "pdpGroup2",
+          "pdpSubGroup": "subGroup3"
+        },
+        "supportedPdpGroups": [
+          {
+            "pdpGroup2": [
+              "subGroup2",
+              "subGroup3"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP": {
+        "type": "onap.policies.Naming",
+        "type_version": "1.0.0",
+        "properties": {
+          "naming-models": [
+            {
+              "naming-type": "VNF",
+              "naming-recipe": "AIC_CLOUD_REGION|DELIMITER|CONSTANT|DELIMITER|TIMESTAMP",
+              "name-operation": "to_lower_case()",
+              "naming-properties": [
+                {
+                  "property-name": "AIC_CLOUD_REGION"
+                },
+                {
+                  "property-name": "CONSTANT",
+                  "property-value": "onap-nf"
+                },
+                {
+                  "property-name": "TIMESTAMP"
+                },
+                {
+                  "property-value": "-",
+                  "property-name": "DELIMITER"
+                }
+              ]
+            },
+            {
+              "naming-type": "VNFC",
+              "naming-recipe": "VNF_NAME|DELIMITER|NFC_NAMING_CODE|DELIMITER|SEQUENCE",
+              "name-operation": "to_lower_case()",
+              "naming-properties": [
+                {
+                  "property-name": "VNF_NAME"
+                },
+                {
+                  "property-name": "SEQUENCE",
+                  "increment-sequence": {
+                    "max": "zzz",
+                    "scope": "ENTIRETY",
+                    "start-value": "1",
+                    "length": "3",
+                    "increment": "1",
+                    "sequence-type": "alpha-numeric"
+                  }
+                },
+                {
+                  "property-name": "NFC_NAMING_CODE"
+                },
+                {
+                  "property-value": "-",
+                  "property-name": "DELIMITER"
+                }
+              ]
+            },
+            {
+              "naming-type": "VF-MODULE",
+              "naming-recipe": "VNF_NAME|DELIMITER|VF_MODULE_LABEL|DELIMITER|VF_MODULE_TYPE|DELIMITER|SEQUENCE",
+              "name-operation": "to_lower_case()",
+              "naming-properties": [
+                {
+                  "property-name": "VNF_NAME"
+                },
+                {
+                  "property-value": "-",
+                  "property-name": "DELIMITER"
+                },
+                {
+                  "property-name": "VF_MODULE_LABEL"
+                },
+                {
+                  "property-name": "VF_MODULE_TYPE"
+                },
+                {
+                  "property-name": "SEQUENCE",
+                  "increment-sequence": {
+                    "max": "zzz",
+                    "scope": "PRECEEDING",
+                    "start-value": "1",
+                    "length": "3",
+                    "increment": "1",
+                    "sequence-type": "alpha-numeric"
+                  }
+                }
+              ]
+            }
+          ],
+          "policy-instance-name": "ONAP_NF_NAMING_TIMESTAMP"
+        },
+        "name": "SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP",
+        "version": "1.0.0",
+        "metadata": {
+          "policy-id": "SDNC_Policy.ONAP_NF_NAMING_TIMESTAMP",
+          "policy-version": "1.0.0"
+        }
+      }
+    }
+  ]
+}
