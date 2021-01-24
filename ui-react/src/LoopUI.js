@@ -300,9 +300,9 @@ export default class LoopUI extends React.Component {
 			<React.Fragment>
 				<Route path="/uploadToscaPolicyModal" render={(routeProps) => (<UploadToscaPolicyModal {...routeProps} />)} />
 				<Route path="/viewToscaPolicyModal" render={(routeProps) => (<ViewToscaPolicyModal {...routeProps} />)} />
-				<Route path="/ViewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
-				<Route path="/ManageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
-
+				<Route path="/viewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
+				<Route path="/manageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
+                <Route path="/viewAllPolicies" render={(routeProps) => (<ViewAllPolicies {...routeProps} />)} />
 				<Route path="/policyModal/:policyInstanceType/:policyName" render={(routeProps) => (<PolicyModal {...routeProps}
 					loopCache={this.getLoopCache()}
 					loadLoopFunction={this.loadLoop}/>)}
