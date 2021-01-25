@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "38fcdb75_3f0bd9e3",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/CsarInstaller.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-25T13:06:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3f159b7_155e8ff8",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "7d8a018240cfb80796f2860f78c9d4931c4cb152",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d9811e2_8d4ace6f",
         "filename": "src/main/java/org/onap/policy/clamp/policy/downloader/PolicyEngineController.java",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "7d8a018240cfb80796f2860f78c9d4931c4cb152",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ed73023_feb14d13",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/downloader/PolicyEngineController.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-25T13:06:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d9811e2_8d4ace6f",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "7d8a018240cfb80796f2860f78c9d4931c4cb152",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
