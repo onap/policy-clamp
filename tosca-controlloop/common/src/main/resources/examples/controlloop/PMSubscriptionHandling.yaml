@@ -1,0 +1,171 @@
+# ============LICENSE_START=======================================================
+# Copyright (C) 2021 Nordix Foundation.
+# ================================================================================
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+# ============LICENSE_END=========================================================
+
+tosca_definitions_version: tosca_simple_yaml_1_3
+data_types:
+  onap.datatypes.ToscaConceptIdentifier:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+node_types:
+  org.onap.policy.clamp.controlloop.Participant:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        requred: false
+  org.onap.policy.clamp.controlloop.ControlLoopElement:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        requred: false
+      participant_id:
+        type: onap.datatypes.ToscaConceptIdentifier
+        requred: true
+  org.onap.policy.clamp.controlloop.ControlLoop:
+    version: 1.0.1
+    derived_from: tosca.nodetypes.Root
+    properties:
+      provider:
+        type: string
+        requred: false
+      elements:
+        type: list
+        required: true
+        entry_schema:
+          type: onap.datatypes.ToscaConceptIdentifier
+  org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
+    properties:
+      dcae_blueprint_id:
+        type: onap.datatypes.ToscaConceptIdentifier
+        requred: true
+  org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
+    properties:
+      policy_type_id:
+        type: onap.datatypes.ToscaConceptIdentifier
+        requred: true
+  org.onap.policy.clamp.controlloop.CDSControlLoopElement:
+    version: 1.0.1
+    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement
+    properties:
+      cds_blueprint_id:
+        type: onap.datatypes.ToscaConceptIdentifier
+        requred: true
+topology_template:
+  node_templates:
+    org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant:
+      version: 2.3.4
+      type: org.onap.policy.clamp.controlloop.Participant
+      type_version: 1.0.1
+      description: Participant for DCAE microservices
+      properties:
+        provider: ONAP
+    org.onap.policy.controlloop.PolicyControlLoopParticipant:
+      version: 2.3.1
+      type: org.onap.policy.clamp.controlloop.Participant
+      type_version: 1.0.1
+      description: Participant for DCAE microservices
+      properties:
+        provider: ONAP
+    org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant:
+      version: 2.2.1
+      type: org.onap.policy.clamp.controlloop.Participant
+      type_version: 1.0.1
+      description: Participant for DCAE microservices
+      properties:
+        provider: ONAP
+    org.onap.domain.pmsh.PMSH_DCAEMicroservice:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for the DCAE microservice for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_id:
+          name: org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant
+          version: 2.3.4
+        dcae_blueprint_id:
+          name: org.onap.dcae.blueprints.PMSHBlueprint
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for the monitoring policy for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_id:
+          name: org.onap.policy.controlloop.PolicyControlLoopParticipant
+          version: 2.3.1
+        policy_type_id:
+          name: onap.policies.monitoring.pm-subscription-handler
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for the operational policy for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_id:
+          name: org.onap.policy.controlloop.PolicyControlLoopParticipant
+          version: 2.2.1
+        policy_type_id:
+          name: onap.policies.operational.pm-subscription-handler
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.CDSControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for CDS for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_Id:
+          name: org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant
+          version: 3.2.1
+        cds_blueprint_id:
+          name: org.onap.ccsdk.cds.PMSHCdsBlueprint
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSHControlLoopDefinition:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.ControlLoop
+      type_version: 1.0.0
+      description: Control loop for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        elements:
+        - name: org.onap.domain.pmsh.PMSH_DCAEMicroservice
+          version: 1.2.3
+        - name: org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement
+          version: 1.2.3
+        - name: org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement
+          version: 1.2.3
+        - name: org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement
+          version: 1.2.3
