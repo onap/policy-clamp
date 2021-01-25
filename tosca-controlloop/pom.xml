@@ -27,7 +27,7 @@
         <groupId>org.onap.policy.parent</groupId>
         <artifactId>integration</artifactId>
         <version>3.3.0-SNAPSHOT</version>
-        <relativePath/>
+        <relativePath>../../parent/integration</relativePath>
     </parent>
 
     <groupId>org.onap.policy.clamp.controlloop</groupId>
@@ -144,6 +144,20 @@
                 </excludes>
             </resource>
         </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkCount>1C</forkCount>
+                    <reuseForks>true</reuseForks>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                    <parallel>methods</parallel>
+                    <useUnlimitedThreads>true</useUnlimitedThreads>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
