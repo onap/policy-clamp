@@ -1,0 +1,45 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+imports:
+  - cloop_base_types.yaml
+
+node_types:
+  #node type for Policy
+  org.onap.PolicyFramework:
+    derived_from: org.onap.APP
+
+  #node type for Apex Policy
+  org.onap.ApexPolicyFramework:
+    derived_from: org.onap.PolicyFramework
+
+  #node type for CDS
+  org.onap.CDS:
+    derived_from: org.onap.APP
+    capabilities:
+      #consumer capability for CDS for events of type ResourceAndTemplate management API
+      ResourceAndTemplateManagement:
+        type: org.onap.EventConsumer
+        properties:
+          carrier_protocol_type: "DMAAP_message_router"
+          data_format: "JSON"
+          event_format: "ResourceAndTemplate"
+          event_format_version: "x.xx.x"
+        occurrences: [ 0, UNBOUNDED ]
+      #consumer capability for CDS for events of type SelfService API
+      SelfService:
+        type: org.onap.EventConsumer
+        properties:
+          carrier_protocol_type: "DMAAP_message_router"
+          data_format: "JSON"
+          event_format: "SelfService"
+          event_format_version: "x.xx.x"
+        occurrences: [ 0, UNBOUNDED ]
+      #producer capability for CDS for events of type PNFControl
+      PNFcontrolEventsProducer:
+        type: org.onap.EventProducer
+        properties:
+          carrier_protocol_type: "DMAAP_message_router"
+          data_format: "JSON"
+          event_format: "PNFcontrol"
+          event_format_version: "x.xx.x"
+        occurrences: [ 0, UNBOUNDED ]

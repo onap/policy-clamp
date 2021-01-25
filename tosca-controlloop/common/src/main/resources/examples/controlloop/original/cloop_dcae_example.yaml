@@ -1,0 +1,32 @@
+tosca_definitions_version: tosca_simple_yaml_1_3
+
+imports:
+  - cloop_base_types.yaml
+  - cloop_dcae_types.yaml
+  - cloop_other_types.yaml
+
+topology_template:
+  node_templates:
+
+    node1_DCAE_VES_TCA:
+      type: org.onap.DCAE_VES_TCA
+      directives:
+        - substitute
+
+    node2_PolicyFramework:
+      type: org.onap.ApexPolicyFramework
+      requirements:
+        - receive:
+            capability: TCA-handle-out-publisher
+            node: node1_DCAE_VES_TCA
+            relationship:
+              properties:
+                config_keys: [ ves-measurement ]
+        - send:
+            capability: SelfService
+            node: org.onap.CDS
+            relationship:
+              properties:
+                config_keys: [ ves-measurement ]
+
+  #if this closed loop to subscribe to other events via the VesCollector, should we not add that?
