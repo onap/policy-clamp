@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "72e51836_bb521dc8",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/original/cloop_base_types.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-26T13:45:21Z",
+      "side": 1,
+      "message": "Yes but i would say that it\u0027s a small mistake, we embed some files (sometimes huge, even if they are compressed) to Prod artifact.\nI understand very well the need, and there is a specific way to do that with maven, it\u0027s possible to create test-jar that will be tagged in test scope when used, that test artifact should be part of the Nexus deliverable:\n\nhttps://maven.apache.org/plugins/maven-jar-plugin/examples/create-test-jar.html\n\nDid you try that already (even in PEF code) ? I think I did try it in the past, it was working pretty well.",
+      "parentUuid": "6104d443_3e7e993f",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e129b38f_a7d2e186",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
         "patchSetId": 2
@@ -107,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "016e8584_2bd6202b",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopComparator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-26T13:45:21Z",
+      "side": 1,
+      "message": "Well i\u0027m not saying it\u0027s bad :-) \nI\u0027m just saying it\u0027s a useless complexity, unless you have a very good reason to do it. \nWhich seems to be the case apparently ? Is this code currently coupled with that policy filter code part (may be i missed it)?",
+      "parentUuid": "a99b5b53_6927ebfe",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dac8626e_aa25d42f",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
         "patchSetId": 2
@@ -171,6 +207,24 @@
       "side": 1,
       "message": "We haven\u0027t used Hibernate in the Policy Framework, I think because it had security issues if I remember correctly. Again, this is following the pattern for persistence classes we\u0027re using in the Policy Framework. See:\nhttps://github.com/onap/policy-models/tree/master/models-tosca/src/main/java/org/onap/policy/models/tosca/simple/concepts\n\nWe ahve a whole framework for persisting and reading TOSCA artifacts that uses EclipseLink. It works well. Now we are discussing in the PF how to move to predefined tables but for now we haven\u0027t worked through that and it\u0027ll probably come in Istanbul so for now I followed the current way of doing things.",
       "parentUuid": "df5bfc8e_8e3aab70",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45dcf196_8ca0eb38",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-01-26T13:45:21Z",
+      "side": 1,
+      "message": "Sorry my bad, it\u0027s not only for hibernate, it\u0027s for JPA entities in general and any framework you use for the db access.\n\nI believe that this will have to be changed in PEF, the impacts are performance issues with db accesses and sometimes exceptions (like LazyInitializationException in hibernate, etc ...)",
+      "parentUuid": "b5a41434_4d8fb3fc",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
