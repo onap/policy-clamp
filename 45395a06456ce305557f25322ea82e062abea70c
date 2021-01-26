@@ -177,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "fa76fbe5_5ac38ac6",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:49:06Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem to give a checkstyle error but I put in a comment anyway.",
+      "parentUuid": "5d9e0720_6ba8db9b",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffe6302c_5cc358b2",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantFilter.java",
         "patchSetId": 1
