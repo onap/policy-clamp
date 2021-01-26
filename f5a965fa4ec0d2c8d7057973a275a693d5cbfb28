@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "6e9cae4b_ae093d90",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopComparator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T13:55:47Z",
+      "side": 1,
+      "message": "Well it\u0027s linked in that we\u0027re using the same pattern for filtering that\u0027s used in the policy-models code. We want to come up with a generic way of avoiding having to create these two classes for all filtering. I\u0027ll probably have a go at it when I get a few minutes to look at it.  Ideally we would have a generic filter that we can apply to a concept class, the problem is that if you want to use a comparator, the comparator has to work on a specific class, not a superclass. I\u0027m sure there\u0027s a way around it but just need to find a few hours to do it.",
+      "parentUuid": "016e8584_2bd6202b",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dac8626e_aa25d42f",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
         "patchSetId": 2
