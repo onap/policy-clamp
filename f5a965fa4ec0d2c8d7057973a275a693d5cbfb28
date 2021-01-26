@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6104d443_3e7e993f",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/original/cloop_base_types.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "Well they should be available in the resource bundles for other modules to use them. We used this approach in Policy for Policy examples. We have a whole module in there with policy type and policy examples. This works well for us because we then have all unit tests using the same examples so, if we decide to change a format of policy, then everyone is pulling from the same module/resource bundle for tests and the new format gets verified by the existing tests. See\nhttps://github.com/onap/policy-models/tree/master/models-examples",
+      "parentUuid": "e7cbdb5a_67255c91",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e129b38f_a7d2e186",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2021-01-26T10:17:58Z",
       "side": 1,
       "message": "Do you have some tests to add ??\nWe have  3K lines added without a single test  :-(",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e5b9775_5e7ceec8",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "Yes, tests are coming, as this is PoC code, we wanted to push up the code as soon as possible rather than doing a big code dump. In the event the code is merged to master at some point in the future, we will comply with all code coverage and other directives. For example style guides and SONAR is already on.\n\nIf ye\u0027d prefer to wait and take everything as the finished article, we can do it that way either, let\u0027s discuss at the scrum.",
+      "parentUuid": "e129b38f_a7d2e186",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a99b5b53_6927ebfe",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopComparator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "This is a pattern we use for filters in the Policy Framework on model classes, We know this is not great, Jim and I are discussing how to make this generic, see similar classes in this package.\n\nToday we have to create a specific filter class and a comparator class for every concept we want to filter on and that\u0027s not good, but this should be fixed in policy-models.\n\nhttps://github.com/onap/policy-models/tree/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts",
+      "parentUuid": "56fe56ec_b8fba9b7",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dac8626e_aa25d42f",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2021-01-26T10:17:58Z",
       "side": 1,
       "message": "Same comment than for controlloop comparator, this class is probably not needed. The code should be moved under the Participant class",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "892fb72c_d8c5139b",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "See previous answer.",
+      "parentUuid": "dac8626e_aa25d42f",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "b5a41434_4d8fb3fc",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "We haven\u0027t used Hibernate in the Policy Framework, I think because it had security issues if I remember correctly. Again, this is following the pattern for persistence classes we\u0027re using in the Policy Framework. See:\nhttps://github.com/onap/policy-models/tree/master/models-tosca/src/main/java/org/onap/policy/models/tosca/simple/concepts\n\nWe ahve a whole framework for persisting and reading TOSCA artifacts that uses EclipseLink. It works well. Now we are discussing in the PF how to move to predefined tables but for now we haven\u0027t worked through that and it\u0027ll probably come in Istanbul so for now I followed the current way of doing things.",
+      "parentUuid": "df5bfc8e_8e3aab70",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7053745c_1c369075",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2021-01-26T10:17:58Z",
       "side": 1,
       "message": "Same comment for lombok annotation defined on Entity objects",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61169b66_5834f9f1",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "See previous answer.",
+      "parentUuid": "7053745c_1c369075",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "66a19048_b59bca02",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipant.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "See previous answer.",
+      "parentUuid": "7a114e2a_c775a7d5",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e0be08e5_2fbb1490",
         "filename": "tosca-controlloop/runtime/pom.xml",
         "patchSetId": 2
@@ -132,6 +258,24 @@
       "writtenOn": "2021-01-26T10:17:58Z",
       "side": 1,
       "message": "Just an note: You are not forced to use H2, you can benefit from what we do in clamp, we create a mariadb docker instance for the maven integration tests, it\u0027s better to test it with the final DB type :-)",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84fba4e9_0cdb7545",
+        "filename": "tosca-controlloop/runtime/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:26:02Z",
+      "side": 1,
+      "message": "Yes, I agree, it would be better to use MariaDB. We should discuss this and see how we can bring MariaDB into the Policy Framework for unit tests using your approach.",
+      "parentUuid": "e0be08e5_2fbb1490",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
