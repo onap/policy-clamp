@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8aa121c3_3744d451",
+        "filename": "tosca-controlloop/common/src/main/java/org/onap/policy/clamp/controlloop/common/exception/ControlLoopException.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:44:17Z",
+      "side": 1,
+      "message": "I thought about this too, My thinking here was that it was worth dragging in the JAXRS response code even in cases where it is not a REST exception because the Response.Status codes can be applied more generally than just in REST and cold maybe help users (and force developers!) to categorize their exceptions.\n\nBut maybe it should be in a subclass.",
+      "parentUuid": "fbb58261_b8fd6eab",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4884daaf_7f3d6261",
         "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/original/cloop_base_types.yaml",
         "patchSetId": 1
@@ -106,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "85068539_1d1db388",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopStatistics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:44:17Z",
+      "side": 1,
+      "message": "This class is used by participants to set the statistics so I think it\u0027s better to allow access using the Lombok generated getters and setters. The copy constructor is used during the marshalling of the ParticipantStatus message for DMaaP.\n\nBut when the participant is populating the ControlLoopStatistics object, I think it\u0027s better to do:\n\nControlLoopStatistics clStates \u003d new ControlLoopStatistics();\nclStats.setUpTime(12345);\nclStates.setLastStart(98665);\n\nand so on, I think that would be easier for developers.\n\nMaybe we need some more cute construction like automatically setting the timestamp on object instantation so this could change as we move on with the work.",
+      "parentUuid": "7f09e38e_6f249bd4",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1d3a0a92_ae38390c",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
         "patchSetId": 1
@@ -152,6 +188,24 @@
       "writtenOn": "2021-01-25T21:52:41Z",
       "side": 1,
       "message": "not sure if this class is a;most identical to ControlLoopFilter before .. one possibility to reuse same code would be to template the Participant if that was the case.",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aac31143_37ae3c0a",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantFilter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T11:44:17Z",
+      "side": 1,
+      "message": "Yes, Jim and I discussed this. We should look at filters on concepts because in the approach we now have we have to create a ....Filter and a ....Comparator class for every class we want to filter on, so we have to create two classes for every one we filter on, see the comparators and filters here:\nhttps://github.com/onap/policy-models/tree/master/models-tosca/src/main/java/org/onap/policy/models/tosca/authorative/concepts\n\nPart of the reason is that you can\u0027t subclass a Comparator and have a subclass of a comparator work on its parent, but I\u0027m sure there is some nice way around this.\n\nSee also my reply on Seb\u0027s comment.",
+      "parentUuid": "ffe6302c_5cc358b2",
       "revId": "45395a06456ce305557f25322ea82e062abea70c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
