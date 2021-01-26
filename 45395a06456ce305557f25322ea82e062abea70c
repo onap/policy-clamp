@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "9707c7fc_d15eeed3",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/original/cloop_base_types.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T08:59:37Z",
+      "side": 1,
+      "message": "Yes, Added. BTW we don\u0027t have license headers on our policy types and policy examples. We probably should add them.",
+      "parentUuid": "4884daaf_7f3d6261",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "999f99c5_bff3638f",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopFilter.java",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2021-01-25T21:52:41Z",
       "side": 1,
       "message": "how do these fields get populated if there\u0027s no constructors?   Perhaps there are side effects with the filter operations on the stream processing below?",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5225dbfc_adffc018",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopFilter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T08:59:37Z",
+      "side": 1,
+      "message": "This is a copy of the filter types we have for filtering policy types and policies in policy models. The way it\u0027s done today, we have to create a new filter and comparator for each type we\u0027re working with. I was chatting with Jim about this a few weeks ago and we said we\u0027d look at how we can make these classes general (maybe using generics) to avoid having to create 2 classes for each class we filter.",
+      "parentUuid": "999f99c5_bff3638f",
       "revId": "45395a06456ce305557f25322ea82e062abea70c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -87,6 +123,24 @@
     },
     {
       "key": {
+        "uuid": "5d9e0720_6ba8db9b",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T08:59:37Z",
+      "side": 1,
+      "message": "I\u0027ll check this. Its building for us but maybe it shouldn\u0027t.",
+      "parentUuid": "1d3a0a92_ae38390c",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ffe6302c_5cc358b2",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantFilter.java",
         "patchSetId": 1
@@ -118,6 +172,24 @@
       "revId": "45395a06456ce305557f25322ea82e062abea70c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a9c547c_4135f59d",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/SimpleResponse.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-01-26T08:59:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c07fb404_be79235e",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
