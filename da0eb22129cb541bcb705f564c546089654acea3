@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42495b21_98821dfb",
+        "filename": "src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-08T16:41:24Z",
+      "side": 1,
+      "message": "I assume this and the next file are overridden by OOM, as it seems odd to have \"clamptest\" in src/main/resources.",
+      "revId": "da0eb22129cb541bcb705f564c546089654acea3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
