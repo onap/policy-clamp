@@ -114,7 +114,12 @@ With the default log settings, all logs will be generated into console and into 
 
 You can see the swagger definition for the jaxrs apis at `/restservices/clds/v1/openapi.json`
 
-## Clamp AAF - Renew Certificates
+## Clamp AAF - Renew Certificates 
+This is not required anymore as in OOM the certificate are generated automatically.
+A certificate is automatically generated during the "build" and it overwrites the p12 located in the 
+resource clds/aaf/org.onap.clamp.p12. 
+
+
 - Connect to windriver with openvpn
 - create a folder aaf-renewal and go to it
 - create a file aaf.props with that content (or run the agent.sh script below, it will prompt you for values at first run)

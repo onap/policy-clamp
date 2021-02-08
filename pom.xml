@@ -1266,6 +1266,46 @@
                     </arguments>
                 </configuration>
             </plugin>
+            <!-- Plugin to generate a X509 Certificate for https tests  -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>add-certificate-for-dev</id>
+                        <configuration>
+                            <keystore>${project.build.directory}/classes/clds/aaf/org.onap.clamp.p12</keystore>
+                            <storepass>China in the Spring</storepass>
+                            <alias>clamptest</alias>
+                            <storetype>PKCS12</storetype>
+                            <keyalg>RSA</keyalg>
+                            <dname>cn=CN, ou=OU, o=O, c=C</dname>
+                            <validity>365</validity>
+                        </configuration>
+                        <goals>
+                            <goal>generateKeyPair</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>add-certificate-for-test</id>
+                        <configuration>
+                            <keystore>${project.build.directory}/test-classes/clds/aaf/org.onap.clamp.p12</keystore>
+                            <storepass>China in the Spring</storepass>
+                            <alias>clamptest</alias>
+                            <storetype>PKCS12</storetype>
+                            <keyalg>RSA</keyalg>
+                            <dname>cn=CN, ou=OU, o=O, c=C</dname>
+                            <validity>365</validity>
+                        </configuration>
+                        <goals>
+                            <goal>generateKeyPair</goal>
+                        </goals>
+                        <phase>generate-test-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>

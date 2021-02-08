@@ -26,17 +26,19 @@ package org.onap.policy.clamp.clds.it;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import org.apache.commons.io.FileUtils;
-import org.junit.BeforeClass;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +46,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -64,53 +66,13 @@ public class HttpsItCase {
     @Value("${server.http-to-https-redirection.port}")
     private String httpPort;
 
-    /**
-     * Setup the variable before tests execution.
-     */
-    @BeforeClass
-    public static void setUp() {
-        try {
-            // setup ssl context to ignore certificate errors
-            SSLContext ctx = SSLContext.getInstance("TLS");
-            X509TrustManager tm = new X509TrustManager() {
-
-                @Override
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType)
-                        throws java.security.cert.CertificateException {
-                }
-
-                @Override
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType)
-                        throws java.security.cert.CertificateException {
-                }
-
-                @Override
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-            };
-            ctx.init(null, new TrustManager[] { tm }, null);
-            SSLContext.setDefault(ctx);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
     @Test
     public void testDesignerIndex() throws Exception {
-        RestTemplate template = new RestTemplate();
-        final MySimpleClientHttpRequestFactory factory = new MySimpleClientHttpRequestFactory(new HostnameVerifier() {
-
-            @Override
-            public boolean verify(final String hostname, final SSLSession session) {
-                return true;
-            }
-        });
-        template.setRequestFactory(factory);
-        ResponseEntity<String> entity = template.getForEntity("http://localhost:" + this.httpPort + "/swagger.html",
-                String.class);
+        ResponseEntity<String> entity =
+                new RestTemplate().getForEntity("http://localhost:" + this.httpPort + "/swagger.html",
+                        String.class);
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-        ResponseEntity<String> httpsEntity = template
+        ResponseEntity<String> httpsEntity = getRestTemplate()
                 .getForEntity("https://localhost:" + this.httpsPort + "/swagger.html", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpsEntity.getBody()).contains("Clamp Rest API");
@@ -118,16 +80,7 @@ public class HttpsItCase {
 
     @Test
     public void testSwaggerJson() throws Exception {
-        RestTemplate template = new RestTemplate();
-        final MySimpleClientHttpRequestFactory factory = new MySimpleClientHttpRequestFactory(new HostnameVerifier() {
-
-            @Override
-            public boolean verify(final String hostname, final SSLSession session) {
-                return true;
-            }
-        });
-        template.setRequestFactory(factory);
-        ResponseEntity<String> httpsEntity = template
+        ResponseEntity<String> httpsEntity = getRestTemplate()
                 .getForEntity("https://localhost:" + this.httpsPort + "/restservices/clds/api-doc", String.class);
         assertThat(httpsEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpsEntity.getBody()).contains("swagger");
@@ -135,25 +88,19 @@ public class HttpsItCase {
                 Charset.defaultCharset());
     }
 
-    /**
-     * Http Request Factory for ignoring SSL hostname errors. Not for production
-     * use!
-     */
-    class MySimpleClientHttpRequestFactory extends SimpleClientHttpRequestFactory {
-
-        private final HostnameVerifier verifier;
-
-        public MySimpleClientHttpRequestFactory(final HostnameVerifier verifier) {
-            this.verifier = verifier;
-        }
-
-        @Override
-        protected void prepareConnection(final HttpURLConnection connection, final String httpMethod)
-                throws IOException {
-            if (connection instanceof HttpsURLConnection) {
-                ((HttpsURLConnection) connection).setHostnameVerifier(this.verifier);
-            }
-            super.prepareConnection(connection, httpMethod);
-        }
+    private RestTemplate getRestTemplate() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = org.apache.http.ssl.SSLContexts.custom()
+                .loadTrustMaterial(null, new TrustStrategy() {
+                    @Override
+                    public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+                        return true;
+                    }
+                }).build();
+        SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+        CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(csf).build();
+        HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
+        requestFactory.setHttpClient(httpClient);
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        return restTemplate;
     }
 }
