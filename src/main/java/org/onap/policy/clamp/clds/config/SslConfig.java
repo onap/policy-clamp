@@ -74,6 +74,7 @@ public class SslConfig {
                         password.toCharArray());
                 return truststore;
             }
+
         });
     }
 
@@ -83,9 +84,13 @@ public class SslConfig {
         return (tomcat) -> tomcat.setSsl(new Ssl() {
             @Override
             public String getKeyPassword() {
-                String password = PassDecoder.decode(env.getProperty("server.ssl.key-password"),
+                return PassDecoder.decode(env.getProperty("server.ssl.key-password"),
                         env.getProperty("clamp.config.keyFile"));
-                return password;
+            }
+
+            @Override
+            public String getKeyAlias() {
+                return env.getProperty("server.ssl.key-alias");
             }
         });
     }
