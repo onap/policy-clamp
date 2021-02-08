@@ -16,6 +16,24 @@
       "revId": "da0eb22129cb541bcb705f564c546089654acea3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6cb6e540_9aeb4bae",
+        "filename": "src/main/resources/application.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-08T17:22:52Z",
+      "side": 1,
+      "message": "Exactly, parameters for Spring can be provided externally. \nThis is the case in OOM, we build an application.properties that overwrite some parameters, like keystore, trustore, aaf key pass, db access, policy adress, etc ...",
+      "parentUuid": "42495b21_98821dfb",
+      "revId": "da0eb22129cb541bcb705f564c546089654acea3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
