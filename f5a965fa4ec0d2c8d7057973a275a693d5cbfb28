@@ -286,6 +286,24 @@
     },
     {
       "key": {
+        "uuid": "e781aeaa_0d63b212",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T13:01:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a64cc5ea_558a98da",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df5bfc8e_8e3aab70",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
         "patchSetId": 2
@@ -339,6 +357,24 @@
     },
     {
       "key": {
+        "uuid": "b999bf99_e511dfdd",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T13:01:45Z",
+      "side": 1,
+      "message": "We need to investigate this issue right through the existing Policy Framework code. I have opened a JIRA to investigate this issue:\n\nhttps://jira.onap.org/browse/POLICY-3060",
+      "parentUuid": "45dcf196_8ca0eb38",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7053745c_1c369075",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
         "patchSetId": 2
@@ -374,6 +410,24 @@
     },
     {
       "key": {
+        "uuid": "07c85751_79f25eaf",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T13:01:45Z",
+      "side": 1,
+      "message": "We need to investigate this issue right through the existing Policy Framework code. I have opened a JIRA to investigate this issue:\n\nhttps://jira.onap.org/browse/POLICY-3060",
+      "parentUuid": "61169b66_5834f9f1",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7a114e2a_c775a7d5",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipant.java",
         "patchSetId": 2
@@ -403,6 +457,24 @@
       "side": 1,
       "message": "See previous answer.",
       "parentUuid": "7a114e2a_c775a7d5",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a870173a_4c4db74a",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipant.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T13:01:45Z",
+      "side": 1,
+      "message": "We need to investigate this issue right through the existing Policy Framework code. I have opened a JIRA to investigate this issue:\n\nhttps://jira.onap.org/browse/POLICY-3060",
+      "parentUuid": "66a19048_b59bca02",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true

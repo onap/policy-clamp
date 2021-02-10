@@ -284,6 +284,24 @@
     },
     {
       "key": {
+        "uuid": "d473d173_72f81b42",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantFilter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T13:01:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "620aeb25_20938bc5",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c07fb404_be79235e",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/SimpleResponse.java",
         "patchSetId": 1
