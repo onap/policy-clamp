@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "ad9a9b81_30d29a77",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T12:28:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e5b9775_5e7ceec8",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56fe56ec_b8fba9b7",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopComparator.java",
         "patchSetId": 2
@@ -161,6 +179,24 @@
     },
     {
       "key": {
+        "uuid": "93e57f81_596af7fc",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopComparator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T12:28:51Z",
+      "side": 1,
+      "message": "I generalised the approach in the policy framework and we can now use generics for filters so the filters and comparators are removed here now.\n\nA control loop filter is now:\nToscaTypedEntityFilter\u003cControlLoop\u003e\n\nSee this review: https://gerrit.onap.org/r/c/policy/models/+/117573",
+      "parentUuid": "6e9cae4b_ae093d90",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dac8626e_aa25d42f",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
         "patchSetId": 2
@@ -190,6 +226,24 @@
       "side": 1,
       "message": "See previous answer.",
       "parentUuid": "dac8626e_aa25d42f",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a64cc5ea_558a98da",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T12:28:51Z",
+      "side": 1,
+      "message": "See comment above. comparators are now gone.",
+      "parentUuid": "892fb72c_d8c5139b",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -351,6 +405,24 @@
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70f46181_01df463f",
+        "filename": "tosca-controlloop/runtime/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T12:28:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "84fba4e9_0cdb7545",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }

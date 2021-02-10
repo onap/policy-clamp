@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "19203a4f_f82eb314",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopFilter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T12:28:51Z",
+      "side": 1,
+      "message": "Filters are now generic, see the comment above and this review:\nhttps://gerrit.onap.org/r/c/policy/models/+/117573",
+      "parentUuid": "5225dbfc_adffc018",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f09e38e_6f249bd4",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopStatistics.java",
         "patchSetId": 1
