@@ -26,7 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.onap.policy.clamp</groupId>
+        <groupId>org.onap.policy.clamp.controlloop</groupId>
         <artifactId>controlloop</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
