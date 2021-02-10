@@ -5,6 +5,7 @@
   ================================================================================
   Copyright (C) 2017-2021 AT&T Intellectual Property. All rights
                               reserved.
+  Modifications Copyright (C) 2021 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -1303,6 +1304,26 @@
                             <goal>generateKeyPair</goal>
                         </goals>
                         <phase>generate-test-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <projectsDirectory>tosca-controlloop</projectsDirectory>
+                    <cloneProjectsTo>${project.build.directory}/tosca-controlloop</cloneProjectsTo>
+                    <pomIncludes>
+                        <pomInclude>*/pom.xml</pomInclude>
+                    </pomIncludes>
+                    <streamLogs>true</streamLogs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-tosca-controlloop</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
