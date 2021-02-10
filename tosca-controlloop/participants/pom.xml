@@ -1,7 +1,6 @@
 <!--
   ============LICENSE_START=======================================================
-   Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
-   Modifications Copyright (C) 2020 Nordix Foundation.
+  Copyright (C) 2021 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.onap.policy.clamp</groupId>
+        <groupId>org.onap.policy.clamp.controlloop</groupId>
         <artifactId>controlloop</artifactId>
         <version>6.0.0-SNAPSHOT</version>
     </parent>
@@ -63,6 +62,16 @@
             <groupId>org.onap.policy.common</groupId>
             <artifactId>utils-test</artifactId>
             <version>${version.policy.common}</version>
+        </dependency>
+       <dependency>
+            <groupId>org.onap.policy.clamp.controlloop</groupId>
+            <artifactId>controlloop-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.clamp.controlloop</groupId>
+            <artifactId>controlloop-models</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.common</groupId>
@@ -103,23 +112,6 @@
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!--test dependencies -->
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

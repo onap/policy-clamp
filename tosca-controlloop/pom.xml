@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
-   Copyright (C) 2020 AT&T Intellectual Property. All rights reserved.
-   Modifications Copyright (C) 2020 Nordix Foundation.
+  Copyright (C) 2021 Nordix Foundation.
   ================================================================================
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,14 +24,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.onap.policy.clamp</groupId>
-        <artifactId>clamp</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <groupId>org.onap.policy.parent</groupId>
+        <artifactId>integration</artifactId>
+        <version>3.3.0-SNAPSHOT</version>
+        <relativePath>../../parent/integration</relativePath>
     </parent>
 
+    <groupId>org.onap.policy.clamp.controlloop</groupId>
     <artifactId>controlloop</artifactId>
+    <version>6.0.0-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
+
+    <properties>
+        <policy.common.version>1.8.0-SNAPSHOT</policy.common.version>
+        <policy.models.version>2.4.0-SNAPSHOT</policy.models.version>
+    </properties>
 
     <modules>
         <module>common</module>
@@ -59,12 +66,6 @@
         </dependency>
         <dependency>
             <groupId>org.onap.policy.common</groupId>
-            <artifactId>utils-test</artifactId>
-            <version>${policy.common.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.onap.policy.common</groupId>
             <artifactId>policy-endpoints</artifactId>
             <version>${policy.common.version}</version>
         </dependency>
@@ -78,8 +79,52 @@
             <artifactId>policy-models-provider</artifactId>
             <version>${policy.models.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.onap.policy.common</groupId>
+            <artifactId>utils-test</artifactId>
+            <version>${policy.common.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
 
     <build>
         <resources>
