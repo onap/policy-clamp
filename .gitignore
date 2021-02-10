@@ -4,6 +4,7 @@
 .project
 .buildpath
 .idea
+.checkstyle
 *.iml
 ui-react/node_modules
 ui-react/build
