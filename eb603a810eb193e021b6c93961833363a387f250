@@ -1,0 +1,785 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b81f33bd_d502eea3",
+        "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/DummyControlLoopHandler.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "is sonar ok with this?  or need a comment like this:\n\n  // do nothing",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b3493c3_8ffb21b1",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ClElementStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "should this also be NonNull?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80d2e984_935349ef",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could reduce this to:\n\n  return stream.filter(...).findAny().orElse(Null)",
+      "range": {
+        "startLine": 108,
+        "startChar": 8,
+        "endLine": 114,
+        "endChar": 20
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c469b22_55b796ca",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElement.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "technically, should make copies of these two?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf8aadf1_10b63ffe",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopState.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "obviously, this will throw an exception if the state is one of the Xxx2Yyy states.",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e9c40e0_be195936",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/Participant.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "clone?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a36e9227_5caf6676",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaClElementStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "NotNull?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43565b59_ee85a768",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "NotNull?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "663dd4b3_fc29856e",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "this may throw an exception",
+      "range": {
+        "startLine": 172,
+        "startChar": 80,
+        "endLine": 172,
+        "endChar": 94
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10db60aa_951ef453",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could use a stream/collector instead",
+      "range": {
+        "startLine": 175,
+        "startChar": 7,
+        "endLine": 178,
+        "endChar": 9
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a5fc3a4_2c5b759d",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could throw an exception",
+      "range": {
+        "startLine": 192,
+        "startChar": 41,
+        "endLine": 192,
+        "endChar": 55
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33fd89ff_512fc552",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "sonar: (controlLoop.getElements().size())",
+      "range": {
+        "startLine": 195,
+        "startChar": 39,
+        "endLine": 195,
+        "endChar": 41
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64f89714_31384826",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could throw an exception",
+      "range": {
+        "startLine": 162,
+        "startChar": 76,
+        "endLine": 162,
+        "endChar": 90
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "384a8f27_e9d73328",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could throw an exception",
+      "range": {
+        "startLine": 179,
+        "startChar": 100,
+        "endLine": 179,
+        "endChar": 114
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aeec1522_19cf3f5d",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipantStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "NotNull?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca0029d2_a8438140",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipantStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "NotNull?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7cb2ac6_5c6bc344",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipantStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "participantId?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "103aacd6_bc6d2631",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipantStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "participantId?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbe276e1_106319a8",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ClElementStatisticsProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "perhaps want to accumulate the result for each element and throw the exception after the loop? (and then do another loop to create each one)",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "794fee46_58758eed",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ClElementStatisticsProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "(1)",
+      "range": {
+        "startLine": 118,
+        "startChar": 71,
+        "endLine": 118,
+        "endChar": 73
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0afca7da_d683757c",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ClElementStatisticsProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "looks like this can be inside of the \"if\" block",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ade48d5a_30a3d92b",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could just use:\n\n  Collections.singletonList(controlLoop)",
+      "range": {
+        "startLine": 79,
+        "startChar": 34,
+        "endLine": 79,
+        "endChar": 49
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4aee9cd_74a14ccd",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "same comment as before: accumulate results?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19cee2cf_67ed8f9c",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "(controlLoops.size())",
+      "range": {
+        "startLine": 130,
+        "startChar": 62,
+        "endLine": 130,
+        "endChar": 64
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81d32b46_3fe2704d",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "(controlLoops.size())",
+      "range": {
+        "startLine": 151,
+        "startChar": 62,
+        "endLine": 151,
+        "endChar": 64
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc5a2b7a_5ff75191",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "accumulate results?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b088025a_ef52dd36",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could use stream/collector",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "814a1219_a780f671",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "accumulate results?\n\nsame comment through-out this and other files",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9cd23a7_f864c316",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "(participants.size())",
+      "range": {
+        "startLine": 100,
+        "startChar": 62,
+        "endLine": 100,
+        "endChar": 64
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88e36001_ea6b79d1",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "accumulate results?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "217f0295_62b13e5d",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "(participants.size())",
+      "range": {
+        "startLine": 133,
+        "startChar": 62,
+        "endLine": 133,
+        "endChar": 64
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2cb537b_95bc854b",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "could use stream/collector",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb0ad227_ecd0be08",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantStatisticsProvider.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "move inside \"if\" block",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70c5c64a_67ff1501",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/dmaap/participant/ParticipantControlLoopUpdate.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "clone controlLoop?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2e949c5_db467fcf",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ClElementStatisticsTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "verify that sonar is ok with these assertEquals(boolean, value)\n\nuse assertNotEquals(0, value) - or assertThat().isNotZero()",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21a1067a_bc4e2ff2",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "same comments as before\n\napplies to subsequent files, too",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "938a2cca_3696a172",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "delete this line",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d33df66_d91b2d9d",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ClElementStatisticsProviderTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "maybe pick a different name to prevent potential collisions with other junits\n\nsame comment for the other provider test classes",
+      "range": {
+        "startLine": 61,
+        "startChar": 47,
+        "endLine": 61,
+        "endChar": 53
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fbcd832_a9a905ac",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ClElementStatisticsProviderTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "my preference is to put the After blocks right after the Before blocks.  That way the \"unusual\" stuff is bunched together at the top of the class.\n\nsame comment for other test files",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e16af10_4c135d52",
+        "filename": "tosca-controlloop/models/src/test/resources/providers/TestParticipant.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "maybe add newline",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a826039_f5e6eb07",
+        "filename": "tosca-controlloop/models/src/test/resources/providers/TestParticipantStatistics.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-10T17:27:57Z",
+      "side": 1,
+      "message": "maybe add newline",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
