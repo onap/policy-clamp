@@ -178,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "9aad7b6d_54b8341a",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopStatistics.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-10T13:05:38Z",
+      "side": 1,
+      "message": "This class is renamed as ParticipantStatistics.java and now it is just a bare class with a Lombok @Data annotation that generates getters and setters.",
+      "parentUuid": "85068539_1d1db388",
+      "revId": "45395a06456ce305557f25322ea82e062abea70c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1d3a0a92_ae38390c",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantComparator.java",
         "patchSetId": 1
