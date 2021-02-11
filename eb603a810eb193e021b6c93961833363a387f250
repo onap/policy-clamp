@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "09f4d1f0_209ac86a",
+        "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T15:38:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9aedd9d9_1555f8ad",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b81f33bd_d502eea3",
         "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/DummyControlLoopHandler.java",
         "patchSetId": 7
@@ -1521,6 +1539,24 @@
     },
     {
       "key": {
+        "uuid": "29039d1d_2868d63e",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T15:38:30Z",
+      "side": 1,
+      "message": "Maybe I have my Eclipse set up incorrectly here but I was getting low coverage figures on these classes unless I did this sort of thing.",
+      "parentUuid": "b02a25f1_081f2e37",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "938a2cca_3696a172",
         "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
         "patchSetId": 7
@@ -1739,6 +1775,24 @@
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aef721c8_a8a8be8b",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T15:38:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5894224e_51598043",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
