@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f0d83baa_70c7f60e",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "could still combine lines 176 \u0026 177 into one line using collector",
+      "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7efae37f_41681bab",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "change this line to add to validation result\n\nthe fact that this passed junits implies that there\u0027s a missing junit for the \"invalid\" case",
+      "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a4922a9_f614ddce",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantStatisticsProvider.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "(1)",
+      "range": {
+        "startLine": 68,
+        "startChar": 79,
+        "endLine": 68,
+        "endChar": 81
+      },
+      "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2b37113e_48d3f6da",
+        "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "actually, I think this is correct as the goal is to verify that dclh.close() unregisters it",
+      "parentUuid": "9aedd9d9_1555f8ad",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b81f33bd_d502eea3",
         "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/DummyControlLoopHandler.java",
         "patchSetId": 7
@@ -224,6 +242,24 @@
     },
     {
       "key": {
+        "uuid": "5f096964_35b3c4af",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopState.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3fdc4186_d7a377f5",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e9c40e0_be195936",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/Participant.java",
         "patchSetId": 7
@@ -376,6 +412,30 @@
     },
     {
       "key": {
+        "uuid": "f3fba5d4_61b49691",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e1e08e9b_244ba259",
+      "range": {
+        "startLine": 172,
+        "startChar": 80,
+        "endLine": 172,
+        "endChar": 94
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10db60aa_951ef453",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
         "patchSetId": 7
@@ -467,6 +527,30 @@
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e1e8ab7_bda30fc4",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c5b5967c_2645b985",
+      "range": {
+        "startLine": 192,
+        "startChar": 41,
+        "endLine": 192,
+        "endChar": 55
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -564,6 +648,30 @@
     },
     {
       "key": {
+        "uuid": "28b61380_d7a2fd9d",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0937ac96_b703a45b",
+      "range": {
+        "startLine": 162,
+        "startChar": 76,
+        "endLine": 162,
+        "endChar": 90
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "384a8f27_e9d73328",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
         "patchSetId": 7
@@ -608,6 +716,30 @@
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59a2156f_e223ebe9",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoopElement.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e7a60388_381891cc",
+      "range": {
+        "startLine": 179,
+        "startChar": 100,
+        "endLine": 179,
+        "endChar": 114
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1470,6 +1602,24 @@
     },
     {
       "key": {
+        "uuid": "30971c3e_e8a4ea08",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopConceptPojosTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "sonar also treats \"validate\" and \"check\" as test methods.",
+      "parentUuid": "41d614eb_e6798d40",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "21a1067a_bc4e2ff2",
         "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementTest.java",
         "patchSetId": 7
@@ -1502,6 +1652,24 @@
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "db7737f3_344af42e",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "assertThat().isNotZero()",
+      "parentUuid": "4fb78af1_29e0cf32",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     },
     {
       "key": {
@@ -1551,6 +1719,24 @@
       "side": 1,
       "message": "Maybe I have my Eclipse set up incorrectly here but I was getting low coverage figures on these classes unless I did this sort of thing.",
       "parentUuid": "b02a25f1_081f2e37",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6769ebab_83813656",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-11T15:52:16Z",
+      "side": 1,
+      "message": "maybe need to add a lombok.config file to the top-level?",
+      "parentUuid": "29039d1d_2868d63e",
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
