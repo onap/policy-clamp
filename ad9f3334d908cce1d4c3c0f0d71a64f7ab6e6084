@@ -1,0 +1,9 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jim Hahn <jrh3@att.com>
+Code-Review+1: Ajith Sreekumar <ajith.sreekumar@bell.ca>
+Code-Review+2: S�bastien Determe <sebastien.determe@intl.att.com>
+Submitted-by: S�bastien Determe <sebastien.determe@intl.att.com>
+Submitted-at: Thu, 11 Feb 2021 08:27:57 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/117702
+Project: policy/clamp
+Branch: refs/heads/tosca-poc
