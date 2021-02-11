@@ -334,6 +334,30 @@
     },
     {
       "key": {
+        "uuid": "e1e08e9b_244ba259",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T14:54:59Z",
+      "side": 1,
+      "message": "Yes, if the state is in a transitional state and orderedState is not set, it is an error in the state handling. The only way a state can change is if orderedState is set, so if orderedState is null and state is transitioning there is something very odd happening in the server\u0027s state handling.",
+      "parentUuid": "663dd4b3_fc29856e",
+      "range": {
+        "startLine": 172,
+        "startChar": 80,
+        "endLine": 172,
+        "endChar": 94
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "10db60aa_951ef453",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
         "patchSetId": 7
@@ -357,6 +381,30 @@
     },
     {
       "key": {
+        "uuid": "e47cc9b6_06ceb67f",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T14:54:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10db60aa_951ef453",
+      "range": {
+        "startLine": 175,
+        "startChar": 7,
+        "endLine": 178,
+        "endChar": 9
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a5fc3a4_2c5b759d",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
         "patchSetId": 7
@@ -368,6 +416,30 @@
       "writtenOn": "2021-02-10T17:27:57Z",
       "side": 1,
       "message": "could throw an exception",
+      "range": {
+        "startLine": 192,
+        "startChar": 41,
+        "endLine": 192,
+        "endChar": 55
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5b5967c_2645b985",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T14:54:59Z",
+      "side": 1,
+      "message": "OrderedState marked @NonNull now so this can \"never\" be null (according to SONAR) but it can actually be null when the input JSON/YAML is incorrect. We will validate the JSON/YAML on input.",
+      "parentUuid": "5a5fc3a4_2c5b759d",
       "range": {
         "startLine": 192,
         "startChar": 41,
@@ -400,6 +472,30 @@
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd9a5631_7c456968",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T14:54:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33fd89ff_512fc552",
+      "range": {
+        "startLine": 195,
+        "startChar": 39,
+        "endLine": 195,
+        "endChar": 41
+      },
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -584,6 +680,24 @@
     },
     {
       "key": {
+        "uuid": "e2f6a202_4ea5a109",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipantStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T14:54:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7cb2ac6_5c6bc344",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "103aacd6_bc6d2631",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipantStatistics.java",
         "patchSetId": 7
@@ -598,6 +712,24 @@
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b048410_5248f7f8",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaParticipantStatistics.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T14:54:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "103aacd6_bc6d2631",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
