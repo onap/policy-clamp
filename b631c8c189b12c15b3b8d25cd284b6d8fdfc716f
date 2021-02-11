@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c6cebee_56907935",
+        "filename": "tosca-controlloop/models/src/test/resources/META-INF/persistence.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-02-11T23:18:24Z",
+      "side": 1,
+      "message": "Not a comment for this review but my main concern in the near future with having all these programmatically generated database table databases is how to do the data migration from release to release when there is schema changes.  Not having a good strategy, would be a problem for adoption of the software, as users would want to keep their data from release to release seemingly.",
+      "revId": "b631c8c189b12c15b3b8d25cd284b6d8fdfc716f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
