@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "1a0951ea_ea3a376f",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/original/cloop_base_types.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T09:27:13Z",
+      "side": 1,
+      "message": "Yes i totally agree with you, but why store them into the src/resource instead of src/test/resource, normally this type of examples should not go to production jars, war, etc... This tend to grow the Jars we deliver with useless things inside .\nThey should be under the src/test/resources and be bundled into a test jar, and they will still be on github/gerrit? \nIt\u0027s the same approach, it\u0027s just a different folder ? Or may be I missed something ?",
+      "parentUuid": "0582ab2c_412b5c6d",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e129b38f_a7d2e186",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
         "patchSetId": 2
@@ -369,6 +387,24 @@
       "side": 1,
       "message": "We need to investigate this issue right through the existing Policy Framework code. I have opened a JIRA to investigate this issue:\n\nhttps://jira.onap.org/browse/POLICY-3060",
       "parentUuid": "45dcf196_8ca0eb38",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e733358_4faf6e8a",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T09:27:13Z",
+      "side": 1,
+      "message": "Cool, I have seen that, need to do the same on SDC ....",
+      "parentUuid": "b999bf99_e511dfdd",
       "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
