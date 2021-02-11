@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "9aedd9d9_1555f8ad",
+        "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T10:22:03Z",
+      "side": 1,
+      "message": "I\u0027m Nitpicking, but I believe this is the assertion for the unregister right ?\nIf yes could we move it just under the unregister so that we easily understand that it\u0027s linked ?\nOr may be i missed something",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b81f33bd_d502eea3",
         "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/DummyControlLoopHandler.java",
         "patchSetId": 7
@@ -675,6 +692,40 @@
     },
     {
       "key": {
+        "uuid": "7b47d55d_d543b3c0",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ClElementStatisticsTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T10:22:03Z",
+      "side": 1,
+      "message": "Just a note here because i\u0027m thinking to the issue we currently have in SDC.\nAs you are the lucky one that begins this project, you can probably divide the tests into several smaller tests (I say that for all tests in general)\n\nThis seems totally useless at the beginning but when we have 3 to 4K test classes (like in SDC) it really makes sense to execute them in parallel as you can divide the time required to build the project by 5 or 6 (in terms of methods  not only in terms of test classes), this can be configured in the surefire plugin, and I would really recommend to enable it at the beginning of your project.\n\nSo you validate 3 things: \n1. Each test methods within the same class are totally independent\n2. No static code used between test classes or within the same class\n2. Vertical scaling will at least be useful for the test phase.",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c923d294_a8014662",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopConceptPojosTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T10:22:03Z",
+      "side": 1,
+      "message": "No assertion ? do we verify if no exception is raised ?",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "21a1067a_bc4e2ff2",
         "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementTest.java",
         "patchSetId": 7
@@ -692,6 +743,40 @@
     },
     {
       "key": {
+        "uuid": "ae93424c_9aca4118",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T10:22:03Z",
+      "side": 1,
+      "message": "Same comment than before try to split into smaller tests, it does not cost a lot to do it right now, and it can save your time one day",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b02a25f1_081f2e37",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T10:22:03Z",
+      "side": 1,
+      "message": "Strange to test lombok code, not sure it\u0027s really useful, it\u0027s not going to be part of the coverage anyway.\nThat\u0027s one of the advantage of lombok, it\u0027s something we do not have to take care anymore.",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "938a2cca_3696a172",
         "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopTest.java",
         "patchSetId": 7
@@ -703,6 +788,23 @@
       "writtenOn": "2021-02-10T17:27:57Z",
       "side": 1,
       "message": "delete this line",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "365c76d2_15a2fcfa",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ParticipantStatisticsTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T10:22:03Z",
+      "side": 1,
+      "message": "Same comment, for me that\u0027s useless.\nI prefer to see your functionalities tested instead :-)",
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -777,6 +879,23 @@
       "writtenOn": "2021-02-10T17:27:57Z",
       "side": 1,
       "message": "maybe add newline",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5894224e_51598043",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 7
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-11T10:22:03Z",
+      "side": 1,
+      "message": "As i said earlier,\nChange the surefire options in the plugin section for all your Tosca code:\n            \u003cplugin\u003e\n                \u003cgroupId\u003eorg.apache.maven.plugins\u003c/groupId\u003e\n                \u003cartifactId\u003emaven-surefire-plugin\u003c/artifactId\u003e\n                \u003cversion\u003e2.22.2\u003c/version\u003e\n                \u003cconfiguration\u003e\n                    \u003cforkCount\u003e1C\u003c/forkCount\u003e\n                    \u003creuseForks\u003etrue\u003c/reuseForks\u003e\n                    \u003cuseSystemClassLoader\u003efalse\u003c/useSystemClassLoader\u003e\n                    \u003cparallel\u003emethods\u003c/parallel\u003e\n                \u003c/configuration\u003e\n            \u003c/plugin\u003e\n\nFrom the surefire doc:\n\"When using reuseForks\u003dtrue and a forkCount value larger than one, test classes are handed over to the forked process one-by-one. Thus, parallel\u003dclasses would not change anything. However, you can use parallel\u003dmethods: classes are executed in forkCount concurrent processes, each of the processes can then use threadCount threads to execute the methods of one class in parallel.\"",
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
