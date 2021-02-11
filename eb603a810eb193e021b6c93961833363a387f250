@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "c0610df0_fa8421b1",
+        "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T16:34:26Z",
+      "side": 1,
+      "message": "I put the assert in both places, no harm to test both.",
+      "parentUuid": "2b37113e_48d3f6da",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b81f33bd_d502eea3",
         "filename": "tosca-controlloop/common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/DummyControlLoopHandler.java",
         "patchSetId": 7
@@ -1670,6 +1688,24 @@
       "revId": "eb603a810eb193e021b6c93961833363a387f250",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4286e27e_1b3b0b85",
+        "filename": "tosca-controlloop/models/src/test/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoopElementTest.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T16:34:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db7737f3_344af42e",
+      "revId": "eb603a810eb193e021b6c93961833363a387f250",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {

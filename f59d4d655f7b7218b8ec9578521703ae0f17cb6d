@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4abaf151_c14f260c",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T16:34:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0d83baa_70c7f60e",
+      "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7efae37f_41681bab",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
         "patchSetId": 9
@@ -33,6 +51,24 @@
       "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8a15515_6dc87bb9",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantProvider.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T16:34:26Z",
+      "side": 1,
+      "message": "Oops, copy-paste error.",
+      "parentUuid": "7efae37f_41681bab",
+      "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -56,6 +92,30 @@
       "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d89ca54_f9581b73",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ParticipantStatisticsProvider.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-11T16:34:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a4922a9_f614ddce",
+      "range": {
+        "startLine": 68,
+        "startChar": 79,
+        "endLine": 68,
+        "endChar": 81
+      },
+      "revId": "f59d4d655f7b7218b8ec9578521703ae0f17cb6d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
