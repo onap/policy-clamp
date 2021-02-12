@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,6 +35,15 @@ import org.onap.policy.clamp.clds.tosca.update.parser.metadata.ToscaMetadataPars
 import org.onap.policy.clamp.clds.tosca.update.templates.JsonTemplate;
 import org.onap.policy.clamp.loop.service.Service;
 
+/**
+ * This class can be used to convert a tosca to a json schema.
+ * This class is not supposed to be used directly because it requires the json Schema templates
+ * (template conversion tosca type to json schema entry) but also the supported Tosca main type file.
+ * The class ToscaConverterWithDictionarySupport is more complete for the end user to be used (in the clamp context).
+ *
+ * @see org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport#convertToscaToJsonSchemaObject
+ * @see org.onap.policy.clamp.clds.tosca.update.parser.ToscaConverterToJsonSchema#getJsonSchemaOfToscaElement
+ */
 public class ToscaConverterToJsonSchema {
     private LinkedHashMap<String, ToscaElement> components;
     private LinkedHashMap<String, JsonTemplate> templates;
@@ -266,11 +275,12 @@ public class ToscaConverterToJsonSchema {
                         // Native cases
                         JsonObject itemContainer = new JsonObject();
                         String valueInEntrySchema =
-                                this.extractSpecificFieldFromMap(toscaElementProperty, "entry_schema");
+                            this.extractSpecificFieldFromMap(toscaElementProperty, "entry_schema");
                         itemContainer.addProperty("type", valueInEntrySchema);
                         propertiesInJson.add("items", itemContainer);
                         propertiesInJson.addProperty("format", "tabs-top");
                     }
+
                     // MAP Case, for now nothing
 
                     break;

@@ -1075,8 +1075,7 @@
             </route>
         </get>
         <get uri="/v2/policyToscaModels/{policyModelType}/{policyModelVersion}"
-             outType="org.onap.policy.clamp.loop.template.PolicyModel"
-             produces="application/json">
+             outType="com.google.gson.JsonObject" produces="application/json">
             <route>
                 <removeHeaders pattern="*"
                                excludePattern="policyModelType|policyModelVersion"/>
@@ -1086,7 +1085,7 @@
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','read')"/>
                     <to
-                            uri="bean:org.onap.policy.clamp.loop.template.PolicyModelsService?method=getPolicyModelByType(${header.policyModelType},${header.policyModelVersion})"/>
+                            uri="bean:org.onap.policy.clamp.loop.template.PolicyModelsService?method=getPolicyModelJson(${header.policyModelType},${header.policyModelVersion})"/>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
                     <doCatch>
