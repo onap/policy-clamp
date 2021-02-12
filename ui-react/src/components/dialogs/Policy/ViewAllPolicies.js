@@ -33,11 +33,17 @@ import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
 import Search from '@material-ui/icons/Search';
 import MaterialTable from "material-table";
-import LoopCache from '../../../api/LoopCache';
 import PolicyService from '../../../api/PolicyService';
+import PolicyToscaService from '../../../api/PolicyToscaService';
 import Select from 'react-select';
+import JSONEditor from '@json-editor/json-editor';
 
 const ModalStyled = styled(Modal)`
+	@media (min-width: 1200px) {
+		.modal-xl {
+			max-width: 96%;
+		}
+	}
     background-color: transparent;
 `
 
@@ -45,9 +51,6 @@ const standardCellStyle = { border: '1px solid black' };
 const cellPdpGroupStyle = { backgroundColor: '#039be5', color: '#FFF', border: '1px solid black'};
 const headerStyle = { backgroundColor: '#ddd',    border: '2px solid black' };
 const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
-const selectPdpGroupStyle = {
-    width: 2000
-}
 
 export default class ViewAllPolicies extends React.Component {
   state = {
@@ -114,7 +117,7 @@ export default class ViewAllPolicies extends React.Component {
         this.handleClose = this.handleClose.bind(this);
         this.renderPdpGroupDropBox = this.renderPdpGroupDropBox.bind(this);
         this.handlePdpGroupChange = this.handlePdpGroupChange.bind(this);
-
+        this.createJsonEditor = this.createJsonEditor.bind(this);
         this.getAllPolicies();
 
     }
@@ -124,10 +127,49 @@ export default class ViewAllPolicies extends React.Component {
         let selectedPdpGroup = pdpSplit[0];
         let selectedSubPdpGroup = pdpSplit[1];
         if (typeof selectedSubPdpGroup !== "undefined") {
-            this.state.policiesListData[this.state.selectedRow]["pdpGroupInfo"] = {"pdpGroup":selectedPdpGroup,"pdpSubGroup":selectedSubPdpGroup};
+            let temp = this.state.policiesListData;
+            temp[this.state.selectedRow]["pdpGroupInfo"] = {"pdpGroup":selectedPdpGroup,"pdpSubGroup":selectedSubPdpGroup};
+            this.setState({policiesListData: temp});
         } else {
             delete this.state.policiesListData[this.state.selectedRow]["pdpGroupInfo"];
         }
+    }
+
+    createJsonEditor(toscaModel, editorData) {
+        JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
+    			getTab: function(text,tabId) {
+    				var liel = document.createElement('li');
+    				liel.classList.add('nav-item');
+    				var ael = document.createElement("a");
+    				ael.classList.add("nav-link");
+    				ael.setAttribute("style",'padding:10px;max-width:160px;');
+    				ael.setAttribute("href", "#" + tabId);
+    				ael.setAttribute('data-toggle', 'tab');
+    				text.setAttribute("style",'word-wrap:break-word;');
+    				ael.appendChild(text);
+    				liel.appendChild(ael);
+    				return liel;
+    			}
+    		});
+        return new JSONEditor(document.getElementById("policy-editor"),
+        {   schema: toscaModel,
+              startval: editorData,
+              theme: 'myBootstrap4',
+              object_layout: 'grid',
+              disable_properties: false,
+              disable_edit_json: false,
+              disable_array_reorder: true,
+              disable_array_delete_last_row: true,
+              disable_array_delete_all_rows: false,
+              array_controls_top: true,
+              keep_oneof_values: false,
+              collapsed:true,
+              show_errors: 'always',
+              display_required_only: false,
+              show_opt_in: false,
+              prompt_before_delete: true,
+              required_by_default: false
+        })
     }
 
     renderPdpGroupDropBox(dataRow) {
@@ -159,6 +201,17 @@ export default class ViewAllPolicies extends React.Component {
         this.props.history.push('/')
     }
 
+    handleOnRowClick(rowData) {
+        PolicyToscaService.getToscaPolicyModel(rowData["type"], rowData["type_version"]).then(respJsonPolicyTosca => {
+    	    this.setState({
+                selectedRow: rowData.tableData.id,
+                selectedRowJsonSchema: respJsonPolicyTosca,
+                selectedRowPolicyProperties: rowData["properties"],
+                jsonEditorForPolicy: this.createJsonEditor(respJsonPolicyTosca, rowData["properties"])
+                });
+    	});
+    }
+
     render() {
     return (
             <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static"  keyboard={false}>
@@ -170,7 +223,7 @@ export default class ViewAllPolicies extends React.Component {
                       data={this.state.policiesListData}
                       columns={this.state.policyColumnsDefinition}
                       icons={this.state.tableIcons}
-                      onRowClick={(event, rowData) => {this.setState({selectedRow: rowData.tableData.id})}}
+                      onRowClick={(event, rowData) => {this.handleOnRowClick(rowData)}}
                       options={{
                           headerStyle:rowHeaderStyle,
                           rowStyle: rowData => ({
@@ -178,6 +231,7 @@ export default class ViewAllPolicies extends React.Component {
                           })
                       }}
                 />
+                <div id="policy-editor" />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.handleClose}>Close</Button>
