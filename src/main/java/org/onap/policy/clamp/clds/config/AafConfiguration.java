@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,6 +58,7 @@ public class AafConfiguration {
         registration.addUrlPatterns("/restservices/clds/v2/templates/*");
         registration.addUrlPatterns("/restservices/clds/v2/clampInformation/*");
         registration.addUrlPatterns("/restservices/clds/v2/policyToscaModels/*");
+        registration.addUrlPatterns("/restservices/clds/v2/policies/*");
         registration.addUrlPatterns("/restservices/clds/v2/loop/*");
         registration.setName("cadiFilter");
         registration.setOrder(0);

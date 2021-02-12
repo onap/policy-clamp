@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,12 +69,12 @@ export default class PolicyToscaService {
  					return response.json();
  				} else {
  					console.error("getToscaPolicyModel query failed");
- 					return "";
+ 					return {};
  				}
  			})
  			.catch(function (error) {
  				console.error("getToscaPolicyModel error received", error);
- 				return "";
+ 				return {};
  			});
   }
 

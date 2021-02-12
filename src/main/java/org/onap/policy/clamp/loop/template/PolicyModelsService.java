@@ -29,6 +29,9 @@ import java.util.Collections;
 import java.util.List;
 import org.onap.policy.clamp.clds.tosca.ToscaSchemaConstants;
 import org.onap.policy.clamp.clds.tosca.ToscaYamlToJsonConvertor;
+import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
+import org.onap.policy.clamp.clds.tosca.update.parser.ToscaConverterToJsonSchema;
+import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.policy.pdpgroup.PdpGroupsAnalyzer;
 import org.onap.policy.clamp.util.SemanticVersioning;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
@@ -43,7 +46,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PolicyModelsService {
     private final PolicyModelsRepository policyModelsRepository;
+    /**
+     * This variable is there to support legacy saving of the tosca from the clamp UI.
+     */
     private ToscaYamlToJsonConvertor toscaYamlToJsonConvertor;
+
+    /**
+     * This is the new tosca converter that must be used in clamp.
+     */
+    @Autowired
+    private ToscaConverterWithDictionarySupport toscaConverterWithDictionarySupport;
 
     @Autowired
     public PolicyModelsService(PolicyModelsRepository policyModelrepo,
@@ -108,6 +120,22 @@ public class PolicyModelsService {
                 ToscaSchemaConstants.METADATA_ACRONYM));
         thePolicyModel.setPolicyModelTosca(policyModelTosca);
         return saveOrUpdatePolicyModel(thePolicyModel);
+    }
+
+    /**
+     * This method retrieves the tosca model and convert it to a Json schema.
+     * That json schema is normally used by the UI.
+     *
+     * @param policyType        The policy model type id
+     * @param policyTypeVersion The policy model type version
+     * @return A JsonObject with the json schema describing the tosca
+     */
+    public JsonObject getPolicyModelJson(String policyType, String policyTypeVersion) {
+        PolicyModel thePolicyModel = getPolicyModel(policyType, policyTypeVersion);
+        // In the following use case we are not in the context of a closed loop, so the enrichment
+        // of the json cannot be done, that's why the serviceModel provided is NULL.
+        return toscaConverterWithDictionarySupport
+                .convertToscaToJsonSchemaObject(thePolicyModel.getPolicyModelTosca(), policyType, null);
     }
 
     public List<String> getAllPolicyModelTypes() {
