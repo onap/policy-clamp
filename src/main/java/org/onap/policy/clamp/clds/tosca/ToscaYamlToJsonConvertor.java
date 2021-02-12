@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,6 +51,7 @@ import org.yaml.snakeyaml.Yaml;
  *
  */
 @Component
+@Deprecated
 public class ToscaYamlToJsonConvertor {
 
     @Autowired
