@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "04f60095_22d46ac3",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/original/cloop_base_types.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-12T08:32:20Z",
+      "side": 1,
+      "message": "Yes this sounds like a good approach, we will make a test jar using the suggested method above.\n\nI have opened a sub task on our Infrastructure/Integration story for this:\nhttps://jira.onap.org/browse/POLICY-3064",
+      "parentUuid": "1a0951ea_ea3a376f",
+      "revId": "f5a965fa4ec0d2c8d7057973a275a693d5cbfb28",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e129b38f_a7d2e186",
         "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
         "patchSetId": 2

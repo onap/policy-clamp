@@ -16,6 +16,24 @@
       "revId": "b631c8c189b12c15b3b8d25cd284b6d8fdfc716f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2be49bf3_7c87bd1a",
+        "filename": "tosca-controlloop/models/src/test/resources/META-INF/persistence.xml",
+        "patchSetId": 11
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-12T08:32:20Z",
+      "side": 1,
+      "message": "Yes, I agree, we need to address this in the overall project and cascade it to here if a decision is made to continue with this work in Istanbul.",
+      "parentUuid": "6c6cebee_56907935",
+      "revId": "b631c8c189b12c15b3b8d25cd284b6d8fdfc716f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
