@@ -69,12 +69,12 @@ export default class PolicyToscaService {
  					return response.json();
  				} else {
  					console.error("getToscaPolicyModel query failed");
- 					return "";
+ 					return {};
  				}
  			})
  			.catch(function (error) {
  				console.error("getToscaPolicyModel error received", error);
- 				return "";
+ 				return {};
  			});
   }
 
