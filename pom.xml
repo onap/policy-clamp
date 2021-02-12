@@ -1314,7 +1314,7 @@
                     <projectsDirectory>tosca-controlloop</projectsDirectory>
                     <cloneProjectsTo>${project.build.directory}/tosca-controlloop</cloneProjectsTo>
                     <pomIncludes>
-                        <pomInclude>*/pom.xml</pomInclude>
+                        <pomInclude>pom.xml</pomInclude>
                     </pomIncludes>
                     <streamLogs>true</streamLogs>
                 </configuration>
