@@ -55,7 +55,7 @@ public class PoliciesPdpMerger {
     }
 
     /**
-     * This method merges 2 JsonElement together. If the jsonToMerge is null nothign is changed.
+     * This method merges 2 JsonElement together. If the jsonToMerge is null nothing is changed.
      *
      * @param json        The initial json that will received the data
      * @param jsonToMerge The json that will be added to the first json object

@@ -51,6 +51,7 @@ import org.yaml.snakeyaml.Yaml;
  *
  */
 @Component
+@Deprecated
 public class ToscaYamlToJsonConvertor {
 
     @Autowired

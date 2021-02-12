@@ -36,6 +36,13 @@ import org.onap.policy.clamp.loop.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * This is the main class that must be used to convert a tosca to a json schema.
+ * This class adds feature to support the dictionary mechanism that enables json possible values extracted
+ * from the dictionary DB table.
+ *
+ * @see org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport#convertToscaToJsonSchemaObject
+ */
 @Component
 public class ToscaConverterWithDictionarySupport {
 
