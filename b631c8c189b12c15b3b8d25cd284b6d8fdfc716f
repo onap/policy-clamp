@@ -1,0 +1,14 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+1: Jim Hahn <jrh3@att.com>
+Code-Review+1: Pamela Dragosh <pdragosh@research.att.com>
+Code-Review+1: Jorge Hernandez <jorge.hernandez-herrero@att.com>
+Code-Review+1: Ramesh Murugan Iyer <ramesh.murugan.iyer@est.tech>
+Code-Review+1: Sirisha Manchikanti <sirisha.manchikanti@est.tech>
+Code-Review+1: Robertas Rimkus <robertas.rimkus@est.tech>
+Code-Review+1: Ajith Sreekumar <ajith.sreekumar@bell.ca>
+Code-Review+2: S�bastien Determe <sebastien.determe@intl.att.com>
+Submitted-by: Liam Fallon <liam.fallon@est.tech>
+Submitted-at: Fri, 12 Feb 2021 10:24:39 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/117113
+Project: policy/clamp
+Branch: refs/heads/tosca-poc
