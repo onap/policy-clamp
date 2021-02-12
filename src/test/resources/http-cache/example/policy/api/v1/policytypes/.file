@@ -28,6 +28,13 @@ policy_types:
       properties:
         # Omitted for brevity, see Section 1
 
+  onap.policies.Naming:
+      version: 1.0.0
+      description: Supports blacklist of VNF's from performing control loop actions on.
+      derived_from: tosca.policies.Root
+      properties:
+        # Omitted for brevity, see Section 1
+
   onap.policies.controlloop.guard.common.MinMax:
       version: 1.0.0
       description: Supports Min/Max number of VF Modules
