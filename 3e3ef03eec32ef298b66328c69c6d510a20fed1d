@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba3a9afe_dd4ed1f8",
+        "filename": "ui-react/src/api/PoliciesListCache.js",
+        "patchSetId": 12
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-15T09:15:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e733c71e_2d1f03fb",
+      "revId": "3e3ef03eec32ef298b66328c69c6d510a20fed1d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1290b1b3_15cae1b5",
         "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2021-02-13T01:26:29Z",
       "side": 1,
       "message": "tabs \u003d\u003e spaces\n\nsame comment for several lines",
+      "revId": "3e3ef03eec32ef298b66328c69c6d510a20fed1d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62c19962_027beac5",
+        "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
+        "patchSetId": 12
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-15T09:15:56Z",
+      "side": 1,
+      "message": "It\u0027s a generated file, strange it generates tabs now",
+      "parentUuid": "1290b1b3_15cae1b5",
       "revId": "3e3ef03eec32ef298b66328c69c6d510a20fed1d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
