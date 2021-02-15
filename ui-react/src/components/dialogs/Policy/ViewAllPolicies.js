@@ -25,13 +25,23 @@ import React, { forwardRef } from 'react'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import AddBox from '@material-ui/icons/AddBox';
+import ArrowDownward from '@material-ui/icons/ArrowDownward';
+import Check from '@material-ui/icons/Check';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Clear from '@material-ui/icons/Clear';
+import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import Edit from '@material-ui/icons/Edit';
+import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
 import LastPage from '@material-ui/icons/LastPage';
+import Remove from '@material-ui/icons/Remove';
+import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
+import ViewColumn from '@material-ui/icons/ViewColumn';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import MaterialTable from "material-table";
 import PolicyService from '../../../api/PolicyService';
 import PolicyToscaService from '../../../api/PolicyToscaService';
@@ -39,13 +49,23 @@ import Select from 'react-select';
 import JSONEditor from '@json-editor/json-editor';
 
 const ModalStyled = styled(Modal)`
-	@media (min-width: 1200px) {
-		.modal-xl {
-			max-width: 96%;
-		}
-	}
+    @media (min-width: 1200px) {
+        .modal-xl {
+            max-width: 96%;
+        }
+    }
     background-color: transparent;
 `
+const JsonEditorDiv = styled.div`
+    margin-top: 20px;
+    background-color: ${props => props.theme.toscaTextareaBackgroundColor};
+    text-align: justify;
+    font-size: ${props => props.theme.toscaTextareaFontSize};
+    width: 100%;
+    height: 30%;
+    border: 1px solid black;
+`
+
 
 const standardCellStyle = { border: '1px solid black' };
 const cellPdpGroupStyle = { backgroundColor: '#039be5', color: '#FFF', border: '1px solid black'};
@@ -58,12 +78,8 @@ export default class ViewAllPolicies extends React.Component {
         content: 'Please select a policy to display it',
         selectedRow: -1,
         policiesListData: [],
+        prefixGrouping: false,
         policyColumnsDefinition: [
-            {
-                title: "#", field: "index", render: rowData => rowData.tableData.id + 1,
-                cellStyle: standardCellStyle,
-                headerStyle: headerStyle
-            },
             {
                 title: "Policy Name", field: "name",
                 cellStyle: standardCellStyle,
@@ -88,7 +104,8 @@ export default class ViewAllPolicies extends React.Component {
                 title: "Deployed in PDP", field: "pdpGroupInfo.pdpGroup",
                 cellStyle: cellPdpGroupStyle,
                 headerStyle: headerStyle,
-                render: rowData => this.renderPdpGroupDropBox(rowData)
+                render: rowData => this.renderPdpGroupDropBox(rowData),
+                grouping: false
             },
             {
                 title: "PDP Group", field: "pdpGroupInfo.pdpGroup",
@@ -102,13 +119,23 @@ export default class ViewAllPolicies extends React.Component {
             }
         ],
         tableIcons: {
+            Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+            Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+            Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+            Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+            DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+            Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+            Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+            Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
             FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
             LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
             NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
             PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
             ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
             Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-            SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />)
+            SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+            ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+            ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
         }
     };
 
@@ -118,6 +145,9 @@ export default class ViewAllPolicies extends React.Component {
         this.renderPdpGroupDropBox = this.renderPdpGroupDropBox.bind(this);
         this.handlePdpGroupChange = this.handlePdpGroupChange.bind(this);
         this.createJsonEditor = this.createJsonEditor.bind(this);
+        this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
+        this.deletePolicy = this.deletePolicy.bind(this);
+        this.handleUpdatePolicy = this.handleUpdatePolicy.bind(this);
         this.getAllPolicies();
 
     }
@@ -136,23 +166,25 @@ export default class ViewAllPolicies extends React.Component {
     }
 
     createJsonEditor(toscaModel, editorData) {
+        document.getElementById("policy-editor").innerHTML = "";
         JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
-    			getTab: function(text,tabId) {
-    				var liel = document.createElement('li');
-    				liel.classList.add('nav-item');
-    				var ael = document.createElement("a");
-    				ael.classList.add("nav-link");
-    				ael.setAttribute("style",'padding:10px;max-width:160px;');
-    				ael.setAttribute("href", "#" + tabId);
-    				ael.setAttribute('data-toggle', 'tab');
-    				text.setAttribute("style",'word-wrap:break-word;');
-    				ael.appendChild(text);
-    				liel.appendChild(ael);
-    				return liel;
-    			}
-    		});
+                getTab: function(text,tabId) {
+                    var liel = document.createElement('li');
+                    liel.classList.add('nav-item');
+                    var ael = document.createElement("a");
+                    ael.classList.add("nav-link");
+                    ael.setAttribute("style",'padding:10px;max-width:160px;');
+                    ael.setAttribute("href", "#" + tabId);
+                    ael.setAttribute('data-toggle', 'tab');
+                    text.setAttribute("style",'word-wrap:break-word;');
+                    ael.appendChild(text);
+                    liel.appendChild(ael);
+                    return liel;
+                }
+            });
         return new JSONEditor(document.getElementById("policy-editor"),
-        {   schema: toscaModel,
+        {
+              schema: toscaModel,
               startval: editorData,
               theme: 'myBootstrap4',
               object_layout: 'grid',
@@ -201,23 +233,40 @@ export default class ViewAllPolicies extends React.Component {
         this.props.history.push('/')
     }
 
+    handleUpdatePolicy() {
+        this.setState({ show: false });
+        this.props.history.push('/')
+    }
+
     handleOnRowClick(rowData) {
         PolicyToscaService.getToscaPolicyModel(rowData["type"], rowData["type_version"]).then(respJsonPolicyTosca => {
-    	    this.setState({
+            this.setState({
                 selectedRow: rowData.tableData.id,
                 selectedRowJsonSchema: respJsonPolicyTosca,
                 selectedRowPolicyProperties: rowData["properties"],
                 jsonEditorForPolicy: this.createJsonEditor(respJsonPolicyTosca, rowData["properties"])
                 });
-    	});
+        });
+    }
+
+    handlePrefixGrouping(event) {
+        this.setState({prefixGrouping: event.target.checked});
+    };
+
+    deletePolicy(event, rowData) {
+        return null;
     }
 
     render() {
     return (
-            <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static"  keyboard={false}>
+            <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                 </Modal.Header>
                 <Modal.Body>
+                  <FormControlLabel
+                        control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
+                        label="Group by prefix"
+                      />
                    <MaterialTable
                       title={"View All Policies in Policy Engine"}
                       data={this.state.policiesListData}
@@ -225,13 +274,27 @@ export default class ViewAllPolicies extends React.Component {
                       icons={this.state.tableIcons}
                       onRowClick={(event, rowData) => {this.handleOnRowClick(rowData)}}
                       options={{
+                          grouping: true,
+                          exportButton: true,
                           headerStyle:rowHeaderStyle,
                           rowStyle: rowData => ({
-                          backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
+                            backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
                           })
                       }}
+                      actions={[
+                          {
+                            icon: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+                            tooltip: 'Delete Policy',
+                            onClick: (event, rowData) => this.deletePolicy(event, rowData)
+                          }
+                      ]}
+
                 />
-                <div id="policy-editor" />
+                <JsonEditorDiv>
+                    <h5>Policy Properties Editor</h5>
+                    <div id="policy-editor" title="Policy Properties"/>
+                    <Button variant="secondary" onClick={this.handleUpdatePolicy}>Update</Button>
+                </JsonEditorDiv>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.handleClose}>Close</Button>
