@@ -118,8 +118,8 @@ public class ToscaConverterToJsonSchema {
         JsonArray requirements = new JsonArray();
         ToscaElement toParse = components.get(nameComponent);
         //Check for a father component, and launch the same process
-        if (!toParse.getDerivedFrom().equals("tosca.datatypes.Root")
-                && !toParse.getDerivedFrom().equals("tosca.policies.Root")) {
+        if (!"tosca.datatypes.Root".equals(toParse.getDerivedFrom())
+                && !"tosca.policies.Root".equals(toParse.getDerivedFrom())) {
             requirements.addAll(getRequirements(toParse.getDerivedFrom()));
         }
         //Each property is checked, and add to the requirement array if it's required
