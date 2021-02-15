@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -118,8 +118,8 @@ public class ToscaConverterToJsonSchema {
         JsonArray requirements = new JsonArray();
         ToscaElement toParse = components.get(nameComponent);
         //Check for a father component, and launch the same process
-        if (!toParse.getDerivedFrom().equals("tosca.datatypes.Root")
-                && !toParse.getDerivedFrom().equals("tosca.policies.Root")) {
+        if (!"tosca.datatypes.Root".equals(toParse.getDerivedFrom())
+                && !"tosca.policies.Root".equals(toParse.getDerivedFrom())) {
             requirements.addAll(getRequirements(toParse.getDerivedFrom()));
         }
         //Each property is checked, and add to the requirement array if it's required
