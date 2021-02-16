@@ -22,7 +22,7 @@
 
 export default class PolicyService {
   static getPoliciesList() {
-    return fetch(window.location.pathname + 'restservices/clds/v2/policies/list', {
+    return fetch(window.location.pathname + 'restservices/clds/v2/policies', {
         method: 'GET',
         credentials: 'same-origin'
         })

@@ -36,9 +36,12 @@ import org.onap.policy.models.pdp.enums.PdpState;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
 
 /**
- * This is an utility class to do searching in pdp groups.
+ * This is an utility class to do searching in pdp groups and create json object describing the result.
  */
 public class PdpGroupsAnalyzer {
+
+    public static final String ASSIGNED_PDP_GROUPS_INFO = "pdpGroupInfo";
+    public static final String SUPPORTED_PDP_GROUPS_INFO = "supportedPdpGroups";
 
     /**
      * Get supported subGroups based on the defined policy type and version for s specific PDPgroup.
@@ -80,7 +83,7 @@ public class PdpGroupsAnalyzer {
     public static JsonObject getSupportedPdpGroupsForModelType(PdpGroups pdpGroups, String policyType, String version) {
         JsonObject supportedPdpGroups = new JsonObject();
         JsonArray pdpGroupsArray = new JsonArray();
-        supportedPdpGroups.add("supportedPdpGroups", pdpGroupsArray);
+        supportedPdpGroups.add(SUPPORTED_PDP_GROUPS_INFO, pdpGroupsArray);
 
         pdpGroups.getGroups().stream().map(pdpGroup -> PdpGroupsAnalyzer.getSupportedPdpSubgroupsForModelType(pdpGroup,
                 policyType, version)).filter(Objects::nonNull)
@@ -113,7 +116,7 @@ public class PdpGroupsAnalyzer {
     public static JsonObject getPdpGroupDeploymentOfOnePolicy(PdpGroups pdpGroups, String policyName, String version) {
         JsonObject pdpGroupInfo = new JsonObject();
         JsonObject assignedPdpGroups = new JsonObject();
-        pdpGroupInfo.add("pdpGroupInfo", assignedPdpGroups);
+        pdpGroupInfo.add(ASSIGNED_PDP_GROUPS_INFO, assignedPdpGroups);
 
         ToscaPolicyIdentifier toscaPolicyIdentifier = new ToscaPolicyIdentifier(policyName, version);
         pdpGroups.getGroups().stream().anyMatch(pdpGroup ->
