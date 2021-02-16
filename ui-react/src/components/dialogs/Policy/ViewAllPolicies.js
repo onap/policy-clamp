@@ -146,8 +146,9 @@ export default class ViewAllPolicies extends React.Component {
         this.handlePdpGroupChange = this.handlePdpGroupChange.bind(this);
         this.createJsonEditor = this.createJsonEditor.bind(this);
         this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
-        this.deletePolicy = this.deletePolicy.bind(this);
+        this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.handleUpdatePolicy = this.handleUpdatePolicy.bind(this);
+        this.handleCreateNewVersion = this.handleCreateNewVersion(this);
         this.getAllPolicies();
 
     }
@@ -233,11 +234,6 @@ export default class ViewAllPolicies extends React.Component {
         this.props.history.push('/')
     }
 
-    handleUpdatePolicy() {
-        this.setState({ show: false });
-        this.props.history.push('/')
-    }
-
     handleOnRowClick(rowData) {
         PolicyToscaService.getToscaPolicyModel(rowData["type"], rowData["type_version"]).then(respJsonPolicyTosca => {
             this.setState({
@@ -251,10 +247,19 @@ export default class ViewAllPolicies extends React.Component {
 
     handlePrefixGrouping(event) {
         this.setState({prefixGrouping: event.target.checked});
-    };
+    }
 
-    deletePolicy(event, rowData) {
+    handleDeletePolicy(event, rowData) {
         return null;
+    }
+
+    handleCreateNewVersion(event,rowData) {
+        return null;
+    }
+
+    handleUpdatePolicy() {
+        this.setState({ show: false });
+        this.props.history.push('/')
     }
 
     render() {
@@ -285,7 +290,7 @@ export default class ViewAllPolicies extends React.Component {
                           {
                             icon: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
                             tooltip: 'Delete Policy',
-                            onClick: (event, rowData) => this.deletePolicy(event, rowData)
+                            onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
                           }
                       ]}
 
@@ -293,7 +298,8 @@ export default class ViewAllPolicies extends React.Component {
                 <JsonEditorDiv>
                     <h5>Policy Properties Editor</h5>
                     <div id="policy-editor" title="Policy Properties"/>
-                    <Button variant="secondary" onClick={this.handleUpdatePolicy}>Update</Button>
+                    <Button variant="secondary" title="Create a new policy version from the defined parameters" onClick={this.handleCreateNewVersion}>Create New Version</Button>
+                    <Button variant="secondary" title="Update the current policy version, BE CAREFUL this will undeploy the policy from PDP, delete it and then recreate the policy" onClick={this.handleUpdatePolicy}>Update Current Version</Button>
                 </JsonEditorDiv>
                 </Modal.Body>
                 <Modal.Footer>
