@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45233d57_0906b704",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/tosca/update/parser/ToscaConverterToJsonSchema.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-16T21:56:46Z",
+      "side": 1,
+      "message": "sonar: combine \"else\" \u0026 \"if\"",
+      "range": {
+        "startLine": 274,
+        "startChar": 22,
+        "endLine": 275,
+        "endChar": 27
+      },
+      "revId": "0959ae5ec9a3d8a4bfc130ffefe37a0223b6bc8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45b68bed_43b32d17",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-16T21:56:46Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces",
+      "revId": "0959ae5ec9a3d8a4bfc130ffefe37a0223b6bc8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7e5c3ee_5e4abcc3",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-16T21:56:46Z",
+      "side": 1,
+      "message": "tabs",
+      "revId": "0959ae5ec9a3d8a4bfc130ffefe37a0223b6bc8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20bc8486_aa98be7e",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-16T21:56:46Z",
+      "side": 1,
+      "message": "tabs",
+      "revId": "0959ae5ec9a3d8a4bfc130ffefe37a0223b6bc8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46e7db1d_42679ad9",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-16T21:56:46Z",
+      "side": 1,
+      "message": "tabs",
+      "revId": "0959ae5ec9a3d8a4bfc130ffefe37a0223b6bc8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
