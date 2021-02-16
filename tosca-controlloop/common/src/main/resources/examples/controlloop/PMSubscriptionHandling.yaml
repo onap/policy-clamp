@@ -27,30 +27,42 @@ data_types:
       version:
         type: string
         required: true
+  onap.datatypes.ApplicationDetails:
+    derived_from: tosca.datatypes.Root
+    properties:
+      name:
+        type: string
+        required: true
+      version:
+        type: string
+        required: true
+      provider:
+        type: string
+        required: true
 node_types:
   org.onap.policy.clamp.controlloop.Participant:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
-      provider:
-        type: string
+      application_details:
+        type: onap.datatypes.ApplicationDetails
         requred: false
   org.onap.policy.clamp.controlloop.ControlLoopElement:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
-      provider:
-        type: string
+      application_details:
+        type: onap.datatypes.ApplicationDetails
         requred: false
-      participant_id:
+      participant:
         type: onap.datatypes.ToscaConceptIdentifier
         requred: true
   org.onap.policy.clamp.controlloop.ControlLoop:
     version: 1.0.1
     derived_from: tosca.nodetypes.Root
     properties:
-      provider:
-        type: string
+      application_details:
+        type: onap.datatypes.ApplicationDetails
         requred: false
       elements:
         type: list
@@ -79,87 +91,162 @@ node_types:
         type: onap.datatypes.ToscaConceptIdentifier
         requred: true
 topology_template:
+  inputs:
+    tosca_concept_identifier:
+      type: onap.datatypes.ToscaConceptIdentifier
+    flag:
+      type: boolean
+    topic:
+      type: string
   node_templates:
     org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant:
       version: 2.3.4
       type: org.onap.policy.clamp.controlloop.Participant
       type_version: 1.0.1
-      description: Participant for DCAE microservices
+      description: Participant for PMSH DCAE microservices
       properties:
-        provider: ONAP
+        application_details:
+          name: PMSH DCAE Microservice
+          version: 1.0.0
+          provider: Ericsson
     org.onap.policy.controlloop.PolicyControlLoopParticipant:
       version: 2.3.1
       type: org.onap.policy.clamp.controlloop.Participant
       type_version: 1.0.1
-      description: Participant for DCAE microservices
+      description: Participant for Policies in the PMSH use case
       properties:
-        provider: ONAP
+        application_details:
+          name: PMSH Policy particiant
+          version: 1.0.0
+          provider: Ericsson
     org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant:
       version: 2.2.1
       type: org.onap.policy.clamp.controlloop.Participant
       type_version: 1.0.1
-      description: Participant for DCAE microservices
+      description: CDS participant for the PMSH use case
       properties:
-        provider: ONAP
+        application_details:
+          name: PMSH CDS particiant
+          version: 1.0.0
+          provider: Ericsson
     org.onap.domain.pmsh.PMSH_DCAEMicroservice:
       version: 1.2.3
       type: org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement
       type_version: 1.0.0
       description: Control loop element for the DCAE microservice for Performance Management Subscription Handling
       properties:
-        provider: Ericsson
-        participant_id:
+        application_details:
+          name: PM Subscription Handler
+          version: 1.0.0
+          provider: Ericsson
+        participant:
           name: org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant
           version: 2.3.4
-        dcae_blueprint_id:
-          name: org.onap.dcae.blueprints.PMSHBlueprint
-          version: 1.0.0
+        dcae_blueprint_id: { get_input: tosca_concept_identifier }
+        enable_tls: { get_input: flag }
+        topic_for_publishing: { get_input: topic }
     org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement:
       version: 1.2.3
       type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement
       type_version: 1.0.0
       description: Control loop element for the monitoring policy for Performance Management Subscription Handling
       properties:
-        provider: Ericsson
-        participant_id:
+        application_details:
+          name: PM Subscription Handler
+          version: 1.0.0
+          provider: Ericsson
+        participant:
           name: org.onap.policy.controlloop.PolicyControlLoopParticipant
           version: 2.3.1
-        policy_type_id:
-          name: onap.policies.monitoring.pm-subscription-handler
-          version: 1.0.0
+        policy_type_id: { get_input: tosca_concept_identifier }
+        # Not sure if this is needed or how its used
+        data_types:
+          measurementType:
+            type: string
+          DN:
+            type: string
+          nfFilter:
+            properties:
+              nfNames:
+                type: list
+                entry_schema: string
+              modelInvariantIDs:
+                type: list
+                entry_schema:
+                  type: string
+              modelVersionIDs:
+                type: list
+                entry_schema:
+                  type: string
+          measurementGroup:
+            properties:
+              masurementTypes:
+                type: list
+                entry_schema:
+                  type: measurementType
+              managedObjectDNsBasic:
+                type: list
+                entry_schema:
+                  type: DN
+        # Not sure if this is needed or how its used
+        schema:
+          subscription:
+            subscriptionName:
+              type: string
+              required: true
+            administrativeState:
+              type: string
+              required: true
+            filebasedGP:
+              type: integer
+              required: true
+            fileLocation:
+              type: string
+              required: true
+            nfFilter:
+              type: nfFilter
+            measurementGroups:
+              type: list
+              entry_schema:
+                type: measurementGroup
     org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement:
       version: 1.2.3
       type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement
       type_version: 1.0.0
       description: Control loop element for the operational policy for Performance Management Subscription Handling
       properties:
-        provider: Ericsson
-        participant_id:
+        application_details:
+          name: PM Subscription Operational Policy
+          version: 1.0.0
+          provider: Ericsson
+        participant:
           name: org.onap.policy.controlloop.PolicyControlLoopParticipant
           version: 2.2.1
-        policy_type_id:
-          name: onap.policies.operational.pm-subscription-handler
-          version: 1.0.0
+        policy_type_id: { get_input: tosca_concept_identifier }
     org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement:
       version: 1.2.3
       type: org.onap.policy.clamp.controlloop.CDSControlLoopElement
       type_version: 1.0.0
       description: Control loop element for CDS for Performance Management Subscription Handling
       properties:
-        provider: Ericsson
-        participant_Id:
+        application_details:
+          name: PM Subscription CDS Blueprint
+          version: 1.0.0
+          provider: Ericsson
+        participant:
           name: org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant
           version: 3.2.1
-        cds_blueprint_id:
-          name: org.onap.ccsdk.cds.PMSHCdsBlueprint
-          version: 1.0.0
+        cds_blueprint_id: { get_input: tosca_concept_identifier }
     org.onap.domain.pmsh.PMSHControlLoopDefinition:
       version: 1.2.3
       type: org.onap.policy.clamp.controlloop.ControlLoop
       type_version: 1.0.0
       description: Control loop for Performance Management Subscription Handling
       properties:
-        provider: Ericsson
+        application_details:
+          name: PMSH Control Loop
+          version: 1.0.0
+          provider: Ericsson
         elements:
         - name: org.onap.domain.pmsh.PMSH_DCAEMicroservice
           version: 1.2.3
