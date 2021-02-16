@@ -1316,7 +1316,9 @@
                 </doTry>
             </route>
         </get>
-        <get uri="/v2/policies/list" outType="com.google.gson.JsonObject" produces="application/json">
+
+        <!-- Policy Related endpoints, not related to LOOP  -->
+        <get uri="/v2/policies" outType="com.google.gson.JsonObject" produces="application/json">
             <route>
                 <removeHeaders pattern="*"/>
                 <doTry>
@@ -1347,17 +1349,63 @@
                         <to
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
-                             message="GET Policy Model YAML request failed for type: ${header.policyModelType}, ${exception.stacktrace}"/>
+                             message="GET Policies list JSON request failed: ${exception.stacktrace}"/>
                         <setHeader headerName="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
-                            <simple>GET Policy model YAML FAILED</simple>
+                            <simple>GET Policies list JSON FAILED</simple>
                         </setBody>
                     </doCatch>
                 </doTry>
             </route>
         </get>
+        <!-- Update an existing policy, therefore it removes it from pdp first, delete it and then recreate it -->
+        <!--  TO BE DONE -->
+
+        <!-- Create a new policy -->
+        <post uri="/v2/policies/{policyModelName}/{policyModelVersion}" outType="com.google.gson.JsonObject" produces="application/json">
+            <route>
+                <removeHeaders pattern="*"
+                               excludePattern="policyModelName|policyModelVersion"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'CREATE a new Policy ')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','update')"/>
+                    <setProperty propertyName="policyModelName">
+                        <simple>${header.policyModelName}</simple>
+                    </setProperty>
+                    <setProperty propertyName="policyModelVersion">
+                        <simple>${header.policyModelVersion}</simple>
+                    </setProperty>
+                    <setBody>
+                        <method ref="org.onap.policy.clamp.policy.pdpgroup.PoliciesPdpMerger"
+                                method="removePdpStatesOnePolicy(${body})"/>
+                    </setBody>
+                    <to uri="direct:create-policy"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="CREATE Policy request failed for type: ${header.policyModelType}/${header.policyModelVersion}, ${exception.stacktrace}"/>
+                        <setHeader headerName="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>CREATE Policy FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </post>
+
         <get uri="/v2/clampInformation" outType="org.onap.policy.clamp.clds.model.ClampInformation"
              produces="application/json">
             <to
