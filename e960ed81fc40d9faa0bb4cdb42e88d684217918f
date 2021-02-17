@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "494a4e5e_7807c00e",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/PMSubscriptionHandling.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-17T13:45:18Z",
+      "side": 1,
+      "message": "I think some of the types here are duplicated in the PMSH policy type definition so they may not be needed here. I\u0027ll check with the PMSH team",
+      "parentUuid": "73a3b10b_c26da10a",
+      "range": {
+        "startLine": 163,
+        "startChar": 8,
+        "endLine": 163,
+        "endChar": 19
+      },
+      "revId": "e960ed81fc40d9faa0bb4cdb42e88d684217918f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9839b526_72937700",
         "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/PMSubscriptionHandling.yaml",
         "patchSetId": 1
