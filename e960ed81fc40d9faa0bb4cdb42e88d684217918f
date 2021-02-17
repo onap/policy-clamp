@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73a3b10b_c26da10a",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/PMSubscriptionHandling.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-17T13:15:42Z",
+      "side": 1,
+      "message": "Ok I see they are declared here, but not sure you could do this with TOSCA specification???",
+      "range": {
+        "startLine": 163,
+        "startChar": 8,
+        "endLine": 163,
+        "endChar": 19
+      },
+      "revId": "e960ed81fc40d9faa0bb4cdb42e88d684217918f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9839b526_72937700",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/PMSubscriptionHandling.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-17T13:15:42Z",
+      "side": 1,
+      "message": "same here - I think you need to declare DN as a datatype first.",
+      "range": {
+        "startLine": 190,
+        "startChar": 18,
+        "endLine": 190,
+        "endChar": 26
+      },
+      "revId": "e960ed81fc40d9faa0bb4cdb42e88d684217918f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee1543c4_a2088891",
+        "filename": "tosca-controlloop/common/src/main/resources/examples/controlloop/PMSubscriptionHandling.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-17T13:15:42Z",
+      "side": 1,
+      "message": "entry_schema:\n  type: nfFilter ??\nShould it be made into a datatype? Because you have declared it as a property.",
+      "range": {
+        "startLine": 207,
+        "startChar": 14,
+        "endLine": 207,
+        "endChar": 28
+      },
+      "revId": "e960ed81fc40d9faa0bb4cdb42e88d684217918f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
