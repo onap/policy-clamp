@@ -97,6 +97,6 @@ public class PoliciesPdpMergerTest {
         JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("example/policy/policy-merger.json"),
                 PoliciesPdpMerger.mergePoliciesAndPdpGroupStates(
                         ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policies/.file"),
-                        pdpGroupsJson), true);
+                        pdpGroupsJson).toString(), true);
     }
 }
