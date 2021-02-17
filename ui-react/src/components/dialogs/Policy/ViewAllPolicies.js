@@ -47,6 +47,12 @@ import PolicyService from '../../../api/PolicyService';
 import PolicyToscaService from '../../../api/PolicyToscaService';
 import Select from 'react-select';
 import JSONEditor from '@json-editor/json-editor';
+import OnapUtils from '../../../utils/OnapUtils';
+import Alert from 'react-bootstrap/Alert';
+
+const DivWhiteSpaceStyled = styled.div`
+	white-space: pre;
+`
 
 const ModalStyled = styled(Modal)`
     @media (min-width: 1200px) {
@@ -76,9 +82,11 @@ export default class ViewAllPolicies extends React.Component {
   state = {
         show: true,
         content: 'Please select a policy to display it',
-        selectedRow: -1,
+        selectedRowId: -1,
         policiesListData: [],
         prefixGrouping: false,
+        showSuccessAlert: false,
+        showFailAlert: false,
         policyColumnsDefinition: [
             {
                 title: "Policy Name", field: "name",
@@ -148,7 +156,8 @@ export default class ViewAllPolicies extends React.Component {
         this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.handleUpdatePolicy = this.handleUpdatePolicy.bind(this);
-        this.handleCreateNewVersion = this.handleCreateNewVersion(this);
+        this.handleCreateNewVersion = this.handleCreateNewVersion.bind(this);
+        this.disableAlert = this.disableAlert.bind(this);
         this.getAllPolicies();
 
     }
@@ -159,10 +168,10 @@ export default class ViewAllPolicies extends React.Component {
         let selectedSubPdpGroup = pdpSplit[1];
         if (typeof selectedSubPdpGroup !== "undefined") {
             let temp = this.state.policiesListData;
-            temp[this.state.selectedRow]["pdpGroupInfo"] = {"pdpGroup":selectedPdpGroup,"pdpSubGroup":selectedSubPdpGroup};
+            temp[this.state.selectedRowId]["pdpGroupInfo"] = {"pdpGroup":selectedPdpGroup,"pdpSubGroup":selectedSubPdpGroup};
             this.setState({policiesListData: temp});
         } else {
-            delete this.state.policiesListData[this.state.selectedRow]["pdpGroupInfo"];
+            delete this.state.policiesListData[this.state.selectedRowId]["pdpGroupInfo"];
         }
     }
 
@@ -237,9 +246,9 @@ export default class ViewAllPolicies extends React.Component {
     handleOnRowClick(rowData) {
         PolicyToscaService.getToscaPolicyModel(rowData["type"], rowData["type_version"]).then(respJsonPolicyTosca => {
             this.setState({
-                selectedRow: rowData.tableData.id,
-                selectedRowJsonSchema: respJsonPolicyTosca,
-                selectedRowPolicyProperties: rowData["properties"],
+                selectedRowId: rowData.tableData.id,
+                selectedRowIdJsonSchema: respJsonPolicyTosca,
+                selectedRowIdPolicyProperties: rowData["properties"],
                 jsonEditorForPolicy: this.createJsonEditor(respJsonPolicyTosca, rowData["properties"])
                 });
         });
@@ -253,8 +262,52 @@ export default class ViewAllPolicies extends React.Component {
         return null;
     }
 
-    handleCreateNewVersion(event,rowData) {
-        return null;
+    customValidation(editorData) {
+        // method for sub-classes to override with customized validation
+        return [];
+    }
+
+    handleCreateNewVersion() {
+        var editorData = this.state.jsonEditorForPolicy.getValue();
+        var errors = this.state.jsonEditorForPolicy.validate();
+        errors = errors.concat(this.customValidation(editorData));
+
+        if (errors.length !== 0) {
+            console.error("Errors detected during policy data validation ", errors);
+            this.setState({
+                showFailAlert: true,
+                showMessage: 'Errors detected during policy data validation:\n' + OnapUtils.jsonEditorErrorFormatter(errors)
+            });
+            return;
+        } else {
+            console.info("NO validation errors found in policy data");
+            let newPolicy = JSON.parse(JSON.stringify(this.state.policiesListData[this.state.selectedRowId]));
+            newPolicy["properties"] = editorData;
+            let newVersion = this.bumpVersion(newPolicy["version"]);
+            newPolicy["version"] = newVersion;
+            newPolicy["metadata"]["policy-version"] = newVersion;
+            // Remove stuff added by UI
+            delete newPolicy["tableData"];
+            PolicyService.createNewPolicy(newPolicy["type"], newPolicy["type_version"], newPolicy).then(respPolicyCreation => {
+                if (respPolicyCreation === "") {
+                    //it indicates a failure
+                    this.setState({
+                        showFailAlert: true,
+                        showMessage: 'Policy Creation Failure'
+                    });
+                } else {
+                    this.setState({
+                        showSuccessAlert: true,
+                        showMessage: 'Policy in version ' + newVersion + ' created successfully'
+                    });
+                }
+            })
+        }
+    }
+
+    bumpVersion(versionToBump) {
+        let semVer = versionToBump.split(".");
+        return parseInt(semVer[0])+1 + "." + semVer[1] + "." + semVer[2];
     }
 
     handleUpdatePolicy() {
@@ -262,11 +315,16 @@ export default class ViewAllPolicies extends React.Component {
         this.props.history.push('/')
     }
 
+    disableAlert() {
+        this.setState ({ showSuccessAlert: false, showFailAlert: false });
+    }
+
     render() {
     return (
             <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                 </Modal.Header>
+
                 <Modal.Body>
                   <FormControlLabel
                         control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
@@ -283,7 +341,7 @@ export default class ViewAllPolicies extends React.Component {
                           exportButton: true,
                           headerStyle:rowHeaderStyle,
                           rowStyle: rowData => ({
-                            backgroundColor: (this.state.selectedRow !== -1 && this.state.selectedRow === rowData.tableData.id) ? '#EEE' : '#FFF'
+                            backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
                           })
                       }}
                       actions={[
@@ -293,14 +351,25 @@ export default class ViewAllPolicies extends React.Component {
                             onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
                           }
                       ]}
-
                 />
                 <JsonEditorDiv>
                     <h5>Policy Properties Editor</h5>
                     <div id="policy-editor" title="Policy Properties"/>
-                    <Button variant="secondary" title="Create a new policy version from the defined parameters" onClick={this.handleCreateNewVersion}>Create New Version</Button>
-                    <Button variant="secondary" title="Update the current policy version, BE CAREFUL this will undeploy the policy from PDP, delete it and then recreate the policy" onClick={this.handleUpdatePolicy}>Update Current Version</Button>
+                    <Button variant="secondary" title="Create a new policy version from the defined parameters"
+                        onClick={this.handleCreateNewVersion}>Create New Version</Button>
+                    <Button variant="secondary" title="Update the current policy version, BE CAREFUL this will undeploy the policy from PDP, delete it and then recreate the policy"
+                        onClick={this.handleUpdatePolicy}>Update Current Version</Button>
                 </JsonEditorDiv>
+                <Alert variant="success" show={this.state.showSuccessAlert} onClose={this.disableAlert} dismissible>
+                         <DivWhiteSpaceStyled>
+                                 {this.state.showMessage}
+                         </DivWhiteSpaceStyled>
+                 </Alert>
+                 <Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
+                         <DivWhiteSpaceStyled>
+                                 {this.state.showMessage}
+                         </DivWhiteSpaceStyled>
+                 </Alert>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.handleClose}>Close</Button>
