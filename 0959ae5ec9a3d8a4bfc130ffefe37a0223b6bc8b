@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "5cb2ef0c_8d5884c0",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/tosca/update/parser/ToscaConverterToJsonSchema.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-17T17:29:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c09de67_e9ea9567",
+      "range": {
+        "startLine": 274,
+        "startChar": 22,
+        "endLine": 275,
+        "endChar": 27
+      },
+      "revId": "0959ae5ec9a3d8a4bfc130ffefe37a0223b6bc8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45b68bed_43b32d17",
         "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
         "patchSetId": 2
