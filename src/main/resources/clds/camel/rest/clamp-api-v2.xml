@@ -803,6 +803,107 @@
                 </doTry>
             </route>
         </post>
+        <get uri="/v2/templates"
+             outType="org.onap.policy.clamp.loop.template.LoopTemplate"
+             produces="application/json">
+            <route>
+                <removeHeaders pattern="*"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET ALL Templates')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.loop.template.LoopTemplatesService?method=getAllLoopTemplates()"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="GET ALL templates request failed: ${exception.stacktrace}"/>
+                        <setHeader headerName="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>GET ALL templates FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </get>
+        <get uri="/v2/templates/{templateName}"
+             outType="org.onap.policy.clamp.loop.template.LoopTemplate"
+             produces="application/json">
+            <route>
+                <removeHeaders pattern="*"
+                               excludePattern="templateName"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET a Template by NAME')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.loop.template.LoopTemplatesService?method=getLoopTemplate(${header.templateName})"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="GET Template request failed for template: ${header.templateName},  ${exception.stacktrace}"/>
+                        <setHeader headerName="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>GET Template FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </get>
+        <get uri="/v2/templates/names" outType="java.lang.String[]"
+             produces="application/json">
+            <route>
+                <removeHeaders pattern="*"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET ALL Loop Template Names')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.loop.template.LoopTemplatesService?method=getLoopTemplateNames()"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="GET All Template names request failed for template:  ${exception.stacktrace}"/>
+                        <setHeader headerName="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>GET All Template names FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </get>
+
+        <!-- NON LOOP related endpoints -->
         <get uri="/v2/dictionary"
              outType="org.onap.policy.clamp.tosca.Dictionary" produces="application/json">
             <route>
@@ -1217,106 +1318,6 @@
             </route>
         </put>
 
-        <get uri="/v2/templates"
-             outType="org.onap.policy.clamp.loop.template.LoopTemplate"
-             produces="application/json">
-            <route>
-                <removeHeaders pattern="*"/>
-                <doTry>
-                    <to
-                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET ALL Templates')"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.loop.template.LoopTemplatesService?method=getAllLoopTemplates()"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
-                    <doCatch>
-                        <exception>java.lang.Exception</exception>
-                        <handled>
-                            <constant>true</constant>
-                        </handled>
-                        <to
-                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
-                        <log loggingLevel="ERROR"
-                             message="GET ALL templates request failed: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
-                            <constant>500</constant>
-                        </setHeader>
-                        <setBody>
-                            <simple>GET ALL templates FAILED</simple>
-                        </setBody>
-                    </doCatch>
-                </doTry>
-            </route>
-        </get>
-        <get uri="/v2/templates/{templateName}"
-             outType="org.onap.policy.clamp.loop.template.LoopTemplate"
-             produces="application/json">
-            <route>
-                <removeHeaders pattern="*"
-                               excludePattern="templateName"/>
-                <doTry>
-                    <to
-                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET a Template by NAME')"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.loop.template.LoopTemplatesService?method=getLoopTemplate(${header.templateName})"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
-                    <doCatch>
-                        <exception>java.lang.Exception</exception>
-                        <handled>
-                            <constant>true</constant>
-                        </handled>
-                        <to
-                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
-                        <log loggingLevel="ERROR"
-                             message="GET Template request failed for template: ${header.templateName},  ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
-                            <constant>500</constant>
-                        </setHeader>
-                        <setBody>
-                            <simple>GET Template FAILED</simple>
-                        </setBody>
-                    </doCatch>
-                </doTry>
-            </route>
-        </get>
-        <get uri="/v2/templates/names" outType="java.lang.String[]"
-             produces="application/json">
-            <route>
-                <removeHeaders pattern="*"/>
-                <doTry>
-                    <to
-                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET ALL Loop Template Names')"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'template','','read')"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.loop.template.LoopTemplatesService?method=getLoopTemplateNames()"/>
-                    <to
-                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
-                    <doCatch>
-                        <exception>java.lang.Exception</exception>
-                        <handled>
-                            <constant>true</constant>
-                        </handled>
-                        <to
-                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
-                        <log loggingLevel="ERROR"
-                             message="GET All Template names request failed for template:  ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
-                            <constant>500</constant>
-                        </setHeader>
-                        <setBody>
-                            <simple>GET All Template names FAILED</simple>
-                        </setBody>
-                    </doCatch>
-                </doTry>
-            </route>
-        </get>
-
         <!-- Policy Related endpoints, not related to LOOP  -->
         <get uri="/v2/policies" outType="com.google.gson.JsonObject" produces="application/json">
             <route>
@@ -1360,11 +1361,13 @@
                 </doTry>
             </route>
         </get>
-        <!-- Update an existing policy, therefore it removes it from pdp first, delete it and then recreate it -->
-        <!--  TO BE DONE -->
 
         <!-- Create a new policy -->
-        <post uri="/v2/policies/{policyModelName}/{policyModelVersion}" outType="com.google.gson.JsonObject" produces="application/json">
+        <post uri="/v2/policies/{policyModelName}/{policyModelVersion}"
+              type="com.google.gson.JsonElement"
+              consumes="application/json"
+              outType="com.google.gson.JsonObject"
+              produces="application/json">
             <route>
                 <removeHeaders pattern="*"
                                excludePattern="policyModelName|policyModelVersion"/>
@@ -1382,6 +1385,9 @@
                     <setBody>
                         <method ref="org.onap.policy.clamp.policy.pdpgroup.PoliciesPdpMerger"
                                 method="removePdpStatesOnePolicy(${body})"/>
+                     </setBody>
+                    <setBody>
+                        <simple>${body.toString()}</simple>
                     </setBody>
                     <to uri="direct:create-policy"/>
                     <to

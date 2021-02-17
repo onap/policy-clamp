@@ -40,4 +40,27 @@ export default class PolicyService {
         return {};
       });
   }
+  static createNewPolicy(policyModelType, policyModelVersion, policyJson) {
+    return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/' + policyModelVersion, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(policyJson)
+        })
+      .then(function (response) {
+        console.debug("createNewPolicy response received: ", response.status);
+        if (response.ok) {
+          return response.text;
+        } else {
+          console.error("createNewPolicy query failed");
+          return "";
+        }
+      })
+      .catch(function (error) {
+        console.error("createNewPolicy error received", error);
+        throw new Error(error)
+      });
+  }
 }
