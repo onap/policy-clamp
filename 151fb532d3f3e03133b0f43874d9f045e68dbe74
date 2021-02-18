@@ -1,0 +1,181 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "283340f8_fe52fd48",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "don\u0027t log",
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7891e933_988b7fd1",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "change to \"+\"",
+      "range": {
+        "startLine": 77,
+        "startChar": 12,
+        "endLine": 77,
+        "endChar": 28
+      },
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69e8b89f_64708b5d",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "don\u0027t log",
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e5d4cef_3a487d2d",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantRequestParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "as long as there\u0027s a getter, I don\u0027t think this comment is true, but would have to verify",
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38d94e6e_220e272e",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "the stack trace is lost; don\u0027t append e.getMessage(), but include \"e\" as the \"cause\" of the exception",
+      "range": {
+        "startLine": 97,
+        "startChar": 61,
+        "endLine": 97,
+        "endChar": 82
+      },
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2adb0f1e_e7f5acc0",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "something seems wrong with this condition.  As it is, it could be simplified to:\n\n  if (remainingArgs.length \u003e 0) {",
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2abf8b08_784d5527",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "need to validate parameterGroup?",
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82d8a525_ae155b48",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/MainTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "could compute this once and store it in a static field",
+      "range": {
+        "startLine": 116,
+        "startChar": 28,
+        "endLine": 116,
+        "endChar": 108
+      },
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd35108d_33e4f5aa",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/MainTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-18T19:55:59Z",
+      "side": 1,
+      "message": "same comment as above",
+      "range": {
+        "startLine": 152,
+        "startChar": 28,
+        "endLine": 152,
+        "endChar": 108
+      },
+      "revId": "151fb532d3f3e03133b0f43874d9f045e68dbe74",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
