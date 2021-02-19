@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61e94eea_0a2e1c47",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-19T14:52:49Z",
+      "side": 1,
+      "message": "FYI: for Honolulu, we\u0027re currently working on 2.4.0-SNAPSHOT, which will be released Monday",
+      "range": {
+        "startLine": 113,
+        "startChar": 31,
+        "endLine": 113,
+        "endChar": 36
+      },
+      "revId": "f3361fa8faf2b55656d0e390d62dee284da9f1aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
