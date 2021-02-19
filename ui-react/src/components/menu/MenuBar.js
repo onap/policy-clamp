@@ -86,16 +86,18 @@ export default class MenuBar extends React.Component {
     render () {
         return (
                 <Navbar.Collapse>
-                    <StyledNavDropdown title="Loop Templates">
+                    <StyledNavDropdown title="POLICY Framework">
+                            <NavDropdown.Item as={StyledLink} to="/manageDictionaries">Manage Metadata Dictionaries</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item as={StyledLink} to="/viewAllPolicies">View All Policies</NavDropdown.Item>
+                            <NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Model</NavDropdown.Item>
+                    </StyledNavDropdown>
+                    <StyledNavDropdown title="LOOP Templates">
                             <NavDropdown.Item as={StyledLink} to="/viewLoopTemplatesModal">View All Templates</NavDropdown.Item>
                     </StyledNavDropdown>
-                    <StyledNavDropdown title="Policy Models">
-                            <NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Model</NavDropdown.Item>
-                            <NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
-                            <NavDropdown.Item as={StyledLink} to="/manageDictionaries">Manage Metadata Dictionaries</NavDropdown.Item>
-                            <NavDropdown.Item as={StyledLink} to="/viewAllPolicies">View All Policies</NavDropdown.Item>
-                    </StyledNavDropdown>
-                    <StyledNavDropdown title="Loop Instance">
+                    <StyledNavDropdown title="LOOP Instance">
                             <NavDropdown.Item as={StyledLink} to="/createLoop">Create</NavDropdown.Item>
                             <NavDropdown.Item as={StyledLink} to="/openLoop">Open</NavDropdown.Item>
                             <NavDropdown.Item as={StyledLink} to="/closeLoop" disabled={this.state.disabled}>Close</NavDropdown.Item>
@@ -104,7 +106,7 @@ export default class MenuBar extends React.Component {
                             <NavDropdown.Item as={StyledLink} to="/loopProperties" disabled={this.state.disabled}>Properties</NavDropdown.Item>
                             <NavDropdown.Item as={StyledLink} to="/refreshStatus" disabled={this.state.disabled}>Refresh Status</NavDropdown.Item>
                     </StyledNavDropdown>
-                    <StyledNavDropdown title="Loop Operations">
+                    <StyledNavDropdown title="LOOP Operations">
                             <NavDropdown.Item as={StyledLink} to="/submit" disabled={this.state.disabled}>Create and deploy to Policy Engine(SUBMIT)</NavDropdown.Item>
                             <NavDropdown.Item as={StyledLink} to="/stop" disabled={this.state.disabled}>Undeploy from Policy Engine (STOP)</NavDropdown.Item>
                             <NavDropdown.Item as={StyledLink} to="/restart" disabled={this.state.disabled}>ReDeploy to Policy Engine (RESTART)</NavDropdown.Item>
