@@ -26,7 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.onap.policy</groupId>
     <artifactId>clamp</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.0.1-SNAPSHOT</version>
     <name>policy-clamp</name>
 
 
@@ -51,7 +51,7 @@
         - The POLICY-CLAMP backend, JAVA unit testing
         - The POLICY-CLAMP backend, JAVA integration tests (with Spring + docker mariadb database + docker policy/dcae
         emulator written in python)
-        - The POLICY-CLAMP frontend, Javascrip tests (NodeJS(NPM) + JEST and Enzyme for React)
+        - The POLICY-CLAMP frontend, Javascript tests (NodeJS(NPM) + JEST and Enzyme for React)
 
         The test coverage for dev's can be found after a "clean install" build in:
         - Clamp backend: target/jacoco-dev.exec (unit tests + integration tests merged)
