@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ae08d47_b622433a",
+        "filename": "src/test/resources/tosca/tca_hi_lo.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-19T15:00:54Z",
+      "side": 1,
+      "message": "this one was deprecated, sure you want to use it?",
+      "revId": "af040a80000e4a0f1a98d251a78fc6b55aa6c1f4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
