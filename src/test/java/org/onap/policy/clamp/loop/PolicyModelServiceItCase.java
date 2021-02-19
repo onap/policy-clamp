@@ -47,7 +47,7 @@ import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.onap.policy.models.pdp.concepts.PdpSubGroup;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -275,20 +275,20 @@ public class PolicyModelServiceItCase {
         policyModelsService.saveOrUpdatePolicyModel(getPolicyModel(POLICY_MODEL_TYPE_3, "yaml",
                 POLICY_MODEL_TYPE_3_VERSION_1, "TEST", "VARIANT", "user"));
 
-        ToscaPolicyTypeIdentifier type1 = new ToscaPolicyTypeIdentifier("org.onap.testos", "1.0.0");
-        ToscaPolicyTypeIdentifier type2 = new ToscaPolicyTypeIdentifier("org.onap.testos2", "2.0.0");
+        ToscaConceptIdentifier type1 = new ToscaConceptIdentifier("org.onap.testos", "1.0.0");
+        ToscaConceptIdentifier type2 = new ToscaConceptIdentifier("org.onap.testos2", "2.0.0");
 
         PdpSubGroup pdpSubgroup1 = new PdpSubGroup();
         pdpSubgroup1.setPdpType("subGroup1");
-        List<ToscaPolicyTypeIdentifier> pdpTypeList = new LinkedList<>();
+        List<ToscaConceptIdentifier> pdpTypeList = new LinkedList<>();
         pdpTypeList.add(type1);
         pdpTypeList.add(type2);
         pdpSubgroup1.setSupportedPolicyTypes(pdpTypeList);
 
-        ToscaPolicyTypeIdentifier type3 = new ToscaPolicyTypeIdentifier("org.onap.testos3", "2.0.0");
+        ToscaConceptIdentifier type3 = new ToscaConceptIdentifier("org.onap.testos3", "2.0.0");
         PdpSubGroup pdpSubgroup2 = new PdpSubGroup();
         pdpSubgroup2.setPdpType("subGroup2");
-        List<ToscaPolicyTypeIdentifier> pdpTypeList2 = new LinkedList<>();
+        List<ToscaConceptIdentifier> pdpTypeList2 = new LinkedList<>();
         pdpTypeList2.add(type2);
         pdpTypeList2.add(type3);
         pdpSubgroup2.setSupportedPolicyTypes(pdpTypeList2);
