@@ -43,6 +43,9 @@
 			<setProperty propertyName="policyTypeVersion">
 				<simple>${body.getPolicyModel().getVersion()}</simple>
 			</setProperty>
+			<setProperty propertyName="policyPdpGroup">
+				<simple>${body.getPdpGroup()}</simple>
+			</setProperty>
 			<setProperty propertyName="policyVersion">
 				<simple>1.0.0</simple>
 			</setProperty>
@@ -70,8 +73,8 @@
 		 	<setProperty propertyName="policyVersion">
 				<simple>1.0.0</simple>
 			</setProperty>
-			<setProperty propertyName="operationalPolicy">
-				<simple>${body}</simple>
+			<setProperty propertyName="policyPdpGroup">
+				<simple>${body.getPdpGroup()}</simple>
 			</setProperty>
 			<setBody>
 				<constant>null</constant>
