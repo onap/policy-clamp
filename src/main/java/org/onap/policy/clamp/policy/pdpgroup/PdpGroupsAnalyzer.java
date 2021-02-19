@@ -33,7 +33,7 @@ import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.onap.policy.models.pdp.concepts.PdpSubGroup;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * This is an utility class to do searching in pdp groups and create json object describing the result.
@@ -118,12 +118,12 @@ public class PdpGroupsAnalyzer {
         JsonObject assignedPdpGroups = new JsonObject();
         pdpGroupInfo.add(ASSIGNED_PDP_GROUPS_INFO, assignedPdpGroups);
 
-        ToscaPolicyIdentifier toscaPolicyIdentifier = new ToscaPolicyIdentifier(policyName, version);
+        ToscaConceptIdentifier toscaConceptIdentifier = new ToscaConceptIdentifier(policyName, version);
         pdpGroups.getGroups().stream().anyMatch(pdpGroup ->
                 pdpGroup.getPdpSubgroups().stream().anyMatch(
                         pdpSubGroup -> {
                             if (pdpSubGroup.getPolicies() != null && pdpSubGroup.getPolicies()
-                                    .contains(toscaPolicyIdentifier)) {
+                                    .contains(toscaConceptIdentifier)) {
                                 assignedPdpGroups.addProperty("pdpGroup", pdpGroup.getName());
                                 assignedPdpGroups.addProperty("pdpSubGroup", pdpSubGroup.getPdpType());
                                 return true;
