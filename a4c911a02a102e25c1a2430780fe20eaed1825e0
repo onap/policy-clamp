@@ -230,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "ae5a68b7_2094fed8",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantStateChangeParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-22T15:01:19Z",
+      "side": 1,
+      "message": "Are you expecting additional fields to be added at some point in the future?  If not, then could eliminate this class and just use ParticipantRequestParameters",
+      "parentUuid": "8184169b_3e0ceff3",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9e949cf7_d5571cf4",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantUpdateParameters.java",
         "patchSetId": 2
@@ -265,6 +283,24 @@
     },
     {
       "key": {
+        "uuid": "8fe781db_91cfafeb",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantUpdateParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-22T15:01:19Z",
+      "side": 1,
+      "message": "same comment",
+      "parentUuid": "88ade7b3_c00eef8e",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e048166_07af70c2",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
         "patchSetId": 2
@@ -294,6 +330,24 @@
       "side": 1,
       "message": "clRuntimeParameterGroup is validated at Main level, and there are tests for not valid parameters in MainTests.",
       "parentUuid": "6e048166_07af70c2",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1acd66da_dac4175e",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-22T15:01:19Z",
+      "side": 1,
+      "message": "the question is: can clRuntimeParameterGroup, itself, be null?",
+      "parentUuid": "76add45b_ebe8e4ce",
       "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
