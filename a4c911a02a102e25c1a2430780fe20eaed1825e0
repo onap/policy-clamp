@@ -426,6 +426,24 @@
     },
     {
       "key": {
+        "uuid": "611489b5_bab49106",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T16:09:39Z",
+      "side": 1,
+      "message": "clRuntimeParameterGroup is validate when is created \"getParameters()\"\n\nI will check clRuntimeParameterGroup  into ClRuntimeActivator:\n        if (clRuntimeParameterGroup \u003d\u003d null || !clRuntimeParameterGroup.isValid()) {\n            throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR, \"ParameterGroup not valid\");\n        }",
+      "parentUuid": "568018b3_9895b8c9",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6d1c65a_c00941fd",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeCommandLineArguments.java",
         "patchSetId": 2
