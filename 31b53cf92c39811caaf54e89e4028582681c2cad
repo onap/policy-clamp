@@ -22,6 +22,30 @@
       "revId": "31b53cf92c39811caaf54e89e4028582681c2cad",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9a055ff_106927d1",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/tosca/update/execution/cds/ToscaMetadataCdsProcess.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-22T15:45:33Z",
+      "side": 1,
+      "message": "Created https://jira.onap.org/browse/POLICY-3087",
+      "parentUuid": "0fd651e6_2b776459",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 46
+      },
+      "revId": "31b53cf92c39811caaf54e89e4028582681c2cad",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
