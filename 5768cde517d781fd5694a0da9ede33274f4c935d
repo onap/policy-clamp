@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7e6b17fc_0ede9705",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterGroup.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-02-22T19:30:21Z",
+      "side": 1,
+      "message": "Not sure if you will need this. In PAP we use it to perform health status of all the components exposing REST API for health check.\nMay be you are planning to do the same.",
+      "range": {
+        "startLine": 45,
+        "startChar": 33,
+        "endLine": 45,
+        "endChar": 64
+      },
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "708e9629_f4d606eb",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
         "patchSetId": 6
