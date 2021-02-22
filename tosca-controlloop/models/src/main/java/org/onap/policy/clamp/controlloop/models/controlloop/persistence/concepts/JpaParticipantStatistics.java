@@ -22,10 +22,8 @@
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -60,8 +58,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class JpaParticipantStatistics extends PfConcept
-    implements PfAuthorative<ParticipantStatistics>, Serializable {
+public class JpaParticipantStatistics extends PfConcept implements PfAuthorative<ParticipantStatistics>, Serializable {
 
     private static final long serialVersionUID = -5992214428190133190L;
 
@@ -72,11 +69,8 @@ public class JpaParticipantStatistics extends PfConcept
 
     @VerifyKey
     @NotNull
-    @AttributeOverrides({
-        @AttributeOverride(name = "name",    column = @Column(name = "participant_name")),
-        @AttributeOverride(name = "version", column = @Column(name = "participant_version"))
-        }
-    )
+    @AttributeOverride(name = "name", column = @Column(name = "participant_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "participant_version"))
     private PfConceptKey participantId;
 
     @Column
@@ -119,8 +113,8 @@ public class JpaParticipantStatistics extends PfConcept
      * @param key the key
      */
     public JpaParticipantStatistics(@NonNull final PfTimestampKey key) {
-        this(key, new PfConceptKey(), ParticipantState.PASSIVE, ParticipantHealthStatus.HEALTHY, 0L, 0L,
-            0.0d, 0L, 0L, 0L);
+        this(key, new PfConceptKey(), ParticipantState.PASSIVE, ParticipantHealthStatus.HEALTHY, 0L, 0L, 0.0d, 0L, 0L,
+                0L);
     }
 
 
@@ -196,7 +190,7 @@ public class JpaParticipantStatistics extends PfConcept
     @Override
     public ParticipantStatistics toAuthorative() {
         ParticipantStatistics participantStatistics = new ParticipantStatistics();
-        participantStatistics.setTimeStamp(new Date(key.getTimeStamp().getTime()));
+        participantStatistics.setTimeStamp(key.getTimeStamp().toInstant());
         participantStatistics.setParticipantId(new ToscaConceptIdentifier(participantId));
         participantStatistics.setState(state);
         participantStatistics.setHealthStatus(healthStatus);
@@ -214,8 +208,7 @@ public class JpaParticipantStatistics extends PfConcept
     public void fromAuthorative(@NonNull final ParticipantStatistics participantStatistics) {
         if (this.key == null || this.getKey().isNullKey()) {
             this.setKey(new PfTimestampKey(participantStatistics.getParticipantId().getName(),
-                participantStatistics.getParticipantId().getVersion(),
-                participantStatistics.getTimeStamp()));
+                    participantStatistics.getParticipantId().getVersion(), participantStatistics.getTimeStamp()));
         }
         this.setParticipantId(participantStatistics.getParticipantId().asConceptKey());
         this.setState(participantStatistics.getState());

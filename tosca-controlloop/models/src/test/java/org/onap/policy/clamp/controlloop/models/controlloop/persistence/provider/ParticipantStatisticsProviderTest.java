@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
@@ -99,9 +99,9 @@ public class ParticipantStatisticsProviderTest {
 
         participantStatisticsProvider.createParticipantStatistics(inputParticipantStatistics.getStatisticsList());
         ToscaConceptIdentifier identifier = inputParticipantStatistics.getStatisticsList().get(0).getParticipantId();
-        Date date = inputParticipantStatistics.getStatisticsList().get(0).getTimeStamp();
+        Instant instant = inputParticipantStatistics.getStatisticsList().get(0).getTimeStamp();
         assertEquals(1, participantStatisticsProvider
-                .getParticipantStatistics(identifier.getName(), identifier.getVersion(), date).size());
+                .getParticipantStatistics(identifier.getName(), identifier.getVersion(), instant).size());
 
         assertEquals(1, participantStatisticsProvider
                 .getFilteredParticipantStatistics("name2", "1.0.1", null, null, null, "DESC", 1).size());

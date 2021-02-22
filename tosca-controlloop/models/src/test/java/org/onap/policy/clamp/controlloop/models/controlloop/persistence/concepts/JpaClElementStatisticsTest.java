@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Date;
+import java.time.Instant;
 import org.junit.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
@@ -91,7 +91,7 @@ public class JpaClElementStatisticsTest {
         testJpaClElementStatisticsFa.setKey(PfTimestampKey.getNullKey());
         testJpaClElementStatisticsFa.fromAuthorative(cles);
         assertEquals(testJpaClElementStatistics, testJpaClElementStatisticsFa);
-        testJpaClElementStatisticsFa.setKey(new PfTimestampKey("elementName", "0.0.1", new Date(123456L)));
+        testJpaClElementStatisticsFa.setKey(new PfTimestampKey("elementName", "0.0.1", Instant.ofEpochMilli(123456L)));
         testJpaClElementStatisticsFa.fromAuthorative(cles);
         assertEquals(testJpaClElementStatistics, testJpaClElementStatisticsFa);
 
@@ -178,7 +178,7 @@ public class JpaClElementStatisticsTest {
     private ClElementStatistics createClElementStatisticsInstance() {
         ClElementStatistics clElementStatistics = new ClElementStatistics();
         clElementStatistics.setControlLoopElementId(new ToscaConceptIdentifier("elementName", "0.0.1"));
-        clElementStatistics.setTimeStamp(new Date(123456L));
+        clElementStatistics.setTimeStamp(Instant.ofEpochMilli(123456L));
         clElementStatistics.setControlLoopState(ControlLoopState.UNINITIALISED);
 
         return clElementStatistics;

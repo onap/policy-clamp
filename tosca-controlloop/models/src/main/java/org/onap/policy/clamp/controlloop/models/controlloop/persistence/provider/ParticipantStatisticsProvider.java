@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -62,7 +62,7 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting participant statistics
      */
     public List<ParticipantStatistics> getParticipantStatistics(final String name, final String version,
-            final Date timestamp) throws PfModelException {
+            final Instant timestamp) throws PfModelException {
 
         if (name != null && version != null && timestamp != null) {
             List<ParticipantStatistics> participantStatistics = new ArrayList<>(1);
@@ -87,8 +87,8 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting policies
      */
     public List<ParticipantStatistics> getFilteredParticipantStatistics(final String name, final String version,
-            final Date startTimeStamp, final Date endTimeStamp, Map<String, Object> filterMap, final String sortOrder,
-            final int getRecordNum) {
+            final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
+            final String sortOrder, final int getRecordNum) {
 
         return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, name, version,
                 startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));

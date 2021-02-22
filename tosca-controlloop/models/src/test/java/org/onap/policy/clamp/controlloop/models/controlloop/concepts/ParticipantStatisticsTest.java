@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Date;
+import java.time.Instant;
 import org.junit.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -44,7 +44,7 @@ public class ParticipantStatisticsTest {
 
         ParticipantStatistics ps1 = new ParticipantStatistics();
         ps1.setParticipantId(new ToscaConceptIdentifier("defName", "0.0.1"));
-        ps1.setTimeStamp(new Date(System.currentTimeMillis()));
+        ps1.setTimeStamp(Instant.now());
 
         assertThat(ps1.toString()).contains("ParticipantStatistics(");
         assertEquals(false, ps1.hashCode() == 0);

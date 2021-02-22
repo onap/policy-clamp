@@ -21,10 +21,8 @@
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -70,10 +68,8 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
     @VerifyKey
     @NotNull
     // @formatter:off
-    @AttributeOverrides({
-        @AttributeOverride(name = "name", column = @Column(name = "cl_element_name")),
-        @AttributeOverride(name = "version", column = @Column(name = "cl_element_version"))
-    })
+    @AttributeOverride(name = "name", column = @Column(name = "cl_element_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "cl_element_version"))
     private PfConceptKey clElementId;
     // @formatter: on
 
@@ -127,12 +123,10 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
         this.fromAuthorative(authorativeConcept);
     }
 
-
-
     @Override
     public ClElementStatistics toAuthorative() {
         ClElementStatistics clElementStatistics = new ClElementStatistics();
-        clElementStatistics.setTimeStamp(new Date(key.getTimeStamp().getTime()));
+        clElementStatistics.setTimeStamp(key.getTimeStamp().toInstant());
         clElementStatistics.setControlLoopElementId(new ToscaConceptIdentifier(clElementId));
         clElementStatistics.setControlLoopState(state);
         clElementStatistics.setClElementUptime(clElementUptime);
