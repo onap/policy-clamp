@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,10 @@
 
 package org.onap.policy.clamp.clds.tosca.update.execution.target;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
+import org.onap.policy.clamp.clds.tosca.update.execution.ToscaMetadataExecutor;
 import org.onap.policy.clamp.clds.tosca.update.execution.ToscaMetadataProcess;
 import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.policy.operational.OperationalPolicyRepresentationBuilder;
@@ -33,8 +36,15 @@ import org.onap.policy.clamp.policy.operational.OperationalPolicyRepresentationB
  */
 public class ToscaMetadataTargetProcess extends ToscaMetadataProcess {
 
+    private static final EELFLogger logger =
+            EELFManager.getInstance().getLogger(ToscaMetadataTargetProcess.class);
+
     @Override
     public void executeProcess(String parameters, JsonObject childObject, Service serviceModel) {
+        if (serviceModel == null) {
+            logger.info("serviceModel is null, therefore the ToscaMetadataTargetProcess is skipped");
+            return;
+        }
         childObject.add("anyOf", OperationalPolicyRepresentationBuilder.createAnyOfArray(serviceModel, false));
     }
 }
