@@ -22,6 +22,30 @@
       "revId": "dadac06a2eef145528d548aa78b89227a86f3520",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c5b2f10_df401c97",
+        "filename": "src/main/resources/clds/camel/routes/policy-flows.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-22T09:01:50Z",
+      "side": 1,
+      "message": "Yeah i agree 😞 but that requires more changes than that. It\u0027s a feature that must be designed properly, i submitted an epic for that in the backlog (https://jira.onap.org/browse/POLICY-3086)\nLet\u0027s change all that in another release.\n\nIt\u0027s a legacy from the initial policy framework/clamp rework.",
+      "parentUuid": "78b8f935_0f410332",
+      "range": {
+        "startLine": 110,
+        "startChar": 198,
+        "endLine": 110,
+        "endChar": 203
+      },
+      "revId": "dadac06a2eef145528d548aa78b89227a86f3520",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
