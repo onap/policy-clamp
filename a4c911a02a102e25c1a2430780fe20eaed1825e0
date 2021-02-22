@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1154c417_094b7b7d",
+        "filename": "tosca-controlloop/.gitignore",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "I am avoiding to hidden the package named \"org.onap.policy.clamp.clds.tosca.update.execution.target\"",
+      "parentUuid": "159539c7_469a19b3",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19d49a2f_3528ef1c",
         "filename": "tosca-controlloop/runtime/pom.xml",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2021-02-22T10:26:50Z",
       "side": 1,
       "message": "This is not required i believe",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1eb886a9_1486c96c",
+        "filename": "tosca-controlloop/runtime/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "we are using the following classes:\norg.onap.policy.clamp.controlloop.common.ControlLoopConstants\norg.onap.policy.clamp.controlloop.common.exception.ControlLoopException\norg.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException",
+      "parentUuid": "19d49a2f_3528ef1c",
       "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "e40d631c_e92d1478",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04fb7d77_dfbae76b",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d029a144_d3001e19",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e204a13_89871714",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d029a144_d3001e19",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "e3e54658_5367570c",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06d9ff47_6eed72d5",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1aff9e9_c17cdce9",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantStateChangeParameters.java",
         "patchSetId": 2
@@ -98,6 +188,24 @@
       "writtenOn": "2021-02-22T10:26:50Z",
       "side": 1,
       "message": "Empty class ???",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8184169b_3e0ceff3",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantStateChangeParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "there is a constructor",
+      "parentUuid": "b1aff9e9_c17cdce9",
       "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "88ade7b3_c00eef8e",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantUpdateParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "there is a constructor",
+      "parentUuid": "9e949cf7_d5571cf4",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e048166_07af70c2",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
         "patchSetId": 2
@@ -132,6 +258,24 @@
       "writtenOn": "2021-02-22T10:26:50Z",
       "side": 1,
       "message": "As you have some exceptions, you can probably add a try/catch for nullpointer because if clRuntimeParameterGroup is null, it\u0027s going to crash\nOr add a test ?",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76add45b_ebe8e4ce",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "clRuntimeParameterGroup is validated at Main level, and there are tests for not valid parameters in MainTests.",
+      "parentUuid": "6e048166_07af70c2",
       "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -152,6 +296,24 @@
       "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab550b31_9b25ad52",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-22T14:47:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6d1c65a_c00941fd",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
