@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2fb3271d_f24e5243",
+        "filename": "ui-react/src/components/menu/MenuBar.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-22T13:22:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a38757ab_18a4cb5e",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 3
+      },
+      "revId": "62a56970e88c36007d86d4baec42f2f356d82cb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee572788_0d250ba4",
         "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
         "patchSetId": 1
@@ -141,6 +165,30 @@
       "revId": "62a56970e88c36007d86d4baec42f2f356d82cb7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9fd8f4a_91a773f9",
+        "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-22T13:22:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f8ce3f59_a0d988dc",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 2
+      },
+      "revId": "62a56970e88c36007d86d4baec42f2f356d82cb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
