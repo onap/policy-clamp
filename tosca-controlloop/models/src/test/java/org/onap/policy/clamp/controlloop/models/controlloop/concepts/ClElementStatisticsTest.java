@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Date;
+import java.time.Instant;
 import org.junit.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -44,7 +44,7 @@ public class ClElementStatisticsTest {
 
         ClElementStatistics cles1 = new ClElementStatistics();
         cles1.setControlLoopElementId(new ToscaConceptIdentifier("defName", "0.0.1"));
-        cles1.setTimeStamp(new Date(System.currentTimeMillis()));
+        cles1.setTimeStamp(Instant.now());
 
         assertThat(cles1.toString()).contains("ClElementStatistics(");
         assertEquals(false, cles1.hashCode() == 0);

@@ -20,8 +20,8 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -115,7 +115,7 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting clElement statistics
      */
     public List<ClElementStatistics> getClElementStatistics(final String name, final String version,
-            final Date timestamp) throws PfModelException {
+            final Instant timestamp) throws PfModelException {
 
         if (name != null && version != null && timestamp != null) {
             List<ClElementStatistics> clElementStatistics = new ArrayList<>(1);
@@ -139,8 +139,8 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting policies
      */
     public List<ClElementStatistics> getFilteredClElementStatistics(final String name, final String version,
-            final Date startTimeStamp, final Date endTimeStamp, Map<String, Object> filterMap, final String sortOrder,
-            final int getRecordNum) {
+            final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
+            final String sortOrder, final int getRecordNum) {
         return asClElementStatisticsList(getPfDao().getFiltered(JpaClElementStatistics.class, name, version,
                 startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
     }

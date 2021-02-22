@@ -21,7 +21,7 @@
 package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -39,7 +39,7 @@ public class ParticipantStatistics implements Serializable {
     private ToscaConceptIdentifier participantId;
 
     @NonNull
-    private Date timeStamp;
+    private Instant timeStamp;
 
     private ParticipantState state;
     private ParticipantHealthStatus healthStatus;

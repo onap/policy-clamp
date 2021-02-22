@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.After;
@@ -102,9 +102,9 @@ public class ClElementStatisticsProviderTest {
             .getClElementStatistics());
         ToscaConceptIdentifier identifier = inputClElementStats.getClElementStatistics().get(0)
             .getControlLoopElementId();
-        Date date = inputClElementStats.getClElementStatistics().get(0).getTimeStamp();
+        Instant instant = inputClElementStats.getClElementStatistics().get(0).getTimeStamp();
         assertEquals(1, clElementStatisticsProvider.getClElementStatistics(identifier.getName(),
-            identifier.getVersion(), date).size());
+            identifier.getVersion(), instant).size());
 
         assertEquals(1, clElementStatisticsProvider.getFilteredClElementStatistics("name2",
             "1.0.1", null, null, null,

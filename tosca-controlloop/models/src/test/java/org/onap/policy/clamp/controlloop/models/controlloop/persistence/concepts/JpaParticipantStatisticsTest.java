@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Date;
+import java.time.Instant;
 import org.junit.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
@@ -93,7 +93,8 @@ public class JpaParticipantStatisticsTest {
         testJpaParticipantStatisticsFa.setKey(PfTimestampKey.getNullKey());
         testJpaParticipantStatisticsFa.fromAuthorative(cles);
         assertEquals(testJpaParticipantStatistics, testJpaParticipantStatisticsFa);
-        testJpaParticipantStatisticsFa.setKey(new PfTimestampKey("participantName", "0.0.1", new Date(123456L)));
+        testJpaParticipantStatisticsFa
+                .setKey(new PfTimestampKey("participantName", "0.0.1", Instant.ofEpochMilli(123456L)));
         testJpaParticipantStatisticsFa.fromAuthorative(cles);
         assertEquals(testJpaParticipantStatistics, testJpaParticipantStatisticsFa);
 
@@ -183,7 +184,7 @@ public class JpaParticipantStatisticsTest {
     private ParticipantStatistics createParticipantStatisticsInstance() {
         ParticipantStatistics participantStatistics = new ParticipantStatistics();
         participantStatistics.setParticipantId(new ToscaConceptIdentifier("participantName", "0.0.1"));
-        participantStatistics.setTimeStamp(new Date(123456L));
+        participantStatistics.setTimeStamp(Instant.ofEpochMilli(123456L));
         participantStatistics.setState(ParticipantState.PASSIVE);
         participantStatistics.setHealthStatus(ParticipantHealthStatus.HEALTHY);
 
