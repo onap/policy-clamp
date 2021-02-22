@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "708e9629_f4d606eb",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-22T17:32:26Z",
+      "side": 1,
+      "message": "this is probably safest, though I\u0027m also OK leaving it out since, as you pointed out, these checks were already made in Main.",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "72d0e75e_9b5cda39",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-22T17:32:26Z",
+      "side": 1,
+      "message": "I can\u0027t remember, does isValid() invoke validate() and throw an exception if it fails?",
+      "range": {
+        "startLine": 58,
+        "startChar": 72,
+        "endLine": 58,
+        "endChar": 79
+      },
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
