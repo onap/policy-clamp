@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "159539c7_469a19b3",
+        "filename": "tosca-controlloop/.gitignore",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-22T13:33:22Z",
+      "side": 1,
+      "message": "Shouldn\u0027t need this at this level - a .gitignore at the root of the project would (or should) have this declared.",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19d49a2f_3528ef1c",
         "filename": "tosca-controlloop/runtime/pom.xml",
         "patchSetId": 2
