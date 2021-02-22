@@ -117,6 +117,30 @@
       "revId": "62a56970e88c36007d86d4baec42f2f356d82cb7",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8ce3f59_a0d988dc",
+        "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-22T08:12:49Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "078614f5_d1d5210b",
+      "range": {
+        "startLine": 6,
+        "startChar": 0,
+        "endLine": 6,
+        "endChar": 2
+      },
+      "revId": "62a56970e88c36007d86d4baec42f2f356d82cb7",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
