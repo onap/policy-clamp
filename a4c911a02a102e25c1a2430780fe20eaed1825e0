@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "9c6f50c5_dce7f65c",
+        "filename": "tosca-controlloop/runtime/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-22T14:56:57Z",
+      "side": 1,
+      "message": "I think Seb was referring to com.h2database.  Is H2 used in the junit tests?  If not, it can be removed from the dependency list",
+      "parentUuid": "1eb886a9_1486c96c",
+      "revId": "a4c911a02a102e25c1a2430780fe20eaed1825e0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "04fb7d77_dfbae76b",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ClRuntimeParameterHandler.java",
         "patchSetId": 2
