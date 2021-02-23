@@ -282,6 +282,24 @@
       "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b369a17_b1464bd2",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-23T13:50:07Z",
+      "side": 1,
+      "message": "null check is unnecessary here\n\nhowever, let\u0027s create a JIRA for Istanbul.  I tend to agree that this should simply call Main.shutdown().  That would reduce the amount of code to maintain and increase the coverage by junit, at the same time.",
+      "parentUuid": "0948a41d_9f91d9de",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
