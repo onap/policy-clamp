@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ec89d0ce_325b4772",
+        "filename": "tosca-controlloop/.gitignore",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-23T10:39:16Z",
+      "side": 1,
+      "message": "The main .gitignore in the repo already contains that, it contains \"/target\"\nTherefore I\u0027m not quite sure why we need that one ?\nIf you really want that value instead of \"/target\", I would suggest to remove this gitignore and store the new entry \"target/\" in the main .gitignore located one level up.\n\nI think, it\u0027s easier to have only one gitignore in the main repo than having multiple gitignore stored anywhere in the hierarchy.",
+      "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
