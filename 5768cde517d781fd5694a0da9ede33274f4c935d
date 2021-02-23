@@ -158,6 +158,40 @@
       "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "776b2395_5771e1f5",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-23T10:16:40Z",
+      "side": 1,
+      "message": "Which code does the shutdown ? The method shutdown() line 110 or the Thread Run line 123 ?\nAre they used in different cases may be ?",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25ca7132_896256a5",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-23T10:16:40Z",
+      "side": 1,
+      "message": "If activator is null, the thread is going to crash, is that a problem in your case ?\n\nAs you check it in the shutdown method(line 110), i was wondering why is it not tested here as well?",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
