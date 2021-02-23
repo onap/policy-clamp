@@ -31,9 +31,7 @@ import com.google.gson.JsonObject;
 import java.util.Map;
 import java.util.Set;
 import org.onap.policy.clamp.clds.tosca.ToscaSchemaConstants;
-import org.onap.policy.clamp.clds.tosca.ToscaSchemaConstants;
 import org.onap.policy.clamp.clds.tosca.update.execution.ToscaMetadataProcess;
-import org.onap.policy.clamp.clds.tosca.update.execution.target.ToscaMetadataTargetProcess;
 import org.onap.policy.clamp.loop.service.Service;
 
 
