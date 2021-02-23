@@ -101,4 +101,16 @@ public class PoliciesPdpMerger {
                         policyJsonNode.get("type_version").getAsString());
         mergeJsonElement(policyJsonNode, supportedPdpGroupsJson);
     }
+
+    /**
+     * This method removes the pdp States added for one policy.
+     *
+     * @param policyJsonNode The policy node in Json
+     */
+    public static JsonObject removePdpStatesOnePolicy(JsonObject policyJsonNode) {
+        // Simply remove the nodes we have added.
+        policyJsonNode.remove(PdpGroupsAnalyzer.ASSIGNED_PDP_GROUPS_INFO);
+        policyJsonNode.remove(PdpGroupsAnalyzer.SUPPORTED_PDP_GROUPS_INFO);
+        return policyJsonNode;
+    }
 }

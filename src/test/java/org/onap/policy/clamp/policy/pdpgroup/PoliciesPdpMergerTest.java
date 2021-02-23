@@ -25,6 +25,7 @@ package org.onap.policy.clamp.policy.pdpgroup;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.Arrays;
 import org.junit.BeforeClass;
@@ -98,5 +99,16 @@ public class PoliciesPdpMergerTest {
                 PoliciesPdpMerger.mergePoliciesAndPdpGroupStates(
                         ResourceFileUtils.getResourceAsString("http-cache/example/policy/api/v1/policies/.file"),
                         pdpGroupsJson).toString(), true);
+    }
+
+    @Test
+    public void testRemovePdpStatesOnePolicy() throws IOException {
+        JsonObject policiesList = PoliciesPdpMerger.removePdpStatesOnePolicy(JsonUtils.GSON
+                .fromJson(ResourceFileUtils.getResourceAsString("example/policy/single-policy-enriched.json"),
+                        JsonObject.class));
+
+        assertThat(policiesList.get(PdpGroupsAnalyzer.ASSIGNED_PDP_GROUPS_INFO)).isNull();
+        assertThat(policiesList.get(PdpGroupsAnalyzer.SUPPORTED_PDP_GROUPS_INFO)).isNull();
+        assertThat(policiesList.size()).isEqualTo(6);
     }
 }
