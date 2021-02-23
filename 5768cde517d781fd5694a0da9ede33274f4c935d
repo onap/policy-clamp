@@ -214,6 +214,24 @@
     },
     {
       "key": {
+        "uuid": "eeaa6079_88e1a3d3",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-23T12:39:01Z",
+      "side": 1,
+      "message": "Can we discuss this at the scrum or the committers meeting? If we change this way of starting, then we need to do it in all the Policy Framework components. If we decide to change things, we could write a JIRA and take it in the project as a whole.",
+      "parentUuid": "1b507f10_72cd10d7",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25ca7132_896256a5",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
         "patchSetId": 6
