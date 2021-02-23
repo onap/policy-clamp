@@ -172,41 +172,27 @@
         </doTry>
     </route>
 
-    <route id="delete-policy">
-        <from uri="direct:delete-policy"/>
+    <route id="delete-policy-from-loop-object">
+        <from uri="direct:delete-policy-from-loop-object"/>
         <doTry>
             <log loggingLevel="INFO"
-                 message="Deleting Policy: ${exchangeProperty[policy].getName()}"/>
+                 message="Deleting Policy in a loop: ${exchangeProperty[policy].getName()}"/>
             <to
-                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Policy')"/>
-            <setBody>
-                <constant>null</constant>
-            </setBody>
-            <setHeader headerName="CamelHttpMethod">
-                <constant>DELETE</constant>
-            </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
-                <simple>${exchangeProperty[X-ONAP-RequestID]}
-                </simple>
-            </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
-                <simple>${exchangeProperty[X-ONAP-InvocationID]}
-                </simple>
-            </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
-                <simple>${exchangeProperty[X-ONAP-PartnerName]}
-                </simple>
-            </setHeader>
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Policy in a loop')"/>
+            <setProperty propertyName="policyModelType">
+                <simple>${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}</simple>
+            </setProperty>
+            <setProperty propertyName="policyModelVersion">
+                <simple>${exchangeProperty[policy].getPolicyModel().getVersion()</simple>
+            </setProperty>
+            <setProperty propertyName="policyName">
+                <simple>${exchangeProperty[policy].getName()}</simple>
+            </setProperty>
             <setProperty propertyName="policyVersion">
                 <simple>1.0.0</simple>
             </setProperty>
-            <log loggingLevel="INFO"
-                 message="Endpoint to delete policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies/${exchangeProperty[policy].getName()}/versions/${exchangeProperty[policyVersion]}"></log>
-            <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}/versions/${exchangeProperty[policy].getPolicyModel().getVersion()}/policies/${exchangeProperty[policy].getName()}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
-
+            <to uri="direct:delete-policy"/>
             <doFinally>
-                <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
                 <setProperty propertyName="logMessage">
@@ -568,6 +554,43 @@
                  message="Endpoint to create policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies"></log>
             <toD
                     uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
+    <route id="delete-policy">
+        <from uri="direct:delete-policy"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Deleting Policy: ${exchangeProperty[policyName]}"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Policy')"/>
+            <setBody>
+                <constant>null</constant>
+            </setBody>
+            <setHeader headerName="CamelHttpMethod">
+                <constant>DELETE</constant>
+            </setHeader>
+            <setHeader headerName="X-ONAP-RequestID">
+                <simple>${exchangeProperty[X-ONAP-RequestID]}
+                </simple>
+            </setHeader>
+            <setHeader headerName="X-ONAP-InvocationID">
+                <simple>${exchangeProperty[X-ONAP-InvocationID]}
+                </simple>
+            </setHeader>
+            <setHeader headerName="X-ONAP-PartnerName">
+                <simple>${exchangeProperty[X-ONAP-PartnerName]}
+                </simple>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to delete policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}"></log>
+            <toD
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
