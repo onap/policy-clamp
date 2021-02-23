@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f51318f2_567a7a2d",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/tosca/update/execution/ToscaMetadataExecutor.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-23T12:40:27Z",
+      "side": 1,
+      "message": "Maybe change the date if you get a chance.",
+      "range": {
+        "startLine": 5,
+        "startChar": 17,
+        "endLine": 5,
+        "endChar": 21
+      },
+      "revId": "6147cef5eff240afac874a221e7df8a1a25af656",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
