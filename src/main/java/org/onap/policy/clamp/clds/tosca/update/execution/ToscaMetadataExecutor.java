@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.onap.policy.clamp.clds.tosca.update.execution.cds.ToscaMetadataCdsProcess;
-import org.onap.policy.clamp.clds.tosca.update.execution.target.ToscaMetadataTargetProcess;
 import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.tosca.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;

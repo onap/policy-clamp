@@ -21,13 +21,11 @@
  *
  */
 
-package org.onap.policy.clamp.clds.tosca.update.execution.target;
+package org.onap.policy.clamp.clds.tosca.update.execution;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
-import org.onap.policy.clamp.clds.tosca.update.execution.ToscaMetadataExecutor;
-import org.onap.policy.clamp.clds.tosca.update.execution.ToscaMetadataProcess;
 import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.policy.operational.OperationalPolicyRepresentationBuilder;
 
@@ -35,6 +33,7 @@ import org.onap.policy.clamp.policy.operational.OperationalPolicyRepresentationB
  * This class is there to add the JsonObject for CDS in the json Schema according to what is found in the Tosca model.
  */
 public class ToscaMetadataTargetProcess extends ToscaMetadataProcess {
+
 
     private static final EELFLogger logger =
             EELFManager.getInstance().getLogger(ToscaMetadataTargetProcess.class);
