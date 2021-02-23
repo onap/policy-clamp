@@ -196,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "1b507f10_72cd10d7",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-23T12:34:57Z",
+      "side": 1,
+      "message": "The Thread code will not be tested then ? Instead the method shutdown (never called in reality from what i understood), will be tested ?\nWhy not merge the run and shutdown into a unique one, and call it from the thread Run method instead ?\nYou can give the instance of Main to your thread so that it can call the shutdown method?",
+      "parentUuid": "72aa3593_83cfc9a3",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25ca7132_896256a5",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
         "patchSetId": 6

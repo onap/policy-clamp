@@ -34,6 +34,24 @@
       "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15380c48_6ca874b5",
+        "filename": "tosca-controlloop/.gitignore",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-23T12:34:57Z",
+      "side": 1,
+      "message": "My bad, let\u0027s get rid of that annoying java package",
+      "parentUuid": "29f9e1f5_e2bc6918",
+      "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
