@@ -232,6 +232,24 @@
     },
     {
       "key": {
+        "uuid": "1b276733_ba025580",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-23T13:01:57Z",
+      "side": 1,
+      "message": "Sure we can do that, i\u0027m just pointing the fact that having a code just for testing is kind of an software testing anti-pattern 😊\nLike if (test) {} else {}.....",
+      "parentUuid": "eeaa6079_88e1a3d3",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25ca7132_896256a5",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
         "patchSetId": 6
