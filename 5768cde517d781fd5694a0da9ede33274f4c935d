@@ -161,6 +161,30 @@
     },
     {
       "key": {
+        "uuid": "78e6aff1_1e5041f8",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-23T14:34:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a6569235_4112205d",
+      "range": {
+        "startLine": 58,
+        "startChar": 72,
+        "endLine": 58,
+        "endChar": 79
+      },
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "776b2395_5771e1f5",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
         "patchSetId": 6
@@ -250,6 +274,24 @@
     },
     {
       "key": {
+        "uuid": "66e6dac8_2680e622",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-23T14:34:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1b276733_ba025580",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25ca7132_896256a5",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
         "patchSetId": 6
@@ -300,6 +342,24 @@
       "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ea5325c_4450c2de",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-23T14:34:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2b369a17_b1464bd2",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
