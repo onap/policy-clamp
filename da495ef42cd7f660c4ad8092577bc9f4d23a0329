@@ -70,6 +70,24 @@
       "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36f3c95a_7e67ba5e",
+        "filename": "tosca-controlloop/.gitignore",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-23T14:13:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1e70e57_b5719438",
+      "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
