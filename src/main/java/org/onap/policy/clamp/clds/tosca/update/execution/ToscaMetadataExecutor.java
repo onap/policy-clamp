@@ -2,7 +2,7 @@
  * ============LICENSE_START=======================================================
  * ONAP CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.onap.policy.clamp.clds.tosca.update.execution.cds.ToscaMetadataCdsProcess;
-import org.onap.policy.clamp.clds.tosca.update.execution.target.ToscaMetadataTargetProcess;
 import org.onap.policy.clamp.loop.service.Service;
 import org.onap.policy.clamp.tosca.DictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
