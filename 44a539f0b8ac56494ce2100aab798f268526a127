@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9076f31f_c433fac5",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-23T13:42:02Z",
+      "side": 1,
+      "message": "Seems like this is replacing an endpoint, vs introducing an endpoint as the commit message suggests.",
+      "range": {
+        "startLine": 25,
+        "startChar": 45,
+        "endLine": 25,
+        "endChar": 75
+      },
+      "revId": "44a539f0b8ac56494ce2100aab798f268526a127",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
