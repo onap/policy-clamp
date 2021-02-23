@@ -134,6 +134,30 @@
       "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6569235_4112205d",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-23T10:13:58Z",
+      "side": 1,
+      "message": "validate() method is called into ClRuntimeParameterHandler.getParameters() that throw ControlLoopException if parameters are not valid.\nMain calls ClRuntimeParameterHandler.getParameters() to get parameterGroup",
+      "parentUuid": "72d0e75e_9b5cda39",
+      "range": {
+        "startLine": 58,
+        "startChar": 72,
+        "endLine": 58,
+        "endChar": 79
+      },
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
