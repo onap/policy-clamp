@@ -16,6 +16,24 @@
       "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29f9e1f5_e2bc6918",
+        "filename": "tosca-controlloop/.gitignore",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-23T10:43:35Z",
+      "side": 1,
+      "message": "There is a directory in the source of CLAMP with the name \"target\", if we put an intry in the main .gitignore, we would shadow that directory.\n\nclamp % find src -type d -name target -print -exec ls {} \\;\nsrc/main/java/org/onap/policy/clamp/clds/tosca/update/execution/target\nToscaMetadataTargetProcess.java",
+      "parentUuid": "ec89d0ce_325b4772",
+      "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
