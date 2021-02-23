@@ -52,6 +52,24 @@
       "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1e70e57_b5719438",
+        "filename": "tosca-controlloop/.gitignore",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-23T13:57:33Z",
+      "side": 1,
+      "message": "You can therefore remove that change,the main gitignore should be ok now\nhttps://gerrit.onap.org/r/c/policy/clamp/+/117974",
+      "parentUuid": "15380c48_6ca874b5",
+      "revId": "da495ef42cd7f660c4ad8092577bc9f4d23a0329",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
