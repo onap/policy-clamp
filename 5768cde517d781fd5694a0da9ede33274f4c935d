@@ -178,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "72aa3593_83cfc9a3",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-23T10:36:35Z",
+      "side": 1,
+      "message": "This is Policy Framework template code. See also for example:\nhttps://github.com/onap/policy-pap/blob/master/main/src/main/java/org/onap/policy/pap/main/startstop/Main.java\n\nIt works as follows:\n\nThe shutDown() method works as a way of shutting down execution explicitly in test cases. We run an instance of the system by calling the Main method from test cases. The activator is checked for null here because this method can be explicitly invoked more than once during testing.\n\nThe shutdown hook is the regular way to shut down the server, so activator should never be null in this scenario, and if it is we want an exception to be thrown.",
+      "parentUuid": "776b2395_5771e1f5",
+      "revId": "5768cde517d781fd5694a0da9ede33274f4c935d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25ca7132_896256a5",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/Main.java",
         "patchSetId": 6
