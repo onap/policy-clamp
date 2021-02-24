@@ -29,6 +29,7 @@ import lombok.NonNull;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts.JpaControlLoop;
 import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
 import org.onap.policy.models.base.PfModelException;
@@ -36,7 +37,10 @@ import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
+import org.onap.policy.models.tosca.simple.concepts.JpaToscaNodeTemplate;
 
 /**
  * This class provides information on control loop concepts in the database to callers.
@@ -88,7 +92,7 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      */
     public List<ControlLoop> getControlLoops(final String name, final String version) throws PfModelException {
 
-        return asControlLoopList(getPfDao().getFiltered(JpaControlLoop.class, name, version));
+        return asEntityList(getPfDao().getFiltered(JpaControlLoop.class, name, version));
     }
 
     /**
@@ -100,8 +104,8 @@ public class ControlLoopProvider extends AbstractModelsProvider {
      */
     public List<ControlLoop> getFilteredControlLoops(@NonNull final ToscaTypedEntityFilter<ControlLoop> filter) {
 
-        return filter.filter(asControlLoopList(
-                getPfDao().getFiltered(JpaControlLoop.class, filter.getName(), PfKey.NULL_KEY_VERSION)));
+        return filter.filter(
+                asEntityList(getPfDao().getFiltered(JpaControlLoop.class, filter.getName(), PfKey.NULL_KEY_VERSION)));
     }
 
     /**
@@ -207,12 +211,38 @@ public class ControlLoopProvider extends AbstractModelsProvider {
     }
 
     /**
+     * Get Node Templates.
+     *
+     * @param name the name of the node template to get, null to get all node templates
+     * @param version the version of the node template to get, null to get all node templates
+     * @return the node templates found
+     * @throws PfModelException on errors getting node templates
+     */
+    public List<ToscaNodeTemplate> getNodeTemplates(final String name, final String version) {
+        return asEntityList(getPfDao().getFiltered(JpaToscaNodeTemplate.class, name, version));
+    }
+
+    /**
+     * Get filtered node templates.
+     *
+     * @param filter the filter for the node templates to get
+     * @return the node templates found
+     * @throws PfModelException on errors getting policies
+     */
+    public List<ToscaNodeTemplate> getFilteredNodeTemplates(
+            @NonNull final ToscaTypedEntityFilter<ToscaNodeTemplate> filter) {
+
+        return filter.filter(asEntityList(
+                getPfDao().getFiltered(JpaToscaNodeTemplate.class, filter.getName(), filter.getVersion())));
+    }
+
+    /**
      * Convert JPA control loop list to an authorative control loop list.
      *
-     * @param jpaControlLoopList the list to convert
+     * @param jpaEntityList the list to convert
      * @return the authorative list
      */
-    private List<ControlLoop> asControlLoopList(List<JpaControlLoop> jpaControlLoopList) {
-        return jpaControlLoopList.stream().map(JpaControlLoop::toAuthorative).collect(Collectors.toList());
+    private <T extends ToscaEntity, J extends PfAuthorative<T>> List<T> asEntityList(List<J> jpaEntityList) {
+        return jpaEntityList.stream().map(J::toAuthorative).collect(Collectors.toList());
     }
 }
