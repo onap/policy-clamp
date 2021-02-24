@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
+import java.time.Instant;
 import java.util.UUID;
 import org.junit.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
@@ -46,8 +47,8 @@ public class ParticipantControlLoopUpdateTest {
         id.setVersion("1.2.3");
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
-        orig.setRequestId(UUID.randomUUID());
-        orig.setTimestampMs(Long.valueOf(3000));
+        orig.setMessageId(UUID.randomUUID());
+        orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         ControlLoop controlLoop = new ControlLoop();
         controlLoop.setName("controlLoop");

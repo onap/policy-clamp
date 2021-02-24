@@ -53,7 +53,7 @@ public class ControlLoopTest {
         ControlLoop cl0 = new ControlLoop();
 
         assertThat(cl0.toString()).contains("ControlLoop(");
-        assertEquals(false, cl0.hashCode() == 0);
+        assertThat(cl0.hashCode()).isNotZero();
         assertEquals(true, cl0.equals(cl0));
         assertEquals(false, cl0.equals(null));
 

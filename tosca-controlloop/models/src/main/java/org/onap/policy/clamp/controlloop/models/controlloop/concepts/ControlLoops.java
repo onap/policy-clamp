@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.onap.policy.models.base.PfUtils;
 
 @Getter
 @Setter
@@ -32,4 +33,13 @@ import lombok.ToString;
 @AllArgsConstructor
 public class ControlLoops {
     private List<ControlLoop> controlLoopList;
+
+    /**
+     * Copy contructor, does a deep copy.
+     *
+     * @param otherControlLoops the other element to copy from
+     */
+    public ControlLoops(final ControlLoops otherControlLoops) {
+        this.controlLoopList = PfUtils.mapList(controlLoopList, ControlLoop::new);
+    }
 }

@@ -30,6 +30,6 @@ public class ParticipantMessageUtils {
     }
 
     public static String removeVariableFields(String text) {
-        return text.replaceAll("requestId=[^,]*", "requestId=xxx").replaceAll("timestampMs=[^,]*", "timestampMs=nnn");
+        return text.replaceAll("messageId=[^,]*", "messageId=xxx").replaceAll("timestamp=[^,]*", "timestamp=nnn");
     }
 }

@@ -33,5 +33,10 @@ public enum ParticipantResponseStatus {
     /**
      * participant operation failed.
      */
-    FAIL
+    FAIL,
+
+    /**
+     * periodic response.
+     */
+    PERIODIC
 }

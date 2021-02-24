@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.time.Instant;
 import java.util.UUID;
 import org.junit.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
@@ -40,15 +41,15 @@ public class ParticipantMessageTest {
         // verify with null values
         message = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
         ParticipantMessage newmsg = new ParticipantMessage(message);
-        newmsg.setRequestId(message.getRequestId());
-        newmsg.setTimestampMs(message.getTimestampMs());
+        newmsg.setMessageId(message.getMessageId());
+        newmsg.setTimestamp(message.getTimestamp());
         assertEquals(message.toString(), newmsg.toString());
 
         // verify with all values
         message = makeMessage();
         newmsg = new ParticipantMessage(message);
-        newmsg.setRequestId(message.getRequestId());
-        newmsg.setTimestampMs(message.getTimestampMs());
+        newmsg.setMessageId(message.getMessageId());
+        newmsg.setTimestamp(message.getTimestamp());
         assertEquals(message.toString(), newmsg.toString());
     }
 
@@ -93,8 +94,8 @@ public class ParticipantMessageTest {
         id.setVersion("1.2.3");
         msg.setControlLoopId(id);
         msg.setParticipantId(id);
-        msg.setRequestId(UUID.randomUUID());
-        msg.setTimestampMs(Long.valueOf(3000));
+        msg.setMessageId(UUID.randomUUID());
+        msg.setTimestamp(Instant.ofEpochMilli(3000));
 
         return msg;
     }

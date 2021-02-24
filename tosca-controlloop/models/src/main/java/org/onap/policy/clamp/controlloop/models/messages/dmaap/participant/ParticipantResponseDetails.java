@@ -41,6 +41,17 @@ public class ParticipantResponseDetails {
     private String responseMessage;
 
     /**
+     * Constructs the object as a response to.
+     *
+     * @param triggerMessage the message to which this is a response
+     */
+    public ParticipantResponseDetails(ParticipantMessage triggerMessage) {
+        this.responseMessage = null;
+        this.responseStatus = ParticipantResponseStatus.FAIL;
+        this.responseTo = triggerMessage.getMessageId();
+    }
+
+    /**
      * Constructs the object, making a deep copy.
      *
      * @param source source from which to copy

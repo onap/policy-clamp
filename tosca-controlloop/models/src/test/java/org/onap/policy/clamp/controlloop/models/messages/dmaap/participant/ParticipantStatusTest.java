@@ -24,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessageUtils.removeVariableFields;
 
+import java.time.Instant;
 import java.util.UUID;
 import org.junit.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
@@ -47,9 +48,9 @@ public class ParticipantStatusTest {
         id.setVersion("1.2.3");
         orig.setControlLoopId(id);
         orig.setParticipantId(id);
-        orig.setRequestId(UUID.randomUUID());
+        orig.setMessageId(UUID.randomUUID());
         orig.setState(ParticipantState.ACTIVE);
-        orig.setTimestampMs(Long.valueOf(3000));
+        orig.setTimestamp(Instant.ofEpochMilli(3000));
 
         final ParticipantResponseDetails resp = new ParticipantResponseDetails();
         resp.setResponseMessage("my-response");
