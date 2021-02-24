@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f24192bc_075c6124",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-24T15:23:23Z",
+      "side": 1,
+      "message": "I would suggest staying with 3.3.0 for now",
+      "range": {
+        "startLine": 36,
+        "startChar": 17,
+        "endLine": 36,
+        "endChar": 22
+      },
+      "revId": "dd48e8b2ba23a013d286796c6a8b506d8a84ec1f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
