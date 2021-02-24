@@ -34,12 +34,12 @@
     <name>${project.artifactId}</name>
 
     <dependencies>
-      <dependency>
+        <dependency>
             <groupId>org.onap.policy.clamp.controlloop</groupId>
             <artifactId>controlloop-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-      <dependency>
+        <dependency>
             <groupId>org.onap.policy.clamp.controlloop</groupId>
             <artifactId>controlloop-models</artifactId>
             <version>${project.version}</version>
