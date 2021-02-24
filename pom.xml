@@ -80,8 +80,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <eelf.core.version>1.0.0</eelf.core.version>
-        <camel.version>2.25.2</camel.version>
-        <springboot.version>2.2.10.RELEASE</springboot.version>
+        <camel.version>2.25.3</camel.version>
+        <springboot.version>2.2.13.RELEASE</springboot.version>
 
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <sonar.surefire.reportsPath>${project.build.directory}/surefire-reports</sonar.surefire.reportsPath>
@@ -512,6 +512,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+            <version>4.13</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
