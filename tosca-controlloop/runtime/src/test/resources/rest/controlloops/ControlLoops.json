@@ -1,0 +1,142 @@
+{
+    "controlLoopList": [
+        {
+            "name": "PMSHInstance0",
+            "version": "1.0.1",
+            "definition": {
+                "name": "org.onap.domain.pmsh.PMSHControlLoopDefinition",
+                "version": "1.2.3"
+            },
+            "state": "UNINITIALISED",
+            "orderedState": "UNINITIALISED",
+            "description": "PMSH control loop instance 0",
+            "elements": [
+                {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_DCAEMicroservice",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "DCAEParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "DCAE Control Loop Element for the PMSH instance 0 control loop"
+                },
+                {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c21",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "PolicyParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "Monitoring Policy Control Loop Element for the PMSH instance 0 control loop"
+                },
+                {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c22",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "PolicyParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "Operational Policy Control Loop Element for the PMSH instance 0 control loop"
+                },
+                {
+                    "id": "709c62b3-8918-41b9-a747-d21eb79c6c23",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "CDSParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "CDS Control Loop Element for the PMSH instance 0 control loop"
+                }
+            ]
+        },
+        {
+            "name": "PMSHInstance1",
+            "version": "1.0.1",
+            "definition": {
+                "name": "org.onap.domain.pmsh.PMSHControlLoopDefinition",
+                "version": "1.2.3"
+            },
+            "state": "UNINITIALISED",
+            "orderedState": "UNINITIALISED",
+            "description": "PMSH control loop instance 1",
+            "elements": [
+                {
+                    "id": "709c62b3-8918-41b9-a747-e21eb79c6c24",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_DCAEMicroservice",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "DCAEParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "DCAE Control Loop Element for the PMSH instance 1 control loop"
+                },
+                {
+                    "id": "709c62b3-8918-41b9-a747-e21eb79c6c25",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "PolicyParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "Monitoring Policy Control Loop Element for the PMSH instance 1 control loop"
+                },
+                {
+                    "id": "709c62b3-8918-41b9-a747-e21eb79c6c26",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "PolicyParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "Operational Policy Control Loop Element for the PMSH instance 1 control loop"
+                },
+                {
+                    "id": "709c62b3-8918-41b9-a747-e21eb79c6c27",
+                    "definition": {
+                        "name": "org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement",
+                        "version": "1.2.3"
+                    },
+                    "participantId": {
+                        "name": "CDSParticipant0",
+                        "version": "1.0.0"
+                    },
+                    "state": "UNINITIALISED",
+                    "orderedState": "UNINITIALISED",
+                    "description": "CDS Control Loop Element for the PMSH instance 1 control loop"
+                }
+            ]
+        }
+    ]
+}
