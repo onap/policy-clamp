@@ -16,6 +16,24 @@
       "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b31ab6e_ba89cf21",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-25T15:43:16Z",
+      "side": 1,
+      "message": "equals() is not overridden in ControlLoops",
+      "parentUuid": "75a242f2_f86eb004",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
