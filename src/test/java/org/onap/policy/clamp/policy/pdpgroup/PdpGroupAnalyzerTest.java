@@ -33,8 +33,7 @@ import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.onap.policy.models.pdp.concepts.PdpSubGroup;
 import org.onap.policy.models.pdp.enums.PdpState;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyIdentifier;
-import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyTypeIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * This test class validates the PdpGroupAnalyzer class.
@@ -52,33 +51,33 @@ public class PdpGroupAnalyzerTest {
         // Those that do not work first
         PdpSubGroup pdpSubgroupBad = new PdpSubGroup();
         pdpSubgroupBad.setPdpType("subGroupBad");
-        pdpSubgroupBad.setSupportedPolicyTypes(Arrays.asList(new ToscaPolicyTypeIdentifier("org.onap.test", "2.0.0"),
-                new ToscaPolicyTypeIdentifier("org.onap.test.*", "1.0.0"),
-                new ToscaPolicyTypeIdentifier("org.onip.testos", "1.0.0"),
-                new ToscaPolicyTypeIdentifier("org.onap.testos3", "2.0.0"),
-                new ToscaPolicyTypeIdentifier("org.onap.tes", "1.0.0"),
-                new ToscaPolicyTypeIdentifier("org.onap", "1.0.0")
+        pdpSubgroupBad.setSupportedPolicyTypes(Arrays.asList(new ToscaConceptIdentifier("org.onap.test", "2.0.0"),
+                new ToscaConceptIdentifier("org.onap.test.*", "1.0.0"),
+                new ToscaConceptIdentifier("org.onip.testos", "1.0.0"),
+                new ToscaConceptIdentifier("org.onap.testos3", "2.0.0"),
+                new ToscaConceptIdentifier("org.onap.tes", "1.0.0"),
+                new ToscaConceptIdentifier("org.onap", "1.0.0")
         ));
-        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaPolicyIdentifier("org.onap", "1.0.0")));
-        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaPolicyIdentifier("org.onap.testos", "2.0.0")));
-        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaPolicyIdentifier("org.onap.testos", "1.0.1")));
-        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaPolicyIdentifier("org.onap.testos.new", "1.0.0")));
-        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaPolicyIdentifier("org.onap.*", "1.0.0")));
+        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaConceptIdentifier("org.onap", "1.0.0")));
+        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaConceptIdentifier("org.onap.testos", "2.0.0")));
+        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")));
+        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaConceptIdentifier("org.onap.testos.new", "1.0.0")));
+        pdpSubgroupBad.setPolicies(Arrays.asList(new ToscaConceptIdentifier("org.onap.*", "1.0.0")));
 
         PdpSubGroup pdpSubgroup1 = new PdpSubGroup();
         pdpSubgroup1.setPdpType("subGroup1");
         pdpSubgroup1.setSupportedPolicyTypes(
-                Arrays.asList(new ToscaPolicyTypeIdentifier("org.onap.*", "1.0.0")));
+                Arrays.asList(new ToscaConceptIdentifier("org.onap.*", "1.0.0")));
 
         PdpSubGroup pdpSubgroup2 = new PdpSubGroup();
         pdpSubgroup2.setPdpType("subGroup2");
-        pdpSubgroup2.setSupportedPolicyTypes(Arrays.asList(new ToscaPolicyTypeIdentifier("org.onap.test", "1.0.0")));
-        pdpSubgroup2.setPolicies(Arrays.asList(new ToscaPolicyIdentifier("org.onap.testos", "1.0.0")));
+        pdpSubgroup2.setSupportedPolicyTypes(Arrays.asList(new ToscaConceptIdentifier("org.onap.test", "1.0.0")));
+        pdpSubgroup2.setPolicies(Arrays.asList(new ToscaConceptIdentifier("org.onap.testos", "1.0.0")));
 
         PdpSubGroup pdpSubgroup3 = new PdpSubGroup();
         pdpSubgroup3.setPdpType("subGroup3");
-        pdpSubgroup3.setSupportedPolicyTypes(Arrays.asList(new ToscaPolicyTypeIdentifier("org.onap.test*", "1.0.0")));
-        pdpSubgroup3.setPolicies(Arrays.asList(new ToscaPolicyIdentifier("org.onap.testos", "2.0.0")));
+        pdpSubgroup3.setSupportedPolicyTypes(Arrays.asList(new ToscaConceptIdentifier("org.onap.test*", "1.0.0")));
+        pdpSubgroup3.setPolicies(Arrays.asList(new ToscaConceptIdentifier("org.onap.testos", "2.0.0")));
 
         // Should match pdpSubgroup1
         PdpGroup pdpGroup1 = new PdpGroup();
