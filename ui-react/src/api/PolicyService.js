@@ -63,4 +63,24 @@ export default class PolicyService {
         throw new Error(error)
       });
   }
+  static deletePolicy(policyModelType, policyModelVersion, policyName, policyVersion) {
+    return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/'
+    + policyModelVersion + '/' + policyName + '/' + policyVersion, {
+            method: 'DELETE',
+            credentials: 'same-origin'
+        })
+      .then(function (response) {
+        console.debug("deletePolicy response received: ", response.status);
+        if (response.ok) {
+          return response.text;
+        } else {
+          console.error("deletePolicy query failed");
+          return "";
+        }
+      })
+      .catch(function (error) {
+        console.error("deletePolicy error received", error);
+        throw new Error(error)
+      });
+  }
 }
