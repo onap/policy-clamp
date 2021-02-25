@@ -20,7 +20,7 @@
 # limitations under the License.
 # ============LICENSE_END============================================
 # ===================================================================
-# 
+#
 ###
 
-mysqldump -uroot -p$MYSQL_ROOT_PASSWORD -v --extended-insert=FALSE --no-create-db --no-create-info --databases cldsdb4 > /docker-entrypoint-initdb.d/dump/test-data.sql
+mysqldump -uroot -p$MYSQL_ROOT_PASSWORD -v --extended-insert=FALSE --complete-insert --no-create-db --no-create-info --databases cldsdb4 > /docker-entrypoint-initdb.d/dump/test-data.sql
