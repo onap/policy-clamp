@@ -26,19 +26,22 @@ export default class PolicyService {
         method: 'GET',
         credentials: 'same-origin'
         })
-      .then(function (response) {
-        console.debug("getPoliciesList response received: ", response.status);
-        if (response.ok) {
-          return response.json();
-        } else {
-          console.error("getPoliciesList query failed");
-          return {};
-        }
-      })
-      .catch(function (error) {
-        console.error("getPoliciesList error received", error);
-        return {};
-      });
+        .then(function(response) {
+            console.debug("getPoliciesList response received: ", response.status);
+            if (response.ok) {
+                console.info("getPoliciesList query successful");
+                return response.json();
+            } else {
+                return response.text().then(responseBody => {
+                    throw new Error("HTTP " + response.status + "," + responseBody);
+                })
+            }
+        })
+        .catch(function(error) {
+            console.error("getPoliciesList query failed: ", error);
+            alert("getPoliciesList query failed " + error);
+            return "";
+        })
   }
   static createNewPolicy(policyModelType, policyModelVersion, policyJson) {
     return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/' + policyModelVersion, {
@@ -49,18 +52,44 @@ export default class PolicyService {
             },
             body: JSON.stringify(policyJson)
         })
-      .then(function (response) {
-        console.debug("createNewPolicy response received: ", response.status);
-        if (response.ok) {
-          return response.text;
-        } else {
-          console.error("createNewPolicy query failed");
-          return "";
-        }
-      })
-      .catch(function (error) {
-        console.error("createNewPolicy error received", error);
-        throw new Error(error)
-      });
+        .then(function (response) {
+            console.debug("createNewPolicy response received: ", response.status);
+            if (response.ok) {
+                console.info("createNewPolicy query successful");
+                return response.text();
+            } else {
+               return response.text().then(responseBody => {
+                    throw new Error("HTTP " + response.status + "," + responseBody);
+                })
+            }
+        })
+        .catch(function (error) {
+            console.error("createNewPolicy error received ", error);
+            alert ("createNewPolicy error received " + error);
+            return "";
+        });
+  }
+  static deletePolicy(policyModelType, policyModelVersion, policyName, policyVersion) {
+    return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/'
+        + policyModelVersion + '/' + policyName + '/' + policyVersion, {
+            method: 'DELETE',
+            credentials: 'same-origin'
+        })
+        .then(function (response) {
+            console.debug("deletePolicy response received: ", response.status);
+            if (response.ok) {
+                console.info("deletePolicy query successful");
+                return response.text();
+            } else {
+                return response.text().then(responseBody => {
+                    throw new Error("HTTP " + response.status + "," + responseBody);
+                })
+            }
+        })
+        .catch(function (error) {
+            console.error("deletePolicy error received ", error);
+            alert ("deletePolicy error received " + error);
+            return "";
+        });
   }
 }
