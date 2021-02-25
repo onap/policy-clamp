@@ -49,9 +49,11 @@ import Select from 'react-select';
 import JSONEditor from '@json-editor/json-editor';
 import OnapUtils from '../../../utils/OnapUtils';
 import Alert from 'react-bootstrap/Alert';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 
 const DivWhiteSpaceStyled = styled.div`
-	white-space: pre;
+    white-space: pre;
 `
 
 const ModalStyled = styled(Modal)`
@@ -259,7 +261,22 @@ export default class ViewAllPolicies extends React.Component {
     }
 
     handleDeletePolicy(event, rowData) {
-        return null;
+        PolicyService.deletePolicy(rowData["type"], rowData["type_version"], rowData["name"],rowData["version"]).then(
+            respPolicyDeletion => {
+                if (respPolicyDeletion === "") {
+                    //it indicates a failure
+                    this.setState({
+                        showFailAlert: true,
+                        showMessage: 'Policy Deletion Failure'
+                    });
+                } else {
+                    this.setState({
+                        showSuccessAlert: true,
+                        showMessage: 'Policy successfully Deleted'
+                    });
+                }
+            }
+        )
     }
 
     customValidation(editorData) {
@@ -324,53 +341,54 @@ export default class ViewAllPolicies extends React.Component {
             <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                 </Modal.Header>
-
-                <Modal.Body>
-                  <FormControlLabel
-                        control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
-                        label="Group by prefix"
-                      />
-                   <MaterialTable
-                      title={"View All Policies in Policy Engine"}
-                      data={this.state.policiesListData}
-                      columns={this.state.policyColumnsDefinition}
-                      icons={this.state.tableIcons}
-                      onRowClick={(event, rowData) => {this.handleOnRowClick(rowData)}}
-                      options={{
-                          grouping: true,
-                          exportButton: true,
-                          headerStyle:rowHeaderStyle,
-                          rowStyle: rowData => ({
-                            backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
-                          })
-                      }}
-                      actions={[
-                          {
-                            icon: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-                            tooltip: 'Delete Policy',
-                            onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
-                          }
-                      ]}
-                />
+                <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key, selectedRowData: {} })}>
+                    <Tab eventKey="policies" title="Policies in Policy Framework">
+                        <Modal.Body>
+                          <FormControlLabel
+                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
+                                label="Group by prefix"
+                              />
+                           <MaterialTable
+                              title={"View All Policies in Policy Engine"}
+                              data={this.state.policiesListData}
+                              columns={this.state.policyColumnsDefinition}
+                              icons={this.state.tableIcons}
+                              onRowClick={(event, rowData) => {this.handleOnRowClick(rowData)}}
+                              options={{
+                                  grouping: true,
+                                  exportButton: true,
+                                  headerStyle:rowHeaderStyle,
+                                  rowStyle: rowData => ({
+                                    backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
+                                  })
+                              }}
+                              actions={[
+                                  {
+                                    icon: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+                                    tooltip: 'Delete Policy',
+                                    onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
+                                  }
+                              ]}
+                           />
+                        </Modal.Body>
+                    </Tab>
+                </Tabs>
                 <JsonEditorDiv>
                     <h5>Policy Properties Editor</h5>
                     <div id="policy-editor" title="Policy Properties"/>
                     <Button variant="secondary" title="Create a new policy version from the defined parameters"
                         onClick={this.handleCreateNewVersion}>Create New Version</Button>
-                    <Button variant="secondary" title="Update the current policy version, BE CAREFUL this will undeploy the policy from PDP, delete it and then recreate the policy"
-                        onClick={this.handleUpdatePolicy}>Update Current Version</Button>
                 </JsonEditorDiv>
                 <Alert variant="success" show={this.state.showSuccessAlert} onClose={this.disableAlert} dismissible>
-                         <DivWhiteSpaceStyled>
-                                 {this.state.showMessage}
-                         </DivWhiteSpaceStyled>
-                 </Alert>
-                 <Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
-                         <DivWhiteSpaceStyled>
-                                 {this.state.showMessage}
-                         </DivWhiteSpaceStyled>
-                 </Alert>
-                </Modal.Body>
+                    <DivWhiteSpaceStyled>
+                        {this.state.showMessage}
+                    </DivWhiteSpaceStyled>
+                </Alert>
+                <Alert variant="danger" show={this.state.showFailAlert} onClose={this.disableAlert} dismissible>
+                    <DivWhiteSpaceStyled>
+                        {this.state.showMessage}
+                    </DivWhiteSpaceStyled>
+                </Alert>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={this.handleClose}>Close</Button>
                </Modal.Footer>
