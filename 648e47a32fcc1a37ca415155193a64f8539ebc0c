@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d2c0c07_e0bc076a",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-25T12:55:55Z",
+      "side": 1,
+      "message": "Seems like line 83 overwrites this, so remove? Unless you are ensuring that is at least an empty array there.",
+      "range": {
+        "startLine": 82,
+        "startChar": 8,
+        "endLine": 82,
+        "endChar": 60
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d327a13_867bdb1a",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-02-25T12:55:55Z",
+      "side": 1,
+      "message": "Duplicate method to line 87",
+      "range": {
+        "startLine": 91,
+        "startChar": 1,
+        "endLine": 101,
+        "endChar": 0
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
