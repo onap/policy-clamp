@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "143fe7f6_f21a22b6",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-02-25T16:38:19Z",
+      "side": 1,
+      "message": "do these methods (q applies to the ones below too) need to be synchronized?",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca4c4f93_de8b1e77",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-02-25T16:38:19Z",
+      "side": 1,
+      "message": "can you use assertThat .. isEmpty as line 73?   General Q, there are some other occurrences below.",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "75a242f2_f86eb004",
         "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
         "patchSetId": 3
