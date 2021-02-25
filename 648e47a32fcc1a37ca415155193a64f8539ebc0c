@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "47419774_ed4d64ff",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "class comment",
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d2c0c07_e0bc076a",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
         "patchSetId": 1
@@ -25,6 +42,149 @@
     },
     {
       "key": {
+        "uuid": "dec3f948_c0834ff2",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "what happens if some succeed, while another one throws an exception?",
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50f49ea7_ca6fa1a6",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "thorough - nice!",
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62cc29cb_2627b8a4",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "sonar (or checkstyle?) should start with uppercase\n\nsame comment for other methods (and other files?)",
+      "range": {
+        "startLine": 46,
+        "startChar": 7,
+        "endLine": 46,
+        "endChar": 11
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98980f24_916278aa",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "delete",
+      "range": {
+        "startLine": 50,
+        "startChar": 45,
+        "endLine": 50,
+        "endChar": 46
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a9c2bbe_0cdf07e5",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "can delete this, I think",
+      "range": {
+        "startLine": 58,
+        "startChar": 41,
+        "endLine": 58,
+        "endChar": 50
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b459591_f70dd6d2",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "can delete this, I think",
+      "range": {
+        "startLine": 76,
+        "startChar": 59,
+        "endLine": 76,
+        "endChar": 68
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a259110_75b9968b",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "why using string comparison instead of just a.equals(b)?\n\nsame question below",
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d327a13_867bdb1a",
         "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
         "patchSetId": 1
@@ -41,6 +201,76 @@
         "startChar": 1,
         "endLine": 101,
         "endChar": 0
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95c60279_f4ec747d",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "ControlLoop vs ControlLoops",
+      "parentUuid": "5d327a13_867bdb1a",
+      "range": {
+        "startLine": 91,
+        "startChar": 1,
+        "endLine": 101,
+        "endChar": 0
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a87351b4_2de467fe",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "if equals() will work, then use that instead, as it\u0027s clearer\n\nsame comment below",
+      "range": {
+        "startLine": 115,
+        "startChar": 37,
+        "endLine": 115,
+        "endChar": 46
+      },
+      "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b59b77c_bacdbd5a",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/util/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-25T13:23:23Z",
+      "side": 1,
+      "message": "use something unique to this test",
+      "range": {
+        "startLine": 65,
+        "startChar": 88,
+        "endLine": 65,
+        "endChar": 98
       },
       "revId": "648e47a32fcc1a37ca415155193a64f8539ebc0c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
