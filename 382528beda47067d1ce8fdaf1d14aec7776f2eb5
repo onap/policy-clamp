@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "010ae83e_3f52e8ef",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-26T14:00:02Z",
+      "side": 1,
+      "message": "The name is unclear, it seems to be dedicated to ControlLoop object ?",
+      "revId": "382528beda47067d1ce8fdaf1d14aec7776f2eb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5b75717_62db91ec",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-02-26T14:00:02Z",
+      "side": 1,
+      "message": "Dumb question, do we expect multiple JVM running that code at the same time ?\nOr it\u0027s going to be a singleton in the whole deployment ?",
+      "revId": "382528beda47067d1ce8fdaf1d14aec7776f2eb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9c539610_3aea102e",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
         "patchSetId": 4
