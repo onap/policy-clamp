@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "62021a36_d1d5756c",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T14:05:15Z",
+      "side": 1,
+      "message": "That\u0027s a whole other issue - we have at least one JIRA open to address transactions across multiple DB calls.",
+      "parentUuid": "e5b75717_62db91ec",
+      "revId": "382528beda47067d1ce8fdaf1d14aec7776f2eb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9c539610_3aea102e",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
         "patchSetId": 4
