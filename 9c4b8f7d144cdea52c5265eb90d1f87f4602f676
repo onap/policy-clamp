@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e8ed5b36_c485a6c6",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-26T10:21:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2e39a6f_3a37f8ab",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca4c4f93_de8b1e77",
         "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProviderTest.java",
         "patchSetId": 3
@@ -51,6 +69,24 @@
       "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e92bef6c_d6d0821c",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProviderTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-26T10:21:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca4c4f93_de8b1e77",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -104,6 +140,24 @@
       "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "070622f2_86162764",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-26T10:21:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0c81927_170c758d",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
