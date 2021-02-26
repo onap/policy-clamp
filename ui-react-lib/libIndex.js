@@ -42,6 +42,8 @@ export { default as OnapUtils } from './src/utils/OnapUtils';
 export { default as OpenLoopModal } from './src/components/dialogs/Loop/OpenLoopModal';
 export { default as PerformActions } from './src/components/dialogs/PerformActions';
 export { default as PolicyModal } from './src/components/dialogs/Policy/PolicyModal';
+export { default as ToscaViewer } from './src/components/dialogs/Policy/ToscaViewer';
+export { default as PolicyEditor } from './src/components/dialogs/Policy/PolicyEditor';
 export { default as PolicyToscaService } from './src/api/PolicyToscaService';
 export { default as RefreshStatus } from './src/components/dialogs/RefreshStatus';
 export { default as SvgGenerator } from './src/components/loop_viewer/svg/SvgGenerator';
