@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: S�bastien Determe <sebastien.determe@intl.att.com>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Submitted-by: S�bastien Determe <sebastien.determe@intl.att.com>
+Submitted-at: Fri, 26 Feb 2021 13:08:47 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/118486
+Project: policy/clamp
+Branch: refs/heads/tosca-poc
