@@ -165,7 +165,7 @@ public class PolicyEngineServices {
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yamlParser = new Yaml(options);
         String responseBody = callCamelRoute(
-                ExchangeBuilder.anExchange(camelContext).withProperty("policyModelName", policyType)
+                ExchangeBuilder.anExchange(camelContext).withProperty("policyModelType", policyType)
                         .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-tosca-model",
                 "Get one policy");
 
