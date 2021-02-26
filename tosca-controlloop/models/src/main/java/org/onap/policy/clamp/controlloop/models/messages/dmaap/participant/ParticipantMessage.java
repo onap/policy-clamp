@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.models.messages.dmaap.participant;
 
+import java.time.Instant;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,13 +40,13 @@ public class ParticipantMessage {
     @Setter(AccessLevel.NONE)
     private ParticipantMessageType messageType;
 
-    private UUID requestId = UUID.randomUUID();
+    private UUID messageId = UUID.randomUUID();
 
     /**
      * Time-stamp, in milliseconds, when the message was created. Defaults to the current
      * time.
      */
-    private long timestampMs = System.currentTimeMillis();
+    private Instant timestamp = Instant.now();
 
     /**
      * Participant ID, or {@code null} for state-change broadcast messages.
