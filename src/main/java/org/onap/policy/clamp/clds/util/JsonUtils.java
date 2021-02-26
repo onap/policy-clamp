@@ -40,10 +40,10 @@ public class JsonUtils {
 
     protected static final EELFLogger logger = EELFManager.getInstance().getLogger(JsonUtils.class);
 
-    public static final Gson GSON = new GsonBuilder()
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(SecureServicePermission.class, new SecureServicePermissionDeserializer()).create();
 
-    public static final Gson GSON_JPA_MODEL = new GsonBuilder()
+    public static final Gson GSON_JPA_MODEL = new GsonBuilder().setPrettyPrinting()
             .registerTypeAdapter(Instant.class, new InstantSerializer())
             .registerTypeAdapter(Instant.class, new InstantDeserializer()).setPrettyPrinting()
             .excludeFieldsWithoutExposeAnnotation().create();
