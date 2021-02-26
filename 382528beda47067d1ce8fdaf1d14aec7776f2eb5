@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "9630c1ed_e9fd0f2b",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-26T15:54:30Z",
+      "side": 1,
+      "message": "InstantiationProvider for now is not implemented as singleton yet.\nI agree that it would be better to use DB mechanisms than current approach.",
+      "parentUuid": "62021a36_d1d5756c",
+      "revId": "382528beda47067d1ce8fdaf1d14aec7776f2eb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c539610_3aea102e",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
         "patchSetId": 4
