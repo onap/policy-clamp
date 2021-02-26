@@ -1363,32 +1363,35 @@
         </get>
 
         <!-- Create a new policy -->
-        <post uri="/v2/policies/{policyModelName}/{policyModelVersion}"
+        <post uri="/v2/policies/{policyModelType}/{policyModelVersion}/{policyName}/{policyVersion}"
               type="com.google.gson.JsonElement"
               consumes="application/json"
               outType="com.google.gson.JsonObject"
               produces="application/json">
             <route>
                 <removeHeaders pattern="*"
-                               excludePattern="policyModelName|policyModelVersion"/>
+                               excludePattern="policyModelType|policyModelVersion|policyName|policyVersion"/>
                 <doTry>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'CREATE a new Policy ')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','update')"/>
-                    <setProperty propertyName="policyModelName">
-                        <simple>${header.policyModelName}</simple>
+                    <setProperty propertyName="policyModelType">
+                        <simple>${header.policyModelType}</simple>
                     </setProperty>
                     <setProperty propertyName="policyModelVersion">
                         <simple>${header.policyModelVersion}</simple>
                     </setProperty>
+                    <setProperty propertyName="policyProperties">
+                        <simple>${body}</simple>
+                    </setProperty>
+                    <to
+                       uri="bean:org.onap.policy.clamp.loop.template.PolicyModelsService?method=getPolicyModelTosca(${header.policyModelType},${header.policyModelVersion})"/>
                     <setBody>
-                        <method ref="org.onap.policy.clamp.policy.pdpgroup.PoliciesPdpMerger"
-                                method="removePdpStatesOnePolicy(${body})"/>
+                        <method ref="org.onap.policy.clamp.policy.PolicyPayload"
+                                method="createPolicyPayload(${header.policyModelType}, ${header.policyModelVersion},
+                                    ${header.policyName}, ${header.policyVersion}, ${exchangeProperty[policyProperties]}, ${body})"/>
                      </setBody>
-                    <setBody>
-                        <simple>${body.toString()}</simple>
-                    </setBody>
                     <to uri="direct:create-policy"/>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
