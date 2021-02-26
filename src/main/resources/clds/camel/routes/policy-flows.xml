@@ -183,7 +183,7 @@
                 <simple>${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}</simple>
             </setProperty>
             <setProperty propertyName="policyModelVersion">
-                <simple>${exchangeProperty[policy].getPolicyModel().getVersion()</simple>
+                <simple>${exchangeProperty[policy].getPolicyModel().getVersion()}</simple>
             </setProperty>
             <setProperty propertyName="policyName">
                 <simple>${exchangeProperty[policy].getName()}</simple>
@@ -386,7 +386,7 @@
         <from uri="direct:get-policy-tosca-model"/>
         <doTry>
             <log loggingLevel="INFO"
-                 message="Getting the policy tosca model: ${exchangeProperty[policyModelName]}/${exchangeProperty[policyModelVersion]}"/>
+                 message="Getting the policy tosca model: ${exchangeProperty[policyModelType]}/${exchangeProperty[policyModelVersion]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policy model')"/>
             <setHeader headerName="CamelHttpMethod">
@@ -405,9 +405,9 @@
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
-                 message="Endpoint to get policy model: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelName]}/versions/${exchangeProperty[policyModelVersion]}"></log>
+                 message="Endpoint to get policy model: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelName]}/versions/${exchangeProperty[policyModelVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
