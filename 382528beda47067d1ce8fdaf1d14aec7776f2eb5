@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1b4cbfe1_f3cfc554",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-26T14:59:32Z",
+      "side": 1,
+      "message": "This class will be dedicated to the Instantiation of Commissioned control loops. I have changed the class comment.",
+      "parentUuid": "010ae83e_3f52e8ef",
+      "revId": "382528beda47067d1ce8fdaf1d14aec7776f2eb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5b75717_62db91ec",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
         "patchSetId": 4
@@ -68,6 +86,24 @@
       "revId": "382528beda47067d1ce8fdaf1d14aec7776f2eb5",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e717731a_ffc52552",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-02-26T14:59:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c539610_3aea102e",
+      "revId": "382528beda47067d1ce8fdaf1d14aec7776f2eb5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
