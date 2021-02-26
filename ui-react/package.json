@@ -1,11 +1,11 @@
 {
 	"name": "onap-policy-clamp-ui",
-	"version": "${project.version}",
+	"version": "6.0.1-SNAPSHOT",
 	"description": "ONAP Policy Clamp UI",
 	"author": "ONAP Policy Team",
 	"license": "Apache-2.0",
 	"publishConfig": {
-		"registry": "${npm.publish.url}"
+		"registry": "https://nexus3.onap.org/repository/npm.snapshot/"
 	},
 	"main": "index.js",
 	"proxy": "https://localhost:8443",
@@ -36,7 +36,8 @@
 		"@material-ui/core": "4.9.11",
 		"@material-ui/icons": "4.9.1",
 		"material-table": "1.57.2",
-		"react-select": "3.0.8"
+		"react-select": "3.0.8",
+		"react-uuid": "1.0.2"
 	},
 	"devDependencies": {
 		"jest": "24.8.0",
@@ -57,11 +58,11 @@
 	],
 	"jest": {
 		"verbose": true,
-		"coverageDirectory": "${project.build.directory}/${ui.react.src}/coverage",
+		"coverageDirectory": "/home/seb/lf-repos/policy/clamp/target/ui-react/coverage",
 		"collectCoverageFrom": [
 			"**/*.{js,jsx}"
 		],
-		"rootDir": "${project.build.directory}/${ui.react.src}",
+		"rootDir": "/home/seb/lf-repos/policy/clamp/target/ui-react",
 		"coverageReporters": [
 			"lcov"
 		],
@@ -93,4 +94,3 @@
 		]
 	}
 }
-
