@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "f873712d_c57f05ec",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-02-26T10:42:30Z",
+      "side": 1,
+      "message": "I would like to look at locking and transaction handling again in all our DB handling, It would be better to use DB mechanisms than our current approach even in the policy models providers.",
+      "parentUuid": "e8ed5b36_c485a6c6",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca4c4f93_de8b1e77",
         "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProviderTest.java",
         "patchSetId": 3
