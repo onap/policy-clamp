@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e2e39a6f_3a37f8ab",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProvider.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T04:46:40Z",
+      "side": 1,
+      "message": "and would that be sufficient (i.e., if there is more than one InstantiationProvider, then synchronizing the methods would not satisfy the concern)?",
+      "parentUuid": "143fe7f6_f21a22b6",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca4c4f93_de8b1e77",
         "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationProviderTest.java",
         "patchSetId": 3
@@ -65,6 +83,24 @@
       "side": 1,
       "message": "equals() is not overridden in ControlLoops",
       "parentUuid": "75a242f2_f86eb004",
+      "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0c81927_170c758d",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-02-26T04:46:40Z",
+      "side": 1,
+      "message": "probably should be",
+      "parentUuid": "5b31ab6e_ba89cf21",
       "revId": "9c4b8f7d144cdea52c5265eb90d1f87f4602f676",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
