@@ -90,6 +90,9 @@ export const DefaultClampTheme = {
 	menuHighlightedBackgroundColor: '#337ab7',
 	menuHighlightedFontColor: 'white',
 
-	toscaTextareaBackgroundColor: '#E8E8E8',
-	toscaTextareaFontSize: '13px'
+	toscaTextareaBackgroundColor: 'white',
+	toscaTextareaFontSize: '13px',
+
+	policyEditorBackgroundColor: 'white',
+	policyEditorFontSize: '13px'
 };
