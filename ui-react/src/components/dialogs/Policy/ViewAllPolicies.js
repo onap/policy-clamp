@@ -31,7 +31,7 @@ import Check from '@material-ui/icons/Check';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import Edit from '@material-ui/icons/Edit';
 import FilterList from '@material-ui/icons/FilterList';
 import FirstPage from '@material-ui/icons/FirstPage';
@@ -40,6 +40,9 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import DescriptionIcon from '@material-ui/icons/Description';
+import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
+import NoteAddIcon from '@material-ui/icons/NoteAdd';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import MaterialTable from "material-table";
@@ -51,31 +54,32 @@ import OnapUtils from '../../../utils/OnapUtils';
 import Alert from 'react-bootstrap/Alert';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
+import PolicyEditor from './PolicyEditor';
+import ToscaViewer from './ToscaViewer';
 
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
 `
 
 const ModalStyled = styled(Modal)`
-    @media (min-width: 1200px) {
+    @media (min-width: 1000px) {
         .modal-xl {
             max-width: 96%;
         }
     }
     background-color: transparent;
 `
-const JsonEditorDiv = styled.div`
-    margin-top: 20px;
-    background-color: ${props => props.theme.toscaTextareaBackgroundColor};
-    text-align: justify;
-    font-size: ${props => props.theme.toscaTextareaFontSize};
-    width: 100%;
-    height: 30%;
-    border: 1px solid black;
+const DetailedRow = styled.div`
+    margin: 0 auto;
+    background-color: ${props => props.theme.policyEditorBackgroundColor};
+    font-size: ${props => props.theme.policyEditorFontSize};
+    width: 97%;
+    margin-left: auto;
+    margin-right: 0;
 `
 
 
-const standardCellStyle = { border: '1px solid black' };
+const standardCellStyle = { backgroundColor: '#039be5', color: '#FFF', border: '1px solid black' };
 const cellPdpGroupStyle = { backgroundColor: '#039be5', color: '#FFF', border: '1px solid black'};
 const headerStyle = { backgroundColor: '#ddd',    border: '2px solid black' };
 const rowHeaderStyle = {backgroundColor:'#ddd',  fontSize: '15pt', text: 'bold', border: '1px solid black'};
@@ -86,6 +90,8 @@ export default class ViewAllPolicies extends React.Component {
         content: 'Please select a policy to display it',
         selectedRowId: -1,
         policiesListData: [],
+        toscaModelsListData: [],
+        jsonEditorForPolicy: new Map(),
         prefixGrouping: false,
         showSuccessAlert: false,
         showFailAlert: false,
@@ -128,11 +134,38 @@ export default class ViewAllPolicies extends React.Component {
                 headerStyle: headerStyle
             }
         ],
+        toscaColumnsDefinition: [
+            {
+                title: "Policy Model Type", field: "policyModelType",
+                cellStyle: standardCellStyle,
+                headerStyle: headerStyle
+            },
+            { 
+                title: "Policy Acronym", field: "policyAcronym",
+                cellStyle: standardCellStyle,
+                headerStyle: headerStyle
+            },
+            { 
+                title: "Version", field: "version",
+                cellStyle: standardCellStyle,
+                headerStyle: headerStyle
+            },
+            { 
+                title: "Uploaded By", field: "updatedBy",
+                cellStyle: standardCellStyle,
+                headerStyle: headerStyle
+            },
+            { 
+                title: "Uploaded Date", field: "updatedDate", editable: 'never',
+                cellStyle: standardCellStyle,
+                headerStyle: headerStyle
+            }
+        ],
         tableIcons: {
             Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
             Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
             Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-            Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+            Delete: forwardRef((props, ref) => <DeleteRoundedIcon {...props} ref={ref} />),
             DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
             Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
             Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
@@ -158,10 +191,16 @@ export default class ViewAllPolicies extends React.Component {
         this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.handleUpdatePolicy = this.handleUpdatePolicy.bind(this);
-        this.handleCreateNewVersion = this.handleCreateNewVersion.bind(this);
         this.disableAlert = this.disableAlert.bind(this);
+        this.getToscaPolicyModelYaml = this.getToscaPolicyModelYaml.bind(this);
         this.getAllPolicies();
+        this.getAllToscaModels();
+    }
 
+    getAllToscaModels() {
+        PolicyToscaService.getToscaPolicyModels().then(toscaModelsList => {
+            this.setState({ toscaModelsListData: toscaModelsList });
+        });
     }
 
     handlePdpGroupChange(e) {
@@ -239,19 +278,25 @@ export default class ViewAllPolicies extends React.Component {
             this.setState({ policiesListData: allPolicies["policies"] })
         });
     }
+    
+    getToscaPolicyModelYaml(rowId, policyModelType, policyModelVersion) {
+        PolicyToscaService.getToscaPolicyModelYaml(policyModelType, policyModelVersion).then(toscaYaml => {
+            this.state.toscaModelsForPolicy.set(rowId, toscaYaml);
+        });
+    }
 
     handleClose() {
         this.setState({ show: false });
         this.props.history.push('/')
     }
 
-    handleOnRowClick(rowData) {
+    handleOnToscaRowClick(rowData) {
         PolicyToscaService.getToscaPolicyModel(rowData["type"], rowData["type_version"]).then(respJsonPolicyTosca => {
             this.setState({
                 selectedRowId: rowData.tableData.id,
                 selectedRowIdJsonSchema: respJsonPolicyTosca,
                 selectedRowIdPolicyProperties: rowData["properties"],
-                jsonEditorForPolicy: this.createJsonEditor(respJsonPolicyTosca, rowData["properties"])
+                jsonEditorForTosca: this.createJsonEditor(respJsonPolicyTosca, rowData["properties"])
                 });
         });
     }
@@ -284,49 +329,6 @@ export default class ViewAllPolicies extends React.Component {
         return [];
     }
 
-    handleCreateNewVersion() {
-        var editorData = this.state.jsonEditorForPolicy.getValue();
-        var errors = this.state.jsonEditorForPolicy.validate();
-        errors = errors.concat(this.customValidation(editorData));
-
-        if (errors.length !== 0) {
-            console.error("Errors detected during policy data validation ", errors);
-            this.setState({
-                showFailAlert: true,
-                showMessage: 'Errors detected during policy data validation:\n' + OnapUtils.jsonEditorErrorFormatter(errors)
-            });
-            return;
-        } else {
-            console.info("NO validation errors found in policy data");
-            let newPolicy = JSON.parse(JSON.stringify(this.state.policiesListData[this.state.selectedRowId]));
-            newPolicy["properties"] = editorData;
-            let newVersion = this.bumpVersion(newPolicy["version"]);
-            newPolicy["version"] = newVersion;
-            newPolicy["metadata"]["policy-version"] = newVersion;
-            // Remove stuff added by UI
-            delete newPolicy["tableData"];
-            PolicyService.createNewPolicy(newPolicy["type"], newPolicy["type_version"], newPolicy).then(respPolicyCreation => {
-                if (respPolicyCreation === "") {
-                    //it indicates a failure
-                    this.setState({
-                        showFailAlert: true,
-                        showMessage: 'Policy Creation Failure'
-                    });
-                } else {
-                    this.setState({
-                        showSuccessAlert: true,
-                        showMessage: 'Policy in version ' + newVersion + ' created successfully'
-                    });
-                }
-            })
-        }
-    }
-
-    bumpVersion(versionToBump) {
-        let semVer = versionToBump.split(".");
-        return parseInt(semVer[0])+1 + "." + semVer[1] + "." + semVer[2];
-    }
-
     handleUpdatePolicy() {
         this.setState({ show: false });
         this.props.history.push('/')
@@ -336,35 +338,56 @@ export default class ViewAllPolicies extends React.Component {
         this.setState ({ showSuccessAlert: false, showFailAlert: false });
     }
 
-    render() {
-    return (
-            <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false}>
-                <Modal.Header closeButton>
-                </Modal.Header>
-                <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key, selectedRowData: {} })}>
-                    <Tab eventKey="policies" title="Policies in Policy Framework">
+    renderPoliciesTab() {
+        return (
+                <Tab eventKey="policies" title="Policies in Policy Framework">
                         <Modal.Body>
                           <FormControlLabel
                                 control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
                                 label="Group by prefix"
                               />
                            <MaterialTable
-                              title={"View All Policies in Policy Engine"}
+                              title={"Policies"}
                               data={this.state.policiesListData}
                               columns={this.state.policyColumnsDefinition}
                               icons={this.state.tableIcons}
-                              onRowClick={(event, rowData) => {this.handleOnRowClick(rowData)}}
+                              onRowClick={(event, rowData, togglePanel) => togglePanel()}
                               options={{
                                   grouping: true,
                                   exportButton: true,
                                   headerStyle:rowHeaderStyle,
                                   rowStyle: rowData => ({
                                     backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
-                                  })
+                                  }),
+                                  actionsColumnIndex: -1
                               }}
+                              detailPanel={[
+                                {
+                                  icon: SettingsEthernetIcon,
+                                  tooltip: 'Show Configuration',
+                                  render: rowData => {
+                                    return (
+                                        <DetailedRow>
+                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} />
+                                        </DetailedRow>
+                                    )
+                                  },
+                                },
+                                {
+                                  icon: DescriptionIcon,
+                                  tooltip: 'Show Raw Data',
+                                  render: rowData => {
+                                    return (
+                                        <DetailedRow>
+                                            <pre>{JSON.stringify(rowData, null, 2)}</pre>
+                                        </DetailedRow>
+                                    )
+                                  },
+                                },
+                              ]}
                               actions={[
                                   {
-                                    icon: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+                                    icon: forwardRef((props, ref) => <DeleteRoundedIcon {...props} ref={ref} />),
                                     tooltip: 'Delete Policy',
                                     onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
                                   }
@@ -372,13 +395,89 @@ export default class ViewAllPolicies extends React.Component {
                            />
                         </Modal.Body>
                     </Tab>
+        );
+    }
+
+    renderToscaTab() {
+        return (
+                    <Tab eventKey="tosca models" title="Tosca Models in Policy Framework">
+                        <Modal.Body>
+                          <FormControlLabel
+                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
+                                label="Group by prefix"
+                              />
+                           <MaterialTable
+                              title={"Tosca Models"}
+                              data={this.state.toscaModelsListData}
+                              columns={this.state.toscaColumnsDefinition}
+                              icons={this.state.tableIcons}
+                              onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                              options={{
+                                  grouping: true,
+                                  exportButton: true,
+                                  headerStyle:rowHeaderStyle,
+                                  rowStyle: rowData => ({
+                                    backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
+                                  }),
+                                  actionsColumnIndex: -1
+                              }}
+                              detailPanel={[
+                                {
+                                  icon: SettingsEthernetIcon,
+                                  tooltip: 'Show Tosca',
+                                  render: rowData => {
+                                    return (
+                                        <DetailedRow>
+                                            <ToscaViewer toscaData={rowData} />
+                                        </DetailedRow>
+                                    )
+                                  },
+                                },
+                                {
+                                  icon: DescriptionIcon,
+                                  tooltip: 'Show Raw Data',
+                                  render: rowData => {
+                                    return (
+                                        <DetailedRow>
+                                            <pre>{JSON.stringify(rowData, null, 2)}</pre>
+                                        </DetailedRow>
+                                    )
+                                  },
+                                },
+                                {
+                                  icon: NoteAddIcon,
+                                  tooltip: 'Create a policy from this model',
+                                  render: rowData => {
+                                    return (
+                                        <DetailedRow>
+                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} />
+                                        </DetailedRow>
+                                    )
+                                  },
+                                },
+                              ]}
+                              actions={[
+                                  {
+                                    icon: forwardRef((props, ref) => <DeleteRoundedIcon {...props} ref={ref} />),
+                                    tooltip: 'Delete Tosca Model',
+                                    onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
+                                  }
+                              ]}
+                           />
+                        </Modal.Body>
+                    </Tab>
+        );
+    }
+
+    render() {
+    return (
+            <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false}>
+                <Modal.Header closeButton>
+                </Modal.Header>
+                <Tabs id="controlled-tab-example" activeKey={this.state.key} onSelect={key => this.setState({ key, selectedRowData: {} })}>
+                    {this.renderPoliciesTab()}
+                    {this.renderToscaTab()}
                 </Tabs>
-                <JsonEditorDiv>
-                    <h5>Policy Properties Editor</h5>
-                    <div id="policy-editor" title="Policy Properties"/>
-                    <Button variant="secondary" title="Create a new policy version from the defined parameters"
-                        onClick={this.handleCreateNewVersion}>Create New Version</Button>
-                </JsonEditorDiv>
                 <Alert variant="success" show={this.state.showSuccessAlert} onClose={this.disableAlert} dismissible>
                     <DivWhiteSpaceStyled>
                         {this.state.showMessage}

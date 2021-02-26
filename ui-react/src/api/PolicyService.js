@@ -43,8 +43,9 @@ export default class PolicyService {
             return "";
         })
   }
-  static createNewPolicy(policyModelType, policyModelVersion, policyJson) {
-    return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/' + policyModelVersion, {
+  static createNewPolicy(policyModelType, policyModelVersion, policyName, policyVersion, policyJson) {
+    return fetch(window.location.pathname + 'restservices/clds/v2/policies/' + policyModelType + '/'
+                    + policyModelVersion + '/' + policyName + '/' + policyVersion, {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
