@@ -20,6 +20,7 @@ package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ import org.onap.policy.models.base.PfUtils;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ControlLoops {
     private List<ControlLoop> controlLoopList;
 
