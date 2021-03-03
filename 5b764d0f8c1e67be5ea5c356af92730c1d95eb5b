@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db503ef1_717b6ae7",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-03-03T14:16:45Z",
+      "side": 1,
+      "message": "I know we don\u0027t have the best messages returned on errors, but despite that what the error was could be useful for debugging or helping users when they happen. Would we not want to display that message?",
+      "range": {
+        "startLine": 78,
+        "startChar": 10,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "5b764d0f8c1e67be5ea5c356af92730c1d95eb5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c653857_95b144f9",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-03-03T14:16:45Z",
+      "side": 1,
+      "message": "Something appended here as to why deletion failed.",
+      "range": {
+        "startLine": 270,
+        "startChar": 24,
+        "endLine": 270,
+        "endChar": 62
+      },
+      "revId": "5b764d0f8c1e67be5ea5c356af92730c1d95eb5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
