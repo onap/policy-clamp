@@ -88,6 +88,24 @@
       "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3bb0285_40676600",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-03T13:33:25Z",
+      "side": 1,
+      "message": "@Seb, we normally build policy repos using snapshot versions so-as to always be up to date with the latest changes, even if it breaks something.  The advantage is that it identifies inconsistencies sooner.",
+      "parentUuid": "317f4dbc_2d9fa840",
+      "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
