@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a1bc4112_bb8bc2cd",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-03T14:49:01Z",
+      "side": 1,
+      "message": "Pam yes, that\u0027s true for the user, it\u0027s not really great. I can probably improve it and add the HTTP code returned, now I\u0027m not sure that the http code and server message will help a lot an unexperienced user.\n\nNow for the developers, the browser console will report the error and the Firefox developer mode (F12) is enough to debug it, you\u0027ll see the network queries going in and out with their payloads, headers ... So there is no problem to debug it.",
+      "parentUuid": "db503ef1_717b6ae7",
+      "range": {
+        "startLine": 78,
+        "startChar": 10,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "5b764d0f8c1e67be5ea5c356af92730c1d95eb5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6c653857_95b144f9",
         "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2021-03-03T14:16:45Z",
       "side": 1,
       "message": "Something appended here as to why deletion failed.",
+      "range": {
+        "startLine": 270,
+        "startChar": 24,
+        "endLine": 270,
+        "endChar": 62
+      },
+      "revId": "5b764d0f8c1e67be5ea5c356af92730c1d95eb5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df41b5d4_61d14fd5",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-03T14:49:01Z",
+      "side": 1,
+      "message": "Right, I agree with you, my bad\nI\u0027ll add the HTTP code and server message for the current query like I have done for the control loop user logs.\n\nBut I\u0027m going to add this for the entire UI and queries so that we have a consistent code and behavior.\n\nThank you for the comments",
+      "parentUuid": "6c653857_95b144f9",
       "range": {
         "startLine": 270,
         "startChar": 24,
