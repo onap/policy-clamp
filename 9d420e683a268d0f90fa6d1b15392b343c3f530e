@@ -106,6 +106,24 @@
       "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e7af0bb_35b26f11",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-03T13:55:56Z",
+      "side": 1,
+      "message": "Yes i have well understood the game 😊\nIn the context of an open source it may not be appropriate, your project \"should\" always build (in theory)\nPreviously in clamp it was not possible to do so, i think there was a plugin in the OParent to check that\n\nDo you know if we disable it in the integration policy parent or ? It has been removed from the Oparent may be ?",
+      "parentUuid": "b3bb0285_40676600",
+      "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
