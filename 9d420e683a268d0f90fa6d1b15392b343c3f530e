@@ -70,6 +70,24 @@
       "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "317f4dbc_2d9fa840",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-03T13:30:30Z",
+      "side": 1,
+      "message": "I asked, because I\u0027ve seen Seb strip off the \"-SNAPSHOT\" and have it still build.  If that\u0027s the case, then you could potentially use \"1.8.1\" \u0026 \"2.4.1\" and thus still get the updated versions.",
+      "parentUuid": "160bb12a_102608da",
+      "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
