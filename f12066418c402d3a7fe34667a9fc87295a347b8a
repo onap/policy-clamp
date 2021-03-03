@@ -46,6 +46,30 @@
       "revId": "f12066418c402d3a7fe34667a9fc87295a347b8a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c05e3d2d_88df5443",
+        "filename": "src/main/resources/clds/camel/routes/policy-flows.xml",
+        "patchSetId": 4
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-03T15:17:52Z",
+      "side": 1,
+      "message": "Here it\u0027s a route for the control loop flows, in that context we currently do not support the policy versioning (It\u0027s a legacy of the Dublin policy rework). We already discussed that in a previous PR.\nThat should be put in the Backlog for a future work. That makes more sense now that clamp manages also directly the policies.\n\nSo, instead of duplicating the policy endpoint call, I have created a new common Camel route (line 564) that will now be called either by the control loop flows or by the policies flows.\n\nSo no worries the delete policy call supports all versions.",
+      "parentUuid": "ce47fa80_965ed80a",
+      "range": {
+        "startLine": 192,
+        "startChar": 24,
+        "endLine": 192,
+        "endChar": 29
+      },
+      "revId": "f12066418c402d3a7fe34667a9fc87295a347b8a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
