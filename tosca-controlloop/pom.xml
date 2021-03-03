@@ -32,13 +32,13 @@
 
     <groupId>org.onap.policy.clamp.controlloop</groupId>
     <artifactId>controlloop</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.0.1-SNAPSHOT</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
     <properties>
-        <policy.common.version>1.8.0-SNAPSHOT</policy.common.version>
-        <policy.models.version>2.4.0-SNAPSHOT</policy.models.version>
+        <policy.common.version>1.8.1-SNAPSHOT</policy.common.version>
+        <policy.models.version>2.4.1-SNAPSHOT</policy.models.version>
     </properties>
 
     <modules>
