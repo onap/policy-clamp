@@ -34,6 +34,24 @@
       "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "160bb12a_102608da",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-03T12:55:28Z",
+      "side": 1,
+      "message": "I need the snapshot versions of policy common and models because we are fixing a few issues in the Policy repos when we come across them and need to take the updates, especially in policy models.....There\u0027s even a review coming today once I finish the unit test.\n\nThe Tosca PoC code will build as of now without the snapshots but not if any more fixes are pushed so we\u0027d like to stay on the snapshots for now....I think it\u0027s OK because it\u0027s all in the same project anyhow.",
+      "parentUuid": "8de4a8f2_b17d091a",
+      "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
