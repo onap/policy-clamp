@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.onap.policy.clamp.controlloop</groupId>
         <artifactId>controlloop</artifactId>
-        <version>6.0.0-SNAPSHOT</version>
+        <version>6.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>controlloop-participants</artifactId>
@@ -36,8 +36,6 @@
         <encoding>UTF-8</encoding>
         <file.encoding>UTF-8</file.encoding>
         <version.commons-cli>1.4</version.commons-cli>
-        <version.policy.common>1.8.0-SNAPSHOT</version.policy.common>
-        <version.policy.models>2.4.0-SNAPSHOT</version.policy.models>
         <version.jgroups>4.1.5.Final</version.jgroups>
         <version.commons-codec>20041127.091804</version.commons-codec>
         <sonar.javascript.lcov.reportPaths>${project.basedir}/target/code-coverage/lcov.info</sonar.javascript.lcov.reportPaths>
@@ -56,22 +54,22 @@
         <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>utils</artifactId>
-            <version>${version.policy.common}</version>
+            <version>${policy.common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>utils-test</artifactId>
-            <version>${version.policy.common}</version>
+            <version>${policy.common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>common-parameters</artifactId>
-            <version>${version.policy.common}</version>
+            <version>${policy.common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.policy.common</groupId>
             <artifactId>policy-endpoints</artifactId>
-            <version>${version.policy.common}</version>
+            <version>${policy.common.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jgroups</groupId>
@@ -91,7 +89,7 @@
                     <artifactId>javax.ws.rs-api</artifactId>
                 </exclusion>
             </exclusions>
-            <version>${version.policy.models}</version>
+            <version>${policy.models.version}</version>
         </dependency>
         <dependency>
             <groupId>org.onap.dmaap.messagerouter.dmaapclient</groupId>
