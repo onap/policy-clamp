@@ -124,6 +124,24 @@
       "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1575416c_a340aaba",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-03-03T14:08:42Z",
+      "side": 1,
+      "message": "No it is still there in oparent - it should have failed as part of the release job. Unless its defined in the \u003cparent\u003e tag. Which is not the case here.",
+      "parentUuid": "4e7af0bb_35b26f11",
+      "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
