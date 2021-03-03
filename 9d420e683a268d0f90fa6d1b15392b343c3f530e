@@ -52,6 +52,24 @@
       "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8eb5bc64_58437c7d",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-03T13:29:35Z",
+      "side": 1,
+      "message": "Ok but try to avoid that 😊\nIt\u0027s different repos/builds so it\u0027s not really the same project.\nThis leads to unstable/unreproductible builds 😊",
+      "parentUuid": "160bb12a_102608da",
+      "revId": "9d420e683a268d0f90fa6d1b15392b343c3f530e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
