@@ -46,7 +46,7 @@
         <module>models</module>
         <module>design</module>
         <module>runtime</module>
-        <module>participants</module>
+        <module>participant</module>
     </modules>
 
     <dependencies>
