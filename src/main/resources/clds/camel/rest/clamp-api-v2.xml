@@ -499,7 +499,7 @@
                         <setProperty propertyName="raiseHttpExceptionFlag">
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
-                        <to uri="direct:delete-policy"/>
+                        <to uri="direct:delete-policy-from-loop-object"/>
                         <to uri="direct:create-policy"/>
                     </split>
                     <log loggingLevel="INFO"
@@ -516,7 +516,7 @@
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
 
-                        <to uri="direct:delete-policy"/>
+                        <to uri="direct:delete-policy-from-loop-object"/>
                         <to uri="direct:create-policy"/>
                     </split>
 
@@ -584,7 +584,7 @@
                         <setProperty propertyName="raiseHttpExceptionFlag">
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
-                        <to uri="direct:delete-policy"/>
+                        <to uri="direct:delete-policy-from-loop-object"/>
                     </split>
                     <log loggingLevel="INFO"
                          message="Deleting all OPERATIONAL policies defined in loop ${exchangeProperty[loopObject].getName()}"/>
@@ -599,7 +599,7 @@
                         <setProperty propertyName="raiseHttpExceptionFlag">
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
-                        <to uri="direct:delete-policy"/>
+                        <to uri="direct:delete-policy-from-loop-object"/>
                     </split>
                     <to
                             uri="bean:org.onap.policy.clamp.loop.LoopController?method=deleteLoop(${header.loopName})"/>
@@ -737,7 +737,7 @@
                     <setProperty propertyName="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">false</simple>
                     </setProperty>
-                    <to uri="direct:delete-policy"/>
+                    <to uri="direct:delete-policy-from-loop-object"/>
                     <to
                             uri="bean:org.onap.policy.clamp.loop.LoopController?method=removeOperationalPolicy(${header.loopName},${header.policyType},${header.policyVersion})"/>
                     <to
@@ -1411,6 +1411,54 @@
                 </doTry>
             </route>
         </post>
+
+        <delete uri="/v2/policies/{policyModelType}/{policyModelVersion}/{policyName}/{policyVersion}">
+            <route>
+                <removeHeaders pattern="*"
+                               excludePattern="policyModelType|policyModelVersion|policyName|policyVersion"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'DELETE a Policy ')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','update')"/>
+                    <setProperty propertyName="policyModelType">
+                        <simple>${header.policyModelType}</simple>
+                    </setProperty>
+                    <setProperty propertyName="policyModelVersion">
+                        <simple>${header.policyModelVersion}</simple>
+                    </setProperty>
+                    <setProperty propertyName="policyName">
+                        <simple>${header.policyName}</simple>
+                    </setProperty>
+                    <setProperty propertyName="policyVersion">
+                        <simple>${header.policyVersion}</simple>
+                    </setProperty>
+                    <setProperty propertyName="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">false</simple>
+                    </setProperty>
+                    <to uri="direct:undeploy-one-policy-from-pap"/>
+                    <to uri="direct:delete-policy"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="DELETE Policy request failed for policy: ${header.policyName}/${header.policyVersion}, ${exception.stacktrace}"/>
+                        <setHeader headerName="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>DELETE Policy FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </delete>
 
         <get uri="/v2/clampInformation" outType="org.onap.policy.clamp.clds.model.ClampInformation"
              produces="application/json">
