@@ -46,7 +46,6 @@ import LoopPropertiesModal from './components/dialogs/Loop/LoopPropertiesModal';
 import UserInfoModal from './components/dialogs/UserInfoModal';
 import LoopService from './api/LoopService';
 import UploadToscaPolicyModal from './components/dialogs/Tosca/UploadToscaPolicyModal';
-import ViewToscaPolicyModal from './components/dialogs/Tosca/ViewToscaPolicyModal';
 import ViewLoopTemplatesModal from './components/dialogs/Tosca/ViewLoopTemplatesModal';
 import ManageDictionaries from './components/dialogs/ManageDictionaries/ManageDictionaries';
 import PerformAction from './components/dialogs/PerformActions';
@@ -300,7 +299,6 @@ export default class LoopUI extends React.Component {
         return(
             <React.Fragment>
                 <Route path="/uploadToscaPolicyModal" render={(routeProps) => (<UploadToscaPolicyModal {...routeProps} />)} />
-                <Route path="/viewToscaPolicyModal" render={(routeProps) => (<ViewToscaPolicyModal {...routeProps} />)} />
                 <Route path="/viewLoopTemplatesModal" render={(routeProps) => (<ViewLoopTemplatesModal {...routeProps} />)} />
                 <Route path="/manageDictionaries" render={(routeProps) => (<ManageDictionaries {...routeProps} />)} />
                 <Route path="/viewAllPolicies" render={(routeProps) => (<ViewAllPolicies {...routeProps} />)} />
