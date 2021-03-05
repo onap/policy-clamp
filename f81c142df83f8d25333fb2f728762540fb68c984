@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03425ded_3c2fa752",
+        "filename": "extra/sql/dump/backup-data-only.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-05T16:07:07Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 2
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3cfa2ab2_59a0dfde",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-05T16:07:07Z",
+      "side": 1,
+      "message": "should probably be consistent with line 67 \u0026 90 (also remove trailing \":\" for consistency)",
+      "range": {
+        "startLine": 40,
+        "startChar": 60,
+        "endLine": 40,
+        "endChar": 76
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab845e5a_07a6cfcf",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-05T16:07:07Z",
+      "side": 1,
+      "message": "java automatically invokes toString() when concatenating.  Does javascript not?\n\nsame comment below",
+      "range": {
+        "startLine": 41,
+        "startChar": 57,
+        "endLine": 41,
+        "endChar": 68
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f89ab956_9131cbc7",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-05T16:07:07Z",
+      "side": 1,
+      "message": "spacing around \"+\"",
+      "range": {
+        "startLine": 68,
+        "startChar": 48,
+        "endLine": 68,
+        "endChar": 49
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3a0ac67_ec4ce74a",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-05T16:07:07Z",
+      "side": 1,
+      "message": "should this be text() for consistency?",
+      "range": {
+        "startLine": 82,
+        "startChar": 28,
+        "endLine": 82,
+        "endChar": 32
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3779268d_24dd6238",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-05T16:07:07Z",
+      "side": 1,
+      "message": "spacing around \"+\"",
+      "range": {
+        "startLine": 85,
+        "startChar": 58,
+        "endLine": 85,
+        "endChar": 59
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2389aeb3_57aa976a",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-05T16:07:07Z",
+      "side": 1,
+      "message": "spacing around \"+\"",
+      "range": {
+        "startLine": 91,
+        "startChar": 45,
+        "endLine": 91,
+        "endChar": 46
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
