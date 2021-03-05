@@ -21,11 +21,17 @@
 package org.onap.policy.clamp.controlloop.runtime.main.startstop;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
+import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationHandler;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
+import org.onap.policy.clamp.controlloop.runtime.main.rest.ControlLoopAafFilter;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
+import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
+import org.onap.policy.common.endpoints.http.server.RestServer;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 import org.onap.policy.common.parameters.ParameterService;
 import org.onap.policy.common.utils.services.ServiceManagerContainer;
@@ -41,6 +47,7 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
     private final ClRuntimeParameterGroup clRuntimeParameterGroup;
 
     // Topics from which the application receives and to which the application sends messages
+    private List<TopicSink> topicSinks;
     private List<TopicSource> topicSources;
 
     /**
@@ -61,6 +68,9 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
 
         this.clRuntimeParameterGroup = clRuntimeParameterGroup;
 
+        topicSinks = TopicEndpointManager.getManager()
+                .addTopicSinks(clRuntimeParameterGroup.getTopicParameterGroup().getTopicSinks());
+
         topicSources = TopicEndpointManager.getManager()
                 .addTopicSources(clRuntimeParameterGroup.getTopicParameterGroup().getTopicSources());
 
@@ -71,6 +81,9 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
                     "topic message dispatcher failed to start", e);
         }
 
+        final AtomicReference<InstantiationHandler> instantiationHandler = new AtomicReference<>();
+        final AtomicReference<RestServer> restServer = new AtomicReference<>();
+
         // @formatter:off
         addAction("Control loop runtime parameters",
             () -> ParameterService.register(clRuntimeParameterGroup),
@@ -80,9 +93,38 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
             () -> TopicEndpointManager.getManager().start(),
             () -> TopicEndpointManager.getManager().shutdown());
 
+        addAction("Instantiation Handler",
+            () -> instantiationHandler.set(new InstantiationHandler(clRuntimeParameterGroup)),
+            () -> instantiationHandler.get().close());
+
+        addAction("Providers",
+            () -> instantiationHandler.get().startProviders(),
+            () -> instantiationHandler.get().stopProviders());
+
+        addAction("Listeners",
+            () -> instantiationHandler.get().startAndRegisterListeners(msgDispatcher),
+            () -> instantiationHandler.get().stopAndUnregisterListeners(msgDispatcher));
+
+        addAction("Publishers",
+            () -> instantiationHandler.get().startAndRegisterPublishers(topicSinks),
+            () -> instantiationHandler.get().stopAndUnregisterPublishers());
+
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
 
         clRuntimeParameterGroup.getRestServerParameters().setName(clRuntimeParameterGroup.getName());
+
+        addAction("REST server",
+            () -> {
+                Set<Class<?>> providerClasses = instantiationHandler.get().getProviderClasses();
+
+                RestServer server = new RestServer(clRuntimeParameterGroup.getRestServerParameters(),
+                            ControlLoopAafFilter.class,
+                            providerClasses.toArray(new Class<?>[providerClasses.size()]));
+
+                restServer.set(server);
+                restServer.get().start();
+            },
+            () -> restServer.get().stop());
         // @formatter:on
     }
 
