@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a7ea31bb_ff62509d",
+        "filename": "extra/sql/dump/backup-data-only.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-05T16:37:21Z",
+      "side": 1,
+      "message": "date",
+      "range": {
+        "startLine": 7,
+        "startChar": 16,
+        "endLine": 7,
+        "endChar": 20
+      },
+      "revId": "f81c142df83f8d25333fb2f728762540fb68c984",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "03425ded_3c2fa752",
         "filename": "extra/sql/dump/backup-data-only.sh",
         "patchSetId": 2
