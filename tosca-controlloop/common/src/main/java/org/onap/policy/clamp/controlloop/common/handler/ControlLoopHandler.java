@@ -79,6 +79,11 @@ public abstract class ControlLoopHandler {
     public abstract void startAndRegisterPublishers(List<TopicSink> topicSinks);
 
     /**
+     * Start any providers for this handler.
+     */
+    public abstract void startProviders();
+
+    /**
      * Stop any topic message publishers for this handler.
      */
     public abstract void stopAndUnregisterPublishers();
@@ -89,4 +94,9 @@ public abstract class ControlLoopHandler {
      * @param msgDispatcher the message dispatcher from which to unregister the listener
      */
     public abstract void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher);
+
+    /**
+     * Stop any providers for this handler.
+     */
+    public abstract void stopProviders();
 }
