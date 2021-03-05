@@ -1,0 +1,27 @@
+{
+    "name":"ParticipantParameterGroup",
+    "participantStatusParameters":{
+        "timeIntervalMs": 10000,
+        "description":"Participant Status",
+        "participantId":{
+            "name": "CDSParticipant0",
+            "version":"1.0.0"
+        },
+        "participantDefinition":{
+            "name": "org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant",
+            "version":"3.2.1"
+        }
+    },
+    "topicParameterGroup": {
+        "topicSources" : [{
+            "topic" : "POLICY-CLRUNTIME-PARTICIPANT",
+            "servers" : [ "127.0.0.1:3904" ],
+            "topicCommInfrastructure" : "dmaap"
+        }],
+        "topicSinks" : [{
+            "topic" : "POLICY-CLRUNTIME-PARTICIPANT",
+            "servers" : [ "127.0.0.1:3904" ],
+            "topicCommInfrastructure" : "dmaap"
+        }]
+    }
+}
