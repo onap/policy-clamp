@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "bda455ec_be99c388",
+        "filename": "ui-react/src/api/PolicyService.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-05T16:00:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a1bc4112_bb8bc2cd",
+      "range": {
+        "startLine": 78,
+        "startChar": 10,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "5b764d0f8c1e67be5ea5c356af92730c1d95eb5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c653857_95b144f9",
         "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
         "patchSetId": 1
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Right, I agree with you, my bad\nI\u0027ll add the HTTP code and server message for the current query like I have done for the control loop user logs.\n\nBut I\u0027m going to add this for the entire UI and queries so that we have a consistent code and behavior.\n\nThank you for the comments",
       "parentUuid": "6c653857_95b144f9",
+      "range": {
+        "startLine": 270,
+        "startChar": 24,
+        "endLine": 270,
+        "endChar": 62
+      },
+      "revId": "5b764d0f8c1e67be5ea5c356af92730c1d95eb5b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e35ff5b_e2c53854",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-05T16:00:28Z",
+      "side": 1,
+      "message": "An alert box will be displayed by the PolicyService code.\nIt\u0027s not yet prfect as i intend to integrate that without an alert in the Alert React compo but i\u0027ll do that later.\nAt least now the user knows when a problem happens and he will see the server response",
+      "parentUuid": "df41b5d4_61d14fd5",
       "range": {
         "startLine": 270,
         "startChar": 24,
