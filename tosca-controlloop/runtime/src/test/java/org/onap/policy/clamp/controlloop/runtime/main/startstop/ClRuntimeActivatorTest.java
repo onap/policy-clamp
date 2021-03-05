@@ -75,7 +75,8 @@ public class ClRuntimeActivatorTest {
 
     @Test
     public void testNotValid() {
+        ClRuntimeParameterGroup parameterGroup = new ClRuntimeParameterGroup("name");
         assertThatExceptionOfType(ControlLoopRuntimeException.class)
-                .isThrownBy(() -> new ClRuntimeActivator(new ClRuntimeParameterGroup("name")));
+                .isThrownBy(() -> new ClRuntimeActivator(parameterGroup));
     }
 }

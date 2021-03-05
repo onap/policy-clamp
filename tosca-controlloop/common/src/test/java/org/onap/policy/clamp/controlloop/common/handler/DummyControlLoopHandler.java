@@ -50,4 +50,14 @@ public class DummyControlLoopHandler extends ControlLoopHandler {
     public void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher) {
         // Do nothing on this dummy class
     }
+
+    @Override
+    public void startProviders() {
+        // Do nothing on this dummy class
+    }
+
+    @Override
+    public void stopProviders() {
+        // Do nothing on this dummy class
+    }
 }
