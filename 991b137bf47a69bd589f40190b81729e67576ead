@@ -1,0 +1,398 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d24e4e4_cd45d276",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "maybe add a comment that only one object of this type should be built at a time and that the start \u0026 stop methods typically don\u0027t check to see if it\u0027s already started or stopped",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f864897_2e9501b2",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "FYI: You can use \"\u003cp/\u003e\" if you\u0027d rather it look like:\n\n\u003cp/\u003e\nIt is effectively...",
+      "range": {
+        "startLine": 42,
+        "startChar": 3,
+        "endLine": 42,
+        "endChar": 8
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f8be144_89fc59c8",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "since this object gets registered in the Registry by the superclass, there is no need for this static field - just get it from the Registry instead.  In fact, the whole Builder class could then be eliminated and the close() method can go away, as well",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6278f83b_05b23aa7",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "could just use the Registry directly and delete this method",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0eeda4e_c615ec11",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "indentation",
+      "range": {
+        "startLine": 120,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 5
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aa46f81_602eb2b6",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "use a Getter",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25402094_61c50863",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCommandController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "need @Path or @Api?\n\nsame question for the other InstantiationXxxController classes",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa25e025_2283de24",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCommandController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "can delete this line",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b068a8b_1b97a01d",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCommandController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "is the \"command\" a resource that can be updated or deleted later?  if not, then this should probably be POST instead of PUT",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78aa74d1_7c04ec94",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCommandController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "does this really \"create\" something?",
+      "range": {
+        "startLine": 110,
+        "startChar": 20,
+        "endLine": 110,
+        "endChar": 26
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8ed0c16_99d3ca85",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCreateController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "can delete this line",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40f5e90f_cb15d3c9",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationUpdateController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "seems like this should be POST since the particular control loop being updated is not part of the URI",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67e192f7_bd27686c",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "can any of these methods throw exceptions?  if so, they should each be in their own separate addAction().  In fact, maybe they should be in their own separate addAction() anyway and delete these two methods (i.e., lines 122-143)",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fd5a361_241a2ade",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCommandControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "should probably add extract a common method into CommonRestController, as all of these controller tests need to check this and do basically the same thing each time",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7827d916_0e9ccba6",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCommandControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "maybe just import Assert and remove \"Assert.\" through-out\n\nsame comment in other Test files",
+      "range": {
+        "startLine": 83,
+        "startChar": 8,
+        "endLine": 83,
+        "endChar": 15
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd467081_9aaabae6",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCreateControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "assertThat(xxx).hasSize(1)",
+      "range": {
+        "startLine": 91,
+        "startChar": 23,
+        "endLine": 91,
+        "endChar": 35
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c907f2c_c42aeb0a",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationDeleteControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "assertThat(xxx).isEmpty()",
+      "range": {
+        "startLine": 98,
+        "startChar": 23,
+        "endLine": 98,
+        "endChar": 33
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffcad0cf_9329e989",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationQueryControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "assertThat(xxx).hasSize(1)",
+      "range": {
+        "startLine": 99,
+        "startChar": 19,
+        "endLine": 99,
+        "endChar": 31
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3389be3_0eefa277",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationUpdateControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "same comment",
+      "range": {
+        "startLine": 100,
+        "startChar": 23,
+        "endLine": 100,
+        "endChar": 35
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74d5f4bb_1856670d",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/util/rest/CommonRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T20:37:03Z",
+      "side": 1,
+      "message": "maybe use \"40, 250L\" - that will retry every 250ms for up to 10s (i.e., 40x250)\n\nthe original code from which this was copied (PAP?) should probably be modified (some day)",
+      "range": {
+        "startLine": 144,
+        "startChar": 51,
+        "endLine": 144,
+        "endChar": 60
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
