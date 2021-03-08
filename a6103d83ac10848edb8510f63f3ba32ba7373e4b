@@ -1,0 +1,170 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56e435c0_2333f65e",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "node templates",
+      "range": {
+        "startLine": 230,
+        "startChar": 50,
+        "endLine": 230,
+        "endChar": 58
+      },
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c367ed77_4a7896ca",
+        "filename": "tosca-controlloop/runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "guess this line should probably be indented two more spaces",
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ed5dc76_b23bf71f",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "maybe use something unique to this test?",
+      "range": {
+        "startLine": 56,
+        "startChar": 60,
+        "endLine": 56,
+        "endChar": 66
+      },
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c94ad02_e5d1d553",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "I\u0027m still unclear whether sonar prefers assertThat(xxx).hasSize(2) - I have seen complaints in sonarlint, but not sonarcloud (maybe it\u0027s when I\u0027m still using the built-in sonar rules instead of the onap sonar rules?)",
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "988bf86f_c6edc2e8",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "move the closing parenthesis here\n\nsame comment below",
+      "range": {
+        "startLine": 98,
+        "startChar": 38,
+        "endLine": 98,
+        "endChar": 39
+      },
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5aa6a028_780a5f7f",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "sonar: don\u0027t use \"{}\" here",
+      "range": {
+        "startLine": 113,
+        "startChar": 37,
+        "endLine": 113,
+        "endChar": 38
+      },
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f8c2e67_8d65ce46",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "once the \")\" is moved, I think you\u0027ll find that this test is broken, as the listOfTemplates is still the original list at this point",
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd246456_8237f83e",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProviderTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-08T15:55:15Z",
+      "side": 1,
+      "message": "could just \"return true\" here and delete line 181",
+      "range": {
+        "startLine": 185,
+        "startChar": 16,
+        "endLine": 185,
+        "endChar": 30
+      },
+      "revId": "a6103d83ac10848edb8510f63f3ba32ba7373e4b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
