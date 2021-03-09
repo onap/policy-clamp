@@ -19,6 +19,87 @@
     },
     {
       "key": {
+        "uuid": "171e3c68_3728843f",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "created https://jira.onap.org/browse/POLICY-3128",
+      "parentUuid": "4b24b588_27f8bbc6",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3aab8fb1_5342302a",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "don\u0027t log the error since it\u0027s included in the exception\n\nsame comment below",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c4a792c_5a361378",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "simulator",
+      "range": {
+        "startLine": 36,
+        "startChar": 36,
+        "endLine": 36,
+        "endChar": 45
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de77d598_7d779256",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/Main.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "just invoke shutdown()?",
+      "range": {
+        "startLine": 121,
+        "startChar": 12,
+        "endLine": 130,
+        "endChar": 13
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "23cfc0dd_3ad003c2",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
         "patchSetId": 2
@@ -30,6 +111,218 @@
       "writtenOn": "2021-03-09T15:04:33Z",
       "side": 1,
       "message": "We could also include this handling, it\u0027s generic when we have the -h, -c and -v parameters only.",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37381021_11d5cd80",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "something wrong with the logic here, as the part before \"||\" is subsumed by the part after it",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95dfba12_1a3e8b1b",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "use lombok Getter",
+      "range": {
+        "startLine": 185,
+        "startChar": 15,
+        "endLine": 185,
+        "endChar": 36
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad0799db_5d1635c9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "use Setter",
+      "range": {
+        "startLine": 202,
+        "startChar": 16,
+        "endLine": 202,
+        "endChar": 40
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "834c2166_d2f5cb90",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "use !StringUtils.isEmpty()  (or isBlank())",
+      "range": {
+        "startLine": 213,
+        "startChar": 15,
+        "endLine": 213,
+        "endChar": 82
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eac07bc3_4440c406",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "StringUtils.isEmpty()",
+      "range": {
+        "startLine": 224,
+        "startChar": 12,
+        "endLine": 224,
+        "endChar": 54
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa20f3e0_57061da0",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/SimulationHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "can use \"\u003cp/\u003e\" instead, which will allow you to put the tag on a separate line",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 35,
+        "endChar": 6
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "074e4a55_44f5c829",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/CommonTestData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "can replace this with:\n\n  coder.convert(source, clazz)",
+      "range": {
+        "startLine": 65,
+        "startChar": 8,
+        "endLine": 70,
+        "endChar": 9
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5566b138_51609baa",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/TestParticipantConstants.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "I don\u0027t think this is needed - I don\u0027t think sonarcloud counts empty private constructors within \"final\" constant classes (if the class isn\u0027t marked \"final\", it probably should be)",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d2ce482_f6c72884",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "for testing purposes, I typically just use this, to eliminate superfluous stuff from the console output:\n\n  %d %level  %msg%n",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 69
+      },
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2feed49_5359bb90",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T16:44:25Z",
+      "side": 1,
+      "message": "does this come in handy?  if not, could delete it",
       "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
