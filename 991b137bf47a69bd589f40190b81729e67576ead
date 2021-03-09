@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "a907af22_fff4d975",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T15:11:16Z",
+      "side": 1,
+      "message": "don\u0027t need \"\u003cp\u003e\" and \"\u003c/p\u003e\" wrappers.  Can just use \"\u003cp/\u003e\" at the start, then checkstyle (and the IDE) will allow you to put that tag on a line by itself.",
+      "parentUuid": "d45616f6_5ff6d92e",
+      "range": {
+        "startLine": 42,
+        "startChar": 3,
+        "endLine": 42,
+        "endChar": 8
+      },
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3f8be144_89fc59c8",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
         "patchSetId": 1
