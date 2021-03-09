@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b24b588_27f8bbc6",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-09T15:04:33Z",
+      "side": 1,
+      "message": "We have a few versions of this class now in the Policy Framework where the only difference is the parameter class and messages, we should see if we can create some common code to handle this\n\n@Jim should we open a JIRA on Istanbul for this?",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23cfc0dd_3ad003c2",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-09T15:04:33Z",
+      "side": 1,
+      "message": "We could also include this handling, it\u0027s generic when we have the -h, -c and -v parameters only.",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
