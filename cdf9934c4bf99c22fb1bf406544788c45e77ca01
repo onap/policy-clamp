@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "effdb36f_bb508fbc",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-03-09T16:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c46ccf8c_f44705d6",
+      "range": {
+        "startLine": 58,
+        "startChar": 16,
+        "endLine": 58,
+        "endChar": 36
+      },
+      "revId": "cdf9934c4bf99c22fb1bf406544788c45e77ca01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71ad6f42_8fa2fabf",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCreateController.java",
         "patchSetId": 2
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "4e56fedb_af3e5250",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationCreateController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-03-09T16:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "71ad6f42_8fa2fabf",
+      "revId": "cdf9934c4bf99c22fb1bf406544788c45e77ca01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5083eab_3040656e",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationUpdateController.java",
         "patchSetId": 2
@@ -56,6 +98,24 @@
       "revId": "cdf9934c4bf99c22fb1bf406544788c45e77ca01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c47b6b4_f7f7e802",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationUpdateController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-03-09T16:54:13Z",
+      "side": 1,
+      "message": "POST is already implemented in other method",
+      "parentUuid": "c5083eab_3040656e",
+      "revId": "cdf9934c4bf99c22fb1bf406544788c45e77ca01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
