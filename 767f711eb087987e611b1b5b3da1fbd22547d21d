@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08e6919a_5a44e3a2",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-09T17:33:04Z",
+      "side": 1,
+      "message": "looks like we can extract a common method for this",
+      "range": {
+        "startLine": 134,
+        "startChar": 11,
+        "endLine": 138,
+        "endChar": 52
+      },
+      "revId": "767f711eb087987e611b1b5b3da1fbd22547d21d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
