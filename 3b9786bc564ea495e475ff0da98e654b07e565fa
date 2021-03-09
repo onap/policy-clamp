@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebee6393_ca5b5da6",
+        "filename": "tosca-controlloop/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-03-09T16:16:43Z",
+      "side": 1,
+      "message": "Is this code being released? If not, you could just up it to 3.3.1-SNAPSHOT",
+      "range": {
+        "startLine": 29,
+        "startChar": 17,
+        "endLine": 29,
+        "endChar": 22
+      },
+      "revId": "3b9786bc564ea495e475ff0da98e654b07e565fa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
