@@ -488,6 +488,24 @@
     },
     {
       "key": {
+        "uuid": "9d200256_07ebdf59",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationUpdateController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-03-10T09:55:32Z",
+      "side": 1,
+      "message": "POST is already implemented to create a control loop definition, that is a PUT to update a control loop definition",
+      "parentUuid": "40f5e90f_cb15d3c9",
+      "revId": "991b137bf47a69bd589f40190b81729e67576ead",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67e192f7_bd27686c",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
         "patchSetId": 1
