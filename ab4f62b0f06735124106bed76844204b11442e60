@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4773d9c_5eb46e6b",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/startstop/ParticipantSimulatorCommandLineArguments.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-10T12:16:37Z",
+      "side": 1,
+      "message": "This will throw a NPE if fileName is null, you need to use Apache Commons StringUtils.isEmpty()\n\nhttp://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/StringUtils.html#isEmpty-java.lang.CharSequence-",
+      "range": {
+        "startLine": 205,
+        "startChar": 8,
+        "endLine": 205,
+        "endChar": 33
+      },
+      "revId": "ab4f62b0f06735124106bed76844204b11442e60",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

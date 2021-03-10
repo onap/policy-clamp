@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "82f22f22_c3645f38",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-10T12:16:37Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "171e3c68_3728843f",
+      "revId": "75a6574fffc4a0c926993cc5845456515ec4b3f8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3aab8fb1_5342302a",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
         "patchSetId": 2
