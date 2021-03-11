@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18a50c54_86e7f9af",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 21
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-11T14:15:31Z",
+      "side": 1,
+      "message": "could use !StringUtils.isEmpty(xxx) (or isBlank())",
+      "range": {
+        "startLine": 47,
+        "startChar": 32,
+        "endLine": 47,
+        "endChar": 79
+      },
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33ee22dc_607c9c4d",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 21
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-11T14:15:31Z",
+      "side": 1,
+      "message": "use a static object to avoid re-constructing this each time",
+      "range": {
+        "startLine": 48,
+        "startChar": 15,
+        "endLine": 48,
+        "endChar": 25
+      },
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0c109e0_5544d2e2",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 21
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-11T14:15:31Z",
+      "side": 1,
+      "message": "put this Gson object in a static field, too",
+      "range": {
+        "startLine": 88,
+        "startChar": 31,
+        "endLine": 88,
+        "endChar": 77
+      },
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88f12b52_80ff9979",
+        "filename": "src/main/resources/clds/camel/rest/clamp-api-v2.xml",
+        "patchSetId": 21
+      },
+      "lineNbr": 1384,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-11T14:15:31Z",
+      "side": 1,
+      "message": "need policyName \u0026 policyVersion, too?",
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
