@@ -18,39 +18,50 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.simulator.simulation;
+package org.onap.policy.clamp.controlloop.runtime.commissioning;
 
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import javax.ws.rs.core.Response;
+import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.ParticipantSimulatorParameters;
-import org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest.SimulationQueryElementController;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.rest.CommissioningController;
+import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
+import org.onap.policy.common.utils.services.Registry;
+import org.onap.policy.models.base.PfModelRuntimeException;
 
 /**
- * This class handles simulation of participants and control loop elements.
- *
- * <p/>It is effectively a singleton that is started at system start.
+ * This class handles commissioning of control loop definitions.
  */
-public class SimulationHandler extends ControlLoopHandler {
+public final class CommissioningHandler extends ControlLoopHandler {
+
+    @Getter
+    private CommissioningProvider provider;
+
+    /**
+     * Gets the CommissioningHandler.
+     *
+     * @return CommissioningHandler
+     */
+    public static CommissioningHandler getInstance() {
+        return Registry.get(CommissioningHandler.class.getName());
+    }
+
     /**
      * Create a handler.
      *
-     * @param parameters the parameters for access to the database
+     * @param controlLoopParameters the parameters for access to the database
      */
-    public SimulationHandler(ParticipantSimulatorParameters parameters) {
-        super(parameters.getDatabaseProviderParameters());
+    public CommissioningHandler(ClRuntimeParameterGroup controlLoopParameters) {
+        super(controlLoopParameters.getDatabaseProviderParameters());
     }
 
     @Override
     public Set<Class<?>> getProviderClasses() {
-        Set<Class<?>> providerClasses = new HashSet<>();
-
-        providerClasses.add(SimulationQueryElementController.class);
-
-        return providerClasses;
+        return Set.of(CommissioningController.class);
     }
 
     @Override
@@ -75,11 +86,15 @@ public class SimulationHandler extends ControlLoopHandler {
 
     @Override
     public void startProviders() {
-        // No provider available
+        provider = new CommissioningProvider(getDatabaseProviderParameters());
     }
 
     @Override
     public void stopProviders() {
-        // No provider available
+        try {
+            provider.close();
+        } catch (IOException e) {
+            throw new PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }

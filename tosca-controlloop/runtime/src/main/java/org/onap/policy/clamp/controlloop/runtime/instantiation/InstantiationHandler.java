@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.ws.rs.core.Response;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.rest.CommissioningController;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.rest.InstantiationController;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -66,11 +67,7 @@ public final class InstantiationHandler extends ControlLoopHandler {
 
     @Override
     public Set<Class<?>> getProviderClasses() {
-        Set<Class<?>> providerClasses = new HashSet<>();
-
-        providerClasses.add(InstantiationController.class);
-
-        return providerClasses;
+        return Set.of(InstantiationController.class);
     }
 
     @Override
