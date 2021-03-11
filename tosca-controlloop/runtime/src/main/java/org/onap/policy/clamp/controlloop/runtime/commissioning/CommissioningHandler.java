@@ -18,17 +18,15 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.runtime.instantiation;
+package org.onap.policy.clamp.controlloop.runtime.commissioning;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.ws.rs.core.Response;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.rest.CommissioningController;
-import org.onap.policy.clamp.controlloop.runtime.instantiation.rest.InstantiationController;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
@@ -36,24 +34,20 @@ import org.onap.policy.common.utils.services.Registry;
 import org.onap.policy.models.base.PfModelRuntimeException;
 
 /**
- * This class handles instantiation of control loop instances,
- * so only one object of this type should be built at a time.
- *
- * </p>
- * It is effectively a singleton that is started at system start
+ * This class handles commissioning of control loop definitions.
  */
-public final class InstantiationHandler extends ControlLoopHandler {
+public final class CommissioningHandler extends ControlLoopHandler {
 
     @Getter
-    private ControlLoopInstantiationProvider controlLoopInstantiationProvider;
+    private CommissioningProvider provider;
 
     /**
-     * Gets the InstantiationHandler.
+     * Gets the CommissioningHandler.
      *
-     * @return InstantiationHandler
+     * @return CommissioningHandler
      */
-    public static InstantiationHandler getInstance() {
-        return Registry.get(InstantiationHandler.class.getName());
+    public static CommissioningHandler getInstance() {
+        return Registry.get(CommissioningHandler.class.getName());
     }
 
     /**
@@ -61,13 +55,13 @@ public final class InstantiationHandler extends ControlLoopHandler {
      *
      * @param controlLoopParameters the parameters for access to the database
      */
-    public InstantiationHandler(ClRuntimeParameterGroup controlLoopParameters) {
+    public CommissioningHandler(ClRuntimeParameterGroup controlLoopParameters) {
         super(controlLoopParameters.getDatabaseProviderParameters());
     }
 
     @Override
     public Set<Class<?>> getProviderClasses() {
-        return Set.of(InstantiationController.class);
+        return Set.of(CommissioningController.class);
     }
 
     @Override
@@ -92,15 +86,16 @@ public final class InstantiationHandler extends ControlLoopHandler {
 
     @Override
     public void startProviders() {
-        controlLoopInstantiationProvider = new ControlLoopInstantiationProvider(getDatabaseProviderParameters());
+        provider = new CommissioningProvider(getDatabaseProviderParameters());
     }
 
     @Override
     public void stopProviders() {
         try {
-            controlLoopInstantiationProvider.close();
+            provider.close();
         } catch (IOException e) {
-            throw new PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR,
+                    "an error has occured while stopping commissioning providers", e);
         }
     }
 }

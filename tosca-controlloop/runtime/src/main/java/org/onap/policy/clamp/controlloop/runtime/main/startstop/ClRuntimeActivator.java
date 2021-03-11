@@ -20,11 +20,14 @@
 
 package org.onap.policy.clamp.controlloop.runtime.main.startstop;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
+import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningHandler;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationHandler;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.main.rest.ControlLoopAafFilter;
@@ -61,7 +64,6 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
      * @param clRuntimeParameterGroup the parameters for the control loop runtime service
      */
     public ClRuntimeActivator(final ClRuntimeParameterGroup clRuntimeParameterGroup) {
-
         if (clRuntimeParameterGroup == null || !clRuntimeParameterGroup.isValid()) {
             throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR, "ParameterGroup not valid");
         }
@@ -81,51 +83,59 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
                     "topic message dispatcher failed to start", e);
         }
 
-        final AtomicReference<InstantiationHandler> instantiationHandler = new AtomicReference<>();
-        final AtomicReference<RestServer> restServer = new AtomicReference<>();
+        final AtomicReference<ControlLoopHandler> commissioningHandler = new AtomicReference<>();
+        final AtomicReference<ControlLoopHandler> instantiationHandler = new AtomicReference<>();
 
+        final AtomicReference<RestServer> restServer = new AtomicReference<>();
         // @formatter:off
         addAction("Control loop runtime parameters",
-            () -> ParameterService.register(clRuntimeParameterGroup),
-            () -> ParameterService.deregister(clRuntimeParameterGroup.getName()));
-
+                () -> ParameterService.register(clRuntimeParameterGroup),
+                () -> ParameterService.deregister(clRuntimeParameterGroup.getName()));
         addAction("Topic endpoint management",
-            () -> TopicEndpointManager.getManager().start(),
-            () -> TopicEndpointManager.getManager().shutdown());
-
+                () -> TopicEndpointManager.getManager().start(),
+                () -> TopicEndpointManager.getManager().shutdown());
+        addAction("Commissioning Handler",
+                () -> commissioningHandler.set(new CommissioningHandler(clRuntimeParameterGroup)),
+                () -> commissioningHandler.get().close());
         addAction("Instantiation Handler",
-            () -> instantiationHandler.set(new InstantiationHandler(clRuntimeParameterGroup)),
-            () -> instantiationHandler.get().close());
+                () -> instantiationHandler.set(new InstantiationHandler(clRuntimeParameterGroup)),
+                () -> instantiationHandler.get().close());
 
-        addAction("Providers",
-            () -> instantiationHandler.get().startProviders(),
-            () -> instantiationHandler.get().stopProviders());
-
-        addAction("Listeners",
-            () -> instantiationHandler.get().startAndRegisterListeners(msgDispatcher),
-            () -> instantiationHandler.get().stopAndUnregisterListeners(msgDispatcher));
-
-        addAction("Publishers",
-            () -> instantiationHandler.get().startAndRegisterPublishers(topicSinks),
-            () -> instantiationHandler.get().stopAndUnregisterPublishers());
+        addHandlerActions("Commissioning", commissioningHandler);
+        addHandlerActions("Instantiation", instantiationHandler);
 
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
 
         clRuntimeParameterGroup.getRestServerParameters().setName(clRuntimeParameterGroup.getName());
 
         addAction("REST server",
-            () -> {
-                Set<Class<?>> providerClasses = instantiationHandler.get().getProviderClasses();
+                () -> {
+                    Set<Class<?>> providerClasses = new HashSet<>();
+                    providerClasses.addAll(commissioningHandler.get().getProviderClasses());
+                    providerClasses.addAll(instantiationHandler.get().getProviderClasses());
 
-                RestServer server = new RestServer(clRuntimeParameterGroup.getRestServerParameters(),
+                    RestServer server = new RestServer(clRuntimeParameterGroup.getRestServerParameters(),
                             ControlLoopAafFilter.class,
                             providerClasses.toArray(new Class<?>[providerClasses.size()]));
-
-                restServer.set(server);
-                restServer.get().start();
-            },
-            () -> restServer.get().stop());
+                    restServer.set(server);
+                    restServer.get().start();
+                },
+                () -> restServer.get().stop());
         // @formatter:on
+    }
+
+    private void addHandlerActions(final String name, final AtomicReference<ControlLoopHandler> handler) {
+        addAction(name + " Providers",
+                () -> handler.get().startProviders(),
+                () -> handler.get().stopProviders());
+
+        addAction(name + " Listeners",
+                () -> handler.get().startAndRegisterListeners(msgDispatcher),
+                () -> handler.get().stopAndUnregisterListeners(msgDispatcher));
+
+        addAction(name + " Publishers",
+                () -> handler.get().startAndRegisterPublishers(topicSinks),
+                () -> handler.get().stopAndUnregisterPublishers());
     }
 
     /**
