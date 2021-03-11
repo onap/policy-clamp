@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "40faafd3_804ecaa9",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 21
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-11T16:19:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b91d751d_e3ed7726",
+      "range": {
+        "startLine": 88,
+        "startChar": 31,
+        "endLine": 88,
+        "endChar": 77
+      },
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88f12b52_80ff9979",
         "filename": "src/main/resources/clds/camel/rest/clamp-api-v2.xml",
         "patchSetId": 21
@@ -175,6 +199,24 @@
       "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e36b59a_638bba90",
+        "filename": "src/main/resources/clds/camel/rest/clamp-api-v2.xml",
+        "patchSetId": 21
+      },
+      "lineNbr": 1384,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-11T16:19:14Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b6b1349c_524e423c",
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
