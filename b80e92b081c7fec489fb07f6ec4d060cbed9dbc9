@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "73a4f499_2a757312",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/resources/parameters/EmptyParameters.json",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-11T09:09:33Z",
+      "side": 1,
+      "message": "Hi Jorge, I will take care of this comment in my next commit, as this commit is merged.",
+      "parentUuid": "89a4971c_c181e031",
+      "revId": "b80e92b081c7fec489fb07f6ec4d060cbed9dbc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a4562377_6acf1e9b",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/resources/parameters/logback-test.xml",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2021-03-10T19:01:17Z",
       "side": 1,
       "message": "unnecessary property if printing to standard output.  I am not sure if lines 24 and 25 are necessary neither.\n\nIn general in the absence of a logback*.xml, by default, it will print to stdout at the info level, so this file may be unnecessary if you were ok without setting it at the trace level in line 39.",
+      "revId": "b80e92b081c7fec489fb07f6ec4d060cbed9dbc9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8afd208b_f1e5869c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-11T09:09:33Z",
+      "side": 1,
+      "message": "Hi Jorge, I will take care of this comment in my next commit, as this commit is merged.",
+      "parentUuid": "a4562377_6acf1e9b",
       "revId": "b80e92b081c7fec489fb07f6ec4d060cbed9dbc9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
