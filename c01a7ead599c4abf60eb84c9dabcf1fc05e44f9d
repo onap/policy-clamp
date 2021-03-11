@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "031813ff_8942bc19",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 21
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-11T15:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18a50c54_86e7f9af",
+      "range": {
+        "startLine": 47,
+        "startChar": 32,
+        "endLine": 47,
+        "endChar": 79
+      },
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33ee22dc_607c9c4d",
         "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
         "patchSetId": 21
@@ -45,6 +69,30 @@
       "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee483b0c_8e3c2e6e",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 21
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-11T15:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33ee22dc_607c9c4d",
+      "range": {
+        "startLine": 48,
+        "startChar": 15,
+        "endLine": 48,
+        "endChar": 25
+      },
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b91d751d_e3ed7726",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/PolicyPayload.java",
+        "patchSetId": 21
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-11T15:54:12Z",
+      "side": 1,
+      "message": "We have a utility class in clamp for that, i\u0027ll use that one too",
+      "parentUuid": "c0c109e0_5544d2e2",
+      "range": {
+        "startLine": 88,
+        "startChar": 31,
+        "endLine": 88,
+        "endChar": 77
+      },
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "88f12b52_80ff9979",
         "filename": "src/main/resources/clds/camel/rest/clamp-api-v2.xml",
         "patchSetId": 21
@@ -82,6 +154,24 @@
       "writtenOn": "2021-03-11T14:15:31Z",
       "side": 1,
       "message": "need policyName \u0026 policyVersion, too?",
+      "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6b1349c_524e423c",
+        "filename": "src/main/resources/clds/camel/rest/clamp-api-v2.xml",
+        "patchSetId": 21
+      },
+      "lineNbr": 1384,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-11T15:54:12Z",
+      "side": 1,
+      "message": "No 😊 the url used is not requiring these values, i guess policy framework uses the Payload info\n\n{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies",
+      "parentUuid": "88f12b52_80ff9979",
       "revId": "c01a7ead599c4abf60eb84c9dabcf1fc05e44f9d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
