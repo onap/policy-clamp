@@ -112,7 +112,7 @@ public class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testComand_Unauthorized() throws Exception {
+    public void testCommand_Unauthorized() throws Exception {
         InstantiationCommand instantiationCommand = InstantiationUtils
                 .getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Unauthorized");
 
@@ -274,14 +274,14 @@ public class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testComand_NotFound1() throws Exception {
+    public void testCommand_NotFound1() throws Exception {
         Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
         Response resp = invocationBuilder.put(Entity.json(new InstantiationCommand()));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     @Test
-    public void testComand_NotFound2() throws Exception {
+    public void testCommand_NotFound2() throws Exception {
         InstantiationCommand command =
                 InstantiationUtils.getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Command");
         command.setOrderedState(null);
