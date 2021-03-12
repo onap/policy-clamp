@@ -37,8 +37,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.messages.rest.TypedSimpleResponse;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.RestController;
@@ -46,26 +44,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to provide REST end points for participant simulator to query details of controlLoopElements.
+ * Class to provide REST end points for participant simulator to query details of all participants.
  */
-public class SimulationQueryElementController extends RestController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimulationQueryElementController.class);
+public class SimulationQueryParticipantController extends RestController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimulationQueryParticipantController.class);
 
     /**
-     * Queries details of all control loop element within the simulator.
+     * Queries details of all participants within the simulator.
      *
      * @param requestId request ID used in ONAP logging
-     * @param name the name of the Control Loop element to get, null to get all
-     * @param version the version of the Control Loop element to get, null to get all
-     * @return the control loop elements
+     * @param name the name of the participant to get, null to get all
+     * @param version the version of the participant to get, null to get all
+     * @return the participants
      */
     // @formatter:off
     @GET
-    @Path("/elements")
-    @ApiOperation(value = "Query details of the requested simulated control loop elements",
-            notes = "Queries details of the requested simulated control loop elements, "
-                    + "returning all control loop element details",
-            response = ControlLoops.class,
+    @Path("/participants")
+    @ApiOperation(value = "Query details of the requested simulated participants",
+            notes = "Queries details of the requested simulated participants, "
+                    + "returning all participant details",
+            response = List.class,
             tags = {
                 "Clamp Control Loop Participant Simulator API"
             },
@@ -99,16 +97,16 @@ public class SimulationQueryElementController extends RestController {
     )
     // @formatter:on
     public Response loop(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Control loop element name", required = true) @QueryParam("name") String name,
-            @ApiParam(value = "Control loop element version", required = true) @QueryParam("version") String version) {
+            @ApiParam(value = "Participant name", required = true) @QueryParam("name") String name,
+            @ApiParam(value = "Participant version", required = true) @QueryParam("version") String version) {
 
         try {
-            List<ControlLoopElement> response = getSimulationProvider().getControlLoopElements(name, version);
+            List<Participant> response = getSimulationProvider().getParticipants(name, version);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
                     .build();
 
         } catch (ControlLoopException cle) {
-            LOGGER.warn("get of control loop elements failed", cle);
+            LOGGER.warn("get of participants failed", cle);
             TypedSimpleResponse<Participant> resp = new TypedSimpleResponse<>();
             resp.setErrorDetails(cle.getErrorResponse().getErrorMessage());
             return addLoggingHeaders(
