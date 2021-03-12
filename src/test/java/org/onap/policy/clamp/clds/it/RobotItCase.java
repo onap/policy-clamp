@@ -99,6 +99,7 @@ public class RobotItCase {
             exec = client.inspectContainerCmd(id).exec();
             tries++;
         } while (exec.getState().getRunning() && tries < TIMEOUT_S);
+        logger.info(exec.getState().getError());
         Assert.assertEquals(exec.getState().getError(), 0L,
                 Objects.requireNonNull(exec.getState().getExitCodeLong()).longValue());
         LogContainerCmd logContainerCmd = client.logContainerCmd(id);

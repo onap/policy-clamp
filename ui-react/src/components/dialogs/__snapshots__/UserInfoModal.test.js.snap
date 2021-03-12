@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Verify UserInfoModal Test the render method full permission 1`] = `
-<Styled(Bootstrap(Modal))
+<Styled(Modal)
   onHide={[Function]}
   show={true}
   size="lg"
@@ -113,5 +113,5 @@ exports[`Verify UserInfoModal Test the render method full permission 1`] = `
       Cancel
     </Button>
   </ModalFooter>
-</Styled(Bootstrap(Modal))>
+</Styled(Modal)>
 `;
