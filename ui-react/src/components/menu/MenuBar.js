@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
  * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
@@ -87,15 +87,12 @@ export default class MenuBar extends React.Component {
         return (
                 <Navbar.Collapse>
                     <StyledNavDropdown title="POLICY Framework">
-                            <NavDropdown.Item as={StyledLink} to="/manageDictionaries">Manage Metadata Dictionaries</NavDropdown.Item>
-                            <NavDropdown.Divider />
                             <NavDropdown.Item as={StyledLink} to="/viewAllPolicies">View All Policies</NavDropdown.Item>
-                            <NavDropdown.Item as={StyledLink} to="/viewToscaPolicyModal">View Tosca Models</NavDropdown.Item>
-                            <NavDropdown.Divider />
-                            <NavDropdown.Item as={StyledLink} to="/uploadToscaPolicyModal">Upload Tosca Model</NavDropdown.Item>
                     </StyledNavDropdown>
-                    <StyledNavDropdown title="LOOP Templates">
-                            <NavDropdown.Item as={StyledLink} to="/viewLoopTemplatesModal">View All Templates</NavDropdown.Item>
+                    <StyledNavDropdown title="CLAMP Options">
+                            <NavDropdown.Item as={StyledLink} to="/manageDictionaries">Tosca Metadata Dictionaries</NavDropdown.Item>
+                            <NavDropdown.Divider />
+                            <NavDropdown.Item as={StyledLink} to="/viewLoopTemplatesModal">View All Loop Templates</NavDropdown.Item>
                     </StyledNavDropdown>
                     <StyledNavDropdown title="LOOP Instance">
                             <NavDropdown.Item as={StyledLink} to="/createLoop">Create</NavDropdown.Item>

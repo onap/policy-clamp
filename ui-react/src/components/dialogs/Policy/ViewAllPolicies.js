@@ -40,9 +40,9 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
-import DescriptionIcon from '@material-ui/icons/Description';
-import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
-import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import DehazeIcon from '@material-ui/icons/Dehaze';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import AddIcon from '@material-ui/icons/Add';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import MaterialTable from "material-table";
@@ -188,6 +188,8 @@ export default class ViewAllPolicies extends React.Component {
         this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.disableAlert = this.disableAlert.bind(this);
+        this.getAllPolicies = this.getAllPolicies.bind(this);
+        this.getAllToscaModels = this.getAllToscaModels.bind(this);
         this.getAllPolicies();
         this.getAllToscaModels();
     }
@@ -247,7 +249,7 @@ export default class ViewAllPolicies extends React.Component {
     handleDeletePolicy(event, rowData) {
         PolicyService.deletePolicy(rowData["type"], rowData["type_version"], rowData["name"],rowData["version"]).then(
             respPolicyDeletion => {
-                if (respPolicyDeletion === "") {
+                if (typeof(respPolicyDeletion) === "undefined") {
                     //it indicates a failure
                     this.setState({
                         showFailAlert: true,
@@ -259,6 +261,7 @@ export default class ViewAllPolicies extends React.Component {
                         showMessage: 'Policy successfully Deleted'
                     });
                 }
+                this.getAllPolicies();
             }
         )
     }
@@ -292,18 +295,18 @@ export default class ViewAllPolicies extends React.Component {
                               }}
                               detailPanel={[
                                 {
-                                  icon: SettingsEthernetIcon,
+                                  icon: ArrowForwardIosIcon,
                                   tooltip: 'Show Configuration',
                                   render: rowData => {
                                     return (
                                         <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} />
+                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} policyUpdateFunction={this.getAllPolicies} />
                                         </DetailedRow>
                                     )
                                   },
                                 },
                                 {
-                                  icon: DescriptionIcon,
+                                  icon: DehazeIcon,
                                   tooltip: 'Show Raw Data',
                                   render: rowData => {
                                     return (
@@ -352,7 +355,7 @@ export default class ViewAllPolicies extends React.Component {
                               }}
                               detailPanel={[
                                 {
-                                  icon: SettingsEthernetIcon,
+                                  icon: ArrowForwardIosIcon,
                                   tooltip: 'Show Tosca',
                                   render: rowData => {
                                     return (
@@ -363,7 +366,7 @@ export default class ViewAllPolicies extends React.Component {
                                   },
                                 },
                                 {
-                                  icon: DescriptionIcon,
+                                  icon: DehazeIcon,
                                   tooltip: 'Show Raw Data',
                                   render: rowData => {
                                     return (
@@ -374,23 +377,16 @@ export default class ViewAllPolicies extends React.Component {
                                   },
                                 },
                                 {
-                                  icon: NoteAddIcon,
+                                  icon: AddIcon,
                                   tooltip: 'Create a policy from this model',
                                   render: rowData => {
                                     return (
                                         <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} />
+                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} policyUpdateFunction={this.getAllPolicies} />
                                         </DetailedRow>
                                     )
                                   },
                                 },
-                              ]}
-                              actions={[
-                                  {
-                                    icon: forwardRef((props, ref) => <DeleteRoundedIcon {...props} ref={ref} />),
-                                    tooltip: 'Delete Tosca Model',
-                                    onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
-                                  }
                               ]}
                            />
                         </Modal.Body>
