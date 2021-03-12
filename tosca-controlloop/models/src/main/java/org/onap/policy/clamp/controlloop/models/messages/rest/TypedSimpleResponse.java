@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,18 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest;
+package org.onap.policy.clamp.controlloop.models.messages.rest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
- * Class to provide REST end points for participant simulator to query details of controlLoopElements.
+ * Response returned when no extra output fields are needed.
  */
-public class SimulationQueryElementController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimulationQueryElementController.class);
+@Getter
+@Setter
+@ToString
+public class TypedSimpleResponse<T> extends SimpleResponse {
+    private T response;
 }
