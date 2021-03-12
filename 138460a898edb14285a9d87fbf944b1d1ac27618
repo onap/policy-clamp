@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5bf7f65_4b4bbdd8",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyEditor.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-12T18:39:35Z",
+      "side": 1,
+      "message": "should this be quoted?",
+      "range": {
+        "startLine": 103,
+        "startChar": 52,
+        "endLine": 103,
+        "endChar": 61
+      },
+      "revId": "138460a898edb14285a9d87fbf944b1d1ac27618",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f91d7191_3e5a5ce8",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-12T18:39:35Z",
+      "side": 1,
+      "message": "quotes?",
+      "range": {
+        "startLine": 252,
+        "startChar": 52,
+        "endLine": 252,
+        "endChar": 61
+      },
+      "revId": "138460a898edb14285a9d87fbf944b1d1ac27618",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
