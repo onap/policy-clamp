@@ -26,6 +26,9 @@ import java.util.Set;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.ParticipantSimulatorParameters;
 import org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest.SimulationQueryElementController;
+import org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest.SimulationQueryParticipantController;
+import org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest.SimulationUpdateElementController;
+import org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest.SimulationUpdateParticipantController;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
 
@@ -49,6 +52,9 @@ public class SimulationHandler extends ControlLoopHandler {
         Set<Class<?>> providerClasses = new HashSet<>();
 
         providerClasses.add(SimulationQueryElementController.class);
+        providerClasses.add(SimulationQueryParticipantController.class);
+        providerClasses.add(SimulationUpdateElementController.class);
+        providerClasses.add(SimulationUpdateParticipantController.class);
 
         return providerClasses;
     }

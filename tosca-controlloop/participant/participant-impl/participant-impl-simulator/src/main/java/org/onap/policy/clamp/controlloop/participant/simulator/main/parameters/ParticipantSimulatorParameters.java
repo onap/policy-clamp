@@ -22,6 +22,7 @@ package org.onap.policy.clamp.controlloop.participant.simulator.main.parameters;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.common.endpoints.parameters.RestServerParameters;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
 import org.onap.policy.common.parameters.annotations.NotNull;
@@ -36,6 +37,7 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 @Getter
 public class ParticipantSimulatorParameters extends ParameterGroupImpl {
     private RestServerParameters restServerParameters;
+    private ParticipantIntermediaryParameters intermediaryParameters;
     private PolicyModelsProviderParameters databaseProviderParameters;
 
     /**
