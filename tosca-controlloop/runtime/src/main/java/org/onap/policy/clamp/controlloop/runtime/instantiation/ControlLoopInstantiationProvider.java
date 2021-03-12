@@ -25,26 +25,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
  * This class is dedicated to the Instantiation of Commissioned control loop.
  */
 public class ControlLoopInstantiationProvider implements Closeable {
     private final ControlLoopProvider controlLoopProvider;
+    private final CommissioningProvider commissioningProvider;
 
     private static final Object lockit = new Object();
 
@@ -56,6 +61,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
     public ControlLoopInstantiationProvider(PolicyModelsProviderParameters databaseProviderParameters) {
         try {
             controlLoopProvider = new ControlLoopProvider(databaseProviderParameters);
+            commissioningProvider = new CommissioningProvider(databaseProviderParameters);
         } catch (PfModelException e) {
             throw new PfModelRuntimeException(e);
         }
@@ -83,6 +89,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
                             controlLoop.getKey().asIdentifier() + " already defined");
                 }
             }
+            validateControlLoops(controlLoops);
             controlLoopProvider.createControlLoops(controlLoops.getControlLoopList());
         }
 
@@ -102,6 +109,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      */
     public InstantiationResponse updateControlLoops(ControlLoops controlLoops) throws PfModelException {
         synchronized (lockit) {
+            validateControlLoops(controlLoops);
             controlLoopProvider.updateControlLoops(controlLoops.getControlLoopList());
         }
 
@@ -110,6 +118,59 @@ public class ControlLoopInstantiationProvider implements Closeable {
                 .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
+    }
+
+    /**
+     * Validate ControlLoops.
+     *
+     * @param controlLoops ControlLoops to validate
+     * @throws PfModelException if controlLoops is not valid
+     */
+    private void validateControlLoops(ControlLoops controlLoops) throws PfModelException {
+
+        for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+
+            List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getControlLoopDefinitions(
+                    controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
+
+            if (toscaNodeTemplates.isEmpty() || toscaNodeTemplates.size() > 1) {
+                throw new PfModelException(Response.Status.BAD_REQUEST,
+                        "Commissioned control loop definition not FOUND");
+            }
+
+            List<ToscaNodeTemplate> clElementDefinitions =
+                    commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
+
+            // @formatter:off
+            Map<String, ToscaConceptIdentifier> definitions = clElementDefinitions
+                    .stream()
+                    .map(nodeTemplate -> nodeTemplate.getKey().asIdentifier())
+                    .collect(Collectors.toMap(ToscaConceptIdentifier::getName, definition -> definition));
+            // @formatter:on
+
+            for (ControlLoopElement element : controlLoop.getElements()) {
+                validateDefinition(definitions, element.getDefinition());
+            }
+        }
+    }
+
+    /**
+     * Validate ToscaConceptIdentifier, checking if exist in ToscaConceptIdentifiers map.
+     *
+     * @param definitions map of all ToscaConceptIdentifiers
+     * @param definition ToscaConceptIdentifier to validate
+     * @throws PfModelException if definition is not valid
+     */
+    private void validateDefinition(Map<String, ToscaConceptIdentifier> definitions, ToscaConceptIdentifier definition)
+            throws PfModelException {
+        if (!definitions.containsKey(definition.getName())) {
+            throw new PfModelException(Response.Status.BAD_REQUEST, definition.getName() + " not FOUND");
+        } else {
+            ToscaConceptIdentifier id = definitions.get(definition.getName());
+            if (definition.compareTo(id) != 0) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, definition.getName() + " version not matching");
+            }
+        }
     }
 
     /**
