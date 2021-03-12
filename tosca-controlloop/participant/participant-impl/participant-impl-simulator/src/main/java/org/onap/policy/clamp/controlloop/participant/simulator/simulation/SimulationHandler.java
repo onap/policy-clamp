@@ -72,4 +72,14 @@ public class SimulationHandler extends ControlLoopHandler {
     public void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher) {
         // No topic communication on this handler
     }
+
+    @Override
+    public void startProviders() {
+        // No providers on this handler
+    }
+
+    @Override
+    public void stopProviders() {
+        // No providers on this handler
+    }
 }
