@@ -40,7 +40,7 @@ export default class PolicyService {
         .catch(function(error) {
             console.error("getPoliciesList error occurred ", error);
             alert("getPoliciesList error occurred " + error);
-            return "";
+            return undefined;
         })
   }
   static createNewPolicy(policyModelType, policyModelVersion, policyName, policyVersion, policyJson) {
@@ -67,7 +67,7 @@ export default class PolicyService {
         .catch(function (error) {
             console.error("createNewPolicy error occurred ", error);
             alert ("createNewPolicy error occurred " + error);
-            return "";
+            return undefined;
         });
   }
   static deletePolicy(policyModelType, policyModelVersion, policyName, policyVersion) {
@@ -90,7 +90,7 @@ export default class PolicyService {
         .catch(function (error) {
             console.error("deletePolicy error occurred ", error);
             alert ("deletePolicy error occurred " + error);
-            return "";
+            return undefined;
         });
   }
 }
