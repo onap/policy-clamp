@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Verify ManageDictionaries Test API Successful 1`] = `
-<Styled(Bootstrap(Modal))
+<Styled(Modal)
   backdrop="static"
   keyboard={false}
   onHide={[Function]}
@@ -192,5 +192,5 @@ exports[`Verify ManageDictionaries Test API Successful 1`] = `
       Close
     </Button>
   </ModalFooter>
-</Styled(Bootstrap(Modal))>
+</Styled(Modal)>
 `;

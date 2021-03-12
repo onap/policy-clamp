@@ -5,7 +5,7 @@ exports[`Verify LoopLogs Test the render method 1`] = `
   <label>
     Loop Logs
   </label>
-  <Styled(Bootstrap(Table))
+  <Styled(Component)
     hover={true}
     responsive={true}
     striped={true}
@@ -56,6 +56,6 @@ exports[`Verify LoopLogs Test the render method 1`] = `
         }
       />
     </tbody>
-  </Styled(Bootstrap(Table))>
+  </Styled(Component)>
 </styled.div>
 `;

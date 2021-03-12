@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Verify OnapClamp Test the render method 1`] = `
-<ThemeProvider
+<Component
   theme={
     Object {
       "backgroundColor": "#eeeeee",
@@ -33,7 +33,7 @@ exports[`Verify OnapClamp Test the render method 1`] = `
   <styled.div
     id="main_div"
   >
-    <GlobalStyleComponent />
+    <Memo(l) />
     <Route
       path="/viewLoopTemplatesModal"
       render={[Function]}
@@ -119,7 +119,6 @@ exports[`Verify OnapClamp Test the render method 1`] = `
               "timeout": 300,
               "unmountOnExit": false,
             },
-            "displayName": "Fade",
             "render": [Function],
           }
         }
@@ -140,7 +139,6 @@ exports[`Verify OnapClamp Test the render method 1`] = `
               "timeout": 300,
               "unmountOnExit": false,
             },
-            "displayName": "Fade",
             "render": [Function],
           }
         }
@@ -214,5 +212,5 @@ exports[`Verify OnapClamp Test the render method 1`] = `
       </styled.div>
     </styled.div>
   </styled.div>
-</ThemeProvider>
+</Component>
 `;

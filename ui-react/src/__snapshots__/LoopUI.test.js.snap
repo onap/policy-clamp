@@ -4,7 +4,7 @@ exports[`Verify LoopUI Test the render method 1`] = `
 <styled.div
   id="main_div"
 >
-  <GlobalStyleComponent />
+  <Memo(l) />
   <Route
     path="/viewLoopTemplatesModal"
     render={[Function]}
@@ -90,7 +90,6 @@ exports[`Verify LoopUI Test the render method 1`] = `
             "timeout": 300,
             "unmountOnExit": false,
           },
-          "displayName": "Fade",
           "render": [Function],
         }
       }
@@ -111,7 +110,6 @@ exports[`Verify LoopUI Test the render method 1`] = `
             "timeout": 300,
             "unmountOnExit": false,
           },
-          "displayName": "Fade",
           "render": [Function],
         }
       }
