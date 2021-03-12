@@ -23,7 +23,8 @@
 
 import React from 'react'
 import PolicyToscaService from '../../../api/PolicyToscaService';
-import JSONEditor from '@json-editor/json-editor';
+//import { JSONEditor }  from '@json-editor/json-editor/dist/nonmin/jsoneditor.js';
+import "@fortawesome/fontawesome-free/css/all.css"
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import TextField from '@material-ui/core/TextField';
@@ -32,6 +33,7 @@ import PolicyService from '../../../api/PolicyService';
 import OnapUtils from '../../../utils/OnapUtils';
 import uuid from 'react-uuid';
 
+const JSONEditor = require("@json-editor/json-editor").JSONEditor;
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
 `
@@ -39,8 +41,9 @@ const DivWhiteSpaceStyled = styled.div`
 const JsonEditorDiv = styled.div`
     margin-top: 20px;
     background-color: ${props => props.theme.loopViewerBackgroundColor};
-    text-align: justify;
+    //text-align: justify;
     font-size: ${props => props.theme.policyEditorFontSize};
+    border: 1px solid #C0C0C0;
 `
 const PanelDiv = styled.div`
     margin-top: 20px;
@@ -98,7 +101,7 @@ export default class PolicyEditor extends React.Component {
             console.info("NO validation errors found in policy data");
             PolicyService.createNewPolicy(this.state.policyModelType, this.state.policyModelTypeVersion,
                 this.state.policyName, this.state.policyVersion, editorData).then(respPolicyCreation => {
-                if (respPolicyCreation === "") {
+                if (typeof(respPolicyCreation) === "undefined") {
                     //it indicates a failure
                     this.setState({
                         showFailAlert: true,
@@ -109,6 +112,7 @@ export default class PolicyEditor extends React.Component {
                         showSuccessAlert: true,
                         showMessage: 'Policy '+ this.state.policyName + '/' + this.state.policyVersion + ' created successfully'
                     });
+                    this.props.policyUpdateFunction();
                 }
             })
         }
@@ -135,7 +139,7 @@ export default class PolicyEditor extends React.Component {
    }
 
    createJsonEditor(toscaModel, editorData) {
-        JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
+        /*JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
                 getTab: function(text,tabId) {
                     var liel = document.createElement('li');
                     liel.classList.add('nav-item');
@@ -149,12 +153,15 @@ export default class PolicyEditor extends React.Component {
                     liel.appendChild(ael);
                     return liel;
                 }
-            });
+            });*/
+
         return new JSONEditor(document.getElementById(this.state.jsonEditorDivId),
         {
               schema: toscaModel,
               startval: editorData,
-              theme: 'myBootstrap4',
+              //theme: 'myBootstrap4',
+              theme: 'bootstrap4',
+              iconlib: 'fontawesome5',
               object_layout: 'grid',
               disable_properties: false,
               disable_edit_json: false,
@@ -163,7 +170,7 @@ export default class PolicyEditor extends React.Component {
               disable_array_delete_all_rows: false,
               array_controls_top: true,
               keep_oneof_values: false,
-              collapsed:true,
+              collapsed: true,
               show_errors: 'always',
               display_required_only: false,
               show_opt_in: false,
