@@ -31,7 +31,8 @@ import Modal from 'react-bootstrap/Modal';
 import styled from 'styled-components';
 import LoopService from '../../../api/LoopService';
 import LoopCache from '../../../api/LoopCache';
-import JSONEditor from '@json-editor/json-editor';
+import { JSONEditor }  from '@json-editor/json-editor/dist/jsoneditor.js';
+import "@fortawesome/fontawesome-free/css/all.css"
 import Alert from 'react-bootstrap/Alert';
 import OnapConstant from '../../../utils/OnapConstants';
 import OnapUtils from '../../../utils/OnapUtils';
@@ -137,7 +138,7 @@ export default class PolicyModal extends React.Component {
 	}
 
     createJsonEditor(toscaModel, editorData) {
-        JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
+        /*JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
     			getTab: function(text,tabId) {
     				var liel = document.createElement('li');
     				liel.classList.add('nav-item');
@@ -151,11 +152,12 @@ export default class PolicyModal extends React.Component {
     				liel.appendChild(ael);
     				return liel;
     			}
-    		});
+    		});*/
         return new JSONEditor(document.getElementById("editor"),
         {   schema: toscaModel,
               startval: editorData,
-              theme: 'myBootstrap4',
+              theme: 'bootstrap4',
+              iconlib: 'fontawesome5',
               object_layout: 'grid',
               disable_properties: false,
               disable_edit_json: false,

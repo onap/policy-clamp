@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Verify LoopPropertiesModal Test the render method 1`] = `
-<Styled(Bootstrap(Modal))
+<Styled(Modal)
   backdrop="static"
   keyboard={false}
   onHide={[Function]}
@@ -57,5 +57,5 @@ exports[`Verify LoopPropertiesModal Test the render method 1`] = `
       Save Changes
     </Button>
   </ModalFooter>
-</Styled(Bootstrap(Modal))>
+</Styled(Modal)>
 `;
