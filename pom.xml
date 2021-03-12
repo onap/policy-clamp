@@ -951,7 +951,7 @@
                                     </bind>
                                 </volumes>
                                 <wait>
-                                    <log>socket: '/run/mysqld/mysqld.sock'</log>
+                                    <log>port: 3306</log>
                                     <time>300000</time>
                                     <exec>
                                         <preStop>/docker-entrypoint-initdb.d/dump/backup-data-only.sh</preStop>

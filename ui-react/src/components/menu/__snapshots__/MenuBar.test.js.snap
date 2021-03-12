@@ -10,8 +10,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -40,66 +42,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
-          "toString": [Function],
-          "warnTooManyClasses": [Function],
-          "withComponent": [Function],
-        }
-      }
-      disabled={false}
-      to="/manageDictionaries"
-    >
-      Manage Metadata Dictionaries
-    </DropdownItem>
-    <DropdownDivider
-      role="separator"
-    />
-    <DropdownItem
-      as={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
-            "isStatic": false,
-            "rules": Array [
-              "
-    color: ",
-              [Function],
-              ";
-    background-color: ",
-              [Function],
-              ";
-    font-weight: normal;
-    display: block;
-    width: 100%;
-    padding: .25rem 1.5rem;
-    clear: both;
-    text-align: inherit;
-    white-space: nowrap;
-    border: 0;
-    :hover {
-        text-decoration: none;
-        background-color: ",
-              [Function],
-              ";
-        color:  ",
-              [Function],
-              ";
-    }
-",
-            ],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
           },
-          "displayName": "Styled(Link)",
-          "foldedComponentIds": Array [],
-          "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -110,13 +69,19 @@ exports[`Verify MenuBar Test the render method 1`] = `
     >
       View All Policies
     </DropdownItem>
+  </Styled(NavDropdown)>
+  <Styled(NavDropdown)
+    title="CLAMP Options"
+  >
     <DropdownItem
       as={
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -145,21 +110,32 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
         }
       }
       disabled={false}
-      to="/viewToscaPolicyModal"
+      to="/manageDictionaries"
     >
-      View Tosca Models
+      Tosca Metadata Dictionaries
     </DropdownItem>
     <DropdownDivider
       role="separator"
@@ -169,8 +145,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -199,67 +177,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
-          "toString": [Function],
-          "warnTooManyClasses": [Function],
-          "withComponent": [Function],
-        }
-      }
-      disabled={false}
-      to="/uploadToscaPolicyModal"
-    >
-      Upload Tosca Model
-    </DropdownItem>
-  </Styled(NavDropdown)>
-  <Styled(NavDropdown)
-    title="LOOP Templates"
-  >
-    <DropdownItem
-      as={
-        Object {
-          "$$typeof": Symbol(react.forward_ref),
-          "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
-            "isStatic": false,
-            "rules": Array [
-              "
-    color: ",
-              [Function],
-              ";
-    background-color: ",
-              [Function],
-              ";
-    font-weight: normal;
-    display: block;
-    width: 100%;
-    padding: .25rem 1.5rem;
-    clear: both;
-    text-align: inherit;
-    white-space: nowrap;
-    border: 0;
-    :hover {
-        text-decoration: none;
-        background-color: ",
-              [Function],
-              ";
-        color:  ",
-              [Function],
-              ";
-    }
-",
-            ],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
           },
-          "displayName": "Styled(Link)",
-          "foldedComponentIds": Array [],
-          "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -268,7 +202,7 @@ exports[`Verify MenuBar Test the render method 1`] = `
       disabled={false}
       to="/viewLoopTemplatesModal"
     >
-      View All Templates
+      View All Loop Templates
     </DropdownItem>
   </Styled(NavDropdown)>
   <Styled(NavDropdown)
@@ -279,8 +213,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -309,12 +245,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -330,8 +277,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -360,12 +309,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -381,8 +341,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -411,12 +373,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -432,8 +405,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -462,12 +437,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -486,8 +472,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -516,12 +504,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -537,8 +536,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -567,12 +568,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -592,8 +604,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -622,12 +636,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -643,8 +668,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -673,12 +700,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -694,8 +732,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -724,12 +764,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -745,8 +796,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -775,12 +828,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -799,8 +863,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -829,12 +895,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -850,8 +927,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -880,12 +959,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
@@ -916,8 +1006,10 @@ exports[`Verify MenuBar Test the render method 1`] = `
         Object {
           "$$typeof": Symbol(react.forward_ref),
           "attrs": Array [],
-          "componentStyle": ComponentStyle {
-            "componentId": "sc-bdVaJa",
+          "componentStyle": e {
+            "baseHash": 1014106698,
+            "baseStyle": undefined,
+            "componentId": "sc-bdfBwQ",
             "isStatic": false,
             "rules": Array [
               "
@@ -946,12 +1038,23 @@ exports[`Verify MenuBar Test the render method 1`] = `
     }
 ",
             ],
+            "staticRulesId": "",
           },
-          "displayName": "Styled(Link)",
           "foldedComponentIds": Array [],
           "render": [Function],
-          "styledComponentId": "sc-bdVaJa",
-          "target": [Function],
+          "shouldForwardProp": undefined,
+          "styledComponentId": "sc-bdfBwQ",
+          "target": Object {
+            "$$typeof": Symbol(react.forward_ref),
+            "propTypes": Object {
+              "innerRef": [Function],
+              "onClick": [Function],
+              "replace": [Function],
+              "target": [Function],
+              "to": [Function],
+            },
+            "render": [Function],
+          },
           "toString": [Function],
           "warnTooManyClasses": [Function],
           "withComponent": [Function],
