@@ -1,0 +1,8 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: Jim Hahn <jrh3@att.com>
+Code-Review+1: Liam Fallon <liam.fallon@est.tech>
+Submitted-by: Jim Hahn <jrh3@att.com>
+Submitted-at: Fri, 12 Mar 2021 21:46:36 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/policy/clamp/+/119203
+Project: policy/clamp
+Branch: refs/heads/tosca-poc
