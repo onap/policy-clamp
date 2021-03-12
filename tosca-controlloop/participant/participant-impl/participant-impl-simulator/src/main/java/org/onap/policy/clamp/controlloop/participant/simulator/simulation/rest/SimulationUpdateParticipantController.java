@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- *  Copyright (C) 2021 Nordix Foundation.
+ * Copyright (C) 2021 Nordix Foundation.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,13 @@ import io.swagger.annotations.Authorization;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
-import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.messages.rest.TypedSimpleResponse;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.RestController;
@@ -46,75 +42,80 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Class to provide REST end points for participant simulator to query details of controlLoopElements.
+ * Class to provide REST end points for updating a participant in the simulator.
  */
-public class SimulationQueryElementController extends RestController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimulationQueryElementController.class);
+public class SimulationUpdateParticipantController extends RestController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimulationUpdateParticipantController.class);
 
     /**
-     * Queries details of all control loop element within the simulator.
+     * Updates a participant in the simulator.
      *
      * @param requestId request ID used in ONAP logging
-     * @param name the name of the Control Loop element to get, null to get all
-     * @param version the version of the Control Loop element to get, null to get all
-     * @return the control loop elements
+     * @param body the body of a participant
+     * @return a response
      */
     // @formatter:off
-    @GET
-    @Path("/elements/{name}/{version}")
-    @ApiOperation(value = "Query details of the requested simulated control loop elements",
-            notes = "Queries details of the requested simulated control loop elements, "
-                    + "returning all control loop element details",
-            response = ControlLoops.class,
+    @PUT
+    @Path("/participants")
+    @ApiOperation(
+            value = "Updates simulated participants",
+            notes = "Updates simulated participants, returning the updated control loop definition IDs",
+            response = TypedSimpleResponse.class,
             tags = {
                 "Clamp Control Loop Participant Simulator API"
-            },
+                },
             authorizations = @Authorization(value = AUTHORIZATION_TYPE),
             responseHeaders = {
                     @ResponseHeader(
-                            name = VERSION_MINOR_NAME, description = VERSION_MINOR_DESCRIPTION,
+                            name = VERSION_MINOR_NAME,
+                            description = VERSION_MINOR_DESCRIPTION,
                             response = String.class),
-                    @ResponseHeader(name = VERSION_PATCH_NAME, description = VERSION_PATCH_DESCRIPTION,
+                    @ResponseHeader(
+                            name = VERSION_PATCH_NAME,
+                            description = VERSION_PATCH_DESCRIPTION,
                             response = String.class),
-                    @ResponseHeader(name = VERSION_LATEST_NAME, description = VERSION_LATEST_DESCRIPTION,
+                    @ResponseHeader(
+                            name = VERSION_LATEST_NAME,
+                            description = VERSION_LATEST_DESCRIPTION,
                             response = String.class),
-                    @ResponseHeader(name = REQUEST_ID_NAME, description = REQUEST_ID_HDR_DESCRIPTION,
-                            response = UUID.class)},
+                    @ResponseHeader(
+                            name = REQUEST_ID_NAME,
+                            description = REQUEST_ID_HDR_DESCRIPTION,
+                            response = UUID.class)
+                },
             extensions = {
-                    @Extension(
-                            name = EXTENSION_NAME,
-                            properties = {
-                                    @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
-                                    @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
-                            }
-                    )
+                @Extension(
+                    name = EXTENSION_NAME,
+                    properties = {
+                            @ExtensionProperty(name = API_VERSION_NAME, value = API_VERSION),
+                            @ExtensionProperty(name = LAST_MOD_NAME, value = LAST_MOD_RELEASE)
+                    }
+                )
             }
-    )
+        )
     @ApiResponses(
             value = {
-                    @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
-                    @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
-                    @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
+                @ApiResponse(code = AUTHENTICATION_ERROR_CODE, message = AUTHENTICATION_ERROR_MESSAGE),
+                @ApiResponse(code = AUTHORIZATION_ERROR_CODE, message = AUTHORIZATION_ERROR_MESSAGE),
+                @ApiResponse(code = SERVER_ERROR_CODE, message = SERVER_ERROR_MESSAGE)
             }
-    )
+        )
     // @formatter:on
-    public Response loop(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Control loop element name", required = true) @PathParam("name") String name,
-            @ApiParam(value = "Control loop element version", required = true) @PathParam("version") String version) {
+    public Response update(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Body of a participant", required = true) Participant body) {
 
         try {
-            List<ControlLoopElement> response = getSimulationProvider().getControlLoopElements(name, version);
+            TypedSimpleResponse<Participant> response = getSimulationProvider().updateParticipant(body);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
                     .build();
 
         } catch (ControlLoopException cle) {
-            LOGGER.warn("get of control loop elements failed", cle);
+            LOGGER.warn("update of participant failed", cle);
             TypedSimpleResponse<Participant> resp = new TypedSimpleResponse<>();
             resp.setErrorDetails(cle.getErrorResponse().getErrorMessage());
             return addLoggingHeaders(
                     addVersionControlHeaders(Response.status(cle.getErrorResponse().getResponseCode())), requestId)
                             .entity(resp).build();
         }
-
     }
 }
