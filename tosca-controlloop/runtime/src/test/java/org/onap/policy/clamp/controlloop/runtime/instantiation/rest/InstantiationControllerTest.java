@@ -58,6 +58,8 @@ public class InstantiationControllerTest extends CommonRestController {
 
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
 
+    private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
+
     /**
      * starts Main and inserts a commissioning template.
      *
@@ -66,6 +68,9 @@ public class InstantiationControllerTest extends CommonRestController {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         CommonRestController.setUpBeforeClass("InstApi");
+
+        // to validate control Loop, it needs to define ToscaServiceTemplate
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, getParameters());
 
         ControlLoops controlLoops =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Command");
@@ -112,7 +117,7 @@ public class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testComand_Unauthorized() throws Exception {
+    public void testCommand_Unauthorized() throws Exception {
         InstantiationCommand instantiationCommand = InstantiationUtils
                 .getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Unauthorized");
 
@@ -274,14 +279,14 @@ public class InstantiationControllerTest extends CommonRestController {
     }
 
     @Test
-    public void testComand_NotFound1() throws Exception {
+    public void testCommand_NotFound1() throws Exception {
         Invocation.Builder invocationBuilder = super.sendRequest(INSTANTIATION_COMMAND_ENDPOINT);
         Response resp = invocationBuilder.put(Entity.json(new InstantiationCommand()));
         assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), resp.getStatus());
     }
 
     @Test
-    public void testComand_NotFound2() throws Exception {
+    public void testCommand_NotFound2() throws Exception {
         InstantiationCommand command =
                 InstantiationUtils.getInstantiationCommandFromResource(CL_INSTANTIATION_CHANGE_STATE_JSON, "Command");
         command.setOrderedState(null);

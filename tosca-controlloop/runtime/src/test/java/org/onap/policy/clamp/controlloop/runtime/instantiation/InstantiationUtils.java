@@ -33,7 +33,14 @@ import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.Inst
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.coder.YamlJsonTranslator;
+import org.onap.policy.common.utils.resources.ResourceUtils;
+import org.onap.policy.models.base.PfModelException;
+import org.onap.policy.models.provider.PolicyModelsProvider;
+import org.onap.policy.models.provider.PolicyModelsProviderFactory;
+import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 /**
  * Utility methods supporting tests for Instantiation.
@@ -41,6 +48,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 public class InstantiationUtils {
 
     private static final Coder CODER = new StandardCoder();
+    private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
 
     /**
      * Gets the ControlLoops from Resource.
@@ -118,5 +126,24 @@ public class InstantiationUtils {
         Assert.assertNull(response.getErrorDetails());
         assertEquals(1, response.getAffectedControlLoops().size());
         assertEquals(0, response.getAffectedControlLoops().get(0).compareTo(controlLoop.getKey().asIdentifier()));
+    }
+
+    /**
+     * Store ToscaServiceTemplate from resource to DB.
+     *
+     * @param path path of the resource
+     * @param parameters The parameters for the implementation of the PolicyModelProvider
+     * @throws PfModelException if an error occurs
+     */
+    public static void storeToscaServiceTemplate(String path, PolicyModelsProviderParameters parameters)
+            throws PfModelException {
+
+        ToscaServiceTemplate template =
+                yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(path), ToscaServiceTemplate.class);
+
+        try (PolicyModelsProvider modelsProvider =
+                new PolicyModelsProviderFactory().createPolicyModelsProvider(parameters)) {
+            modelsProvider.createServiceTemplate(template);
+        }
     }
 }

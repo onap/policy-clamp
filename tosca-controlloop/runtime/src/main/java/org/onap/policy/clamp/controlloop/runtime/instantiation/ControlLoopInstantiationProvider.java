@@ -25,26 +25,36 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider.ControlLoopProvider;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
+import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.common.parameters.BeanValidationResult;
+import org.onap.policy.common.parameters.ObjectValidationResult;
+import org.onap.policy.common.parameters.ValidationResult;
+import org.onap.policy.common.parameters.ValidationStatus;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
  * This class is dedicated to the Instantiation of Commissioned control loop.
  */
 public class ControlLoopInstantiationProvider implements Closeable {
     private final ControlLoopProvider controlLoopProvider;
+    private final CommissioningProvider commissioningProvider;
 
     private static final Object lockit = new Object();
 
@@ -56,6 +66,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
     public ControlLoopInstantiationProvider(PolicyModelsProviderParameters databaseProviderParameters) {
         try {
             controlLoopProvider = new ControlLoopProvider(databaseProviderParameters);
+            commissioningProvider = new CommissioningProvider(databaseProviderParameters);
         } catch (PfModelException e) {
             throw new PfModelRuntimeException(e);
         }
@@ -83,6 +94,10 @@ public class ControlLoopInstantiationProvider implements Closeable {
                             controlLoop.getKey().asIdentifier() + " already defined");
                 }
             }
+            BeanValidationResult validationResult = validateControlLoops(controlLoops);
+            if (!validationResult.isValid()) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            }
             controlLoopProvider.createControlLoops(controlLoops.getControlLoopList());
         }
 
@@ -102,6 +117,10 @@ public class ControlLoopInstantiationProvider implements Closeable {
      */
     public InstantiationResponse updateControlLoops(ControlLoops controlLoops) throws PfModelException {
         synchronized (lockit) {
+            BeanValidationResult validationResult = validateControlLoops(controlLoops);
+            if (!validationResult.isValid()) {
+                throw new PfModelException(Response.Status.BAD_REQUEST, validationResult.getResult());
+            }
             controlLoopProvider.updateControlLoops(controlLoops.getControlLoopList());
         }
 
@@ -110,6 +129,71 @@ public class ControlLoopInstantiationProvider implements Closeable {
                 .map(cl -> cl.getKey().asIdentifier()).collect(Collectors.toList()));
 
         return response;
+    }
+
+    /**
+     * Validate ControlLoops.
+     *
+     * @param controlLoops ControlLoops to validate
+     * @result the result of validation
+     * @throws PfModelException if controlLoops is not valid
+     */
+    private BeanValidationResult validateControlLoops(ControlLoops controlLoops) throws PfModelException {
+
+        BeanValidationResult validationResult = new BeanValidationResult("ControlLoops", controlLoops);
+
+        for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+
+            List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getControlLoopDefinitions(
+                    controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
+
+            if (toscaNodeTemplates.isEmpty()) {
+                validationResult
+                        .addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
+                                ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
+            } else if (toscaNodeTemplates.size() > 1) {
+                validationResult
+                        .addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
+                                ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
+            } else {
+
+                List<ToscaNodeTemplate> clElementDefinitions =
+                        commissioningProvider.getControlLoopElementDefinitions(toscaNodeTemplates.get(0));
+
+                // @formatter:off
+                Map<String, ToscaConceptIdentifier> definitions = clElementDefinitions
+                        .stream()
+                        .map(nodeTemplate -> nodeTemplate.getKey().asIdentifier())
+                        .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
+                // @formatter:on
+
+                for (ControlLoopElement element : controlLoop.getElements()) {
+                    validationResult.addResult(validateDefinition(definitions, element.getDefinition()));
+                }
+            }
+        }
+        return validationResult;
+    }
+
+    /**
+     * Validate ToscaConceptIdentifier, checking if exist in ToscaConceptIdentifiers map.
+     *
+     * @param definitions map of all ToscaConceptIdentifiers
+     * @param definition ToscaConceptIdentifier to validate
+     * @result result the validation result
+     */
+    private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
+            ToscaConceptIdentifier definition) {
+        BeanValidationResult result = new BeanValidationResult(definition.getName(), definition);
+        ToscaConceptIdentifier identifier = definitions.get(definition.getName());
+        if (identifier == null) {
+            result.setResult(ValidationStatus.INVALID, "Not FOUND");
+        } else if (!identifier.equals(definition)) {
+            result.setResult(ValidationStatus.INVALID, "Version not matching");
+        } else {
+            result.setResult(ValidationStatus.CLEAN);
+        }
+        return (result.isClean() ? null : result);
     }
 
     /**
