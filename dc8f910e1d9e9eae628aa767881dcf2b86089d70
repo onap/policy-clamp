@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "836408d7_caee94fd",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-12T16:29:28Z",
+      "side": 1,
+      "message": "don\u0027t know why I didn\u0027t mention this is the previous reviews.  Could just change this to:\n\n  return Set.of(CommissioningController.class);",
+      "range": {
+        "startLine": 65,
+        "startChar": 7,
+        "endLine": 69,
+        "endChar": 31
+      },
+      "revId": "dc8f910e1d9e9eae628aa767881dcf2b86089d70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d416addd_676749ff",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-12T16:29:28Z",
+      "side": 1,
+      "message": "should create a copy of the value returned by the handler, rather than modifying it\u0027s Set",
+      "revId": "dc8f910e1d9e9eae628aa767881dcf2b86089d70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
