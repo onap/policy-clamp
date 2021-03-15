@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "001ae18d_5361c770",
+        "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-15T17:35:25Z",
+      "side": 1,
+      "message": "same comment than the other, it\u0027s an auto generated code used by the test framework",
+      "parentUuid": "80a08c8c_61fdd1de",
+      "revId": "b8831e5199aa0fe2bb1de531069d376182b3571d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e1ad6660_60e990cb",
         "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2021-03-15T17:07:55Z",
       "side": 1,
       "message": "these definitions are repeated a lot - any way to extract this block into a common function?",
+      "revId": "b8831e5199aa0fe2bb1de531069d376182b3571d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32e5c419_dd478657",
+        "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
+        "patchSetId": 8
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-15T17:35:25Z",
+      "side": 1,
+      "message": "It\u0027s a snapshot code (auto generated)\nIt\u0027s not something i developed, this is used by the tests to validate that the react compo looks similar to the previous version. If the component is changed by something, the test will fail indicating to the developer that something changed 😊",
+      "parentUuid": "e1ad6660_60e990cb",
       "revId": "b8831e5199aa0fe2bb1de531069d376182b3571d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
