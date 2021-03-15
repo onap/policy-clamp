@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80a08c8c_61fdd1de",
+        "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-15T17:07:55Z",
+      "side": 1,
+      "message": "these definitions are repeated a lot - any way to extract this block into a common function?",
+      "revId": "b8831e5199aa0fe2bb1de531069d376182b3571d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1ad6660_60e990cb",
+        "filename": "ui-react/src/components/menu/__snapshots__/MenuBar.test.js.snap",
+        "patchSetId": 8
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-15T17:07:55Z",
+      "side": 1,
+      "message": "these definitions are repeated a lot - any way to extract this block into a common function?",
+      "revId": "b8831e5199aa0fe2bb1de531069d376182b3571d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

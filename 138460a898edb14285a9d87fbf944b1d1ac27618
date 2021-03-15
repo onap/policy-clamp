@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a32d03fa_1dba3d01",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyEditor.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-15T17:07:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e0d9d929_1da4defc",
+      "range": {
+        "startLine": 103,
+        "startChar": 52,
+        "endLine": 103,
+        "endChar": 61
+      },
+      "revId": "138460a898edb14285a9d87fbf944b1d1ac27618",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f91d7191_3e5a5ce8",
         "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
         "patchSetId": 1
@@ -93,6 +117,30 @@
       "revId": "138460a898edb14285a9d87fbf944b1d1ac27618",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2a93df1_0857b93c",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 1
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-15T17:07:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "63210d53_4b74ad83",
+      "range": {
+        "startLine": 252,
+        "startChar": 52,
+        "endLine": 252,
+        "endChar": 61
+      },
+      "revId": "138460a898edb14285a9d87fbf944b1d1ac27618",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
