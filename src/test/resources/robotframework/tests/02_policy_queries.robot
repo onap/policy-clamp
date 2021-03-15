@@ -16,6 +16,6 @@ Get Requests policies list ok
     ${auth} =    Create List     ${login}    ${passw}
     Create Session   clamp  http://localhost:${port}   auth=${auth}   disable_warnings=1
     Set Global Variable     ${clamp_session}      clamp
-    ${response_query}=    Get Request    ${clamp_session}   /restservices/clds/v2/policies/list
+    ${response_query}=    Get Request    ${clamp_session}   /restservices/clds/v2/policies
     Should Be Equal As Strings  ${response_query.status_code}     200
     Should Contain   ${response_query.text}   ${reponse_pdp_group}

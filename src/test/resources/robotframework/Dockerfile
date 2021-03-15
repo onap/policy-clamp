@@ -1,4 +1,4 @@
-FROM  ppodgorsek/robot-framework:latest
+FROM  ppodgorsek/robot-framework:3.8.0
 
 USER root
 COPY requirements.txt .
