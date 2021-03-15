@@ -42,6 +42,7 @@ import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.netty.NettyDockerCmdExecFactory;
 import java.io.File;
 import java.util.Objects;
+import org.codehaus.plexus.util.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,8 +100,8 @@ public class RobotItCase {
             exec = client.inspectContainerCmd(id).exec();
             tries++;
         } while (exec.getState().getRunning() && tries < TIMEOUT_S);
-        Assert.assertEquals(exec.getState().getError(), 0L,
-                Objects.requireNonNull(exec.getState().getExitCodeLong()).longValue());
+        logger.info("RobotFramework result:" + exec.getState());
+
         LogContainerCmd logContainerCmd = client.logContainerCmd(id);
         logContainerCmd.withStdOut(true).withStdErr(true);
         try {
@@ -121,5 +122,10 @@ public class RobotItCase {
         copyInputStreamToFile(client.copyArchiveFromContainerCmd(id, "/opt/robotframework/reports/report.html").exec(),
                 new File("target/robotframework/report.html"));
         client.stopContainerCmd(id);
+
+        logger.info("RobotFramework output.xml file: " + FileUtils.fileRead("target/robotframework/output.xml"));
+
+        Assert.assertEquals(exec.getState().getError(), 0L,
+                Objects.requireNonNull(exec.getState().getExitCodeLong()).longValue());
     }
 }
