@@ -28,12 +28,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
+import java.util.UUID;
 import org.junit.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.models.base.PfConceptKey;
-import org.onap.policy.models.base.PfTimestampKey;
+import org.onap.policy.models.base.PfReferenceTimestampKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -50,7 +51,7 @@ public class JpaClElementStatisticsTest {
         }).hasMessageMatching("copyConcept is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaClElementStatistics((PfTimestampKey) null);
+            new JpaClElementStatistics((PfReferenceTimestampKey) null);
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
@@ -62,12 +63,12 @@ public class JpaClElementStatisticsTest {
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaClElementStatistics(new PfTimestampKey(), null);
-        }).hasMessageMatching("clElementId is marked .*ull but is null");
+            new JpaClElementStatistics(new PfReferenceTimestampKey(), null);
+        }).hasMessageMatching("participantId is marked .*ull but is null");
 
         assertNotNull(new JpaClElementStatistics());
-        assertNotNull(new JpaClElementStatistics((new PfTimestampKey())));
-        assertNotNull(new JpaClElementStatistics(new PfTimestampKey(), new PfConceptKey()));
+        assertNotNull(new JpaClElementStatistics((new PfReferenceTimestampKey())));
+        assertNotNull(new JpaClElementStatistics(new PfReferenceTimestampKey(), new PfConceptKey()));
     }
 
     @Test
@@ -82,16 +83,17 @@ public class JpaClElementStatisticsTest {
         }).hasMessageMatching("clElementStatistics is marked .*ull but is null");
 
         assertThatThrownBy(() -> new JpaClElementStatistics((JpaClElementStatistics) null))
-                .isInstanceOf(NullPointerException.class);
+            .isInstanceOf(NullPointerException.class);
 
         JpaClElementStatistics testJpaClElementStatisticsFa = new JpaClElementStatistics();
         testJpaClElementStatisticsFa.setKey(null);
         testJpaClElementStatisticsFa.fromAuthorative(cles);
         assertEquals(testJpaClElementStatistics, testJpaClElementStatisticsFa);
-        testJpaClElementStatisticsFa.setKey(PfTimestampKey.getNullKey());
+        testJpaClElementStatisticsFa.setKey(PfReferenceTimestampKey.getNullKey());
         testJpaClElementStatisticsFa.fromAuthorative(cles);
         assertEquals(testJpaClElementStatistics, testJpaClElementStatisticsFa);
-        testJpaClElementStatisticsFa.setKey(new PfTimestampKey("elementName", "0.0.1", Instant.ofEpochMilli(123456L)));
+        testJpaClElementStatisticsFa.setKey(new PfReferenceTimestampKey("elementName", "0.0.1",
+            "a95757ba-b34a-4049-a2a8-46773abcbe5e", Instant.ofEpochSecond(123456L)));
         testJpaClElementStatisticsFa.fromAuthorative(cles);
         assertEquals(testJpaClElementStatistics, testJpaClElementStatisticsFa);
 
@@ -100,10 +102,10 @@ public class JpaClElementStatisticsTest {
 
         assertEquals(1, testJpaClElementStatistics.getKeys().size());
 
-        assertEquals("elementName", testJpaClElementStatistics.getKey().getName());
+        assertEquals("elementName", testJpaClElementStatistics.getKey().getReferenceKey().getParentKeyName());
 
         testJpaClElementStatistics.clean();
-        assertEquals("elementName", testJpaClElementStatistics.getKey().getName());
+        assertEquals("elementName", testJpaClElementStatistics.getKey().getReferenceKey().getParentKeyName());
 
         JpaClElementStatistics testJpaClElementStatistics2 = new JpaClElementStatistics(testJpaClElementStatistics);
         assertEquals(testJpaClElementStatistics, testJpaClElementStatistics2);
@@ -121,7 +123,7 @@ public class JpaClElementStatisticsTest {
     }
 
     @Test
-    public void testJpaClElementStatisticsConmpareTo() {
+    public void testJpaClElementStatisticsCompareTo() {
         JpaClElementStatistics testJpaClElementStatistics = createJpaClElementStatisticsInstance();
 
         JpaClElementStatistics otherJpaClElementStatistics = new JpaClElementStatistics(testJpaClElementStatistics);
@@ -169,7 +171,7 @@ public class JpaClElementStatisticsTest {
         JpaClElementStatistics testJpaClElementStatistics = new JpaClElementStatistics();
         testJpaClElementStatistics.setKey(null);
         testJpaClElementStatistics.fromAuthorative(testCles);
-        testJpaClElementStatistics.setKey(PfTimestampKey.getNullKey());
+        testJpaClElementStatistics.setKey(PfReferenceTimestampKey.getNullKey());
         testJpaClElementStatistics.fromAuthorative(testCles);
 
         return testJpaClElementStatistics;
@@ -177,8 +179,9 @@ public class JpaClElementStatisticsTest {
 
     private ClElementStatistics createClElementStatisticsInstance() {
         ClElementStatistics clElementStatistics = new ClElementStatistics();
-        clElementStatistics.setControlLoopElementId(new ToscaConceptIdentifier("elementName", "0.0.1"));
-        clElementStatistics.setTimeStamp(Instant.ofEpochMilli(123456L));
+        clElementStatistics.setParticipantId(new ToscaConceptIdentifier("elementName", "0.0.1"));
+        clElementStatistics.setId(UUID.fromString("a95757ba-b34a-4049-a2a8-46773abcbe5e"));
+        clElementStatistics.setTimeStamp(Instant.ofEpochSecond(123456L));
         clElementStatistics.setControlLoopState(ControlLoopState.UNINITIALISED);
 
         return clElementStatistics;

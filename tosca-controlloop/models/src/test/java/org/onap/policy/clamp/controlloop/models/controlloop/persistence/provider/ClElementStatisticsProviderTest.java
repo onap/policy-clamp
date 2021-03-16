@@ -95,16 +95,18 @@ public class ClElementStatisticsProviderTest {
         List<ClElementStatistics> getResponse;
 
         //Return empty list when no data present in db
-        getResponse = clElementStatisticsProvider.getClElementStatistics(null, null, null);
+        getResponse = clElementStatisticsProvider.getClElementStatistics(null, null, null,
+            null);
         assertThat(getResponse).isEmpty();
 
         clElementStatisticsProvider.createClElementStatistics(inputClElementStats
             .getClElementStatistics());
         ToscaConceptIdentifier identifier = inputClElementStats.getClElementStatistics().get(0)
-            .getControlLoopElementId();
+            .getParticipantId();
         Instant instant = inputClElementStats.getClElementStatistics().get(0).getTimeStamp();
+        String id = inputClElementStats.getClElementStatistics().get(0).getId().toString();
         assertEquals(1, clElementStatisticsProvider.getClElementStatistics(identifier.getName(),
-            identifier.getVersion(), instant).size());
+            identifier.getVersion(), id, instant).size());
 
         assertEquals(1, clElementStatisticsProvider.getFilteredClElementStatistics("name2",
             "1.0.1", null, null, null,

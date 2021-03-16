@@ -22,16 +22,18 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concept
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
@@ -41,7 +43,7 @@ import org.onap.policy.models.base.PfAuthorative;
 import org.onap.policy.models.base.PfConcept;
 import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfKey;
-import org.onap.policy.models.base.PfTimestampKey;
+import org.onap.policy.models.base.PfReferenceTimestampKey;
 import org.onap.policy.models.base.validation.annotations.VerifyKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -54,7 +56,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 @Table(name = "ClElementStatistics")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class JpaClElementStatistics extends PfConcept implements PfAuthorative<ClElementStatistics>, Serializable {
 
@@ -63,14 +65,15 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
     @EmbeddedId
     @VerifyKey
     @NotNull
-    private PfTimestampKey key = new PfTimestampKey();
+    private PfReferenceTimestampKey key = new PfReferenceTimestampKey();
+
 
     @VerifyKey
     @NotNull
     // @formatter:off
-    @AttributeOverride(name = "name", column = @Column(name = "cl_element_name"))
-    @AttributeOverride(name = "version", column = @Column(name = "cl_element_version"))
-    private PfConceptKey clElementId;
+    @AttributeOverride(name = "name",    column = @Column(name = "participant_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "participant_version"))
+    private PfConceptKey participantId;
     // @formatter: on
 
     @Column
@@ -80,24 +83,34 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
     @Column
     private long clElementUptime;
 
+
     /**
-     * The Key Constructor creates a {@link JpaClElementStatistics} object with the given Timestamp key.
+     * The Default Constructor creates a {@link JpaClElementStatistics} object with a null key.
+     */
+    public JpaClElementStatistics() {
+        this(new PfReferenceTimestampKey());
+    }
+
+
+    /**
+     * The Key Constructor creates a {@link JpaClElementStatistics} object with the given Reference Timestamp key.
      *
      * @param key the key
      */
-    public JpaClElementStatistics(@NonNull final PfTimestampKey key) {
-        this(key, new PfConceptKey());
+    public JpaClElementStatistics(@NonNull final PfReferenceTimestampKey key) {
+        this(key, new PfConceptKey(), ControlLoopState.PASSIVE, 0L);
     }
 
     /**
      * The Key Constructor creates a {@link JpaClElementStatistics} object with all mandatory fields.
      *
      * @param key the key
-     * @param clElementId the TOSCA definition of the control loop element
+     * @param participantId the TOSCA definition of the control loop element
      */
-    public JpaClElementStatistics(@NonNull final PfTimestampKey key, @NonNull final PfConceptKey clElementId) {
+    public JpaClElementStatistics(@NonNull final PfReferenceTimestampKey key,
+                                  @NonNull final PfConceptKey participantId) {
         this.key = key;
-        this.clElementId = clElementId;
+        this.participantId = participantId;
     }
 
     /**
@@ -107,8 +120,8 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
      */
     public JpaClElementStatistics(@NonNull final JpaClElementStatistics copyConcept) {
         super(copyConcept);
-        this.key = new PfTimestampKey(copyConcept.key);
-        this.clElementId = new PfConceptKey(copyConcept.clElementId);
+        this.key = new PfReferenceTimestampKey(copyConcept.key);
+        this.participantId = new PfConceptKey(copyConcept.participantId);
         this.state = copyConcept.state;
         this.clElementUptime = copyConcept.clElementUptime;
     }
@@ -123,11 +136,14 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
         this.fromAuthorative(authorativeConcept);
     }
 
+
+
     @Override
     public ClElementStatistics toAuthorative() {
         ClElementStatistics clElementStatistics = new ClElementStatistics();
-        clElementStatistics.setTimeStamp(key.getTimeStamp().toInstant());
-        clElementStatistics.setControlLoopElementId(new ToscaConceptIdentifier(clElementId));
+        clElementStatistics.setId(UUID.fromString(getKey().getReferenceKey().getLocalName()));
+        clElementStatistics.setTimeStamp(key.getInstant());
+        clElementStatistics.setParticipantId(new ToscaConceptIdentifier(participantId));
         clElementStatistics.setControlLoopState(state);
         clElementStatistics.setClElementUptime(clElementUptime);
 
@@ -138,14 +154,12 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
     public void fromAuthorative(@NonNull ClElementStatistics clElementStatistics) {
         // @formatter:off
         if (this.key == null || this.getKey().isNullKey()) {
-            this.setKey(
-                new PfTimestampKey(
-                    clElementStatistics.getControlLoopElementId().getName(),
-                    clElementStatistics.getControlLoopElementId().getVersion(),
-                    clElementStatistics.getTimeStamp()));
+            this.setKey(new PfReferenceTimestampKey(clElementStatistics.getParticipantId().getName(),
+                clElementStatistics.getParticipantId().getVersion(), clElementStatistics.getId().toString(),
+                clElementStatistics.getTimeStamp()));
         }
         // @formatter:on
-        this.setClElementId(clElementStatistics.getControlLoopElementId().asConceptKey());
+        this.setParticipantId(clElementStatistics.getParticipantId().asConceptKey());
         this.setState(clElementStatistics.getControlLoopState());
         this.setClElementUptime(clElementStatistics.getClElementUptime());
     }
@@ -158,7 +172,7 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
     @Override
     public void clean() {
         key.clean();
-        clElementId.clean();
+        participantId.clean();
     }
 
 
@@ -176,6 +190,6 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
 
         final JpaClElementStatistics other = (JpaClElementStatistics) otherConcept;
         return new CompareToBuilder().append(this.key, other.key).append(this.state, other.state)
-                .append(this.clElementUptime, other.clElementUptime).toComparison();
+            .append(this.clElementUptime, other.clElementUptime).toComparison();
     }
 }

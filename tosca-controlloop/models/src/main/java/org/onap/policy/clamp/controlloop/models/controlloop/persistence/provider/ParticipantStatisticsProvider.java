@@ -62,13 +62,16 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting participant statistics
      */
     public List<ParticipantStatistics> getParticipantStatistics(final String name, final String version,
-            final Instant timestamp) throws PfModelException {
+                                                                final Instant timestamp) throws PfModelException {
 
         if (name != null && version != null && timestamp != null) {
             List<ParticipantStatistics> participantStatistics = new ArrayList<>(1);
             participantStatistics.add(getPfDao()
-                    .get(JpaParticipantStatistics.class, new PfTimestampKey(name, version, timestamp)).toAuthorative());
+                .get(JpaParticipantStatistics.class, new PfTimestampKey(name, version, timestamp)).toAuthorative());
             return participantStatistics;
+        } else if (name != null) {
+            return getFilteredParticipantStatistics(name, version, timestamp, null, null,
+                "DESC", 0);
         } else {
             return asParticipantStatisticsList(getPfDao().getAll(JpaParticipantStatistics.class));
         }
@@ -87,11 +90,14 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting policies
      */
     public List<ParticipantStatistics> getFilteredParticipantStatistics(final String name, final String version,
-            final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
-            final String sortOrder, final int getRecordNum) {
+                                                                        final Instant startTimeStamp,
+                                                                        final Instant endTimeStamp,
+                                                                        Map<String, Object> filterMap,
+                                                                        final String sortOrder,
+                                                                        final int getRecordNum) {
 
         return asParticipantStatisticsList(getPfDao().getFiltered(JpaParticipantStatistics.class, name, version,
-                startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
+            startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
     }
 
 
@@ -103,10 +109,10 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors creating participant statistics
      */
     public List<ParticipantStatistics> createParticipantStatistics(
-            @NonNull final List<ParticipantStatistics> participantStatisticsList) throws PfModelException {
+        @NonNull final List<ParticipantStatistics> participantStatisticsList) throws PfModelException {
 
         BeanValidationResult validationResult =
-                new BeanValidationResult("participant statistics List", participantStatisticsList);
+            new BeanValidationResult("participant statistics List", participantStatisticsList);
 
         for (ParticipantStatistics participantStatistics : participantStatisticsList) {
             JpaParticipantStatistics jpaParticipantStatistics = new JpaParticipantStatistics();
@@ -131,9 +137,9 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
 
         for (ParticipantStatistics participantStatisticsItem : participantStatisticsList) {
             JpaParticipantStatistics jpaParticipantStatistics = getPfDao().get(JpaParticipantStatistics.class,
-                    new PfTimestampKey(participantStatisticsItem.getParticipantId().getName(),
-                            participantStatisticsItem.getParticipantId().getVersion(),
-                            participantStatisticsItem.getTimeStamp()));
+                new PfTimestampKey(participantStatisticsItem.getParticipantId().getName(),
+                    participantStatisticsItem.getParticipantId().getVersion(),
+                    participantStatisticsItem.getTimeStamp()));
             participantStatistics.add(jpaParticipantStatistics.toAuthorative());
         }
 
@@ -148,9 +154,9 @@ public class ParticipantStatisticsProvider extends AbstractModelsProvider {
      * @return the participant statistics list
      */
     private List<ParticipantStatistics> asParticipantStatisticsList(
-            List<JpaParticipantStatistics> jpaParticipantStatisticsList) {
+        List<JpaParticipantStatistics> jpaParticipantStatisticsList) {
 
         return jpaParticipantStatisticsList.stream().map(JpaParticipantStatistics::toAuthorative)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
     }
 }
