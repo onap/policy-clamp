@@ -6,14 +6,6 @@ exports[`Verify LoopUI Test the render method 1`] = `
 >
   <GlobalStyleComponent />
   <Route
-    path="/uploadToscaPolicyModal"
-    render={[Function]}
-  />
-  <Route
-    path="/viewToscaPolicyModal"
-    render={[Function]}
-  />
-  <Route
     path="/viewLoopTemplatesModal"
     render={[Function]}
   />
