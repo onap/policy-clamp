@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a294dcbf_25dbbe29",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T12:16:44Z",
+      "side": 1,
+      "message": "Yes, it uses a ConcurrentHashMap.",
+      "parentUuid": "6aa5a7a6_47fb974d",
+      "revId": "f74408b7005959bf68693a49c5c24ae63e4e97e9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76dc0d4c_9ac196a1",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningHandler.java",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2021-03-16T10:56:05Z",
       "side": 1,
       "message": "Do not absorb the stack trace (this prevents the developer to access the source of the issue), replace e.getMessage by \"e\" so that the stack trace is sent to the upper layers.",
+      "revId": "f74408b7005959bf68693a49c5c24ae63e4e97e9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40b551ad_152829d5",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T12:16:44Z",
+      "side": 1,
+      "message": "signature requires a string - perhaps change to:\n\n  PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR,\"cannot stop providers\", e);",
+      "parentUuid": "76dc0d4c_9ac196a1",
       "revId": "f74408b7005959bf68693a49c5c24ae63e4e97e9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
