@@ -150,6 +150,30 @@
       "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8b4ceac_ba4dd108",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T18:22:29Z",
+      "side": 1,
+      "message": "ah, so this is being returned directly by a REST call rather than being embedded within another returned structure.  That being the case, it\u0027s fine left as is.  REST allows generic Lists to be returned, but it seems like it\u0027s frequently more convenient to wrap it, as it is here.",
+      "parentUuid": "7c904a16_4a920b53",
+      "range": {
+        "startLine": 84,
+        "startChar": 11,
+        "endLine": 84,
+        "endChar": 37
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
