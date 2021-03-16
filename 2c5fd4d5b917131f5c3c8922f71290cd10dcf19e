@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22aeb144_bc268d11",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T12:50:15Z",
+      "side": 1,
+      "message": "\"p/\"",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 6
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ca36617_6b3f530b",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T12:50:15Z",
+      "side": 1,
+      "message": "return Set.of(MonitoringQueryController.class)",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 31
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59610a60_cfe12b0f",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T12:50:15Z",
+      "side": 1,
+      "message": "\"cannot stop provider\", e",
+      "range": {
+        "startLine": 106,
+        "startChar": 85,
+        "endLine": 106,
+        "endChar": 99
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78672c38_aaab36a2",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T12:50:15Z",
+      "side": 1,
+      "message": "hmm, does this end up having three open DB connections?  If so, we need to figure out how to share the DB connection.",
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7fe9f3a_3f32fbb4",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T12:50:15Z",
+      "side": 1,
+      "message": "question: is it necessary to create all of these XxxList classes?  Wondering why we don\u0027t just return the List\u003cXxx\u003e objects instead and avoid the extra memory and code for doing \"new\" and setXxxList()",
+      "range": {
+        "startLine": 84,
+        "startChar": 11,
+        "endLine": 84,
+        "endChar": 37
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
