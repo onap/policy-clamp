@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.time.Instant;
+import java.util.UUID;
 import org.junit.Test;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -43,7 +44,7 @@ public class ClElementStatisticsTest {
 
 
         ClElementStatistics cles1 = new ClElementStatistics();
-        cles1.setControlLoopElementId(new ToscaConceptIdentifier("defName", "0.0.1"));
+        cles1.setParticipantId(new ToscaConceptIdentifier("defName", "0.0.1"));
         cles1.setTimeStamp(Instant.now());
 
         assertThat(cles1.toString()).contains("ClElementStatistics(");
@@ -54,12 +55,13 @@ public class ClElementStatisticsTest {
         assertNotEquals(cles1, cles0);
 
         ClElementStatistics cles2 = new ClElementStatistics();
+        cles2.setId(UUID.randomUUID());
 
         // @formatter:off
-        assertThatThrownBy(() -> cles2.setControlLoopElementId(null)).isInstanceOf(NullPointerException.class);
-        assertThatThrownBy(() -> cles2.setTimeStamp(null)).           isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cles2.setParticipantId(null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> cles2.setTimeStamp(null)).isInstanceOf(NullPointerException.class);
         // @formatter:on
 
-        assertEquals(cles2, cles0);
+        assertNotEquals(cles2, cles0);
     }
 }
