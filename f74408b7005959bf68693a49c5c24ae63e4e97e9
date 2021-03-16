@@ -69,6 +69,24 @@
       "revId": "f74408b7005959bf68693a49c5c24ae63e4e97e9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26b7ae45_4fa100b8",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-03-16T12:57:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40b551ad_152829d5",
+      "revId": "f74408b7005959bf68693a49c5c24ae63e4e97e9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
