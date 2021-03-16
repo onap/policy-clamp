@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c60a78b6_af154554",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-16T18:31:49Z",
+      "side": 1,
+      "message": "maybe add a nested BeanValidationResult here, with the definition name and then append any errors to it.  Then append that nested result to validationResult.  Don\u0027t return until all control loops have been validated.",
+      "revId": "972f87b2bdc9854a846917a850a048b42f088007",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
