@@ -22,21 +22,23 @@ package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.ToString;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @NoArgsConstructor
 @Data
-@ToString
 public class ClElementStatistics implements Serializable {
 
     private static final long serialVersionUID = 3284285693112271055L;
 
     @NonNull
-    private ToscaConceptIdentifier controlLoopElementId;
+    private UUID id = UUID.randomUUID();
+
+    @NonNull
+    private ToscaConceptIdentifier participantId;
 
     @NonNull
     private Instant timeStamp;
