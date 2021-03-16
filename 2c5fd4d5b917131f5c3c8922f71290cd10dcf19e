@@ -88,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "23c4fa2b_7fd0d8b9",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-03-16T17:17:50Z",
+      "side": 1,
+      "message": "Yes the provider classes are creating their own db connections. I am not sure, I have any alternative way here to avoid this problem . I will check this.",
+      "parentUuid": "78672c38_aaab36a2",
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a7fe9f3a_3f32fbb4",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
         "patchSetId": 1
@@ -99,6 +117,30 @@
       "writtenOn": "2021-03-16T12:50:15Z",
       "side": 1,
       "message": "question: is it necessary to create all of these XxxList classes?  Wondering why we don\u0027t just return the List\u003cXxx\u003e objects instead and avoid the extra memory and code for doing \"new\" and setXxxList()",
+      "range": {
+        "startLine": 84,
+        "startChar": 11,
+        "endLine": 84,
+        "endChar": 37
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c904a16_4a920b53",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-03-16T17:17:50Z",
+      "side": 1,
+      "message": "Hi Jim, We can just return the List here, but I guess we should also change the REST controller response accordingly. We may need to create a new GenericEntity type response and use it on the REST controller methods to accommodate list of entities in the response.\n\nChanges expected on REST controller:\n(-)  @ApiOperation(response \u003d ParticipantStatisticsList.class)\n(+)  @ApiOperation(response \u003d ParticipantStatistics.class, responseContainer \u003d \"List\")\n\n(+)  GenericEntity\u003cList\u003cParticipantStatistics\u003e\u003e entities \u003d new GenericEntity\u003cList\u003cParticipantStatistics\u003e\u003e(response){};\n\nReturn the above created GenericEntity type as response entity. Please provide your thoughts if this change can be implemented on the controller.",
+      "parentUuid": "a7fe9f3a_3f32fbb4",
       "range": {
         "startLine": 84,
         "startChar": 11,
