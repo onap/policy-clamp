@@ -32,7 +32,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
-import org.onap.policy.models.base.PfTimestampKey;
+import org.onap.policy.models.base.PfReferenceTimestampKey;
 import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.provider.impl.AbstractModelsProvider;
 
@@ -62,10 +62,10 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors creating clElement statistics
      */
     public List<ClElementStatistics> createClElementStatistics(
-            @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
+        @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
 
         BeanValidationResult validationResult =
-                new BeanValidationResult("control loop element statistics list", clElementStatisticsList);
+            new BeanValidationResult("control loop element statistics list", clElementStatisticsList);
         for (ClElementStatistics clElementStatistics : clElementStatisticsList) {
             JpaClElementStatistics jpaClElementStatistics = new JpaClElementStatistics();
             jpaClElementStatistics.fromAuthorative(clElementStatistics);
@@ -80,7 +80,6 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
         for (ClElementStatistics clElementStatistics : clElementStatisticsList) {
             JpaClElementStatistics jpaClElementStatistics = new JpaClElementStatistics();
             jpaClElementStatistics.fromAuthorative(clElementStatistics);
-
             getPfDao().create(jpaClElementStatistics);
         }
 
@@ -89,8 +88,9 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
 
         for (ClElementStatistics clElementStat : clElementStatisticsList) {
             JpaClElementStatistics jpaClElementStatistics = getPfDao().get(JpaClElementStatistics.class,
-                    new PfTimestampKey(clElementStat.getControlLoopElementId().getName(),
-                            clElementStat.getControlLoopElementId().getVersion(), clElementStat.getTimeStamp()));
+                new PfReferenceTimestampKey(clElementStat.getParticipantId().getName(),
+                    clElementStat.getParticipantId().getVersion(), clElementStat.getId().toString(),
+                    clElementStat.getTimeStamp()));
             elementStatistics.add(jpaClElementStatistics.toAuthorative());
         }
 
@@ -110,21 +110,28 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
     /**
      * Get clElement statistics.
      *
-     * @param name the name of the clElement statistics to get, null to get all stats
+     * @param name the name of the participant
+     * @param version version of the participant
+     * @param id of the control loop element
+     * @param timestamp timestamp of the statistics
      * @return the clElement statistics found
      * @throws PfModelException on errors getting clElement statistics
      */
-    public List<ClElementStatistics> getClElementStatistics(final String name, final String version,
-            final Instant timestamp) throws PfModelException {
-
-        if (name != null && version != null && timestamp != null) {
-            List<ClElementStatistics> clElementStatistics = new ArrayList<>(1);
+    public List<ClElementStatistics> getClElementStatistics(final String name, final String version, final String id,
+                                                            final Instant timestamp) throws PfModelException {
+        List<ClElementStatistics> clElementStatistics = new ArrayList<>(1);
+        if (name != null && version != null && timestamp != null && id != null) {
             clElementStatistics.add(getPfDao()
-                    .get(JpaClElementStatistics.class, new PfTimestampKey(name, version, timestamp)).toAuthorative());
+                .get(JpaClElementStatistics.class, new PfReferenceTimestampKey(name, version, id, timestamp))
+                .toAuthorative());
             return clElementStatistics;
+        } else if (name != null) {
+            clElementStatistics.addAll(getFilteredClElementStatistics(name, version, null, null, null,
+                "DESC", 0));
         } else {
-            return asClElementStatisticsList(getPfDao().getAll(JpaClElementStatistics.class));
+            clElementStatistics.addAll(asClElementStatisticsList(getPfDao().getAll(JpaClElementStatistics.class)));
         }
+        return  clElementStatistics;
     }
 
     /**
@@ -139,9 +146,11 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting policies
      */
     public List<ClElementStatistics> getFilteredClElementStatistics(final String name, final String version,
-            final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
-            final String sortOrder, final int getRecordNum) {
+                                                                    final Instant startTimeStamp,
+                                                                    final Instant endTimeStamp,
+                                                                    Map<String, Object> filterMap,
+                                                                    final String sortOrder, final int getRecordNum) {
         return asClElementStatisticsList(getPfDao().getFiltered(JpaClElementStatistics.class, name, version,
-                startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
+            startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
     }
 }

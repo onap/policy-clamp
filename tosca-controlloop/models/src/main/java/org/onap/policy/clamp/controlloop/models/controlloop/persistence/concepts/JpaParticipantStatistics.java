@@ -53,7 +53,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  * @author Ramesh Murugan Iyer (ramesh.murugan.iyer@est.tech)
  */
 @Entity
-@Table(name = "ControlLoopStatistics")
+@Table(name = "ParticipantStatistics")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 @AllArgsConstructor
