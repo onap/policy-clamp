@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cfda0cc_c6f2b70c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/rest/SimulationQueryParticipantController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-03-17T16:02:29Z",
+      "side": 1,
+      "message": "In general, I think the use of query parameters is overused, in restful designs query parameters should not be used for entities (resources).   I would consider a participant a resource.   Query parameters are better for flavoring things, for example as pretty printing, etc .. \n\nI think in general the query is more amenable for something like this\n\nparticipants/\u003cparticipant-name\u003e/\u003cparticipant-version\u003e\n\nSee API component REST interface for hierarchical partitioning of resource queries, from policy types to specific policies or set of policies (not using query parameters).\n\nThis comment may apply to other rest interfaces",
+      "revId": "03c5f38a345f6b755a58fe58b2aa5edb14d9faf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
