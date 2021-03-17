@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b8e2154_3edb538f",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/rest/MonitoringQueryController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-17T18:44:25Z",
+      "side": 1,
+      "message": "maybe add the newline back in",
+      "revId": "ca5992b7b38d82df62f7114dc484d1153809218c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

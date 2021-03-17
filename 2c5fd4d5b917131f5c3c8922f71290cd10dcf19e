@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1a46e8d5_a7f4e52a",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-17T18:44:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "22aeb144_bc268d11",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 6
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ca36617_6b3f530b",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "564836db_efd8c796",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-17T18:44:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ca36617_6b3f530b",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 31
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59610a60_cfe12b0f",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
         "patchSetId": 1
@@ -68,6 +116,30 @@
       "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fe4015d_61a38931",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-17T18:44:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59610a60_cfe12b0f",
+      "range": {
+        "startLine": 106,
+        "startChar": 85,
+        "endLine": 106,
+        "endChar": 99
+      },
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -100,6 +172,24 @@
       "side": 1,
       "message": "Yes the provider classes are creating their own db connections. I am not sure, I have any alternative way here to avoid this problem . I will check this.",
       "parentUuid": "78672c38_aaab36a2",
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b590a751_1d7c5def",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-17T18:44:25Z",
+      "side": 1,
+      "message": "Please create a JIRA to address this in a later review.",
+      "parentUuid": "23c4fa2b_7fd0d8b9",
       "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
