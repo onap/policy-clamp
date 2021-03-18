@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "cff8c663_1cd148c3",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-03-18T14:47:06Z",
+      "side": 1,
+      "message": "currently is:\nif (toscaNodeTemplates.isEmpty()) {\n                validationResult\n                        .addResult(new ObjectValidationResult(\"ControlLoop\", controlLoop.getDefinition().getName(),\n                                ValidationStatus.INVALID, \"Commissioned control loop definition not FOUND\"));",
+      "parentUuid": "efe87056_c2f40d35",
+      "range": {
+        "startLine": 150,
+        "startChar": 33,
+        "endLine": 150,
+        "endChar": 42
+      },
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd6402dd_25ace3a0",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 6
@@ -144,6 +168,30 @@
     },
     {
       "key": {
+        "uuid": "6c46c4ec_1114fc85",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-03-18T14:47:06Z",
+      "side": 1,
+      "message": "currently is:\n} else if (toscaNodeTemplates.size() \u003e 1) {\n                validationResult\n                        .addResult(new ObjectValidationResult(\"ControlLoop\", controlLoop.getDefinition().getName(),\n                                ValidationStatus.INVALID, \"Commissioned control loop definition not VALID\"));\n            }",
+      "parentUuid": "1b7217c3_f0fe0fec",
+      "range": {
+        "startLine": 152,
+        "startChar": 33,
+        "endLine": 152,
+        "endChar": 42
+      },
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a6dafa4f_93bced0f",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 6
@@ -194,6 +242,24 @@
       "revId": "b61c959c984f12783dc0057905953fab77a32569",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b33ccd95_d29133bf",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-03-18T14:47:06Z",
+      "side": 1,
+      "message": "currently:\n   /**\n     * Validate ToscaConceptIdentifier, checking if exist in ToscaConceptIdentifiers map.\n     *\n     * @param definitions map of all ToscaConceptIdentifiers\n     * @param definition ToscaConceptIdentifier to validate\n     * @result result the validation result\n     */\n    private ValidationResult validateDefinition(Map\u003cString, ToscaConceptIdentifier\u003e definitions,\n            ToscaConceptIdentifier definition) {\n        BeanValidationResult result \u003d new BeanValidationResult(definition.getName(), definition);\n        ToscaConceptIdentifier identifier \u003d definitions.get(definition.getName());\n        if (identifier \u003d\u003d null) {\n            result.setResult(ValidationStatus.INVALID, \"Not FOUND\");\n        } else if (!identifier.equals(definition)) {\n            result.setResult(ValidationStatus.INVALID, \"Version not matching\");\n        } else {\n            result.setResult(ValidationStatus.CLEAN);\n        }\n        return (result.isClean() ? null : result);\n    }",
+      "parentUuid": "373f4b94_39a53e54",
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
