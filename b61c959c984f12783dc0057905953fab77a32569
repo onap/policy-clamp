@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "efe87056_c2f40d35",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-18T14:38:02Z",
+      "side": 1,
+      "message": "I think Jim wants an validationResult.addResult() call rather than a validationResult.setResult()",
+      "parentUuid": "e5ed5c37_c4e71a37",
+      "range": {
+        "startLine": 150,
+        "startChar": 33,
+        "endLine": 150,
+        "endChar": 42
+      },
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cd6402dd_25ace3a0",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 6
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "1b7217c3_f0fe0fec",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-18T14:38:02Z",
+      "side": 1,
+      "message": "same here",
+      "parentUuid": "e1b10fa4_4d581571",
+      "range": {
+        "startLine": 152,
+        "startChar": 33,
+        "endLine": 152,
+        "endChar": 42
+      },
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6dafa4f_93bced0f",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 6
@@ -128,6 +176,24 @@
       "revId": "b61c959c984f12783dc0057905953fab77a32569",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "373f4b94_39a53e54",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-18T14:38:02Z",
+      "side": 1,
+      "message": "Can you change this based on Jim\u0027s comment?",
+      "parentUuid": "54e81c8e_d70d9749",
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
