@@ -16,6 +16,24 @@
       "revId": "03c5f38a345f6b755a58fe58b2aa5edb14d9faf3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46ed8234_88ca1bfa",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/rest/SimulationQueryParticipantController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-18T11:37:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7cfda0cc_c6f2b70c",
+      "revId": "03c5f38a345f6b755a58fe58b2aa5edb14d9faf3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
