@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2f8349d8_ae75b482",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/CommonParticipantRestServer.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-03-18T12:37:47Z",
+      "side": 1,
+      "message": "why main2 is used here? could just shutdown and then assign main to null right!",
+      "range": {
+        "startLine": 185,
+        "startChar": 12,
+        "endLine": 185,
+        "endChar": 30
+      },
+      "revId": "34823f7c4e99d03d2b733fc8617cc905a437dbb3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c45379d_cb817b08",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestSimulationRestController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 4903
+      },
+      "writtenOn": "2021-03-18T12:37:47Z",
+      "side": 1,
+      "message": "you can just use assertEquals.",
+      "range": {
+        "startLine": 79,
+        "startChar": 8,
+        "endLine": 79,
+        "endChar": 15
+      },
+      "revId": "34823f7c4e99d03d2b733fc8617cc905a437dbb3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
