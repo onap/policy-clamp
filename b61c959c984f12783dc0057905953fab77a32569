@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a2f95781_bc9466bc",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-18T13:02:13Z",
+      "side": 1,
+      "message": "should do an addResult here",
+      "range": {
+        "startLine": 150,
+        "startChar": 33,
+        "endLine": 150,
+        "endChar": 42
+      },
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd6402dd_25ace3a0",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-18T13:02:13Z",
+      "side": 1,
+      "message": "should do an addResult here",
+      "range": {
+        "startLine": 152,
+        "startChar": 33,
+        "endLine": 152,
+        "endChar": 42
+      },
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6dafa4f_93bced0f",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 6
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-18T13:02:13Z",
+      "side": 1,
+      "message": "this should allocate a completely new bean whose \"field\" name is definition.getName() and then don\u0027t need to include definition.getName() when calling addResult() below.  This method can then return the new bean which can then be added to the result on line 166",
+      "revId": "b61c959c984f12783dc0057905953fab77a32569",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
