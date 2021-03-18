@@ -16,6 +16,24 @@
       "revId": "ca5992b7b38d82df62f7114dc484d1153809218c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19d3aa79_71a31c4b",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/rest/MonitoringQueryController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-18T12:49:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b8e2154_3edb538f",
+      "revId": "ca5992b7b38d82df62f7114dc484d1153809218c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
