@@ -196,6 +196,24 @@
     },
     {
       "key": {
+        "uuid": "e969137b_92648757",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-03-18T10:59:27Z",
+      "side": 1,
+      "message": "Thanks Jim. I have created a ticket to address the db related issues in control loop POC. https://jira.onap.org/browse/POLICY-3153",
+      "parentUuid": "b590a751_1d7c5def",
+      "revId": "2c5fd4d5b917131f5c3c8922f71290cd10dcf19e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a7fe9f3a_3f32fbb4",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
         "patchSetId": 1
