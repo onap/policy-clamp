@@ -37,32 +37,17 @@ Policy/CLAMP uses the API's exposed by the following ONAP components:
 
 - SDC : REST based interface exposed by the SDC, Distribution of service to DCAE
 - DCAE: REST based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
-- Policy Core: REST based interface, Policy engine target both XACML and Drools PDP, Policy Engine trigger operations to App-C/VF-C/SDN-C
+- Policy Core: REST based interface, Policy Core engine target both XACML and Drools PDP, Policy Engine trigger operations to App-C/VF-C/SDN-C
 - CDS: REST based interface, to retrieve list of operations/actions with their corresponding payload at runtime for Operational Policies where the field 'actor' is 'CDS'.
 
 Delivery
 --------
-Policy/CLAMP component is composed of a UI layer and a backend layer and packaged into a single container (single jar).
+Policy/CLAMP component is composed of a UI layer and a backend layer each layer having its own container.
 Policy/CLAMP also requires a database instance with 1 DB, it uses MariaDB, which is the same DB as for the core Policy.
 
-.. blockdiag::
+.. |clamp-policy-archi| image:: images/clamp-policy_archi.png
 
-
-   blockdiag layers {
-       orientation = portrait
-       CLAMP_UI -> CLAMP_BACKEND;
-       CLAMP_BACKEND -> CLDSDB;
-       group l1 {
-       color = blue;
-       label = "CLAMP container";
-       CLAMP_UI; CLAMP_BACKEND;
-       }
-       group l3 {
-       color = orange;
-       label = "MariaDB container";
-       CLDSDB;
-       }
-   }
+|clamp-policy-archi|
 
 Logging & Diagnostic Information
 --------------------------------
@@ -85,7 +70,7 @@ Configuration
 .. What are parameters and values?
 
 
-Currently, the CLAMP docker image can be deployed with small configuration needs. Though, you might need to make small adjustments to the configuration. As CLAMP is spring based, you can use the SPRING_APPLICATION_JSON environment variable to update its parameters.
+Currently, the CLAMP docker images can be deployed with small configuration needs. Though, you might need to make small adjustments to the configuration. As CLAMP is spring based, you can use the SPRING_APPLICATION_JSON environment variable to update its parameters.
 
 .. TODO detail config parameters and the usage
 
