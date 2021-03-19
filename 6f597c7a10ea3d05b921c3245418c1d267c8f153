@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3dd67a0_dbf00039",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/SimulationHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "return Set.of(...)",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 31
+      },
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80eb2ac8_2439d294",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/rest/SimulationQueryElementController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "let\u0027s merge these XxxControllers into one class for each type of object being controlled, which in this case, would be elements and participants.",
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48c6281d_54b01fbb",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/rest/SimulationQueryElementController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "just a SimpleResponse",
+      "range": {
+        "startLine": 112,
+        "startChar": 12,
+        "endLine": 112,
+        "endChar": 44
+      },
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e75c8dc2_77482961",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/rest/SimulationQueryParticipantController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "\"participants\"?",
+      "range": {
+        "startLine": 99,
+        "startChar": 20,
+        "endLine": 99,
+        "endChar": 24
+      },
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9b1c72e_b6bb9661",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/rest/SimulationQueryParticipantController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "just a SimpleResponse",
+      "range": {
+        "startLine": 110,
+        "startChar": 12,
+        "endLine": 110,
+        "endChar": 44
+      },
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91bad79f_3f569818",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/rest/SimulationUpdateElementController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "ControlLoopElement",
+      "range": {
+        "startLine": 116,
+        "startChar": 32,
+        "endLine": 116,
+        "endChar": 43
+      },
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0f73616_1e5375f8",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/CommonParticipantRestServer.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "40, 250",
+      "range": {
+        "startLine": 171,
+        "startChar": 58,
+        "endLine": 171,
+        "endChar": 66
+      },
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd0dd10b_62517f81",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestListenerUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "sonar - add:\n\nprivate TestListenerUtils() {}",
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0af24fe6_cb4f23d2",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestListenerUtils.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-19T13:21:41Z",
+      "side": 1,
+      "message": "should probably throw an exception if controlLoopString is null (i.e., file not found)",
+      "revId": "6f597c7a10ea3d05b921c3245418c1d267c8f153",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
