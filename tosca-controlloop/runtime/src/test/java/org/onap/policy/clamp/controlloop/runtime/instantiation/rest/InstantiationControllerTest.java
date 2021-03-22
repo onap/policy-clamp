@@ -58,6 +58,8 @@ public class InstantiationControllerTest extends CommonRestController {
 
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
 
+    private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
+
     /**
      * starts Main and inserts a commissioning template.
      *
@@ -66,6 +68,9 @@ public class InstantiationControllerTest extends CommonRestController {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         CommonRestController.setUpBeforeClass("InstApi");
+
+        // to validate control Loop, it needs to define ToscaServiceTemplate
+        InstantiationUtils.storeToscaServiceTemplate(TOSCA_TEMPLATE_YAML, getParameters());
 
         ControlLoops controlLoops =
                 InstantiationUtils.getControlLoopsFromResource(CL_INSTANTIATION_CREATE_JSON, "Command");
