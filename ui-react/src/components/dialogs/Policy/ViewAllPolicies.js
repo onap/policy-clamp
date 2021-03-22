@@ -48,7 +48,7 @@ import Switch from '@material-ui/core/Switch';
 import MaterialTable from "material-table";
 import PolicyService from '../../../api/PolicyService';
 import PolicyToscaService from '../../../api/PolicyToscaService';
-import Select from 'react-select';
+import Select from '@material-ui/core/Select';
 import Alert from 'react-bootstrap/Alert';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -115,19 +115,12 @@ export default class ViewAllPolicies extends React.Component {
                 headerStyle: headerStyle
             },
             {
-                title: "Deployed in PDP", field: "pdpGroupInfo.pdpGroup",
-                cellStyle: cellPdpGroupStyle,
-                headerStyle: headerStyle,
-                render: rowData => this.renderPdpGroupDropBox(rowData),
-                grouping: false
-            },
-            {
-                title: "PDP Group", field: "pdpGroupInfo.pdpGroup",
+                title: "Deployable in PDP Group", field: "supportedPdpGroupsString",
                 cellStyle: cellPdpGroupStyle,
                 headerStyle: headerStyle
             },
             {
-                title: "PDP SubGroup", field: "pdpGroupInfo.pdpSubGroup",
+                title: "Deployed in PDP Group", field: "pdpGroupInfoString",
                 cellStyle: cellPdpGroupStyle,
                 headerStyle: headerStyle
             }
@@ -183,15 +176,39 @@ export default class ViewAllPolicies extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handleClose = this.handleClose.bind(this);
-        this.renderPdpGroupDropBox = this.renderPdpGroupDropBox.bind(this);
-        this.handlePdpGroupChange = this.handlePdpGroupChange.bind(this);
         this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.disableAlert = this.disableAlert.bind(this);
         this.getAllPolicies = this.getAllPolicies.bind(this);
         this.getAllToscaModels = this.getAllToscaModels.bind(this);
+        this.generateAdditionalPolicyColumns = this.generateAdditionalPolicyColumns.bind(this);
         this.getAllPolicies();
         this.getAllToscaModels();
+    }
+
+    generateAdditionalPolicyColumns(policiesData) {
+        policiesData.forEach(policy => {
+            let supportedPdpGroupsString = "";
+            if (typeof policy.supportedPdpGroups !== "undefined") {
+                        for (const pdpGroup of policy["supportedPdpGroups"]) {
+                            for (const pdpSubGroup of Object.values(pdpGroup)[0]) {
+                                supportedPdpGroupsString += (Object.keys(pdpGroup)[0] + "/" + pdpSubGroup + "\r");
+                            }
+                        }
+                        policy["supportedPdpGroupsString"] = supportedPdpGroupsString;
+            }
+
+            let infoPdpGroup = "";
+            if (typeof policy.pdpGroupInfo !== "undefined") {
+                    policy["pdpGroupInfo"].forEach(pdpGroupElem => {
+                        pdpGroupElem[Object.keys(pdpGroupElem)[0]]["pdpSubgroups"].forEach(pdpSubGroupElem => {
+                            infoPdpGroup += (Object.keys(pdpGroupElem)[0] + "/" + pdpSubGroupElem["pdpType"] + " ("
+                                    + pdpGroupElem[Object.keys(pdpGroupElem)[0]]["pdpGroupState"] + ")" +"\r");
+                        });
+                        policy["pdpGroupInfoString"] = infoPdpGroup;
+                    });
+            }
+        });
     }
 
     getAllToscaModels() {
@@ -200,41 +217,12 @@ export default class ViewAllPolicies extends React.Component {
         });
     }
 
-    handlePdpGroupChange(e) {
-        let pdpSplit = e.value.split("/");
-        let selectedPdpGroup = pdpSplit[0];
-        let selectedSubPdpGroup = pdpSplit[1];
-        if (typeof selectedSubPdpGroup !== "undefined") {
-            let temp = this.state.policiesListData;
-            temp[this.state.selectedRowId]["pdpGroupInfo"] = {"pdpGroup":selectedPdpGroup,"pdpSubGroup":selectedSubPdpGroup};
-            this.setState({policiesListData: temp});
-        } else {
-            delete this.state.policiesListData[this.state.selectedRowId]["pdpGroupInfo"];
-        }
-    }
-
-    renderPdpGroupDropBox(dataRow) {
-        let optionItems = [{label: "NOT DEPLOYED", value: "NOT DEPLOYED"}];
-        let selectedItem = {label: "NOT DEPLOYED", value: "NOT DEPLOYED"};
-        if (typeof dataRow.supportedPdpGroups !== "undefined") {
-            for (const pdpGroup of dataRow["supportedPdpGroups"]) {
-                for (const pdpSubGroup of Object.values(pdpGroup)[0]) {
-                    optionItems.push({ label: Object.keys(pdpGroup)[0]+"/"+pdpSubGroup,
-                    value: Object.keys(pdpGroup)[0]+"/"+pdpSubGroup });
-                }
-            }
-        }
-        if (typeof dataRow.pdpGroupInfo !== "undefined") {
-            selectedItem = {label: dataRow["pdpGroupInfo"]["pdpGroup"]+"/"+dataRow["pdpGroupInfo"]["pdpSubGroup"],
-            value: dataRow["pdpGroupInfo"]["pdpGroup"]+"/"+dataRow["pdpGroupInfo"]["pdpSubGroup"]};
-        }
-        return (<div style={{width: '250px'}}><Select value={selectedItem} options={optionItems} onChange={this.handlePdpGroupChange}/></div>);
-    }
-
     getAllPolicies() {
         PolicyService.getPoliciesList().then(allPolicies => {
+            this.generateAdditionalPolicyColumns(allPolicies["policies"])
             this.setState({ policiesListData: allPolicies["policies"] })
         });
+
     }
 
     handleClose() {
