@@ -23,11 +23,8 @@
 
 package org.onap.policy.clamp.policy.pdpgroup;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import java.util.Map;
 import java.util.stream.StreamSupport;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
@@ -100,19 +97,5 @@ public class PoliciesPdpMerger {
                 .getSupportedPdpGroupsForModelType(pdpGroups, policyJsonNode.get("type").getAsString(),
                         policyJsonNode.get("type_version").getAsString());
         mergeJsonElement(policyJsonNode, supportedPdpGroupsJson);
-    }
-
-    /**
-     * This method removes the pdp States added for one policy.
-     *
-     * @param policyJsonNode The policy node Json as String
-     * @return The Json with pdp group info removed
-     */
-    public static JsonObject removePdpStatesOnePolicy(JsonObject policyJsonNode) {
-        //JsonObject policyJson = JsonUtils.GSON.fromJson(policyJsonNode, JsonObject.class);
-        // Simply remove the nodes we have added.
-        policyJsonNode.remove(PdpGroupsAnalyzer.ASSIGNED_PDP_GROUPS_INFO);
-        policyJsonNode.remove(PdpGroupsAnalyzer.SUPPORTED_PDP_GROUPS_INFO);
-        return policyJsonNode;
     }
 }
