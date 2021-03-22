@@ -25,20 +25,19 @@ package org.onap.policy.clamp.loop.components.external;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javax.persistence.Transient;
 import org.apache.camel.Exchange;
+import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.Loop;
 import org.onap.policy.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.policy.clamp.policy.operational.OperationalPolicy;
+import org.onap.policy.clamp.policy.pdpgroup.PdpGroupPayload;
 
+/**
+ * This class represents the policy state according to all policies involved in the control loop.
+ * It can compute it with all policy queries result.
+ * It contains also the method to generate the PDP payload used for the policies deployment.
+ */
 public class PolicyComponent extends ExternalComponent {
 
     @Transient
@@ -81,79 +80,20 @@ public class PolicyComponent extends ExternalComponent {
      * @return The json, payload to send
      */
     public static String createPoliciesPayloadPdpGroup(Loop loop, String action) {
-        Map<String, Map<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
+        PdpGroupPayload pdpGroupPayload = new PdpGroupPayload();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
-            updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(),
-                    opPolicy.getName(),
-                    "1.0.0", pdpGroupMap);
+            pdpGroupPayload
+                    .updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(), opPolicy.getName(), "1.0.0");
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
-            updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(),
-                    msPolicy.getName(),
-                    "1.0.0", pdpGroupMap);
+            pdpGroupPayload
+                    .updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(), msPolicy.getName(), "1.0.0");
         }
 
-        String payload = new GsonBuilder().setPrettyPrinting().create()
-                .toJson(generateActivatePdpGroupPayload(pdpGroupMap, action));
+        String payload = JsonUtils.GSON.toJson(pdpGroupPayload.generateActivatePdpGroupPayload(action));
         logger.info("PdpGroup policy payload: " + payload);
         return payload;
-    }
-
-    private static void updatePdpGroupMap(String pdpGroup,
-                                          String pdpSubGroup,
-                                          String policyName,
-                                          String policyVersion,
-                                          Map<String, Map<String,
-                                                  List<JsonObject>>> pdpGroupMap) {
-        JsonObject policyJson = new JsonObject();
-        policyJson.addProperty("name", policyName);
-        policyJson.addProperty("version", policyVersion);
-        Map<String, List<JsonObject>> pdpSubGroupMap;
-        List<JsonObject> policyList;
-        if (pdpGroupMap.get(pdpGroup) == null) {
-            pdpSubGroupMap = new HashMap<>();
-            policyList = new LinkedList<>();
-        } else {
-            pdpSubGroupMap = pdpGroupMap.get(pdpGroup);
-            if (pdpSubGroupMap.get(pdpSubGroup) == null) {
-                policyList = new LinkedList<>();
-            } else {
-                policyList = (List<JsonObject>) pdpSubGroupMap.get(pdpSubGroup);
-            }
-        }
-        policyList.add(policyJson);
-        pdpSubGroupMap.put(pdpSubGroup, policyList);
-        pdpGroupMap.put(pdpGroup, pdpSubGroupMap);
-    }
-
-    private static JsonObject generateActivatePdpGroupPayload(
-            Map<String, Map<String, List<JsonObject>>> pdpGroupMap, String action) {
-        JsonArray payloadArray = new JsonArray();
-        for (Entry<String, Map<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
-            JsonObject pdpGroupNode = new JsonObject();
-            JsonArray subPdpArray = new JsonArray();
-            pdpGroupNode.addProperty("name", pdpGroupInfo.getKey());
-            pdpGroupNode.add("deploymentSubgroups", subPdpArray);
-
-            for (Entry<String, List<JsonObject>> pdpSubGroupInfo : pdpGroupInfo.getValue().entrySet()) {
-                JsonObject pdpSubGroupNode = new JsonObject();
-                subPdpArray.add(pdpSubGroupNode);
-                pdpSubGroupNode.addProperty("pdpType", pdpSubGroupInfo.getKey());
-                pdpSubGroupNode.addProperty("action", action);
-
-                JsonArray policyArray = new JsonArray();
-                pdpSubGroupNode.add("policies", policyArray);
-
-                for (JsonObject policy : pdpSubGroupInfo.getValue()) {
-                    policyArray.add(policy);
-                }
-            }
-            payloadArray.add(pdpGroupNode);
-        }
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("groups", payloadArray);
-        return jsonObject;
     }
 
     private static ExternalComponentState findNewState(boolean found, boolean deployed) {
