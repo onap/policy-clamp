@@ -16,6 +16,24 @@
       "revId": "840733402146a4545a7c7b835de29c9e1a052dcc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a994af74_b8cdd686",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-22T11:55:35Z",
+      "side": 0,
+      "message": "Yes, This part of the code is for participant simulator, which is used for Test purposes only. I think we may not need this file here.",
+      "parentUuid": "f3364bc8_283e5fe5",
+      "revId": "840733402146a4545a7c7b835de29c9e1a052dcc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
