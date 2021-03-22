@@ -34,10 +34,38 @@
         "policy-id": "MICROSERVICE_vLoadBalancerMS_v1_0_tcagen2_1_0_0_AV0",
         "policy-version": "1.0.0"
       },
-      "pdpGroupInfo": {
-        "pdpGroup": "pdpGroup2",
-        "pdpSubGroup": "subGroup2"
-      },
+      "pdpGroupInfo": [
+        {
+          "pdpGroup2": {
+            "name": "pdpGroup2",
+            "pdpGroupState": "ACTIVE",
+            "pdpSubgroups": [
+              {
+                "pdpType": "subGroup2",
+                "supportedPolicyTypes": [
+                  {
+                    "name": "onap.policies.monitoring.tcagen2",
+                    "version": "1.0.0"
+                  },
+                  {
+                    "name": "onap.policies.controlloop.operational.common.Drools",
+                    "version": "1.0.0"
+                  }
+                ],
+                "policies": [
+                  {
+                    "name": "MICROSERVICE_vLoadBalancerMS_v1_0_tcagen2_1_0_0_AV0",
+                    "version": "1.0.0"
+                  }
+                ],
+                "currentInstanceCount": 0,
+                "desiredInstanceCount": 0,
+                "pdpInstances": []
+              }
+            ]
+          }
+        }
+      ],
       "supportedPdpGroups": [
         {
           "pdpGroup2": [
@@ -97,10 +125,42 @@
         "policy-id": "OPERATIONAL_vLoadBalancerMS_v1_0_Drools_1_0_0_7xd",
         "policy-version": "1.0.0"
       },
-      "pdpGroupInfo": {
-        "pdpGroup": "pdpGroup2",
-        "pdpSubGroup": "subGroup3"
-      },
+      "pdpGroupInfo": [
+        {
+          "pdpGroup2": {
+            "name": "pdpGroup2",
+            "pdpGroupState": "ACTIVE",
+            "pdpSubgroups": [
+              {
+                "pdpType": "subGroup3",
+                "supportedPolicyTypes": [
+                  {
+                    "name": "onap.policies.monitoring.tcagen2",
+                    "version": "1.0.0"
+                  },
+                  {
+                    "name": "onap.policies.controlloop.operational.common.Drools",
+                    "version": "1.0.0"
+                  }
+                ],
+                "policies": [
+                  {
+                    "name": "org.onap.testos",
+                    "version": "2.0.0"
+                  },
+                  {
+                    "name": "OPERATIONAL_vLoadBalancerMS_v1_0_Drools_1_0_0_7xd",
+                    "version": "1.0.0"
+                  }
+                ],
+                "currentInstanceCount": 0,
+                "desiredInstanceCount": 0,
+                "pdpInstances": []
+              }
+            ]
+          }
+        }
+      ],
       "supportedPdpGroups": [
         {
           "pdpGroup2": [
