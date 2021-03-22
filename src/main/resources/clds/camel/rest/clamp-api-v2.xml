@@ -437,7 +437,7 @@
                     <to
                             uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('RESTART request','INFO',${exchangeProperty[loopObject]})"/>
 
-                    <to uri="direct:add-all-to-active-pdp-group"/>
+                    <to uri="direct:add-policies-from-loop-to-pdp-group"/>
                     <log loggingLevel="INFO"
                          message="RESTART request successfully executed for loop: ${header.loopName}"/>
                     <to
@@ -524,7 +524,7 @@
                         <constant>3000</constant>
                     </delay>
 
-                    <to uri="direct:add-all-to-active-pdp-group"/>
+                    <to uri="direct:add-policies-from-loop-to-pdp-group"/>
 
                     <log loggingLevel="INFO"
                          message="SUBMIT request successfully executed for loop: ${header.loopName}"/>

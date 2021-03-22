@@ -208,8 +208,8 @@
         </doTry>
     </route>
 
-    <route id="add-all-to-active-pdp-group">
-        <from uri="direct:add-all-to-active-pdp-group"/>
+    <route id="add-policies-from-loop-to-pdp-group">
+        <from uri="direct:add-policies-from-loop-to-pdp-group"/>
         <doTry>
             <log loggingLevel="INFO"
                  message="Adding loop policies to PDP Group: ${exchangeProperty[loopObject].getName()}"/>
@@ -220,29 +220,7 @@
                     ${exchangeProperty[loopObject].getComponent("POLICY").createPoliciesPayloadPdpGroup(exchangeProperty[loopObject],"POST")}
                 </simple>
             </setBody>
-            <setHeader headerName="CamelHttpMethod">
-                <constant>POST</constant>
-            </setHeader>
-            <setHeader headerName="Content-Type">
-                <constant>application/json</constant>
-            </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
-                <simple>${exchangeProperty[X-ONAP-RequestID]}
-                </simple>
-            </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
-                <simple>${exchangeProperty[X-ONAP-InvocationID]}
-                </simple>
-            </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
-                <simple>${exchangeProperty[X-ONAP-PartnerName]}
-                </simple>
-            </setHeader>
-            <log loggingLevel="INFO"
-                 message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
-            <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
-
+            <to uri="direct:add-multiple-policies-to-pdp-group"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
@@ -486,7 +464,43 @@
             </doFinally>
         </doTry>
     </route>
-
+    <route id="add-multiple-policies-to-pdp-group">
+        <from uri="direct:add-multiple-policies-to-pdp-group"/>
+        <!-- Body should come from outside, expect a json describing the policy -->
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Add policies to PDP group"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Add policies to PDP group')"/>
+            <setHeader headerName="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader headerName="Content-Type">
+                <constant>application/json</constant>
+            </setHeader>
+            <setHeader headerName="X-ONAP-RequestID">
+                <simple>${exchangeProperty[X-ONAP-RequestID]}
+                </simple>
+            </setHeader>
+            <setHeader headerName="X-ONAP-InvocationID">
+                <simple>${exchangeProperty[X-ONAP-InvocationID]}
+                </simple>
+            </setHeader>
+            <setHeader headerName="X-ONAP-PartnerName">
+                <simple>${exchangeProperty[X-ONAP-PartnerName]}
+                </simple>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
+            <toD
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
     <route id="undeploy-one-policy-from-pap">
         <from uri="direct:undeploy-one-policy-from-pap"/>
         <doTry>

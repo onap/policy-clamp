@@ -10,7 +10,12 @@
                     "desiredInstanceCount": 1,
                     "pdpInstances": [],
                     "pdpType": "apex",
-                    "policies": [],
+                    "policies": [
+                                {
+                                  "name": "OPERATIONAL_vLoadBalancerMS_v1_0_Drools_1_0_0_7xd",
+                                  "version": "1.0.0"
+                                }
+                    ],
                     "properties": {},
                     "supportedPolicyTypes": [
                         {
