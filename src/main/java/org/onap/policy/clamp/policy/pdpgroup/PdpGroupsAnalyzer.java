@@ -25,9 +25,14 @@ package org.onap.policy.clamp.policy.pdpgroup;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import org.apache.commons.collections4.CollectionUtils;
+import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
@@ -44,8 +49,77 @@ public class PdpGroupsAnalyzer {
     public static final String SUPPORTED_PDP_GROUPS_INFO = "supportedPdpGroups";
 
     /**
-     * Get supported subGroups based on the defined policy type and version for s specific PDPgroup.
-     * It returns null if the Group is not ACTIVE or if the policytype/version has not been found in the PDPSubgroups.
+     * This structure holds the map of PdpGroups per policies, policies are identifed by ToscaConceptIdentifier.
+     */
+    private final Map<ToscaConceptIdentifier, Map<String, PdpGroup>> pdpGroupsDeploymentPerPolicy =
+            new ConcurrentHashMap<>();
+
+    /**
+     * Constructor taking he PDPGroups info from the PEF.
+     * It then caches the groups per policies and per types.
+     *
+     * @param pdpGroups The pdpgroup info from the PEF
+     */
+    public PdpGroupsAnalyzer(PdpGroups pdpGroups) {
+        this.analyzePdpGroups(pdpGroups);
+    }
+
+    /**
+     * Getter of the GroupDeploymentPerPolicy structure.
+     *
+     * @return The map of policies.
+     */
+    public Map<ToscaConceptIdentifier, Map<String, PdpGroup>> getPdpGroupsDeploymentPerPolicy() {
+        return pdpGroupsDeploymentPerPolicy;
+    }
+
+    private static void addInfoToPdpGroupsStructure(ToscaConceptIdentifier toscaId,
+                                                    Map<ToscaConceptIdentifier,
+                                                            Map<String,
+                                                                    PdpGroup>> pdpGroupsDeploymentPerToscaIdentifier,
+                                                    PdpGroup pdpGroupSource,
+                                                    PdpSubGroup pdpSubGroupSource) {
+        // Copy the subgroup but empty the policies & types
+        pdpGroupsDeploymentPerToscaIdentifier.computeIfAbsent(toscaId, toscaKey -> new ConcurrentHashMap<>())
+                .computeIfAbsent(pdpGroupSource.getName(), pdpGroupName -> {
+                    PdpGroup pdpGroupCopy = new PdpGroup(pdpGroupSource);
+                    pdpGroupCopy.setPdpSubgroups(new ArrayList<>());
+                    return pdpGroupCopy;
+                }).getPdpSubgroups().add(new PdpSubGroup(pdpSubGroupSource));
+    }
+
+    private void analyzePdpGroups(PdpGroups pdpGroups) {
+        CollectionUtils.emptyIfNull(pdpGroups.getGroups()).stream()
+                .forEach(group -> CollectionUtils.emptyIfNull(group.getPdpSubgroups()).stream().forEach(subGroup ->
+                        CollectionUtils.emptyIfNull(subGroup.getPolicies()).parallelStream().forEach(policy ->
+                                PdpGroupsAnalyzer.addInfoToPdpGroupsStructure(policy, this.pdpGroupsDeploymentPerPolicy,
+                                        group, subGroup))));
+    }
+
+    /**
+     * This method retrieves all pdpGroups and subgroups where a specific policy name/version is deployed.
+     *
+     * @param policyName The policy name that must be used for searching
+     * @param version    THe policy version that must be used for searching
+     * @return It returns a JsonObject containing each pdpGroup and subgroups associated
+     */
+    public JsonObject getPdpGroupsForPolicy(String policyName, String version) {
+        Map<String, PdpGroup> mapOfGroups =
+                this.pdpGroupsDeploymentPerPolicy.get(new ToscaConceptIdentifier(policyName, version));
+        if (mapOfGroups != null) {
+            JsonObject policyPdpGroups = new JsonObject();
+            JsonArray pdpGroupsArray = new JsonArray();
+            policyPdpGroups.add(ASSIGNED_PDP_GROUPS_INFO, pdpGroupsArray);
+            pdpGroupsArray.add(JsonUtils.GSON
+                    .toJsonTree(mapOfGroups));
+            return policyPdpGroups;
+        }
+        return null;
+    }
+
+    /**
+     * Get supported subGroups based on the defined policy type and version for specific PDPGroup.
+     * It returns null if the Group is TERMINATED or if the policytype/version has not been found in the PDPSubgroups.
      *
      * @param pdpGroup   The pdpGroup that must be analyzed
      * @param policyType The policy type
@@ -56,7 +130,7 @@ public class PdpGroupsAnalyzer {
      */
     private static JsonObject getSupportedPdpSubgroupsForModelType(PdpGroup pdpGroup, String policyType,
                                                                    String version) {
-        if (!PdpState.ACTIVE.equals(pdpGroup.getPdpGroupState())) {
+        if (PdpState.TERMINATED.equals(pdpGroup.getPdpGroupState())) {
             return null;
         }
         JsonObject supportedPdpGroup = new JsonObject();
@@ -87,7 +161,7 @@ public class PdpGroupsAnalyzer {
 
         pdpGroups.getGroups().stream().map(pdpGroup -> PdpGroupsAnalyzer.getSupportedPdpSubgroupsForModelType(pdpGroup,
                 policyType, version)).filter(Objects::nonNull)
-                .forEach(jsonPdpGroup -> pdpGroupsArray.add(jsonPdpGroup));
+                .forEach(pdpGroupsArray::add);
 
         return pdpGroupsArray.size() != 0 ? supportedPdpGroups : null;
     }
@@ -99,38 +173,8 @@ public class PdpGroupsAnalyzer {
      * @param pdpGroups        The PdpGroups containing all PDP group definition
      */
     public static void updatePdpGroupOfPolicyModels(List<PolicyModel> policyModelsList, PdpGroups pdpGroups) {
-        policyModelsList.parallelStream().forEach(policyModel -> {
-            policyModel.setPolicyPdpGroup(getSupportedPdpGroupsForModelType(pdpGroups, policyModel.getPolicyModelType(),
-                    policyModel.getVersion()));
-        });
-    }
-
-    /**
-     * This method searches for the PdpGroup/subgroup where the policy given is currently deployed.
-     *
-     * @param pdpGroups The pdpGroups info from PEF
-     * @param policyName The policy Id
-     * @param version The policy version
-     * @return It returns a JsonObject containing the pdpGroup/subgroup info
-     */
-    public static JsonObject getPdpGroupDeploymentOfOnePolicy(PdpGroups pdpGroups, String policyName, String version) {
-        JsonObject pdpGroupInfo = new JsonObject();
-        JsonObject assignedPdpGroups = new JsonObject();
-        pdpGroupInfo.add(ASSIGNED_PDP_GROUPS_INFO, assignedPdpGroups);
-
-        ToscaConceptIdentifier toscaConceptIdentifier = new ToscaConceptIdentifier(policyName, version);
-        pdpGroups.getGroups().stream().anyMatch(pdpGroup ->
-                pdpGroup.getPdpSubgroups().stream().anyMatch(
-                        pdpSubGroup -> {
-                            if (pdpSubGroup.getPolicies() != null && pdpSubGroup.getPolicies()
-                                    .contains(toscaConceptIdentifier)) {
-                                assignedPdpGroups.addProperty("pdpGroup", pdpGroup.getName());
-                                assignedPdpGroups.addProperty("pdpSubGroup", pdpSubGroup.getPdpType());
-                                return true;
-                            }
-                            return false;
-                        })
-        );
-        return assignedPdpGroups.entrySet().isEmpty() ? null : pdpGroupInfo;
+        policyModelsList.parallelStream().forEach(policyModel -> policyModel
+                .setPolicyPdpGroup(getSupportedPdpGroupsForModelType(pdpGroups, policyModel.getPolicyModelType(),
+                        policyModel.getVersion())));
     }
 }
