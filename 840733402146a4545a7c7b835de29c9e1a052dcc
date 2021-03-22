@@ -52,6 +52,24 @@
       "revId": "840733402146a4545a7c7b835de29c9e1a052dcc",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "192f7424_0ba2d293",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-22T13:13:04Z",
+      "side": 0,
+      "message": "Hi Jim, I had below comment from Jorge in my previous commit, Based on this comment I think Info level logging should be fine for debugging the REST, as the code in participant simulator will be pretty straight forward. \nJorge: \"In general in the absence of a logback*.xml, by default, it will print to stdout at the info level, so this file may be unnecessary if you were ok without setting it at the trace level in line 39.\"\n\nPlease let me know if you think otherwise.Thanks.",
+      "parentUuid": "dc8d3a81_5c04dbbf",
+      "revId": "840733402146a4545a7c7b835de29c9e1a052dcc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
