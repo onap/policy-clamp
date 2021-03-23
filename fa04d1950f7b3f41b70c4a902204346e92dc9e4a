@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a4097ca6_56259e11",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-23T15:07:33Z",
+      "side": 1,
+      "message": "seems like there\u0027s a 50-character limit to a commit title",
+      "parentUuid": "c42b656b_eb8b1fe6",
+      "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f76793f6_bcdbbcc6",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "041f2635_19560822",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-23T15:07:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f76793f6_bcdbbcc6",
+      "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -68,6 +104,24 @@
       "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "598698af_8e5bb9cd",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-23T15:07:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "23901d72_51a31e0a",
+      "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
