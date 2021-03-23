@@ -205,19 +205,19 @@ public class MonitoringProvider implements Closeable {
             //Fetch all control loop elements for the control loop
             ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name,
                 version));
-            clElements.addAll(controlLoop.getElements());
-
-            //Collect control loop element statistics for each cl element.
-            for (ControlLoopElement clElement : clElements) {
-                clElementStats.addAll(fetchFilteredClElementStatistics(clElement.getParticipantId().getName(),
-                    clElement.getParticipantId().getVersion(), clElement.getId().toString(), null,
-                    null, 0).getClElementStatistics());
+            if (controlLoop != null) {
+                clElements.addAll(controlLoop.getElements());
+                //Collect control loop element statistics for each cl element.
+                for (ControlLoopElement clElement : clElements) {
+                    clElementStats.addAll(fetchFilteredClElementStatistics(clElement.getParticipantId().getName(),
+                        clElement.getParticipantId().getVersion(), clElement.getId().toString(), null,
+                        null, 0).getClElementStatistics());
+                }
             }
             clElementStatisticsList.setClElementStatistics(clElementStats);
         } catch (PfModelException e) {
             throw new PfModelRuntimeException(e);
         }
-
         return clElementStatisticsList;
     }
 
@@ -255,13 +255,13 @@ public class MonitoringProvider implements Closeable {
         throws PfModelException {
         Map<String, ToscaConceptIdentifier> clElementId = new HashMap<>();
         ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
-        for (ControlLoopElement clElement : controlLoop.getElements()) {
-            clElementId.put(clElement.getId().toString(), clElement.getParticipantId());
+        if (controlLoop != null) {
+            for (ControlLoopElement clElement : controlLoop.getElements()) {
+                clElementId.put(clElement.getId().toString(), clElement.getParticipantId());
+            }
         }
         return clElementId;
     }
-
-
 
     public void updateClElementStatistics(List<ClElementStatistics> clElementStatistics) {
         // TODO Auto-generated method stub
