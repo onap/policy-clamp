@@ -50,6 +50,24 @@
       "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23901d72_51a31e0a",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 6070
+      },
+      "writtenOn": "2021-03-23T15:01:14Z",
+      "side": 1,
+      "message": "Yes, for invalid ConceptId, we get a null response from control loop provider.",
+      "parentUuid": "2f434002_a0ba793e",
+      "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
