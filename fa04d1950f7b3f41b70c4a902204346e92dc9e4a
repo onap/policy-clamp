@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c42b656b_eb8b1fe6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-23T14:28:51Z",
+      "side": 1,
+      "message": "also ties monitoring handler into the activator",
+      "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f76793f6_bcdbbcc6",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-23T14:28:51Z",
+      "side": 1,
+      "message": "skip this test - it isn\u0027t needed",
+      "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f434002_a0ba793e",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/monitoring/MonitoringProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-23T14:28:51Z",
+      "side": 1,
+      "message": "just wondering, can it actually be null?",
+      "revId": "fa04d1950f7b3f41b70c4a902204346e92dc9e4a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
