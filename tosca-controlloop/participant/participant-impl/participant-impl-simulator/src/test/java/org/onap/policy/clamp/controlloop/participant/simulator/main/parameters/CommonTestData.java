@@ -182,9 +182,7 @@ public class CommonTestData {
      * @return participant Id
      */
     public static ToscaConceptIdentifier getParticipantId() {
-        final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("CDSParticipant0");
-        participantId.setVersion("1.0.0");
+        final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.0");
         return participantId;
     }
 

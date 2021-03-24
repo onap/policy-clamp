@@ -53,6 +53,10 @@ public class ParticipantSimulatorActivator extends ServiceManagerContainer {
             () -> simulationHandler.set(new SimulationHandler(parameters)),
             () -> simulationHandler.get().close());
 
+        addAction("Simulation Providers",
+            () -> simulationHandler.get().startProviders(),
+            () -> simulationHandler.get().stopProviders());
+
         parameters.getRestServerParameters().setName(parameters.getName());
 
         addAction("REST server",

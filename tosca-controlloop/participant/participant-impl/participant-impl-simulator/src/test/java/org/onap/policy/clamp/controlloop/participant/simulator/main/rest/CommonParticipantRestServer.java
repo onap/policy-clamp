@@ -21,7 +21,7 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.main.rest;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -127,8 +127,7 @@ public class CommonParticipantRestServer {
      */
     protected void testSwagger(final String endpoint) throws Exception {
         final Invocation.Builder invocationBuilder = sendFqeRequest(httpPrefix + "swagger.yaml", true);
-        final String resp = invocationBuilder.get(String.class);
-        assertTrue(resp.contains(ENDPOINT_PREFIX + endpoint + ":"));
+        assertThat(invocationBuilder.get(String.class)).contains(ENDPOINT_PREFIX + endpoint + ":");
     }
 
     /**

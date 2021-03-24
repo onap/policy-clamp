@@ -13,11 +13,11 @@
         "reportingTimeInterval": 120000,
         "description": "Participant Description",
         "participantId": {
-            "name": "CDSParticipant0",
+            "name": "org.onap.PM_CDS_Blueprint",
             "version": "1.0.0"
         },
         "participantType": {
-            "name": "CDSParticipant0",
+            "name": "org.onap.PM_CDS_Blueprint",
             "version": "1.0.0"
         },
         "clampControlLoopTopics": {

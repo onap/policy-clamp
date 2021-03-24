@@ -32,6 +32,8 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.IntermediaryActivator;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -40,49 +42,74 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
  */
 public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryApi {
 
+    // The activator for the participant intermediary
+    private IntermediaryActivator activator;
+
     @Override
     public void init(ParticipantIntermediaryParameters parameters) {
+        activator = new IntermediaryActivator(parameters);
+
+        activator.start();
     }
 
     @Override
     public void close() {
+        activator.shutdown();
     }
 
     @Override
     public List<Participant> getParticipants(String name, String version) {
-        return Collections.emptyList();
+        return List.of(activator.getParticipantHandler().getParticipant(name, version));
     }
 
     @Override
     public Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState state) {
-        return null;
+        return activator.getParticipantHandler().updateParticipantState(definition, state);
     }
 
     @Override
     public void updateParticipantStatistics(ParticipantStatistics participantStatistics) {
+        // TODO Auto-generated method stub
     }
 
     @Override
     public ControlLoops getControlLoops(String name, String version) {
-        return null;
+        return activator.getParticipantHandler().getControlLoopHandler().getControlLoops();
     }
 
     @Override
     public List<ControlLoopElement> getControlLoopElements(String name, String version) {
+        List<ControlLoop> controlLoops = activator.getParticipantHandler()
+                .getControlLoopHandler().getControlLoops().getControlLoopList();
+
+        for (ControlLoop controlLoop : controlLoops) {
+            if (controlLoop.getDefinition().getName().equals(name)) {
+                return controlLoop.getElements();
+            }
+        }
         return Collections.emptyList();
     }
 
     @Override
     public ControlLoop updateControlLoopState(ToscaConceptIdentifier definition, ControlLoopOrderedState state) {
-        return null;
+        return activator.getParticipantHandler().getControlLoopHandler()
+                .updateControlLoopState(definition, state);
     }
 
     @Override
     public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState state) {
-        return null;
+        return activator.getParticipantHandler().getControlLoopHandler()
+                .updateControlLoopElementState(id, state);
     }
 
     @Override
     public void updateControlLoopElementStatistics(ClElementStatistics elementStatistics) {
+        activator.getParticipantHandler().getControlLoopHandler()
+        .updateControlLoopElementStatistics(elementStatistics);
+    }
+
+    @Override
+    public ParticipantHandler getParticipantHandler() {
+        return activator.getParticipantHandler();
     }
 }
