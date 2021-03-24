@@ -31,6 +31,7 @@ import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningHand
 import org.onap.policy.clamp.controlloop.runtime.instantiation.InstantiationHandler;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.clamp.controlloop.runtime.main.rest.ControlLoopAafFilter;
+import org.onap.policy.clamp.controlloop.runtime.monitoring.MonitoringHandler;
 import org.onap.policy.common.endpoints.event.comm.TopicEndpointManager;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.event.comm.TopicSource;
@@ -85,6 +86,7 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
 
         final AtomicReference<ControlLoopHandler> commissioningHandler = new AtomicReference<>();
         final AtomicReference<ControlLoopHandler> instantiationHandler = new AtomicReference<>();
+        final AtomicReference<ControlLoopHandler> monitoringHandler = new AtomicReference<>();
 
         final AtomicReference<RestServer> restServer = new AtomicReference<>();
         // @formatter:off
@@ -100,9 +102,13 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
         addAction("Instantiation Handler",
                 () -> instantiationHandler.set(new InstantiationHandler(clRuntimeParameterGroup)),
                 () -> instantiationHandler.get().close());
+        addAction("Monitoring Handler",
+            () -> monitoringHandler.set(new MonitoringHandler(clRuntimeParameterGroup)),
+            () -> monitoringHandler.get().close());
 
         addHandlerActions("Commissioning", commissioningHandler);
         addHandlerActions("Instantiation", instantiationHandler);
+        addHandlerActions("Monitoring", monitoringHandler);
 
         addAction("Topic Message Dispatcher", this::registerMsgDispatcher, this::unregisterMsgDispatcher);
 
@@ -113,6 +119,7 @@ public class ClRuntimeActivator extends ServiceManagerContainer {
                     Set<Class<?>> providerClasses = new HashSet<>();
                     providerClasses.addAll(commissioningHandler.get().getProviderClasses());
                     providerClasses.addAll(instantiationHandler.get().getProviderClasses());
+                    providerClasses.addAll(monitoringHandler.get().getProviderClasses());
 
                     RestServer server = new RestServer(clRuntimeParameterGroup.getRestServerParameters(),
                             ControlLoopAafFilter.class,
