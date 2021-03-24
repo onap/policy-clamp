@@ -20,6 +20,7 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.main.parameters;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -89,16 +90,15 @@ public class TestParticipantSimulatorParameterHandler {
     public void testParticipantVersion() throws ControlLoopException {
         final String[] participantConfigParameters = { "-v" };
         final ParticipantSimulatorCommandLineArguments arguments = new ParticipantSimulatorCommandLineArguments();
-        final String version = arguments.parse(participantConfigParameters);
-        assertTrue(version.startsWith("ONAP Tosca defined control loop Participant"));
+        assertThat(arguments.parse(participantConfigParameters)).startsWith(
+                        "ONAP Tosca defined control loop Participant");
     }
 
     @Test
     public void testParticipantHelp() throws ControlLoopException {
         final String[] participantConfigParameters = { "-h" };
         final ParticipantSimulatorCommandLineArguments arguments = new ParticipantSimulatorCommandLineArguments();
-        final String help = arguments.parse(participantConfigParameters);
-        assertTrue(help.startsWith("usage:"));
+        assertThat(arguments.parse(participantConfigParameters)).startsWith("usage:");
     }
 
     @Test
