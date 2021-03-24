@@ -34,9 +34,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
-import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationHandler;
 import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationProvider;
 
 /**
@@ -56,7 +54,6 @@ import org.onap.policy.clamp.controlloop.participant.simulator.simulation.Simula
     tags = {@Tag(name = "participantsim", description = "Participant Simulator")},
     securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 // @formatter:on
-@NoArgsConstructor
 public class RestController {
     public static final String APPLICATION_YAML = "application/yaml";
 
@@ -95,17 +92,14 @@ public class RestController {
     public static final String SERVER_ERROR_MESSAGE = "Internal Server Error";
     @Getter(AccessLevel.PROTECTED)
     // The provider for simulation requests
-    private static SimulationProvider simulationProvider;
+    private SimulationProvider simulationProvider;
+
 
     /**
-     * Create a participant simulation provider.
-     * @return
-     *
-     * @throws ControlLoopRuntimeException on errors creating the provider
+     * create a Rest Controller.
      */
-    public static void init(ParticipantIntermediaryParameters participantParameters)
-                     throws ControlLoopRuntimeException {
-        simulationProvider = new SimulationProvider(participantParameters);
+    public RestController() {
+        simulationProvider = SimulationHandler.getInstance().getSimulationProvider();
     }
 
     /**

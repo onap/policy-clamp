@@ -27,14 +27,37 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
+import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationHandler;
+import org.onap.policy.common.utils.services.Registry;
 
 public class RestControllerTest {
 
     private RestController ctlr;
     private ResponseBuilder bldr;
 
+    /**
+     * Setup before class, instantiate SimulationHandler.
+     *
+     */
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        Registry.newRegistry();
+        Registry.register(SimulationHandler.class.getName(), Mockito.mock(SimulationHandler.class));
+    }
+
+    @AfterClass
+    public static void teardownAfterClass() throws Exception {
+        Registry.unregister(SimulationHandler.class.getName());
+    }
+
+    /**
+     * set Up.
+     */
     @Before
     public void setUp() {
         ctlr = new RestController();
