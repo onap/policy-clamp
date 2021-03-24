@@ -30,6 +30,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
@@ -63,7 +64,7 @@ public interface ParticipantIntermediaryApi {
      *
      * @param definition the definition of the participant to update the state on
      * @param state the state of the participant
-     * @return updated participant
+     * @return the participant
      */
     public Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState state);
 
@@ -116,4 +117,12 @@ public interface ParticipantIntermediaryApi {
      * @param elementStatistics the updated statistics
      */
     public void updateControlLoopElementStatistics(ClElementStatistics elementStatistics);
+
+    /**
+     * Return participantHandler, This will not be used in real world, but for junits,
+     * if participantHandler is not returned, there is no way to test state change messages
+     * without dmaap simulator.
+     *
+     */
+    public ParticipantHandler getParticipantHandler();
 }

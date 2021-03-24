@@ -20,14 +20,20 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.simulation;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import javax.ws.rs.core.Response;
+import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
+import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.ParticipantSimulatorParameters;
 import org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest.SimulationElementController;
 import org.onap.policy.clamp.controlloop.participant.simulator.simulation.rest.SimulationParticipantController;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
 import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
+import org.onap.policy.common.utils.services.Registry;
+import org.onap.policy.models.base.PfModelRuntimeException;
 
 /**
  * This class handles simulation of participants and control loop elements.
@@ -35,6 +41,11 @@ import org.onap.policy.common.endpoints.listeners.MessageTypeDispatcher;
  * <p/>It is effectively a singleton that is started at system start.
  */
 public class SimulationHandler extends ControlLoopHandler {
+    private final ParticipantIntermediaryParameters participantParameters;
+
+    @Getter
+    private SimulationProvider simulationProvider;
+
     /**
      * Create a handler.
      *
@@ -42,6 +53,11 @@ public class SimulationHandler extends ControlLoopHandler {
      */
     public SimulationHandler(ParticipantSimulatorParameters parameters) {
         super(parameters.getDatabaseProviderParameters());
+        participantParameters = parameters.getIntermediaryParameters();
+    }
+
+    public static SimulationHandler getInstance() {
+        return Registry.get(SimulationHandler.class.getName());
     }
 
     @Override
@@ -71,11 +87,15 @@ public class SimulationHandler extends ControlLoopHandler {
 
     @Override
     public void startProviders() {
-        // No providers on this handler
+        simulationProvider = new SimulationProvider(participantParameters);
     }
 
     @Override
     public void stopProviders() {
-        // No providers on this handler
+        try {
+            simulationProvider.close();
+        } catch (IOException e) {
+            throw new PfModelRuntimeException(Response.Status.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 }
