@@ -23,13 +23,9 @@ package org.onap.policy.clamp.controlloop.participant.simulator.main.startstop;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.onap.policy.clamp.controlloop.common.ControlLoopConstants;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.common.utils.resources.MessageConstants;
 
