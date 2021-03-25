@@ -1,0 +1,233 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bcfd72d_76ad6afb",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/SimulationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "message, e",
+      "range": {
+        "startLine": 98,
+        "startChar": 85,
+        "endLine": 98,
+        "endChar": 99
+      },
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "818efd06_bb5b6bd9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/intermediary/TestControlLoopUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "use assertThat().hasSize(1)",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 20
+      },
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c227839_f69f0b99",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/TestParticipantSimulatorParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "use assertThat().contains()\n\nsame comment below",
+      "range": {
+        "startLine": 97,
+        "startChar": 8,
+        "endLine": 97,
+        "endChar": 18
+      },
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0fe65b0_1f8b030e",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "can just pass these to the constructor\n\nsame comment below",
+      "range": {
+        "startLine": 133,
+        "startChar": 8,
+        "endLine": 134,
+        "endChar": 42
+      },
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6cf2d49_e2ea0882",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestSimulationRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "use assertThat().contains()\n\nsame comment below",
+      "range": {
+        "startLine": 153,
+        "startChar": 8,
+        "endLine": 153,
+        "endChar": 18
+      },
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aecae44d_e7db63c4",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "\"Return\" \u003d\u003e \"Returns\" or \"Gets\"\n\nsonar may want a @return, too - not sure",
+      "range": {
+        "startLine": 122,
+        "startChar": 7,
+        "endLine": 122,
+        "endChar": 13
+      },
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d0de630_6417abcf",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/dispatcher/MessageDispatcher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "I know this is a bit picky, but I generally think of \"dispatch\" to indicate the handling of something within the current process, whereas in this case, it\u0027s really meaning to send or transmit something to another system.  Should it perhaps be renamed (and the comments changed)?\n\nThis comment would also apply to the class name and any variables named \"dispatcher\"",
+      "range": {
+        "startLine": 84,
+        "startChar": 16,
+        "endLine": 84,
+        "endChar": 24
+      },
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3355da3e_a3f2a639",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "hmm.  Feels like there should be a field containing a Map mapping an id to an element to avoid this double loop look-up",
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5daf18a3_b86dcf96",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "maybe log a message here - seems like the only thing this could be is \"null\"",
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c20e7a8_15b234c4",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/IntermediaryActivator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "probably better to use a delegate here so that getPartipantHandler() just returns the handler and hides the fact that it\u0027s implemented using an AtomicReference",
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0afe8700_6297bbcc",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-25T17:31:47Z",
+      "side": 1,
+      "message": "maybe log a message here - seems like the only thing this could be is \"null\"",
+      "revId": "490a8baf07054f1ffd10f75ea0bd2857216fbe2c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
