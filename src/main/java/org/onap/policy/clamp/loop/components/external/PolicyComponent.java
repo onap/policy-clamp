@@ -83,15 +83,17 @@ public class PolicyComponent extends ExternalComponent {
         PdpGroupPayload pdpGroupPayload = new PdpGroupPayload();
         for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
             pdpGroupPayload
-                    .updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(), opPolicy.getName(), "1.0.0");
+                    .updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(), opPolicy.getName(), "1.0.0",
+                            action);
         }
 
         for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
             pdpGroupPayload
-                    .updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(), msPolicy.getName(), "1.0.0");
+                    .updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(), msPolicy.getName(), "1.0.0",
+                            action);
         }
 
-        String payload = JsonUtils.GSON.toJson(pdpGroupPayload.generateActivatePdpGroupPayload(action));
+        String payload = JsonUtils.GSON.toJson(pdpGroupPayload.generateActivatePdpGroupPayload());
         logger.info("PdpGroup policy payload: " + payload);
         return payload;
     }

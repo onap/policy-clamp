@@ -25,10 +25,11 @@ package org.onap.policy.clamp.policy.pdpgroup;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * This is an utility class that build the PDP group policy payload.
@@ -36,73 +37,68 @@ import java.util.Map;
  */
 public class PdpGroupPayload {
 
-    private Map<String, Map<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
+    // First level is the PDPGroup, the second is the PdpSubGroup, the third is the operation (POST or DELETE)
+    private Map<String, Map<String, Map<String, List<ToscaConceptIdentifier>>>> pdpGroupMap = new HashMap<>();
 
     /**
      * This method updates the pdpGroupMap structure for a specific policy/version/pdpdGroup/PdpSubGroup.
      *
-     * @param pdpGroup The pdp Group in String
-     * @param pdpSubGroup The pdp Sub Group in String
-     * @param policyName The policy name
+     * @param pdpGroup      The pdp Group in String
+     * @param pdpSubGroup   The pdp Sub Group in String
+     * @param policyName    The policy name
      * @param policyVersion The policy Version
+     * @param operation     DELETE or POST
      */
     public void updatePdpGroupMap(String pdpGroup,
-                                          String pdpSubGroup,
-                                          String policyName,
-                                          String policyVersion) {
-        JsonObject policyJson = new JsonObject();
-        policyJson.addProperty("name", policyName);
-        policyJson.addProperty("version", policyVersion);
-        Map<String, List<JsonObject>> pdpSubGroupMap;
-        List<JsonObject> policyList;
-        if (pdpGroupMap.get(pdpGroup) == null) {
-            pdpSubGroupMap = new HashMap<>();
-            policyList = new LinkedList<>();
-        } else {
-            pdpSubGroupMap = pdpGroupMap.get(pdpGroup);
-            if (pdpSubGroupMap.get(pdpSubGroup) == null) {
-                policyList = new LinkedList<>();
-            } else {
-                policyList = pdpSubGroupMap.get(pdpSubGroup);
-            }
-        }
-        policyList.add(policyJson);
-        pdpSubGroupMap.put(pdpSubGroup, policyList);
-        pdpGroupMap.put(pdpGroup, pdpSubGroupMap);
+                                  String pdpSubGroup,
+                                  String policyName,
+                                  String policyVersion, String operation) {
+        ToscaConceptIdentifier newPolicyToAdd = new ToscaConceptIdentifier(policyName, policyVersion);
+        pdpGroupMap.computeIfAbsent(pdpGroup, key -> new HashMap<>());
+        pdpGroupMap.get(pdpGroup).computeIfAbsent(pdpSubGroup, key -> new HashMap<>());
+        pdpGroupMap.get(pdpGroup).get(pdpSubGroup).computeIfAbsent(operation, key -> new ArrayList<>());
+        pdpGroupMap.get(pdpGroup).get(pdpSubGroup).get(operation).add(newPolicyToAdd);
     }
 
     /**
      * This method generates the Payload in Json from the pdp Group structure containing the policies/versions
      * that must be sent to the policy framework.
      *
-     * @param action The action to do, either a POST or a DELETE
      * @return The Json that can be sent to policy framework as JsonObject
      */
-    public JsonObject generateActivatePdpGroupPayload(String action) {
+    public JsonObject generateActivatePdpGroupPayload() {
         JsonArray payloadArray = new JsonArray();
-        for (Map.Entry<String, Map<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
+        for (Map.Entry<String, Map<String, Map<String, List<ToscaConceptIdentifier>>>> pdpGroupInfo : pdpGroupMap
+                .entrySet()) {
             JsonObject pdpGroupNode = new JsonObject();
-            JsonArray subPdpArray = new JsonArray();
             pdpGroupNode.addProperty("name", pdpGroupInfo.getKey());
-            pdpGroupNode.add("deploymentSubgroups", subPdpArray);
-
-            for (Map.Entry<String, List<JsonObject>> pdpSubGroupInfo : pdpGroupInfo.getValue().entrySet()) {
-                JsonObject pdpSubGroupNode = new JsonObject();
-                subPdpArray.add(pdpSubGroupNode);
-                pdpSubGroupNode.addProperty("pdpType", pdpSubGroupInfo.getKey());
-                pdpSubGroupNode.addProperty("action", action);
-
-                JsonArray policyArray = new JsonArray();
-                pdpSubGroupNode.add("policies", policyArray);
-
-                for (JsonObject policy : pdpSubGroupInfo.getValue()) {
-                    policyArray.add(policy);
-                }
-            }
+            pdpGroupNode.add("deploymentSubgroups", buildPdpSubGroupsArray(pdpGroupInfo.getValue()));
             payloadArray.add(pdpGroupNode);
         }
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("groups", payloadArray);
         return jsonObject;
+    }
+
+    private JsonArray buildPdpSubGroupsArray (Map<String, Map<String, List<ToscaConceptIdentifier>>> mapOfPdpSubGroups) {
+        JsonArray subGroupsArray = new JsonArray();
+        for (Map.Entry<String, Map<String, List<ToscaConceptIdentifier>>> pdpSubGroupInfo : mapOfPdpSubGroups
+                .entrySet()) {
+            for (Map.Entry<String, List<ToscaConceptIdentifier>> operation : pdpSubGroupInfo
+                    .getValue().entrySet()) {
+                JsonObject pdpSubGroupNode = new JsonObject();
+                subGroupsArray.add(pdpSubGroupNode);
+                pdpSubGroupNode.addProperty("pdpType", pdpSubGroupInfo.getKey());
+                pdpSubGroupNode.addProperty("action", operation.getKey());
+                pdpSubGroupNode.add("policies", new JsonArray());
+                for (ToscaConceptIdentifier policy : operation.getValue()) {
+                    JsonObject newPolicy = new JsonObject();
+                    newPolicy.addProperty("name",policy.getName());
+                    newPolicy.addProperty("version",policy.getVersion());
+                    pdpSubGroupNode.getAsJsonArray("policies").add(newPolicy);
+                }
+            }
+        }
+        return subGroupsArray;
     }
 }
