@@ -1463,6 +1463,44 @@
             </route>
         </delete>
 
+        <put uri="/v2/policies/pdpDeployment/"
+             type="com.google.gson.JsonElement"
+             consumes="application/json" >
+            <route>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Pdp group deployment update')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','update')"/>
+                    <setBody>
+                        <method ref="org.onap.policy.clamp.policy.pdpgroup.PdpGroupPayload"
+                                method="generatePdpGroupPayloadFromList(${body})"/>
+                    </setBody>
+                    <log loggingLevel="INFO"
+                         message="PDP Group DEPLOY request payload: ${body}"/>
+                    <to uri="direct:add-multiple-policies-to-pdp-group"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="PDP Group deployment request failed: ${exception.stacktrace}"/>
+                        <setHeader headerName="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>PDP Group deployment request FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </put>
+
         <get uri="/v2/clampInformation" outType="org.onap.policy.clamp.clds.model.ClampInformation"
              produces="application/json">
             <to
