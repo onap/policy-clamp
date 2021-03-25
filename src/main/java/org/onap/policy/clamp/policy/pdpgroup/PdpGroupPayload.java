@@ -23,86 +23,115 @@
 
 package org.onap.policy.clamp.policy.pdpgroup;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.google.gson.JsonElement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import org.onap.policy.clamp.clds.util.JsonUtils;
+import org.onap.policy.models.pdp.concepts.DeploymentGroup;
+import org.onap.policy.models.pdp.concepts.DeploymentGroups;
+import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
  * This is an utility class that build the PDP group policy payload.
  * This is used when policies have to be deployed to PDP group/subgroups on the Policy Engine.
+ * Currently it does not group the queries per pdpgroup/subgroups/action.
+ * This is currently NOT thread safe, do not use parallel streams to update the structure.
  */
 public class PdpGroupPayload {
 
-    private Map<String, Map<String, List<JsonObject>>> pdpGroupMap = new HashMap<>();
+    private static final EELFLogger logger = EELFManager.getInstance().getLogger(PdpGroupPayload.class);
+
+    /**
+     * The default node that will contain the actions array.
+     */
+    public static final String PDP_ACTIONS = "PdpActions";
+
+    private final DeploymentGroups deploymentGroups = new DeploymentGroups();
+
+    /**
+     * Default constructor.
+     */
+    public PdpGroupPayload() {
+        deploymentGroups.setGroups(new ArrayList<>());
+    }
+
+    /**
+     * Constructor that takes a list of actions in input.
+     *
+     * @param listOfPdpActions The list of actions that needs to be done.
+     *                            e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
+     * @throws PdpGroupPayloadException in case of issues to read the listOfActions
+     */
+    public PdpGroupPayload(final JsonElement listOfPdpActions) throws PdpGroupPayloadException {
+        this();
+        this.readListOfActions(listOfPdpActions);
+    }
+
+    /**
+     * This method converts the list of actions directly to the pdp payload query as String.
+     *
+     * @param listOfPdpActions The list of actions that needs to be done.
+     *                            e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
+     * @return The string containing the PDP payload that can be sent directly
+     * @throws PdpGroupPayloadException in case of issues to read the listOfActions
+     */
+    public static String generatePdpGroupPayloadFromList(final JsonElement listOfPdpActions)
+            throws PdpGroupPayloadException {
+        return new PdpGroupPayload(listOfPdpActions).generatePdpGroupPayload();
+    }
+
+
+    private void readListOfActions(final JsonElement listOfPdpActions) throws PdpGroupPayloadException {
+        for (JsonElement action : listOfPdpActions.getAsJsonObject().getAsJsonArray(PDP_ACTIONS)) {
+            String[] opParams = action.getAsString().split("/");
+            if (opParams.length == 5) {
+                this.updatePdpGroupMap(opParams[1], opParams[2], opParams[3], opParams[4], opParams[0]);
+            } else {
+                logger.error("One PDP push command does not contain the right number of arguments: " + action);
+                throw new PdpGroupPayloadException(
+                        "One PDP push command does not contain the right number of arguments: " + action);
+            }
+        }
+    }
 
     /**
      * This method updates the pdpGroupMap structure for a specific policy/version/pdpdGroup/PdpSubGroup.
      *
-     * @param pdpGroup The pdp Group in String
-     * @param pdpSubGroup The pdp Sub Group in String
-     * @param policyName The policy name
+     * @param pdpGroup      The pdp Group in String
+     * @param pdpSubGroup   The pdp Sub Group in String
+     * @param policyName    The policy name
      * @param policyVersion The policy Version
+     * @param action        DELETE or POST
      */
     public void updatePdpGroupMap(String pdpGroup,
-                                          String pdpSubGroup,
-                                          String policyName,
-                                          String policyVersion) {
-        JsonObject policyJson = new JsonObject();
-        policyJson.addProperty("name", policyName);
-        policyJson.addProperty("version", policyVersion);
-        Map<String, List<JsonObject>> pdpSubGroupMap;
-        List<JsonObject> policyList;
-        if (pdpGroupMap.get(pdpGroup) == null) {
-            pdpSubGroupMap = new HashMap<>();
-            policyList = new LinkedList<>();
-        } else {
-            pdpSubGroupMap = pdpGroupMap.get(pdpGroup);
-            if (pdpSubGroupMap.get(pdpSubGroup) == null) {
-                policyList = new LinkedList<>();
-            } else {
-                policyList = pdpSubGroupMap.get(pdpSubGroup);
-            }
-        }
-        policyList.add(policyJson);
-        pdpSubGroupMap.put(pdpSubGroup, policyList);
-        pdpGroupMap.put(pdpGroup, pdpSubGroupMap);
+                                  String pdpSubGroup,
+                                  String policyName,
+                                  String policyVersion, String action) {
+        // create subgroup
+        DeploymentSubGroup newSubGroup = new DeploymentSubGroup();
+        newSubGroup.setPdpType(pdpSubGroup);
+        newSubGroup.setAction(DeploymentSubGroup.Action.valueOf(action));
+        newSubGroup.setPolicies(Arrays.asList(new ToscaConceptIdentifier(policyName, policyVersion)));
+        // Then the group
+        DeploymentGroup newGroup = new DeploymentGroup();
+        newGroup.setName(pdpGroup);
+        newGroup.setDeploymentSubgroups(Arrays.asList(newSubGroup));
+        // Add to deployment Groups structure
+        this.deploymentGroups.getGroups().add(newGroup);
     }
 
     /**
      * This method generates the Payload in Json from the pdp Group structure containing the policies/versions
      * that must be sent to the policy framework.
      *
-     * @param action The action to do, either a POST or a DELETE
-     * @return The Json that can be sent to policy framework as JsonObject
+     * @return The Json that can be sent to policy framework as String
      */
-    public JsonObject generateActivatePdpGroupPayload(String action) {
-        JsonArray payloadArray = new JsonArray();
-        for (Map.Entry<String, Map<String, List<JsonObject>>> pdpGroupInfo : pdpGroupMap.entrySet()) {
-            JsonObject pdpGroupNode = new JsonObject();
-            JsonArray subPdpArray = new JsonArray();
-            pdpGroupNode.addProperty("name", pdpGroupInfo.getKey());
-            pdpGroupNode.add("deploymentSubgroups", subPdpArray);
-
-            for (Map.Entry<String, List<JsonObject>> pdpSubGroupInfo : pdpGroupInfo.getValue().entrySet()) {
-                JsonObject pdpSubGroupNode = new JsonObject();
-                subPdpArray.add(pdpSubGroupNode);
-                pdpSubGroupNode.addProperty("pdpType", pdpSubGroupInfo.getKey());
-                pdpSubGroupNode.addProperty("action", action);
-
-                JsonArray policyArray = new JsonArray();
-                pdpSubGroupNode.add("policies", policyArray);
-
-                for (JsonObject policy : pdpSubGroupInfo.getValue()) {
-                    policyArray.add(policy);
-                }
-            }
-            payloadArray.add(pdpGroupNode);
-        }
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.add("groups", payloadArray);
-        return jsonObject;
+    public String generatePdpGroupPayload() {
+        String payload = JsonUtils.GSON.toJson(this.deploymentGroups);
+        logger.info("PdpGroup policy payload: " + payload);
+        return payload;
     }
 }
