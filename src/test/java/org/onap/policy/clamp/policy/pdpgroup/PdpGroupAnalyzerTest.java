@@ -129,9 +129,9 @@ public class PdpGroupAnalyzerTest {
     public void testStructuresConstruction() {
         PdpGroupsAnalyzer pdpGroupsAnalyzer = new PdpGroupsAnalyzer(pdpGroups);
         assertThat(pdpGroupsAnalyzer).isNotNull();
-        assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy().size()).isEqualTo(6);
+        assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()).hasSize(6);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
-                .get(new ToscaConceptIdentifier("org.onap.testos", "2.0.0")).size()).isEqualTo(3);
+                .get(new ToscaConceptIdentifier("org.onap.testos", "2.0.0"))).hasSize(3);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
                 .get(new ToscaConceptIdentifier("org.onap.testos", "2.0.0")).get("pdpGroup1").getPdpSubgroups().size())
                 .isEqualTo(1);
@@ -155,31 +155,31 @@ public class PdpGroupAnalyzerTest {
                 .contains(pdpSubgroupBad);
 
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
-                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.0")).size()).isEqualTo(1);
+                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.0"))).hasSize(1);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
-                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.0")).get("pdpGroup2").getPdpSubgroups().size())
-                .isEqualTo(1);
+                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.0")).get("pdpGroup2").getPdpSubgroups())
+                .hasSize(1);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
                 .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.0")).get("pdpGroup2").getPdpSubgroups())
                 .contains(pdpSubgroup2);
 
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
-                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).size()).isEqualTo(3);
+                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1"))).hasSize(3);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
-                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup1").getPdpSubgroups().size())
-                .isEqualTo(1);
+                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup1").getPdpSubgroups())
+                .hasSize(1);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
                 .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup1").getPdpSubgroups())
                 .contains(pdpSubgroupBad);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
-                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup2").getPdpSubgroups().size())
-                .isEqualTo(1);
+                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup2").getPdpSubgroups())
+                .hasSize(1);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
                 .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup2").getPdpSubgroups())
                 .contains(pdpSubgroupBad);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
-                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup3").getPdpSubgroups().size())
-                .isEqualTo(1);
+                .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup3").getPdpSubgroups())
+                .hasSize(1);
         assertThat(pdpGroupsAnalyzer.getPdpGroupsDeploymentPerPolicy()
                 .get(new ToscaConceptIdentifier("org.onap.testos", "1.0.1")).get("pdpGroup3").getPdpSubgroups())
                 .contains(pdpSubgroupBad);
@@ -208,7 +208,7 @@ public class PdpGroupAnalyzerTest {
 
         assertThat(
                 pdpGroupsAnalyzer.getPdpGroupsForPolicy("org.onap.donotexist", "1.0.0"))
-                .isEqualTo(null);
+                .isNull();
     }
 
     @Test
@@ -223,8 +223,8 @@ public class PdpGroupAnalyzerTest {
         policyModel.setVersion("1.0.0");
         PdpGroupsAnalyzer.updatePdpGroupOfPolicyModels(Arrays.asList(policyModel), pdpGroups);
 
-        assertThat(policyModel.getPolicyPdpGroup().toString()).isEqualTo(
-                "{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},"
+        assertThat(policyModel.getPolicyPdpGroup().toString())
+                .hasToString("{\"supportedPdpGroups\":[{\"pdpGroup1\":[\"subGroup1\"]},"
                         + "{\"pdpGroup2\":[\"subGroup1\",\"subGroup2\",\"subGroup3\"]}]}");
     }
 }
