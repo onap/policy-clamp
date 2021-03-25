@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,6 +39,7 @@ import org.onap.policy.clamp.loop.template.LoopTemplate;
 import org.onap.policy.clamp.loop.template.PolicyModel;
 import org.onap.policy.clamp.policy.microservice.MicroServicePolicy;
 import org.onap.policy.clamp.policy.operational.OperationalPolicy;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 public class PolicyComponentTest {
 
@@ -289,9 +290,7 @@ public class PolicyComponentTest {
         loopTemplate.setDcaeBlueprintId("UUID-blueprint");
         loopTest.setLoopTemplate(loopTemplate);
 
-        String payload = PolicyComponent.createPoliciesPayloadPdpGroup(loopTest, "POST");
-        String expectedRes = ResourceFileUtils.getResourceAsString("tosca/pdp-group-policy-payload.json");
-
-        assertThat(payload).isEqualTo(expectedRes);
+        JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("example/policy/pdp-group-policy-payload.json"),
+                PolicyComponent.createPoliciesPayloadPdpGroup(loopTest, "POST"), false);
     }
 }
