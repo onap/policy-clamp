@@ -27,10 +27,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import javax.persistence.Transient;
 import org.apache.camel.Exchange;
-import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.loop.Loop;
-import org.onap.policy.clamp.policy.microservice.MicroServicePolicy;
-import org.onap.policy.clamp.policy.operational.OperationalPolicy;
 import org.onap.policy.clamp.policy.pdpgroup.PdpGroupPayload;
 
 /**
@@ -81,17 +78,15 @@ public class PolicyComponent extends ExternalComponent {
      */
     public static String createPoliciesPayloadPdpGroup(Loop loop, String action) {
         PdpGroupPayload pdpGroupPayload = new PdpGroupPayload();
-        for (OperationalPolicy opPolicy : loop.getOperationalPolicies()) {
-            pdpGroupPayload
-                    .updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(), opPolicy.getName(), "1.0.0");
-        }
+        loop.getOperationalPolicies().parallelStream().forEach(opPolicy -> pdpGroupPayload
+                .updatePdpGroupMap(opPolicy.getPdpGroup(), opPolicy.getPdpSubgroup(), opPolicy.getName(), "1.0.0",
+                        action));
 
-        for (MicroServicePolicy msPolicy : loop.getMicroServicePolicies()) {
-            pdpGroupPayload
-                    .updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(), msPolicy.getName(), "1.0.0");
-        }
+        loop.getMicroServicePolicies().parallelStream().forEach(msPolicy -> pdpGroupPayload
+                .updatePdpGroupMap(msPolicy.getPdpGroup(), msPolicy.getPdpSubgroup(), msPolicy.getName(), "1.0.0",
+                        action));
 
-        String payload = JsonUtils.GSON.toJson(pdpGroupPayload.generateActivatePdpGroupPayload(action));
+        String payload = pdpGroupPayload.generatePdpGroupPayload();
         logger.info("PdpGroup policy payload: " + payload);
         return payload;
     }
