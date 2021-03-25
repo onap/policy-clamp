@@ -23,11 +23,11 @@
           "action": "POST",
           "policies": [
             {
-              "name": "opLegacyPolicy",
+              "name": "opPolicy",
               "version": "1.0.0"
             },
             {
-              "name": "opPolicy",
+              "name": "opLegacyPolicy",
               "version": "1.0.0"
             }
           ]
