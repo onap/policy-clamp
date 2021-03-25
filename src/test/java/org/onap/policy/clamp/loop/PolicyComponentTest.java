@@ -289,9 +289,7 @@ public class PolicyComponentTest {
         loopTemplate.setDcaeBlueprintId("UUID-blueprint");
         loopTest.setLoopTemplate(loopTemplate);
 
-        String payload = PolicyComponent.createPoliciesPayloadPdpGroup(loopTest, "POST");
-        String expectedRes = ResourceFileUtils.getResourceAsString("tosca/pdp-group-policy-payload.json");
-
-        assertThat(payload).isEqualTo(expectedRes);
+        assertThat(PolicyComponent.createPoliciesPayloadPdpGroup(loopTest, "POST"))
+                .isEqualTo(ResourceFileUtils.getResourceAsString("example/policy/pdp-group-policy-payload.json"));
     }
 }
