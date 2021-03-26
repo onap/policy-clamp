@@ -75,7 +75,8 @@ const DetailedRow = styled.div`
     font-size: ${props => props.theme.policyEditorFontSize};
     width: 97%;
     margin-left: auto;
-    margin-right: 0;
+    margin-right: auto;
+    margin-top: 20px;
 `
 
 
@@ -291,13 +292,14 @@ export default class ViewAllPolicies extends React.Component {
                                   render: rowData => {
                                     return (
                                         <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} policyUpdateFunction={this.getAllPolicies} />
+                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} policiesTableUpdateFunction={this.getAllPolicies} />
                                         </DetailedRow>
                                     )
                                   },
                                 },
                                 {
                                   icon: DehazeIcon,
+                                  openIcon: DehazeIcon,
                                   tooltip: 'Show Raw Data',
                                   render: rowData => {
                                     return (
@@ -309,10 +311,13 @@ export default class ViewAllPolicies extends React.Component {
                                 },
                                 {
                                   icon: PublishIcon,
+                                  openIcon: PublishIcon,
                                   tooltip: 'PDP Group Deployment',
                                   render: rowData => {
                                     return (
-                                        <PolicyDeploymentEditor policyData={rowData}/>
+                                        <DetailedRow>
+                                            <PolicyDeploymentEditor policyData={rowData} policiesTableUpdateFunction={this.getAllPolicies} />
+                                        </DetailedRow>
                                     )
                                   },
                                 }
@@ -367,6 +372,7 @@ export default class ViewAllPolicies extends React.Component {
                                 },
                                 {
                                   icon: DehazeIcon,
+                                  openIcon: DehazeIcon,
                                   tooltip: 'Show Raw Data',
                                   render: rowData => {
                                     return (
@@ -378,11 +384,12 @@ export default class ViewAllPolicies extends React.Component {
                                 },
                                 {
                                   icon: AddIcon,
+                                  openIcon: AddIcon,
                                   tooltip: 'Create a policy from this model',
                                   render: rowData => {
                                     return (
                                         <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} policyUpdateFunction={this.getAllPolicies} />
+                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} policiesTableUpdateFunction={this.getAllPolicies} />
                                         </DetailedRow>
                                     )
                                   },
