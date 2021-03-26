@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36782dae_89bc5823",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-26T18:26:19Z",
+      "side": 1,
+      "message": "can do this once and cache it in a variable",
+      "range": {
+        "startLine": 89,
+        "startChar": 12,
+        "endLine": 89,
+        "endChar": 45
+      },
+      "revId": "733aab315e378bb9fe67920a94d31ac0a07bb5c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea08198d_1731bde4",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-26T18:26:19Z",
+      "side": 1,
+      "message": "before this, need to remove items from elementsOnThisParticipant if they\u0027re no longer in the control loop?",
+      "revId": "733aab315e378bb9fe67920a94d31ac0a07bb5c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

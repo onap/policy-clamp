@@ -114,6 +114,30 @@
     },
     {
       "key": {
+        "uuid": "d4345e5c_b8483a70",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-26T18:26:19Z",
+      "side": 1,
+      "message": "that works - thx!",
+      "parentUuid": "3f6b26f1_54890b05",
+      "range": {
+        "startLine": 85,
+        "startChar": 68,
+        "endLine": 85,
+        "endChar": 81
+      },
+      "revId": "2735230a1c198bfd5322b5f9fa735dacb6234b8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9b5e56d_3d5d81e2",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 2
