@@ -26,8 +26,7 @@ import PolicyToscaService from '../../../api/PolicyToscaService';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 
-const JsonEditorDiv = styled.div`
-    margin-top: 20px;
+const ToscaDiv = styled.div`
     background-color: ${props => props.theme.toscaTextareaBackgroundColor};
     text-align: justify;
     font-size: ${props => props.theme.toscaTextareaFontSize};
@@ -57,11 +56,11 @@ export default class ToscaViewer extends React.Component {
 
    render() {
        return (
-                    <JsonEditorDiv>
+                    <ToscaDiv>
                         <pre>{this.state.yamlPolicyTosca}</pre>
                         <Button variant="secondary" title="Create a new policy version from the defined parameters"
                             onClick={this.handleCreateNewVersion}>Create New Version</Button>
-                    </JsonEditorDiv>
+                    </ToscaDiv>
        );
    }
 }
