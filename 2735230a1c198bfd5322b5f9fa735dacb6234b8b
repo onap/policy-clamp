@@ -90,6 +90,30 @@
     },
     {
       "key": {
+        "uuid": "3f6b26f1_54890b05",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-26T18:12:04Z",
+      "side": 1,
+      "message": "Added an elementsOnthisParticipant map which holds the ControlLoopElements on the Partcipant in action. I think this will be handy for further implementations as well. Please check. Thanks.",
+      "parentUuid": "369807b0_abb00878",
+      "range": {
+        "startLine": 85,
+        "startChar": 68,
+        "endLine": 85,
+        "endChar": 81
+      },
+      "revId": "2735230a1c198bfd5322b5f9fa735dacb6234b8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9b5e56d_3d5d81e2",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 2
