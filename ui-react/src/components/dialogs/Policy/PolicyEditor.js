@@ -33,7 +33,6 @@ import PolicyService from '../../../api/PolicyService';
 import OnapUtils from '../../../utils/OnapUtils';
 import uuid from 'react-uuid';
 
-//const JSONEditor = require("@json-editor/json-editor").JSONEditor;
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
 `
@@ -46,7 +45,6 @@ const JsonEditorDiv = styled.div`
     border: 1px solid #C0C0C0;
 `
 const PanelDiv = styled.div`
-    margin-top: 20px;
     text-align: justify;
     font-size: ${props => props.theme.policyEditorFontSize};
     background-color: ${props => props.theme.loopViewerBackgroundColor};
@@ -112,15 +110,10 @@ export default class PolicyEditor extends React.Component {
                         showSuccessAlert: true,
                         showMessage: 'Policy '+ this.state.policyName + '/' + this.state.policyVersion + ' created successfully'
                     });
-                    this.props.policyUpdateFunction();
+                    this.props.policiesTableUpdateFunction();
                 }
             })
         }
-    }
-
-    bumpVersion(versionToBump) {
-        let semVer = versionToBump.split(".");
-        return parseInt(semVer[0])+1 + "." + semVer[1] + "." + semVer[2];
     }
 
    getToscaModelForPolicy() {
@@ -139,27 +132,10 @@ export default class PolicyEditor extends React.Component {
    }
 
    createJsonEditor(toscaModel, editorData) {
-        /*JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
-                getTab: function(text,tabId) {
-                    var liel = document.createElement('li');
-                    liel.classList.add('nav-item');
-                    var ael = document.createElement("a");
-                    ael.classList.add("nav-link");
-                    ael.setAttribute("style",'padding:10px;max-width:160px;');
-                    ael.setAttribute("href", "#" + tabId);
-                    ael.setAttribute('data-toggle', 'tab');
-                    text.setAttribute("style",'word-wrap:break-word;');
-                    ael.appendChild(text);
-                    liel.appendChild(ael);
-                    return liel;
-                }
-            });*/
-
         return new JSONEditor(document.getElementById(this.state.jsonEditorDivId),
         {
               schema: toscaModel,
               startval: editorData,
-              //theme: 'myBootstrap4',
               theme: 'bootstrap4',
               iconlib: 'fontawesome5',
               object_layout: 'grid',
