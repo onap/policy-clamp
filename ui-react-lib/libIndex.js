@@ -26,7 +26,6 @@ export { default as CreateLoopModal } from './src/components/dialogs/Loop/Create
 export { default as DeployLoopModal } from './src/components/dialogs/Loop/DeployLoopModal';
 export { default as LoopActionService } from './src/api/LoopActionService';
 export { default as LoopCache }  from './src/api/LoopCache';
-export { default as PoliciesListCache }  from './src/api/PoliciesListCache';
 export { default as LoopLogs } from './src/components/loop_viewer/logs/LoopLogs';
 export { default as LoopPropertiesModal } from './src/components/dialogs/Loop/LoopPropertiesModal';
 export { default as LoopService } from './src/api/LoopService';
