@@ -66,6 +66,30 @@
     },
     {
       "key": {
+        "uuid": "369807b0_abb00878",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-26T16:18:45Z",
+      "side": 1,
+      "message": "actually, that\u0027s what I\u0027d like to see avoided.  No loop through the control loops (i.e., via \"for()\"), no loop through the elements within the control loop (i.e., via \"stream().filter()\" in \"getElement(id)\").\n\nThe loop through the elements could be eliminated by having ControlLoop generate/cache a map on the first call to getElement().  That would be a start.  However, I\u0027d also like to eliminate the loop through the ControlLoop objects, too.  To do that, we either need to know the control loop ID at this point, or we need to cache all of the element IDs from all of the control loops in a single map - and keep the map up to date.  So we should address one or both of these in this review, and then address whatever is missing in a later review.",
+      "parentUuid": "d38b57a7_566e2784",
+      "range": {
+        "startLine": 85,
+        "startChar": 68,
+        "endLine": 85,
+        "endChar": 81
+      },
+      "revId": "2735230a1c198bfd5322b5f9fa735dacb6234b8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f9b5e56d_3d5d81e2",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 2
