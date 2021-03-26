@@ -290,7 +290,7 @@ export default class ViewAllPolicies extends React.Component {
                                   render: rowData => {
                                     return (
                                         <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} policyUpdateFunction={this.getAllPolicies} />
+                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} policiesTableUpdateFunction={this.getAllPolicies} />
                                         </DetailedRow>
                                     )
                                   },
@@ -311,7 +311,7 @@ export default class ViewAllPolicies extends React.Component {
                                   tooltip: 'PDP Group Deployment',
                                   render: rowData => {
                                     return (
-                                        <PolicyDeploymentEditor policyData={rowData}/>
+                                        <PolicyDeploymentEditor policyData={rowData} policiesTableUpdateFunction={this.getAllPolicies} />
                                     )
                                   },
                                 }
@@ -381,7 +381,7 @@ export default class ViewAllPolicies extends React.Component {
                                   render: rowData => {
                                     return (
                                         <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} policyUpdateFunction={this.getAllPolicies} />
+                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} policiesTableUpdateFunction={this.getAllPolicies} />
                                         </DetailedRow>
                                     )
                                   },
