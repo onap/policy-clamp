@@ -188,6 +188,241 @@
       "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e729e8bb_6958ca81",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "sonar: use computeIfAbsent()",
+      "range": {
+        "startLine": 68,
+        "startChar": 8,
+        "endLine": 72,
+        "endChar": 9
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce54d6d4_8ad459be",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "sonar: use computeIfAbsent()",
+      "range": {
+        "startLine": 79,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 9
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "368ffb34_59d87519",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "I like how concise this is, though it is inefficient, as it does the group \u0026 subgroup look-ups repeatedly",
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b73d96ca_98e5bccb",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "might want to create a generic method for this and use it here and on lines 92 \u0026 96.",
+      "range": {
+        "startLine": 90,
+        "startChar": 9,
+        "endLine": 90,
+        "endChar": 98
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb7a9f05_e47d1f2f",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "cache this result and reuse below",
+      "range": {
+        "startLine": 116,
+        "startChar": 17,
+        "endLine": 116,
+        "endChar": 98
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9d5980a_60e6d580",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "sonar - constructors should appear first",
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d7ef538_2244d489",
+        "filename": "src/main/resources/clds/camel/routes/policy-flows.xml",
+        "patchSetId": 10
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "does it matter that this also appears on lines 225-227?",
+      "range": {
+        "startLine": 498,
+        "startChar": 16,
+        "endLine": 500,
+        "endChar": 109
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ace1325_cbed8b60",
+        "filename": "src/test/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupAnalyzerTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "could use Collections.emptyList()\n\nsame comment below",
+      "range": {
+        "startLine": 79,
+        "startChar": 39,
+        "endLine": 79,
+        "endChar": 56
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b4d35b8_bbb48f06",
+        "filename": "ui-react-lib/libIndex.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "maybe add a newline at the end of the file?",
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "315d86d2_9a7bcb18",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "extra indentation?\n\nsame question below",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 24
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "700c58df_faab1009",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T16:01:16Z",
+      "side": 1,
+      "message": "cache this and reuse it below?",
+      "range": {
+        "startLine": 206,
+        "startChar": 37,
+        "endLine": 206,
+        "endChar": 65
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
