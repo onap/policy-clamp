@@ -99,6 +99,24 @@
       "revId": "733aab315e378bb9fe67920a94d31ac0a07bb5c3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a70c5d9_85615052",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-29T13:56:41Z",
+      "side": 1,
+      "message": "Ack, Added a TODO statement. Thanks.",
+      "parentUuid": "8fcd8589_bd376f9b",
+      "revId": "733aab315e378bb9fe67920a94d31ac0a07bb5c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
