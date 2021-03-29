@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "363d82b7_be256438",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/components/external/PolicyComponent.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-29T14:58:47Z",
+      "side": 1,
+      "message": "Are we always using version 1.0.0 of a policy?",
+      "range": {
+        "startLine": 82,
+        "startChar": 106,
+        "endLine": 82,
+        "endChar": 113
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d99e211_ec33dd39",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/components/external/PolicyComponent.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-29T14:58:47Z",
+      "side": 1,
+      "message": "Same comment",
+      "range": {
+        "startLine": 86,
+        "startChar": 106,
+        "endLine": 86,
+        "endChar": 113
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "64beaabc_64b8a009",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
         "patchSetId": 4
