@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5c3b46a_ffbd875e",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/components/external/PolicyComponent.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-29T15:03:07Z",
+      "side": 1,
+      "message": "Should we be able to support multiple versions?",
+      "range": {
+        "startLine": 86,
+        "startChar": 110,
+        "endLine": 86,
+        "endChar": 117
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbf3bfe0_1d82a37b",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/components/external/PolicyComponent.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-29T15:03:07Z",
+      "side": 1,
+      "message": "Same question.",
+      "range": {
+        "startLine": 91,
+        "startChar": 111,
+        "endLine": 91,
+        "endChar": 117
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c80d0eb_ae5e0e6f",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/deploy/DcaeDeployParameters.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-29T15:03:07Z",
+      "side": 1,
+      "message": "Date",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
