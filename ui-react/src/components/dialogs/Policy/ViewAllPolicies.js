@@ -56,6 +56,7 @@ import Tab from 'react-bootstrap/Tab';
 import PolicyEditor from './PolicyEditor';
 import ToscaViewer from './ToscaViewer';
 import PolicyDeploymentEditor from './PolicyDeploymentEditor';
+import PoliciesTreeViewer from './PoliciesTreeViewer';
 
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
@@ -79,6 +80,17 @@ const DetailedRow = styled.div`
     margin-top: 20px;
 `
 
+const PoliciesTreeViewerDiv = styled.div`
+    width: 12%;
+    float: left;
+    left: 0;
+`
+
+const MaterialTableDiv = styled.div`
+    float: right;
+    width: 88%;
+    left: 12%;
+`
 
 const standardCellStyle = { backgroundColor: '#039be5', color: '#FFF', border: '1px solid black' };
 const headerStyle = { backgroundColor: '#ddd', border: '2px solid black' };
@@ -91,9 +103,10 @@ export default class ViewAllPolicies extends React.Component {
         content: 'Please select a policy to display it',
         selectedRowId: -1,
         policiesListData: [],
+        policiesListDataFiltered: [],
         toscaModelsListData: [],
         jsonEditorForPolicy: new Map(),
-        prefixGrouping: false,
+        treeView: false,
         showSuccessAlert: false,
         showFailAlert: false,
         policyColumnsDefinition: [
@@ -179,12 +192,13 @@ export default class ViewAllPolicies extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handleClose = this.handleClose.bind(this);
-        this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
+        this.handleTreeView = this.handleTreeView.bind(this);
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.disableAlert = this.disableAlert.bind(this);
         this.getAllPolicies = this.getAllPolicies.bind(this);
         this.getAllToscaModels = this.getAllToscaModels.bind(this);
         this.generateAdditionalPolicyColumns = this.generateAdditionalPolicyColumns.bind(this);
+        this.filterPolicies = this.filterPolicies.bind(this);
         this.getAllPolicies();
         this.getAllToscaModels();
     }
@@ -223,7 +237,9 @@ export default class ViewAllPolicies extends React.Component {
     getAllPolicies() {
         PolicyService.getPoliciesList().then(allPolicies => {
             this.generateAdditionalPolicyColumns(allPolicies["policies"])
-            this.setState({ policiesListData: allPolicies["policies"] })
+            this.setState({ policiesListData: allPolicies["policies"],
+                            policiesListDataFiltered: allPolicies["policies"],
+            })
         });
 
     }
@@ -233,8 +249,8 @@ export default class ViewAllPolicies extends React.Component {
         this.props.history.push('/')
     }
 
-    handlePrefixGrouping(event) {
-        this.setState({prefixGrouping: event.target.checked});
+    handleTreeView(event) {
+        this.setState({treeView: event.target.checked});
     }
 
     handleDeletePolicy(event, rowData) {
@@ -261,17 +277,25 @@ export default class ViewAllPolicies extends React.Component {
         this.setState ({ showSuccessAlert: false, showFailAlert: false });
     }
 
+    filterPolicies(prefixForFiltering) {
+        this.setState({policiesListDataFiltered: this.state.policiesListData.filter(element => element.name.startsWith(prefixForFiltering))});
+    }
+
     renderPoliciesTab() {
         return (
                 <Tab eventKey="policies" title="Policies in Policy Framework">
                         <Modal.Body>
-                          <FormControlLabel
-                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
-                                label="Group by prefix"
-                              />
-                           <MaterialTable
+                        <FormControlLabel
+                                control={<Switch checked={this.state.treeView} onChange={this.handleTreeView} />}
+                                label="Tree View" />
+                        <div>
+                          <PoliciesTreeViewerDiv>
+                            <PoliciesTreeViewer show={this.state.treeView} policiesData={this.state.policiesListData} policiesFilterFunction={this.filterPolicies} />
+                          </PoliciesTreeViewerDiv>
+                          <MaterialTableDiv>
+                          <MaterialTable
                               title={"Policies"}
-                              data={this.state.policiesListData}
+                              data={this.state.policiesListDataFiltered}
                               columns={this.state.policyColumnsDefinition}
                               icons={this.state.tableIcons}
                               onRowClick={(event, rowData, togglePanel) => togglePanel()}
@@ -328,7 +352,9 @@ export default class ViewAllPolicies extends React.Component {
                                     onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
                                   }
                               ]}
-                           />
+                          />
+                          </MaterialTableDiv>
+                          </div>
                         </Modal.Body>
                     </Tab>
         );
@@ -339,7 +365,7 @@ export default class ViewAllPolicies extends React.Component {
                     <Tab eventKey="tosca models" title="Tosca Models in Policy Framework">
                         <Modal.Body>
                           <FormControlLabel
-                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
+                                control={<Switch checked={this.state.treeView} onChange={this.handleTreeView} />}
                                 label="Group by prefix"
                               />
                            <MaterialTable
