@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "878d43d5_fe9b5fd9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/SimulationHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T14:45:37Z",
+      "side": 1,
+      "message": "The Registry.register() method, which is invoked via line #55 above, will throw an exception if an attempt is made to re-register a handler",
+      "parentUuid": "794bde9b_ecbb3903",
+      "revId": "52f1b9ad1a082fd214f4f2f0c2e25225e4d0ec11",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23d8f028_4c989236",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/intermediary/TestControlLoopUpdateListener.java",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2021-03-29T14:25:13Z",
       "side": 1,
       "message": "Is there any usage for this? I couldn\u0027t see any usage for it in this file",
+      "revId": "52f1b9ad1a082fd214f4f2f0c2e25225e4d0ec11",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b7f540b_652ca0e5",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/intermediary/TestControlLoopUpdateListener.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T14:45:37Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure about this either - if it\u0027s needed, maybe add a comment as to which class is using it",
+      "parentUuid": "23d8f028_4c989236",
       "revId": "52f1b9ad1a082fd214f4f2f0c2e25225e4d0ec11",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -200,6 +236,24 @@
       "writtenOn": "2021-03-29T14:25:13Z",
       "side": 1,
       "message": "I don\u0027t think you need the () for the second clause, will give sonar too",
+      "revId": "52f1b9ad1a082fd214f4f2f0c2e25225e4d0ec11",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2eef919_d12dca35",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T14:45:37Z",
+      "side": 1,
+      "message": "or could replace the whole condition with Objects.equals(a,b), as it will also do the null check",
+      "parentUuid": "f50cc218_4d867e9d",
       "revId": "52f1b9ad1a082fd214f4f2f0c2e25225e4d0ec11",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
