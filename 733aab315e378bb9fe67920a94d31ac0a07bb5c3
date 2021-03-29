@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a11ca417_3806f9c6",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-29T13:01:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36782dae_89bc5823",
+      "range": {
+        "startLine": 89,
+        "startChar": 12,
+        "endLine": 89,
+        "endChar": 45
+      },
+      "revId": "733aab315e378bb9fe67920a94d31ac0a07bb5c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea08198d_1731bde4",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2021-03-26T18:26:19Z",
       "side": 1,
       "message": "before this, need to remove items from elementsOnThisParticipant if they\u0027re no longer in the control loop?",
+      "revId": "733aab315e378bb9fe67920a94d31ac0a07bb5c3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0f9f15b_cd57e149",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-03-29T13:01:58Z",
+      "side": 1,
+      "message": "Yes, eventually we need to handle all scenarios of multiple control loops, multiple control elements, changes in controlloopelements etc. In this review, For the first ControlLoopUpdate message, all maps get populated, and any state changes should be handled with ControlLoopStateChange message.\nFor a scenario, where there is a Second ControlLoopUpdate message (with same controlLoopId and same participantId, but with an addition/removal of controlLoopElements), following \"if\" will return a response saying \"Control Loop already defined on participant\" and returns by doing nothing.\n       if (controlLoop !\u003d null) { //If this controlloop already exists, then return\n            response.setResponseStatus(ParticipantResponseStatus.FAIL);\n            response.setResponseMessage(\"Control loop \" + updateMsg.getControlLoopId()\n                    + \" already defined on participant \" + participantId);\n\n            sender.sendResponse(response);\n            return;\n        }\n\nFor subsequent reviews, there Control Loop State should be checked, and first the control loop state should be brought to UNINITIALISED, before any changes to the structure of Control loop elements inside ControlLoop.\nParking the logic of handling controlLoopElement for upcoming reviews. Please let me know what do you think about this. Thanks.",
+      "parentUuid": "ea08198d_1731bde4",
       "revId": "733aab315e378bb9fe67920a94d31ac0a07bb5c3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
