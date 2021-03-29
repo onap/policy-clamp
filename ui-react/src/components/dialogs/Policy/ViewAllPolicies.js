@@ -56,6 +56,7 @@ import Tab from 'react-bootstrap/Tab';
 import PolicyEditor from './PolicyEditor';
 import ToscaViewer from './ToscaViewer';
 import PolicyDeploymentEditor from './PolicyDeploymentEditor';
+import PoliciesTreeViewer from './PoliciesTreeViewer';
 
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
@@ -79,6 +80,17 @@ const DetailedRow = styled.div`
     margin-top: 20px;
 `
 
+const PoliciesTreeViewerDiv = styled.div`
+    width: 12%;
+    float: left;
+    left: 0;
+`
+
+const MaterialTableDiv = styled.div`
+    float: right;
+    width: 88%;
+    left: 12%;
+`
 
 const standardCellStyle = { backgroundColor: '#039be5', color: '#FFF', border: '1px solid black' };
 const headerStyle = { backgroundColor: '#ddd', border: '2px solid black' };
@@ -93,7 +105,7 @@ export default class ViewAllPolicies extends React.Component {
         policiesListData: [],
         toscaModelsListData: [],
         jsonEditorForPolicy: new Map(),
-        prefixGrouping: false,
+        treeView: false,
         showSuccessAlert: false,
         showFailAlert: false,
         policyColumnsDefinition: [
@@ -179,7 +191,7 @@ export default class ViewAllPolicies extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handleClose = this.handleClose.bind(this);
-        this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
+        this.handleTreeView = this.handleTreeView.bind(this);
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.disableAlert = this.disableAlert.bind(this);
         this.getAllPolicies = this.getAllPolicies.bind(this);
@@ -233,8 +245,8 @@ export default class ViewAllPolicies extends React.Component {
         this.props.history.push('/')
     }
 
-    handlePrefixGrouping(event) {
-        this.setState({prefixGrouping: event.target.checked});
+    handleTreeView(event) {
+        this.setState({treeView: event.target.checked});
     }
 
     handleDeletePolicy(event, rowData) {
@@ -265,11 +277,15 @@ export default class ViewAllPolicies extends React.Component {
         return (
                 <Tab eventKey="policies" title="Policies in Policy Framework">
                         <Modal.Body>
-                          <FormControlLabel
-                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
-                                label="Group by prefix"
-                              />
-                           <MaterialTable
+                        <FormControlLabel
+                                control={<Switch checked={this.state.treeView} onChange={this.handleTreeView} />}
+                                label="Tree View" />
+                        <div>
+                          <PoliciesTreeViewerDiv>
+                            <PoliciesTreeViewer show={this.state.treeView} policiesData={this.state.policiesListData} />
+                          </PoliciesTreeViewerDiv>
+                          <MaterialTableDiv>
+                          <MaterialTable
                               title={"Policies"}
                               data={this.state.policiesListData}
                               columns={this.state.policyColumnsDefinition}
@@ -328,7 +344,9 @@ export default class ViewAllPolicies extends React.Component {
                                     onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
                                   }
                               ]}
-                           />
+                          />
+                          </MaterialTableDiv>
+                          </div>
                         </Modal.Body>
                     </Tab>
         );
@@ -339,7 +357,7 @@ export default class ViewAllPolicies extends React.Component {
                     <Tab eventKey="tosca models" title="Tosca Models in Policy Framework">
                         <Modal.Body>
                           <FormControlLabel
-                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
+                                control={<Switch checked={this.state.treeView} onChange={this.handleTreeView} />}
                                 label="Group by prefix"
                               />
                            <MaterialTable
