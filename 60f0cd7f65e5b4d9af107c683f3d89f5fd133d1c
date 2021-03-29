@@ -130,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "2285e3b0_01fa1e97",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-03-29T15:00:23Z",
+      "side": 1,
+      "message": "the class is DeploymentGroups.  However, it does not support concurrent access and just uses lists instead of maps.  Nevertheless, you could stick with the above data structure internally and convert to DeploymentGroups (instead of GSON structures) prior to conversion to a string. (We prefer to avoid as much direct use of gson as possible.)",
+      "parentUuid": "9329c92c_cfa39317",
+      "range": {
+        "startLine": 50,
+        "startChar": 98,
+        "endLine": 50,
+        "endChar": 115
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf115082_718585d7",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
         "patchSetId": 4
