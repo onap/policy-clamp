@@ -382,6 +382,30 @@
     },
     {
       "key": {
+        "uuid": "ff68a40c_bba31e35",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T21:16:25Z",
+      "side": 1,
+      "message": "Yes we had the same idea 😊, I was thinking to create a subclass as well",
+      "parentUuid": "15716fe7_c607c2bb",
+      "range": {
+        "startLine": 50,
+        "startChar": 98,
+        "endLine": 50,
+        "endChar": 115
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf115082_718585d7",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
         "patchSetId": 4
