@@ -42,6 +42,48 @@
     },
     {
       "key": {
+        "uuid": "6adbbdeb_1b8a33b1",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T14:51:30Z",
+      "side": 1,
+      "message": "Yes I hesitated a lot before going there, it\u0027s cumbersome to manipulate map of map of map. \nI was hoping to find existing Pojos in policy models to represent these operations but id did not find anything? did i miss it ?",
+      "parentUuid": "64beaabc_64b8a009",
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9329c92c_cfa39317",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T14:51:30Z",
+      "side": 1,
+      "message": "Yes the upper calls are done in parallel. I was expecting potentially big batch coming from UI in a coming feature",
+      "parentUuid": "78f38d7d_a17e1b2a",
+      "range": {
+        "startLine": 50,
+        "startChar": 98,
+        "endLine": 50,
+        "endChar": 115
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bf115082_718585d7",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
         "patchSetId": 4
@@ -53,6 +95,24 @@
       "writtenOn": "2021-03-29T14:02:22Z",
       "side": 1,
       "message": "sonar: move this method after line 77",
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53969c2b_decab78c",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T14:51:30Z",
+      "side": 1,
+      "message": "sure will do, sonarlint did not complain about it :-)",
+      "parentUuid": "bf115082_718585d7",
       "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "4e964a7d_b1c66792",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T14:51:30Z",
+      "side": 1,
+      "message": "Absolutely right, Stupid code :-)",
+      "parentUuid": "0bcc567a_09152993",
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "42ffe615_89bac2e0",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
         "patchSetId": 4
@@ -87,6 +165,30 @@
       "writtenOn": "2021-03-29T14:02:22Z",
       "side": 1,
       "message": "given how complex the type is, maybe just use \"var\"",
+      "range": {
+        "startLine": 116,
+        "startChar": 13,
+        "endLine": 116,
+        "endChar": 86
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7c6c1a8_d9209a80",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T14:51:30Z",
+      "side": 1,
+      "message": "Yeah i hesitated as well, having that structure \"complexity\" in mind .... could be hard to understand without it ??",
+      "parentUuid": "42ffe615_89bac2e0",
       "range": {
         "startLine": 116,
         "startChar": 13,
@@ -122,6 +224,30 @@
     },
     {
       "key": {
+        "uuid": "75c71584_69ca39cb",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T14:51:30Z",
+      "side": 1,
+      "message": "same answer ? what do you think ? replace or not ?",
+      "parentUuid": "2ffe57eb_2b42741c",
+      "range": {
+        "startLine": 131,
+        "startChar": 13,
+        "endLine": 131,
+        "endChar": 73
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bacbbcf8_04ffbb97",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
         "patchSetId": 4
@@ -133,6 +259,30 @@
       "writtenOn": "2021-03-29T14:02:22Z",
       "side": 1,
       "message": "cache this to avoid repeated look-up via pdpSubGroupNode.getAsJsonArray(\"policies\") below",
+      "range": {
+        "startLine": 139,
+        "startChar": 48,
+        "endLine": 139,
+        "endChar": 63
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d835bb92_66f2a4f3",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T14:51:30Z",
+      "side": 1,
+      "message": "yep will do",
+      "parentUuid": "bacbbcf8_04ffbb97",
       "range": {
         "startLine": 139,
         "startChar": 48,
