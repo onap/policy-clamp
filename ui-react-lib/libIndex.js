@@ -52,3 +52,4 @@ export { default as UserService } from './src/api/UserService';
 export { default as ViewLoopTemplatesModal } from './src/components/dialogs/Tosca/ViewLoopTemplatesModal';
 export { default as ViewAllPolicies } from './src/components/dialogs/Policy/ViewAllPolicies';
 export { default as PolicyDeploymentEditor } from './src/components/dialogs/Policy/PolicyDeploymentEditor';
+export { default as PoliciesTreeViewer } from './src/components/dialogs/Policy/PoliciesTreeViewer';
