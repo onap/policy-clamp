@@ -290,6 +290,24 @@
     },
     {
       "key": {
+        "uuid": "81396686_99c9b958",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T18:20:57Z",
+      "side": 1,
+      "message": ":-)\nHere we should gain some cpu when we have a lot of policies in the PEF compared to what i did previously, I was parsing the PEF json P times. Here i\u0027m caching the inverted PDPgroup/pdpSubgroup structure from the PEF and then it\u0027s just a Map get for each policy",
+      "parentUuid": "2e72b82d_cc6d881d",
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b73d96ca_98e5bccb",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
         "patchSetId": 10
