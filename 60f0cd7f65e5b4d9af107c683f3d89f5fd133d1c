@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e6e3accf_03499e7c",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/components/external/PolicyComponent.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T15:10:48Z",
+      "side": 1,
+      "message": "This stuff is for the control loop flows, not the policy listing feature. I\u0027m changing that to reuse the existing code and limit the number of lines added.\nSo yes for the control loop, we will have to change the code one day to support multiple versions (this requires to be well designed). \nCurrently when resubmitting the policies clamp un-deploys, removes, re-creates and re-deploys all policies defined in the CL.",
+      "parentUuid": "363d82b7_be256438",
+      "range": {
+        "startLine": 82,
+        "startChar": 106,
+        "endLine": 82,
+        "endChar": 113
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d99e211_ec33dd39",
         "filename": "src/main/java/org/onap/policy/clamp/loop/components/external/PolicyComponent.java",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2021-03-29T14:58:47Z",
       "side": 1,
       "message": "Same comment",
+      "range": {
+        "startLine": 86,
+        "startChar": 106,
+        "endLine": 86,
+        "endChar": 113
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a61362ab_320996e7",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/components/external/PolicyComponent.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T15:10:48Z",
+      "side": 1,
+      "message": "Same answer we won\u0027t change that now and i think we have a user story in the backlog ? if not we should add one",
+      "parentUuid": "4d99e211_ec33dd39",
       "range": {
         "startLine": 86,
         "startChar": 106,
@@ -142,6 +190,30 @@
       "side": 1,
       "message": "the class is DeploymentGroups.  However, it does not support concurrent access and just uses lists instead of maps.  Nevertheless, you could stick with the above data structure internally and convert to DeploymentGroups (instead of GSON structures) prior to conversion to a string. (We prefer to avoid as much direct use of gson as possible.)",
       "parentUuid": "9329c92c_cfa39317",
+      "range": {
+        "startLine": 50,
+        "startChar": 98,
+        "endLine": 50,
+        "endChar": 115
+      },
+      "revId": "60f0cd7f65e5b4d9af107c683f3d89f5fd133d1c",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0cb3c91e_73f6226d",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayload.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-03-29T15:10:48Z",
+      "side": 1,
+      "message": "Thx i missed it sorry. I Agree with you for the \"direct GSON\", unless json is really simple which is not totally true here, \nI\u0027ll do the change",
+      "parentUuid": "2285e3b0_01fa1e97",
       "range": {
         "startLine": 50,
         "startChar": 98,
