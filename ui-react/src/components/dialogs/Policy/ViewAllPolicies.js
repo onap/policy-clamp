@@ -44,7 +44,6 @@ import DehazeIcon from '@material-ui/icons/Dehaze';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import AddIcon from '@material-ui/icons/Add';
 import PublishIcon from '@material-ui/icons/Publish';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import MaterialTable from "material-table";
 import PolicyService from '../../../api/PolicyService';
@@ -56,6 +55,7 @@ import Tab from 'react-bootstrap/Tab';
 import PolicyEditor from './PolicyEditor';
 import ToscaViewer from './ToscaViewer';
 import PolicyDeploymentEditor from './PolicyDeploymentEditor';
+import PoliciesTreeViewer from './PoliciesTreeViewer';
 
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
@@ -79,6 +79,18 @@ const DetailedRow = styled.div`
     margin-top: 20px;
 `
 
+const PoliciesTreeViewerDiv = styled.div`
+    width: 20%;
+    float: left;
+    left: 0;
+    overflow: auto;
+`
+
+const MaterialTableDiv = styled.div`
+    float: right;
+    width: 80%;
+    left: 20%;
+`
 
 const standardCellStyle = { backgroundColor: '#039be5', color: '#FFF', border: '1px solid black' };
 const headerStyle = { backgroundColor: '#ddd', border: '2px solid black' };
@@ -87,13 +99,12 @@ const rowHeaderStyle = {backgroundColor:'#ddd', fontSize: '15pt', text: 'bold', 
 export default class ViewAllPolicies extends React.Component {
   state = {
         show: true,
-        showPolicyDeploymentDialog: false,
-        content: 'Please select a policy to display it',
         selectedRowId: -1,
         policiesListData: [],
+        policiesListDataFiltered: [],
         toscaModelsListData: [],
+        toscaModelsListDataFiltered: [],
         jsonEditorForPolicy: new Map(),
-        prefixGrouping: false,
         showSuccessAlert: false,
         showFailAlert: false,
         policyColumnsDefinition: [
@@ -179,12 +190,13 @@ export default class ViewAllPolicies extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handleClose = this.handleClose.bind(this);
-        this.handlePrefixGrouping = this.handlePrefixGrouping.bind(this);
         this.handleDeletePolicy = this.handleDeletePolicy.bind(this);
         this.disableAlert = this.disableAlert.bind(this);
         this.getAllPolicies = this.getAllPolicies.bind(this);
         this.getAllToscaModels = this.getAllToscaModels.bind(this);
         this.generateAdditionalPolicyColumns = this.generateAdditionalPolicyColumns.bind(this);
+        this.filterPolicies = this.filterPolicies.bind(this);
+        this.filterTosca = this.filterTosca.bind(this);
         this.getAllPolicies();
         this.getAllToscaModels();
     }
@@ -217,14 +229,18 @@ export default class ViewAllPolicies extends React.Component {
 
     getAllToscaModels() {
         PolicyToscaService.getToscaPolicyModels().then(toscaModelsList => {
-            this.setState({ toscaModelsListData: toscaModelsList });
+            this.setState({ toscaModelsListData: toscaModelsList,
+                            toscaModelsListDataFiltered: toscaModelsList
+             });
         });
     }
 
     getAllPolicies() {
         PolicyService.getPoliciesList().then(allPolicies => {
             this.generateAdditionalPolicyColumns(allPolicies["policies"])
-            this.setState({ policiesListData: allPolicies["policies"] })
+            this.setState({ policiesListData: allPolicies["policies"],
+                            policiesListDataFiltered: allPolicies["policies"],
+            })
         });
 
     }
@@ -232,10 +248,6 @@ export default class ViewAllPolicies extends React.Component {
     handleClose() {
         this.setState({ show: false });
         this.props.history.push('/')
-    }
-
-    handlePrefixGrouping(event) {
-        this.setState({prefixGrouping: event.target.checked});
     }
 
     handleDeletePolicy(event, rowData) {
@@ -262,74 +274,87 @@ export default class ViewAllPolicies extends React.Component {
         this.setState ({ showSuccessAlert: false, showFailAlert: false });
     }
 
+    filterPolicies(prefixForFiltering) {
+        this.setState({policiesListDataFiltered: this.state.policiesListData.filter(element => element.name.startsWith(prefixForFiltering))});
+    }
+
+    filterTosca(prefixForFiltering) {
+        this.setState({toscaModelsListDataFiltered: this.state.toscaModelsListData.filter(element => element.policyModelType.startsWith(prefixForFiltering))});
+    }
+
     renderPoliciesTab() {
         return (
                 <Tab eventKey="policies" title="Policies in Policy Framework">
                         <Modal.Body>
-                          <FormControlLabel
-                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
-                                label="Group by prefix"
+                        <div>
+                          <PoliciesTreeViewerDiv>
+                              <PoliciesTreeViewer policiesData={this.state.policiesListData} valueForTreeCreation="name" policiesFilterFunction={this.filterPolicies} />
+                          </PoliciesTreeViewerDiv>
+                          <MaterialTableDiv>
+                              <MaterialTable
+                                  title={"Policies"}
+                                  data={this.state.policiesListDataFiltered}
+                                  columns={this.state.policyColumnsDefinition}
+                                  icons={this.state.tableIcons}
+                                  onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                                  options={{
+                                      grouping: true,
+                                      exportButton: true,
+                                      headerStyle:rowHeaderStyle,
+                                      rowStyle: rowData => ({
+                                        backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
+                                      }),
+                                      actionsColumnIndex: -1
+                                  }}
+                                  detailPanel={[
+                                    {
+                                      icon: ArrowForwardIosIcon,
+                                      tooltip: 'Show Configuration',
+                                      render: rowData => {
+                                        return (
+                                            <DetailedRow>
+                                                <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]}
+                                                    policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]}
+                                                    policiesTableUpdateFunction={this.getAllPolicies} />
+                                            </DetailedRow>
+                                        )
+                                      },
+                                    },
+                                    {
+                                      icon: DehazeIcon,
+                                      openIcon: DehazeIcon,
+                                      tooltip: 'Show Raw Data',
+                                      render: rowData => {
+                                        return (
+                                            <DetailedRow>
+                                                <pre>{JSON.stringify(rowData, null, 2)}</pre>
+                                            </DetailedRow>
+                                        )
+                                      },
+                                    },
+                                    {
+                                      icon: PublishIcon,
+                                      openIcon: PublishIcon,
+                                      tooltip: 'PDP Group Deployment',
+                                      render: rowData => {
+                                        return (
+                                            <DetailedRow>
+                                                <PolicyDeploymentEditor policyData={rowData} policiesTableUpdateFunction={this.getAllPolicies} />
+                                            </DetailedRow>
+                                        )
+                                      },
+                                    }
+                                  ]}
+                                  actions={[
+                                      {
+                                        icon: forwardRef((props, ref) => <DeleteRoundedIcon {...props} ref={ref} />),
+                                        tooltip: 'Delete Policy',
+                                        onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
+                                      }
+                                  ]}
                               />
-                           <MaterialTable
-                              title={"Policies"}
-                              data={this.state.policiesListData}
-                              columns={this.state.policyColumnsDefinition}
-                              icons={this.state.tableIcons}
-                              onRowClick={(event, rowData, togglePanel) => togglePanel()}
-                              options={{
-                                  grouping: true,
-                                  exportButton: true,
-                                  headerStyle:rowHeaderStyle,
-                                  rowStyle: rowData => ({
-                                    backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
-                                  }),
-                                  actionsColumnIndex: -1
-                              }}
-                              detailPanel={[
-                                {
-                                  icon: ArrowForwardIosIcon,
-                                  tooltip: 'Show Configuration',
-                                  render: rowData => {
-                                    return (
-                                        <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["type"]} policyModelTypeVersion={rowData["type_version"]} policyName={rowData["name"]} policyVersion={rowData["version"]} policyProperties={rowData["properties"]} policiesTableUpdateFunction={this.getAllPolicies} />
-                                        </DetailedRow>
-                                    )
-                                  },
-                                },
-                                {
-                                  icon: DehazeIcon,
-                                  openIcon: DehazeIcon,
-                                  tooltip: 'Show Raw Data',
-                                  render: rowData => {
-                                    return (
-                                        <DetailedRow>
-                                            <pre>{JSON.stringify(rowData, null, 2)}</pre>
-                                        </DetailedRow>
-                                    )
-                                  },
-                                },
-                                {
-                                  icon: PublishIcon,
-                                  openIcon: PublishIcon,
-                                  tooltip: 'PDP Group Deployment',
-                                  render: rowData => {
-                                    return (
-                                        <DetailedRow>
-                                            <PolicyDeploymentEditor policyData={rowData} policiesTableUpdateFunction={this.getAllPolicies} />
-                                        </DetailedRow>
-                                    )
-                                  },
-                                }
-                              ]}
-                              actions={[
-                                  {
-                                    icon: forwardRef((props, ref) => <DeleteRoundedIcon {...props} ref={ref} />),
-                                    tooltip: 'Delete Policy',
-                                    onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
-                                  }
-                              ]}
-                           />
+                          </MaterialTableDiv>
+                          </div>
                         </Modal.Body>
                     </Tab>
         );
@@ -339,63 +364,66 @@ export default class ViewAllPolicies extends React.Component {
         return (
                     <Tab eventKey="tosca models" title="Tosca Models in Policy Framework">
                         <Modal.Body>
-                          <FormControlLabel
-                                control={<Switch checked={this.state.prefixGrouping} onChange={this.handlePrefixGrouping} />}
-                                label="Group by prefix"
-                              />
-                           <MaterialTable
-                              title={"Tosca Models"}
-                              data={this.state.toscaModelsListData}
-                              columns={this.state.toscaColumnsDefinition}
-                              icons={this.state.tableIcons}
-                              onRowClick={(event, rowData, togglePanel) => togglePanel()}
-                              options={{
-                                  grouping: true,
-                                  exportButton: true,
-                                  headerStyle:rowHeaderStyle,
-                                  rowStyle: rowData => ({
-                                    backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
-                                  }),
-                                  actionsColumnIndex: -1
-                              }}
-                              detailPanel={[
-                                {
-                                  icon: ArrowForwardIosIcon,
-                                  tooltip: 'Show Tosca',
-                                  render: rowData => {
-                                    return (
-                                        <DetailedRow>
-                                            <ToscaViewer toscaData={rowData} />
-                                        </DetailedRow>
-                                    )
-                                  },
-                                },
-                                {
-                                  icon: DehazeIcon,
-                                  openIcon: DehazeIcon,
-                                  tooltip: 'Show Raw Data',
-                                  render: rowData => {
-                                    return (
-                                        <DetailedRow>
-                                            <pre>{JSON.stringify(rowData, null, 2)}</pre>
-                                        </DetailedRow>
-                                    )
-                                  },
-                                },
-                                {
-                                  icon: AddIcon,
-                                  openIcon: AddIcon,
-                                  tooltip: 'Create a policy from this model',
-                                  render: rowData => {
-                                    return (
-                                        <DetailedRow>
-                                            <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} policiesTableUpdateFunction={this.getAllPolicies} />
-                                        </DetailedRow>
-                                    )
-                                  },
-                                },
-                              ]}
-                           />
+                          <div>
+                              <PoliciesTreeViewerDiv>
+                                  <PoliciesTreeViewer policiesData={this.state.toscaModelsListData} valueForTreeCreation="policyModelType" policiesFilterFunction={this.filterTosca} />
+                              </PoliciesTreeViewerDiv>
+                              <MaterialTableDiv>
+                               <MaterialTable
+                                  title={"Tosca Models"}
+                                  data={this.state.toscaModelsListDataFiltered}
+                                  columns={this.state.toscaColumnsDefinition}
+                                  icons={this.state.tableIcons}
+                                  onRowClick={(event, rowData, togglePanel) => togglePanel()}
+                                  options={{
+                                      grouping: true,
+                                      exportButton: true,
+                                      headerStyle:rowHeaderStyle,
+                                      rowStyle: rowData => ({
+                                        backgroundColor: (this.state.selectedRowId !== -1 && this.state.selectedRowId === rowData.tableData.id) ? '#EEE' : '#FFF'
+                                      }),
+                                      actionsColumnIndex: -1
+                                  }}
+                                  detailPanel={[
+                                    {
+                                      icon: ArrowForwardIosIcon,
+                                      tooltip: 'Show Tosca',
+                                      render: rowData => {
+                                        return (
+                                            <DetailedRow>
+                                                <ToscaViewer toscaData={rowData} />
+                                            </DetailedRow>
+                                        )
+                                      },
+                                    },
+                                    {
+                                      icon: DehazeIcon,
+                                      openIcon: DehazeIcon,
+                                      tooltip: 'Show Raw Data',
+                                      render: rowData => {
+                                        return (
+                                            <DetailedRow>
+                                                <pre>{JSON.stringify(rowData, null, 2)}</pre>
+                                            </DetailedRow>
+                                        )
+                                      },
+                                    },
+                                    {
+                                      icon: AddIcon,
+                                      openIcon: AddIcon,
+                                      tooltip: 'Create a policy from this model',
+                                      render: rowData => {
+                                        return (
+                                            <DetailedRow>
+                                                <PolicyEditor policyModelType={rowData["policyModelType"]} policyModelTypeVersion={rowData["version"]} policyProperties={{}} policiesTableUpdateFunction={this.getAllPolicies} />
+                                            </DetailedRow>
+                                        )
+                                      },
+                                    },
+                                  ]}
+                               />
+                              </MaterialTableDiv>
+                         </div>
                         </Modal.Body>
                     </Tab>
         );
