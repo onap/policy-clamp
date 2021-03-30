@@ -21,7 +21,7 @@
 #
 ###
 
-FROM onap/integration-java11:7.1.0
+FROM onap/integration-java11:8.0.0
 
 MAINTAINER "The Onap Team"
 LABEL Description="This image contains alpine, openjdk 11 and policy clamp"
