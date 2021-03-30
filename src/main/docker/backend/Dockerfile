@@ -2,7 +2,7 @@
 # ============LICENSE_START=======================================================
 # ONAP CLAMP
 # ================================================================================
-# Copyright (C) 2018 AT&T Intellectual Property. All rights
+# Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
 #                             reserved.
 # ================================================================================
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@
 #
 ###
 
-FROM onap/integration-java11:7.1.0
+FROM onap/integration-java11:8.0.0
 
 MAINTAINER "The Onap Team"
 LABEL Description="This image contains alpine, openjdk 11 and policy clamp"
