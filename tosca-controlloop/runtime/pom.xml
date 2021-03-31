@@ -32,9 +32,10 @@
 
     <artifactId>controlloop-runtime</artifactId>
     <name>${project.artifactId}</name>
+    <description>Runtime server of the TOSCA Control Loop system</description>
 
     <dependencies>
-        <dependency>
+      <dependency>
             <groupId>org.onap.policy.clamp.controlloop</groupId>
             <artifactId>controlloop-common</artifactId>
             <version>${project.version}</version>
@@ -43,6 +44,11 @@
             <groupId>org.onap.policy.clamp.controlloop</groupId>
             <artifactId>controlloop-models</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
