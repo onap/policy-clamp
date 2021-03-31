@@ -32,7 +32,7 @@
     <artifactId>participant</artifactId>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
-    <description>Participants that communicate with the runtime server to handle control lops</description>
+    <description>participants that communicate with the runtime servier to handle control loops</description>
 
     <modules>
         <module>participant-intermediary</module>
@@ -51,4 +51,22 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.onap.policy.clamp.controlloop.participant.simulator.main.startstop.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

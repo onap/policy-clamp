@@ -38,5 +38,6 @@
         <module>participant-impl-dcae</module>
         <module>participant-impl-policy</module>
         <module>participant-impl-cds</module>
+        <module>participant-impl-kubernetes</module>
     </modules>
 </project>

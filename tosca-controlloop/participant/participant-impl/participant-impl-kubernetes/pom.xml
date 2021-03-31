@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ============LICENSE_START=======================================================
   Copyright (C) 2021 Nordix Foundation.
@@ -19,18 +18,17 @@
   ============LICENSE_END=========================================================
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.onap.policy.clamp.controlloop</groupId>
-        <artifactId>controlloop</artifactId>
+        <artifactId>participant-impl</artifactId>
         <version>6.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>controlloop-common</artifactId>
+    <artifactId>participant-impl-kubernetes</artifactId>
     <name>${project.artifactId}</name>
-    <description>Common utilities and code for the TOSCA Control Loop system</description>
+    <description>Kubernetes participant, that allows microservices running in Kubernetes to partake in control loops</description>
 </project>
