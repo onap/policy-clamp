@@ -32,4 +32,5 @@
 
     <artifactId>controlloop-common</artifactId>
     <name>${project.artifactId}</name>
+    <description>Common utilities and code for the TOSCA Control Loop system</description>
 </project>

@@ -31,4 +31,12 @@
     <artifactId>participant-impl-dcae</artifactId>
     <name>${project.artifactId}</name>
     <description>DCAE participant, that allows DCAE to partake in control loops</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.onap.policy.clamp.controlloop</groupId>
+            <artifactId>participant-intermediary</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>

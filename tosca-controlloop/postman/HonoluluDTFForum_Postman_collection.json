@@ -1,0 +1,583 @@
+{
+	"info": {
+		"_postman_id": "193b3b58-1daa-4b66-9783-7530cf47356b",
+		"name": "Tosca POC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "TOSCA Control Loop Instantiation",
+			"item": [
+				{
+					"name": "Put instantiation command 1",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "healthcheck",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "zb!XztG34",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-ONAP-RequestID",
+								"value": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderedState\": \"RUNNING\",\r\n    \"controlLoopIdentifierList\": [\r\n        {\r\n            \"name\": \"PMSHInstance0\",\r\n            \"version\": \"1.0.1\"\r\n        },\r\n        {\r\n            \"name\": \"PMSHInstance1\",\r\n            \"version\": \"1.0.1\"\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:6969/onap/controlloop/v2/instantiation/command",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"onap",
+								"controlloop",
+								"v2",
+								"instantiation",
+								"command"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get instantiation by name and version 1",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "healthcheck",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "zb!XztG34",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-ONAP-RequestID",
+								"value": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:6969/onap/controlloop/v2/instantiation?name=name&version=1.001",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"onap",
+								"controlloop",
+								"v2",
+								"instantiation"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "name"
+								},
+								{
+									"key": "version",
+									"value": "1.001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete instantiation by name and version 1",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "healthcheck",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "zb!XztG34",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-ONAP-RequestID",
+								"value": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:6969/onap/controlloop/v2/instantiation?name=name&version=1.001",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"onap",
+								"controlloop",
+								"v2",
+								"instantiation"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "name"
+								},
+								{
+									"key": "version",
+									"value": "1.001"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create instantiation 1",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "healthcheck",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "zb!XztG34",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-ONAP-RequestID",
+								"value": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"controlLoops\": [\r\n        {\r\n            \"name\": \"PMSHInstance0\",\r\n            \"version\": \"1.0.1\",\r\n            \"definition\": {\r\n                \"name\": \"org.onap.domain.pmsh.PMSHControlLoopDefinition\",\r\n                \"version\": \"1.0.0\"\r\n            },\r\n            \"state\": \"UNINITIALISED\",\r\n            \"orderedState\": \"UNINITIALISED\",\r\n            \"description\": \"PMSH control loop instance 0\",\r\n            \"elements\": [\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c20\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_DCAEMicroservice\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"DCAEParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"DCAE Control Loop Element for the PMSH instance 0 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c21\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Monitoring Policy Control Loop Element for the PMSH instance 0 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c22\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Operational Policy Control Loop Element for the PMSH instance 0 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c23\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"CDSParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 0 control loop\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"name\": \"PMSHInstance1\",\r\n            \"version\": \"1.0.1\",\r\n            \"definition\": {\r\n                \"name\": \"org.onap.domain.pmsh.PMSHControlLoopDefinition\",\r\n                \"version\": \"1.0.0\"\r\n            },\r\n            \"state\": \"UNINITIALISED\",\r\n            \"orderedState\": \"UNINITIALISED\",\r\n            \"description\": \"PMSH control loop instance 1\",\r\n            \"elements\": [\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c20\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_DCAEMicroservice\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"DCAEParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"DCAE Control Loop Element for the PMSH instance 1 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c21\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Monitoring Policy Control Loop Element for the PMSH instance 1 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c22\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Operational Policy Control Loop Element for the PMSH instance 1 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c23\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"CDSParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 1 control loop\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:6969/onap/controlloop/v2/instantiation",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"onap",
+								"controlloop",
+								"v2",
+								"instantiation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change instantiation 1",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "healthcheck",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "zb!XztG34",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "X-ONAP-RequestID",
+								"value": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"controlLoops\": [\r\n        {\r\n            \"name\": \"PMSHInstance0\",\r\n            \"version\": \"1.0.1\",\r\n            \"definition\": {\r\n                \"name\": \"org.onap.domain.pmsh.PMSHControlLoopDefinition\",\r\n                \"version\": \"1.0.0\"\r\n            },\r\n            \"state\": \"UNINITIALISED\",\r\n            \"orderedState\": \"UNINITIALISED\",\r\n            \"description\": \"PMSH control loop instance 0\",\r\n            \"elements\": [\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c20\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_DCAEMicroservice\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"DCAEParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"DCAE Control Loop Element for the PMSH instance 0 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c21\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Monitoring Policy for Control Loop Element for the PMSH instance 0 control loop has been \"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c22\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Operational Policy Control Loop Element for the PMSH instance 0 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c23\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"CDSParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 0 control loop\"\r\n                }\r\n            ]\r\n        },\r\n        {\r\n            \"name\": \"PMSHInstance1\",\r\n            \"version\": \"1.0.1\",\r\n            \"definition\": {\r\n                \"name\": \"org.onap.domain.pmsh.PMSHControlLoopDefinition\",\r\n                \"version\": \"1.0.0\"\r\n            },\r\n            \"state\": \"UNINITIALISED\",\r\n            \"orderedState\": \"UNINITIALISED\",\r\n            \"description\": \"PMSH control loop instance 1\",\r\n            \"elements\": [\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c24\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_DCAEMicroservice\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"DCAEParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"DCAE Control Loop Element for the PMSH instance 1 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c25\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Monitoring Policy Control Loop Element for the PMSH instance 1 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c26\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"PolicyParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"Operational Policy Control Loop Element for the PMSH instance 1 control loop\"\r\n                },\r\n                {\r\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c27\",\r\n                    \"definition\": {\r\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\r\n                        \"version\": \"1.2.3\"\r\n                    },\r\n                    \"participantId\": {\r\n                        \"name\": \"CDSParticipant0\",\r\n                        \"version\": \"1.0.0\"\r\n                    },\r\n                    \"state\": \"UNINITIALISED\",\r\n                    \"orderedState\": \"UNINITIALISED\",\r\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 1 control loop\"\r\n                }\r\n            ]\r\n        }\r\n    ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:6969/onap/controlloop/v2/instantiation",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"onap",
+								"controlloop",
+								"v2",
+								"instantiation"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get commissioned control loop definition with name and version",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:6969/onap/controlloop/v2/commission",
+					"host": [
+						"localhost"
+					],
+					"port": "6969",
+					"path": [
+						"onap",
+						"controlloop",
+						"v2",
+						"commission"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete commissioned control loop definition",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comission control loop definition",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "zb!XztG34",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "healthcheck",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-ONAP-RequestID",
+						"value": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "appiication/yaml",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "# ============LICENSE_START=======================================================\n# Copyright (C) 2021 Nordix Foundation.\n# ================================================================================\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n# SPDX-License-Identifier: Apache-2.0\n# ============LICENSE_END=========================================================\n\ntosca_definitions_version: tosca_simple_yaml_1_3\ndata_types:\n  onap.datatypes.ToscaConceptIdentifier:\n    derived_from: tosca.datatypes.Root\n    properties:\n      name:\n        type: string\n        required: true\n      version:\n        type: string\n        required: true\nnode_types:\n  org.onap.policy.clamp.controlloop.Participant:\n    version: 1.0.1\n    derived_from: tosca.nodetypes.Root\n    properties:\n      provider:\n        type: string\n        requred: false\n  org.onap.policy.clamp.controlloop.ControlLoopElement:\n    version: 1.0.1\n    derived_from: tosca.nodetypes.Root\n    properties:\n      provider:\n        type: string\n        requred: false\n      participant_id:\n        type: onap.datatypes.ToscaConceptIdentifier\n        requred: true\n  org.onap.policy.clamp.controlloop.ControlLoop:\n    version: 1.0.1\n    derived_from: tosca.nodetypes.Root\n    properties:\n      provider:\n        type: string\n        requred: false\n      elements:\n        type: list\n        required: true\n        entry_schema:\n          type: onap.datatypes.ToscaConceptIdentifier\n  org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement:\n    version: 1.0.1\n    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement\n    properties:\n      dcae_blueprint_id:\n        type: onap.datatypes.ToscaConceptIdentifier\n        requred: true\n  org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement:\n    version: 1.0.1\n    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement\n    properties:\n      policy_type_id:\n        type: onap.datatypes.ToscaConceptIdentifier\n        requred: true\n  org.onap.policy.clamp.controlloop.CDSControlLoopElement:\n    version: 1.0.1\n    derived_from: org.onap.policy.clamp.controlloop.ControlLoopElement\n    properties:\n      cds_blueprint_id:\n        type: onap.datatypes.ToscaConceptIdentifier\n        requred: true\ntopology_template:\n  node_templates:\n    org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant:\n      version: 2.3.4\n      type: org.onap.policy.clamp.controlloop.Participant\n      type_version: 1.0.1\n      description: Participant for DCAE microservices\n      properties:\n        provider: ONAP\n    org.onap.policy.controlloop.PolicyControlLoopParticipant:\n      version: 2.3.1\n      type: org.onap.policy.clamp.controlloop.Participant\n      type_version: 1.0.1\n      description: Participant for DCAE microservices\n      properties:\n        provider: ONAP\n    org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant:\n      version: 2.2.1\n      type: org.onap.policy.clamp.controlloop.Participant\n      type_version: 1.0.1\n      description: Participant for DCAE microservices\n      properties:\n        provider: ONAP\n    org.onap.domain.pmsh.PMSH_DCAEMicroservice:\n      version: 1.2.3\n      type: org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement\n      type_version: 1.0.0\n      description: Control loop element for the DCAE microservice for Performance Management Subscription Handling\n      properties:\n        provider: Ericsson\n        participant_id:\n          name: org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant\n          version: 2.3.4\n        dcae_blueprint_id:\n          name: org.onap.dcae.blueprints.PMSHBlueprint\n          version: 1.0.0\n    org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement:\n      version: 1.2.3\n      type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement\n      type_version: 1.0.0\n      description: Control loop element for the monitoring policy for Performance Management Subscription Handling\n      properties:\n        provider: Ericsson\n        participant_id:\n          name: org.onap.policy.controlloop.PolicyControlLoopParticipant\n          version: 2.3.1\n        policy_type_id:\n          name: onap.policies.monitoring.pm-subscription-handler\n          version: 1.0.0\n    org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement:\n      version: 1.2.3\n      type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement\n      type_version: 1.0.0\n      description: Control loop element for the operational policy for Performance Management Subscription Handling\n      properties:\n        provider: Ericsson\n        participant_id:\n          name: org.onap.policy.controlloop.PolicyControlLoopParticipant\n          version: 2.2.1\n        policy_type_id:\n          name: onap.policies.operational.pm-subscription-handler\n          version: 1.0.0\n    org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement:\n      version: 1.2.3\n      type: org.onap.policy.clamp.controlloop.CDSControlLoopElement\n      type_version: 1.0.0\n      description: Control loop element for CDS for Performance Management Subscription Handling\n      properties:\n        provider: Ericsson\n        participant_Id:\n          name: org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant\n          version: 3.2.1\n        cds_blueprint_id:\n          name: org.onap.ccsdk.cds.PMSHCdsBlueprint\n          version: 1.0.0\n    org.onap.domain.pmsh.PMSHControlLoopDefinition:\n      version: 1.2.3\n      type: org.onap.policy.clamp.controlloop.ControlLoop\n      type_version: 1.0.0\n      description: Control loop for Performance Management Subscription Handling\n      properties:\n        provider: Ericsson\n        elements:\n        - name: org.onap.domain.pmsh.PMSH_DCAEMicroservice\n          version: 1.2.3\n        - name: org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement\n          version: 1.2.3\n        - name: org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement\n          version: 1.2.3\n        - name: org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\n          version: 1.2.3"
+				},
+				"url": {
+					"raw": "localhost:6969/onap/controlloop/v2/commission",
+					"host": [
+						"localhost"
+					],
+					"port": "6969",
+					"path": [
+						"onap",
+						"controlloop",
+						"v2",
+						"commission"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update commissioned control loop definition",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "zb!XztG34",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "healthcheck",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-ONAP-RequestID",
+						"value": "709c62b3-8918-41b9-a747-d21eb79c6c20",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "tosca_definitions_version: tosca_simple_yaml_1_3\ncapability_types:\n  org.onap.EventProducer:\n    properties:\n      carrier_protocol_type:\n        type: string\n        required: true\n        constraints:\n        - valid_values:\n          - DMAAP_message_router\n          - SOMETHING_ELSE\n          - REST\n      data_format:\n        type: string\n        required: true\n        constraints:\n        - valid_values:\n          - JSON\n          - YAML\n          - JMS\n      event_format:\n        type: string\n        required: true\n      event_format_version:\n        type: string\n        required: false\n      config_keys:\n        type: list\n        required: false\n        entry_schema:\n          type: string\n          constraints:\n          - valid_values:\n            - all valid values should be added here\n            - if not specified, events of any config key may be generated\n            - 'examples for config_key: ves-measurement, ves-syslog, tca_handle_out,\n              etc.'\n    version: 0.0.1\n    derived_from: tosca.capabilities.Root\n  org.onap.EventConsumer:\n    properties:\n      responding_capability:\n        type: string\n        required: false\n      carrier_protocol_type:\n        type: string\n        required: true\n        constraints:\n        - valid_values:\n          - DMAAP_message_router\n          - SOMETHING_ELSE\n          - REST\n      data_format:\n        type: string\n        required: true\n        constraints:\n        - valid_values:\n          - JSON\n          - YAML\n          - JMS\n          - all valid values should be added here\n      event_format:\n        type: string\n        description: 'examples for event_format: Ves_specification, LinkUp, VnfConfigured,\n          etc.'\n        required: true\n      event_format_version:\n        type: string\n        description: 'examples for event_format_version: 5.28.4, 7.30.1, etc.'\n        required: false\n      config_keys:\n        type: list\n        required: false\n        entry_schema:\n          type: string\n          constraints:\n          - valid_values:\n            - all valid values should be added here\n            - if not specified, events of any config key may be generated\n            - 'examples for config_key: ves-measurement, ves-syslog, tca_handle_out,\n              etc.'\n    version: 0.0.1\n    derived_from: tosca.capabilities.Root\nnode_types:\n  org.onap.DynamicConfig:\n    properties:\n      application_name:\n        type: string\n        description: Value used to tie the config to an application ? should we be\n          using a relationship here instead?\n        required: true\n      application_version:\n        type: string\n        required: true\n      application_provider:\n        type: string\n        required: false\n      data_types:\n        type: object\n        required: false\n      schema:\n        type: object\n        required: false\n    version: 0.0.1\n    derived_from: tosca.nodes.Root\n  org.onap.APP:\n    properties:\n      application_name:\n        type: string\n        description: Human readable name for the application Product\n        required: false\n      provider:\n        type: string\n        description: Provider of the application and of the descriptor\n        required: true\n      application_version:\n        type: string\n        description: Software version of the application\n        required: true\n      blueprint_id:\n        type: string\n        description: A reference to the app blueprint\n        required: false\n      monitoring_policy:\n        type: string\n        description: A reference to the monitoring policy\n        required: false\n    requirements:\n    - receive:\n        capability: org.onap.EventProducer\n        relationship: org.onap.PropagateEvent\n        occurrences:\n        - 0\n        - UNBOUNDED\n    - send:\n        capability: org.onap.EventConsumer\n        relationship: org.onap.PropagateEvent\n        occurrences:\n        - 0\n        - UNBOUNDED\n    version: 0.0.1\n    derived_from: tosca.nodes.Root\n  org.onap.EventRelay:\n    properties:\n      event_format:\n        type: string\n        description: 'examples for event_format: Ves_specification, etc.'\n        required: true\n      event_format_version:\n        type: string\n        description: 'examples for event_format_version: 5.28.4, 7.30.1, etc.'\n        required: true\n      config_keys:\n        type: list\n        required: false\n        entry_schema:\n          type: string\n          constraints:\n          - valid_values:\n            - all valid values should be added here\n            - if not specified, events of any config key is relayed\n            - 'examples for config_key: ves-measurement, ves-syslog, tca_handle_out,\n              etc.'\n      supported_carrier_protocols:\n        type: map\n        description: 'A map describing supported carrier protocols and translations.\n          The tuples define what protocol combinations are supported on the producer\n          and consumer side: e.g. { REST: REST, DMAAP: REST, DMAAP: DMAAP}'\n        required: true\n        key_schema:\n          type: string\n          constraints:\n          - valid_values:\n            - DMAAP_message_router\n            - SOMETHING_ELSE\n            - REST\n            - all valid values should be added here\n        entry_schema:\n          type: string\n          constraints:\n          - valid_values:\n            - DMAAP_message_router\n            - SOMETHING_ELSE\n            - REST\n            - all valid values should be added here\n      supported_data_formats:\n        type: map\n        description: 'Is a map describing supported data formats and translation.\n          The tuples define what protocol combinations are supported on the producer\n          and consumer side: e.g. { JSON: JSON, JMS: JSON, YAML:YAML }'\n        required: true\n        key_schema:\n          type: string\n          constraints:\n          - valid_values:\n            - JSON\n            - JMS\n            - YAML\n            - etc\n            - all valid values should be added here\n        entry_schema:\n          type: string\n          constraints:\n          - valid_values:\n            - JSON\n            - JMS\n            - YAML\n            - etc\n            - all valid values should be added here\n    requirements:\n    - receive:\n        capability: org.onap.EventProducer\n        relationship: org.onap.PropagateEvent\n        occurrences:\n        - 0\n        - UNBOUNDED\n    - send:\n        capability: org.onap.EventConsumer\n        relationship: org.onap.PropagateEvent\n        occurrences:\n        - 0\n        - UNBOUNDED\n    version: 0.0.1\n    derived_from: tosca.nodes.Root\nrelationship_types:\n  org.onap.PropagateEvent:\n    properties:\n      config_keys:\n        type: list\n        description: The relationship type used on requirements to org.onap.EventProducer\n          and org.onap.EventConsumer capabilities. Filters events by specific config_keys\n          to be transferred by this relationship. That is, any event with a specific\n          config_key found in the list is transferred. If list is not defined or is\n          empty, events with all config_keys are transferred.\n        required: false\n        entry_schema:\n          type: string\n    version: 0.0.1\n    derived_from: tosca.relationships.Root\ntopology_template:\n  inputs:\n    pm_subscription_topic:\n      type: string\n    pm_subscription_response_topic:\n      type: string\n    pm_subscription_handler_blueprint_id:\n      type: string\n    pm_subscription_operational_policy_id:\n      type: string\n    pm_subscription_cds_blueprint_id:\n      type: string\n    enable_tls:\n      type: string\n  node_templates:\n    org.onap.PM_Subscription_Handler:\n      type: org.onap.APP\n      properties:\n        application_name: PM Subscription Handler\n        provider: Ericsson\n        application_version: 1.0.0\n        artifact_id:\n          get_input: pm_subscription_handler_blueprint_id\n          description: Is this a reference to the DCAE Cloudify Blueprint that is\n            already stored(or will be stored before CL configuration & instatiation)\n            in DCAE Inventory?\n        artifact_config:\n          enable_tls:\n            get_input: enable_tls\n          pmsh_publish_topic_name:\n            get_input: pm_subscription_topic\n      capabilities:\n        pm-subscription-event-publisher:\n          properties:\n            carrier_protocol_type: DMAAP_message_router\n            data_format: JSON\n            event_format: pm-subscription-event-format\n            event_format_version: 1.0.0\n          attributes:\n            type: org.onap.EventProducer\n          occurrences:\n          - 0\n          - UNBOUNDED\n        pm-subscription-event-receiver:\n          properties:\n            carrier_protocol_type: DMAAP_message_router\n            data_format: JSON\n            event_format: pm-subscription-event-response-format\n            event_format_version: 1.0.0\n            relationships:\n            - type: tosca.relationships.DependsOn\n            - description: any ideas on a better realtionship ? or is it better to\n                just use the root realtionship ?\n            - target: org.onap.PM_Monitoring_Policy\n          attributes:\n            type: org.onap.EventConsumer\n          occurrences:\n          - 0\n          - UNBOUNDED\n    org.onap.PM_Monitoring_Policy:\n      type: org.onap.DynamicConfig\n      properties:\n        application_name: PM Subscription Handler\n        application_version: 1.0.0\n        provider: Ericsson\n        data_types:\n          measurementType:\n            type: string\n          DN:\n            type: string\n          nfFilter:\n            properties:\n              nfNames:\n                type: list\n                entry_schema: string\n              modelInvariantIDs:\n                type: list\n                entry_schema:\n                  type: string\n              modelVersionIDs:\n                type: list\n                entry_schema:\n                  type: string\n          measurementGroup:\n            properties:\n              masurementTypes:\n                type: list\n                entry_schema:\n                  type: measurementType\n              managedObjectDNsBasic:\n                type: list\n                entry_schema:\n                  type: DN\n        schema:\n          subscription:\n            subscriptionName:\n              type: string\n              required: true\n            administrativeState:\n              type: string\n              required: true\n            filebasedGP:\n              type: integer\n              required: true\n            fileLocation:\n              type: string\n              required: true\n            nfFilter:\n              type: nfFilter\n            measurementGroups:\n              type: list\n              entry_schema:\n                type: measurementGroup\n      description: Should I be showing a dependency between PM Subscription Handler\n        and the PM Monitoring Policy\n    org.onap.PM_Policy:\n      type: org.onap.APP\n      properties:\n        application_name: PM Subscription Operational Policy\n        provider: Ericsson\n        application_version: 1.0.0\n        artifact_id:\n          get_input: pm_subscription_operational_policy_id\n        artifact_config: NOT_DEFINED\n      requirements:\n      - receive_0:\n          capability: pm-subscription-event-publisher\n          node: org.onap.PM_Subscription_Handler\n          relationship: NOT_DEFINED\n          properties:\n            config_keys:\n            - topic_name:\n                get_input: pm_subscription_topic\n      - send_0:\n          capability: cds-rest-receive\n          node: org.onap.CDS\n      - receive_1:\n          capability: cds-rest-response\n          node: org.onap.CDS\n      - send_1:\n          capability: pm-subscription-event-receiver\n          node: org.onap.PM_Subscription_Handler\n          relationship: NOT_DEFINED\n          properties:\n            config_keys:\n            - topic_name:\n                get_input: pm_subscription_response_topic\n      capabilities:\n        pm-subscription-response-event-publisher:\n          properties:\n            type: org.onap.EventProducer\n            carrier_protocol_type: DMAAP_message_router\n            data_format: JSON\n            event_format: pm-subscription-event-response-format\n            event_format_version: 1.0.0\n          occurrences:\n          - 0\n          - UNBOUNDED\n    org.onap.PM_CDS_Blueprint:\n      type: org.onap.APP\n      properties:\n        application_name: PM Subscription CDS Blueprint\n        provider: Ericsson\n        application_version: 1.0.0\n        artifact_id:\n          get_input: pm_subscription_cds_blueprint_id\n      capabilities:\n        cds-rest-receive:\n          properties:\n            type: org.onap.EventConsumer\n            protocol_type: REST\n            data_format: JSON\n            event_format: cds_action_format\n            event_format_version: 1.0.0\n            responding_capability: cds-rest-response\n          occurrences:\n            - 0\n            - UNBOUNDED\n        cds-rest-response:\n          properties:\n            type: org.onap.EventProducer\n            protocol_type: REST\n            data_format: JSON\n            event_format: cds_action_response_format\n            event_format_version: 1.0.0\n          occurrences:\n            - 0\n    org.onap.controlloop0:\n      type: org.onap.APP\n      properties:\n        application_name: Test Control Loop\n        provider: Ericsson\n        application_version: 1.0.0\n        status: NOT_DEPLOYED\n"
+				},
+				"url": {
+					"raw": "localhost:6969/onap/controlloop/v2/commission/update",
+					"host": [
+						"localhost"
+					],
+					"port": "6969",
+					"path": [
+						"onap",
+						"controlloop",
+						"v2",
+						"commission",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST ParticipantStatus from PolicyParticipant to DMaaP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"response\": {\n        \"responseTo\": \"3742c95b-9c1f-4f46-8624-83e4655624b7\",\n        \"responseStatus\": \"SUCCESS\",\n        \"responseMessage\": \"Resonpse Message\"\n    },\n    \"state\": \"PASSIVE\",\n    \"healthStatus\": \"HEALTHY\",\n    \"elements\": [\n        [\n            {\n                \"name\": \"PMSHInstance0\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-d21eb79c6c21\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c21\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"PolicyParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"Monitoring Policy Control Loop Element for the PMSH instance 0 control loop\"\n                },\n                \"709c62b3-8918-41b9-a747-d21eb79c6c22\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c22\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"PolicyParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"Operational Policy Control Loop Element for the PMSH instance 0 control loop\"\n                }\n            }\n        ],\n        [\n            {\n                \"name\": \"PMSHInstance1\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-e21eb79c6c25\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c25\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"PolicyParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"Monitoring Policy Control Loop Element for the PMSH instance 1 control loop\"\n                },\n                \"709c62b3-8918-41b9-a747-e21eb79c6c26\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c26\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"PolicyParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"Operational Policy Control Loop Element for the PMSH instance 1 control loop\"\n                }\n            }\n        ]\n    ],\n    \"message\": \"Control Loop Elements passivated\",\n    \"messageType\": \"PARTICIPANT_STATUS\",\n    \"requestId\": \"3742c95b-9c1f-4f46-8624-83e4655624b8\",\n    \"timestampMs\": 1612169281148,\n    \"participantId\": {\n        \"name\": \"PolicyParticipant0\",\n        \"version\": \"1.0.0\"\n    },\n    \"controlLoopId\": null\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3904/events/POLICY-CLRUNTIME-PARTICIPANT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3904",
+					"path": [
+						"events",
+						"POLICY-CLRUNTIME-PARTICIPANT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST ParticipantStatus from DCAE to DMaaP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"response\": {\n        \"responseTo\": \"3742c95b-9c1f-4f46-8624-83e4655624b7\",\n        \"responseStatus\": \"SUCCESS\",\n        \"responseMessage\": \"Resonpse Message\"\n    },\n    \"state\": \"PASSIVE\",\n    \"healthStatus\": \"HEALTHY\",\n    \"elements\": [\n        [\n            {\n                \"name\": \"PMSHInstance0\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-d21eb79c6c20\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c20\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_DCAEMicroservice\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"DCAEParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"DCAE Control Loop Element for the PMSH instance 0 control loop\"\n                }\n            }\n        ],\n        [\n            {\n                \"name\": \"PMSHInstance1\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-e21eb79c6c24\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c24\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_DCAEMicroservice\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"DCAEParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"DCAE Control Loop Element for the PMSH instance 1 control loop\"\n                }\n            }\n        ]\n    ],\n    \"message\": \"Control Loop Elements passivated\",\n    \"messageType\": \"PARTICIPANT_STATUS\",\n    \"requestId\": \"3742c95b-9c1f-4f46-8624-83e4655624b8\",\n    \"timestampMs\": 1612169281148,\n    \"participantId\": {\n        \"name\": \"DCAEParticipant0\",\n        \"version\": \"1.0.0\"\n    },\n    \"controlLoopId\": null\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3904/events/POLICY-CLRUNTIME-PARTICIPANT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3904",
+					"path": [
+						"events",
+						"POLICY-CLRUNTIME-PARTICIPANT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST ParticipantStatus from CDS to DMaaP",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"response\": {\n        \"responseTo\": \"3742c95b-9c1f-4f46-8624-83e4655624b7\",\n        \"responseStatus\": \"SUCCESS\",\n        \"responseMessage\": \"Resonpse Message\"\n    },\n    \"state\": \"PASSIVE\",\n    \"healthStatus\": \"HEALTHY\",\n    \"elements\": [\n        [\n            {\n                \"name\": \"PMSHInstance0\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-d21eb79c6c23\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c23\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"CDSParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 0 control loopp\"\n                }\n            }\n        ],\n        [\n            {\n                \"name\": \"PMSHInstance1\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-e21eb79c6c27\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c27\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"CDSParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 1 control loop\"\n                }\n            }\n        ]\n    ],\n    \"message\": \"Control Loop Elements passivated\",\n    \"messageType\": \"PARTICIPANT_STATUS\",\n    \"requestId\": \"3742c95b-9c1f-4f46-8624-83e4655624b8\",\n    \"timestampMs\": 1612169281148,\n    \"participantId\": {\n        \"name\": \"CDSParticipant0\",\n        \"version\": \"1.0.0\"\n    },\n    \"controlLoopId\": null\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3904/events/POLICY-CLRUNTIME-PARTICIPANT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3904",
+					"path": [
+						"events",
+						"POLICY-CLRUNTIME-PARTICIPANT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST ParticipantControlLoopUpdate from server to participant",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"response\": {\n        \"responseTo\": \"3742c95b-9c1f-4f46-8624-83e4655624b7\",\n        \"responseStatus\": \"SUCCESS\",\n        \"responseMessage\": \"Resonpse Message\"\n    },\n    \"state\": \"PASSIVE\",\n    \"healthStatus\": \"HEALTHY\",\n    \"elements\": [\n        [\n            {\n                \"name\": \"PMSHInstance0\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-d21eb79c6c23\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-d21eb79c6c23\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"CDSParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 0 control loopp\"\n                }\n            }\n        ],\n        [\n            {\n                \"name\": \"PMSHInstance1\",\n                \"version\": \"1.0.1\"\n            },\n            {\n                \"709c62b3-8918-41b9-a747-e21eb79c6c27\": {\n                    \"id\": \"709c62b3-8918-41b9-a747-e21eb79c6c27\",\n                    \"definition\": {\n                        \"name\": \"org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement\",\n                        \"version\": \"1.2.3\"\n                    },\n                    \"participantId\": {\n                        \"name\": \"CDSParticipant0\",\n                        \"version\": \"1.0.0\"\n                    },\n                    \"state\": \"PASSIVE\",\n                    \"orderedState\": \"PASSIVE\",\n                    \"description\": \"CDS Control Loop Element for the PMSH instance 1 control loop\"\n                }\n            }\n        ]\n    ],\n    \"message\": \"Control Loop Elements passivated\",\n    \"messageType\": \"PARTICIPANT_STATUS\",\n    \"requestId\": \"3742c95b-9c1f-4f46-8624-83e4655624b8\",\n    \"timestampMs\": 1612169281148,\n    \"participantId\": {\n        \"name\": \"CDSParticipant0\",\n        \"version\": \"1.0.0\"\n    },\n    \"controlLoopId\": null\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3904/events/POLICY-CLRUNTIME-PARTICIPANT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3904",
+					"path": [
+						"events",
+						"POLICY-CLRUNTIME-PARTICIPANT"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
