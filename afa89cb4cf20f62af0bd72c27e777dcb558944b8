@@ -22,6 +22,30 @@
       "revId": "afa89cb4cf20f62af0bd72c27e777dcb558944b8",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "317c5c75_78fe2e1b",
+        "filename": "tosca-controlloop/participant/participant-impl/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-03-31T15:08:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ccc7d286_0d94fb00",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 1
+      },
+      "revId": "afa89cb4cf20f62af0bd72c27e777dcb558944b8",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
