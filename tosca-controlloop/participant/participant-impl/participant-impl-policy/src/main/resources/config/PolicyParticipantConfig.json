@@ -1,0 +1,28 @@
+{
+    "name":"ParticipantParameterGroup",
+    "participantStatusParameters":{
+        "timeIntervalMs":10000,
+        "description":"Participant Status",
+        "participantId":{
+            "name": "PolicyParticipant0",
+            "version":"1.0.0"
+        },
+        "participantDefinition":{
+            "name": "org.onap.policy.controlloop.PolicyControlLoopParticipant",
+            "version":"2.3.1"
+        }
+    },
+    "topicParameterGroup": {
+        "topicSources" : [{
+            "topic" : "POLICY-CLRUNTIME-PARTICIPANT",
+            "servers" : [ "127.0.0.1:3904" ],
+            "topicCommInfrastructure" : "dmaap"
+        }],
+        "topicSinks" : [{
+            "topic" : "POLICY-CLRUNTIME-PARTICIPANT",
+            "servers" : [ "127.0.0.1:3904" ],
+            "topicCommInfrastructure" : "dmaap"
+        }]
+    }
+}
+
