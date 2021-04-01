@@ -23,8 +23,10 @@ package org.onap.policy.clamp.controlloop.participant.intermediary.handler;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
@@ -36,8 +38,10 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.MessageSender;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +57,9 @@ public class ControlLoopHandler implements Closeable {
 
     private final Map<ToscaConceptIdentifier, ControlLoop> controlLoopMap = new LinkedHashMap<>();
     private final Map<UUID, ControlLoopElement> elementsOnThisParticipant = new LinkedHashMap<>();
+
+    @Getter
+    private List<ControlLoopElementListener> listeners = new ArrayList<>();
 
     public ControlLoopHandler() {
     }
@@ -71,6 +78,10 @@ public class ControlLoopHandler implements Closeable {
     @Override
     public void close() {
         // No explicit action on this class
+    }
+
+    public void registerControlLoopElementListener(ControlLoopElementListener listener) {
+        listeners.add(listener);
     }
 
     /**
@@ -205,6 +216,14 @@ public class ControlLoopHandler implements Closeable {
         for (ControlLoopElement element : updateMsg.getControlLoop().getElements()) {
             element.setState(element.getOrderedState().asState());
             elementsOnThisParticipant.put(element.getId(), element);
+        }
+
+        for (ControlLoopElementListener clElementListener : listeners) {
+            try {
+                clElementListener.controlLoopElementUpdate(null, updateMsg.getControlLoopDefinition());
+            } catch (PfModelException e) {
+                LOGGER.debug("Control loop element update failed {}", updateMsg.getControlLoopId());
+            }
         }
 
         response.setResponseStatus(ParticipantResponseStatus.SUCCESS);

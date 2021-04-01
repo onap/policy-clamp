@@ -31,4 +31,12 @@
     <artifactId>participant-impl-policy</artifactId>
     <name>${project.artifactId}</name>
     <description>Policy participant, that allows Policy to partake in control loops</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.onap.policy.clamp.controlloop</groupId>
+            <artifactId>participant-intermediary</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
