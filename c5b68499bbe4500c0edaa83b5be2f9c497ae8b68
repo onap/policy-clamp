@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "9fba396c_5e9667f4",
+        "filename": "src/main/java/org/onap/policy/clamp/loop/deploy/DcaeDeployParameters.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ebc02763_d384c7f2",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e729e8bb_6958ca81",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
         "patchSetId": 10
@@ -214,6 +238,30 @@
     },
     {
       "key": {
+        "uuid": "d0489200_7175de52",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e729e8bb_6958ca81",
+      "range": {
+        "startLine": 68,
+        "startChar": 8,
+        "endLine": 72,
+        "endChar": 9
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce54d6d4_8ad459be",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
         "patchSetId": 10
@@ -234,6 +282,30 @@
       "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ec36146_98c5b8b5",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce54d6d4_8ad459be",
+      "range": {
+        "startLine": 79,
+        "startChar": 7,
+        "endLine": 84,
+        "endChar": 9
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -331,6 +403,30 @@
     },
     {
       "key": {
+        "uuid": "74462296_a6021a36",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b73d96ca_98e5bccb",
+      "range": {
+        "startLine": 90,
+        "startChar": 9,
+        "endLine": 90,
+        "endChar": 98
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bb7a9f05_e47d1f2f",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
         "patchSetId": 10
@@ -354,6 +450,30 @@
     },
     {
       "key": {
+        "uuid": "bfa9ae15_4190ad98",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb7a9f05_e47d1f2f",
+      "range": {
+        "startLine": 116,
+        "startChar": 17,
+        "endLine": 116,
+        "endChar": 98
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9d5980a_60e6d580",
         "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
         "patchSetId": 10
@@ -371,6 +491,24 @@
     },
     {
       "key": {
+        "uuid": "e160659c_e858d11e",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupsAnalyzer.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9d5980a_60e6d580",
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d7ef538_2244d489",
         "filename": "src/main/resources/clds/camel/routes/policy-flows.xml",
         "patchSetId": 10
@@ -382,6 +520,30 @@
       "writtenOn": "2021-03-29T16:01:16Z",
       "side": 1,
       "message": "does it matter that this also appears on lines 225-227?",
+      "range": {
+        "startLine": 498,
+        "startChar": 16,
+        "endLine": 500,
+        "endChar": 109
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d51c3789_02256b98",
+        "filename": "src/main/resources/clds/camel/routes/policy-flows.xml",
+        "patchSetId": 10
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "errfff missed it, that should be removed line 225-227, i added that in the past for low level calls\nThx 😊",
+      "parentUuid": "3d7ef538_2244d489",
       "range": {
         "startLine": 498,
         "startChar": 16,
@@ -417,6 +579,30 @@
     },
     {
       "key": {
+        "uuid": "93ca330a_cb35a2a2",
+        "filename": "src/test/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupAnalyzerTest.java",
+        "patchSetId": 10
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ace1325_cbed8b60",
+      "range": {
+        "startLine": 79,
+        "startChar": 39,
+        "endLine": 79,
+        "endChar": 56
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b4d35b8_bbb48f06",
         "filename": "ui-react-lib/libIndex.js",
         "patchSetId": 10
@@ -431,6 +617,24 @@
       "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd8c6e73_cb8f5225",
+        "filename": "ui-react-lib/libIndex.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b4d35b8_bbb48f06",
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -457,6 +661,30 @@
     },
     {
       "key": {
+        "uuid": "e1a59c3e_aaf16070",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "315d86d2_9a7bcb18",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 195,
+        "endChar": 24
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "700c58df_faab1009",
         "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
         "patchSetId": 10
@@ -477,6 +705,30 @@
       "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48f70750_5a7379b4",
+        "filename": "ui-react/src/components/dialogs/Policy/ViewAllPolicies.js",
+        "patchSetId": 10
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-01T14:54:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "700c58df_faab1009",
+      "range": {
+        "startLine": 206,
+        "startChar": 37,
+        "endLine": 206,
+        "endChar": 65
+      },
+      "revId": "c5b68499bbe4500c0edaa83b5be2f9c497ae8b68",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
