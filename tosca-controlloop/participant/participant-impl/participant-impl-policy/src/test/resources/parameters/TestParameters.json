@@ -1,0 +1,53 @@
+{
+    "name": "ControlLoopParticipantGroup",
+    "intermediaryParameters": {
+        "name": "Participant parameters",
+        "reportingTimeInterval": 120000,
+        "description": "Participant Description",
+        "participantId": {
+            "name": "org.onap.PM_Policy",
+            "version": "0.0.0"
+        },
+        "participantType": {
+            "name": "org.onap.PM_Policy",
+            "version": "0.0.0"
+        },
+        "clampControlLoopTopics": {
+            "topicSources": [
+                {
+                    "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                    "servers": [
+                        "localhost"
+                    ],
+                    "topicCommInfrastructure": "dmaap",
+                    "fetchTimeout": 15000
+                }
+            ],
+            "topicSinks": [
+                {
+                    "topic": "POLICY-CLRUNTIME-PARTICIPANT",
+                    "servers": [
+                        "localhost"
+                    ],
+                    "topicCommInfrastructure": "dmaap"
+                },
+                {
+                    "topic": "POLICY-NOTIFICATION",
+                    "servers": [
+                        "localhost"
+                    ],
+                    "topicCommInfrastructure": "dmaap"
+                }
+            ]
+        }
+    },
+    "databaseProviderParameters": {
+        "name": "PolicyProviderParameterGroup",
+        "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
+        "databaseDriver": "org.h2.Driver",
+        "databaseUrl": "jdbc:h2:mem:testdb",
+        "databaseUser": "policy",
+        "databasePassword": "P01icY",
+        "persistenceUnit": "ToscaConceptTest"
+    }
+}

@@ -51,6 +51,13 @@ public interface ParticipantIntermediaryApi {
     void close();
 
     /**
+     * Register a listener for control loop elements that are mediated by the intermediary.
+     *
+     * @param controlLoopElementListener The control loop element listener to register
+     */
+    void registerControlLoopElementListener(ControlLoopElementListener controlLoopElementListener);
+
+    /**
      * Get participants loops from the intermediary API.
      *
      * @param name the participant name, null for all
