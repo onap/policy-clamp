@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "665ef143_04a9eae9",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T13:06:03Z",
+      "side": 1,
+      "message": "excess spacing?",
+      "range": {
+        "startLine": 118,
+        "startChar": 12,
+        "endLine": 118,
+        "endChar": 24
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eeff1697_b104236f",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T13:06:03Z",
+      "side": 1,
+      "message": "can this be computed once and cached?",
+      "range": {
+        "startLine": 120,
+        "startChar": 54,
+        "endLine": 120,
+        "endChar": 78
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13d9c714_fdc5e0d9",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T13:06:03Z",
+      "side": 1,
+      "message": "cache in outer loop?\n\nsame question on next line",
+      "range": {
+        "startLine": 130,
+        "startChar": 43,
+        "endLine": 130,
+        "endChar": 71
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bcbb2ce_a84e6eba",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T13:06:03Z",
+      "side": 1,
+      "message": "cache in inner loop?\n\nsame question on next line",
+      "range": {
+        "startLine": 130,
+        "startChar": 80,
+        "endLine": 130,
+        "endChar": 106
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
