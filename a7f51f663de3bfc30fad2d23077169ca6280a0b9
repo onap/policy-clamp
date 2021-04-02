@@ -16,6 +16,24 @@
       "revId": "a7f51f663de3bfc30fad2d23077169ca6280a0b9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5d9041e_de9f3ac1",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayloadException.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T16:40:14Z",
+      "side": 1,
+      "message": "It\u0027s partially tested in real condition (should have around 50% for the exception class), in the test PdpGroupPayloadTest\nwith @Test(expected \u003d PdpGroupPayloadException.class), there is a test case to check if the exception is well raised.",
+      "parentUuid": "98850327_b4c410cb",
+      "revId": "a7f51f663de3bfc30fad2d23077169ca6280a0b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
