@@ -94,6 +94,30 @@
       "revId": "f4ec3550f3acbc7f7677ea9a7f0c46e343f3d5ed",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2c577e3_8d87f3fd",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 11
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T18:52:08Z",
+      "side": 1,
+      "message": "I have also removed this totally useless foreach",
+      "parentUuid": "3bf1a74c_016330f4",
+      "range": {
+        "startLine": 132,
+        "startChar": 60,
+        "endLine": 132,
+        "endChar": 86
+      },
+      "revId": "f4ec3550f3acbc7f7677ea9a7f0c46e343f3d5ed",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
