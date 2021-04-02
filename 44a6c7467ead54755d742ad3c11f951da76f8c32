@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "41d26bfa_fbaa00c2",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T16:01:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "665ef143_04a9eae9",
+      "range": {
+        "startLine": 118,
+        "startChar": 12,
+        "endLine": 118,
+        "endChar": 24
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eeff1697_b104236f",
         "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49c167c8_3ddce896",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T16:01:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eeff1697_b104236f",
+      "range": {
+        "startLine": 120,
+        "startChar": 54,
+        "endLine": 120,
+        "endChar": 78
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -91,6 +139,54 @@
       "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9442ea43_a52a2f88",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T16:01:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13d9c714_fdc5e0d9",
+      "range": {
+        "startLine": 130,
+        "startChar": 43,
+        "endLine": 130,
+        "endChar": 71
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44f31826_92c544b2",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T16:01:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bcbb2ce_a84e6eba",
+      "range": {
+        "startLine": 130,
+        "startChar": 80,
+        "endLine": 130,
+        "endChar": 106
+      },
+      "revId": "44a6c7467ead54755d742ad3c11f951da76f8c32",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
