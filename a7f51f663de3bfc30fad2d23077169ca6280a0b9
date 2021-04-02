@@ -70,6 +70,24 @@
       "revId": "a7f51f663de3bfc30fad2d23077169ca6280a0b9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c948d3e1_95f701f5",
+        "filename": "src/main/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayloadException.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T19:36:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "981a4905_edabbcb2",
+      "revId": "a7f51f663de3bfc30fad2d23077169ca6280a0b9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
