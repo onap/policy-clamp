@@ -70,6 +70,30 @@
       "revId": "f4ec3550f3acbc7f7677ea9a7f0c46e343f3d5ed",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3bf1a74c_016330f4",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 11
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-02T16:49:58Z",
+      "side": 1,
+      "message": "😄 absolutely ....stupid code from me",
+      "parentUuid": "5666dfc6_b062d856",
+      "range": {
+        "startLine": 132,
+        "startChar": 60,
+        "endLine": 132,
+        "endChar": 86
+      },
+      "revId": "f4ec3550f3acbc7f7677ea9a7f0c46e343f3d5ed",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
