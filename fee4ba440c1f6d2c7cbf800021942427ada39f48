@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6a81f7c9_09919b28",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyDeploymentEditor.js",
+        "patchSetId": 13
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T19:14:23Z",
+      "side": 1,
+      "message": "could use a Set since all we\u0027re doing is checking whether \"group/subgroup\" is found",
+      "range": {
+        "startLine": 117,
+        "startChar": 33,
+        "endLine": 117,
+        "endChar": 36
+      },
+      "revId": "fee4ba440c1f6d2c7cbf800021942427ada39f48",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
