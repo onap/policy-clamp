@@ -1,0 +1,250 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "741e5e89_365fa787",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "if 109 throws an exception, then 110 will not be executed.  One option is obviously to split these lines into two different try/catch blocks.  Another option is to the use a ServiceManager from policy-common (maybe even derive ControlLoopHandler from ServiceManager).",
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b3274b3_d45c0001",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "private",
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b02360f8_7cd2a7cd",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/startstop/ParticipantPolicyCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "seems like this should be Access\u003dPRIVATE",
+      "range": {
+        "startLine": 52,
+        "startChar": 11,
+        "endLine": 52,
+        "endChar": 13
+      },
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f1be5d2_086db5cb",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/startstop/ParticipantPolicyCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "I know I\u0027ve seen this code before - let\u0027s use a common function",
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "988a20f2_fa3a1535",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/TestPolicyHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "delete comment",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 3
+      },
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41edef64_cc41d09d",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "use:\n\n  coder.convert(source, clazz)",
+      "range": {
+        "startLine": 60,
+        "startChar": 19,
+        "endLine": 60,
+        "endChar": 60
+      },
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a13fc92a_4fd3067d",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/TestParticipantPolicyParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "delete comment\n\nsame comment for the other test files.  If TestXxx is the junit for Xxx, then no need to comment it.  OTOH, if TestXxx is NOT the junit for Xxx, then it SHOULD BE commented.  Also, if TestXxx tests Yyy, then it should be renamed to TestYyy to avoid confusion.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 3
+      },
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23215048_d97f34b9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/TestParticipantPolicyParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "TestParticipantParameterGroup",
+      "range": {
+        "startLine": 34,
+        "startChar": 13,
+        "endLine": 34,
+        "endChar": 44
+      },
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8ce2694_11ea75ec",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/startstop/TestParticipantConstants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "don\u0027t think this is needed",
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3846e637_dbb275ee",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/utils/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "Thought I\u0027d mention this, though I don\u0027t enforce it: General java documentation guidelines say that method comments should start with an active verb (i.e., \"Initializes\", in this case).",
+      "range": {
+        "startLine": 71,
+        "startChar": 7,
+        "endLine": 71,
+        "endChar": 27
+      },
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4b88ad91_b728c65c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/parameters/NoParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "add newline at end of file\n\nsame comment in a number of the json \u0026 yaml files",
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2d14736_eef65cf9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-02T14:00:31Z",
+      "side": 1,
+      "message": "delete this, unless it\u0027s useful for debugging purposes",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 45,
+        "endChar": 15
+      },
+      "revId": "a31d07f7415905ffbd263640d58dee543e9695a1",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
