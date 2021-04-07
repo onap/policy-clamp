@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,10 +62,10 @@ public class LoggingUtils {
     private static final String EMPTY_MESSAGE = "";
 
     /** Logger delegate. */
-    private Logger mlogger;
+    private final Logger mlogger;
 
     /** Automatic UUID, overrideable per adapter or per invocation. */
-    private static UUID sInstanceUUID = UUID.randomUUID();
+    private static final UUID sInstanceUUID = UUID.randomUUID();
 
     /**
      * Constructor.
