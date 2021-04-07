@@ -22,8 +22,6 @@
 
 package org.onap.policy.clamp.authorization;
 
-
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
@@ -34,14 +32,12 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class UserService {
 
-    private SecurityContext securityContext = SecurityContextHolder.getContext();
-
     /**
      * REST service that returns the username.
      *
      * @return the user name
      */
     public String getUser() {
-        return AuthorizationController.getPrincipalName(securityContext);
+        return AuthorizationController.getPrincipalName(SecurityContextHolder.getContext());
     }
 }
