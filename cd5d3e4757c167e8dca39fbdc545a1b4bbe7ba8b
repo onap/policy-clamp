@@ -175,6 +175,24 @@
       "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6440bcc1_dc20349b",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/ParticipantPolicyParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-07T15:01:20Z",
+      "side": 1,
+      "message": "I created https://jira.onap.org/browse/POLICY-3172 to fix the standard coder.",
+      "parentUuid": "81e7d8dc_31cfe805",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
