@@ -74,12 +74,10 @@ public class CdsServices {
     public CdsBpWorkFlowListResponse getBlueprintWorkflowList(String blueprintName, String blueprintVersion) {
         LoggingUtils.setTargetContext("CDS", "getBlueprintWorkflowList");
 
-        Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext)
-                .withProperty("blueprintName", blueprintName).withProperty("blueprintVersion", blueprintVersion)
-                .build();
-
         Exchange exchangeResponse = camelContext.createProducerTemplate()
-                .send("direct:get-blueprint-workflow-list", myCamelExchange);
+                .send("direct:get-blueprint-workflow-list", ExchangeBuilder.anExchange(camelContext)
+                        .withProperty("blueprintName", blueprintName).withProperty("blueprintVersion", blueprintVersion)
+                        .withProperty("raiseHttpExceptionFlag", true).build());
 
         if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
             String cdsResponse = (String) exchangeResponse.getIn().getBody();
@@ -107,12 +105,10 @@ public class CdsServices {
                                                  String workflow) {
         LoggingUtils.setTargetContext("CDS", "getWorkflowInputProperties");
 
-        Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext)
-                .withBody(getCdsPayloadForWorkFlow(blueprintName, blueprintVersion, workflow))
-                .build();
-
         Exchange exchangeResponse = camelContext.createProducerTemplate()
-                .send("direct:get-blueprint-workflow-input-properties", myCamelExchange);
+                .send("direct:get-blueprint-workflow-input-properties", ExchangeBuilder.anExchange(camelContext)
+                        .withBody(getCdsPayloadForWorkFlow(blueprintName, blueprintVersion, workflow))
+                        .withProperty("raiseHttpExceptionFlag", true).build());
 
         if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
             String cdsResponse = (String) exchangeResponse.getIn().getBody();
@@ -159,9 +155,9 @@ public class CdsServices {
     }
 
     private void handleListType(String propertyName,
-                                      JsonObject inputProperty,
-                                      JsonObject dataTypes,
-                                      JsonObject inputObject) {
+                                JsonObject inputProperty,
+                                JsonObject dataTypes,
+                                JsonObject inputObject) {
         if (inputProperty.get("entry_schema") == null) {
             throw new CdsParametersException("Entry schema is null for " + propertyName);
         }

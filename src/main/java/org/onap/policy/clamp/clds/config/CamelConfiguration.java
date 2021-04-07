@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,112 +23,144 @@
 package org.onap.policy.clamp.clds.config;
 
 import java.io.IOException;
-import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.Objects;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.http4.HttpClientConfigurer;
-import org.apache.camel.component.http4.HttpComponent;
+import org.apache.camel.component.http.HttpComponent;
 import org.apache.camel.model.rest.RestBindingMode;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.onap.policy.clamp.clds.util.ClampVersioning;
 import org.onap.policy.clamp.clds.util.ResourceFileUtils;
 import org.onap.policy.clamp.util.PassDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
 
+    private static final String HTTP = "http";
+    private static final String HTTPS = "https";
+
     @Autowired
     CamelContext camelContext;
 
+    @Value("${server.ssl.key-store:#{null}}")
+    private String keyStore;
+
+    @Value("${server.ssl.key-store-type:JKS}")
+    private String keyStoreType;
+
+    @Value("${server.ssl.key-store-password:#{null}}")
+    private String keyStorePass;
+
+    @Value("${server.ssl.trust-store:#{null}}")
+    private String trustStore;
+
+    @Value("${server.ssl.trust-store-password:#{null}}")
+    private String trustStorePass;
+
+    @Value("${server.ssl.trust-store-type:JKS}")
+    private String trustStoreType;
+
+    @Value("${server.ssl.trust-store-algorithm:PKIX}")
+    private String trustStoreAlgorithm;
+
+    @Value("${clamp.config.httpclient.connectTimeout:-1}")
+    private int connectTimeout;
+
+    @Value("${clamp.config.httpclient.connectRequestTimeout:-1}")
+    private int connectRequestTimeout;
+
+    @Value("${clamp.config.httpclient.socketTimeout:-1}")
+    private int socketTimeout;
+
+    @Value("${clamp.config.keyFile:#{null}}")
+    private String keyFile;
+
+
     @Autowired
-    private Environment env;
+    private ClampProperties clampProperties;
 
-    private void configureDefaultSslProperties() throws IOException {
-        if (env.getProperty("server.ssl.trust-store") != null) {
-            URL storeResource = Thread.currentThread().getContextClassLoader()
-                .getResource(env.getProperty("server.ssl.trust-store").replaceFirst("classpath:", ""));
-            System.setProperty("javax.net.ssl.trustStore", storeResource.getPath());
-            String keyFile = env.getProperty("clamp.config.keyFile");
-            String trustStorePass = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"),
-                keyFile);
-            System.setProperty("javax.net.ssl.trustStorePassword", trustStorePass);
-            System.setProperty("javax.net.ssl.trustStoreType", "jks");
-            System.setProperty("ssl.TrustManagerFactory.algorithm", "PKIX");
-            storeResource = Thread.currentThread().getContextClassLoader()
-                .getResource(env.getProperty("server.ssl.key-store").replaceFirst("classpath:", ""));
-            System.setProperty("javax.net.ssl.keyStore", storeResource.getPath());
-
-            String keyStorePass = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
-                keyFile);
-            System.setProperty("javax.net.ssl.keyStorePassword", keyStorePass);
-            System.setProperty("javax.net.ssl.keyStoreType", env.getProperty("server.ssl.key-store-type"));
+    private void configureDefaultSslProperties() {
+        if (trustStore != null) {
+            System.setProperty("javax.net.ssl.trustStore", Thread.currentThread().getContextClassLoader()
+                    .getResource(trustStore.replaceFirst("classpath:", "")).getPath());
+            System.setProperty("javax.net.ssl.trustStorePassword", Objects.requireNonNull(
+                    PassDecoder.decode(trustStorePass, keyFile)));
+            System.setProperty("javax.net.ssl.trustStoreType", trustStoreType);
+            System.setProperty("ssl.TrustManagerFactory.algorithm", trustStoreAlgorithm);
         }
+        if (keyStore != null) {
+            System.setProperty("javax.net.ssl.keyStore", Thread.currentThread().getContextClassLoader()
+                    .getResource(keyStore.replaceFirst("classpath:", "")).getPath());
+            System.setProperty("javax.net.ssl.keyStorePassword", Objects.requireNonNull(
+                    PassDecoder.decode(keyStorePass, keyFile)));
+            System.setProperty("javax.net.ssl.keyStoreType", keyStoreType);
+        }
+
     }
 
-    private void registerTrustStore()
-        throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException, CertificateException, IOException {
-        if (env.getProperty("server.ssl.trust-store") != null) {
-            KeyStore truststore = KeyStore.getInstance("JKS");
-            String keyFile = env.getProperty("clamp.config.keyFile");
-            String password = PassDecoder.decode(env.getProperty("server.ssl.trust-store-password"), keyFile);
-            truststore.load(
-                    ResourceFileUtils.getResourceAsStream(env.getProperty("server.ssl.trust-store")),
-                    password.toCharArray());
+    private void configureCamelHttpComponent()
+            throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException, CertificateException,
+            IOException {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(connectTimeout)
+                .setConnectionRequestTimeout(connectRequestTimeout)
+                .setSocketTimeout(socketTimeout).build();
 
-            TrustManagerFactory trustFactory = TrustManagerFactory.getInstance("PKIX");
+        if (trustStore != null) {
+            KeyStore truststore = KeyStore.getInstance(trustStoreType);
+            truststore.load(
+                    ResourceFileUtils.getResourceAsStream(trustStore),
+                    Objects.requireNonNull(PassDecoder.decode(trustStorePass, keyFile)).toCharArray());
+            TrustManagerFactory trustFactory = TrustManagerFactory.getInstance(trustStoreAlgorithm);
             trustFactory.init(truststore);
             SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, trustFactory.getTrustManagers(), null);
-            SSLSocketFactory factory = new SSLSocketFactory(sslcontext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            SchemeRegistry registry = new SchemeRegistry();
-            final Scheme scheme = new Scheme("https4", 443, factory);
-            registry.register(scheme);
-            ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
-            HttpComponent http4 = camelContext.getComponent("https4", HttpComponent.class);
-            http4.setHttpClientConfigurer(new HttpClientConfigurer() {
-
-                @Override
-                public void configureHttpClient(HttpClientBuilder builder) {
-                    builder.setSSLSocketFactory(factory);
-                    Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-                        .register("https", factory).register("http", plainsf).build();
-                    builder.setConnectionManager(new BasicHttpClientConnectionManager(registry));
-                }
+            camelContext.getComponent(HTTPS, HttpComponent.class).setHttpClientConfigurer(builder -> {
+                SSLSocketFactory factory = new SSLSocketFactory(sslcontext,
+                        SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                builder.setSSLSocketFactory(factory);
+                builder.setConnectionManager(new BasicHttpClientConnectionManager(
+                        RegistryBuilder.<ConnectionSocketFactory>create().register(HTTPS, factory).build()))
+                        .setDefaultRequestConfig(requestConfig);
             });
         }
+        camelContext.getComponent(HTTP, HttpComponent.class).setHttpClientConfigurer(builder -> {
+            Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register(HTTP, PlainConnectionSocketFactory.getSocketFactory()).build();
+            builder.setConnectionManager(new BasicHttpClientConnectionManager(registry))
+                    .setDefaultRequestConfig(requestConfig);
+        });
     }
 
     @Override
     public void configure()
-        throws KeyManagementException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+            throws KeyManagementException, KeyStoreException, NoSuchAlgorithmException, CertificateException,
+            IOException {
         restConfiguration().component("servlet").bindingMode(RestBindingMode.json).jsonDataFormat("clamp-gson")
-            .dataFormatProperty("prettyPrint", "true")// .enableCORS(true)
-            // turn on swagger api-doc
-            .apiContextPath("api-doc").apiVendorExtension(true).apiProperty("api.title", "Clamp Rest API")
-            .apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
-            .apiProperty("base.path", "/restservices/clds/");
+                .dataFormatProperty("prettyPrint", "true")// .enableCORS(true)
+                // turn on swagger api-doc
+                .apiContextPath("api-doc").apiVendorExtension(true).apiProperty("api.title", "Clamp Rest API")
+                .apiProperty("api.version", ClampVersioning.getCldsVersionFromProps())
+                .apiProperty("base.path", "/restservices/clds/");
 
-        // camelContext.setTracing(true);
-
+        // Configure httpClient properties for Camel HTTP/HTTPS calls
         configureDefaultSslProperties();
-        registerTrustStore();
+        configureCamelHttpComponent();
     }
 }

@@ -355,10 +355,10 @@ public class LoopServiceTestItCase {
         saveTestLoopToDb();
         Loop loop = loopService.getLoop(EXAMPLE_LOOP_NAME);
         loopService.updateDcaeDeploymentFields(loop, "CLAMP_c5ce429a-f570-48c5-a7ea-53bed8f86f85",
-                "https4://deployment-handler.onap:8443");
+                "https://deployment-handler.onap:8443");
         loop = loopService.getLoop(EXAMPLE_LOOP_NAME);
         assertThat(loop.getDcaeDeploymentId()).isEqualTo("CLAMP_c5ce429a-f570-48c5-a7ea-53bed8f86f85");
-        assertThat(loop.getDcaeDeploymentStatusUrl()).isEqualTo("https4://deployment-handler.onap:8443");
+        assertThat(loop.getDcaeDeploymentStatusUrl()).isEqualTo("https://deployment-handler.onap:8443");
     }
 
     @Test
