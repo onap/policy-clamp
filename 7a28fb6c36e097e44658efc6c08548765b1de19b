@@ -46,6 +46,30 @@
       "revId": "7a28fb6c36e097e44658efc6c08548765b1de19b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "704282d1_f0438209",
+        "filename": "src/test/java/org/onap/policy/clamp/policy/pdpgroup/PdpGroupPayloadExceptionTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-07T08:14:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10186841_8a268e58",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 1
+      },
+      "revId": "7a28fb6c36e097e44658efc6c08548765b1de19b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
