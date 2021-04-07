@@ -109,7 +109,7 @@ public class DcaeInventoryServices {
         for (int i = 0; i < retryLimit; i++) {
             Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext)
                     .withProperty("blueprintResourceId", resourceUuid).withProperty("blueprintServiceId", serviceUuid)
-                    .withProperty("blueprintName", artifactName).build();
+                    .withProperty("blueprintName", artifactName).withProperty("raiseHttpExceptionFlag", true).build();
             metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
 
             Exchange exchangeResponse = camelContext.createProducerTemplate()
