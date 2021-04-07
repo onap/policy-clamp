@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c0beac7f_4ebb3550",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-07T14:41:32Z",
+      "side": 1,
+      "message": "this follows the same model as the others.  Not sure it\u0027s necessary to sync, but if we do, then we should go back and change all of the others, too",
+      "parentUuid": "5a36490f_5aa595d9",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "92c8d963_c9658a0f",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ca26ea8_b8509108",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-07T14:41:32Z",
+      "side": 1,
+      "message": "need to ensure that both close() methods are called, even if the first throws an exception, thus they had to be separated into separate try/catch blocks.",
+      "parentUuid": "92c8d963_c9658a0f",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -64,6 +100,24 @@
       "writtenOn": "2021-04-07T14:22:45Z",
       "side": 1,
       "message": "I thought coder.decode in line 54 always returns an object, but not 100% sure, if that was the case, this cannot be null, as it will not reach it per line 58, if you can double check to make sure?",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d58a25e_60a0e557",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/ParticipantPolicyParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-07T14:41:32Z",
+      "side": 1,
+      "message": "looks like the comment on line 61 is correct.  Wonder if we should change the standard coder to always return an object or throw an exception if the resulting object is null?",
+      "parentUuid": "1c2cfce5_727eb4a7",
       "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
