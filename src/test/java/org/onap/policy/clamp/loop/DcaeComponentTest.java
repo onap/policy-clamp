@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.clds.model.dcae.DcaeInventoryResponse;
 import org.onap.policy.clamp.clds.model.dcae.DcaeOperationStatusResponse;
+import org.onap.policy.clamp.clds.util.ResourceFileUtils;
 import org.onap.policy.clamp.loop.components.external.DcaeComponent;
 import org.onap.policy.clamp.loop.components.external.ExternalComponentState;
 import org.onap.policy.clamp.loop.template.LoopTemplate;
@@ -175,36 +176,10 @@ public class DcaeComponentTest {
      */
     @Test
     public void convertToDcaeInventoryResponseTest() throws IOException, ParseException {
-        String dcaeFakeResponse = "{\n" + "  \"links\": {\n" + "    \"previousLink\": {\n"
-                + "      \"title\": \"string\",\n" + "      \"rel\": \"string\",\n" + "      \"uri\": \"string\",\n"
-                + "      \"uriBuilder\": {},\n" + "      \"rels\": [\n" + "        \"string\"\n" + "      ],\n"
-                + "      \"params\": {\n" + "        \"additionalProp1\": \"string\",\n"
-                + "        \"additionalProp2\": \"string\",\n" + "        \"additionalProp3\": \"string\"\n"
-                + "      },\n" + "      \"type\": \"string\"\n" + "    },\n" + "    \"nextLink\": {\n"
-                + "      \"title\": \"string\",\n" + "      \"rel\": \"string\",\n" + "      \"uri\": \"string\",\n"
-                + "      \"uriBuilder\": {},\n" + "      \"rels\": [\n" + "        \"string\"\n" + "      ],\n"
-                + "      \"params\": {\n" + "        \"additionalProp1\": \"string\",\n"
-                + "        \"additionalProp2\": \"string\",\n" + "        \"additionalProp3\": \"string\"\n"
-                + "      },\n" + "      \"type\": \"string\"\n" + "    }\n" + "  },\n" + "  \"totalCount\": 0,\n"
-                + "  \"items\": [\n" + "    {\n" + "      \"owner\": \"testOwner\",\n"
-                + "      \"application\": \"testApplication\",\n" + "      \"component\": \"testComponent\",\n"
-                + "      \"typeName\": \"testTypeName\",\n" + "      \"typeVersion\": 0,\n"
-                + "      \"blueprintTemplate\": \"testBlueprintTemplate\",\n" + "      \"serviceIds\": [\n"
-                + "        \"serviceId1\", \"serviceId2\"\n" + "      ],\n" + "      \"vnfTypes\": [\n"
-                + "        \"vnfType1\", \"vnfType2\"\n" + "      ],\n" + "      \"serviceLocations\": [\n"
-                + "        \"serviceLocation1\", \"serviceLocation2\"\n" + "      ],\n"
-                + "      \"asdcServiceId\": \"testAsdcServiceId\",\n"
-                + "      \"asdcResourceId\": \"testAsdcResourceId\",\n"
-                + "      \"asdcServiceURL\": \"testAsdcServiceURL\",\n" + "      \"typeId\": \"testTypeId\",\n"
-                + "      \"selfLink\": {\n" + "        \"title\": \"selfLinkTitle\",\n"
-                + "        \"rel\": \"selfLinkRel\",\n" + "        \"uri\": \"selfLinkUri\",\n"
-                + "        \"uriBuilder\": {},\n" + "        \"rels\": [\n" + "          \"string\"\n" + "        ],\n"
-                + "        \"params\": {\n" + "          \"additionalProp1\": \"string\",\n"
-                + "          \"additionalProp2\": \"string\",\n" + "          \"additionalProp3\": \"string\"\n"
-                + "        },\n" + "        \"type\": \"string\"\n" + "      },\n"
-                + "      \"created\": \"2020-01-22T09:38:15.436Z\",\n"
-                + "      \"deactivated\": \"2020-01-22T09:38:15.437Z\"\n" + "    }\n" + "  ]\n" + "}";
-        List<DcaeInventoryResponse> responseObject = DcaeComponent.convertToDcaeInventoryResponse(dcaeFakeResponse);
+
+        List<DcaeInventoryResponse> responseObject = DcaeComponent
+                .convertToDcaeInventoryResponse(
+                        ResourceFileUtils.getResourceAsString("example/dcae/inventory-response.json"));
         assertThat(responseObject.get(0).getAsdcResourceId()).isEqualTo("testAsdcResourceId");
         assertThat(responseObject.get(0).getAsdcServiceId()).isEqualTo("testAsdcServiceId");
         assertThat(responseObject.get(0).getTypeName()).isEqualTo("testTypeName");

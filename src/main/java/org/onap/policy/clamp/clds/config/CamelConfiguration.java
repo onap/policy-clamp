@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,8 +33,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.http4.HttpClientConfigurer;
-import org.apache.camel.component.http4.HttpComponent;
+import org.apache.camel.component.http.HttpClientConfigurer;
+import org.apache.camel.component.http.HttpComponent;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
