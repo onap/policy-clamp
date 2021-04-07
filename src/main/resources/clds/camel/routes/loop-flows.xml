@@ -4,13 +4,13 @@
 		<setBody>
 			<simple>${header.loopName}</simple>
 		</setBody>
-		<setProperty propertyName="loopObject">
+		<setProperty name="loopObject">
 			<method ref="org.onap.policy.clamp.loop.LoopService" method="getLoop" />
 		</setProperty>
 
 		<when>
 			<simple>${exchangeProperty[loopObject]} == null</simple>
-			<setHeader headerName="CamelHttpResponseCode">
+			<setHeader name="CamelHttpResponseCode">
 				<constant>404</constant>
 			</setHeader>
 			<log loggingLevel="WARN" message="Loop not found in database: ${body}" />
@@ -19,14 +19,14 @@
 	</route>
 	<route id="update-policy-status-for-loop">
 		<from uri="direct:update-policy-status-for-loop" />
-		<setProperty propertyName="policyComponent">
+		<setProperty name="policyComponent">
 			<simple>${exchangeProperty[loopObject].getComponent('POLICY')}
 			</simple>
 		</setProperty>
-		<setProperty propertyName="policyFound">
+		<setProperty name="policyFound">
 			<simple resultType="java.lang.Boolean">true</simple>
 		</setProperty>
-		<setProperty propertyName="policyDeployed">
+		<setProperty name="policyDeployed">
 			<simple resultType="java.lang.Boolean">true</simple>
 		</setProperty>
 		<log loggingLevel="INFO"
@@ -34,19 +34,19 @@
 		<split>
 			<simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
 			</simple>
-			<setProperty propertyName="policyName">
+			<setProperty name="policyName">
 				<simple>${body.getName()}</simple>
 			</setProperty>
-			<setProperty propertyName="policyType">
+			<setProperty name="policyType">
 				<simple>${body.getPolicyModel().getPolicyModelType()}</simple>
 			</setProperty>
-			<setProperty propertyName="policyTypeVersion">
+			<setProperty name="policyTypeVersion">
 				<simple>${body.getPolicyModel().getVersion()}</simple>
 			</setProperty>
-			<setProperty propertyName="policyPdpGroup">
+			<setProperty name="policyPdpGroup">
 				<simple>${body.getPdpGroup()}</simple>
 			</setProperty>
-			<setProperty propertyName="policyVersion">
+			<setProperty name="policyVersion">
 				<simple>1.0.0</simple>
 			</setProperty>
 			<setBody>
@@ -61,19 +61,19 @@
 		<split>
 			<simple>${exchangeProperty[loopObject].getOperationalPolicies()}
 			</simple>
-			<setProperty propertyName="policyName">
+			<setProperty name="policyName">
 				<simple>${body.getName()}</simple>
 			</setProperty>
-			<setProperty propertyName="policyType">
+			<setProperty name="policyType">
 				<simple>${body.getPolicyModel().getPolicyModelType()}</simple>
 			</setProperty>
-			<setProperty propertyName="policyTypeVersion">
+			<setProperty name="policyTypeVersion">
 				<simple>${body.getPolicyModel().getVersion()}</simple>
 			</setProperty>
-		 	<setProperty propertyName="policyVersion">
+		 	<setProperty name="policyVersion">
 				<simple>1.0.0</simple>
 			</setProperty>
-			<setProperty propertyName="policyPdpGroup">
+			<setProperty name="policyPdpGroup">
 				<simple>${body.getPdpGroup()}</simple>
 			</setProperty>
 			<setBody>
@@ -83,7 +83,7 @@
 				message="Processing Operational Policy: ${exchangeProperty[policyName]} of type ${exchangeProperty[policyType]}" />
 			<to uri="direct:verify-one-policy" />
 		</split>
-		<setProperty propertyName="policyState">
+		<setProperty name="policyState">
 			<simple> ${exchangeProperty[policyComponent].getState()}
 			</simple>
 		</setProperty>
@@ -100,29 +100,29 @@
 			<when>
 				<simple>${exchangeProperty['loopObject'].getLoopTemplate().getUniqueBlueprint()} == true
 				</simple>
-					<setProperty propertyName="dcaeComponent">
+					<setProperty name="dcaeComponent">
 						<simple>${exchangeProperty[loopObject].getComponent('DCAE')}</simple>
 					</setProperty>
 				<when>
 					<simple>${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()} != null
 					</simple>
-					<setProperty propertyName="getStatusUrl">
+					<setProperty name="getStatusUrl">
 						<simple>${exchangeProperty[loopObject].getDcaeDeploymentStatusUrl()}</simple>
 					</setProperty>
-					<setProperty propertyName="raiseHttpExceptionFlag">
+					<setProperty name="raiseHttpExceptionFlag">
 						<simple resultType="java.lang.Boolean">false</simple>
 					</setProperty>
 					<to uri="direct:get-dcae-deployment-status" />
 					<when>
 						<simple> ${header.CamelHttpResponseCode} == 200 </simple>
 						<convertBodyTo type="java.lang.String" />
-						<setProperty propertyName="dcaeResponse">
+						<setProperty name="dcaeResponse">
 							<method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
 								method="convertDcaeResponse(${body})" />
 						</setProperty>
 					</when>
 				</when>
-				<setProperty propertyName="dcaeState">
+				<setProperty name="dcaeState">
 					<simple> ${exchangeProperty[dcaeComponent].computeState(*)}
 					</simple>
 				</setProperty>
@@ -137,32 +137,32 @@
 				<split>
 					<simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
 					</simple>
-					<setProperty propertyName="microServicePolicy">
+					<setProperty name="microServicePolicy">
 						<simple>${body}</simple>
 					</setProperty>
-					<setProperty propertyName="dcaeComponent">
+					<setProperty name="dcaeComponent">
 						<simple>${exchangeProperty[loopObject].getComponent('DCAE_' + ${exchangeProperty[microServicePolicy].getName()})}</simple>
 					</setProperty>
 					<when>
 						<simple>${exchangeProperty[microServicePolicy].getDcaeDeploymentStatusUrl()} != null
 						</simple>
-						<setProperty propertyName="getStatusUrl">
+						<setProperty name="getStatusUrl">
 							<simple>${exchangeProperty[microServicePolicy].getDcaeDeploymentStatusUrl()}</simple>
 						</setProperty>
-						<setProperty propertyName="raiseHttpExceptionFlag">
+						<setProperty name="raiseHttpExceptionFlag">
 							<simple resultType="java.lang.Boolean">false</simple>
 						</setProperty>
 						<to uri="direct:get-dcae-deployment-status" />
 						<when>
 							<simple> ${header.CamelHttpResponseCode} == 200 </simple>
 							<convertBodyTo type="java.lang.String" />
-							<setProperty propertyName="dcaeResponse">
+							<setProperty name="dcaeResponse">
 								<method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
 									method="convertDcaeResponse(${body})" />
 							</setProperty>
 						</when>
 					</when>
-					<setProperty propertyName="dcaeState">
+					<setProperty name="dcaeState">
 						<simple> ${exchangeProperty[dcaeComponent].computeState(*)}
 						</simple>
 					</setProperty>
@@ -181,14 +181,14 @@
 		<choice>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
-					'BLUEPRINT_DEPLOYED' and ${exchangeProperty['policyState'].getStateName()}
+					'BLUEPRINT_DEPLOYED' &amp;&amp; ${exchangeProperty['policyState'].getStateName()}
 					== 'NOT_SENT'
 				</simple>
 				<to
 					uri="bean:org.onap.policy.clamp.loop.LoopService?method=updateLoopState(${exchangeProperty[loopObject]},'DESIGN')" />
 			</when>
 			<when>
-				<simple>${exchangeProperty['dcaeState'].getStateName()} == 'IN_ERROR' or
+				<simple>${exchangeProperty['dcaeState'].getStateName()} == 'IN_ERROR' ||
 					${exchangeProperty['dcaeState'].getStateName()} ==
 					'MICROSERVICE_INSTALLATION_FAILED'
 				</simple>
@@ -197,7 +197,7 @@
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
-					'MICROSERVICE_UNINSTALLATION_FAILED' or
+					'MICROSERVICE_UNINSTALLATION_FAILED' ||
 					${exchangeProperty['policyState'].getStateName()} == 'IN_ERROR'
 				</simple>
 				<to
@@ -205,7 +205,7 @@
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
-					'MICROSERVICE_INSTALLED_SUCCESSFULLY' and
+					'MICROSERVICE_INSTALLED_SUCCESSFULLY' &amp;&amp;
 					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
 				</simple>
 				<to
@@ -213,7 +213,7 @@
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
-					'MICROSERVICE_INSTALLED_SUCCESSFULLY' and
+					'MICROSERVICE_INSTALLED_SUCCESSFULLY' &amp;&amp;
 					${exchangeProperty['policyState'].getStateName()} == 'SENT'
 				</simple>
 				<to
@@ -221,8 +221,8 @@
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
-					'BLUEPRINT_DEPLOYED' or ${exchangeProperty['dcaeState'].getStateName()} ==
-					'MICROSERVICE_UNINSTALLED_SUCCESSFULLY' and
+					'BLUEPRINT_DEPLOYED' || ${exchangeProperty['dcaeState'].getStateName()} ==
+					'MICROSERVICE_UNINSTALLED_SUCCESSFULLY' &amp;&amp;
 					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
 				</simple>
 				<to
@@ -230,9 +230,9 @@
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
-					'PROCESSING_MICROSERVICE_INSTALLATION' or
+					'PROCESSING_MICROSERVICE_INSTALLATION' ||
 					${exchangeProperty['dcaeState'].getStateName()} ==
-					'PROCESSING_MICROSERVICE_UNINSTALLATION' and
+					'PROCESSING_MICROSERVICE_UNINSTALLATION' &amp;&amp;
 					${exchangeProperty['policyState'].getStateName()} == 'SENT_AND_DEPLOYED'
 				</simple>
 				<to
@@ -240,7 +240,7 @@
 			</when>
 			<when>
 				<simple>${exchangeProperty['dcaeState'].getStateName()} ==
-					'MICROSERVICE_INSTALLED_SUCCESSFULLY' and
+					'MICROSERVICE_INSTALLED_SUCCESSFULLY' &amp;&amp;
 					${exchangeProperty['policyState'].getStateName()} != 'NOT_SENT'
 				</simple>
 				<to

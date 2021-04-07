@@ -1,31 +1,31 @@
 <routes xmlns="http://camel.apache.org/schema/spring">
     <route id="verify-one-policy">
         <from uri="direct:verify-one-policy"/>
-        <setProperty propertyName="raiseHttpExceptionFlag">
+        <setProperty name="raiseHttpExceptionFlag">
             <simple resultType="java.lang.Boolean">false</simple>
         </setProperty>
         <to uri="direct:get-policy"/>
         <when>
             <simple>${header.CamelHttpResponseCode} != 200</simple>
-            <setProperty propertyName="policyFound">
+            <setProperty name="policyFound">
                 <simple resultType="java.lang.Boolean">false</simple>
             </setProperty>
             <log loggingLevel="WARN"
                  message="At least one policy has not been found on policy engine: ${exchangeProperty[policyName]}"/>
         </when>
-        <setProperty propertyName="raiseHttpExceptionFlag">
+        <setProperty name="raiseHttpExceptionFlag">
             <simple resultType="java.lang.Boolean">false</simple>
         </setProperty>
         <to uri="direct:get-deployment-policy"/>
         <when>
             <simple>${header.CamelHttpResponseCode} != 200</simple>
-            <setProperty propertyName="policyDeployed">
+            <setProperty name="policyDeployed">
                 <simple resultType="java.lang.Boolean">false</simple>
             </setProperty>
             <log loggingLevel="WARN"
                  message="At least one policy has not been deployed on policy engine: ${exchangeProperty[policyName]}"/>
         </when>
-        <setProperty propertyName="newPolicyState">
+        <setProperty name="newPolicyState">
             <simple>${exchangeProperty[policyComponent].computeState(*)}</simple>
         </setProperty>
     </route>
@@ -37,18 +37,18 @@
                  message="Getting Policy: ${exchangeProperty[policyName]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Get Policy')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -71,12 +71,12 @@
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policyName]} GET
                         Policy status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -91,18 +91,18 @@
                  message="Getting the policy deployment in PDP: ${exchangeProperty[policyName]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policy deployment in PDP')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -125,12 +125,12 @@
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policyName]} GET Policy deployment
                         status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -149,22 +149,22 @@
                 <simple>${exchangeProperty[policy].createPolicyPayload()}
                 </simple>
             </setBody>
-            <setProperty propertyName="policyModelType">
+            <setProperty name="policyModelType">
                 <simple>${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}</simple>
             </setProperty>
-            <setProperty propertyName="policyModelVersion">
+            <setProperty name="policyModelVersion">
                 <simple>${exchangeProperty[policy].getPolicyModel().getVersion()}</simple>
             </setProperty>
             <to uri="direct:create-policy"/>
             <doFinally>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policy].getName()} creation
                         status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -179,28 +179,28 @@
                  message="Deleting Policy in a loop: ${exchangeProperty[policy].getName()}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Policy in a loop')"/>
-            <setProperty propertyName="policyModelType">
+            <setProperty name="policyModelType">
                 <simple>${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}</simple>
             </setProperty>
-            <setProperty propertyName="policyModelVersion">
+            <setProperty name="policyModelVersion">
                 <simple>${exchangeProperty[policy].getPolicyModel().getVersion()}</simple>
             </setProperty>
-            <setProperty propertyName="policyName">
+            <setProperty name="policyName">
                 <simple>${exchangeProperty[policy].getName()}</simple>
             </setProperty>
-            <setProperty propertyName="policyVersion">
+            <setProperty name="policyVersion">
                 <simple>1.0.0</simple>
             </setProperty>
             <to uri="direct:delete-policy"/>
             <doFinally>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policy].getName()} removal
                         status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -224,10 +224,10 @@
             <doFinally>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>PDP Group push ALL status</simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -247,21 +247,21 @@
                     ${exchangeProperty[loopObject].getComponent("POLICY").createPoliciesPayloadPdpGroup(exchangeProperty[loopObject],"DELETE")}
                 </simple>
             </setBody>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -274,10 +274,10 @@
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>PDP Group remove ALL status</simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -292,15 +292,15 @@
                  message="Removing policy from active PDP group for loop: ${exchangeProperty[loopObject].getName()}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Removing one policy PDP group')"/>
-            <setProperty propertyName="policyVersion">
+            <setProperty name="policyVersion">
                 <simple>1.0.0</simple>
             </setProperty>
             <to uri="direct:undeploy-one-policy-from-pap"/>
-            <setProperty propertyName="logMessage">
+            <setProperty name="logMessage">
                 <simple>${exchangeProperty[policyName]} PDP Group removal status
                 </simple>
             </setProperty>
-            <setProperty propertyName="logComponent">
+            <setProperty name="logComponent">
                 <simple>POLICY</simple>
             </setProperty>
             <to uri="direct:dump-loop-log-http-response"/>
@@ -309,10 +309,10 @@
                 <handled>
                     <constant>false</constant>
                 </handled>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>PDP Group removal, Error reported: ${exception}</simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -331,18 +331,18 @@
             <log loggingLevel="INFO" message="Getting all the policy models"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting all the policy models')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -366,18 +366,18 @@
                  message="Getting the policy tosca model: ${exchangeProperty[policyModelType]}/${exchangeProperty[policyModelVersion]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policy model')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -401,18 +401,18 @@
                  message="Getting the list of PDP Groups"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the PDP Group list')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -436,18 +436,18 @@
                  message="Getting the policies list"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policies list')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -471,21 +471,21 @@
                  message="Add policies to PDP group"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Add policies to PDP group')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -510,18 +510,18 @@
             <setBody>
                 <constant>null</constant>
             </setBody>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>DELETE</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -545,21 +545,21 @@
                  message="Create Policy from model ${exchangeProperty[policyModelType]}/${exchangeProperty[policyModelVersion]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Policy')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -584,18 +584,18 @@
             <setBody>
                 <constant>null</constant>
             </setBody>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>DELETE</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>

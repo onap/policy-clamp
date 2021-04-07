@@ -23,7 +23,7 @@
                         <log loggingLevel="ERROR"
                              message="GET All Loop names FAILED: ${exception.stacktrace}"/>
 
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -56,7 +56,7 @@
                         <log loggingLevel="ERROR"
                              message="GET Loop request failed for loop: ${header.loopName}, ${exception.stacktrace}"/>
 
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -77,7 +77,7 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Update the global properties')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')"/>
-                    <setHeader headerName="GlobalPropertiesJson">
+                    <setHeader name="GlobalPropertiesJson">
                         <simple>${body}</simple>
                     </setHeader>
                     <to uri="direct:load-loop"/>
@@ -97,7 +97,7 @@
                         <log loggingLevel="ERROR"
                              message="UPDATE Global properties FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
 
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -117,7 +117,7 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Update operational policies')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')"/>
-                    <setHeader headerName="OperationalPoliciesArray">
+                    <setHeader name="OperationalPoliciesArray">
                         <simple>${body}</simple>
                     </setHeader>
                     <to uri="direct:load-loop"/>
@@ -139,7 +139,7 @@
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('UPDATE Operational policies request FAILED, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})"/>
 
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -161,7 +161,7 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Update Microservice policies')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')"/>
-                    <setProperty propertyName="MicroServicePolicyObject">
+                    <setProperty name="MicroServicePolicyObject">
                         <simple>${body}</simple>
                     </setProperty>
 
@@ -183,7 +183,7 @@
                              message="UPDATE MicroService policy FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('UPDATE MicroService policy request FAILED, Error reported: ${exception.message}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -200,7 +200,7 @@
                 <doTry>
                     <log loggingLevel="INFO"
                          message="DCAE DEPLOY request for loop: ${header.loopName}"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to
@@ -230,7 +230,7 @@
                              message="DEPLOY request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('DEPLOY request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -273,7 +273,7 @@
                              message="REFRESH json schema request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('REFRESH Json schema request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -316,7 +316,7 @@
                              message="REFRESH json schema request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('REFRESH Json schema request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -333,7 +333,7 @@
                 <doTry>
                     <log loggingLevel="INFO"
                          message="DCAE UNDEPLOY request for loop: ${header.loopName}"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to
@@ -362,7 +362,7 @@
                              message="UNDEPLOY request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('UNDEPLOY request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -379,7 +379,7 @@
                 <doTry>
                     <log loggingLevel="INFO"
                          message="STOP request for loop: ${header.loopName}"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to
@@ -408,7 +408,7 @@
                              message="STOP request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('STOP request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -425,7 +425,7 @@
                 <doTry>
                     <log loggingLevel="INFO"
                          message="RESTART request for loop: ${header.loopName}"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to
@@ -455,7 +455,7 @@
                              message="RESTART request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('RESTART request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -472,7 +472,7 @@
                 <doTry>
                     <log loggingLevel="INFO"
                          message="POLICY SUBMIT request for loop: ${header.loopName}"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to
@@ -482,7 +482,7 @@
                     <to uri="direct:load-loop"/>
                     <to
                             uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('POLICY SUBMIT request','INFO',${exchangeProperty[loopObject]})"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">false</simple>
                     </setProperty>
                     <to uri="direct:remove-all-policy-from-active-pdp-group"/>
@@ -491,12 +491,12 @@
                     <split>
                         <simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
                         </simple>
-                        <setProperty propertyName="policy">
+                        <setProperty name="policy">
                             <simple>${body}</simple>
                         </setProperty>
                         <log loggingLevel="INFO"
                              message="Processing Micro Service Policy: ${exchangeProperty[policy].getName()}"/>
-                        <setProperty propertyName="raiseHttpExceptionFlag">
+                        <setProperty name="raiseHttpExceptionFlag">
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
                         <to uri="direct:delete-policy-from-loop-object"/>
@@ -507,12 +507,12 @@
                     <split>
                         <simple>${exchangeProperty[loopObject].getOperationalPolicies()}
                         </simple>
-                        <setProperty propertyName="policy">
+                        <setProperty name="policy">
                             <simple>${body}</simple>
                         </setProperty>
                         <log loggingLevel="INFO"
                              message="Processing Operational Policy: ${exchangeProperty[policy].getName()}"/>
-                        <setProperty propertyName="raiseHttpExceptionFlag">
+                        <setProperty name="raiseHttpExceptionFlag">
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
 
@@ -543,7 +543,7 @@
                              message="SUBMIT request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('SUBMIT request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -559,7 +559,7 @@
                 <doTry>
                     <log loggingLevel="INFO"
                          message="DELETE request for loop: ${header.loopName}"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to
@@ -576,12 +576,12 @@
                     <split>
                         <simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
                         </simple>
-                        <setProperty propertyName="policy">
+                        <setProperty name="policy">
                             <simple>${body}</simple>
                         </setProperty>
                         <log loggingLevel="INFO"
                              message="Deleting Micro Service Policy: ${exchangeProperty[policy].getName()}"/>
-                        <setProperty propertyName="raiseHttpExceptionFlag">
+                        <setProperty name="raiseHttpExceptionFlag">
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
                         <to uri="direct:delete-policy-from-loop-object"/>
@@ -591,12 +591,12 @@
                     <split>
                         <simple>${exchangeProperty[loopObject].getOperationalPolicies()}
                         </simple>
-                        <setProperty propertyName="policy">
+                        <setProperty name="policy">
                             <simple>${body}</simple>
                         </setProperty>
                         <log loggingLevel="INFO"
                              message="Deleting Operational Policy: ${exchangeProperty[policy].getName()}"/>
-                        <setProperty propertyName="raiseHttpExceptionFlag">
+                        <setProperty name="raiseHttpExceptionFlag">
                             <simple resultType="java.lang.Boolean">false</simple>
                         </setProperty>
                         <to uri="direct:delete-policy-from-loop-object"/>
@@ -618,7 +618,7 @@
                              message="DELETE request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('DELETE request failed, Error reported: ${exception} - Body: ${exception.responseBody}','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -666,7 +666,7 @@
                         <setBody>
                             <simple>${exchangeProperty[loopObject]}</simple>
                         </setBody>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>200</constant>
                         </setHeader>
                     </doFinally>
@@ -701,7 +701,7 @@
                              message="ADD operational policy request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('ADD OperationalPolicy request failed','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -724,17 +724,17 @@
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'cl','','update')"/>
                     <to uri="direct:load-loop"/>
-                    <setProperty propertyName="policyName">
+                    <setProperty name="policyName">
                         <simple>${header.policyName}</simple>
                     </setProperty>
-                    <setProperty propertyName="policy">
+                    <setProperty name="policy">
                         <simple>${exchangeProperty[loopObject].getOperationalPolicy(header.policyName)}</simple>
                     </setProperty>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">false</simple>
                     </setProperty>
                     <to uri="direct:remove-one-policy-from-active-pdp-group"/>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">false</simple>
                     </setProperty>
                     <to uri="direct:delete-policy-from-loop-object"/>
@@ -755,7 +755,7 @@
                              message="REMOVE operational policy request FAILED for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('REMOVE OperationalPolicy request failed','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -793,7 +793,7 @@
                              message="CREATE Loop from Template request failed for loop: ${header.loopName}, ${exception.stacktrace}"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('CREATE Loop from template request failed','ERROR',${exchangeProperty[loopObject]})"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -826,7 +826,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET ALL templates request failed: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -860,7 +860,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Template request failed for template: ${header.templateName},  ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -892,7 +892,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET All Template names request failed for template:  ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -926,7 +926,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Dictionary request failed: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -959,7 +959,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Dictionary request failed: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -992,7 +992,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Dictionary request failed for: ${header.dictionaryName}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1011,7 +1011,7 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Add New or Update Dictionary')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','update')"/>
-                    <setProperty propertyName="DictionaryObject">
+                    <setProperty name="DictionaryObject">
                         <simple>${body}</simple>
                     </setProperty>
                     <to
@@ -1027,7 +1027,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="PUT Dictionary request failed for: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1049,7 +1049,7 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Add New or Update Dictionary Element')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','update')"/>
-                    <setProperty propertyName="DictionaryObject">
+                    <setProperty name="DictionaryObject">
                         <simple>${body}</simple>
                     </setProperty>
                     <to
@@ -1065,7 +1065,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="PUT Dictionary request failed for: ${header.name}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1097,7 +1097,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="DELETE Dictionary request failed for: ${header.name}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1131,7 +1131,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="DELETE Dictionary element request failed for: ${header.name}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1165,7 +1165,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Policy Models request failed for: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1198,7 +1198,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Policy Model request failed for type: ${header.policyModelType}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1231,7 +1231,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Policy Model YAML request failed for type: ${header.policyModelType}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1253,7 +1253,7 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Upload New or Update Tosca Policy Model')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','update')"/>
-                    <setProperty propertyName="PolicyModelTosca">
+                    <setProperty name="PolicyModelTosca">
                         <simple>${body}</simple>
                     </setProperty>
                     <to
@@ -1269,7 +1269,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="POST Policy Model YAML request failed: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1291,7 +1291,7 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Upload New or Update Tosca Policy Model')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'tosca','','update')"/>
-                    <setProperty propertyName="PolicyModelTosca">
+                    <setProperty name="PolicyModelTosca">
                         <simple>${body}</simple>
                     </setProperty>
                     <to
@@ -1307,7 +1307,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="MODIFY Policy Model YAML request failed: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1329,11 +1329,11 @@
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','read')"/>
 
                     <to uri="direct:get-all-policies"/>
-                    <setProperty propertyName="policiesListResponse">
+                    <setProperty name="policiesListResponse">
                         <simple>${body}</simple>
                     </setProperty>
                     <to uri="direct:get-all-pdp-groups"/>
-                    <setProperty propertyName="pdpGroupInfoResponse">
+                    <setProperty name="pdpGroupInfoResponse">
                         <simple>${body}</simple>
                     </setProperty>
                     <setBody>
@@ -1351,7 +1351,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="GET Policies list JSON request failed: ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1376,13 +1376,13 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'CREATE a new Policy ')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','update')"/>
-                    <setProperty propertyName="policyModelType">
+                    <setProperty name="policyModelType">
                         <simple>${header.policyModelType}</simple>
                     </setProperty>
-                    <setProperty propertyName="policyModelVersion">
+                    <setProperty name="policyModelVersion">
                         <simple>${header.policyModelVersion}</simple>
                     </setProperty>
-                    <setProperty propertyName="policyProperties">
+                    <setProperty name="policyProperties">
                         <simple>${body}</simple>
                     </setProperty>
                     <to
@@ -1404,7 +1404,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="CREATE Policy request failed for type: ${header.policyModelType}/${header.policyModelVersion}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>
@@ -1424,19 +1424,19 @@
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'DELETE a Policy ')"/>
                     <to
                             uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','update')"/>
-                    <setProperty propertyName="policyModelType">
+                    <setProperty name="policyModelType">
                         <simple>${header.policyModelType}</simple>
                     </setProperty>
-                    <setProperty propertyName="policyModelVersion">
+                    <setProperty name="policyModelVersion">
                         <simple>${header.policyModelVersion}</simple>
                     </setProperty>
-                    <setProperty propertyName="policyName">
+                    <setProperty name="policyName">
                         <simple>${header.policyName}</simple>
                     </setProperty>
-                    <setProperty propertyName="policyVersion">
+                    <setProperty name="policyVersion">
                         <simple>${header.policyVersion}</simple>
                     </setProperty>
-                    <setProperty propertyName="raiseHttpExceptionFlag">
+                    <setProperty name="raiseHttpExceptionFlag">
                         <simple resultType="java.lang.Boolean">false</simple>
                     </setProperty>
                     <to uri="direct:undeploy-one-policy-from-pap"/>
@@ -1452,7 +1452,7 @@
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
                         <log loggingLevel="ERROR"
                              message="DELETE Policy request failed for policy: ${header.policyName}/${header.policyVersion}, ${exception.stacktrace}"/>
-                        <setHeader headerName="CamelHttpResponseCode">
+                        <setHeader name="CamelHttpResponseCode">
                             <constant>500</constant>
                         </setHeader>
                         <setBody>

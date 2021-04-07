@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications copyright (c) 2019 Nokia
@@ -98,9 +98,9 @@ public class CsarInstallerItCase {
     @Qualifier("csarInstaller")
     private CsarInstaller csarInstaller;
 
-    private BlueprintArtifact buildFakeBuildprintArtifact(String instanceName, String invariantResourceUuid,
-                                                          String blueprintFilePath, String artifactName,
-                                                          String invariantServiceUuid) throws IOException {
+    private BlueprintArtifact buildFakeBlueprintArtifact(String instanceName, String invariantResourceUuid,
+                                                         String blueprintFilePath, String artifactName,
+                                                         String invariantServiceUuid) throws IOException {
         IResourceInstance resource = Mockito.mock(IResourceInstance.class);
         Mockito.when(resource.getResourceInstanceName()).thenReturn(instanceName);
         Mockito.when(resource.getResourceInvariantUUID()).thenReturn(invariantResourceUuid);
@@ -127,7 +127,7 @@ public class CsarInstallerItCase {
         Map<String, BlueprintArtifact> blueprintMap = new HashMap<>();
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
         // Create fake blueprint artifact 1 on resource1
-        BlueprintArtifact blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1,
+        BlueprintArtifact blueprintArtifact = buildFakeBlueprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1,
                 INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca-bad-policy.yaml", "tca-bad-policy.yaml",
                 INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
@@ -167,25 +167,25 @@ public class CsarInstallerItCase {
         Map<String, BlueprintArtifact> blueprintMap = new HashMap<>();
         Mockito.when(csarHandler.getMapOfBlueprints()).thenReturn(blueprintMap);
         // Create fake blueprint artifact 1 on resource1
-        BlueprintArtifact blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1,
+        BlueprintArtifact blueprintArtifact = buildFakeBlueprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1,
                 INVARIANT_RESOURCE1_UUID, "example/sdc/blueprint-dcae/tca.yaml", "tca.yaml", INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
         // Create fake blueprint artifact 2 on resource2
-        blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE2, INVARIANT_RESOURCE2_UUID,
+        blueprintArtifact = buildFakeBlueprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE2, INVARIANT_RESOURCE2_UUID,
                 "example/sdc/blueprint-dcae/tca_2.yaml", "tca_2.yaml", INVARIANT_SERVICE_UUID);
         listResources.add(blueprintArtifact.getResourceAttached());
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
 
         // Create fake blueprint artifact 3 on resource 1 so that it's possible to
         // test multiple CL deployment per Service/vnf
-        blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1, INVARIANT_RESOURCE1_UUID,
+        blueprintArtifact = buildFakeBlueprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1, INVARIANT_RESOURCE1_UUID,
                 "example/sdc/blueprint-dcae/tca_3.yaml", "tca_3.yaml", INVARIANT_SERVICE_UUID);
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
 
         // Create fake blueprint artifact 3 on resource 1 so that it's possible to
         // test multiple CL deployment per Service/vnf
-        blueprintArtifact = buildFakeBuildprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1, INVARIANT_RESOURCE1_UUID,
+        blueprintArtifact = buildFakeBlueprintArtifact(RESOURCE_INSTANCE_NAME_RESOURCE1, INVARIANT_RESOURCE1_UUID,
                 "example/sdc/blueprint-dcae/tca-guilin.yaml", "tca-guilin.yaml", INVARIANT_SERVICE_UUID);
         blueprintMap.put(blueprintArtifact.getBlueprintArtifactName(), blueprintArtifact);
 
