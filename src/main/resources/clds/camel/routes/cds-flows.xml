@@ -5,15 +5,15 @@
              message="Getting blueprint workflow list from CDS"/>
         <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting workflow list from CDS')"/>
         <doTry>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to query workflows from CDS : {{clamp.config.cds.url}}/api/v1/blueprint-model/workflows/blueprint-name/${exchangeProperty[blueprintName]}/version/${exchangeProperty[blueprintVersion]}"></log>
-            <toD uri="{{clamp.config.cds.url}}/api/v1/blueprint-model/workflows/blueprint-name/${exchangeProperty[blueprintName]}/version/${exchangeProperty[blueprintVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.cds.userName}}&amp;authPassword={{clamp.config.cds.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <toD uri="{{clamp.config.cds.url}}/api/v1/blueprint-model/workflows/blueprint-name/${exchangeProperty[blueprintName]}/version/${exchangeProperty[blueprintVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.cds.userName}}&amp;authPassword={{clamp.config.cds.password}}&amp;connectTimeout=10000&amp;socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doCatch>
                 <exception>java.lang.Exception</exception>
@@ -36,15 +36,15 @@
              message="Getting blueprint input properties for workflow"/>
         <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting input properties for workflow')"/>
         <doTry>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to query input properties for workflow from CDS : {{clamp.config.cds.url}}/api/v1/blueprint-model/workflow-spec"></log>
-            <toD uri="{{clamp.config.cds.url}}/api/v1/blueprint-model/workflow-spec?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.cds.userName}}&amp;authPassword={{clamp.config.cds.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <toD uri="{{clamp.config.cds.url}}/api/v1/blueprint-model/workflow-spec?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.cds.userName}}&amp;authPassword={{clamp.config.cds.password}}&amp;connectTimeout=10000&amp;socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doCatch>
                 <exception>java.lang.Exception</exception>
