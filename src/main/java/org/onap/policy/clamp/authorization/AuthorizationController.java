@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -48,16 +48,13 @@ import org.springframework.stereotype.Component;
 public class AuthorizationController {
 
     protected static final EELFLogger logger =
-        EELFManager.getInstance().getLogger(AuthorizationController.class);
+            EELFManager.getInstance().getLogger(AuthorizationController.class);
     protected static final EELFLogger auditLogger = EELFManager.getInstance().getAuditLogger();
-    protected static final EELFLogger securityLogger =
-        EELFManager.getInstance().getSecurityLogger();
+    protected static final EELFLogger securityLogger = EELFManager.getInstance().getSecurityLogger();
 
     // By default we'll set it to a default handler
     @Autowired
     private ClampProperties refProp;
-
-    private SecurityContext securityContext = SecurityContextHolder.getContext();
 
     public static final String PERM_PREFIX = "security.permission.type.";
     private static final String PERM_INSTANCE = "security.permission.instance";
@@ -92,12 +89,12 @@ public class AuthorizationController {
      * Insert authorize the api based on the permission.
      *
      * @param camelExchange The Camel Exchange object containing the properties
-     * @param typeVar The type of the permissions
-     * @param instanceVar The instance of the permissions. e.g. dev
-     * @param action The action of the permissions. e.g. read
+     * @param typeVar       The type of the permissions
+     * @param instanceVar   The instance of the permissions. e.g. dev
+     * @param action        The action of the permissions. e.g. read
      */
     public void authorize(Exchange camelExchange, String typeVar, String instanceVar,
-        String action) {
+                          String action) {
         String type = refProp.getStringValue(PERM_PREFIX + typeVar);
         String instance = refProp.getStringValue(PERM_INSTANCE);
 
@@ -108,7 +105,7 @@ public class AuthorizationController {
         if (null != instanceVar && !instanceVar.isEmpty()) {
             instance = instanceVar;
         }
-        String principalName = AuthorizationController.getPrincipalName(this.securityContext);
+        String principalName = AuthorizationController.getPrincipalName(SecurityContextHolder.getContext());
         SecureServicePermission perm = SecureServicePermission.create(type, instance, action);
         Date startTime = new Date();
         LoggingUtils.setTargetContext("Clamp", "authorize");
@@ -131,23 +128,23 @@ public class AuthorizationController {
      */
     public boolean isUserPermitted(SecureServicePermission inPermission) {
 
-        String principalName = AuthorizationController.getPrincipalName(this.securityContext);
+        String principalName = AuthorizationController.getPrincipalName(SecurityContextHolder.getContext());
         // check if the user has the permission key or the permission key with a
         // combination of all instance and/or all action.
         if (hasRole(inPermission.getKey()) || hasRole(inPermission.getKeyAllInstance())) {
             auditLogger.info("{} authorized because user has permission with * for instance: {}",
-                principalName, inPermission.getKey().replace("|", ":"));
+                    principalName, inPermission.getKey().replace("|", ":"));
             return true;
             // the rest of these don't seem to be required - isUserInRole method
             // appears to take * as a wildcard
         } else if (hasRole(inPermission.getKeyAllInstanceAction())) {
             auditLogger.info(
-                "{} authorized because user has permission with * for instance and * for action: {}",
-                principalName, inPermission.getKey().replace("|", ":"));
+                    "{} authorized because user has permission with * for instance and * for action: {}",
+                    principalName, inPermission.getKey().replace("|", ":"));
             return true;
         } else if (hasRole(inPermission.getKeyAllAction())) {
             auditLogger.info("{} authorized because user has permission with * for action: {}",
-                principalName, inPermission.getKey().replace("|", ":"));
+                    principalName, inPermission.getKey().replace("|", ":"));
             return true;
         } else {
             return false;
@@ -155,7 +152,7 @@ public class AuthorizationController {
     }
 
     protected boolean hasRole(String role) {
-        Authentication authentication = securityContext.getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return false;
         }
@@ -176,11 +173,11 @@ public class AuthorizationController {
      */
     public ClampInformation getClampInformation() {
         ClampInformation clampInfo = new ClampInformation();
-        Authentication authentication = securityContext.getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return new ClampInformation();
         }
-        clampInfo.setUserName(AuthorizationController.getPrincipalName(this.securityContext));
+        clampInfo.setUserName(AuthorizationController.getPrincipalName(SecurityContextHolder.getContext()));
         for (GrantedAuthority auth : authentication.getAuthorities()) {
             clampInfo.getAllPermissions().add(auth.getAuthority());
         }
