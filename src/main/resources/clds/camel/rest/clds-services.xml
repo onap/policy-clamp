@@ -9,7 +9,7 @@
 				</setBody>
 				<when>
 					<simple> ${body} == 'NOT-OK'</simple>
-					<setHeader headerName="CamelHttpResponseCode">
+					<setHeader name="CamelHttpResponseCode">
 						<constant>404</constant>
 					</setHeader>
 					<log loggingLevel="ERROR" message="HealthCheck failed" />

@@ -24,51 +24,51 @@
             <split>
                 <simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
                 </simple>
-                <setProperty propertyName="microServicePolicy">
+                <setProperty name="microServicePolicy">
                     <simple>${body}</simple>
                 </setProperty>
                 <log
                         loggingLevel="INFO"
                         message="Processing Micro Service Policy: ${exchangeProperty[microServicePolicy].getName()}"/>
-                <setProperty propertyName="raiseHttpExceptionFlag">
+                <setProperty name="raiseHttpExceptionFlag">
                     <simple resultType="java.lang.Boolean">false</simple>
                 </setProperty>
                 <setBody>
                     <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                             method="getDeployPayload(${exchangeProperty[loopObject]},${exchangeProperty[microServicePolicy]})"/>
                 </setBody>
-                <setProperty propertyName="dcaeDeploymentId">
+                <setProperty name="dcaeDeploymentId">
                     <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                             method="generateDeploymentId()"/>
                 </setProperty>
-                <setHeader headerName="CamelHttpMethod">
+                <setHeader name="CamelHttpMethod">
                     <constant>PUT</constant>
                 </setHeader>
-                <setHeader headerName="Content-Type">
+                <setHeader name="Content-Type">
                     <constant>application/json</constant>
                 </setHeader>
-                <setHeader headerName="X-ONAP-RequestID">
+                <setHeader name="X-ONAP-RequestID">
                     <simple>${exchangeProperty[X-ONAP-RequestID]}
                     </simple>
                 </setHeader>
-                <setHeader headerName="X-ONAP-InvocationID">
+                <setHeader name="X-ONAP-InvocationID">
                     <simple>${exchangeProperty[X-ONAP-InvocationID]}
                     </simple>
                 </setHeader>
-                <setHeader headerName="X-ONAP-PartnerName">
+                <setHeader name="X-ONAP-PartnerName">
                     <simple>${exchangeProperty[X-ONAP-PartnerName]}
                     </simple>
                 </setHeader>
                 <log loggingLevel="INFO"
                      message="Endpoint to deploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}"></log>
                 <toD
-                        uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                        uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectTimeout=10000&amp;socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
                 <convertBodyTo type="java.lang.String"/>
-                <setProperty propertyName="dcaeResponse">
+                <setProperty name="dcaeResponse">
                     <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                             method="convertDcaeResponse(${body})"/>
                 </setProperty>
-                <setProperty propertyName="dcaeStatusUrl">
+                <setProperty name="dcaeStatusUrl">
                     <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                             method="getStatusUrl(${exchangeProperty[dcaeResponse]})"/>
                 </setProperty>
@@ -82,14 +82,14 @@
                 <handled>
                     <constant>false</constant>
                 </handled>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>DEPLOY micro service failed
                         (MicroService name:${exchangeProperty[microServicePolicy].getName()}),
                         Dep-id:${exchangeProperty[dcaeDeploymentId]},
                         StatusUrl:${exchangeProperty[dcaeStatusUrl]})
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>DCAE</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -112,40 +112,40 @@
                 <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                         method="getDeployPayload(${exchangeProperty[loopObject]})"/>
             </setBody>
-            <setProperty propertyName="dcaeDeploymentId">
+            <setProperty name="dcaeDeploymentId">
                 <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                         method="generateDeploymentId()"/>
             </setProperty>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>PUT</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to deploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}"></log>
             <toD
-                    uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[dcaeDeploymentId]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectTimeout=10000&amp;socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
-            <setProperty propertyName="dcaeResponse">
+            <setProperty name="dcaeResponse">
                 <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                         method="convertDcaeResponse(${body})"/>
             </setProperty>
 
 
-            <setProperty propertyName="dcaeStatusUrl">
+            <setProperty name="dcaeStatusUrl">
                 <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                         method="getStatusUrl(${exchangeProperty[dcaeResponse]})"/>
             </setProperty>
@@ -155,13 +155,13 @@
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>DEPLOY loop status
                         (Dep-id:${exchangeProperty[dcaeDeploymentId]},
                         StatusUrl:${exchangeProperty[dcaeStatusUrl]})
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>DCAE</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -193,7 +193,7 @@
             <split>
                 <simple>${exchangeProperty[loopObject].getMicroServicePolicies()}
                 </simple>
-                <setProperty propertyName="microServicePolicy">
+                <setProperty name="microServicePolicy">
                     <simple>${body}</simple>
                 </setProperty>
                 <log
@@ -207,34 +207,34 @@
                             <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                                     method="getUndeployPayload(${exchangeProperty[microServicePolicy]})"/>
                         </setBody>
-                        <setHeader headerName="CamelHttpMethod">
+                        <setHeader name="CamelHttpMethod">
                             <constant>DELETE</constant>
                         </setHeader>
-                        <setHeader headerName="Content-Type">
+                        <setHeader name="Content-Type">
                             <constant>application/json</constant>
                         </setHeader>
-                        <setHeader headerName="X-ONAP-RequestID">
+                        <setHeader name="X-ONAP-RequestID">
                             <simple>${exchangeProperty[X-ONAP-RequestID]}
                             </simple>
                         </setHeader>
-                        <setHeader headerName="X-ONAP-InvocationID">
+                        <setHeader name="X-ONAP-InvocationID">
                             <simple>${exchangeProperty[X-ONAP-InvocationID]}
                             </simple>
                         </setHeader>
-                        <setHeader headerName="X-ONAP-PartnerName">
+                        <setHeader name="X-ONAP-PartnerName">
                             <simple>${exchangeProperty[X-ONAP-PartnerName]}
                             </simple>
                         </setHeader>
                         <log loggingLevel="INFO"
                              message="Endpoint to undeploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[microServicePolicy].getDcaeDeploymentId()}"></log>
                         <toD
-                                uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[microServicePolicy].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                                uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[microServicePolicy].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectTimeout=10000&amp;socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
                         <convertBodyTo type="java.lang.String"/>
-                        <setProperty propertyName="dcaeResponse">
+                        <setProperty name="dcaeResponse">
                             <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                                     method="convertDcaeResponse(${body})"/>
                         </setProperty>
-                        <setProperty propertyName="dcaeStatusUrl">
+                        <setProperty name="dcaeStatusUrl">
                             <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                                     method="getStatusUrl(${exchangeProperty[dcaeResponse]})"/>
                         </setProperty>
@@ -244,7 +244,7 @@
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO','DCAE',${exchangeProperty[loopObject]})"/>
                     </when>
                     <otherwise>
-                        <log loggingLevel="WARNING"
+                        <log loggingLevel="WARN"
                              message="Cannot Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()}, the Deployment ID does not exist !"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('Cannot Undeploy for the micro service: ${exchangeProperty[microServicePolicy].getName()}, the Deployment ID does not exist !','WARNING','DCAE',${exchangeProperty[loopObject]})"/>
@@ -256,12 +256,12 @@
                 <handled>
                     <constant>false</constant>
                 </handled>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>UNDEPLOY micro service failed
                         (MicroService name:${exchangeProperty[microServicePolicy].getName()})
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>DCAE</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -289,35 +289,35 @@
                         <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                                 method="getUndeployPayload(${exchangeProperty[loopObject]})"/>
                     </setBody>
-                    <setHeader headerName="CamelHttpMethod">
+                    <setHeader name="CamelHttpMethod">
                         <constant>DELETE</constant>
                     </setHeader>
-                    <setHeader headerName="Content-Type">
+                    <setHeader name="Content-Type">
                         <constant>application/json</constant>
                     </setHeader>
 
-                    <setHeader headerName="X-ONAP-RequestID">
+                    <setHeader name="X-ONAP-RequestID">
                         <simple>${exchangeProperty[X-ONAP-RequestID]}
                         </simple>
                     </setHeader>
-                    <setHeader headerName="X-ONAP-InvocationID">
+                    <setHeader name="X-ONAP-InvocationID">
                         <simple>${exchangeProperty[X-ONAP-InvocationID]}
                         </simple>
                     </setHeader>
-                    <setHeader headerName="X-ONAP-PartnerName">
+                    <setHeader name="X-ONAP-PartnerName">
                         <simple>${exchangeProperty[X-ONAP-PartnerName]}
                         </simple>
                     </setHeader>
                     <log loggingLevel="INFO"
                          message="Endpoint to undeploy loop: {{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}"></log>
                     <toD
-                            uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                            uri="{{clamp.config.dcae.deployment.url}}/dcae-deployments/${exchangeProperty[loopObject].getDcaeDeploymentId()}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectTimeout=10000&amp;socketTimeout=300000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
                     <convertBodyTo type="java.lang.String"/>
-                    <setProperty propertyName="dcaeResponse">
+                    <setProperty name="dcaeResponse">
                         <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                                 method="convertDcaeResponse(${body})"/>
                     </setProperty>
-                    <setProperty propertyName="dcaeStatusUrl">
+                    <setProperty name="dcaeStatusUrl">
                         <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                                 method="getStatusUrl(${exchangeProperty[dcaeResponse]})"/>
                     </setProperty>
@@ -327,10 +327,10 @@
                         <to uri="direct:reset-raise-http-exception-flag"/>
                         <to
                                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                        <setProperty propertyName="logMessage">
+                        <setProperty name="logMessage">
                             <simple>UNDEPLOY loop status</simple>
                         </setProperty>
-                        <setProperty propertyName="logComponent">
+                        <setProperty name="logComponent">
                             <simple>DCAE</simple>
                         </setProperty>
                         <to uri="direct:dump-loop-log-http-response"/>
@@ -338,7 +338,7 @@
                 </doTry>
             </when>
             <otherwise>
-                <log loggingLevel="WARNING"
+                <log loggingLevel="WARN"
                      message="Cannot Undeploy for the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !"/>
                 <to
                         uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLog('Cannot Undeploy for the loop: ${exchangeProperty[loopObject].getName()}, the Deployment ID does not exist !','WARNING',${exchangeProperty[loopObject]})"/>
@@ -352,18 +352,18 @@
         <to
                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Getting Deployment status')"/>
         <doTry>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
@@ -373,18 +373,18 @@
                 <when>
                     <simple>${exchangeProperty[getStatusUrl].contains("?")} == true
                     </simple>
-                    <setProperty propertyName="uriSeparator">
+                    <setProperty name="uriSeparator">
                         <simple>&amp;</simple>
                     </setProperty>
                 </when>
                 <otherwise>
-                    <setProperty propertyName="uriSeparator">
+                    <setProperty name="uriSeparator">
                         <simple>?</simple>
                     </setProperty>
                 </otherwise>
             </choice>
             <toD
-                    uri="${exchangeProperty[getStatusUrl]}${exchangeProperty[uriSeparator]}bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="${exchangeProperty[getStatusUrl]}${exchangeProperty[uriSeparator]}bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectTimeout=10000&amp;socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doCatch>
                 <exception>java.lang.Exception</exception>
                 <handled>
@@ -400,10 +400,10 @@
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>DCAE deployment status</simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>DCAE</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -417,25 +417,25 @@
         <to
                 uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Getting blueprint id in inventory')"/>
         <doTry>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to query Dcae inventory Loop status: {{clamp.config.dcae.inventory.url}}/dcae-service-types?${header[CamelHttpQuery]}"></log>
             <toD
-                    uri="{{clamp.config.dcae.inventory.url}}/dcae-service-types?asdcResourceId=${exchangeProperty[blueprintResourceId]}&amp;asdcServiceId=${exchangeProperty[blueprintServiceId]}&amp;typeName=${exchangeProperty[blueprintName]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.dcae.inventory.url}}/dcae-service-types?asdcResourceId=${exchangeProperty[blueprintResourceId]}&amp;asdcServiceId=${exchangeProperty[blueprintServiceId]}&amp;typeName=${exchangeProperty[blueprintName]}&amp;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectTimeout=10000&amp;socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -451,33 +451,33 @@
              message="Getting all DCAE blueprint from inventory"/>
         <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('DCAE', 'Getting all blueprint from inventory')"/>
         <doTry>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to query Blueprints from DCAE inventory: {{clamp.config.dcae.inventory.url}}/dcae-service-types?${header[CamelHttpQuery]}"></log>
-            <toD uri="{{clamp.config.dcae.inventory.url}}/dcae-service-types;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+            <toD uri="{{clamp.config.dcae.inventory.url}}/dcae-service-types;bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.dcae.deployment.userName}}&amp;authPassword={{clamp.config.dcae.deployment.password}}&amp;connectTimeout=10000&amp;socketTimeout=30000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
-            <setProperty propertyName="dcaeResponseList">
+            <setProperty name="dcaeResponseList">
                 <method ref="org.onap.policy.clamp.loop.components.external.DcaeComponent"
                         method="convertToDcaeInventoryResponse(${body})"/>
             </setProperty>
             <split>
                 <simple>${exchangeProperty[dcaeResponseList]}</simple>
                 <convertBodyTo type="org.onap.policy.clamp.clds.model.dcae.DcaeInventoryResponse"/>
-                <setProperty propertyName="dcaeResponse">
+                <setProperty name="dcaeResponse">
                     <simple>${body}</simple>
                 </setProperty>
                 <to uri="bean:org.onap.policy.clamp.clds.model.dcae.DcaeInventoryCache?method=addDcaeInventoryResponse(${exchangeProperty[dcaeResponse]})"/>

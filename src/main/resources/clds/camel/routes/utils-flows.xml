@@ -1,7 +1,7 @@
 <routes xmlns="http://camel.apache.org/schema/spring">
 	<route id="reset-raise-http-exception-flag">
 		<from uri="direct:reset-raise-http-exception-flag" />
-		<setProperty propertyName="raiseHttpExceptionFlag">
+		<setProperty name="raiseHttpExceptionFlag">
 			<simple resultType="java.lang.Boolean">true</simple>
 		</setProperty>
 	</route>
@@ -19,7 +19,7 @@
 			<otherwise>
 				<to
 					uri="bean:org.onap.policy.clamp.loop.log.LoopLogService?method=addLogForComponent('${exchangeProperty[logMessage]} - ${header.CamelHttpResponseCode} : ${header.CamelHttpResponseText}','INFO','${exchangeProperty[logComponent]}',${exchangeProperty[loopObject]})" />
-				<setProperty propertyName="logComponent">
+				<setProperty name="logComponent">
 					<constant>null</constant>
 				</setProperty>
 			</otherwise>

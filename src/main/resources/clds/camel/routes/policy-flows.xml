@@ -1,31 +1,31 @@
 <routes xmlns="http://camel.apache.org/schema/spring">
     <route id="verify-one-policy">
         <from uri="direct:verify-one-policy"/>
-        <setProperty propertyName="raiseHttpExceptionFlag">
+        <setProperty name="raiseHttpExceptionFlag">
             <simple resultType="java.lang.Boolean">false</simple>
         </setProperty>
         <to uri="direct:get-policy"/>
         <when>
             <simple>${header.CamelHttpResponseCode} != 200</simple>
-            <setProperty propertyName="policyFound">
+            <setProperty name="policyFound">
                 <simple resultType="java.lang.Boolean">false</simple>
             </setProperty>
             <log loggingLevel="WARN"
                  message="At least one policy has not been found on policy engine: ${exchangeProperty[policyName]}"/>
         </when>
-        <setProperty propertyName="raiseHttpExceptionFlag">
+        <setProperty name="raiseHttpExceptionFlag">
             <simple resultType="java.lang.Boolean">false</simple>
         </setProperty>
         <to uri="direct:get-deployment-policy"/>
         <when>
             <simple>${header.CamelHttpResponseCode} != 200</simple>
-            <setProperty propertyName="policyDeployed">
+            <setProperty name="policyDeployed">
                 <simple resultType="java.lang.Boolean">false</simple>
             </setProperty>
             <log loggingLevel="WARN"
                  message="At least one policy has not been deployed on policy engine: ${exchangeProperty[policyName]}"/>
         </when>
-        <setProperty propertyName="newPolicyState">
+        <setProperty name="newPolicyState">
             <simple>${exchangeProperty[policyComponent].computeState(*)}</simple>
         </setProperty>
     </route>
@@ -37,25 +37,25 @@
                  message="Getting Policy: ${exchangeProperty[policyName]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Get Policy')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to get policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyType]}/versions/${exchangeProperty[policyTypeVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doCatch>
                 <exception>java.lang.Exception</exception>
                 <handled>
@@ -71,12 +71,12 @@
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policyName]} GET
                         Policy status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -91,25 +91,25 @@
                  message="Getting the policy deployment in PDP: ${exchangeProperty[policyName]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policy deployment in PDP')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to get policy deployment status: {{clamp.config.policy.pap.url}}/policy/pap/v1/policies/status/${exchangeProperty[policyPdpGroup]}/${exchangeProperty[policyName]}/1.0.0"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/policies/status/${exchangeProperty[policyPdpGroup]}/${exchangeProperty[policyName]}/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/policies/status/${exchangeProperty[policyPdpGroup]}/${exchangeProperty[policyName]}/1.0.0?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doCatch>
                 <exception>java.lang.Exception</exception>
                 <handled>
@@ -125,12 +125,12 @@
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policyName]} GET Policy deployment
                         status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -149,22 +149,22 @@
                 <simple>${exchangeProperty[policy].createPolicyPayload()}
                 </simple>
             </setBody>
-            <setProperty propertyName="policyModelType">
+            <setProperty name="policyModelType">
                 <simple>${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}</simple>
             </setProperty>
-            <setProperty propertyName="policyModelVersion">
+            <setProperty name="policyModelVersion">
                 <simple>${exchangeProperty[policy].getPolicyModel().getVersion()}</simple>
             </setProperty>
             <to uri="direct:create-policy"/>
             <doFinally>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policy].getName()} creation
                         status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -179,28 +179,28 @@
                  message="Deleting Policy in a loop: ${exchangeProperty[policy].getName()}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Delete Policy in a loop')"/>
-            <setProperty propertyName="policyModelType">
+            <setProperty name="policyModelType">
                 <simple>${exchangeProperty[policy].getPolicyModel().getPolicyModelType()}</simple>
             </setProperty>
-            <setProperty propertyName="policyModelVersion">
+            <setProperty name="policyModelVersion">
                 <simple>${exchangeProperty[policy].getPolicyModel().getVersion()}</simple>
             </setProperty>
-            <setProperty propertyName="policyName">
+            <setProperty name="policyName">
                 <simple>${exchangeProperty[policy].getName()}</simple>
             </setProperty>
-            <setProperty propertyName="policyVersion">
+            <setProperty name="policyVersion">
                 <simple>1.0.0</simple>
             </setProperty>
             <to uri="direct:delete-policy"/>
             <doFinally>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>${exchangeProperty[policy].getName()} removal
                         status
                     </simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -224,10 +224,10 @@
             <doFinally>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>PDP Group push ALL status</simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -247,37 +247,37 @@
                     ${exchangeProperty[loopObject].getComponent("POLICY").createPoliciesPayloadPdpGroup(exchangeProperty[loopObject],"DELETE")}
                 </simple>
             </setBody>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to remove policies from PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
                         uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>PDP Group remove ALL status</simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -292,15 +292,15 @@
                  message="Removing policy from active PDP group for loop: ${exchangeProperty[loopObject].getName()}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Removing one policy PDP group')"/>
-            <setProperty propertyName="policyVersion">
+            <setProperty name="policyVersion">
                 <simple>1.0.0</simple>
             </setProperty>
             <to uri="direct:undeploy-one-policy-from-pap"/>
-            <setProperty propertyName="logMessage">
+            <setProperty name="logMessage">
                 <simple>${exchangeProperty[policyName]} PDP Group removal status
                 </simple>
             </setProperty>
-            <setProperty propertyName="logComponent">
+            <setProperty name="logComponent">
                 <simple>POLICY</simple>
             </setProperty>
             <to uri="direct:dump-loop-log-http-response"/>
@@ -309,10 +309,10 @@
                 <handled>
                     <constant>false</constant>
                 </handled>
-                <setProperty propertyName="logMessage">
+                <setProperty name="logMessage">
                     <simple>PDP Group removal, Error reported: ${exception}</simple>
                 </setProperty>
-                <setProperty propertyName="logComponent">
+                <setProperty name="logComponent">
                     <simple>POLICY</simple>
                 </setProperty>
                 <to uri="direct:dump-loop-log-http-response"/>
@@ -331,25 +331,25 @@
             <log loggingLevel="INFO" message="Getting all the policy models"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting all the policy models')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to get all policy models: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -366,25 +366,25 @@
                  message="Getting the policy tosca model: ${exchangeProperty[policyModelType]}/${exchangeProperty[policyModelVersion]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policy model')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to get policy model: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -401,25 +401,25 @@
                  message="Getting the list of PDP Groups"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the PDP Group list')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to get policy model: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -436,25 +436,25 @@
                  message="Getting the policies list"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Getting the policies list')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to get policies list: {{clamp.config.policy.api.url}}/policy/api/v1/policies"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authMethod=Basic&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <convertBodyTo type="java.lang.String"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
@@ -471,28 +471,28 @@
                  message="Add policies to PDP group"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Add policies to PDP group')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
@@ -510,25 +510,25 @@
             <setBody>
                 <constant>null</constant>
             </setBody>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>DELETE</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to delete policy from PDP Group: {{clamp.config.policy.pap.url}}/pdps/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
@@ -545,28 +545,28 @@
                  message="Create Policy from model ${exchangeProperty[policyModelType]}/${exchangeProperty[policyModelVersion]}"/>
             <to
                     uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create Policy')"/>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to create policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
                 <to
@@ -584,25 +584,25 @@
             <setBody>
                 <constant>null</constant>
             </setBody>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>DELETE</constant>
             </setHeader>
-            <setHeader headerName="X-ONAP-RequestID">
+            <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-InvocationID">
+            <setHeader name="X-ONAP-InvocationID">
                 <simple>${exchangeProperty[X-ONAP-InvocationID]}
                 </simple>
             </setHeader>
-            <setHeader headerName="X-ONAP-PartnerName">
+            <setHeader name="X-ONAP-PartnerName">
                 <simple>${exchangeProperty[X-ONAP-PartnerName]}
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
                  message="Endpoint to delete policy: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}"></log>
             <toD
-                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;httpClient.connectTimeout=10000&amp;httpClient.socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes/${exchangeProperty[policyModelType]}/versions/${exchangeProperty[policyModelVersion]}/policies/${exchangeProperty[policyName]}/versions/${exchangeProperty[policyVersion]}?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;deleteWithBody=false&amp;mapHttpMessageBody=false&amp;mapHttpMessageFormUrlEncodedBody=false&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;connectTimeout=10000&amp;socketTimeout=20000&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
 
             <doFinally>
                 <to uri="direct:reset-raise-http-exception-flag"/>
