@@ -35,6 +35,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
+import org.apache.camel.component.servlet.springboot.ServletMappingAutoConfiguration;
 import org.apache.catalina.connector.Connector;
 import org.onap.policy.clamp.clds.util.ClampVersioning;
 import org.onap.policy.clamp.clds.util.ResourceFileUtils;
@@ -61,10 +62,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@ComponentScan(basePackages = { "org.onap.policy.clamp" })
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class })
-@EnableJpaRepositories(basePackages = { "org.onap.policy.clamp" })
-@EntityScan(basePackages = { "org.onap.policy.clamp" })
+@ComponentScan(basePackages = {"org.onap.policy.clamp"})
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class, UserDetailsServiceAutoConfiguration.class,
+        ServletMappingAutoConfiguration.class})
+@EnableJpaRepositories(basePackages = {"org.onap.policy.clamp"})
+@EntityScan(basePackages = {"org.onap.policy.clamp"})
 @EnableTransactionManagement
 @EnableConfigurationProperties
 @EnableAsync
