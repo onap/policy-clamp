@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a36490f_5aa595d9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-07T14:22:45Z",
+      "side": 1,
+      "message": "it seems that start, stop, could be toggled in sequences, should stop check that policyProvider !\u003d null ?\nDo they have to be synchronized?",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92c8d963_c9658a0f",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-07T14:22:45Z",
+      "side": 1,
+      "message": "can move this line under 109, and change the line 110 catch to IOException | PfModelException since lines 111 and 117 are identical",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a02a8c13_b5de0b82",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyProvider.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-07T14:22:45Z",
+      "side": 1,
+      "message": "I think this can can also be made final",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c2cfce5_727eb4a7",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/ParticipantPolicyParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-07T14:22:45Z",
+      "side": 1,
+      "message": "I thought coder.decode in line 54 always returns an object, but not 100% sure, if that was the case, this cannot be null, as it will not reach it per line 58, if you can double check to make sure?",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
