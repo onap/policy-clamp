@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
  * Copyright (C) 2020-2021 AT&T Intellectual Property. All rights
  *                             reserved.
@@ -145,8 +145,9 @@ public class PolicyEngineServices {
      * @return A yaml containing all policy Types and all data types
      */
     public String downloadAllPolicyModels() {
-        return callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-policy-models",
-                "Get all policies models");
+        return callCamelRoute(
+                ExchangeBuilder.anExchange(camelContext).withProperty("raiseHttpExceptionFlag", true).build(),
+                "direct:get-all-policy-models", "Get all policies models");
     }
 
     /**
@@ -166,7 +167,8 @@ public class PolicyEngineServices {
         Yaml yamlParser = new Yaml(options);
         String responseBody = callCamelRoute(
                 ExchangeBuilder.anExchange(camelContext).withProperty("policyModelType", policyType)
-                        .withProperty("policyModelVersion", policyVersion).build(), "direct:get-policy-tosca-model",
+                        .withProperty("policyModelVersion", policyVersion).withProperty("raiseHttpExceptionFlag", true)
+                        .build(), "direct:get-policy-tosca-model",
                 "Get one policy");
 
         if (responseBody == null || responseBody.isEmpty()) {
@@ -182,8 +184,9 @@ public class PolicyEngineServices {
      */
     public void downloadPdpGroups() {
         String responseBody =
-                callCamelRoute(ExchangeBuilder.anExchange(camelContext).build(), "direct:get-all-pdp-groups",
-                        "Get Pdp Groups");
+                callCamelRoute(
+                        ExchangeBuilder.anExchange(camelContext).withProperty("raiseHttpExceptionFlag", true).build(),
+                        "direct:get-all-pdp-groups", "Get Pdp Groups");
 
         if (responseBody == null || responseBody.isEmpty()) {
             logger.warn("getPdpGroups returned by policy engine could not be decoded, as it's null or empty");
