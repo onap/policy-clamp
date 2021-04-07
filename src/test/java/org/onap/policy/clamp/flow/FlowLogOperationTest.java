@@ -1,8 +1,10 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
  * Copyright (C) 2019 Samsung. All rights reserved.
+ * ================================================================================
+ * Modifications Copyright (c) 2021 AT&T
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +30,7 @@ import static org.mockito.Mockito.mock;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.onap.policy.clamp.clds.util.LoggingUtils;
@@ -43,7 +45,7 @@ public class FlowLogOperationTest {
     private FlowLogOperation flowLogOperation = new FlowLogOperation();
 
     @Test
-    public void testStratLog() {
+    public void testStartLog() {
         // given
         LoggingUtils loggingUtils = mock(LoggingUtils.class);
         ReflectionTestUtils.setField(flowLogOperation, "util", loggingUtils);
@@ -65,7 +67,7 @@ public class FlowLogOperationTest {
     public void testInvokeLog() {
         // given
         final String mockEntity = "mockEntity";
-        final String mockServiceName = "mockSerivceName";
+        final String mockServiceName = "mockServiceName";
         MDCAdapter mdcAdapter = MDC.getMDCAdapter();
         // when
         flowLogOperation.invokeLog(mockEntity, mockServiceName);

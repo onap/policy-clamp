@@ -5,10 +5,10 @@
              message="Getting blueprint workflow list from CDS"/>
         <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting workflow list from CDS')"/>
         <doTry>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>GET</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
             <log loggingLevel="INFO"
@@ -36,10 +36,10 @@
              message="Getting blueprint input properties for workflow"/>
         <to uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('CDS', 'Getting input properties for workflow')"/>
         <doTry>
-            <setHeader headerName="CamelHttpMethod">
+            <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
-            <setHeader headerName="Content-Type">
+            <setHeader name="Content-Type">
                 <constant>application/json</constant>
             </setHeader>
             <log loggingLevel="INFO"
