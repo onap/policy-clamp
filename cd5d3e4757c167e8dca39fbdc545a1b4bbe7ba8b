@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "08624a97_6b289abe",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-07T14:56:03Z",
+      "side": 1,
+      "message": "ok, let\u0027s not change, as long as the caller uses are careful enough",
+      "parentUuid": "c0beac7f_4ebb3550",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92c8d963_c9658a0f",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "need to ensure that both close() methods are called, even if the first throws an exception, thus they had to be separated into separate try/catch blocks.",
       "parentUuid": "92c8d963_c9658a0f",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1173799_53622b76",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/PolicyHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-07T14:56:03Z",
+      "side": 1,
+      "message": "Ok, I see, it will be more cumbersome to take care of inside the catch clause.",
+      "parentUuid": "1ca26ea8_b8509108",
       "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
@@ -121,6 +157,24 @@
       "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81e7d8dc_31cfe805",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/ParticipantPolicyParameterHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-07T14:56:03Z",
+      "side": 1,
+      "message": "Ok, I tend to think that an exception in this case, will be more appropriate, but not worth to change it if we need to change the common standardcoder, out of scope of this review, so have no issue.",
+      "parentUuid": "6d58a25e_60a0e557",
+      "revId": "cd5d3e4757c167e8dca39fbdc545a1b4bbe7ba8b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
