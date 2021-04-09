@@ -1171,6 +1171,7 @@
                 <version>1.8.0</version>
                 <configuration>
                     <installDirectory>${project.build.directory}/${ui.react.src}</installDirectory>
+                    <npmDownloadRoot>${repo.npm}</npmDownloadRoot>
                 </configuration>
                 <executions>
                     <execution>
