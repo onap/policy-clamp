@@ -22,6 +22,30 @@
       "revId": "087ee6d9f78fa426ad2fa65cd8ca76f6db6639e3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e8ca85c_4d274580",
+        "filename": "ui-react/src/components/dialogs/Policy/PoliciesTreeViewer.js",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-14T14:36:51Z",
+      "side": 1,
+      "message": "yep, line 64.\nJavascript forEach creates this var name and binds it to the array you are iterating on\nhttps://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach",
+      "parentUuid": "f1042702_9fbdbc9e",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 54
+      },
+      "revId": "087ee6d9f78fa426ad2fa65cd8ca76f6db6639e3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
