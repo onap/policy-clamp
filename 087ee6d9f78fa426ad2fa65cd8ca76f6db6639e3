@@ -46,6 +46,30 @@
       "revId": "087ee6d9f78fa426ad2fa65cd8ca76f6db6639e3",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60795f31_06c10fe7",
+        "filename": "ui-react/src/components/dialogs/Policy/PoliciesTreeViewer.js",
+        "patchSetId": 8
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-14T15:54:31Z",
+      "side": 1,
+      "message": "thanks for educating me :-)",
+      "parentUuid": "8e8ca85c_4d274580",
+      "range": {
+        "startLine": 71,
+        "startChar": 34,
+        "endLine": 71,
+        "endChar": 54
+      },
+      "revId": "087ee6d9f78fa426ad2fa65cd8ca76f6db6639e3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
