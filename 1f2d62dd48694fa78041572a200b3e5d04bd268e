@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69fba298_a3071941",
+        "filename": "pom.xml",
+        "patchSetId": 20
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-04-15T20:48:21Z",
+      "side": 1,
+      "message": "not sure if at some point eelf would need to be upgraded at some point, are are using in policy/common: 2.0.0-oss version, just fyi not a comment.",
+      "revId": "1f2d62dd48694fa78041572a200b3e5d04bd268e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
