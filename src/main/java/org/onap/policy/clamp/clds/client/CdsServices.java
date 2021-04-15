@@ -1,8 +1,10 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
  * Copyright (C) 2020 Huawei Technologies Co., Ltd.
+ * ================================================================================
+ * Modifications Copyright (C) 2021 AT&T.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,16 +31,19 @@ import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.onap.policy.clamp.clds.exception.cds.CdsParametersException;
 import org.onap.policy.clamp.clds.model.cds.CdsBpWorkFlowListResponse;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.clds.util.LoggingUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
@@ -57,14 +62,6 @@ public class CdsServices {
     private static final String LIST = "list";
 
     /**
-     * Constructor.
-     */
-    @Autowired
-    public CdsServices() {
-    }
-
-
-    /**
      * Query CDS to get blueprint's workflow list.
      *
      * @param blueprintName    CDS blueprint name
@@ -74,23 +71,28 @@ public class CdsServices {
     public CdsBpWorkFlowListResponse getBlueprintWorkflowList(String blueprintName, String blueprintVersion) {
         LoggingUtils.setTargetContext("CDS", "getBlueprintWorkflowList");
 
-        Exchange exchangeResponse = camelContext.createProducerTemplate()
-                .send("direct:get-blueprint-workflow-list", ExchangeBuilder.anExchange(camelContext)
-                        .withProperty("blueprintName", blueprintName).withProperty("blueprintVersion", blueprintVersion)
-                        .withProperty("raiseHttpExceptionFlag", true).build());
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            Exchange exchangeResponse =
+                    producerTemplate.send("direct:get-blueprint-workflow-list", ExchangeBuilder.anExchange(camelContext)
+                            .withProperty("blueprintName", blueprintName)
+                            .withProperty("blueprintVersion", blueprintVersion)
+                            .withProperty("raiseHttpExceptionFlag", false).build());
 
-        if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
-            String cdsResponse = (String) exchangeResponse.getIn().getBody();
-            logger.info("getBlueprintWorkflowList, response from CDS:" + cdsResponse);
-            LoggingUtils.setResponseContext("0", "Get Blueprint workflow list", this.getClass().getName());
-            Date startTime = new Date();
-            LoggingUtils.setTimeContext(startTime, new Date());
-            return JsonUtils.GSON_JPA_MODEL.fromJson(cdsResponse, CdsBpWorkFlowListResponse.class);
-        } else {
-            logger.error("CDS getBlueprintWorkflowList FAILED");
-            return null;
+            if (HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+                    .is2xxSuccessful()) {
+                String cdsResponse = (String) exchangeResponse.getIn().getBody();
+                logger.info("getBlueprintWorkflowList, response from CDS:" + cdsResponse);
+                LoggingUtils.setResponseContext("0", "Get Blueprint workflow list", this.getClass().getName());
+                Date startTime = new Date();
+                LoggingUtils.setTimeContext(startTime, new Date());
+                return JsonUtils.GSON_JPA_MODEL.fromJson(cdsResponse, CdsBpWorkFlowListResponse.class);
+            } else {
+                logger.error("CDS getBlueprintWorkflowList FAILED");
+            }
+        } catch (IOException e) {
+            logger.error("IOException caught when trying to execute get-blueprint-workflow-list flow", e);
         }
-
+        return null;
     }
 
     /**
@@ -105,22 +107,27 @@ public class CdsServices {
                                                  String workflow) {
         LoggingUtils.setTargetContext("CDS", "getWorkflowInputProperties");
 
-        Exchange exchangeResponse = camelContext.createProducerTemplate()
-                .send("direct:get-blueprint-workflow-input-properties", ExchangeBuilder.anExchange(camelContext)
-                        .withBody(getCdsPayloadForWorkFlow(blueprintName, blueprintVersion, workflow))
-                        .withProperty("raiseHttpExceptionFlag", true).build());
-
-        if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
-            String cdsResponse = (String) exchangeResponse.getIn().getBody();
-            logger.info("getWorkflowInputProperties, response from CDS:" + cdsResponse);
-            LoggingUtils.setResponseContext("0", "Get Blueprint workflow input properties", this.getClass().getName());
-            Date startTime = new Date();
-            LoggingUtils.setTimeContext(startTime, new Date());
-            return parseCdsResponse(cdsResponse);
-        } else {
-            logger.error("CDS getWorkflowInputProperties FAILED");
-            return null;
+        try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+            Exchange exchangeResponse = producerTemplate
+                    .send("direct:get-blueprint-workflow-input-properties", ExchangeBuilder.anExchange(camelContext)
+                            .withBody(getCdsPayloadForWorkFlow(blueprintName, blueprintVersion, workflow))
+                            .withProperty("raiseHttpExceptionFlag", false).build());
+            if (HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+                    .is2xxSuccessful()) {
+                String cdsResponse = (String) exchangeResponse.getIn().getBody();
+                logger.info("getWorkflowInputProperties, response from CDS:" + cdsResponse);
+                LoggingUtils
+                        .setResponseContext("0", "Get Blueprint workflow input properties", this.getClass().getName());
+                Date startTime = new Date();
+                LoggingUtils.setTimeContext(startTime, new Date());
+                return parseCdsResponse(cdsResponse);
+            } else {
+                logger.error("CDS getWorkflowInputProperties FAILED");
+            }
+        } catch (IOException e) {
+            logger.error("IOException caught when trying to execute get-blueprint-workflow-input-properties flow", e);
         }
+        return null;
     }
 
     protected JsonObject parseCdsResponse(String response) {
@@ -133,8 +140,7 @@ public class CdsServices {
         return workFlowProperties;
     }
 
-    private JsonObject getInputProperties(JsonObject inputs, JsonObject dataTypes,
-                                          JsonObject inputObject) {
+    private JsonObject getInputProperties(JsonObject inputs, JsonObject dataTypes, JsonObject inputObject) {
         if (inputs == null) {
             return inputObject;
         }
@@ -164,7 +170,7 @@ public class CdsServices {
 
         String type = inputProperty.get("entry_schema").getAsJsonObject().get(
                 TYPE).getAsString();
-        if (dataTypes.get(type) != null) {
+        if (dataTypes != null && dataTypes.get(type) != null) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty(TYPE, LIST);
             jsonObject.add(PROPERTIES, getPropertiesObject(type, dataTypes));
