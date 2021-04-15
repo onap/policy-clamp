@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,13 +66,7 @@ export default class DeployLoopModal extends React.Component {
 	}
 	getInitialKeyValue(temporaryPropertiesJson) {
 		const deployJsonList = temporaryPropertiesJson["dcaeDeployParameters"];
-		let initialKey;
-		Object.keys(deployJsonList)
-			.filter((obj) => Object.keys(deployJsonList).indexOf(obj) === 0)
-			.map(obj =>
-				initialKey = obj
-		);
-		return initialKey;
+		return Object.keys(deployJsonList).find((obj) => Object.keys(deployJsonList).indexOf(obj) === 0);
 	}
 	componentWillReceiveProps(newProps) {
 		this.setState({
@@ -143,7 +137,7 @@ export default class DeployLoopModal extends React.Component {
 
 		const deployJsonList = this.state.temporaryPropertiesJson["dcaeDeployParameters"];
 		var indents = [];
-		Object.keys(deployJsonList).map((item,key) =>
+		Object.keys(deployJsonList).forEach(item =>
 			indents.push(<Tab eventKey={item} title={item}>
 				{this.renderDeployParam(deployJsonList[item])}
 				</Tab>)
@@ -152,7 +146,7 @@ export default class DeployLoopModal extends React.Component {
 	}
 	renderDeployParam(deployJson) {
 		var indents = [];
-		Object.keys(deployJson).map((item,key) =>
+		Object.keys(deployJson).forEach(item =>
 		indents.push(<FormStyled>
 				<Form.Label>{item}</Form.Label>
 				<Form.Control type="text" name={item} onChange={this.handleChange} defaultValue={deployJson[item]}></Form.Control>
