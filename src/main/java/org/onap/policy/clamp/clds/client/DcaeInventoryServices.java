@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Date;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -107,29 +108,31 @@ public class DcaeInventoryServices {
             retryInterval = Integer.valueOf(refProp.getStringValue(DCAE_INVENTORY_RETRY_INTERVAL));
         }
         for (int i = 0; i < retryLimit; i++) {
-            Exchange myCamelExchange = ExchangeBuilder.anExchange(camelContext)
-                    .withProperty("blueprintResourceId", resourceUuid).withProperty("blueprintServiceId", serviceUuid)
-                    .withProperty("blueprintName", artifactName).withProperty("raiseHttpExceptionFlag", true).build();
             metricsLogger.info("Attempt n°" + i + " to contact DCAE inventory");
+            try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+                Exchange exchangeResponse = producerTemplate
+                        .send("direct:get-dcae-blueprint-inventory", ExchangeBuilder.anExchange(camelContext)
+                                .withProperty("blueprintResourceId", resourceUuid)
+                                .withProperty("blueprintServiceId", serviceUuid)
+                                .withProperty("blueprintName", artifactName)
+                                .withProperty("raiseHttpExceptionFlag", true).build());
 
-            Exchange exchangeResponse = camelContext.createProducerTemplate()
-                    .send("direct:get-dcae-blueprint-inventory", myCamelExchange);
-
-            if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
-                String dcaeResponse = (String) exchangeResponse.getIn().getBody();
-                int totalCount = getTotalCountFromDcaeInventoryResponse(dcaeResponse);
-                metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
-                if (totalCount > 0) {
-                    logger.info("getDcaeInformation, answer from DCAE inventory:" + dcaeResponse);
-                    LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
-                    Date startTime = new Date();
-                    LoggingUtils.setTimeContext(startTime, new Date());
-                    return getItemsFromDcaeInventoryResponse(dcaeResponse);
-                } else {
-                    logger.info("Dcae inventory totalCount returned is 0, so waiting " + retryInterval
-                            + "ms before retrying ...");
-                    // wait for a while and try to connect to DCAE again
-                    Thread.sleep(retryInterval);
+                if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
+                    String dcaeResponse = (String) exchangeResponse.getIn().getBody();
+                    int totalCount = getTotalCountFromDcaeInventoryResponse(dcaeResponse);
+                    metricsLogger.info("getDcaeInformation complete: totalCount returned=" + totalCount);
+                    if (totalCount > 0) {
+                        logger.info("getDcaeInformation, answer from DCAE inventory:" + dcaeResponse);
+                        LoggingUtils.setResponseContext("0", "Get Dcae Information success", this.getClass().getName());
+                        Date startTime = new Date();
+                        LoggingUtils.setTimeContext(startTime, new Date());
+                        return getItemsFromDcaeInventoryResponse(dcaeResponse);
+                    } else {
+                        logger.info("Dcae inventory totalCount returned is 0, so waiting " + retryInterval
+                                + "ms before retrying ...");
+                        // wait for a while and try to connect to DCAE again
+                        Thread.sleep(retryInterval);
+                    }
                 }
             }
         }

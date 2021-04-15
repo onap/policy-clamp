@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,13 +66,7 @@ export default class DeployLoopModal extends React.Component {
 	}
 	getInitialKeyValue(temporaryPropertiesJson) {
 		const deployJsonList = temporaryPropertiesJson["dcaeDeployParameters"];
-		let initialKey;
-		Object.keys(deployJsonList)
-			.filter((obj) => Object.keys(deployJsonList).indexOf(obj) === 0)
-			.map(obj =>
-				initialKey = obj
-		);
-		return initialKey;
+		return Object.keys(deployJsonList).find((obj) => Object.keys(deployJsonList).indexOf(obj) === 0);
 	}
 	componentWillReceiveProps(newProps) {
 		this.setState({
