@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.onap.policy.clamp.clds.Application;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -99,7 +100,8 @@ public class DcaeInventoryResponseCacheTestItCase {
         Exchange exchange = ExchangeBuilder.anExchange(camelContext).build();
         Exchange exchangeResponse = camelContext.createProducerTemplate()
                 .send("direct:get-all-dcae-blueprint-inventory", exchange);
-        assertThat(exchangeResponse.getIn().getHeader("CamelHttpResponseCode")).isEqualTo(200);
+        assertThat(HttpStatus.valueOf((Integer) exchangeResponse.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE))
+                .is2xxSuccessful()).isTrue();
         Set<DcaeInventoryResponse> blueprint = inventoryCache.getAllBlueprintsPerLoopId("testAsdcServiceId");
         assertThat(blueprint.size()).isEqualTo(2);
 
