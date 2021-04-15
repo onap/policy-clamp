@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * Modifications Copyright (C) 2020 Huawei Technologies Co., Ltd.
  * ================================================================================
@@ -81,12 +81,10 @@ public class OperationalPolicyRepresentationBuilder {
                     .getAsJsonObject().get(ANY_OF).getAsJsonArray().addAll(createAnyOfArray(modelJson, true));
 
             // update CDS recipe and payload information to schema
-            JsonArray actors = jsonSchema.get(PROPERTIES).getAsJsonObject()
+            for (JsonElement actor : jsonSchema.get(PROPERTIES).getAsJsonObject()
                     .get("operational_policy").getAsJsonObject().get(PROPERTIES).getAsJsonObject().get("policies")
                     .getAsJsonObject().get(ITEMS).getAsJsonObject().get(PROPERTIES).getAsJsonObject().get("actor")
-                    .getAsJsonObject().get(ANY_OF).getAsJsonArray();
-
-            for (JsonElement actor : actors) {
+                    .getAsJsonObject().get(ANY_OF).getAsJsonArray()) {
                 if ("CDS".equalsIgnoreCase(actor.getAsJsonObject().get(TITLE).getAsString())) {
                     actor.getAsJsonObject().get(PROPERTIES).getAsJsonObject().get(RECIPE).getAsJsonObject()
                             .get(ANY_OF).getAsJsonArray()
@@ -141,8 +139,8 @@ public class OperationalPolicyRepresentationBuilder {
     private static JsonArray createBlankEntry() {
         JsonArray result = new JsonArray();
         JsonObject blankObject = new JsonObject();
-        blankObject.addProperty("title", "User defined");
-        blankObject.add("properties", new JsonObject());
+        blankObject.addProperty(TITLE, "User defined");
+        blankObject.add(PROPERTIES, new JsonObject());
         result.add(blankObject);
         return result;
     }
@@ -224,7 +222,7 @@ public class OperationalPolicyRepresentationBuilder {
                 for (Entry<String, JsonElement> workflowsEntry : workflows.entrySet()) {
                     JsonObject obj = new JsonObject();
                     obj.addProperty(TITLE, workflowsEntry.getKey());
-                    obj.addProperty(TYPE, "object");
+                    obj.addProperty(TYPE, TYPE_OBJECT);
                     obj.add(PROPERTIES, createPayloadProperty(workflowsEntry.getValue().getAsJsonObject(),
                             controllerProperties, workflowsEntry.getKey()));
                     schemaArray.add(obj);
@@ -239,7 +237,7 @@ public class OperationalPolicyRepresentationBuilder {
                                                     JsonObject controllerProperties, String workFlowName) {
         JsonObject payload = new JsonObject();
         payload.addProperty(TITLE, "Payload");
-        payload.addProperty(TYPE, "object");
+        payload.addProperty(TYPE, TYPE_OBJECT);
         payload.add(PROPERTIES, createInputPropertiesForPayload(workFlow, controllerProperties,
                                                                 workFlowName));
         JsonObject properties = new JsonObject();
@@ -302,7 +300,7 @@ public class OperationalPolicyRepresentationBuilder {
             String key = entry.getKey();
             JsonObject inputProperty = inputs.getAsJsonObject(key);
             if (key.equalsIgnoreCase(workFlowName + "-properties")) {
-                addDataFields(entry.getValue().getAsJsonObject().get("properties").getAsJsonObject(),
+                addDataFields(entry.getValue().getAsJsonObject().get(PROPERTIES).getAsJsonObject(),
                         dataObj, workFlowName);
             } else {
                 dataObj.add(entry.getKey(),
@@ -326,7 +324,7 @@ public class OperationalPolicyRepresentationBuilder {
                 listProperties.add(PROPERTIES, getProperties(cdsProperty.get(PROPERTIES).getAsJsonObject()));
                 property.add(ITEMS, listProperties);
             }
-        } else if (TYPE_OBJECT.equalsIgnoreCase(type)) {
+        } else if (cdsProperty != null && TYPE_OBJECT.equalsIgnoreCase(type)) {
             property.addProperty(TYPE, TYPE_OBJECT);
             property.add(PROPERTIES, getProperties(cdsProperty.get(PROPERTIES).getAsJsonObject()));
         } else {

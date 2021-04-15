@@ -71,7 +71,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
 
     private synchronized List<String> loadDynamicAuthenticationClasses() {
         return Arrays.stream(WebApplicationContextUtils.getWebApplicationContext(getServletContext())
-                .getEnvironment().getProperty(AUTHENTICATION_CLASS).split(",")).map(className -> className.trim())
+                .getEnvironment().getProperty(AUTHENTICATION_CLASS).split(",")).map(String::trim)
                 .collect(Collectors.toList());
     }
 

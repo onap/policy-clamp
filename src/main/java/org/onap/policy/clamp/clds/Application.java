@@ -28,7 +28,6 @@ package org.onap.policy.clamp.clds;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -78,7 +77,7 @@ public class Application extends SpringBootServletInitializer {
     // This settings is an additional one to Spring config,
     // only if we want to have an additional port automatically redirected to
     // HTTPS
-    @Value("${server.http-to-https-redirection.port:none}")
+    @Value("${server.http-to-https-redirection.port:#{null}}")
     private String httpRedirectedPort;
     /**
      * This 8080 is the default port used by spring if this parameter is not
@@ -86,8 +85,19 @@ public class Application extends SpringBootServletInitializer {
      */
     @Value("${server.port:8080}")
     private String springServerPort;
-    @Value("${server.ssl.key-store:none}")
-    private String sslKeystoreFile;
+
+    @Value("${server.ssl.key-store:#{null}}")
+    private String keystoreFile;
+
+    @Value("${server.ssl.key-store-password:#{null}}")
+    private String keyStorePass;
+
+    @Value("${server.ssl.key-store-type:JKS}")
+    private String keyStoreType;
+
+
+    @Value("${clamp.config.keyFile:#{null}}")
+    private String keyFile;
 
     @Autowired
     private Environment env;
@@ -99,6 +109,7 @@ public class Application extends SpringBootServletInitializer {
 
     /**
      * Main method that starts the Clamp backend.
+     *
      * @param args app params
      */
     public static void main(String[] args) {
@@ -130,7 +141,7 @@ public class Application extends SpringBootServletInitializer {
     @Bean
     public ServletWebServerFactory getEmbeddedServletContainerFactory() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-        if (!"none".equals(httpRedirectedPort) && !"none".equals(sslKeystoreFile)) {
+        if (httpRedirectedPort != null && keystoreFile != null) {
             // Automatically redirect to HTTPS
             tomcat = new TomcatEmbeddedServletContainerFactoryRedirection();
             Connector newConnector = createRedirectConnector(Integer.parseInt(springServerPort));
@@ -158,14 +169,10 @@ public class Application extends SpringBootServletInitializer {
     private String getSslExpirationDate() throws IOException {
         StringBuilder result = new StringBuilder("   :: SSL Certificates ::     ");
         try {
-            if (env.getProperty("server.ssl.key-store") != null) {
-
-                KeyStore keystore = KeyStore.getInstance(env.getProperty("server.ssl.key-store-type"));
-                String password = PassDecoder.decode(env.getProperty("server.ssl.key-store-password"),
-                        env.getProperty("clamp.config.keyFile"));
-                String keyStore = env.getProperty("server.ssl.key-store");
-                InputStream is = ResourceFileUtils.getResourceAsStream(keyStore.replaceAll("classpath:", ""));
-                keystore.load(is, password.toCharArray());
+            if (keystoreFile != null) {
+                KeyStore keystore = KeyStore.getInstance(keyStoreType);
+                keystore.load(ResourceFileUtils.getResourceAsStream(keystoreFile.replace("classpath:", "")),
+                        PassDecoder.decode(keyStorePass, keyFile).toCharArray());
 
                 Enumeration<String> aliases = keystore.aliases();
                 while (aliases.hasMoreElements()) {
