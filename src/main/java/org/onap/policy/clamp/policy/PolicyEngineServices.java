@@ -25,10 +25,11 @@ package org.onap.policy.clamp.policy;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.onap.policy.clamp.clds.config.ClampProperties;
 import org.onap.policy.clamp.clds.sdc.controller.installer.BlueprintMicroService;
@@ -55,9 +56,11 @@ public class PolicyEngineServices {
 
     private final PolicyModelsService policyModelsService;
 
+    private static final String RAISE_EXCEPTION_FLAG = "raiseHttpExceptionFlag";
+
     private static final EELFLogger logger = EELFManager.getInstance().getLogger(PolicyEngineServices.class);
-    private static int retryInterval = 0;
-    private static int retryLimit = 1;
+    private int retryInterval = 0;
+    private int retryLimit = 1;
 
     public static final String POLICY_RETRY_INTERVAL = "policy.retry.interval";
     public static final String POLICY_RETRY_LIMIT = "policy.retry.limit";
@@ -146,7 +149,7 @@ public class PolicyEngineServices {
      */
     public String downloadAllPolicyModels() {
         return callCamelRoute(
-                ExchangeBuilder.anExchange(camelContext).withProperty("raiseHttpExceptionFlag", true).build(),
+                ExchangeBuilder.anExchange(camelContext).withProperty(RAISE_EXCEPTION_FLAG, true).build(),
                 "direct:get-all-policy-models", "Get all policies models");
     }
 
@@ -167,7 +170,7 @@ public class PolicyEngineServices {
         Yaml yamlParser = new Yaml(options);
         String responseBody = callCamelRoute(
                 ExchangeBuilder.anExchange(camelContext).withProperty("policyModelType", policyType)
-                        .withProperty("policyModelVersion", policyVersion).withProperty("raiseHttpExceptionFlag", true)
+                        .withProperty("policyModelVersion", policyVersion).withProperty(RAISE_EXCEPTION_FLAG, true)
                         .build(), "direct:get-policy-tosca-model",
                 "Get one policy");
 
@@ -176,7 +179,7 @@ public class PolicyEngineServices {
             return null;
         }
 
-        return yamlParser.dump((Map<String, Object>) yamlParser.load(responseBody));
+        return yamlParser.dump(yamlParser.load(responseBody));
     }
 
     /**
@@ -185,7 +188,7 @@ public class PolicyEngineServices {
     public void downloadPdpGroups() {
         String responseBody =
                 callCamelRoute(
-                        ExchangeBuilder.anExchange(camelContext).withProperty("raiseHttpExceptionFlag", true).build(),
+                        ExchangeBuilder.anExchange(camelContext).withProperty(RAISE_EXCEPTION_FLAG, true).build(),
                         "direct:get-all-pdp-groups", "Get Pdp Groups");
 
         if (responseBody == null || responseBody.isEmpty()) {
@@ -198,17 +201,20 @@ public class PolicyEngineServices {
 
     private String callCamelRoute(Exchange exchange, String camelFlow, String logMsg) {
         for (int i = 0; i < retryLimit; i++) {
-            Exchange exchangeResponse = camelContext.createProducerTemplate().send(camelFlow, exchange);
-            if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
-                return (String) exchangeResponse.getIn().getBody();
-            } else {
-                logger.info(logMsg + " query " + retryInterval + "ms before retrying ...");
-                // wait for a while and try to connect to DCAE again
-                try {
+            try (ProducerTemplate producerTemplate = camelContext.createProducerTemplate()) {
+                Exchange exchangeResponse = producerTemplate.send(camelFlow, exchange);
+                if (Integer.valueOf(200).equals(exchangeResponse.getIn().getHeader("CamelHttpResponseCode"))) {
+                    return (String) exchangeResponse.getIn().getBody();
+                } else {
+                    logger.info(logMsg + " query " + retryInterval + "ms before retrying ...");
+                    // wait for a while and try to connect to DCAE again
                     Thread.sleep(retryInterval);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+
                 }
+            } catch (IOException e) {
+                logger.error("IOException caught when trying to call Camel flow:" + camelFlow, e);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
         return "";
