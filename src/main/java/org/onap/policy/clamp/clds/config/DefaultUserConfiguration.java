@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2017-2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017-2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -73,7 +73,7 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) {
         try {
-            http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
+            http.httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
                     .authenticated().anyRequest().permitAll().and().sessionManagement()
                     .maximumSessions(1);
 

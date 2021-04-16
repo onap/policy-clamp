@@ -26,6 +26,7 @@ package org.onap.policy.clamp.policy.microservice;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.Serializable;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -130,7 +131,7 @@ public class MicroServicePolicy extends Policy implements Serializable {
         this(Policy.generatePolicyName("MICROSERVICE", service.getName(), service.getVersion(),
                 loopElementModel.getPolicyModels().first().getPolicyAcronym() + '_'
                         + loopElementModel.getPolicyModels().first().getVersion(),
-                RandomStringUtils.randomAlphanumeric(3)),
+                RandomStringUtils.random(3, 0, 0, true, true, null, new SecureRandom())),
                 loopElementModel.getPolicyModels().first(), false, new JsonObject(), loopElementModel, null, null);
         this.updateJsonRepresentation(toscaConverter, service);
     }
