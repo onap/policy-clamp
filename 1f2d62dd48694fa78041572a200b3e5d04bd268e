@@ -16,6 +16,24 @@
       "revId": "1f2d62dd48694fa78041572a200b3e5d04bd268e",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63809128_72dd1f84",
+        "filename": "pom.xml",
+        "patchSetId": 20
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-16T08:26:36Z",
+      "side": 1,
+      "message": "Yep Jorge there is a jira ticket for that i think, so i\u0027m going to do it later 😊",
+      "parentUuid": "69fba298_a3071941",
+      "revId": "1f2d62dd48694fa78041572a200b3e5d04bd268e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
