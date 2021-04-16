@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2018-2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018-2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,9 +26,9 @@ package org.onap.policy.clamp.clds.sdc.controller;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.Map.Entry;
-import java.util.concurrent.ThreadLocalRandom;
 import org.onap.policy.clamp.clds.config.ClampProperties;
 import org.onap.policy.clamp.clds.config.sdc.SdcSingleControllerConfiguration;
 import org.onap.policy.clamp.clds.exception.sdc.controller.BlueprintParserException;
@@ -261,7 +261,7 @@ public class SdcSingleController {
         try {
             // wait for a random time, so that 2 running Clamp will not treat
             // the same Notification at the same time
-            Thread.sleep(ThreadLocalRandom.current().nextInt(1, 10) * 1000L);
+            Thread.sleep((new SecureRandom().nextInt(10) + 1) * 1000L);
             logger.info("Notification received for service UUID:" + notificationData.getServiceUUID());
             this.changeControllerStatus(SdcSingleControllerStatus.BUSY);
             csar = new CsarHandler(notificationData, this.sdcConfig.getSdcControllerName(),
@@ -383,23 +383,28 @@ public class SdcSingleController {
         try {
             IComponentDoneStatusMessage message = new IComponentDoneStatusMessage() {
 
-                @Override public String getDistributionID() {
+                @Override
+                public String getDistributionID() {
                     return notificationData.getDistributionID();
                 }
 
-                @Override public String getConsumerID() {
+                @Override
+                public String getConsumerID() {
                     return sdcConfig.getConsumerID();
                 }
 
-                @Override public long getTimestamp() {
+                @Override
+                public long getTimestamp() {
                     return System.currentTimeMillis();
                 }
 
-                @Override public DistributionStatusEnum getStatus() {
+                @Override
+                public DistributionStatusEnum getStatus() {
                     return status;
                 }
 
-                @Override public String getComponentName() {
+                @Override
+                public String getComponentName() {
                     return sdcConfig.getUser();
                 }
             };

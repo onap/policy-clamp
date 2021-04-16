@@ -30,6 +30,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -114,7 +115,7 @@ public class OperationalPolicy extends Policy implements Serializable {
         this(Policy.generatePolicyName("OPERATIONAL", service.getName(), service.getVersion(),
                 loopElementModel.getPolicyModels().first().getPolicyAcronym() + '_'
                         + loopElementModel.getPolicyModels().first().getVersion(),
-                RandomStringUtils.randomAlphanumeric(3)), new JsonObject(),
+                RandomStringUtils.random(3, 0, 0, true, true, null, new SecureRandom())), new JsonObject(),
                 new JsonObject(), loopElementModel.getPolicyModels().first(), loopElementModel, null, null);
         this.setLoop(loop);
         this.updateJsonRepresentation(toscaConverter, service);
@@ -132,7 +133,7 @@ public class OperationalPolicy extends Policy implements Serializable {
                              ToscaConverterWithDictionarySupport toscaConverter) {
         this(Policy.generatePolicyName("OPERATIONAL", service.getName(), service.getVersion(),
                 policyModel.getPolicyAcronym() + '_' + policyModel.getVersion(),
-                RandomStringUtils.randomAlphanumeric(3)),
+                RandomStringUtils.random(3, 0, 0, true, true, null, new SecureRandom())),
                 new JsonObject(),
                 new JsonObject(), policyModel, null, null, null);
         this.setLoop(loop);
