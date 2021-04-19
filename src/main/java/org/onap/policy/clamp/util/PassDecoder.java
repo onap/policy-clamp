@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,10 @@ import org.onap.policy.clamp.clds.util.ResourceFileUtils;
  * PassDecoder for decrypting the truststore and keystore password.
  */
 public class PassDecoder {
+
+    private PassDecoder() {
+    }
+
     /**
      * Used to log PassDecoder class.
      */
@@ -41,7 +45,7 @@ public class PassDecoder {
      * Decode the password.
      *
      * @param encryptedPass The encrypted password
-     * @param keyFileName       The key file name in String
+     * @param keyFileName   The key file name in String
      */
     public static String decode(String encryptedPass, String keyFileName) {
         if (null == keyFileName) {

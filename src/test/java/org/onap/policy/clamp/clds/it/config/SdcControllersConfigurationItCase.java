@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2017, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class SdcControllersConfigurationItCase {
 
     @Test
     public void testGetAllDefinedControllers() throws IOException {
-        loadFile("classpath:/clds/sdc-controllers-config.json");
+        loadFile("classpath:clds/sdc-controllers-config.json");
         Map<String, SdcSingleControllerConfiguration> mapResult = sdcControllersConfiguration
                 .getAllDefinedControllers();
         assertTrue(mapResult.size() == 2);
@@ -66,7 +66,7 @@ public class SdcControllersConfigurationItCase {
 
     @Test
     public void testGetSdcSingleControllerConfiguration() throws IOException {
-        loadFile("classpath:/clds/sdc-controllers-config.json");
+        loadFile("classpath:clds/sdc-controllers-config.json");
         assertEquals("sdc-controller1", sdcControllersConfiguration
                 .getSdcSingleControllerConfiguration("sdc-controller1").getSdcControllerName());
         assertEquals("sdc-controller2", sdcControllersConfiguration
@@ -75,13 +75,13 @@ public class SdcControllersConfigurationItCase {
 
     @Test(expected = JsonSyntaxException.class)
     public void testBadJsonLoading() throws IOException {
-        loadFile("classpath:/clds/sdc-controllers-config-bad.json");
+        loadFile("classpath:clds/sdc-controllers-config-bad.json");
         fail("Should have raised an exception");
     }
 
     @Test(expected = SdcParametersException.class)
     public void testMissingParamInJsonLoading() throws IOException {
-        loadFile("classpath:/clds/sdc-controllers-config-missing-param.json");
+        loadFile("classpath:clds/sdc-controllers-config-missing-param.json");
         sdcControllersConfiguration.getAllDefinedControllers();
         fail("Should have raised an exception");
     }

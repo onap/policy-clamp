@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2017 AT&T Intellectual Property. All rights
+ * Copyright (C) 2017, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,8 +56,8 @@ public final class ResourceFileUtils {
      * @return The file as inputStream
      */
     public static InputStream getResourceAsStream(String fileName) {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-                fileName.startsWith(CLASSPATH_PREFIX) ? fileName.replaceFirst(CLASSPATH_PREFIX, "") : fileName);
+        InputStream is = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream(fileName.replaceFirst("^" + CLASSPATH_PREFIX, ""));
         if (is == null) {
             throw new IllegalArgumentException("Unable to find resource: " + fileName);
         }

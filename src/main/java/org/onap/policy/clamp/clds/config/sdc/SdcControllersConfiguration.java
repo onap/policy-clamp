@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Modifications Copyright (c) 2019 Samsung
@@ -20,7 +20,7 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.policy.clamp.clds.config.sdc;
@@ -49,10 +49,14 @@ public class SdcControllersConfiguration {
     private static final String CONTROLLER_SUBTREE_KEY = "sdc-connections";
     @Autowired
     protected ApplicationContext appContext;
+
+    @Value("${clamp.config.keyFile:classpath:/clds/aaf/org.onap.clamp.keyfile}")
+    private String keyFile;
+
     /**
      * The file name that will be loaded by Spring.
      */
-    @Value("${clamp.config.files.sdcController:'classpath:/clds/sdc-controllers-config.json'}")
+    @Value("${clamp.config.files.sdcController:classpath:/clds/sdc-controllers-config.json}")
     protected String sdcControllerFile;
     /**
      * The root of the JSON.
@@ -69,8 +73,7 @@ public class SdcControllersConfiguration {
         Resource resource = appContext.getResource(sdcControllerFile);
         // Try to load json tree
         jsonRootNode = JsonUtils.GSON.fromJson(new InputStreamReader(
-                resource.getInputStream(), StandardCharsets.UTF_8),
-                                               JsonObject.class);
+                resource.getInputStream(), StandardCharsets.UTF_8), JsonObject.class);
     }
 
     public SdcSingleControllerConfiguration getSdcSingleControllerConfiguration(String controllerName) {
@@ -86,8 +89,9 @@ public class SdcControllersConfiguration {
         Map<String, SdcSingleControllerConfiguration> result = new HashMap<>();
         if (jsonRootNode.get(CONTROLLER_SUBTREE_KEY) != null) {
             jsonRootNode.get(CONTROLLER_SUBTREE_KEY).getAsJsonObject().entrySet().forEach(
-                entry -> result.put(entry.getKey(),
-                    new SdcSingleControllerConfiguration(entry.getValue().getAsJsonObject(), entry.getKey())));
+                    entry -> result.put(entry.getKey(),
+                            new SdcSingleControllerConfiguration(entry.getValue().getAsJsonObject(), entry.getKey(),
+                                    keyFile)));
         } else {
             throw new SdcParametersException(
                     CONTROLLER_SUBTREE_KEY + " key not found in the file: " + sdcControllerFile);
