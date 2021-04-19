@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2becb886_7d112ac0",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/Application.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-19T22:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32556662_7792f35c",
+      "revId": "74699a991f07cc69f94147a413f981a66af924b5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "852ec4de_fa7c6071",
         "filename": "src/test/resources/application.properties",
         "patchSetId": 2
@@ -72,6 +90,30 @@
       "side": 1,
       "message": "Better to keep that without for the tesst (to be consistent)",
       "parentUuid": "852ec4de_fa7c6071",
+      "range": {
+        "startLine": 34,
+        "startChar": 31,
+        "endLine": 34,
+        "endChar": 35
+      },
+      "revId": "74699a991f07cc69f94147a413f981a66af924b5",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04fe9335_3bbb3970",
+        "filename": "src/test/resources/application.properties",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-19T22:24:46Z",
+      "side": 1,
+      "message": "but it has the leading \"/\" in all of the java code",
+      "parentUuid": "f907f8a8_ed6c62e0",
       "range": {
         "startLine": 34,
         "startChar": 31,
