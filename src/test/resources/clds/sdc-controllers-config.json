@@ -6,7 +6,7 @@
         "consumerId": "consumerId1",
         "environmentName": "environmentName1",
         "sdcAddress": "localhost:${docker.http-cache.port.host}",
-        "password": "bb3871669d893c7fb8aaacda31b77b4f537E67A081C2726889548ED7BC4C2DE6",
+        "password": "QpF2TcrdRSFADqDxH1HwDYdYUIbMxOj-TrGd6Vqvwzd",
         "pollingInterval":10,
         "pollingTimeout":30,
         "messageBusAddresses":["localhost"]
@@ -17,7 +17,7 @@
         "consumerId": "consumerId2",
         "environmentName": "environmentName2",
         "sdcAddress": "localhost:${docker.http-cache.port.host}",
-        "password": "bb3871669d893c7fb8aaacda31b77b4f537E67A081C2726889548ED7BC4C2DE6",
+        "password": "QpF2TcrdRSFADqDxH1HwDYdYUIbMxOj-TrGd6Vqvwzd",
         "pollingInterval":10,
         "pollingTimeout":30,
         "messageBusAddresses":["localhost"]

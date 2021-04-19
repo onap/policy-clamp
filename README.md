@@ -67,7 +67,7 @@ This file is a JSON that must be specified to Spring config, here is an example:
         "consumerId": "consumerId1",
         "environmentName": "AUTO",
         "sdcAddress": "localhost:8443",
-        "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
+        "password": "QpF2TcrdRSFADqDxH1HwDYdYUIbMxOj-TrGd6Vqvwzd",
         "pollingInterval":30,
         "pollingTimeout":30,
         "activateServerTLSAuth":"false",
@@ -81,7 +81,7 @@ This file is a JSON that must be specified to Spring config, here is an example:
         "consumerId": "consumerId1",
         "environmentName": "AUTO",
         "sdcAddress": "localhost:8443",
-        "password": "b7acccda32b98c5bb7acccda32b98c5b05D511BD6D93626E90D18E9D24D9B78CD34C7EE8012F0A189A28763E82271E50A5D4EC10C7D93E06E0A2D27CAE66B981",
+        "password": "QpF2TcrdRSFADqDxH1HwDYdYUIbMxOj-TrGd6Vqvwzd",
         "pollingInterval":30,
         "pollingTimeout":30,
         "activateServerTLSAuth":"false",
@@ -101,7 +101,7 @@ If the sdcAddress is not specified or not available (connection failure) the mes
 
 A [docker-compose example file](extra/docker/clamp/docker-compose.yml) can be found under the [extra/docker/clamp/ folder](extra/docker/).
 
-Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a prepopullated database and a clamp instance available on [https://localhost:3000](https://localhost:3000).
+Once the image has been built and is available locally, you can use the `docker-compose up` command to deploy a pre-populated database, and a clamp instance available on [https://localhost:3000](https://localhost:3000).
 
 
 ### Logs
@@ -146,9 +146,9 @@ resource clds/aaf/org.onap.clamp.p12.
     cadi_latitude[0.000]=10.0
     cadi_longitude[0.000]=10.0
 - Certs should created, you can get them in /var/lib/docker/volumes/clamp_config/_data/local
-    If you want to recreate the certs, you have to delete the docker volume (otherwise it will be re used) : docker volume rm clamp_config
+    If you want to recreate the certs, you have to delete the docker volume (otherwise it will be re-used) : docker volume rm clamp_config
 - wget https://nexus.onap.org/content/repositories/releases/org/onap/aaf/authz/aaf-cadi-aaf/2.1.13/aaf-cadi-aaf-2.1.13-full.jar
-- to encrypt or decrypt the store passwords:  java -jar aaf-cadi-aaf-2.1.13-full.jar cadi digest changeit testos.key
+- to encrypt or decrypt the store passwords:  java -jar aaf-cadi-aaf-2.1.13-full.jar cadi <digest|undigest> changeit testos.key
 - you can also use the agent.sh script to decrypt the passwords, by running the showpass commands (see wiki below) 
 - Extract private key from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -nocerts -nodes > clamp.key'
 - Extract public certificate from P12: 'openssl pkcs12 -in org.onap.clamp.p12 -clcerts -nokeys > clamp.pem'

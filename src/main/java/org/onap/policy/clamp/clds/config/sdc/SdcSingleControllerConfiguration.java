@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2018 AT&T Intellectual Property. All rights
+ * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,22 +18,17 @@
  * limitations under the License.
  * ============LICENSE_END============================================
  * ===================================================================
- * 
+ *
  */
 
 package org.onap.policy.clamp.clds.config.sdc;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonObject;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import org.apache.commons.codec.DecoderException;
 import org.onap.policy.clamp.clds.exception.sdc.controller.SdcParametersException;
-import org.onap.policy.clamp.clds.util.CryptoUtils;
+import org.onap.policy.clamp.util.PassDecoder;
 import org.onap.sdc.api.consumer.IConfiguration;
 
 /**
@@ -41,8 +36,8 @@ import org.onap.sdc.api.consumer.IConfiguration;
  */
 public class SdcSingleControllerConfiguration implements IConfiguration {
 
-    private static final EELFLogger logger = EELFManager.getInstance()
-            .getLogger(SdcSingleControllerConfiguration.class);
+    private final String keyFile;
+
     /**
      * The sdc Controller name corresponding.
      */
@@ -78,23 +73,20 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
     public static final String OTHER = "OTHER";
     public static final String TOSCA_CSAR = "TOSCA_CSAR";
     public static final String VF_MODULES_METADATA = "VF_MODULES_METADATA";
-    private static final String[] SUPPORTED_ARTIFACT_TYPES = {
-        TOSCA_CSAR, VF_MODULES_METADATA
-    };
-    public static final List<String> SUPPORTED_ARTIFACT_TYPES_LIST = Collections
-            .unmodifiableList(Arrays.asList(SUPPORTED_ARTIFACT_TYPES));
+    private static final String[] SUPPORTED_ARTIFACT_TYPES = {TOSCA_CSAR, VF_MODULES_METADATA};
+    public static final List<String> SUPPORTED_ARTIFACT_TYPES_LIST = List.of(SUPPORTED_ARTIFACT_TYPES);
 
     /**
      * This constructor builds a SdcSingleControllerConfiguration from the
      * corresponding json.
-     * 
-     * @param jsonNode
-     *            The JSON node
-     * @param controllerName
-     *            The controller name that must appear in the JSON
+     *
+     * @param jsonNode       The JSON node
+     * @param controllerName The controller name that must appear in the JSON
+     * @param keyFileLocation        The location of the file to decode the password using CADI
      */
-    public SdcSingleControllerConfiguration(JsonObject jsonNode, String controllerName) {
+    public SdcSingleControllerConfiguration(JsonObject jsonNode, String controllerName, String keyFileLocation) {
         jsonRootNode = jsonNode;
+        keyFile = keyFileLocation;
         setSdcControllerName(controllerName);
         testAllRequiredParameters();
     }
@@ -130,10 +122,10 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
         }
     }
 
-    private String getEncryptedStringConfig(String key) throws GeneralSecurityException, DecoderException {
+    private String getEncryptedStringConfig(String key) {
         if (jsonRootNode != null && jsonRootNode.get(key) != null) {
             return jsonRootNode.get(key).getAsString().isEmpty() ? null
-                    : CryptoUtils.decrypt(jsonRootNode.get(key).getAsString());
+                    : PassDecoder.decode(jsonRootNode.get(key).getAsString(), keyFile);
         }
         return null;
     }
@@ -164,12 +156,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     @Override
     public String getPassword() {
-        try {
-            return getEncryptedStringConfig(SDC_KEY_ATTRIBUTE_NAME);
-        } catch (GeneralSecurityException | DecoderException e) {
-            logger.error("Unable to decrypt the SDC password", e);
-            return null;
-        }
+        return getEncryptedStringConfig(SDC_KEY_ATTRIBUTE_NAME);
     }
 
     @Override
@@ -211,12 +198,7 @@ public class SdcSingleControllerConfiguration implements IConfiguration {
 
     @Override
     public String getKeyStorePassword() {
-        try {
-            return getEncryptedStringConfig(KEY_STORE_KEY);
-        } catch (GeneralSecurityException | DecoderException e) {
-            logger.error("Unable to decrypt the SDC password", e);
-            return null;
-        }
+        return getEncryptedStringConfig(KEY_STORE_KEY);
     }
 
     @Override
