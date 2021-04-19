@@ -96,7 +96,7 @@ public class Application extends SpringBootServletInitializer {
     private String keyStoreType;
 
 
-    @Value("${clamp.config.keyFile:#{null}}")
+    @Value("${clamp.config.keyFile:classpath:/clds/aaf/org.onap.clamp.keyfile}")
     private String keyFile;
 
     @Autowired
