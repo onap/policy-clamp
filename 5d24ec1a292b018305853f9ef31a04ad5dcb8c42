@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0caf3c69_b210ed1b",
+        "filename": "src/test/resources/clds/sdc-controllers-config.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-04-19T13:24:33Z",
+      "side": 1,
+      "message": "tabs here",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 8
+      },
+      "revId": "5d24ec1a292b018305853f9ef31a04ad5dcb8c42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
