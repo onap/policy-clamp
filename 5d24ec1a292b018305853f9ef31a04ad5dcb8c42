@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e2a30533_80006567",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-19T17:21:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "238ce0a5_0b6e3d72",
+      "range": {
+        "startLine": 99,
+        "startChar": 45,
+        "endLine": 99,
+        "endChar": 46
+      },
+      "revId": "5d24ec1a292b018305853f9ef31a04ad5dcb8c42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bbd5a66_58965bc1",
         "filename": "src/main/java/org/onap/policy/clamp/clds/util/ResourceFileUtils.java",
         "patchSetId": 1
@@ -93,6 +117,30 @@
       "revId": "5d24ec1a292b018305853f9ef31a04ad5dcb8c42",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3831868_7ac9ef35",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/util/ResourceFileUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-19T17:21:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3d6b34a_735bd4db",
+      "range": {
+        "startLine": 60,
+        "startChar": 46,
+        "endLine": 60,
+        "endChar": 63
+      },
+      "revId": "5d24ec1a292b018305853f9ef31a04ad5dcb8c42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
