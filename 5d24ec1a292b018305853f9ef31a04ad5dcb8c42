@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "e331d632_591ba31a",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-19T13:29:48Z",
+      "side": 1,
+      "message": "This has a leading \"/\", but it\u0027s missing in SdcControllersConfiguration.java (and all of the junits).  Does that matter, or is one (or more) of them wrong?",
+      "range": {
+        "startLine": 99,
+        "startChar": 45,
+        "endLine": 99,
+        "endChar": 46
+      },
+      "revId": "5d24ec1a292b018305853f9ef31a04ad5dcb8c42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bbd5a66_58965bc1",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/util/ResourceFileUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-19T13:29:48Z",
+      "side": 1,
+      "message": "can\u0027t just use replaceFirst, or does it throw an exception if the regex is not found?",
+      "range": {
+        "startLine": 60,
+        "startChar": 46,
+        "endLine": 60,
+        "endChar": 63
+      },
+      "revId": "5d24ec1a292b018305853f9ef31a04ad5dcb8c42",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0caf3c69_b210ed1b",
         "filename": "src/test/resources/clds/sdc-controllers-config.json",
         "patchSetId": 1
