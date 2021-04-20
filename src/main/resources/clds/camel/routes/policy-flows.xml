@@ -493,7 +493,7 @@
                 </simple>
             </setHeader>
             <log loggingLevel="INFO"
-                 message="Endpoint to add policies to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
+                 message="Endpoint to add/remove policies in batch to PDP Group: {{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch"></log>
             <toD
                     uri="{{clamp.config.policy.pap.url}}/policy/pap/v1/pdps/deployments/batch?bridgeEndpoint=true&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;useSystemProperties=true&amp;authUsername={{clamp.config.policy.pap.userName}}&amp;authPassword={{clamp.config.policy.pap.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
             <doFinally>

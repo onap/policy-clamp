@@ -1381,12 +1381,12 @@
                         <simple>${body}</simple>
                     </setProperty>
                     <to
-                       uri="bean:org.onap.policy.clamp.loop.template.PolicyModelsService?method=getPolicyModelTosca(${header.policyModelType},${header.policyModelVersion})"/>
+                            uri="bean:org.onap.policy.clamp.loop.template.PolicyModelsService?method=getPolicyModelTosca(${header.policyModelType},${header.policyModelVersion})"/>
                     <setBody>
                         <method ref="org.onap.policy.clamp.policy.PolicyPayload"
                                 method="createPolicyPayload(${header.policyModelType}, ${header.policyModelVersion},
                                     ${header.policyName}, ${header.policyVersion}, ${exchangeProperty[policyProperties]}, ${body})"/>
-                     </setBody>
+                    </setBody>
                     <to uri="direct:create-policy"/>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
@@ -1461,9 +1461,9 @@
             </route>
         </delete>
 
-        <put uri="/v2/policies/pdpDeployment/"
+        <put uri="/v2/policies/pdpDeployment"
              type="com.google.gson.JsonElement"
-             consumes="application/json" >
+             consumes="application/json">
             <route>
                 <doTry>
                     <to
@@ -1477,7 +1477,7 @@
                     <log loggingLevel="INFO"
                          message="PDP Group DEPLOY request payload: ${body}"/>
                     <setProperty name="raiseHttpExceptionFlag">
-                        <simple resultType="java.lang.Boolean">false</simple>
+                        <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to uri="direct:add-multiple-policies-to-pdp-group"/>
                     <to
@@ -1504,8 +1504,10 @@
 
         <get uri="/v2/clampInformation" outType="org.onap.policy.clamp.clds.model.ClampInformation"
              produces="application/json">
-            <to
-                    uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=getClampInformation()"/>
+            <route>
+                <to
+                        uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=getClampInformation()"/>
+            </route>
         </get>
     </rest>
 </rests>

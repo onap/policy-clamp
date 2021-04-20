@@ -73,7 +73,9 @@ public class DefaultUserConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) {
         try {
-            http.httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
+            // Do no remove the csrf as recommended by Sonar otherwise Put/post will not work
+            // Moreover this default user class is only used by dev, on prod we use AAF and this code will be disabled
+            http.csrf().disable().httpBasic().and().authorizeRequests().antMatchers("/restservices/clds/v1/user/**")
                     .authenticated().anyRequest().permitAll().and().sessionManagement()
                     .maximumSessions(1);
 
