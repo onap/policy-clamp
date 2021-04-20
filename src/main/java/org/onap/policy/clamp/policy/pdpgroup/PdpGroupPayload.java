@@ -62,7 +62,7 @@ public class PdpGroupPayload {
      * Constructor that takes a list of actions in input.
      *
      * @param listOfPdpActions The list of actions that needs to be done.
-     *                            e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
+     *                         e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
      * @throws PdpGroupPayloadException in case of issues to read the listOfActions
      */
     public PdpGroupPayload(final JsonElement listOfPdpActions) throws PdpGroupPayloadException {
@@ -74,7 +74,7 @@ public class PdpGroupPayload {
      * This method converts the list of actions directly to the pdp payload query as String.
      *
      * @param listOfPdpActions The list of actions that needs to be done.
-     *                            e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
+     *                         e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
      * @return The string containing the PDP payload that can be sent directly
      * @throws PdpGroupPayloadException in case of issues to read the listOfActions
      */
@@ -118,9 +118,12 @@ public class PdpGroupPayload {
         // Then the group
         DeploymentGroup newGroup = new DeploymentGroup();
         newGroup.setName(pdpGroup);
-        newGroup.setDeploymentSubgroups(Arrays.asList(newSubGroup));
+        newGroup.setDeploymentSubgroups(new ArrayList<>(Arrays.asList(newSubGroup)));
         // Add to deployment Groups structure
-        this.deploymentGroups.getGroups().add(newGroup);
+        this.deploymentGroups.getGroups().stream().filter(group ->
+                group.getName().equals(pdpGroup)).findFirst()
+                .ifPresentOrElse(group -> group.getDeploymentSubgroups().add(newSubGroup),
+                        () -> this.deploymentGroups.getGroups().add(newGroup));
     }
 
     /**
