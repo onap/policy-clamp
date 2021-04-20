@@ -75,7 +75,7 @@ export default class PolicyDeploymentEditor extends React.Component {
         let commandsArray = [];
         initialStates.forEach(initElem => {
             let newStateFound = newStates.find(newElement => newElement.name === initElem.name);
-            if (initElem.value !== newStateFound.value && initElem.value) {
+            if (initElem.value !== newStateFound.value) {
                 let newPdpGroupsArray = newStateFound.name.split("/");
                 commandsArray.push("DELETE/"+newPdpGroupsArray[0] + "/"+newPdpGroupsArray[1] + "/"+this.state.policyData.name
                 + "/" + this.state.policyData.version);
