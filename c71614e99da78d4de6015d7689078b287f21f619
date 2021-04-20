@@ -52,6 +52,24 @@
       "revId": "c71614e99da78d4de6015d7689078b287f21f619",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06c193d5_9e351af4",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/config/DefaultUserConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-20T19:08:40Z",
+      "side": 1,
+      "message": "There is an option, we could return a token to the UI, i\u0027ll study that before adding the //NOSONAR",
+      "parentUuid": "c3f7294a_9e198402",
+      "revId": "c71614e99da78d4de6015d7689078b287f21f619",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
