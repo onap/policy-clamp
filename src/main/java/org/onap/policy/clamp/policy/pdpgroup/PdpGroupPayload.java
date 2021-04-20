@@ -26,12 +26,13 @@ package org.onap.policy.clamp.policy.pdpgroup;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.google.gson.JsonElement;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.models.pdp.concepts.DeploymentGroup;
 import org.onap.policy.models.pdp.concepts.DeploymentGroups;
 import org.onap.policy.models.pdp.concepts.DeploymentSubGroup;
+import org.onap.policy.models.pdp.concepts.PdpGroup;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -62,7 +63,7 @@ public class PdpGroupPayload {
      * Constructor that takes a list of actions in input.
      *
      * @param listOfPdpActions The list of actions that needs to be done.
-     *                            e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
+     *                         e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
      * @throws PdpGroupPayloadException in case of issues to read the listOfActions
      */
     public PdpGroupPayload(final JsonElement listOfPdpActions) throws PdpGroupPayloadException {
@@ -74,7 +75,7 @@ public class PdpGroupPayload {
      * This method converts the list of actions directly to the pdp payload query as String.
      *
      * @param listOfPdpActions The list of actions that needs to be done.
-     *                            e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
+     *                         e.g: {"Pdpactions":["DELETE/PdpGroup1/PdpSubGroup1/PolicyName1/1.0.0",....]}
      * @return The string containing the PDP payload that can be sent directly
      * @throws PdpGroupPayloadException in case of issues to read the listOfActions
      */
@@ -118,9 +119,16 @@ public class PdpGroupPayload {
         // Then the group
         DeploymentGroup newGroup = new DeploymentGroup();
         newGroup.setName(pdpGroup);
-        newGroup.setDeploymentSubgroups(Arrays.asList(newSubGroup));
+        newGroup.setDeploymentSubgroups(new ArrayList<>(Arrays.asList(newSubGroup)));
         // Add to deployment Groups structure
-        this.deploymentGroups.getGroups().add(newGroup);
+        this.deploymentGroups.getGroups().stream().filter(group ->
+                group.getName().equals(pdpGroup)).findFirst()
+                .ifPresentOrElse(group -> group.getDeploymentSubgroups().add(newSubGroup),
+                        () -> this.deploymentGroups.getGroups().add(newGroup));
+    }
+
+    private void addToDeploymentGroup(DeploymentGroup group) {
+        this.deploymentGroups.getGroups().add(group);
     }
 
     /**
