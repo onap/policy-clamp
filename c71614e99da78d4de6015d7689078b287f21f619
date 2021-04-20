@@ -34,6 +34,24 @@
       "revId": "c71614e99da78d4de6015d7689078b287f21f619",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3f7294a_9e198402",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/config/DefaultUserConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-20T18:47:06Z",
+      "side": 1,
+      "message": "agreed.  However, if we never plan to change it, then we generally opt to hide it, but provide comments before it explaining why it\u0027s hidden.",
+      "parentUuid": "2a05f144_69c07f75",
+      "revId": "c71614e99da78d4de6015d7689078b287f21f619",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
