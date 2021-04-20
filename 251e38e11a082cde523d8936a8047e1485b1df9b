@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42fd01c9_56d5ce8f",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/config/sdc/SdcControllersConfiguration.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 57
+      },
+      "writtenOn": "2021-04-20T13:52:37Z",
+      "side": 1,
+      "message": "Does your JsonUtils class close this handle? Since its auto-closeable, we usually use try-with-resources statement.",
+      "range": {
+        "startLine": 75,
+        "startChar": 47,
+        "endLine": 75,
+        "endChar": 68
+      },
+      "revId": "251e38e11a082cde523d8936a8047e1485b1df9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
