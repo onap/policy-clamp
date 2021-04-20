@@ -58,13 +58,19 @@ public class LoggingUtils {
 
     private static final String DATE_FORMATTER_ISO = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
-    /** String constant for messages <tt>ENTERING</tt>, <tt>EXITING</tt>, etc. */
+    /**
+     * String constant for messages <tt>ENTERING</tt>, <tt>EXITING</tt>, etc.
+     */
     private static final String EMPTY_MESSAGE = "";
 
-    /** Logger delegate. */
+    /**
+     * Logger delegate.
+     */
     private final Logger mlogger;
 
-    /** Automatic UUID, overrideable per adapter or per invocation. */
+    /**
+     * Automatic UUID, overrideable per adapter or per invocation.
+     */
     private static final UUID sInstanceUUID = UUID.randomUUID();
 
     /**
@@ -98,7 +104,7 @@ public class LoggingUtils {
      * Set time related logging variables in thread local data via MDC.
      *
      * @param beginTimeStamp Start time
-     * @param endTimeStamp End time
+     * @param endTimeStamp   End time
      */
     public static void setTimeContext(@NotNull Date beginTimeStamp, @NotNull Date endTimeStamp) {
         MDC.put("EntryTimestamp", generateTimestampStr(beginTimeStamp));
@@ -109,9 +115,9 @@ public class LoggingUtils {
     /**
      * Set response related logging variables in thread local data via MDC.
      *
-     * @param code Response code ("0" indicates success)
+     * @param code        Response code ("0" indicates success)
      * @param description Response description
-     * @param className class name of invoking class
+     * @param className   class name of invoking class
      */
     public static void setResponseContext(String code, String description, String className) {
         MDC.put("ResponseCode", code);
@@ -123,7 +129,7 @@ public class LoggingUtils {
     /**
      * Set target related logging variables in thread local data via MDC.
      *
-     * @param targetEntity Target entity (an external/sub component, for ex. "sdc")
+     * @param targetEntity      Target entity (an external/sub component, for ex. "sdc")
      * @param targetServiceName Target service name (name of API invoked on target)
      */
     public static void setTargetContext(String targetEntity, String targetServiceName) {
@@ -134,7 +140,7 @@ public class LoggingUtils {
     /**
      * Set error related logging variables in thread local data via MDC.
      *
-     * @param code Error code
+     * @param code        Error code
      * @param description Error description
      */
     public static void setErrorContext(String code, String description) {
@@ -175,7 +181,7 @@ public class LoggingUtils {
     /**
      * Report <tt>ENTERING</tt> marker.
      *
-     * @param request non-null incoming request (wrapper)
+     * @param request     non-null incoming request (wrapper)
      * @param serviceName service name
      */
     public void entering(HttpServletRequest request, String serviceName) {
@@ -183,16 +189,16 @@ public class LoggingUtils {
         checkNotNull(request);
         // Extract MDC values from standard HTTP headers.
         final String requestId =
-            defaultToUuid(request.getHeader(OnapLogConstants.Headers.REQUEST_ID));
+                defaultToUuid(request.getHeader(OnapLogConstants.Headers.REQUEST_ID));
         final String invocationId =
-            defaultToUuid(request.getHeader(OnapLogConstants.Headers.INVOCATION_ID));
+                defaultToUuid(request.getHeader(OnapLogConstants.Headers.INVOCATION_ID));
         final String partnerName =
-            defaultToEmpty(request.getHeader(OnapLogConstants.Headers.PARTNER_NAME));
+                defaultToEmpty(request.getHeader(OnapLogConstants.Headers.PARTNER_NAME));
 
         // Default the partner name to the user name used to login to clamp
         if (partnerName.equalsIgnoreCase(EMPTY_MESSAGE)) {
             MDC.put(OnapLogConstants.Mdcs.PARTNER_NAME,
-                AuthorizationController.getPrincipalName(SecurityContextHolder.getContext()));
+                    AuthorizationController.getPrincipalName(SecurityContextHolder.getContext()));
         }
 
         // Set standard MDCs. Override this entire method if you want to set
@@ -200,7 +206,7 @@ public class LoggingUtils {
         // depending on where you need them to appear, OR extend the
         // ServiceDescriptor to add them.
         MDC.put(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP, ZonedDateTime.now(ZoneOffset.UTC)
-            .format(DateTimeFormatter.ofPattern(DATE_FORMATTER_ISO)));
+                .format(DateTimeFormatter.ofPattern(DATE_FORMATTER_ISO)));
         MDC.put(OnapLogConstants.Mdcs.REQUEST_ID, requestId);
         MDC.put(OnapLogConstants.Mdcs.INVOCATION_ID, invocationId);
         MDC.put(OnapLogConstants.Mdcs.CLIENT_IP_ADDRESS, defaultToEmpty(request.getRemoteAddr()));
@@ -217,7 +223,7 @@ public class LoggingUtils {
 
         // Set the Response Status code to in progress
         MDC.put(OnapLogConstants.Mdcs.RESPONSE_STATUS_CODE,
-            OnapLogConstants.ResponseStatus.INPROGRESS.toString());
+                OnapLogConstants.ResponseStatus.INPROGRESS.toString());
         setElapsedTime();
 
         this.mlogger.info(OnapLogConstants.Markers.ENTRY, "Entering");
@@ -226,18 +232,17 @@ public class LoggingUtils {
     /**
      * Report <tt>EXITING</tt> marker.
      *
-     *
-     * @param code response code
-     * @param descrption response description
-     * @param severity response severity
-     * @param status response status code
+     * @param code        response code
+     * @param description response description
+     * @param severity    response severity
+     * @param status      response status code
      */
-    public void exiting(int code, String descrption, Level severity,
-        OnapLogConstants.ResponseStatus status) {
+    public void exiting(int code, String description, Level severity,
+                        OnapLogConstants.ResponseStatus status) {
         try {
 
             MDC.put(OnapLogConstants.Mdcs.RESPONSE_CODE, defaultToEmpty(code));
-            MDC.put(OnapLogConstants.Mdcs.RESPONSE_DESCRIPTION, defaultToEmpty(descrption));
+            MDC.put(OnapLogConstants.Mdcs.RESPONSE_DESCRIPTION, defaultToEmpty(description));
             MDC.put(OnapLogConstants.Mdcs.RESPONSE_SEVERITY, defaultToEmpty(severity));
             MDC.put(OnapLogConstants.Mdcs.RESPONSE_STATUS_CODE, defaultToEmpty(status));
 
@@ -249,12 +254,11 @@ public class LoggingUtils {
     }
 
     private void setElapsedTime() {
-        ZonedDateTime startTime =
-            ZonedDateTime.parse(MDC.get(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP),
-                DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneOffset.UTC));
-        ZonedDateTime endTime = ZonedDateTime.now(ZoneOffset.UTC);
-        long duration = ChronoUnit.MILLIS.between(startTime, endTime);
-        MDC.put(OnapLogConstants.Mdcs.ELAPSED_TIME, String.valueOf(duration));
+        String entryTimestamp = MDC.get(OnapLogConstants.Mdcs.ENTRY_TIMESTAMP);
+        MDC.put(OnapLogConstants.Mdcs.ELAPSED_TIME, String.valueOf(ChronoUnit.MILLIS
+                .between(ZonedDateTime.parse(entryTimestamp != null ? entryTimestamp : ZonedDateTime.now(ZoneOffset.UTC)
+                                .format(DateTimeFormatter.ofPattern(DATE_FORMATTER_ISO)),
+                        DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneOffset.UTC)), ZonedDateTime.now(ZoneOffset.UTC))));
     }
 
     /**
@@ -271,13 +275,13 @@ public class LoggingUtils {
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
      *
-     * @param con The HTTP url connection
-     * @param targetEntity The target entity
+     * @param con               The HTTP url connection
+     * @param targetEntity      The target entity
      * @param targetServiceName The target service name
      * @return The HTTP url connection
      */
     public HttpURLConnection invoke(final HttpURLConnection con, String targetEntity,
-        String targetServiceName) {
+                                    String targetServiceName) {
         return this.invokeGeneric(con, targetEntity, targetServiceName);
     }
 
@@ -285,7 +289,7 @@ public class LoggingUtils {
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
      *
-     * @param targetEntity The target entity
+     * @param targetEntity      The target entity
      * @param targetServiceName The target service name
      */
     public void invoke(String targetEntity, String targetServiceName) {
@@ -304,13 +308,13 @@ public class LoggingUtils {
      * Report pending invocation with <tt>INVOKE</tt> marker,
      * setting standard ONAP logging headers automatically.
      *
-     * @param con The HTTPS url connection
-     * @param targetEntity The target entity
+     * @param con               The HTTPS url connection
+     * @param targetEntity      The target entity
      * @param targetServiceName The target service name
      * @return The HTTPS url connection
      */
     public HttpsURLConnection invokeHttps(final HttpsURLConnection con, String targetEntity,
-        String targetServiceName) {
+                                          String targetServiceName) {
         return this.invokeGeneric(con, targetEntity, targetServiceName);
     }
 
@@ -319,7 +323,7 @@ public class LoggingUtils {
      */
     public void invokeReturn() {
         MDC.put(OnapLogConstants.Mdcs.RESPONSE_STATUS_CODE,
-            OnapLogConstants.ResponseStatus.COMPLETE.toString());
+                OnapLogConstants.ResponseStatus.COMPLETE.toString());
         // Add the Invoke-return marker and clear the needed MDC
         this.mlogger.info(OnapLogConstants.Markers.INVOKE_RETURN, "INVOKE-RETURN");
         invokeReturnContext();
@@ -328,7 +332,7 @@ public class LoggingUtils {
     /**
      * Dependency-free nullcheck.
      *
-     * @param in to be checked
+     * @param in  to be checked
      * @param <T> argument (and return) type
      * @return input arg
      */
@@ -368,16 +372,16 @@ public class LoggingUtils {
     /**
      * Set target related logging variables in thread local data via MDC.
      *
-     * @param targetEntity Target entity (an external/sub component, for ex. "sdc")
+     * @param targetEntity      Target entity (an external/sub component, for ex. "sdc")
      * @param targetServiceName Target service name (name of API invoked on target)
-     * @param invocationId The invocation ID
+     * @param invocationId      The invocation ID
      */
     private void invokeContext(String targetEntity, String targetServiceName, String invocationId) {
         MDC.put(OnapLogConstants.Mdcs.TARGET_ENTITY, defaultToEmpty(targetEntity));
         MDC.put(OnapLogConstants.Mdcs.TARGET_SERVICE_NAME, defaultToEmpty(targetServiceName));
         MDC.put(OnapLogConstants.Mdcs.INVOCATIONID_OUT, invocationId);
         MDC.put(OnapLogConstants.Mdcs.INVOKE_TIMESTAMP, ZonedDateTime.now(ZoneOffset.UTC)
-            .format(DateTimeFormatter.ofPattern(DATE_FORMATTER_ISO)));
+                .format(DateTimeFormatter.ofPattern(DATE_FORMATTER_ISO)));
     }
 
     /**
@@ -392,15 +396,15 @@ public class LoggingUtils {
     }
 
     private <T extends URLConnection> T invokeGeneric(final T con, String targetEntity,
-        String targetServiceName) {
+                                                      String targetServiceName) {
         final String invocationId = UUID.randomUUID().toString();
 
         // Set standard HTTP headers on (southbound request) builder.
         con.setRequestProperty(OnapLogConstants.Headers.REQUEST_ID,
-            defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.REQUEST_ID)));
+                defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.REQUEST_ID)));
         con.setRequestProperty(OnapLogConstants.Headers.INVOCATION_ID, invocationId);
         con.setRequestProperty(OnapLogConstants.Headers.PARTNER_NAME,
-            defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.PARTNER_NAME)));
+                defaultToEmpty(MDC.get(OnapLogConstants.Mdcs.PARTNER_NAME)));
 
         invokeContext(targetEntity, targetServiceName, invocationId);
 
