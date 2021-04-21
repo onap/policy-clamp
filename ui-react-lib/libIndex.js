@@ -53,3 +53,4 @@ export { default as ViewLoopTemplatesModal } from './src/components/dialogs/Tosc
 export { default as ViewAllPolicies } from './src/components/dialogs/Policy/ViewAllPolicies';
 export { default as PolicyDeploymentEditor } from './src/components/dialogs/Policy/PolicyDeploymentEditor';
 export { default as PoliciesTreeViewer } from './src/components/dialogs/Policy/PoliciesTreeViewer';
+export { default as PolicyToscaFileSelector } from './src/components/dialogs/Policy/PolicyToscaFileSelector';
