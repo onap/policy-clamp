@@ -1,6 +1,6 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
  * Copyright (C) 2018, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.ServletException;
@@ -46,6 +47,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 public class ClampServlet extends CamelHttpTransportServlet {
@@ -70,9 +72,22 @@ public class ClampServlet extends CamelHttpTransportServlet {
     private static List<SecureServicePermission> permissionList;
 
     private synchronized List<String> loadDynamicAuthenticationClasses() {
-        return Arrays.stream(WebApplicationContextUtils.getWebApplicationContext(getServletContext())
-                .getEnvironment().getProperty(AUTHENTICATION_CLASS).split(",")).map(String::trim)
-                .collect(Collectors.toList());
+        WebApplicationContext webAppContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
+        if (webAppContext != null) {
+            String authClassProperty = webAppContext.getEnvironment().getProperty(AUTHENTICATION_CLASS);
+            if (authClassProperty != null && !authClassProperty.isEmpty()) {
+                return Arrays.stream(authClassProperty.split(",")).map(String::trim)
+                        .collect(Collectors.toList());
+            }
+            logger.warn(
+                    "No authentication classes defined in Clamp BE config " + AUTHENTICATION_CLASS
+                            + " AAF authentication could be broken due to that");
+        } else {
+            logger.error(
+                    "WebApplicationContext is NULL, no authentication classes will be loaded in clamp BE"
+                            + ", AAF authentication could be broken");
+        }
+        return Collections.emptyList();
     }
 
     private synchronized List<SecureServicePermission> getPermissionList() {
