@@ -22,6 +22,30 @@
       "revId": "251e38e11a082cde523d8936a8047e1485b1df9b",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "610c9e1d_35ab9299",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/config/sdc/SdcControllersConfiguration.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-21T12:20:37Z",
+      "side": 1,
+      "message": "Indeed Pam missed that one (Sonar did not even spot it), this stream must be closed properly as usual. I verified the fromJson and Spring getResource.getInputSTream doc. It\u0027s well mentioned \n\"It is the responsibility of the caller to close the stream.\"\n\nThx 😊",
+      "parentUuid": "42fd01c9_56d5ce8f",
+      "range": {
+        "startLine": 75,
+        "startChar": 47,
+        "endLine": 75,
+        "endChar": 68
+      },
+      "revId": "251e38e11a082cde523d8936a8047e1485b1df9b",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
