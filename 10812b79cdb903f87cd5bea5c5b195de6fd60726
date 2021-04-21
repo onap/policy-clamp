@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e3a7512_6c00fc07",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/ClampServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-21T12:08:17Z",
+      "side": 1,
+      "message": "org.apache.commons.lang3.StringUtils",
+      "range": {
+        "startLine": 41,
+        "startChar": 7,
+        "endLine": 41,
+        "endChar": 43
+      },
+      "revId": "10812b79cdb903f87cd5bea5c5b195de6fd60726",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a05d69a5_cd231e7b",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/ClampServlet.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-21T12:08:17Z",
+      "side": 1,
+      "message": "checkstyle would probably complain about the extra space",
+      "range": {
+        "startLine": 79,
+        "startChar": 54,
+        "endLine": 79,
+        "endChar": 55
+      },
+      "revId": "10812b79cdb903f87cd5bea5c5b195de6fd60726",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
