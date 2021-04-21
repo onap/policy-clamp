@@ -614,4 +614,38 @@
             </doFinally>
         </doTry>
     </route>
+    <route id="create-policy-type">
+        <from uri="direct:create-policy-type"/>
+        <doTry>
+            <log loggingLevel="INFO"
+                 message="Creating Policy type"/>
+            <to
+                    uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeLog('Policy', 'Create policy typ')"/>
+             <setHeader name="CamelHttpMethod">
+                <constant>POST</constant>
+            </setHeader>
+            <setHeader name="X-ONAP-RequestID">
+                <simple>${exchangeProperty[X-ONAP-RequestID]}
+                </simple>
+            </setHeader>
+            <setHeader name="X-ONAP-InvocationID">
+                <simple>${exchangeProperty[X-ONAP-InvocationID]}
+                </simple>
+            </setHeader>
+            <setHeader name="X-ONAP-PartnerName">
+                <simple>${exchangeProperty[X-ONAP-PartnerName]}
+                </simple>
+            </setHeader>
+            <log loggingLevel="INFO"
+                 message="Endpoint to create policy type: {{clamp.config.policy.api.url}}/policy/api/v1/policytypes"></log>
+            <toD
+                    uri="{{clamp.config.policy.api.url}}/policy/api/v1/policytypes?bridgeEndpoint=true&amp;useSystemProperties=true&amp;mapHttpMessageHeaders=false&amp;throwExceptionOnFailure=${exchangeProperty[raiseHttpExceptionFlag]}&amp;authUsername={{clamp.config.policy.api.userName}}&amp;authPassword={{clamp.config.policy.api.password}}&amp;authenticationPreemptive=true&amp;connectionClose=true"/>
+
+            <doFinally>
+                <to uri="direct:reset-raise-http-exception-flag"/>
+                <to
+                        uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=invokeReturnLog()"/>
+            </doFinally>
+        </doTry>
+    </route>
 </routes>
