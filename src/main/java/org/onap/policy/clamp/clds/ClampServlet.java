@@ -76,7 +76,7 @@ public class ClampServlet extends CamelHttpTransportServlet {
         WebApplicationContext webAppContext = WebApplicationContextUtils.getWebApplicationContext(getServletContext());
         if (webAppContext != null) {
             String authClassProperty = webAppContext.getEnvironment().getProperty(AUTHENTICATION_CLASS);
-            if (StringUtils.isBlank(authClassProperty)) {
+            if (!StringUtils.isBlank(authClassProperty)) {
                 return Arrays.stream(authClassProperty.split(",")).map(String::trim)
                         .collect(Collectors.toList());
             }
