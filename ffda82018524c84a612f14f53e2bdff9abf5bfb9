@@ -22,6 +22,30 @@
       "revId": "ffda82018524c84a612f14f53e2bdff9abf5bfb9",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16db4be2_01578431",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/ClampServlet.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-21T12:04:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "614b9c90_2a384571",
+      "range": {
+        "startLine": 78,
+        "startChar": 16,
+        "endLine": 78,
+        "endChar": 73
+      },
+      "revId": "ffda82018524c84a612f14f53e2bdff9abf5bfb9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
