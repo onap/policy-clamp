@@ -1502,6 +1502,40 @@
             </route>
         </put>
 
+        <post uri="/v2/policies/policytype" consumes="application/yaml">
+            <route>
+                <removeHeaders pattern="*"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Create policy type')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'policies','','update')"/>
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">true</simple>
+                    </setProperty>
+                    <to uri="direct:create-policy-type"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="Create policy type request failed: ${exception.stacktrace}"/>
+                        <setHeader name="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>Create policy type request FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </post>
+
         <get uri="/v2/clampInformation" outType="org.onap.policy.clamp.clds.model.ClampInformation"
              produces="application/json">
             <route>
