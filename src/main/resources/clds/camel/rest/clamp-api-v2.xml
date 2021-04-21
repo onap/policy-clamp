@@ -1461,10 +1461,9 @@
             </route>
         </delete>
 
-        <put uri="/v2/policies/pdpDeployment"
-             type="com.google.gson.JsonElement"
-             consumes="application/json">
+        <put uri="/v2/policies/pdpDeployment" type="com.google.gson.JsonElement" consumes="application/json">
             <route>
+                <removeHeaders pattern="*"/>
                 <doTry>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'Pdp group deployment update')"/>
