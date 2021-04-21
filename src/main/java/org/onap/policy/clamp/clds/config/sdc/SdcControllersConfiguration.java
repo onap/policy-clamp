@@ -27,7 +27,6 @@ package org.onap.policy.clamp.clds.config.sdc;
 
 import com.google.gson.JsonObject;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -38,7 +37,6 @@ import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
 
 /**
  * This class maps the SDC config JSON file. This JSON can have multiple
