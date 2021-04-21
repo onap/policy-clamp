@@ -624,6 +624,9 @@
              <setHeader name="CamelHttpMethod">
                 <constant>POST</constant>
             </setHeader>
+            <setHeader name="Content-Type">
+                <constant>application/yaml</constant>
+            </setHeader>
             <setHeader name="X-ONAP-RequestID">
                 <simple>${exchangeProperty[X-ONAP-RequestID]}
                 </simple>

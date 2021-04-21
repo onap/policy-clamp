@@ -56,6 +56,7 @@ import PolicyEditor from './PolicyEditor';
 import ToscaViewer from './ToscaViewer';
 import PolicyDeploymentEditor from './PolicyDeploymentEditor';
 import PoliciesTreeViewer from './PoliciesTreeViewer';
+import PolicyToscaFileSelector from './PolicyToscaFileSelector';
 
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
@@ -106,6 +107,7 @@ export default class ViewAllPolicies extends React.Component {
         jsonEditorForPolicy: new Map(),
         showSuccessAlert: false,
         showFailAlert: false,
+        showFileSelector: false,
         policyColumnsDefinition: [
             {
                 title: "Policy Name", field: "name",
@@ -196,6 +198,8 @@ export default class ViewAllPolicies extends React.Component {
         this.generateAdditionalPolicyColumns = this.generateAdditionalPolicyColumns.bind(this);
         this.filterPolicies = this.filterPolicies.bind(this);
         this.filterTosca = this.filterTosca.bind(this);
+        this.showFileSelector = this.showFileSelector.bind(this);
+        this.disableFileSelector = this.disableFileSelector.bind(this);
         this.getAllPolicies();
         this.getAllToscaModels();
     }
@@ -263,8 +267,8 @@ export default class ViewAllPolicies extends React.Component {
                         showSuccessAlert: true,
                         showMessage: 'Policy successfully Deleted'
                     });
+                    this.getAllPolicies();
                 }
-                this.getAllPolicies();
             }
         )
     }
@@ -279,6 +283,14 @@ export default class ViewAllPolicies extends React.Component {
 
     filterTosca(prefixForFiltering) {
         this.setState({toscaModelsListDataFiltered: this.state.toscaModelsListData.filter(element => element.policyModelType.startsWith(prefixForFiltering))});
+    }
+
+    showFileSelector() {
+        this.setState({showFileSelector:true});
+    }
+
+    disableFileSelector() {
+        this.setState({showFileSelector:false});
     }
 
     renderPoliciesTab() {
@@ -343,7 +355,7 @@ export default class ViewAllPolicies extends React.Component {
                                   ]}
                                   actions={[
                                       {
-                                        icon: forwardRef((props, ref) => <DeleteRoundedIcon {...props} ref={ref} />),
+                                        icon: DeleteRoundedIcon,
                                         tooltip: 'Delete Policy',
                                         onClick: (event, rowData) => this.handleDeletePolicy(event, rowData)
                                       }
@@ -377,6 +389,14 @@ export default class ViewAllPolicies extends React.Component {
                                       headerStyle:rowHeaderStyle,
                                       actionsColumnIndex: -1
                                   }}
+                                  actions={[
+                                      {
+                                          icon: AddIcon,
+                                          tooltip: 'Add New Tosca Model',
+                                          isFreeAction: true,
+                                          onClick: () => this.showFileSelector()
+                                      }
+                                  ]}
                                   detailPanel={[
                                     {
                                       icon: ArrowForwardIosIcon,
@@ -423,7 +443,8 @@ export default class ViewAllPolicies extends React.Component {
     }
 
     render() {
-    return (
+        return (
+        <React.Fragment>
             <ModalStyled size="xl" show={this.state.show} onHide={this.handleClose} backdrop="static" keyboard={false}>
                 <Modal.Header closeButton>
                 </Modal.Header>
@@ -445,6 +466,8 @@ export default class ViewAllPolicies extends React.Component {
                     <Button variant="secondary" onClick={this.handleClose}>Close</Button>
                </Modal.Footer>
             </ModalStyled>
+            <PolicyToscaFileSelector show={this.state.showFileSelector} disableFunction={this.disableFileSelector} toscaTableUpdateFunction={this.getAllToscaModels}/>
+            </React.Fragment>
       );
     }
   }
