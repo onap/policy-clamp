@@ -106,7 +106,6 @@ export default class PolicyDeploymentEditor extends React.Component {
                         });
                         this.props.policiesTableUpdateFunction();
                     }
-                    this.props.policiesTableUpdateFunction()
                 })
             } else {
                 this.setState({
