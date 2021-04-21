@@ -36,6 +36,7 @@ import org.apache.camel.spi.DataFormat;
 import org.apache.camel.spi.DataFormatName;
 import org.apache.camel.support.service.ServiceSupport;
 import org.apache.camel.util.IOHelper;
+import org.apache.commons.io.IOUtils;
 import org.onap.policy.clamp.clds.util.JsonUtils;
 
 public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, DataFormatName {
@@ -113,7 +114,9 @@ public class ClampGsonDataFormat extends ServiceSupport implements DataFormat, D
     public Object unmarshal(final Exchange exchange, final InputStream stream) throws Exception {
         try (final InputStreamReader isr = new InputStreamReader(stream, StandardCharsets.UTF_8);
                 final BufferedReader reader = IOHelper.buffered(isr)) {
-            if (unmarshalGenericType == null) {
+            if (unmarshalType.equals(String.class)) {
+                return IOUtils.toString(reader);
+            } else if (unmarshalGenericType == null) {
                 return gson.fromJson(reader, unmarshalType);
             } else {
                 return gson.fromJson(reader, unmarshalGenericType);

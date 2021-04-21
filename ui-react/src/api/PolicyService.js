@@ -119,4 +119,30 @@ export default class PolicyService {
             return undefined;
         });
   }
+  static sendNewPolicyModel(newPolicyModel) {
+      return fetch(window.location.pathname + 'restservices/clds/v2/policies/policytype', {
+              method: 'POST',
+              credentials: 'same-origin',
+              headers: {
+                "Content-Type": "plain/text"
+              },
+              body: newPolicyModel
+          })
+          .then(function (response) {
+              console.debug("sendNewPolicyModel response received: ", response.status);
+              if (response.ok) {
+                  console.info("sendNewPolicyModel query successful");
+                  return response.text();
+              } else {
+                 return response.text().then(responseBody => {
+                      throw new Error("HTTP " + response.status + "," + responseBody);
+                  })
+              }
+          })
+          .catch(function (error) {
+              console.error("sendNewPolicyModel error occurred ", error);
+              alert ("sendNewPolicyModel error occurred " + error);
+              return undefined;
+          });
+    }
 }
