@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e9fc354_66b295b5",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyToscaFileSelector.js",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-23T14:40:27Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces\n\nsame comment below",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 1
+      },
+      "revId": "f79d9d9b329abbf71f3a372174fe6b8b073e894d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b579f44_0df8f8bf",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyToscaFileSelector.js",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-23T14:40:27Z",
+      "side": 1,
+      "message": "appears to be indented too much",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 16
+      },
+      "revId": "f79d9d9b329abbf71f3a372174fe6b8b073e894d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
