@@ -1501,7 +1501,7 @@
             </route>
         </put>
 
-        <post uri="/v2/policies/policytype" consumes="application/yaml">
+        <post uri="/v2/policies/policytype" type="java.lang.String" consumes="plain/text">
             <route>
                 <removeHeaders pattern="*"/>
                 <doTry>
@@ -1513,6 +1513,8 @@
                         <simple resultType="java.lang.Boolean">true</simple>
                     </setProperty>
                     <to uri="direct:create-policy-type"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.policy.downloader.PolicyEngineController?method=synchronizeAllPolicies()"/>
                     <to
                             uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
                     <doCatch>
