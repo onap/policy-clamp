@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f363b34_aa895f4b",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyToscaFileSelector.js",
+        "patchSetId": 8
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-23T15:35:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e9fc354_66b295b5",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 1
+      },
+      "revId": "f79d9d9b329abbf71f3a372174fe6b8b073e894d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b579f44_0df8f8bf",
         "filename": "ui-react/src/components/dialogs/Policy/PolicyToscaFileSelector.js",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "f79d9d9b329abbf71f3a372174fe6b8b073e894d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6d7dd60_4ddd0acb",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyToscaFileSelector.js",
+        "patchSetId": 8
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-04-23T15:35:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b579f44_0df8f8bf",
+      "range": {
+        "startLine": 72,
+        "startChar": 12,
+        "endLine": 72,
+        "endChar": 16
+      },
+      "revId": "f79d9d9b329abbf71f3a372174fe6b8b073e894d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
