@@ -121,24 +121,6 @@ public class PolicyModelServiceItCase {
     }
 
     /**
-     * This tests a create Policy Model from Tosca.
-     *
-     * @throws IOException In case of failure
-     */
-    @Test
-    @Transactional
-    public void shouldCreatePolicyModelFromTosca() throws IOException {
-        String toscaModelYaml =
-                ResourceFileUtils.getResourceAsString("tosca/tosca_with_metadata.yaml");
-        PolicyModel policyModel = policyModelsService.createNewPolicyModelFromTosca(toscaModelYaml);
-
-        assertThat(policyModelsService.getAllPolicyModels()).contains(policyModel);
-
-        assertThat(policyModelsService.getPolicyModelTosca(policyModel.getPolicyModelType(),
-                policyModel.getVersion())).contains(toscaModelYaml);
-    }
-
-    /**
      * This tests the getPolicyModelJson. A json is expected.
      *
      * @throws IOException In case of failure
@@ -159,27 +141,6 @@ public class PolicyModelServiceItCase {
         JSONAssert.assertEquals(ResourceFileUtils.getResourceAsString("tosca/tca_hi_lo.json"),
                 policyTypeJson.toString(),
                 true);
-    }
-
-    /**
-     * This tests a update Policy Model.
-     *
-     * @throws IOException In case of failure
-     */
-    @Test
-    @Transactional
-    public void shouldUpdatePolicyModel() throws IOException {
-        String toscaModelYaml =
-                ResourceFileUtils.getResourceAsString("tosca/tosca_with_metadata.yaml");
-        PolicyModel policyModel = policyModelsService.createNewPolicyModelFromTosca(toscaModelYaml);
-        String newToscaModelYaml =
-                ResourceFileUtils.getResourceAsString("tosca/tosca_metadata_clamp_possible_values.yaml");
-
-        PolicyModel updatedPolicyModel = policyModelsService.updatePolicyModelTosca(
-                policyModel.getPolicyModelType(), policyModel.getVersion(), newToscaModelYaml);
-
-        assertThat(updatedPolicyModel.getPolicyModelTosca()).isEqualTo(newToscaModelYaml);
-
     }
 
     /**

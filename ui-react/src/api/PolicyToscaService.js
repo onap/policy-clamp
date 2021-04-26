@@ -56,9 +56,9 @@ export default class PolicyToscaService {
                 console.error("getToscaPolicyModelYaml error received", error);
                 return "";
             });
- }
+  }
 
- static getToscaPolicyModel(policyModelType, policyModelVersion) {
+  static getToscaPolicyModel(policyModelType, policyModelVersion) {
          return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/' + policyModelType + "/" + policyModelVersion, {
              method: 'GET',
              credentials: 'same-origin'
@@ -77,60 +77,4 @@ export default class PolicyToscaService {
                  return {};
              });
   }
-
-  static createPolicyModelFromToscaModel(jsonData) {
-       return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels', {
-           method: 'POST',
-           credentials: 'same-origin',
-           headers: {
-             "Content-Type": "a",
-           },
-           body: JSON.stringify(jsonData)
-         })
-         .then(function(response) {
-           console.debug("createPolicyModelFromToscaModel response received: ", response.status);
-           if (response.ok) {
-             var message = {
-               status: response.status,
-               message: 'Tosca Policy Model successfully uploaded'
-             };
-             return message;
-           } else {
-             console.error("createPolicyModelFromToscaModel failed");
-             return response.text();
-           }
-         })
-         .catch(function(error) {
-           console.error("createPolicyModelFromToscaModel error received", error);
-           return "";
-         });
-     }
-
-     static updatePolicyModelTosca(policyModelType, policyModelVersion, jsonData) {
-         return fetch(window.location.pathname + 'restservices/clds/v2/policyToscaModels/' + policyModelType + '/' + policyModelVersion, {
-             method: 'PUT',
-             credentials: 'same-origin',
-             headers: {
-               "Content-Type": "a",
-             },
-             body: JSON.stringify(jsonData)
-           })
-           .then(function(response) {
-             console.debug("updatePolicyModelTosca response received: ", response.status);
-             if (response.ok) {
-               var message = {
-                 status: response.status,
-                 message: 'Tosca Policy Model successfully uploaded'
-               };
-               return message;
-             } else {
-               console.error("updatePolicyModelTosca failed");
-               return response.text();
-             }
-           })
-           .catch(function(error) {
-             console.error("updatePolicyModelTosca error received", error);
-             return "";
-           });
-       }
 }

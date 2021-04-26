@@ -78,7 +78,7 @@ public class ToscaMetadataParserWithDictionarySupport implements ToscaMetadataPa
                             processDictionaryElements(multipleValue, childObject, dictionaryService);
                         }
                         if (multipleValue.contains("ClampExecution:")) {
-                            executeClampProcess(multipleValue.replaceAll("ClampExecution:", ""), childObject,
+                            executeClampProcess(multipleValue.replace("ClampExecution:", ""), childObject,
                                     serviceModel, toscaMetadataExecutor);
                         }
                     }

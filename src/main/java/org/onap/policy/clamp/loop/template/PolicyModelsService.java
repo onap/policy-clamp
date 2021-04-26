@@ -24,16 +24,9 @@
 package org.onap.policy.clamp.loop.template;
 
 import com.google.gson.JsonObject;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import org.onap.policy.clamp.clds.tosca.ToscaSchemaConstants;
-import org.onap.policy.clamp.clds.tosca.ToscaYamlToJsonConvertor;
 import org.onap.policy.clamp.clds.tosca.update.ToscaConverterWithDictionarySupport;
-import org.onap.policy.clamp.clds.tosca.update.parser.ToscaConverterToJsonSchema;
-import org.onap.policy.clamp.clds.util.JsonUtils;
 import org.onap.policy.clamp.policy.pdpgroup.PdpGroupsAnalyzer;
-import org.onap.policy.clamp.util.SemanticVersioning;
 import org.onap.policy.models.pdp.concepts.PdpGroups;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,10 +39,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PolicyModelsService {
     private final PolicyModelsRepository policyModelsRepository;
-    /**
-     * This variable is there to support legacy saving of the tosca from the clamp UI.
-     */
-    private ToscaYamlToJsonConvertor toscaYamlToJsonConvertor;
 
     /**
      * This is the new tosca converter that must be used in clamp.
@@ -58,10 +47,8 @@ public class PolicyModelsService {
     private ToscaConverterWithDictionarySupport toscaConverterWithDictionarySupport;
 
     @Autowired
-    public PolicyModelsService(PolicyModelsRepository policyModelrepo,
-                               ToscaYamlToJsonConvertor convertor) {
+    public PolicyModelsService(PolicyModelsRepository policyModelrepo) {
         policyModelsRepository = policyModelrepo;
-        toscaYamlToJsonConvertor = convertor;
     }
 
     /**
@@ -82,44 +69,6 @@ public class PolicyModelsService {
      */
     public boolean existsById(PolicyModelId policyModelId) {
         return policyModelsRepository.existsById(policyModelId);
-    }
-
-    /**
-     * Creates or updates the Tosca Policy Model.
-     *
-     * @param policyModelTosca The Policymodel object
-     * @return The Policy Model created
-     */
-    public PolicyModel createNewPolicyModelFromTosca(String policyModelTosca) {
-        JsonObject jsonObject = toscaYamlToJsonConvertor.validateAndConvertToJson(policyModelTosca);
-        String policyModelTypeFromTosca = toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-                ToscaSchemaConstants.METADATA_POLICY_MODEL_TYPE);
-        Iterable<PolicyModel> models = getAllPolicyModelsByType(policyModelTypeFromTosca);
-        Collections.sort((List<PolicyModel>) models);
-        PolicyModel newPolicyModel = new PolicyModel(policyModelTypeFromTosca, policyModelTosca,
-                SemanticVersioning.incrementMajorVersion(((ArrayList) models).isEmpty() ? null
-                        : ((ArrayList<PolicyModel>) models).get(0).getVersion()),
-                toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-                        ToscaSchemaConstants.METADATA_ACRONYM));
-        return saveOrUpdatePolicyModel(newPolicyModel);
-    }
-
-    /**
-     * Update an existing Tosca Policy Model.
-     *
-     * @param policyModelType    The policy Model type in Tosca yaml
-     * @param policyModelVersion The policy Version to update
-     * @param policyModelTosca   The Policy Model tosca
-     * @return The Policy Model updated
-     */
-    public PolicyModel updatePolicyModelTosca(String policyModelType, String policyModelVersion,
-                                              String policyModelTosca) {
-        JsonObject jsonObject = toscaYamlToJsonConvertor.validateAndConvertToJson(policyModelTosca);
-        PolicyModel thePolicyModel = getPolicyModel(policyModelType, policyModelVersion);
-        thePolicyModel.setPolicyAcronym(toscaYamlToJsonConvertor.getValueFromMetadata(jsonObject,
-                ToscaSchemaConstants.METADATA_ACRONYM));
-        thePolicyModel.setPolicyModelTosca(policyModelTosca);
-        return saveOrUpdatePolicyModel(thePolicyModel);
     }
 
     /**
