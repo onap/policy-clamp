@@ -46,6 +46,30 @@
       "revId": "330f232d99761f7c690658207362b254d6453a24",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91d50f6c_2bac6d0c",
+        "filename": "src/main/java/org/onap/policy/clamp/clds/tosca/update/parser/metadata/ToscaMetadataParserWithDictionarySupport.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-04-26T13:37:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cff8ac9e_6f6efeb2",
+      "range": {
+        "startLine": 81,
+        "startChar": 62,
+        "endLine": 81,
+        "endChar": 69
+      },
+      "revId": "330f232d99761f7c690658207362b254d6453a24",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
