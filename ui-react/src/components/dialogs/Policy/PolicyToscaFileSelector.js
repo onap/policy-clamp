@@ -79,6 +79,7 @@ export default class PolicyToscaFileSelector extends React.Component {
                             };
                         });
                       } else {
+                        this.props.toscaTableUpdateFunction();
                         this.setState(state => {
                             return {
                                 alertMessages: [...state.alertMessages,(<Alert variant="success"><Alert.Heading>{file.name}</Alert.Heading><p>Policy Tosca Model Created Successfully</p><hr/><p>Type: {file.type}</p><p>Size: {file.size}</p></Alert>)]
@@ -88,7 +89,7 @@ export default class PolicyToscaFileSelector extends React.Component {
                 });
             };
         });
-        this.props.toscaTableUpdateFunction();
+
     }
 
     render() {
