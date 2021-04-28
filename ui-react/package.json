@@ -42,15 +42,16 @@
 		"react-uuid": "1.0.2"
 	},
 	"devDependencies": {
-		"jest": "26.6.0",
-		"babel-jest": "26.6.0",
+		"jest": "26.6.3",
+		"babel-jest": "26.6.3",
 		"@babel/preset-env": "7.13.10",
 		"@babel/preset-react": "7.12.13",
 		"@babel/plugin-proposal-class-properties": "7.13.0",
 		"enzyme": "3.11.0",
 		"enzyme-adapter-react-17-updated": "1.0.2",
 		"enzyme-to-json": "3.6.1",
-		"jest-fetch-mock": "3.0.3"
+		"jest-fetch-mock": "3.0.3",
+		"jest-canvas-mock": "2.3.1"
 	},
 	"browserslist": [
 		">0.2%",
@@ -72,7 +73,8 @@
 			"\\.(css|png)$": "identity-obj-proxy"
 		},
 		"setupFiles": [
-			"./src/setupTests.js"
+			"./src/setupTests.js",
+			"jest-canvas-mock"
 		],
 		"snapshotSerializers": [
 			"enzyme-to-json/serializer"
@@ -96,4 +98,3 @@
 		]
 	}
 }
-
