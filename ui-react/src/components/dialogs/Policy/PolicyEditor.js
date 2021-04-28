@@ -31,7 +31,6 @@ import TextField from '@material-ui/core/TextField';
 import Alert from 'react-bootstrap/Alert';
 import PolicyService from '../../../api/PolicyService';
 import OnapUtils from '../../../utils/OnapUtils';
-import uuid from 'react-uuid';
 
 const DivWhiteSpaceStyled = styled.div`
     white-space: pre;
@@ -61,7 +60,7 @@ export default class PolicyEditor extends React.Component {
         showSuccessAlert: false,
         showFailAlert: false,
         jsonEditor: null,
-        jsonEditorDivId: uuid(),
+        jsonEditorDivId: this.props.policyName + "_" + this.props.policyVersion,
    }
 
    constructor(props, context) {
