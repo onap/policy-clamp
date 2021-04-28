@@ -26,6 +26,10 @@ import CreateLoopModal from './CreateLoopModal';
 import LoopService from '../../../api/LoopService';
 import TemplateService from '../../../api/TemplateService';
 
+let errorMessage = '';
+window.alert = jest.fn().mockImplementation((mesg) => { errorMessage = mesg ; return });
+
+
 describe('Verify CreateLoopModal', () => {
 
   it('Test the render method', async () => {
