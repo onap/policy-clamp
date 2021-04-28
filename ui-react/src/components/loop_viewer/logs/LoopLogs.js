@@ -66,10 +66,9 @@ export default class LoopLogs extends React.Component {
 	}
 
 	renderLogs() {
-		if (this.state.loopCache.getLoopLogsArray() != null) {
-			return (
-				this.state.loopCache.getLoopLogsArray().map(row => <TableRow logRow={row} />)
-			)
+	    let logsArray = this.state.loopCache.getLoopLogsArray();
+		if (logsArray != null) {
+			return (logsArray.map(row => <TableRow key={row.id} logRow={row} />));
 		}
 	}
 

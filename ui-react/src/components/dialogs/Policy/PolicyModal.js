@@ -138,21 +138,6 @@ export default class PolicyModal extends React.Component {
     }
 
     createJsonEditor(toscaModel, editorData) {
-        /*JSONEditor.defaults.themes.myBootstrap4 = JSONEditor.defaults.themes.bootstrap4.extend({
-                getTab: function(text,tabId) {
-                    var liel = document.createElement('li');
-                    liel.classList.add('nav-item');
-                    var ael = document.createElement("a");
-                    ael.classList.add("nav-link");
-                    ael.setAttribute("style",'padding:10px;max-width:160px;');
-                    ael.setAttribute("href", "#" + tabId);
-                    ael.setAttribute('data-toggle', 'tab');
-                    text.setAttribute("style",'word-wrap:break-word;');
-                    ael.appendChild(text);
-                    liel.appendChild(ael);
-                    return liel;
-                }
-            });*/
         return new JSONEditor(document.getElementById("editor"),
         {   schema: toscaModel,
               startval: editorData,
@@ -312,17 +297,17 @@ export default class PolicyModal extends React.Component {
     }
 
     renderButton() {
-        var allElement = [(<Button variant="secondary" onClick={this.handleClose}>
+        var allElement = [(<Button key="close" variant="secondary" onClick={this.handleClose}>
                                                    Close
                          </Button>)];
         if(this.state.policyInstanceType !== OnapConstant.operationalPolicyType || !this.state.loopCache.isOpenLoopTemplate()) {
              allElement.push((
-                <Button variant="primary" disabled={this.readOnly} onClick={this.handleSave}>
+                <Button key="save" variant="primary" disabled={this.readOnly} onClick={this.handleSave}>
                                 Save Changes
                 </Button>
              ));
              allElement.push((
-                <Button variant="primary" disabled={this.readOnly} onClick={this.handleRefresh}>
+                <Button key="refresh" variant="primary" disabled={this.readOnly} onClick={this.handleRefresh}>
                                 Refresh
                 </Button>
              ));
