@@ -91,11 +91,13 @@ exports[`Verify UserInfoModal Test the render method full permission 1`] = `
       <Col>
         <FormControl
           defaultValue="permission1"
+          key="permission1"
           plaintext={true}
           readOnly={true}
         />
         <FormControl
           defaultValue="permission2"
+          key="permission2"
           plaintext={true}
           readOnly={true}
         />

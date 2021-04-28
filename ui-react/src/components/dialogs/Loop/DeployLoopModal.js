@@ -138,7 +138,7 @@ export default class DeployLoopModal extends React.Component {
 		const deployJsonList = this.state.temporaryPropertiesJson["dcaeDeployParameters"];
 		var indents = [];
 		Object.keys(deployJsonList).forEach(item =>
-			indents.push(<Tab eventKey={item} title={item}>
+			indents.push(<Tab key={item} eventKey={item} title={item}>
 				{this.renderDeployParam(deployJsonList[item])}
 				</Tab>)
 		);
@@ -147,7 +147,7 @@ export default class DeployLoopModal extends React.Component {
 	renderDeployParam(deployJson) {
 		var indents = [];
 		Object.keys(deployJson).forEach(item =>
-		indents.push(<FormStyled>
+		indents.push(<FormStyled key={item}>
 				<Form.Label>{item}</Form.Label>
 				<Form.Control type="text" name={item} onChange={this.handleChange} defaultValue={deployJson[item]}></Form.Control>
 			</FormStyled>));

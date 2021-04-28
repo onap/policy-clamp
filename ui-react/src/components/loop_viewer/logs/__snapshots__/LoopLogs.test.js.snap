@@ -45,6 +45,7 @@ exports[`Verify LoopLogs Test the render method 1`] = `
     </thead>
     <tbody>
       <TableRow
+        key="1"
         logRow={
           Object {
             "id": 1,

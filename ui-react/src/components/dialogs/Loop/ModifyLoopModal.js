@@ -122,13 +122,6 @@ export default class ModifyLoopModal extends React.Component {
 		this.initializeToscaPolicyModelsInfo();
 	}
 
-	componentWillReceiveProps(newProps) {
-		this.setState({
-			loopCache: newProps.loopCache,
-			temporaryPropertiesJson: JSON.parse(JSON.stringify(newProps.loopCache.getGlobalProperties()))
-		});
-	}
-
 	initializeToscaPolicyModelsInfo() {
 		var operationalPolicies = this.state.loopCache.getOperationalPolicies();
 		var selectedPolicyModels = [];

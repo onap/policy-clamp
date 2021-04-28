@@ -26,9 +26,12 @@ exports[`Verify DeployLoopModal Test the render method 1`] = `
   >
     <Tab
       eventKey="testMs"
+      key="testMs"
       title="testMs"
     >
-      <Styled(FormGroup)>
+      <Styled(FormGroup)
+        key="location_id"
+      >
         <FormLabel
           column={false}
           srOnly={false}
@@ -42,7 +45,9 @@ exports[`Verify DeployLoopModal Test the render method 1`] = `
           type="text"
         />
       </Styled(FormGroup)>
-      <Styled(FormGroup)>
+      <Styled(FormGroup)
+        key="policy_id"
+      >
         <FormLabel
           column={false}
           srOnly={false}

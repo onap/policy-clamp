@@ -58,7 +58,7 @@ export default class UserInfoModal extends React.Component {
 	renderPermissions() {
           if (this.state.userInfo["allPermissions"]) {
 	        var listOfPermissions = this.state.userInfo["allPermissions"].map(function(perm) {
-	            return <Form.Control plaintext readOnly defaultValue={perm} />;
+	            return <Form.Control key={perm} plaintext readOnly defaultValue={perm} />;
 	        })
 		    return listOfPermissions;
 		  } else {
