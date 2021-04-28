@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,16 +59,16 @@ class SvgGenerator extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		return this.state.loopCache !== nextState.loopCache;
+		return this.state.loopCache !== nextProps.loopCache;
 	}
 
-	componentWillReceiveProps(newProps) {
-		if (this.state.loopCache !== newProps.loopCache) {
-			this.setState({
-				loopCache: newProps.loopCache,
-			});
-		}
-	}
+    componentDidUpdate(prevProps) {
+        if (prevProps.loopCache !== this.props.loopCache) {
+            this.setState({
+                loopCache: this.props.loopCache,
+            });
+        }
+    }
 
 	handleSvgClick(event) {
 		console.debug("svg click event received");
@@ -233,10 +233,10 @@ class SvgGenerator extends React.Component {
         return (
 
             <DivStyled onClick={this.handleSvgClick} >
-                <svg height={svgHeight} width={svgWidth}  viewBox="0,0,{svgWidth},{svgHeight}" preserveAspectRatio="none">
-									<svg x="-50" y="25">
-                    {allTheElements}
-									</svg>
+                <svg key="main" height={svgHeight} width={svgWidth}  viewBox="0,0,{svgWidth},{svgHeight}" preserveAspectRatio="none">
+                    <svg key="content" x="-50" y="25">
+                        {allTheElements}
+					</svg>
                 </svg>
             </DivStyled>
         );

@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -120,13 +120,6 @@ export default class ModifyLoopModal extends React.Component {
 		this.handleAdd = this.handleAdd.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
 		this.initializeToscaPolicyModelsInfo();
-	}
-
-	componentWillReceiveProps(newProps) {
-		this.setState({
-			loopCache: newProps.loopCache,
-			temporaryPropertiesJson: JSON.parse(JSON.stringify(newProps.loopCache.getGlobalProperties()))
-		});
 	}
 
 	initializeToscaPolicyModelsInfo() {

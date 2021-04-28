@@ -1,8 +1,8 @@
 /*-
 * ============LICENSE_START=======================================================
-* ONAP CLAMP
+* ONAP POLICY-CLAMP
 * ================================================================================
-* Copyright (C) 2019 AT&T Intellectual Property. All rights
+* Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights
 *                             reserved.
 * ================================================================================
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,12 +57,13 @@ export default class LoopStatus extends React.Component {
 
 
 	renderStatus() {
-		if (this.state.loopCache.getComponentStates() != null) {
-			return Object.keys(this.state.loopCache.getComponentStates()).map((key) => {
+	    let componentStates = this.state.loopCache.getComponentStates();
+		if (componentStates != null) {
+			return Object.keys(componentStates).map((key) => {
 				console.debug("Adding status for: ",key);
 				var res={}
 				res[key]=this.state.loopCache.getComponentStates()[key];
-				return (<TableRow statusRow={{'componentName':key,'stateName':this.state.loopCache.getComponentStates()[key].componentState.stateName,'description':this.state.loopCache.getComponentStates()[key].componentState.description}} />)
+				return (<TableRow key={key} statusRow={{'componentName':key,'stateName':this.state.loopCache.getComponentStates()[key].componentState.stateName,'description':this.state.loopCache.getComponentStates()[key].componentState.description}} />)
 			})
 
 		}

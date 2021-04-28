@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2019 AT&T Intellectual Property. All rights reserved.
+ * Copyright (C) 2019, 2021 AT&T Intellectual Property. All rights reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ export default class UserInfoModal extends React.Component {
 	renderPermissions() {
           if (this.state.userInfo["allPermissions"]) {
 	        var listOfPermissions = this.state.userInfo["allPermissions"].map(function(perm) {
-	            return <Form.Control plaintext readOnly defaultValue={perm} />;
+	            return <Form.Control key={perm} plaintext readOnly defaultValue={perm} />;
 	        })
 		    return listOfPermissions;
 		  } else {

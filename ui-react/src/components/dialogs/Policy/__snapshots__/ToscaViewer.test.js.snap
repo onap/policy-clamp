@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify ToscaViewer Test the render method 1`] = `
+<styled.div>
+  <pre />
+  <Button
+    active={false}
+    disabled={false}
+    title="Create a new policy version from the defined parameters"
+    variant="secondary"
+  >
+    Create New Version
+  </Button>
+</styled.div>
+`;
