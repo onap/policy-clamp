@@ -40,6 +40,7 @@ exports[`Verify LoopStatus Test the render method 1`] = `
       </thead>
       <tbody>
         <TableRow
+          key="POLICY"
           statusRow={
             Object {
               "componentName": "POLICY",
@@ -49,6 +50,7 @@ exports[`Verify LoopStatus Test the render method 1`] = `
           }
         />
         <TableRow
+          key="DCAE"
           statusRow={
             Object {
               "componentName": "DCAE",

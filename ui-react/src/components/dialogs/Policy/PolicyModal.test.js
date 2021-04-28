@@ -1,8 +1,8 @@
 /*-
  * ============LICENSE_START=======================================================
- * ONAP CLAMP
+ * ONAP POLICY-CLAMP
  * ================================================================================
- * Copyright (C) 2020 AT&T Intellectual Property. All rights
+ * Copyright (C) 2020, 2021 AT&T Intellectual Property. All rights
  *                             reserved.
  * ================================================================================
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +26,7 @@ import PolicyModal from './PolicyModal';
 import LoopCache from '../../../api/LoopCache';
 import LoopService from '../../../api/LoopService';
 import OnapConstant from '../../../utils/OnapConstants';
+import { shallow } from 'enzyme';
 
 describe('Verify PolicyModal', () => {
     beforeEach(() => {
@@ -52,6 +53,7 @@ describe('Verify PolicyModal', () => {
                 "jsonRepresentation" : {"schema": {}}
              }]
     };
+
     const loopCache = new LoopCache(loopCacheStr);
     const historyMock = { push: jest.fn() };
     const flushPromises = () => new Promise(setImmediate);
@@ -125,4 +127,9 @@ describe('Verify PolicyModal', () => {
         instance.handlePdpSubgroupChange(event);
         expect(component.state('chosenPdpSubgroup')).toEqual("option1");
     });
+
+	it('Test the render method', () => {
+		const component = shallow(<PolicyModal loopCache={loopCache} match={match}/>)
+		expect(component).toMatchSnapshot();
+	});
 });
