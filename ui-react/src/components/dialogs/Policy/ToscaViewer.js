@@ -49,18 +49,18 @@ export default class ToscaViewer extends React.Component {
    getToscaModelYamlFor(toscaData) {
         PolicyToscaService.getToscaPolicyModelYaml(toscaData["policyModelType"], toscaData["version"]).then(respYamlPolicyTosca => {
             this.setState({
-                            yamlPolicyTosca: respYamlPolicyTosca,
-                        })
+                yamlPolicyTosca: respYamlPolicyTosca,
+            })
         });
    }
 
    render() {
        return (
-                    <ToscaDiv>
-                        <pre>{this.state.yamlPolicyTosca}</pre>
-                        <Button variant="secondary" title="Create a new policy version from the defined parameters"
-                            onClick={this.handleCreateNewVersion}>Create New Version</Button>
-                    </ToscaDiv>
+           <ToscaDiv>
+               <pre>{this.state.yamlPolicyTosca}</pre>
+               <Button variant="secondary" title="Create a new policy version from the defined parameters"
+                   onClick={this.handleCreateNewVersion}>Create New Version</Button>
+           </ToscaDiv>
        );
    }
 }
