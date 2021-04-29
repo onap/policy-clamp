@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import org.junit.Test;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
@@ -63,7 +63,7 @@ public class JpaControlLoopTest {
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaControlLoop(null, null, null, new ArrayList<>());
+            new JpaControlLoop(null, null, null, new LinkedHashMap<>());
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
@@ -71,7 +71,7 @@ public class JpaControlLoopTest {
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaControlLoop(null, null, ControlLoopState.UNINITIALISED, new ArrayList<>());
+            new JpaControlLoop(null, null, ControlLoopState.UNINITIALISED, new LinkedHashMap<>());
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
@@ -79,7 +79,7 @@ public class JpaControlLoopTest {
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaControlLoop(null, new PfConceptKey(), null, new ArrayList<>());
+            new JpaControlLoop(null, new PfConceptKey(), null, new LinkedHashMap<>());
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
@@ -87,7 +87,7 @@ public class JpaControlLoopTest {
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
-            new JpaControlLoop(null, new PfConceptKey(), ControlLoopState.UNINITIALISED, new ArrayList<>());
+            new JpaControlLoop(null, new PfConceptKey(), ControlLoopState.UNINITIALISED, new LinkedHashMap<>());
         }).hasMessageMatching(NULL_KEY_ERROR);
 
         assertThatThrownBy(() -> {
@@ -95,7 +95,7 @@ public class JpaControlLoopTest {
         }).hasMessageMatching("definition is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaControlLoop(new PfConceptKey(), null, null, new ArrayList<>());
+            new JpaControlLoop(new PfConceptKey(), null, null, new LinkedHashMap<>());
         }).hasMessageMatching("definition is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
@@ -103,7 +103,7 @@ public class JpaControlLoopTest {
         }).hasMessageMatching("definition is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaControlLoop(new PfConceptKey(), null, ControlLoopState.UNINITIALISED, new ArrayList<>());
+            new JpaControlLoop(new PfConceptKey(), null, ControlLoopState.UNINITIALISED, new LinkedHashMap<>());
         }).hasMessageMatching("definition is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
@@ -111,7 +111,7 @@ public class JpaControlLoopTest {
         }).hasMessageMatching("state is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
-            new JpaControlLoop(new PfConceptKey(), new PfConceptKey(), null, new ArrayList<>());
+            new JpaControlLoop(new PfConceptKey(), new PfConceptKey(), null, new LinkedHashMap<>());
         }).hasMessageMatching("state is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
@@ -121,7 +121,7 @@ public class JpaControlLoopTest {
         assertNotNull(new JpaControlLoop());
         assertNotNull(new JpaControlLoop((new PfConceptKey())));
         assertNotNull(new JpaControlLoop(new PfConceptKey(), new PfConceptKey(), ControlLoopState.UNINITIALISED,
-                new ArrayList<>()));
+                new LinkedHashMap<>()));
     }
 
     @Test
@@ -188,7 +188,7 @@ public class JpaControlLoopTest {
         JpaControlLoop jpaControlLoopWithElements =
                 new JpaControlLoop(controlLoopsWithElements.getControlLoopList().get(0));
         assertEquals(4, jpaControlLoopWithElements.getElements().size());
-        assertEquals(14, jpaControlLoopWithElements.getKeys().size());
+        assertEquals(18, jpaControlLoopWithElements.getKeys().size());
         assertThatCode(() -> jpaControlLoopWithElements.clean()).doesNotThrowAnyException();
 
         assertEquals(controlLoopsWithElements.getControlLoopList().get(0), jpaControlLoopWithElements.toAuthorative());
@@ -258,7 +258,7 @@ public class JpaControlLoopTest {
 
         cl1.setDefinition(new PfConceptKey("defName", "0.0.1"));
         cl1.setDescription("Description");
-        cl1.setElements(new ArrayList<>());
+        cl1.setElements(new LinkedHashMap<>());
         cl1.setKey(new PfConceptKey("participant", "0.0.1"));
         cl1.setState(ControlLoopState.UNINITIALISED);
 
@@ -289,7 +289,7 @@ public class JpaControlLoopTest {
         testControlLoop.setName("control-loop");
         testControlLoop.setVersion("0.0.1");
         testControlLoop.setDefinition(new ToscaConceptIdentifier("controlLoopDefinitionName", "0.0.1"));
-        testControlLoop.setElements(new ArrayList<>());
+        testControlLoop.setElements(new LinkedHashMap<>());
 
         return testControlLoop;
     }

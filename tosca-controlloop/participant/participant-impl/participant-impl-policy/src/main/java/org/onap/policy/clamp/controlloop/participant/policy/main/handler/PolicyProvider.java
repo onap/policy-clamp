@@ -22,13 +22,8 @@ package org.onap.policy.clamp.controlloop.participant.policy.main.handler;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.List;
 import lombok.Getter;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryFactory;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;

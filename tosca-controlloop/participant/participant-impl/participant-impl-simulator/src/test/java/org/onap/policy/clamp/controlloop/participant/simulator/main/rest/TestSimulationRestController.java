@@ -24,7 +24,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
@@ -46,6 +49,7 @@ import org.onap.policy.clamp.controlloop.participant.simulator.simulation.Simula
 import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationProvider;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 
 /**
  * Class to perform unit test of {@link TestSimulationRestController}.
@@ -124,11 +128,13 @@ public class TestSimulationRestController extends CommonParticipantRestServer {
 
         Response rawresp = invocationBuilder.buildGet().invoke();
         assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        List<ControlLoopElement> returnValue = rawresp.readEntity(new GenericType<List<ControlLoopElement>>() {});
+        Map<UUID, ControlLoopElement> returnValue =
+                        rawresp.readEntity(new GenericType<Map<UUID, ControlLoopElement>>() {});
         assertNotNull(returnValue);
         // Verify the result of GET controlloop elements with what is stored
-        assertThat(returnValue).hasSize(4);
-        assertEquals("org.onap.PM_Subscription_Handler", returnValue.get(0).getDefinition().getName());
+        assertThat(returnValue).hasSize(1);
+        returnValue.values().forEach(element -> assertEquals("org.onap.PM_CDS_Blueprint",
+                                element.getDefinition().getName()));
     }
 
     @Test
@@ -156,24 +162,25 @@ public class TestSimulationRestController extends CommonParticipantRestServer {
     public void testUpdateControlLoopElement() throws Exception {
         ControlLoop controlLoop = TestListenerUtils.createControlLoop();
         SimulationProvider provider = SimulationHandler.getInstance().getSimulationProvider();
-        List<ControlLoopElement> controlLoopElements = provider.getControlLoopElements(
+        Map<UUID, ControlLoopElement> controlLoopElements = provider.getControlLoopElements(
                 controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
 
-        // Check the initial state on the ControlLoopElement, which is UNINITIALISED
-        assertEquals(ControlLoopOrderedState.UNINITIALISED, controlLoopElements.get(0).getOrderedState());
+        for (Map.Entry<UUID, ControlLoopElement> clElement : controlLoopElements.entrySet()) {
+            // Check the initial state on the ControlLoopElement, which is UNINITIALISED
+            assertEquals(ControlLoopOrderedState.UNINITIALISED, clElement.getValue().getOrderedState());
+            // Change the state of the ControlLoopElement to PASSIVE from UNINITIALISED
+            clElement.getValue().setOrderedState(ControlLoopOrderedState.PASSIVE);
+            Entity<ControlLoopElement> entClElement = Entity.entity(clElement.getValue(), MediaType.APPLICATION_JSON);
 
-        // Change the state of the ControlLoopElement to PASSIVE from UNINITIALISED
-        controlLoopElements.get(0).setOrderedState(ControlLoopOrderedState.PASSIVE);
-        Entity<ControlLoopElement> entClElement = Entity.entity(controlLoopElements.get(0), MediaType.APPLICATION_JSON);
-
-        // PUT REST call for updating ControlLoopElement
-        Invocation.Builder invocationBuilder = sendRequest(ELEMENTS_ENDPOINT);
-        Response rawresp = invocationBuilder.put(entClElement);
-        TypedSimpleResponse<ControlLoopElement> resp = rawresp.readEntity(TypedSimpleResponse.class);
-        assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
-        assertNotNull(resp.getResponse());
-        // Verify the response and state returned by PUT REST call for updating participants
-        assertThat(resp.toString()).contains("definition={name=org.onap.PM_Subscription_Handler, version=0.0.0}");
-        assertThat(resp.toString()).contains("orderedState=PASSIVE");
+            // PUT REST call for updating ControlLoopElement
+            Invocation.Builder invocationBuilder = sendRequest(ELEMENTS_ENDPOINT);
+            Response rawresp = invocationBuilder.put(entClElement);
+            TypedSimpleResponse<ControlLoopElement> resp = rawresp.readEntity(TypedSimpleResponse.class);
+            assertEquals(Response.Status.OK.getStatusCode(), rawresp.getStatus());
+            assertNotNull(resp.getResponse());
+            // Verify the response and state returned by PUT REST call for updating participants
+            assertThat(resp.toString()).contains("definition={name=org.onap.PM_CDS_Blueprint, version=1.0.0}");
+            assertThat(resp.toString()).contains("orderedState=PASSIVE");
+        }
     }
 }

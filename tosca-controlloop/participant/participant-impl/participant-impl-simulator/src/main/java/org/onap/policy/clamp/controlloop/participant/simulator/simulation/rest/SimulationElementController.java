@@ -29,6 +29,7 @@ import io.swagger.annotations.Extension;
 import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -104,7 +105,7 @@ public class SimulationElementController extends RestController {
             @ApiParam(value = "Control loop element version", required = true) @PathParam("version") String version) {
 
         try {
-            List<ControlLoopElement> response = getSimulationProvider().getControlLoopElements(name, version);
+            Map<UUID, ControlLoopElement> response = getSimulationProvider().getControlLoopElements(name, version);
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
                     .build();
 

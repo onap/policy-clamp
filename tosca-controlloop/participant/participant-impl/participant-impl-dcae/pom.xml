@@ -32,11 +32,27 @@
     <name>${project.artifactId}</name>
     <description>DCAE participant, that allows DCAE to partake in control loops</description>
 
+    <properties>
+        <mockserver.version>5.11.2</mockserver.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.onap.policy.clamp.controlloop</groupId>
             <artifactId>participant-intermediary</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>${mockserver.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-client-java</artifactId>
+            <version>${mockserver.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

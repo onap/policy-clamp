@@ -39,6 +39,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
@@ -140,19 +141,21 @@ public class ControlLoopInstantiationProvider implements Closeable {
      */
     private BeanValidationResult validateControlLoops(ControlLoops controlLoops) throws PfModelException {
 
-        BeanValidationResult validationResult = new BeanValidationResult("ControlLoops", controlLoops);
+        BeanValidationResult result = new BeanValidationResult("ControlLoops", controlLoops);
 
         for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+            BeanValidationResult subResult = new BeanValidationResult(
+                    "entry " + controlLoop.getDefinition().getName(), controlLoop);
 
             List<ToscaNodeTemplate> toscaNodeTemplates = commissioningProvider.getControlLoopDefinitions(
                     controlLoop.getDefinition().getName(), controlLoop.getDefinition().getVersion());
 
             if (toscaNodeTemplates.isEmpty()) {
-                validationResult
+                subResult
                         .addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
                                 ValidationStatus.INVALID, "Commissioned control loop definition not FOUND"));
             } else if (toscaNodeTemplates.size() > 1) {
-                validationResult
+                subResult
                         .addResult(new ObjectValidationResult("ControlLoop", controlLoop.getDefinition().getName(),
                                 ValidationStatus.INVALID, "Commissioned control loop definition not VALID"));
             } else {
@@ -167,12 +170,13 @@ public class ControlLoopInstantiationProvider implements Closeable {
                         .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
                 // @formatter:on
 
-                for (ControlLoopElement element : controlLoop.getElements()) {
-                    validationResult.addResult(validateDefinition(definitions, element.getDefinition()));
+                for (ControlLoopElement element : controlLoop.getElements().values()) {
+                    subResult.addResult(validateDefinition(definitions, element.getDefinition()));
                 }
             }
+            result.addResult(subResult);
         }
-        return validationResult;
+        return result;
     }
 
     /**
@@ -183,15 +187,13 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * @result result the validation result
      */
     private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-            ToscaConceptIdentifier definition) {
-        BeanValidationResult result = new BeanValidationResult(definition.getName(), definition);
+                                                ToscaConceptIdentifier definition) {
+        BeanValidationResult result = new BeanValidationResult("entry " + definition.getName(), definition);
         ToscaConceptIdentifier identifier = definitions.get(definition.getName());
         if (identifier == null) {
             result.setResult(ValidationStatus.INVALID, "Not FOUND");
         } else if (!identifier.equals(definition)) {
             result.setResult(ValidationStatus.INVALID, "Version not matching");
-        } else {
-            result.setResult(ValidationStatus.CLEAN);
         }
         return (result.isClean() ? null : result);
     }
@@ -264,6 +266,8 @@ public class ControlLoopInstantiationProvider implements Closeable {
             controlLoopProvider.updateControlLoops(controlLoops);
         }
 
+        SupervisionHandler supervisionHandler = SupervisionHandler.getInstance();
+        supervisionHandler.triggerControlLoopSupervision(command.getControlLoopIdentifierList());
         InstantiationResponse response = new InstantiationResponse();
         response.setAffectedControlLoops(command.getControlLoopIdentifierList());
 

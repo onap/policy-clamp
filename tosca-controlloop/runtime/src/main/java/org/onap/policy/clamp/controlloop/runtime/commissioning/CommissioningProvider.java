@@ -40,6 +40,7 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
+import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplates;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaTypedEntityFilter;
 
 /**
@@ -189,5 +190,19 @@ public class CommissioningProvider implements Closeable {
         // @formatter:on
 
         return controlLoopElementList;
+    }
+
+    /**
+     * Get the requested control loop definitions.
+     *
+     * @param name the name of the definition to get, null for all definitions
+     * @param version the version of the definition to get, null for all definitions
+     * @return the control loop definitions
+     * @throws PfModelException on errors getting control loop definitions
+     */
+    public ToscaServiceTemplate getToscaServiceTemplate(String name, String version) throws PfModelException {
+        ToscaServiceTemplates serviceTemplates = new ToscaServiceTemplates();
+        serviceTemplates.setServiceTemplates(modelsProvider.getServiceTemplateList(name, version));
+        return serviceTemplates.getServiceTemplates().get(0);
     }
 }

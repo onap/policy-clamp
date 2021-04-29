@@ -37,6 +37,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
+import org.onap.policy.clamp.controlloop.common.startstop.CommonCommandLineArguments;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 
 /**
@@ -48,6 +49,8 @@ public class ParticipantSimulatorCommandLineArguments {
     private static final int HELP_LINE_LENGTH = 120;
 
     private final Options options;
+    private final CommonCommandLineArguments commonCommandLineArguments;
+
     @Getter()
     @Setter()
     private String configurationFilePath = null;
@@ -56,30 +59,8 @@ public class ParticipantSimulatorCommandLineArguments {
      * Construct the options for the participant component.
      */
     public ParticipantSimulatorCommandLineArguments() {
-        //@formatter:off
         options = new Options();
-        options.addOption(Option.builder("h")
-                .longOpt("help")
-                .desc("outputs the usage of this command")
-                .required(false)
-                .type(Boolean.class)
-                .build());
-        options.addOption(Option.builder("v")
-                .longOpt("version")
-                .desc("outputs the version of participant")
-                .required(false)
-                .type(Boolean.class)
-                .build());
-        options.addOption(Option.builder("c")
-                .longOpt("config-file")
-                .desc("the full path to the configuration file to use, "
-                        + "the configuration file must be a Json file containing the participant parameters")
-                .hasArg()
-                .argName("CONFIG_FILE")
-                .required(false)
-                .type(String.class)
-                .build());
-        //@formatter:on
+        commonCommandLineArguments = new CommonCommandLineArguments(options);
     }
 
     /**
@@ -110,7 +91,6 @@ public class ParticipantSimulatorCommandLineArguments {
     public String parse(final String[] args) throws ControlLoopException {
         // Clear all our arguments
         setConfigurationFilePath(null);
-
         CommandLine commandLine = null;
         try {
             commandLine = new DefaultParser().parse(options, args);
@@ -128,11 +108,11 @@ public class ParticipantSimulatorCommandLineArguments {
         }
 
         if (commandLine.hasOption('h')) {
-            return help(Main.class.getName());
+            return commonCommandLineArguments.help(Main.class.getName(), options);
         }
 
         if (commandLine.hasOption('v')) {
-            return version();
+            return commonCommandLineArguments.version();
         }
 
         if (commandLine.hasOption('c')) {
@@ -148,33 +128,7 @@ public class ParticipantSimulatorCommandLineArguments {
      * @throws ControlLoopException on command argument validation errors
      */
     public void validate() throws ControlLoopException {
-        validateReadableFile("participant configuration", configurationFilePath);
-    }
-
-    /**
-     * Print version information for participant.
-     *
-     * @return the version string
-     */
-    public String version() {
-        return ResourceUtils.getResourceAsString("version.txt");
-    }
-
-    /**
-     * Print help information for participant.
-     *
-     * @param mainClassName the main class name
-     * @return the help string
-     */
-    public String help(final String mainClassName) {
-        final HelpFormatter helpFormatter = new HelpFormatter();
-        final StringWriter stringWriter = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter(stringWriter);
-
-        helpFormatter.printHelp(printWriter, HELP_LINE_LENGTH, mainClassName + " [options...]", "options", options, 0,
-                0, "");
-
-        return stringWriter.toString();
+        commonCommandLineArguments.validate(configurationFilePath);
     }
 
     /**
@@ -193,40 +147,5 @@ public class ParticipantSimulatorCommandLineArguments {
      */
     public boolean checkSetConfigurationFilePath() {
         return !StringUtils.isEmpty(configurationFilePath);
-    }
-
-    /**
-     * Validate readable file.
-     *
-     * @param fileTag the file tag
-     * @param fileName the file name
-     * @throws ControlLoopException on the file name passed as a parameter
-     */
-    private void validateReadableFile(final String fileTag, final String fileName) throws ControlLoopException {
-        if (StringUtils.isEmpty(fileName)) {
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    fileTag + " file was not specified as an argument");
-        }
-
-        // The file name refers to a resource on the local file system
-        final URL fileUrl = ResourceUtils.getUrl4Resource(fileName);
-        if (fileUrl == null) {
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" does not exist");
-        }
-
-        final File theFile = new File(fileUrl.getPath());
-        if (!theFile.exists()) {
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" does not exist");
-        }
-        if (!theFile.isFile()) {
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" is not a normal file");
-        }
-        if (!theFile.canRead()) {
-            throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE,
-                    fileTag + FILE_MESSAGE_PREAMBLE + fileName + "\" is ureadable");
-        }
     }
 }

@@ -69,31 +69,39 @@ public abstract class ControlLoopHandler {
      *
      * @param msgDispatcher the message dispatcher with which to register the listener
      */
-    public abstract void startAndRegisterListeners(MessageTypeDispatcher msgDispatcher);
+    public void startAndRegisterListeners(MessageTypeDispatcher msgDispatcher) {
+        // Start and register listeners
+    }
 
     /**
      * Start any topic message publishers for this handler.
      *
      * @param topicSinks the topic sinks on which the publisher can publish
      */
-    public abstract void startAndRegisterPublishers(List<TopicSink> topicSinks);
-
-    /**
-     * Start any providers for this handler.
-     */
-    public abstract void startProviders();
+    public void startAndRegisterPublishers(List<TopicSink> topicSinks) {
+        // Start and register publishers
+    }
 
     /**
      * Stop any topic message publishers for this handler.
      */
-    public abstract void stopAndUnregisterPublishers();
+    public void stopAndUnregisterPublishers() {
+        // Stop and unregister publishers
+    }
 
     /**
      * Stop any topic message listeners for this handler.
      *
      * @param msgDispatcher the message dispatcher from which to unregister the listener
      */
-    public abstract void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher);
+    public void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher) {
+        // Stop and unregister listeners
+    }
+
+    /**
+     * Start any providers for this handler.
+     */
+    public abstract void startProviders();
 
     /**
      * Stop any providers for this handler.

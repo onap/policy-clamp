@@ -54,11 +54,12 @@ public class InstantiationControllerTest extends CommonRestController {
     private static final String CL_INSTANTIATION_CHANGE_STATE_JSON =
             "src/test/resources/rest/controlloops/PassiveCommand.json";
 
+    private static final String TOSCA_TEMPLATE_YAML =
+            "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
+
     private static final String INSTANTIATION_ENDPOINT = "instantiation";
 
     private static final String INSTANTIATION_COMMAND_ENDPOINT = "instantiation/command";
-
-    private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
 
     /**
      * starts Main and inserts a commissioning template.

@@ -30,8 +30,8 @@ import lombok.ToString;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
- * Class to represent the base class for various messages that will be exchanged between
- * the control loop runtime and participants.
+ * Class to represent the base class for various messages that will be exchanged between the control loop runtime and
+ * participants.
  */
 @Getter
 @Setter
@@ -43,18 +43,22 @@ public class ParticipantMessage {
     private UUID messageId = UUID.randomUUID();
 
     /**
-     * Time-stamp, in milliseconds, when the message was created. Defaults to the current
-     * time.
+     * Time-stamp, in milliseconds, when the message was created. Defaults to the current time.
      */
     private Instant timestamp = Instant.now();
 
     /**
-     * Participant ID, or {@code null} for state-change broadcast messages.
+     * Participant Type, or {@code null} for messages from participants.
+     */
+    private ToscaConceptIdentifier participantType;
+
+    /**
+     * Participant ID, or {@code null} for messages from participants.
      */
     private ToscaConceptIdentifier participantId;
 
     /**
-     * Control loop ID. For state-change messages, this may be {@code null}.
+     * Control loop ID, or {@code null} for messages to participants.
      */
     private ToscaConceptIdentifier controlLoopId;
 
@@ -68,30 +72,42 @@ public class ParticipantMessage {
     }
 
     /**
-     * Constructs the object, making a deep copy. Does <i>not</i> copy the request id or
-     * the time stamp.
+     * Constructs the object, making a deep copy. Does <i>not</i> copy the request id or the time stamp.
      *
      * @param source source from which to copy
      */
     public ParticipantMessage(final ParticipantMessage source) {
         this.messageType = source.messageType;
+        this.participantType = source.participantType;
         this.participantId = source.participantId;
         this.controlLoopId = source.controlLoopId;
     }
 
     /**
-     * Determines if this message applies to this participant.
+     * Determines if this message applies to this participant type.
      *
+     * @param participantType type of the participant to match against
      * @param participantId id of the participant to match against
      * @return {@code true} if this message applies to this participant, {@code false} otherwise
      */
-    public boolean appliesTo(@NonNull final ToscaConceptIdentifier participantId) {
-        if (participantId.equals(this.participantId)) {
+    public boolean appliesTo(@NonNull final ToscaConceptIdentifier participantType,
+            @NonNull final ToscaConceptIdentifier participantId) {
+        // Broadcast message to all participants
+        if (this.participantType == null) {
             return true;
         }
 
-        // false: message included a participant ID, but it does not match
-        // true: its a broadcast message
-        return this.participantId == null;
+        // Broadcast message to all control loop elements on this participant
+        if (participantType.equals(this.participantType) && this.participantId == null) {
+            return true;
+        }
+
+        // Targeted message at this specific participant
+        if (participantType.equals(this.participantType) && participantId.equals(this.participantId)) {
+            return true;
+        }
+
+        // Message is not for this participant
+        return false;
     }
 }

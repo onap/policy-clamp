@@ -3,6 +3,10 @@
     "participantStatusParameters":{
         "timeIntervalMs":10000,
         "description":"Participant Status",
+        "participantType":{
+            "name": "org.onap.policy.controlloop.PolicyControlLoopParticipant",
+            "version":"2.3.1"
+        },
         "participantId":{
             "name": "PolicyParticipant0",
             "version":"1.0.0"

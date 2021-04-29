@@ -26,6 +26,7 @@ import lombok.ToString;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 
 /**
  * Class to represent the PARTICIPANT_STATUS message that all the participants send to the control loop runtime.
@@ -43,6 +44,9 @@ public class ParticipantStatus extends ParticipantMessage {
 
     // Control Loops on the participant
     private ControlLoops controlLoops;
+
+    // Participant statistics
+    private ParticipantStatistics participantStatistics;
 
     // Description. May be left {@code null}.
     private String message;

@@ -20,13 +20,15 @@
 
 package org.onap.policy.clamp.controlloop.participant.intermediary.api.impl;
 
-import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
@@ -85,34 +87,43 @@ public class ParticipantIntermediaryApiImpl implements ParticipantIntermediaryAp
     }
 
     @Override
-    public List<ControlLoopElement> getControlLoopElements(String name, String version) {
+    public Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version) {
         List<ControlLoop> controlLoops = activator.getParticipantHandler()
                 .getControlLoopHandler().getControlLoops().getControlLoopList();
 
         for (ControlLoop controlLoop : controlLoops) {
-            if (controlLoop.getDefinition().getName().equals(name)) {
+            if (name.equals(controlLoop.getDefinition().getName())) {
                 return controlLoop.getElements();
             }
         }
-        return Collections.emptyList();
+        return new LinkedHashMap<>();
+    }
+    
+    @Override
+    public ControlLoopElement getControlLoopElement(UUID id) {
+        List<ControlLoop> controlLoops = activator.getParticipantHandler()
+                .getControlLoopHandler().getControlLoops().getControlLoopList();
+
+        for (ControlLoop controlLoop : controlLoops) {
+            ControlLoopElement clElement = controlLoop.getElements().get(id);
+            if (clElement != null) {
+                return clElement;
+            }
+        }
+        return null;
     }
 
     @Override
-    public ControlLoop updateControlLoopState(ToscaConceptIdentifier definition, ControlLoopOrderedState state) {
+    public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState currentState,
+            ControlLoopState newState) {
         return activator.getParticipantHandler().getControlLoopHandler()
-                .updateControlLoopState(definition, state);
+                .updateControlLoopElementState(id, currentState, newState);
     }
 
     @Override
-    public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState state) {
-        return activator.getParticipantHandler().getControlLoopHandler()
-                .updateControlLoopElementState(id, state);
-    }
-
-    @Override
-    public void updateControlLoopElementStatistics(ClElementStatistics elementStatistics) {
+    public void updateControlLoopElementStatistics(UUID id, ClElementStatistics elementStatistics) {
         activator.getParticipantHandler().getControlLoopHandler()
-        .updateControlLoopElementStatistics(elementStatistics);
+        .updateControlLoopElementStatistics(id, elementStatistics);
     }
 
     @Override

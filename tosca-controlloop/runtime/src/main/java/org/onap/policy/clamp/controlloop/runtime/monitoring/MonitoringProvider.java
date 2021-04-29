@@ -206,7 +206,7 @@ public class MonitoringProvider implements Closeable {
             ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name,
                 version));
             if (controlLoop != null) {
-                clElements.addAll(controlLoop.getElements());
+                clElements.addAll(controlLoop.getElements().values());
                 //Collect control loop element statistics for each cl element.
                 for (ControlLoopElement clElement : clElements) {
                     clElementStats.addAll(fetchFilteredClElementStatistics(clElement.getParticipantId().getName(),
@@ -235,7 +235,7 @@ public class MonitoringProvider implements Closeable {
         List<ToscaConceptIdentifier> participantIds = new ArrayList<>();
         ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
         if (controlLoop != null) {
-            for (ControlLoopElement clElement : controlLoop.getElements()) {
+            for (ControlLoopElement clElement : controlLoop.getElements().values()) {
                 participantIds.add(clElement.getParticipantId());
             }
         }
@@ -256,7 +256,7 @@ public class MonitoringProvider implements Closeable {
         Map<String, ToscaConceptIdentifier> clElementId = new HashMap<>();
         ControlLoop controlLoop = controlLoopProvider.getControlLoop(new ToscaConceptIdentifier(name, version));
         if (controlLoop != null) {
-            for (ControlLoopElement clElement : controlLoop.getElements()) {
+            for (ControlLoopElement clElement : controlLoop.getElements().values()) {
                 clElementId.put(clElement.getId().toString(), clElement.getParticipantId());
             }
         }
