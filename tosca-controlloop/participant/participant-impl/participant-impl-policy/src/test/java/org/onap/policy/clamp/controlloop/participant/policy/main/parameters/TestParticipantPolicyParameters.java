@@ -23,10 +23,11 @@ package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 import java.util.Map;
 import org.junit.Test;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.BeanValidationResult;
 
 public class TestParticipantPolicyParameters {
     CommonTestData commonTestData = new CommonTestData();
@@ -50,7 +51,7 @@ public class TestParticipantPolicyParameters {
         final ParticipantPolicyParameters participantParameters = commonTestData
                 .toObject(commonTestData.getParticipantPolicyParametersMap(null),
                         ParticipantPolicyParameters.class);
-        final GroupValidationResult validationResult = participantParameters.validate();
+        final BeanValidationResult validationResult = participantParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals(null, participantParameters.getName());
         assertThat(validationResult.getResult()).contains("is null");
@@ -61,11 +62,11 @@ public class TestParticipantPolicyParameters {
         final ParticipantPolicyParameters participantParameters = commonTestData
                 .toObject(commonTestData.getParticipantPolicyParametersMap(""),
                                 ParticipantPolicyParameters.class);
-        final GroupValidationResult validationResult = participantParameters.validate();
+        final BeanValidationResult validationResult = participantParameters.validate();
         assertFalse(validationResult.isValid());
         assertEquals("", participantParameters.getName());
         assertThat(validationResult.getResult()).contains(
-                "field \"name\" type \"java.lang.String\" value \"\" INVALID, " + "must be a non-blank string");
+                "item \"name\" value \"\" INVALID, " + "is blank");
     }
 
     @Test
@@ -85,12 +86,8 @@ public class TestParticipantPolicyParameters {
         map.replace("intermediaryParameters", commonTestData.getIntermediaryParametersMap(true));
         final ParticipantPolicyParameters participantParameters =
                 commonTestData.toObject(map, ParticipantPolicyParameters.class);
-        final GroupValidationResult validationResult = participantParameters.validate();
-        assertFalse(validationResult.isValid());
-        assertThat(validationResult.getResult()).contains(
-                        "\"org.onap.policy.clamp.controlloop.participant.policy.main.parameters."
-                        + "ParticipantPolicyParameters\""
-                        + " INVALID, parameter group has status INVALID");
+        final BeanValidationResult validationResult = participantParameters.validate();
+        assertNull(validationResult.getResult());
     }
 
     @Test
@@ -103,10 +100,7 @@ public class TestParticipantPolicyParameters {
 
         final ParticipantPolicyParameters participantParameters =
                 commonTestData.toObject(map, ParticipantPolicyParameters.class);
-        final GroupValidationResult validationResult = participantParameters.validate();
-        assertFalse(validationResult.isValid());
-        assertThat(validationResult.getResult())
-                .contains("\"org.onap.policy.common.endpoints.parameters.TopicParameterGroup\" INVALID, "
-                        + "parameter group has status INVALID");
+        final BeanValidationResult validationResult = participantParameters.validate();
+        assertNull(validationResult.getResult());
     }
 }

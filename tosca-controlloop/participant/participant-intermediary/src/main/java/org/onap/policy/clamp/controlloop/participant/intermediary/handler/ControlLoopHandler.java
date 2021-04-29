@@ -52,27 +52,27 @@ import org.slf4j.LoggerFactory;
 public class ControlLoopHandler implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopHandler.class);
 
+    private ToscaConceptIdentifier participantType = null;
     private ToscaConceptIdentifier participantId = null;
-    private MessageSender sender = null;
+    private MessageSender messageSender = null;
 
     private final Map<ToscaConceptIdentifier, ControlLoop> controlLoopMap = new LinkedHashMap<>();
-    private final Map<UUID, ControlLoopElement> elementsOnThisParticipant = new LinkedHashMap<>();
 
     @Getter
     private List<ControlLoopElementListener> listeners = new ArrayList<>();
 
-    public ControlLoopHandler() {
-    }
+    public ControlLoopHandler() {}
 
     /**
-     * Constructor, set the participant ID and sender.
+     * Constructor, set the participant ID and messageSender.
      *
      * @param parameters the parameters of the participant
-     * @param sender the sender for sending responses to messages
+     * @param messageSender the messageSender for sending responses to messages
      */
-    public ControlLoopHandler(ParticipantIntermediaryParameters parameters, MessageSender sender) {
+    public ControlLoopHandler(ParticipantIntermediaryParameters parameters, MessageSender messageSender) {
+        this.participantType = parameters.getParticipantType();
         this.participantId = parameters.getParticipantId();
-        this.sender = sender;
+        this.messageSender = messageSender;
     }
 
     @Override
@@ -83,58 +83,53 @@ public class ControlLoopHandler implements Closeable {
     public void registerControlLoopElementListener(ControlLoopElementListener listener) {
         listeners.add(listener);
     }
-
+    
     /**
      * Handle a control loop element state change message.
      *
      * @param id controlloop element id
-     * @param state the updated state
+     * @param orderedState the current state
+     * @param newState the ordered state
      * @return controlLoopElement the updated controlloop element
      */
-    public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState state) {
+    public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState orderedState,
+            ControlLoopState newState) {
 
         if (id == null) {
             return null;
         }
 
-        ControlLoopElement clElement = elementsOnThisParticipant.get(id);
-        if (clElement != null) {
-            clElement.setOrderedState(state);
-            LOGGER.debug("Control loop element {} ordered state changed to {}", id, state);
-            ParticipantResponseDetails response = new ParticipantResponseDetails();
-            sender.sendResponse(response);
-            return elementsOnThisParticipant.get(id);
+        for (ControlLoop controlLoop : controlLoopMap.values()) {
+            ControlLoopElement clElement = controlLoop.getElements().get(id);
+            if (clElement != null) {
+                clElement.setOrderedState(orderedState);
+                clElement.setState(newState);
+                LOGGER.debug("Control loop element {} state changed to {}", id, newState);
+                ParticipantResponseDetails response = new ParticipantResponseDetails();
+                response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
+                response.setResponseMessage("ControlLoopElement state changed to {} " + newState);
+                messageSender.sendResponse(response);
+                return clElement;
+            }
         }
 
         return null;
     }
 
-    public void updateControlLoopElementStatistics(ClElementStatistics elementStatistics) {
-        // TODO Handle statistics coming from a participant implementation
-    }
-
     /**
-     * Handle a control loop state change message.
+     * Handle a control loop element statistics.
      *
-     * @param definition controlloop id
-     * @param state the updated state
-     * @return controlLoop the updated controlloop
+     * @param id controlloop element id
+     * @param elementStatistics control loop element Statistics
      */
-    public ControlLoop updateControlLoopState(ToscaConceptIdentifier definition, ControlLoopOrderedState state) {
-        if (definition == null) {
-            return null;
+    public void updateControlLoopElementStatistics(UUID id, ClElementStatistics elementStatistics) {
+        for (ControlLoop controlLoop : getControlLoops().getControlLoopList()) {
+            if (controlLoop.getElements().get(id) != null) {
+                elementStatistics.setParticipantId(participantId);
+                elementStatistics.setId(id);
+                controlLoop.getElements().get(id).setClElementStatistics(elementStatistics);
+            }
         }
-
-        ControlLoop controlLoop = controlLoopMap.get(definition);
-        if (controlLoop == null) {
-            LOGGER.debug("Control loop {} does not use this participant", definition.getName());
-            return null;
-        }
-
-        ParticipantResponseDetails response = new ParticipantResponseDetails();
-        handleState(controlLoop, response, state);
-        sender.sendResponse(response);
-        return controlLoop;
     }
 
     /**
@@ -156,7 +151,7 @@ public class ControlLoopHandler implements Closeable {
 
         ParticipantResponseDetails response = new ParticipantResponseDetails(stateChangeMsg);
         handleState(controlLoop, response, stateChangeMsg.getOrderedState());
-        sender.sendResponse(response);
+        messageSender.sendResponse(response);
     }
 
     /**
@@ -164,19 +159,19 @@ public class ControlLoopHandler implements Closeable {
      *
      * @param controlLoop participant response
      * @param response participant response
-     * @param state controlloop ordered state
+     * @param orderedState controlloop ordered state
      */
     private void handleState(final ControlLoop controlLoop, final ParticipantResponseDetails response,
-            ControlLoopOrderedState state) {
-        switch (state) {
+            ControlLoopOrderedState orderedState) {
+        switch (orderedState) {
             case UNINITIALISED:
-                handleUninitialisedState(controlLoop, response);
+                handleUninitialisedState(controlLoop, orderedState, response);
                 break;
             case PASSIVE:
-                handlePassiveState(controlLoop, response);
+                handlePassiveState(controlLoop, orderedState, response);
                 break;
             case RUNNING:
-                handleRunningState(controlLoop, response);
+                handleRunningState(controlLoop, orderedState, response);
                 break;
             default:
                 LOGGER.debug("StateChange message has no state, state is null {}", controlLoop.getDefinition());
@@ -190,10 +185,6 @@ public class ControlLoopHandler implements Closeable {
      * @param updateMsg the update message
      */
     public void handleControlLoopUpdate(ParticipantControlLoopUpdate updateMsg) {
-        if (!updateMsg.appliesTo(participantId)) {
-            return;
-        }
-
         ControlLoop controlLoop = controlLoopMap.get(updateMsg.getControlLoopId());
 
         ParticipantResponseDetails response = new ParticipantResponseDetails(updateMsg);
@@ -205,22 +196,24 @@ public class ControlLoopHandler implements Closeable {
             response.setResponseMessage("Control loop " + updateMsg.getControlLoopId()
                     + " already defined on participant " + participantId);
 
-            sender.sendResponse(response);
+            messageSender.sendResponse(response);
             return;
         }
 
         controlLoop = updateMsg.getControlLoop();
-        controlLoop.getElements().removeIf(element -> participantId.equals(element.getParticipantId()));
+        controlLoop.getElements().values().removeIf(element -> !participantType.equals(element.getParticipantType()));
 
         controlLoopMap.put(updateMsg.getControlLoopId(), controlLoop);
-        for (ControlLoopElement element : updateMsg.getControlLoop().getElements()) {
+        for (ControlLoopElement element : updateMsg.getControlLoop().getElements().values()) {
             element.setState(element.getOrderedState().asState());
-            elementsOnThisParticipant.put(element.getId(), element);
+            element.setParticipantId(participantId);
         }
 
         for (ControlLoopElementListener clElementListener : listeners) {
             try {
-                clElementListener.controlLoopElementUpdate(null, updateMsg.getControlLoopDefinition());
+                for (ControlLoopElement element : updateMsg.getControlLoop().getElements().values()) {
+                    clElementListener.controlLoopElementUpdate(element, updateMsg.getControlLoopDefinition());
+                }
             } catch (PfModelException e) {
                 LOGGER.debug("Control loop element update failed {}", updateMsg.getControlLoopId());
             }
@@ -230,63 +223,84 @@ public class ControlLoopHandler implements Closeable {
         response.setResponseMessage(
                 "Control loop " + updateMsg.getControlLoopId() + " defined on participant " + participantId);
 
-        sender.sendResponse(response);
+        messageSender.sendResponse(response);
     }
 
     /**
      * Method to handle when the new state from participant is UNINITIALISED state.
      *
      * @param controlLoop participant response
+     * @param orderedState orderedState
      * @param response participant response
      */
-    private void handleUninitialisedState(final ControlLoop controlLoop, final ParticipantResponseDetails response) {
-        handleStateChange(controlLoop, ControlLoopState.UNINITIALISED, response);
+    private void handleUninitialisedState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            final ParticipantResponseDetails response) {
+        handleStateChange(controlLoop, orderedState, ControlLoopState.UNINITIALISED, response);
         controlLoopMap.remove(controlLoop.getKey().asIdentifier());
+
+        for (ControlLoopElementListener clElementListener : listeners) {
+            try {
+                for (ControlLoopElement element : controlLoop.getElements().values()) {
+                    clElementListener.controlLoopElementStateChange(element.getId(), element.getState(),
+                            orderedState);
+                }
+            } catch (PfModelException e) {
+                LOGGER.debug("Control loop element update failed {}", controlLoop.getDefinition());
+            }
+        }
     }
 
     /**
      * Method to handle when the new state from participant is PASSIVE state.
      *
      * @param controlLoop participant response
+     * @param orderedState orderedState
      * @param response participant response
      */
-    private void handlePassiveState(final ControlLoop controlLoop, final ParticipantResponseDetails response) {
-        handleStateChange(controlLoop, ControlLoopState.PASSIVE, response);
+    private void handlePassiveState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            final ParticipantResponseDetails response) {
+        handleStateChange(controlLoop, orderedState, ControlLoopState.PASSIVE, response);
     }
 
     /**
      * Method to handle when the new state from participant is RUNNING state.
      *
      * @param controlLoop participant response
+     * @param orderedState orderedState
      * @param response participant response
      */
-    private void handleRunningState(final ControlLoop controlLoop, final ParticipantResponseDetails response) {
-        handleStateChange(controlLoop, ControlLoopState.RUNNING, response);
+    private void handleRunningState(final ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            final ParticipantResponseDetails response) {
+        handleStateChange(controlLoop, orderedState, ControlLoopState.RUNNING, response);
     }
-
+    
     /**
      * Method to update the state of control loop elements.
      *
      * @param controlLoop participant status in memory
+     * @param orderedState orderedState
      * @param state new state of the control loop elements
      */
-    private void handleStateChange(ControlLoop controlLoop, ControlLoopState newState,
-            ParticipantResponseDetails response) {
+    private void handleStateChange(ControlLoop controlLoop, final ControlLoopOrderedState orderedState,
+            ControlLoopState newState, ParticipantResponseDetails response) {
 
-        if (newState.equals(controlLoop.getState())) {
+        if (orderedState.equals(controlLoop.getOrderedState())) {
             response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-            response.setResponseMessage("Control loop is already in state " + newState);
+            response.setResponseMessage("Control loop is already in state " + orderedState);
             return;
         }
 
-        if (!CollectionUtils.isEmpty(controlLoop.getElements())) {
-            controlLoop.getElements().forEach(element -> element.setState(newState));
+        if (!CollectionUtils.isEmpty(controlLoop.getElements().values())) {
+            controlLoop.getElements().values().forEach(element -> element.setState(newState));
+            controlLoop.getElements().values().forEach(element -> element.setOrderedState(orderedState));
         }
 
         response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
-        response.setResponseMessage("ControlLoop state changed from " + controlLoop.getState() + " to " + newState);
-        controlLoop.setState(newState);
+        response.setResponseMessage("ControlLoop state changed from " + controlLoop.getOrderedState()
+                        + " to " + orderedState);
+        controlLoop.setOrderedState(orderedState);
     }
+
 
     /**
      * Get control loops as a {@link ConrolLoops} class.

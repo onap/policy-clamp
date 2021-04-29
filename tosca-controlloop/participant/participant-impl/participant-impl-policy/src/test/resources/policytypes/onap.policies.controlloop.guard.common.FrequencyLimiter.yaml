@@ -23,4 +23,3 @@ policy_types:
                 required: true
                 constraints:
                 -   greater_than: 0
-

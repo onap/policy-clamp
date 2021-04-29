@@ -611,4 +611,3 @@ topology_template:
         status: NOT_DEPLOYED
       version: 0.0.0
 version: 0.0.0
-

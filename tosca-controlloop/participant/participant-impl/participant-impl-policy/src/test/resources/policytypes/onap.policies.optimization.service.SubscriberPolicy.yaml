@@ -33,4 +33,3 @@ data_types:
                     contextAttribute: true
                 entry_schema:
                     type: string
-

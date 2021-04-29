@@ -20,21 +20,21 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concepts;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -96,16 +96,9 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
     private String description;
 
     // @formatter:off
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @CollectionTable(joinColumns = {
-            @JoinColumn(name = "controlLoopParentKeyName",    referencedColumnName = "parentKeyName"),
-            @JoinColumn(name = "controlLoopParentKeyVersion", referencedColumnName = "parentKeyVersion"),
-            @JoinColumn(name = "controlLoopParentLocalName",  referencedColumnName = "parentLocalName"),
-            @JoinColumn(name = "controlLoopLocalUUID",        referencedColumnName = "localUUID")
-        })
-    // @formatter:on
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @NotNull
-    private List<@NotNull @Valid JpaControlLoopElement> elements;
+    private Map<@NotNull UUID, @NotNull @Valid JpaControlLoopElement> elements;
 
     /**
      * The Default Constructor creates a {@link JpaControlLoop} object with a null key.
@@ -120,7 +113,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
      * @param key the key
      */
     public JpaControlLoop(@NonNull final PfConceptKey key) {
-        this(key, new PfConceptKey(), ControlLoopState.UNINITIALISED, new ArrayList<>());
+        this(key, new PfConceptKey(), ControlLoopState.UNINITIALISED, new LinkedHashMap<>());
     }
 
     /**
@@ -132,7 +125,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
      * @param elements the elements of the control looop in participants
      */
     public JpaControlLoop(@NonNull final PfConceptKey key, @NonNull final PfConceptKey definition,
-            @NonNull final ControlLoopState state, @NonNull final List<JpaControlLoopElement> elements) {
+            @NonNull final ControlLoopState state, @NonNull final Map<UUID, JpaControlLoopElement> elements) {
         this.key = key;
         this.definition = definition;
         this.state = state;
@@ -151,7 +144,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
         this.state = copyConcept.state;
         this.orderedState = copyConcept.orderedState;
         this.description = copyConcept.description;
-        this.elements = PfUtils.mapList(copyConcept.elements, JpaControlLoopElement::new, new ArrayList<>(0));
+        this.elements = PfUtils.mapMap(copyConcept.elements, JpaControlLoopElement::new, new LinkedHashMap<>(0));
     }
 
     /**
@@ -173,9 +166,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
         controlLoop.setState(state);
         controlLoop.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
         controlLoop.setDescription(description);
-
-        controlLoop
-                .setElements(elements.stream().map(JpaControlLoopElement::toAuthorative).collect(Collectors.toList()));
+        controlLoop.setElements(PfUtils.mapMap(elements, JpaControlLoopElement::toAuthorative, new LinkedHashMap<>(0)));
 
         return controlLoop;
     }
@@ -191,12 +182,12 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
         this.orderedState = controlLoop.getOrderedState();
         this.description = controlLoop.getDescription();
 
-        this.elements = new ArrayList<>(controlLoop.getElements().size());
-        for (ControlLoopElement element : controlLoop.getElements()) {
+        this.elements = new LinkedHashMap<>(controlLoop.getElements().size());
+        for (Entry<UUID, ControlLoopElement> elementEntry : controlLoop.getElements().entrySet()) {
             JpaControlLoopElement jpaControlLoopElement = new JpaControlLoopElement();
-            jpaControlLoopElement.setKey(new PfReferenceKey(getKey(), element.getId().toString()));
-            jpaControlLoopElement.fromAuthorative(element);
-            this.elements.add(jpaControlLoopElement);
+            jpaControlLoopElement.setKey(new PfReferenceKey(getKey(), elementEntry.getValue().getId().toString()));
+            jpaControlLoopElement.fromAuthorative(elementEntry.getValue());
+            this.elements.put(elementEntry.getKey(), jpaControlLoopElement);
         }
     }
 
@@ -206,7 +197,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
 
         keyList.add(definition);
 
-        for (JpaControlLoopElement element : elements) {
+        for (JpaControlLoopElement element : elements.values()) {
             keyList.addAll(element.getKeys());
         }
 
@@ -219,7 +210,7 @@ public class JpaControlLoop extends PfConcept implements PfAuthorative<ControlLo
         definition.clean();
         description = (description == null ? null : description.trim());
 
-        for (JpaControlLoopElement element : elements) {
+        for (JpaControlLoopElement element : elements.values()) {
             element.clean();
         }
     }

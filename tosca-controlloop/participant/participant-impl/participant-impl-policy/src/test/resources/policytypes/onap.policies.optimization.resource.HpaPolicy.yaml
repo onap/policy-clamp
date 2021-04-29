@@ -102,4 +102,3 @@ data_types:
          unit:
             type: string
             required: false
-

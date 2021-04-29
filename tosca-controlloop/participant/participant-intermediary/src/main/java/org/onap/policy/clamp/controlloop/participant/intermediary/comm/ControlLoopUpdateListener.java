@@ -51,7 +51,13 @@ public class ControlLoopUpdateListener extends ScoListener<ParticipantControlLoo
     public void onTopicEvent(final CommInfrastructure infra, final String topic, final StandardCoderObject sco,
             final ParticipantControlLoopUpdate participantControlLoopUpdateMsg) {
         LOGGER.debug("Control Loop update received from CLAMP - {}", participantControlLoopUpdateMsg);
-        participantHandler.getControlLoopHandler().handleControlLoopUpdate(participantControlLoopUpdateMsg);
+
+        if (participantHandler.appliesTo(participantControlLoopUpdateMsg)) {
+            LOGGER.debug("Message for this participant - {}", participantControlLoopUpdateMsg);
+            participantHandler.getControlLoopHandler().handleControlLoopUpdate(participantControlLoopUpdateMsg);
+        } else {
+            LOGGER.debug("Message not for this participant - {}", participantControlLoopUpdateMsg);
+        }
     }
 
     @Override

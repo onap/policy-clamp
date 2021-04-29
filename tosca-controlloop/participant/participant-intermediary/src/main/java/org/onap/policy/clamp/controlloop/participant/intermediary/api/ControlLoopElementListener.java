@@ -24,7 +24,6 @@ import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
-import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
@@ -38,17 +37,26 @@ public interface ControlLoopElementListener {
      * @param controlLoopElementId the ID of the control loop element
      * @param currentState the current state of the control loop element
      * @param newState the state to which the control loop element is changing to
+     * @throws PfModelException in case of a model exception
      */
     public void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
-            ControlLoopOrderedState newState);
+            ControlLoopOrderedState newState) throws PfModelException;
 
     /**
      * Handle an update on a control loop element.
      *
      * @param element the information on the control loop element
      * @param controlLoopDefinition toscaServiceTemplate
-     * @throws PfModelException in case of a model exception
+     * @throws PfModelException from Policy framework
      */
     public void controlLoopElementUpdate(ControlLoopElement element,
             ToscaServiceTemplate controlLoopDefinition) throws PfModelException;
+
+    /**
+     * Get controlLoopElement statistics.
+     *
+     * @param controlLoopElementId controlLoopElement id
+     * @throws PfModelException in case of a model exception
+     */
+    public void getClElementStatistics(UUID controlLoopElementId) throws PfModelException;
 }

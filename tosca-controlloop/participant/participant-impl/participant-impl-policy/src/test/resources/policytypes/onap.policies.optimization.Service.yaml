@@ -14,4 +14,3 @@ policy_types:
             required: true
             entry_schema:
                type: string
-

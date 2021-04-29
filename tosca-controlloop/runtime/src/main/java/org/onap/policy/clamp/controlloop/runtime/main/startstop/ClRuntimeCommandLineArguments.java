@@ -33,12 +33,14 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
 import org.onap.policy.common.utils.resources.ResourceUtils;
 
 
 /**
  * This class reads and handles command line parameters for the control loop runtime service.
  *
+ * @author Ram Krishna Verma (ram.krishna.verma@est.tech)
  */
 public class ClRuntimeCommandLineArguments {
     private static final String FILE_MESSAGE_PREAMBLE = " file \"";
@@ -75,6 +77,24 @@ public class ClRuntimeCommandLineArguments {
                 .type(String.class)
                 .build());
         //@formatter:on
+    }
+
+    /**
+     * Construct the options for the CLI editor and parse in the given arguments.
+     *
+     * @param args The command line arguments
+     */
+    public ClRuntimeCommandLineArguments(final String[] args) {
+        // Set up the options with the default constructor
+        this();
+
+        // Parse the arguments
+        try {
+            parse(args);
+        } catch (final ControlLoopException e) {
+            throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE,
+                    "parse error on control loop runtime parameters", e);
+        }
     }
 
     /**

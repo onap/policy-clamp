@@ -116,7 +116,7 @@ public class MainTest {
 
     private void assertThatConfigParameterThrownException(final String[] configParameters) {
         assertThatThrownBy(() -> Main.main(configParameters)).isInstanceOf(ControlLoopRuntimeException.class)
-                .hasMessage(POLICY_CLAMP_FAILURE_MSG);
+                .hasMessage(String.format(POLICY_CLAMP_FAILURE_MSG));
     }
 
     @Test
@@ -152,6 +152,6 @@ public class MainTest {
     private void assertThatConfigFileThrownException(final String configFilePath) {
         final String[] configParameters = new String[] {"-c", configFilePath};
         assertThatThrownBy(() -> new Main(configParameters)).isInstanceOf(ControlLoopRuntimeException.class)
-                .hasMessage(POLICY_CLAMP_FAILURE_MSG);
+                .hasMessage(String.format(POLICY_CLAMP_FAILURE_MSG));
     }
 }

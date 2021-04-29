@@ -30,4 +30,3 @@ policy_types:
             description: Used internally for identification
             type: string
             required: true
-

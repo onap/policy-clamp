@@ -24,7 +24,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -190,6 +189,6 @@ public class JpaClElementStatistics extends PfConcept implements PfAuthorative<C
 
         final JpaClElementStatistics other = (JpaClElementStatistics) otherConcept;
         return new CompareToBuilder().append(this.key, other.key).append(this.state, other.state)
-            .append(this.clElementUptime, other.clElementUptime).toComparison();
+                .append(this.clElementUptime, other.clElementUptime).toComparison();
     }
 }

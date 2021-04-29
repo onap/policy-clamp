@@ -24,7 +24,7 @@ import java.io.File;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.runtime.main.startstop.ClRuntimeCommandLineArguments;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -66,7 +66,7 @@ public class ClRuntimeParameterHandler {
         }
 
         // validate the parameters
-        final GroupValidationResult validationResult = clRuntimeParameterGroup.validate();
+        final BeanValidationResult validationResult = clRuntimeParameterGroup.validate();
         if (!validationResult.isValid()) {
             throw new ControlLoopException(Response.Status.NOT_ACCEPTABLE, "validation error(s) on parameters from \""
                     + arguments.getConfigurationFilePath() + "\"\n" + validationResult.getResult());

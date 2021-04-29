@@ -57,7 +57,7 @@ public class CommonTestData {
      * @return the standard Control Loop parameters as string
      */
     public static String getParameterGroupAsString(final int port, final String dbName) {
-        return ResourceUtils.getResourceAsString("src/test/resources/parameters/ConfigParametersStd.json")
+        return ResourceUtils.getResourceAsString("src/test/resources/parameters/InstantiationConfigParametersStd.json")
                 .replace("${port}", String.valueOf(port)).replace("${dbName}", "jdbc:h2:mem:" + dbName);
     }
 }

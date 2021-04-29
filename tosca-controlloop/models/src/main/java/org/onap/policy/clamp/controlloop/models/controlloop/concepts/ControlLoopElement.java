@@ -25,7 +25,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
-import org.onap.policy.models.base.PfKey;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -39,10 +39,13 @@ public class ControlLoopElement {
     private UUID id = UUID.randomUUID();
 
     @NonNull
-    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_NAME);
+    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
-    private ToscaConceptIdentifier participantId = new ToscaConceptIdentifier(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_NAME);
+    private ToscaConceptIdentifier participantType = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
+
+    @NonNull
+    private ToscaConceptIdentifier participantId = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
     private ControlLoopState state = ControlLoopState.UNINITIALISED;
@@ -52,6 +55,8 @@ public class ControlLoopElement {
 
     private String description;
 
+    private ClElementStatistics clElementStatistics;
+
     /**
      * Copy constructor, does a deep copy but as all fields here are immutable, it's just a regular copy.
      *
@@ -60,9 +65,11 @@ public class ControlLoopElement {
     public ControlLoopElement(final ControlLoopElement otherElement) {
         this.id = otherElement.id;
         this.definition = new ToscaConceptIdentifier(otherElement.definition);
+        this.participantType = new ToscaConceptIdentifier(otherElement.participantType);
         this.participantId = new ToscaConceptIdentifier(otherElement.participantId);
         this.state = otherElement.state;
         this.orderedState = otherElement.orderedState;
         this.description = otherElement.description;
+        this.clElementStatistics = otherElement.clElementStatistics;
     }
 }

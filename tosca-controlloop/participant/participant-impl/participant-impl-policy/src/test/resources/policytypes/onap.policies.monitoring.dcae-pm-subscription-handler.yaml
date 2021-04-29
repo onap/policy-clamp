@@ -129,4 +129,3 @@ data_types:
             type: string
             description: Managed object distinguished name
             required: true
-

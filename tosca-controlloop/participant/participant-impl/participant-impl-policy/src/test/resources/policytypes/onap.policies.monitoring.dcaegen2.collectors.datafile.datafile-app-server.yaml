@@ -16,4 +16,3 @@ policy_types:
          datafile.policy:
             type: string
             description: datafile Policy JSON as string
-

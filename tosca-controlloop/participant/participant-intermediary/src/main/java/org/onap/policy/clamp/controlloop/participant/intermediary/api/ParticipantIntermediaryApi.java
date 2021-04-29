@@ -21,11 +21,13 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.api;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
@@ -43,19 +45,19 @@ public interface ParticipantIntermediaryApi {
      *
      * @param parameters the parameters for the intermediary
      */
-    void init(ParticipantIntermediaryParameters parameters);
+    public void init(ParticipantIntermediaryParameters parameters);
 
     /**
      * Close the intermediary.
      */
-    void close();
+    public void close();
 
     /**
      * Register a listener for control loop elements that are mediated by the intermediary.
      *
      * @param controlLoopElementListener The control loop element listener to register
      */
-    void registerControlLoopElementListener(ControlLoopElementListener controlLoopElementListener);
+    public void registerControlLoopElementListener(ControlLoopElementListener controlLoopElementListener);
 
     /**
      * Get participants loops from the intermediary API.
@@ -64,7 +66,7 @@ public interface ParticipantIntermediaryApi {
      * @param version the participant version, null for all
      * @return the participants
      */
-    List<Participant> getParticipants(String name, String version);
+    public List<Participant> getParticipants(String name, String version);
 
     /**
      * Update the state of a participant.
@@ -73,14 +75,14 @@ public interface ParticipantIntermediaryApi {
      * @param state the state of the participant
      * @return the participant
      */
-    Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState state);
+    public Participant updateParticipantState(ToscaConceptIdentifier definition, ParticipantState state);
 
     /**
      * Update the statistics of a participant.
      *
      * @param participantStatistics the statistics of the participant
      */
-    void updateParticipantStatistics(ParticipantStatistics participantStatistics);
+    public void updateParticipantStatistics(ParticipantStatistics participantStatistics);
 
     /**
      * Get control loops from the intermediary API.
@@ -89,7 +91,7 @@ public interface ParticipantIntermediaryApi {
      * @param version the control loop element version, null for all
      * @return the control loop elements
      */
-    ControlLoops getControlLoops(String name, String version);
+    public ControlLoops getControlLoops(String name, String version);
 
     /**
      * Get control loop elements from the intermediary API.
@@ -98,39 +100,40 @@ public interface ParticipantIntermediaryApi {
      * @param version the control loop element version, null for all
      * @return the control loop elements
      */
-    List<ControlLoopElement> getControlLoopElements(String name, String version);
+    public Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version);
 
     /**
-     * Update the state of a control loop.
+     * Get control loop element from the intermediary API.
      *
-     * @param definition the ID of the control loop to update the state on
-     * @param state the state of the control loop
-     * @return ControlLoop updated control loop
+     * @param id control loop element ID
+     * @return the control loop element
      */
-    ControlLoop updateControlLoopState(ToscaConceptIdentifier definition, ControlLoopOrderedState state);
+    public ControlLoopElement getControlLoopElement(UUID id);
 
     /**
      * Update the state of a control loop element.
      *
      * @param id the ID of the control loop element to update the state on
-     * @param state the state of the control loop element
+     * @param currentState the state of the control loop element
+     * @param newState the state of the control loop element
      * @return ControlLoopElement updated control loop element
      */
-    ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState state);
+    public ControlLoopElement updateControlLoopElementState(UUID id, ControlLoopOrderedState currentState,
+            ControlLoopState newState);
 
     /**
      * Update the control loop element statistics.
      *
+     * @param id the ID of the control loop element to update the state on
      * @param elementStatistics the updated statistics
      */
-    void updateControlLoopElementStatistics(ClElementStatistics elementStatistics);
+    public void updateControlLoopElementStatistics(UUID id, ClElementStatistics elementStatistics);
 
     /**
-     * Returns participantHandler, This will not be used in real world, but for junits,
+     * Return participantHandler, This will not be used in real world, but for junits,
      * if participantHandler is not returned, there is no way to test state change messages
      * without dmaap simulator.
      *
-     * @return ParticipantHandler returns a participantHandler
      */
-    ParticipantHandler getParticipantHandler();
+    public ParticipantHandler getParticipantHandler();
 }

@@ -37,7 +37,7 @@ import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 
 /**
- * This class handles policy of participants and control loop elements.
+ * This class handles policy participant and control loop elements.
  *
  * <p/>It is effectively a singleton that is started at system start.
  */

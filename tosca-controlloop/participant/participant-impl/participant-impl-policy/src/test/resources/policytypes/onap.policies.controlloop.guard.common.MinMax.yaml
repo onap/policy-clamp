@@ -21,4 +21,3 @@ policy_types:
                 type: integer
                 required: false
                 description: The maximum instances of this entity
-

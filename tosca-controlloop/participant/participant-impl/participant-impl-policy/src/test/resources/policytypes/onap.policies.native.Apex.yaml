@@ -200,4 +200,3 @@ data_types:
             plugin_class_name:
                 type: string
                 description: The class path of the plugin class for this executor
-

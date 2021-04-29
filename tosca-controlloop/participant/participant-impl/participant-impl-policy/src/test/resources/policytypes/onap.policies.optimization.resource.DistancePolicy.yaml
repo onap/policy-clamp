@@ -55,4 +55,3 @@ data_types:
                constraints:
                -  valid_values:
                   - km
-

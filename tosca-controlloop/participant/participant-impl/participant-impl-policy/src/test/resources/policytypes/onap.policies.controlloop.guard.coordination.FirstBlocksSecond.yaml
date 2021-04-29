@@ -24,4 +24,3 @@ policy_types:
                length: 2
             entry_schema:
                type: string
-

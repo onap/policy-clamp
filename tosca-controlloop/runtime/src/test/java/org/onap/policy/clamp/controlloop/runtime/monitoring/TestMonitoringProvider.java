@@ -29,7 +29,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.BeforeClass;
@@ -231,7 +231,8 @@ public class TestMonitoringProvider {
             .get(0).getParticipantId().getName(), inputClElementStatistics.getClElementStatistics().get(0)
             .getParticipantId().getVersion()));
         ControlLoop mockCL = new ControlLoop();
-        mockCL.setElements(Arrays.asList(mockClElement));
+        mockCL.setElements(new LinkedHashMap<>());
+        mockCL.getElements().put(mockClElement.getId(), mockClElement);
 
         //Mock controlloop data to be returned for the given CL Id
         ControlLoopProvider mockClProvider = Mockito.mock(ControlLoopProvider.class);

@@ -21,14 +21,22 @@
 package org.onap.policy.clamp.controlloop.participant.intermediary.comm;
 
 import java.io.Closeable;
+import java.time.Instant;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoops;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStatus;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ParticipantStatusPublisher;
 import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
+import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +94,7 @@ public class MessageSender extends TimerTask implements Closeable {
     }
 
     /**
-     * Send a response message for this participant.
+     * Dispatch a response message for this participant.
      *
      * @param controlLoopId the control loop to which this message is a response
      * @param response the details to include in the response message
@@ -95,16 +103,50 @@ public class MessageSender extends TimerTask implements Closeable {
         ParticipantStatus status = new ParticipantStatus();
 
         // Participant related fields
+        status.setParticipantType(participantHandler.getParticipantType());
         status.setParticipantId(participantHandler.getParticipantId());
         status.setState(participantHandler.getState());
         status.setHealthStatus(participantHandler.getHealthStatus());
 
         // Control loop related fields
+        ControlLoops controlLoops = participantHandler.getControlLoopHandler().getControlLoops();
         status.setControlLoopId(controlLoopId);
-        status.setControlLoops(participantHandler.getControlLoopHandler().getControlLoops());
+        status.setControlLoops(controlLoops);
         status.setResponse(response);
 
+        ParticipantStatistics participantStatistics = new ParticipantStatistics();
+        participantStatistics.setTimeStamp(Instant.now());
+        participantStatistics.setParticipantId(participantHandler.getParticipantId());
+        participantStatistics.setHealthStatus(participantHandler.getHealthStatus());
+        participantStatistics.setState(participantHandler.getState());
+        status.setParticipantStatistics(participantStatistics);
+
+        for (ControlLoopElementListener clElementListener :
+            participantHandler.getControlLoopHandler().getListeners()) {
+            getClElementStatistics(controlLoops, clElementListener);
+        }
+
+        status.setControlLoops(controlLoops);
+
         publisher.send(status);
+    }
+
+    /**
+     * Get controlloop element statistics.
+     *
+     * @param controlLoops the control loops
+     * @param clElementListener control loop element listner
+     */
+    public void getClElementStatistics(ControlLoops controlLoops, ControlLoopElementListener clElementListener) {
+        for (ControlLoop controlLoop : controlLoops.getControlLoopList()) {
+            for (ControlLoopElement element : controlLoop.getElements().values()) {
+                try {
+                    clElementListener.getClElementStatistics(element.getId());
+                } catch (PfModelException e) {
+                    LOGGER.debug("Getting statistics for Control loop element failed");
+                }
+            }
+        }
     }
 
     /**

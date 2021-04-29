@@ -140,4 +140,3 @@ data_types:
                 description: Points to the operation to invoke when the current operation is blocked due to guard policy enforcement.
                 required: false
                 default: final_failure_guard
-

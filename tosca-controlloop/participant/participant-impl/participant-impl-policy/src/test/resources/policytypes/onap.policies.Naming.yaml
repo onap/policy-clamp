@@ -99,4 +99,3 @@ data_types:
             length:
                 type: string
                 required: true
-

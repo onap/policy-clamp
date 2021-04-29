@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This class is used to send Participant Status messages to clamp using TopicSinkClient.
+ *
  */
 public class ParticipantStatusPublisher implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantStatusPublisher.class);

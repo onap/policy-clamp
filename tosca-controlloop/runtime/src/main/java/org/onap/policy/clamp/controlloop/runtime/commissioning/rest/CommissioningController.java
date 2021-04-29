@@ -255,9 +255,9 @@ public class CommissioningController extends RestController {
     // @formatter:on
     public Response query(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
                           @ApiParam(value = "Control Loop definition name", required = true)
-                              @QueryParam("name") String name,
+                          @QueryParam("name") String name,
                           @ApiParam(value = "Control Loop definition version", required = true)
-                              @QueryParam("version") String version) {
+                          @QueryParam("version") String version) {
 
         try {
             List<ToscaNodeTemplate> response = provider.getControlLoopDefinitions(name, version);
@@ -319,10 +319,10 @@ public class CommissioningController extends RestController {
     )
     // @formatter:on
     public Response queryElements(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                          @ApiParam(value = "Control Loop definition name", required = true)
-                          @QueryParam("name") String name,
-                          @ApiParam(value = "Control Loop definition version", required = true)
-                          @QueryParam("version") String version) throws Exception {
+                                  @ApiParam(value = "Control Loop definition name", required = true)
+                                  @QueryParam("name") String name,
+                                  @ApiParam(value = "Control Loop definition version", required = true)
+                                  @QueryParam("version") String version) throws Exception {
 
         try {
             List<ToscaNodeTemplate> nodeTemplate = provider.getControlLoopDefinitions(name, version);

@@ -1,0 +1,20 @@
+{
+  "name": "CommissioningGroup",
+  "restServerParameters": {
+    "host": "127.0.0.1",
+    "port": 6969,
+    "userName": "admin",
+    "password": "password",
+    "https": false,
+    "aaf": false
+  },
+  "databaseProviderParameters": {
+    "name": "CommissioningProviderParameterGroup",
+    "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
+    "databaseDriver": "org.mariadb.jdbc.Driver",
+    "databaseUrl": "jdbc:mariadb://localhost:3307/controlloop_runtime",
+    "databaseUser": "controlloop",
+    "databasePassword": "C0ntr0lL00p",
+    "persistenceUnit": "CommissioningMariaDb"
+  }
+}

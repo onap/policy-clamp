@@ -112,11 +112,11 @@ public class JpaControlLoopElementTest {
 
         assertThatThrownBy(() -> {
             new JpaControlLoopElement(new PfReferenceKey(), new PfConceptKey(), null, null);
-        }).hasMessageMatching("participantId is marked .*ull but is null");
+        }).hasMessageMatching("participantType is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
             new JpaControlLoopElement(new PfReferenceKey(), new PfConceptKey(), null, ControlLoopState.UNINITIALISED);
-        }).hasMessageMatching("participantId is marked .*ull but is null");
+        }).hasMessageMatching("participantType is marked .*ull but is null");
 
         assertThatThrownBy(() -> {
             new JpaControlLoopElement(new PfReferenceKey(), new PfConceptKey(),
@@ -240,9 +240,9 @@ public class JpaControlLoopElementTest {
         testJpaControlLoopElement.setState(ControlLoopState.UNINITIALISED);
         assertEquals(0, testJpaControlLoopElement.compareTo(otherJpaControlLoopElement));
 
-        testJpaControlLoopElement.setParticipantId(new PfConceptKey("dummy", "0.0.1"));
+        testJpaControlLoopElement.setParticipantType(new PfConceptKey("dummy", "0.0.1"));
         assertNotEquals(0, testJpaControlLoopElement.compareTo(otherJpaControlLoopElement));
-        testJpaControlLoopElement.setParticipantId(new PfConceptKey("participant", "0.0.1"));
+        testJpaControlLoopElement.setParticipantType(new PfConceptKey("participantType", "0.0.1"));
         assertEquals(0, testJpaControlLoopElement.compareTo(otherJpaControlLoopElement));
 
         assertEquals(testJpaControlLoopElement, new JpaControlLoopElement(testJpaControlLoopElement));
@@ -293,7 +293,7 @@ public class JpaControlLoopElementTest {
         ControlLoopElement controlLoopElement = new ControlLoopElement();
         controlLoopElement.setId(UUID.fromString("a95757ba-b34a-4049-a2a8-46773abcbe5e"));
         controlLoopElement.setDefinition(new ToscaConceptIdentifier("cleDef", "0.0.1"));
-        controlLoopElement.setParticipantId(new ToscaConceptIdentifier("participant", "0.0.1"));
+        controlLoopElement.setParticipantType(new ToscaConceptIdentifier("participantType", "0.0.1"));
 
         return controlLoopElement;
     }

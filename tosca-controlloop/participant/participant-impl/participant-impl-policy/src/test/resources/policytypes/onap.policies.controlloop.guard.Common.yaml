@@ -25,4 +25,3 @@ policy_types:
                 type: string
                 description: The Control Loop id this applies to.
                 required: false
-

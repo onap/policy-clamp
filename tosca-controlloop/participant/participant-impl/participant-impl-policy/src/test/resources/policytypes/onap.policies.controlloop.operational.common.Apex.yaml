@@ -23,4 +23,3 @@ policy_types:
                 type: string
                 description: Name/value pairs of properties to be set for APEX if needed.
                 required: false
-

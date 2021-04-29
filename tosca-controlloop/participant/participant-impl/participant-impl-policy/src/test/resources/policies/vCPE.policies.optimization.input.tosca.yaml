@@ -345,4 +345,3 @@ topology_template:
                         serviceType: ""
                         inventoryType: cloudRegionId
                         customerId: ""
-

@@ -23,4 +23,3 @@ data_types:
          attribute_location:
             type: string
             required: true
-

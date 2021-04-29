@@ -158,4 +158,3 @@ data_types:
             type: string
             required: true
             description: Version number associated with the threshold
-

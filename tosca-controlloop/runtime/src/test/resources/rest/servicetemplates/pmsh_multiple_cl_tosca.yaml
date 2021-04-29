@@ -69,15 +69,8 @@ topology_template:
       description: Participant for DCAE microservices
       properties:
         provider: ONAP
-    org.onap.policy.controlloop.MonitoringPolicyControlLoopParticipant:
-      version: 2.3.1
-      type: org.onap.policy.clamp.controlloop.Participant
-      type_version: 1.0.1
-      description: Participant for DCAE microservices
-      properties:
-        provider: ONAP
-    org.onap.policy.controlloop.OperationalPolicyControlLoopParticipant:
-      version: 3.2.1
+    org.onap.policy.controlloop.PolicyControlLoopParticipant:
+      version: 2.2.1
       type: org.onap.policy.clamp.controlloop.Participant
       type_version: 1.0.1
       description: Participant for DCAE microservices
@@ -111,8 +104,8 @@ topology_template:
       properties:
         provider: Ericsson
         participant_id:
-          name: org.onap.policy.controlloop.MonitoringPolicyControlLoopParticipant
-          version: 2.3.1
+          name: org.onap.policy.controlloop.PolicyControlLoopParticipant
+          version: 2.2.1
         policy_type_id:
           name: onap.policies.monitoring.pm-subscription-handler
           version: 1.0.0
@@ -124,7 +117,7 @@ topology_template:
       properties:
         provider: Ericsson
         participant_id:
-          name: org.onap.policy.controlloop.OperationalPolicyControlLoopParticipant
+          name: org.onap.policy.controlloop.PolicyControlLoopParticipant
           version: 2.2.1
         policy_type_id:
           name: onap.policies.operational.pm-subscription-handler
@@ -150,12 +143,79 @@ topology_template:
       properties:
         provider: Ericsson
         elements:
-        - name: org.onap.domain.pmsh.PMSH_DCAEMicroservice
-          version: 1.2.3
-        - name: org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement
-          version: 1.2.3
-        - name: org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement
-          version: 1.2.3
-        - name: org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement
-          version: 1.2.3
-
+          - name: org.onap.domain.pmsh.PMSH_DCAEMicroservice
+            version: 1.2.3
+          - name: org.onap.domain.pmsh.PMSH_MonitoringPolicyControlLoopElement
+            version: 1.2.3
+          - name: org.onap.domain.pmsh.PMSH_OperationalPolicyControlLoopElement
+            version: 1.2.3
+          - name: org.onap.domain.pmsh.PMSH_CDS_ControlLoopElement
+            version: 1.2.3
+    org.onap.domain.pmsh.PMSD_DCAEMicroservice:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.DCAEMicroserviceControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for the DCAE microservice for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_id:
+          name: org.onap.dcae.controlloop.DCAEMicroserviceControlLoopParticipant
+          version: 2.3.4
+        dcae_blueprint_id:
+          name: org.onap.dcae.blueprints.PMSDBlueprint
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSD_MonitoringPolicyControlLoopElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for the monitoring policy for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_id:
+          name: org.onap.policy.controlloop.PolicyControlLoopParticipant
+          version: 2.2.1
+        policy_type_id:
+          name: onap.policies.monitoring.pm-subscription-handler
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSD_OperationalPolicyControlLoopElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.PolicyTypeControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for the operational policy for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_id:
+          name: org.onap.policy.controlloop.PolicyControlLoopParticipant
+          version: 2.2.1
+        policy_type_id:
+          name: onap.policies.operational.pm-subscription-handler
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSD_CDS_ControlLoopElement:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.ControlLoopElement
+      type_version: 1.0.0
+      description: Control loop element for CDS for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        participant_Id:
+          name: org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant
+          version: 3.2.1
+        cds_blueprint_id:
+          name: org.onap.ccsdk.cds.PMSDCdsBlueprint
+          version: 1.0.0
+    org.onap.domain.pmsh.PMSDControlLoopDefinition:
+      version: 1.2.3
+      type: org.onap.policy.clamp.controlloop.ControlLoop
+      type_version: 1.0.0
+      description: Control loop for Performance Management Subscription Handling
+      properties:
+        provider: Ericsson
+        elements:
+          - name: org.onap.domain.pmsh.PMSD_DCAEMicroservice
+            version: 1.2.3
+          - name: org.onap.domain.pmsh.PMSD_MonitoringPolicyControlLoopElement
+            version: 1.2.3
+          - name: org.onap.domain.pmsh.PMSD_OperationalPolicyControlLoopElement
+            version: 1.2.3
+          - name: org.onap.domain.pmsh.PMSD_CDS_ControlLoopElement
+            version: 1.2.3

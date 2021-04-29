@@ -91,11 +91,8 @@ public class ControlLoopProviderTest {
         ControlLoops createdControlLoops = new ControlLoops();
         createdControlLoops
                 .setControlLoopList(controlLoopProvider.createControlLoops(inputControlLoops.getControlLoopList()));
-        String createdJson = CODER.encode(createdControlLoops, true);
 
-        System.err.println(originalJson);
-        System.out.println(createdJson);
-        assertEquals(originalJson.replaceAll("\\s+", ""), createdJson.replaceAll("\\s+", ""));
+        assertEquals(inputControlLoops, createdControlLoops);
     }
 
     @Test

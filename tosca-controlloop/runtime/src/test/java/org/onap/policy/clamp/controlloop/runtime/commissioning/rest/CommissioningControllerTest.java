@@ -44,7 +44,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 public class CommissioningControllerTest extends CommonRestController {
 
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
-            "src/test/resources/servicetemplates/pmsh_multiple_cl_tosca.yaml";
+            "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
     private static final String COMMISSIONING_ENDPOINT = "commission";
     private static ToscaServiceTemplate serviceTemplate = new ToscaServiceTemplate();
@@ -59,7 +59,7 @@ public class CommissioningControllerTest extends CommonRestController {
         CommonRestController.setUpBeforeClass("CommissioningApi");
 
         serviceTemplate = yamlTranslator.fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
-                        ToscaServiceTemplate.class);
+                ToscaServiceTemplate.class);
     }
 
     @AfterClass

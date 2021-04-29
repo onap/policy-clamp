@@ -39,6 +39,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.persistence.provider
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationCommand;
 import org.onap.policy.clamp.controlloop.models.messages.rest.instantiation.InstantiationResponse;
 import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProvider;
+import org.onap.policy.clamp.controlloop.runtime.supervision.SupervisionHandler;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ObjectValidationResult;
 import org.onap.policy.common.parameters.ValidationResult;
@@ -167,7 +168,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
                         .collect(Collectors.toMap(ToscaConceptIdentifier::getName, UnaryOperator.identity()));
                 // @formatter:on
 
-                for (ControlLoopElement element : controlLoop.getElements()) {
+                for (ControlLoopElement element : controlLoop.getElements().values()) {
                     validationResult.addResult(validateDefinition(definitions, element.getDefinition()));
                 }
             }
@@ -183,7 +184,7 @@ public class ControlLoopInstantiationProvider implements Closeable {
      * @result result the validation result
      */
     private ValidationResult validateDefinition(Map<String, ToscaConceptIdentifier> definitions,
-            ToscaConceptIdentifier definition) {
+                                                ToscaConceptIdentifier definition) {
         BeanValidationResult result = new BeanValidationResult(definition.getName(), definition);
         ToscaConceptIdentifier identifier = definitions.get(definition.getName());
         if (identifier == null) {
@@ -264,6 +265,8 @@ public class ControlLoopInstantiationProvider implements Closeable {
             controlLoopProvider.updateControlLoops(controlLoops);
         }
 
+        SupervisionHandler supervisionHandler = SupervisionHandler.getInstance();
+        supervisionHandler.triggerControlLoopSupervision(command.getControlLoopIdentifierList());
         InstantiationResponse response = new InstantiationResponse();
         response.setAffectedControlLoops(command.getControlLoopIdentifierList());
 

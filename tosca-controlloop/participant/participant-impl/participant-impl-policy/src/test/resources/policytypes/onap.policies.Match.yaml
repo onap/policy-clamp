@@ -5,4 +5,3 @@ policy_types:
         version: 1.0.0
         name: onap.policies.Match
         description: Base Policy Type for matchable Policies
-

@@ -1,8 +1,8 @@
 {
-    "name": "ControlLoopRuntimeGroup",
+    "name": "Instantiation",
     "restServerParameters": {
         "host": "0.0.0.0",
-        "port": ${port},
+        "port": 6969,
         "userName": "healthcheck",
         "password": "zb!XztG34",
         "https": false,
@@ -23,10 +23,10 @@
         "name": "PolicyProviderParameterGroup",
         "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
         "databaseDriver": "org.h2.Driver",
-        "databaseUrl": "${dbName}",
+        "databaseUrl": "jdbc:h2:mem:instantiationdb",
         "databaseUser": "policy",
         "databasePassword": "P01icY",
-        "persistenceUnit": "ToscaConceptTest"
+        "persistenceUnit": "InstantiationTests"
     },
     "topicParameterGroup": {
         "topicSources": [

@@ -20,14 +20,16 @@
 
 package org.onap.policy.clamp.controlloop.models.controlloop.concepts;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.apache.commons.collections4.CollectionUtils;
-import org.onap.policy.models.base.PfKey;
+import org.apache.commons.collections4.MapUtils;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.base.PfUtils;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
@@ -40,7 +42,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 @EqualsAndHashCode(callSuper = true)
 public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> {
     @NonNull
-    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_NAME);
+    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
     private ControlLoopState state = ControlLoopState.UNINITIALISED;
@@ -48,7 +50,7 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
     @NonNull
     private ControlLoopOrderedState orderedState = ControlLoopOrderedState.UNINITIALISED;
 
-    private List<ControlLoopElement> elements;
+    private Map<UUID, ControlLoopElement> elements;
 
     @Override
     public String getType() {
@@ -70,7 +72,7 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
         this.definition = new ToscaConceptIdentifier(otherControlLoop.definition);
         this.state = otherControlLoop.state;
         this.orderedState = otherControlLoop.orderedState;
-        this.elements = PfUtils.mapList(otherControlLoop.elements, ControlLoopElement::new);
+        this.elements = PfUtils.mapMap(otherControlLoop.elements, ControlLoopElement::new);
     }
 
     @Override
@@ -86,25 +88,24 @@ public class ControlLoop extends ToscaEntity implements Comparable<ControlLoop> 
     public void setCascadedOrderedState(final ControlLoopOrderedState orderedState) {
         this.orderedState = orderedState;
 
-        if (CollectionUtils.isEmpty(elements)) {
+        if (MapUtils.isEmpty(elements)) {
             return;
         }
 
-        elements.forEach(element -> element.setOrderedState(orderedState));
+        elements.values().forEach(element -> element.setOrderedState(orderedState));
     }
 
     /**
-     * Find the element with a given UUID for the control loop.
+     * Get a list of control loop element statistics.
      *
-     * @param id the UUID to search for
-     * @return the element or null if its not found
+     * @param controlLoop the control loop
+     * @return List of ClElementStatistics
      */
-
-    public ControlLoopElement getElement(final UUID id) {
-        if (CollectionUtils.isEmpty(elements)) {
-            return null;
+    public List<ClElementStatistics> getControlLoopElementStatisticsList(final ControlLoop controlLoop) {
+        List clElementList = new ArrayList<>();
+        for (ControlLoopElement element : controlLoop.elements.values()) {
+            clElementList.add(element.getClElementStatistics());
         }
-
-        return elements.stream().filter(element -> id.equals(element.getId())).findAny().orElse(null);
+        return clElementList;
     }
 }

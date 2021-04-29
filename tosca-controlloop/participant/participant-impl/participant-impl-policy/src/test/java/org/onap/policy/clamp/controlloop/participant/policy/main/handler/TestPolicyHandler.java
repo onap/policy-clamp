@@ -29,7 +29,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.onap.policy.clamp.controlloop.common.ControlLoopConstants;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
 import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.policy.main.startstop.Main;
@@ -41,11 +43,14 @@ import org.onap.policy.common.utils.services.Registry;
 public class TestPolicyHandler {
 
     private static ControlLoopUpdateListener clUpdateListener;
+    private ControlLoopStateChangeListener clStateChangeListener;
     private static ParticipantControlLoopUpdate participantControlLoopUpdateMsg;
+    private ParticipantControlLoopStateChange participantControlLoopStateChangeMsg;
     private static final String PARTICIPANTS_ENDPOINT = "participants";
     private static final String ELEMENTS_ENDPOINT = "elements";
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
+    private static final Object lockit = new Object();
     static CommonTestData commonTestData = new CommonTestData();
 
     /**
@@ -66,27 +71,61 @@ public class TestPolicyHandler {
                 .getIntermediaryApi()
                 .getParticipantHandler());
         participantControlLoopUpdateMsg =
-                TestListenerUtils.createControlLoopUpdateMsg("src/test/resources/utils/servicetemplates");
+                TestListenerUtils.createControlLoopUpdateMsg();
         participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
     }
 
     @Test
-    public void testUpdatePolicies() throws Exception {
-        // Add policy_types to the toscaServiceTemplate
-        TestListenerUtils.addPolicyTypesToToscaServiceTemplate(
-                        participantControlLoopUpdateMsg.getControlLoopDefinition());
-
-        // Add policies to the toscaServiceTemplate
-        TestListenerUtils.addPoliciesToToscaServiceTemplate(participantControlLoopUpdateMsg.getControlLoopDefinition());
-
+    public void testUpdatePolicyTypes() throws Exception {
         // Verify that the ToscaServicetemplate has policy_types
         assertNotNull(participantControlLoopUpdateMsg.getControlLoopDefinition().getPolicyTypes());
+
+        synchronized (lockit) {
+            clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+        }
+        // Verify the result of GET participants with what is stored
+        assertEquals("org.onap.PM_Policy",
+                TestListenerUtils.getParticipantHandler().getParticipantId().getName());
+    }
+
+    @Test
+    public void testUpdatePolicies() throws Exception {
+        // Add policies to the toscaServiceTemplate
+        TestListenerUtils.addPoliciesToToscaServiceTemplate(participantControlLoopUpdateMsg.getControlLoopDefinition());
 
         // Verify that the ToscaServicetemplate has policies
         assertNotNull(participantControlLoopUpdateMsg.getControlLoopDefinition()
                 .getToscaTopologyTemplate().getPolicies());
 
-        clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+        synchronized (lockit) {
+            clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+        }
+        // Verify the result of GET participants with what is stored
+        assertEquals("org.onap.PM_Policy",
+                TestListenerUtils.getParticipantHandler().getParticipantId().getName());
+    }
+
+    @Test
+    public void testDeletePoliciesAndPolicyTypes() throws Exception {
+        // Add policies to the toscaServiceTemplate
+        TestListenerUtils.addPoliciesToToscaServiceTemplate(participantControlLoopUpdateMsg.getControlLoopDefinition());
+
+        // Verify that the ToscaServicetemplate has policies
+        assertNotNull(participantControlLoopUpdateMsg.getControlLoopDefinition()
+                .getToscaTopologyTemplate().getPolicies());
+
+        synchronized (lockit) {
+            clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
+        }
+        // Verify the result of GET participants with what is stored
+        assertEquals("org.onap.PM_Policy",
+                TestListenerUtils.getParticipantHandler().getParticipantId().getName());
+
+        clStateChangeListener = new ControlLoopStateChangeListener(TestListenerUtils.getParticipantHandler());
+        participantControlLoopStateChangeMsg =
+                TestListenerUtils.createControlLoopStateChangeMsg(ControlLoopOrderedState.UNINITIALISED);
+        participantControlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
+        clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopStateChangeMsg);
 
         // Verify the result of GET participants with what is stored
         assertEquals("org.onap.PM_Policy",

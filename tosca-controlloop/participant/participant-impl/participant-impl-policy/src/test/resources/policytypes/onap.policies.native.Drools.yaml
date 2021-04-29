@@ -115,4 +115,3 @@ data_types:
                 type: string
                 required: true
                 description: the name of drools controller policy
-

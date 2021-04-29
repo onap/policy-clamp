@@ -125,4 +125,3 @@ data_types:
             type: string
             description: The user specific data
             required: false
-

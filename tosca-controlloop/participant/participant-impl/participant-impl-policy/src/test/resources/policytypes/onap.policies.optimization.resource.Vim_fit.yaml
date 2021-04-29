@@ -27,4 +27,3 @@ data_types:
          request:
             type: string
             required: true
-
