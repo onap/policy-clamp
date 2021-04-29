@@ -24,7 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.onap.policy.models.base.PfKey;
+import org.onap.policy.models.base.PfConceptKey;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 
@@ -36,7 +36,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaEntity;
 @EqualsAndHashCode(callSuper = true)
 public class Participant extends ToscaEntity implements Comparable<Participant> {
     @NonNull
-    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfKey.NULL_KEY_NAME, PfKey.NULL_KEY_NAME);
+    private ToscaConceptIdentifier definition = new ToscaConceptIdentifier(PfConceptKey.getNullKey());
 
     @NonNull
     private ParticipantState participantState = ParticipantState.UNKNOWN;

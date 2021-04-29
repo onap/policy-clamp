@@ -27,7 +27,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import org.junit.Test;
 import org.onap.policy.models.base.PfKey;
@@ -51,6 +51,7 @@ public class ControlLoopTest {
     public void testControlLoopLombok() {
         assertNotNull(new ControlLoop());
         ControlLoop cl0 = new ControlLoop();
+        cl0.setElements(new LinkedHashMap<>());
 
         assertThat(cl0.toString()).contains("ControlLoop(");
         assertThat(cl0.hashCode()).isNotZero();
@@ -61,7 +62,7 @@ public class ControlLoopTest {
 
         cl1.setDefinition(new ToscaConceptIdentifier("defName", "0.0.1"));
         cl1.setDescription("Description");
-        cl1.setElements(new ArrayList<>());
+        cl1.setElements(new LinkedHashMap<>());
         cl1.setName("Name");
         cl1.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
         cl1.setState(ControlLoopState.UNINITIALISED);
@@ -75,6 +76,7 @@ public class ControlLoopTest {
         assertNotEquals(cl1, cl0);
 
         ControlLoop cl2 = new ControlLoop();
+        cl2.setElements(new LinkedHashMap<>());
 
         // @formatter:off
         assertThatThrownBy(() -> cl2.setDefinition(null)).  isInstanceOf(NullPointerException.class);
@@ -87,14 +89,13 @@ public class ControlLoopTest {
         cl1.setCascadedOrderedState(ControlLoopOrderedState.PASSIVE);
         assertEquals(ControlLoopOrderedState.PASSIVE, cl1.getOrderedState());
 
-        cl1.getElements().add(new ControlLoopElement());
+        cl1.getElements().put(UUID.randomUUID(), new ControlLoopElement());
         cl1.setCascadedOrderedState(ControlLoopOrderedState.RUNNING);
         assertEquals(ControlLoopOrderedState.RUNNING, cl1.getOrderedState());
-        assertEquals(ControlLoopOrderedState.RUNNING, cl1.getElements().get(0).getOrderedState());
+        assertEquals(ControlLoopOrderedState.RUNNING, cl1.getElements().values().iterator().next().getOrderedState());
 
-        assertNull(cl0.getElement(UUID.randomUUID()));
-        assertNull(cl1.getElement(UUID.randomUUID()));
-        assertEquals(cl1.getElements().get(0), cl1.getElement(cl1.getElements().get(0).getId()));
+        assertNull(cl0.getElements().get(UUID.randomUUID()));
+        assertNull(cl1.getElements().get(UUID.randomUUID()));
 
         assertEquals(PfKey.NULL_KEY_NAME, cl0.getDefinition().getName());
     }

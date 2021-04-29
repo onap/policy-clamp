@@ -32,7 +32,7 @@
     <artifactId>participant</artifactId>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
-    <description>participants that communicate with the runtime servier to handle control loops</description>
+    <description>participants that communicate with the runtime server to handle control loops</description>
 
     <modules>
         <module>participant-intermediary</module>

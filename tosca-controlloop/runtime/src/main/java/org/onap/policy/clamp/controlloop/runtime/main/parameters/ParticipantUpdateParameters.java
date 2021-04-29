@@ -51,3 +51,4 @@ public class ParticipantUpdateParameters extends ParameterGroupImpl {
         super(ParticipantUpdateParameters.class.getSimpleName());
     }
 }
+

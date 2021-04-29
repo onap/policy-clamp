@@ -26,10 +26,12 @@ import java.util.UUID;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.ToString;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 @NoArgsConstructor
 @Data
+@ToString
 public class ClElementStatistics implements Serializable {
 
     private static final long serialVersionUID = 3284285693112271055L;

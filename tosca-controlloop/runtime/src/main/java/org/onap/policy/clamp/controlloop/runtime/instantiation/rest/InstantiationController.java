@@ -412,5 +412,5 @@ public class InstantiationController extends RestController {
         return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
             requestId).entity(resp).build();
     }
-
 }
+

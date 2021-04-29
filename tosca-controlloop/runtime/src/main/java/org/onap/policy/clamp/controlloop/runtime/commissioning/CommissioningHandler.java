@@ -65,26 +65,6 @@ public final class CommissioningHandler extends ControlLoopHandler {
     }
 
     @Override
-    public void startAndRegisterListeners(MessageTypeDispatcher msgDispatcher) {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void startAndRegisterPublishers(List<TopicSink> topicSinks) {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void stopAndUnregisterPublishers() {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher) {
-        // No topic communication on this handler
-    }
-
-    @Override
     public void startProviders() {
         provider = new CommissioningProvider(getDatabaseProviderParameters());
     }

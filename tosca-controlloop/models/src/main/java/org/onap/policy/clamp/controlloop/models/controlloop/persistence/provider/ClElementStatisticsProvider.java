@@ -62,10 +62,10 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors creating clElement statistics
      */
     public List<ClElementStatistics> createClElementStatistics(
-        @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
+            @NonNull final List<ClElementStatistics> clElementStatisticsList) throws PfModelException {
 
         BeanValidationResult validationResult =
-            new BeanValidationResult("control loop element statistics list", clElementStatisticsList);
+                new BeanValidationResult("control loop element statistics list", clElementStatisticsList);
         for (ClElementStatistics clElementStatistics : clElementStatisticsList) {
             JpaClElementStatistics jpaClElementStatistics = new JpaClElementStatistics();
             jpaClElementStatistics.fromAuthorative(clElementStatistics);
@@ -118,7 +118,7 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting clElement statistics
      */
     public List<ClElementStatistics> getClElementStatistics(final String name, final String version, final String id,
-                                                            final Instant timestamp) throws PfModelException {
+            final Instant timestamp) throws PfModelException {
         List<ClElementStatistics> clElementStatistics = new ArrayList<>(1);
         if (name != null && version != null && timestamp != null && id != null) {
             clElementStatistics.add(getPfDao()
@@ -146,11 +146,9 @@ public class ClElementStatisticsProvider extends AbstractModelsProvider {
      * @throws PfModelException on errors getting policies
      */
     public List<ClElementStatistics> getFilteredClElementStatistics(final String name, final String version,
-                                                                    final Instant startTimeStamp,
-                                                                    final Instant endTimeStamp,
-                                                                    Map<String, Object> filterMap,
-                                                                    final String sortOrder, final int getRecordNum) {
+            final Instant startTimeStamp, final Instant endTimeStamp, Map<String, Object> filterMap,
+            final String sortOrder, final int getRecordNum) {
         return asClElementStatisticsList(getPfDao().getFiltered(JpaClElementStatistics.class, name, version,
-            startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
+                startTimeStamp, endTimeStamp, filterMap, sortOrder, getRecordNum));
     }
 }

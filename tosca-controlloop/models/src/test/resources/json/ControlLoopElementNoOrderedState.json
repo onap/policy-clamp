@@ -4,8 +4,8 @@
         "name": "cleDef",
         "version": "0.0.1"
     },
-    "participantId": {
-        "name": "participant",
+    "participantType": {
+        "name": "participantType",
         "version": "0.0.1"
     },
     "state": "UNINITIALISED",

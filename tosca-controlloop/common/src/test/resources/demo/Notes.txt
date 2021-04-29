@@ -1,0 +1,39 @@
+Run DMaaP simulator using Docker
+c/Users/${USER}/Github/simulator/distribution
+${USER}@S031PC03 MINGW64 ~/Github/simulator/distribution (master)
+$ docker run -p 3904:3904 --volume //c/Users/${USER}/Github/simulator/distribution:/opt/app/policy/simulators/etc/mounted:ro --name=dmaap-simulator nexus3.onap.org:10001/onap/policy-models-simulator:latest
+
+
+Run DMaaP simulator using Maven
+Check out policy models
+Go to policy/models/models-sim/models-sim-dmaap
+mvn exec:java  -Dexec.mainClass=org.onap.policy.models.sim.dmaap.startstop.Main -Dexec.args="-c src/main/resources/etc/DefaultConfig.json"
+
+
+Run CL from command line
+Go to clamp/tosca-controlloop/runtime
+mvn exec:java  -Dexec.mainClass=org.onap.policy.clamp.controlloop.runtime.main.startstop.Main -Dexec.args="-c src/test/resources/parameters/TestParametersMariaDB.json"
+
+Run Participant from command line
+mvn exec:java  -Dexec.mainClass=org.onap.policy.clamp.controlloop.participants.ParticipantMain -Dexec.args=" -c src/main/resources/config/CDSParticipantConfig.json"
+mvn exec:java  -Dexec.mainClass=org.onap.policy.clamp.controlloop.participant.dcae.main.startstop.Main -Dexec.args=" -c src/main/resources/config/DCAEParticipantConfig.json"
+mvn exec:java  -Dexec.mainClass=org.onap.policy.clamp.controlloop.participants.ParticipantMain -Dexec.args=" -c src/main/resources/config/PolicyParticipantConfig.json"
+
+Config of DB
+
+Prompt > mysql
+MariaDB [(none)]> create database controlloop;
+MariaDB [(none)]> CREATE USER 'policy'@localhost IDENTIFIED BY 'P01icY';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON controlloop.* TO 'policy'@'localhost';\
+MariaDB [(none)]> SHOW GRANTS for 'policy'@localhost;
++---------------------------------------------------------------------------------------------------------------+
+| Grants for policy@localhost                                                                                   |
++---------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO `policy`@`localhost` IDENTIFIED BY PASSWORD '*D0574A541C5DEDF11838FB41CA04E256FD5A04CC' |
+| GRANT ALL PRIVILEGES ON `controlloop`.* TO `policy`@`localhost`                                               |
++---------------------------------------------------------------------------------------------------------------+
+2 rows in set (0.000 sec)
+
+
+Run Policy API:
+mvn exec:java -Dexec.mainClass=org.onap.policy.api.main.startstop.Main -Dexec.args="-c ../../clamp-tpn/tosca-controlloop/common/src/test/resources/demo/policy-api/PolicyAPIConfig.json"

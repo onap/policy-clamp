@@ -37,7 +37,7 @@ import org.onap.policy.models.provider.PolicyModelsProvider;
 import org.onap.policy.models.provider.PolicyModelsProviderFactory;
 
 /**
- * This class handles policy of participants and control loop elements.
+ * This class handles policy participant and control loop elements.
  *
  * <p/>It is effectively a singleton that is started at system start.
  */
@@ -70,26 +70,6 @@ public class PolicyHandler extends ControlLoopHandler {
     @Override
     public Set<Class<?>> getProviderClasses() {
         return null;
-    }
-
-    @Override
-    public void startAndRegisterListeners(MessageTypeDispatcher msgDispatcher) {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void startAndRegisterPublishers(List<TopicSink> topicSinks) {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void stopAndUnregisterPublishers() {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher) {
-        // No topic communication on this handler
     }
 
     @Override
