@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,7 +89,7 @@ public class TestListenerUtils {
      */
     public static ControlLoop createControlLoop() {
         ControlLoop controlLoop = new ControlLoop();
-        List<ControlLoopElement> elements = new ArrayList<>();
+        Map<UUID, ControlLoopElement> elements = new LinkedHashMap<>();
         ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
@@ -100,12 +101,13 @@ public class TestListenerUtils {
             clElementParticipantId.setName(toscaInputEntry.getKey());
             clElementParticipantId.setVersion(toscaInputEntry.getValue().getVersion());
             clElement.setParticipantId(clElementParticipantId);
+            clElement.setParticipantType(clElementParticipantId);
 
             clElement.setDefinition(clElementParticipantId);
             clElement.setState(ControlLoopState.UNINITIALISED);
             clElement.setDescription(toscaInputEntry.getValue().getDescription());
             clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
-            elements.add(clElement);
+            elements.put(clElement.getId(), clElement);
         }
         controlLoop.setElements(elements);
         controlLoop.setName("PMSHInstance0");
@@ -166,14 +168,15 @@ public class TestListenerUtils {
      */
     public static ParticipantControlLoopUpdate createControlLoopUpdateMsg() {
         final ParticipantControlLoopUpdate clUpdateMsg = new ParticipantControlLoopUpdate();
-        ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier("PMSHInstance0", "1.0.0.");
+        ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier("PMSHInstance0", "1.0.0");
         ToscaConceptIdentifier participantId = new ToscaConceptIdentifier("org.onap.PM_CDS_Blueprint", "1.0.0");
 
         clUpdateMsg.setControlLoopId(controlLoopId);
         clUpdateMsg.setParticipantId(participantId);
+        clUpdateMsg.setParticipantType(participantId);
 
         ControlLoop controlLoop = new ControlLoop();
-        List<ControlLoopElement> elements = new ArrayList<>();
+        Map<UUID, ControlLoopElement> elements = new LinkedHashMap<>();
         ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
@@ -185,12 +188,13 @@ public class TestListenerUtils {
             clElementParticipantId.setName(toscaInputEntry.getKey());
             clElementParticipantId.setVersion(toscaInputEntry.getValue().getVersion());
             clElement.setParticipantId(clElementParticipantId);
+            clElement.setParticipantType(clElementParticipantId);
 
             clElement.setDefinition(clElementParticipantId);
             clElement.setState(ControlLoopState.UNINITIALISED);
             clElement.setDescription(toscaInputEntry.getValue().getDescription());
             clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
-            elements.add(clElement);
+            elements.put(clElement.getId(), clElement);
         }
         controlLoop.setElements(elements);
         controlLoop.setName("PMSHInstance0");

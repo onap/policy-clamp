@@ -3,6 +3,10 @@
     "participantStatusParameters":{
         "timeIntervalMs": 10000,
         "description":"Participant Status",
+        "participantType":{
+            "name": "org.onap.ccsdk.cds.controlloop.CdsControlLoopParticipant",
+            "version":"2.2.1"
+        },
         "participantId":{
             "name": "CDSParticipant0",
             "version":"1.0.0"

@@ -27,6 +27,9 @@ import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantHealthStatus;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantState;
+import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ParticipantStatistics;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
+import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantMessage;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseDetails;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantResponseStatus;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
@@ -44,9 +47,11 @@ import org.slf4j.LoggerFactory;
 public class ParticipantHandler implements Closeable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParticipantHandler.class);
 
+    private final ToscaConceptIdentifier participantType;
     private final ToscaConceptIdentifier participantId;
     private final MessageSender sender;
     private final ControlLoopHandler controlLoopHandler;
+    private final ParticipantStatistics participantStatistics;
 
     @Setter
     private ParticipantState state = ParticipantState.UNKNOWN;
@@ -61,9 +66,11 @@ public class ParticipantHandler implements Closeable {
      * @param publisher the publisher for sending responses to messages
      */
     public ParticipantHandler(ParticipantIntermediaryParameters parameters, ParticipantStatusPublisher publisher) {
+        this.participantType = parameters.getParticipantType();
         this.participantId = parameters.getParticipantId();
         this.sender = new MessageSender(this, publisher, parameters.getReportingTimeInterval());
         this.controlLoopHandler = new ControlLoopHandler(parameters, sender);
+        this.participantStatistics = new ParticipantStatistics();
     }
 
     @Override
@@ -79,7 +86,7 @@ public class ParticipantHandler implements Closeable {
      */
     public void handleParticipantStateChange(final ParticipantStateChange stateChangeMsg) {
 
-        if (!stateChangeMsg.appliesTo(participantId)) {
+        if (!stateChangeMsg.appliesTo(participantType, participantId)) {
             return;
         }
 
@@ -108,6 +115,20 @@ public class ParticipantHandler implements Closeable {
                     + stateChangeMsg.getParticipantId());
                 break;
         }
+
+        sender.sendResponse(response);
+    }
+
+
+    /**
+     * Method which handles a participant health check event from clamp.
+     *
+     * @param healthCheckMsg participant health check message
+     */
+    public void handleParticipantHealthCheck(final ParticipantHealthCheck healthCheckMsg) {
+        ParticipantResponseDetails response = new ParticipantResponseDetails(healthCheckMsg);
+        response.setResponseStatus(ParticipantResponseStatus.SUCCESS);
+        response.setResponseMessage(healthStatus.toString());
 
         sender.sendResponse(response);
     }
@@ -200,5 +221,15 @@ public class ParticipantHandler implements Closeable {
             return participant;
         }
         return null;
+    }
+
+    /**
+     * Check if a participant message applies to this participant handler.
+     *
+     * @param partipantMsg the message to check
+     * @return true if it applies, false otherwise
+     */
+    public boolean canHandle(ParticipantMessage partipantMsg) {
+        return partipantMsg.appliesTo(participantType, participantId);
     }
 }

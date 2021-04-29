@@ -57,9 +57,11 @@ public class ParticipantMessageTest {
     public void testAppliesTo_NullParticipantId() {
         message = makeMessage();
 
-        assertThatThrownBy(() -> message.appliesTo(null))
-                        .isInstanceOf(NullPointerException.class);
-
+        assertThatThrownBy(() -> message.appliesTo(null, null)).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.6"), null))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> message.appliesTo(null, new ToscaConceptIdentifier("id", "1.2.3")))
+                .isInstanceOf(NullPointerException.class);
     }
 
     @Test
@@ -67,33 +69,32 @@ public class ParticipantMessageTest {
         message = makeMessage();
 
         // ParticipantId matches
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier();
-        id.setName("id");
-        id.setVersion("1.2.3");
-        assertTrue(message.appliesTo(id));
+        assertTrue(message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.6"),
+                new ToscaConceptIdentifier("id", "1.2.3")));
+        assertFalse(message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.6"),
+                new ToscaConceptIdentifier("id", "1.2.4")));
+        assertFalse(message.appliesTo(new ToscaConceptIdentifier("PType", "4.5.7"),
+                new ToscaConceptIdentifier("id", "1.2.3")));
     }
 
     @Test
     public void testAppliesTo_ParticipantIdNoMatch() {
         message = makeMessage();
 
-        // ParticipantId doesnot match
+        // ParticipantId does not match
         ToscaConceptIdentifier id = new ToscaConceptIdentifier();
         id.setName("id1111");
         id.setVersion("3.2.1");
-        assertFalse(message.appliesTo(id));
-        message.setParticipantId(null);
-        assertTrue(message.appliesTo(id));
+        assertFalse(message.appliesTo(id, id));
+        message.setParticipantType(null);
+        assertTrue(message.appliesTo(id, id));
     }
 
     private ParticipantMessage makeMessage() {
         ParticipantMessage msg = new ParticipantMessage(ParticipantMessageType.PARTICIPANT_STATE_CHANGE);
 
-        ToscaConceptIdentifier id = new ToscaConceptIdentifier();
-        id.setName("id");
-        id.setVersion("1.2.3");
-        msg.setControlLoopId(id);
-        msg.setParticipantId(id);
+        msg.setParticipantType(new ToscaConceptIdentifier("PType", "4.5.6"));
+        msg.setParticipantId(new ToscaConceptIdentifier("id", "1.2.3"));
         msg.setMessageId(UUID.randomUUID());
         msg.setTimestamp(Instant.ofEpochMilli(3000));
 

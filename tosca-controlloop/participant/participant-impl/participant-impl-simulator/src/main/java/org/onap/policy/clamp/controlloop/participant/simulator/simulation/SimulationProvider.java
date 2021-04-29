@@ -23,6 +23,8 @@ package org.onap.policy.clamp.controlloop.participant.simulator.simulation;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopRuntimeException;
@@ -71,22 +73,6 @@ public class SimulationProvider implements Closeable {
     }
 
     /**
-     * Update the given control loop in the simulator.
-     *
-     * @param controlLoop the control loop to update
-     * @return response simple response returned
-     * @throws ControlLoopException on errors updating the control loop
-     */
-    public TypedSimpleResponse<ControlLoop> updateControlLoop(ControlLoop controlLoop)
-            throws ControlLoopException {
-        TypedSimpleResponse<ControlLoop> response = new TypedSimpleResponse<>();
-        ControlLoop updatedControlLoop = intermediaryApi.updateControlLoopState(
-                controlLoop.getDefinition(), controlLoop.getOrderedState());
-        response.setResponse(updatedControlLoop);
-        return response;
-    }
-
-    /**
      * Get the simulated control loop elements.
      *
      * @param name the controlLoopElement, null to get all
@@ -94,7 +80,8 @@ public class SimulationProvider implements Closeable {
      * @return the control loop elements
      * @throws ControlLoopException on errors getting the control loop elements
      */
-    public List<ControlLoopElement> getControlLoopElements(String name, String version) throws ControlLoopException {
+    public Map<UUID, ControlLoopElement> getControlLoopElements(String name, String version)
+                    throws ControlLoopException {
         return intermediaryApi.getControlLoopElements(name, version);
     }
 
@@ -109,7 +96,7 @@ public class SimulationProvider implements Closeable {
             throws ControlLoopException {
         TypedSimpleResponse<ControlLoopElement> response = new TypedSimpleResponse<>();
         response.setResponse(intermediaryApi.updateControlLoopElementState(
-                element.getId(), element.getOrderedState()));
+                element.getId(), element.getOrderedState(), element.getState()));
         return response;
     }
 

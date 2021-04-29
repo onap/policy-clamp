@@ -83,7 +83,7 @@ public class JpaClElementStatisticsTest {
         }).hasMessageMatching("clElementStatistics is marked .*ull but is null");
 
         assertThatThrownBy(() -> new JpaClElementStatistics((JpaClElementStatistics) null))
-            .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(NullPointerException.class);
 
         JpaClElementStatistics testJpaClElementStatisticsFa = new JpaClElementStatistics();
         testJpaClElementStatisticsFa.setKey(null);

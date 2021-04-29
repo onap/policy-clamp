@@ -43,7 +43,7 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 
 public class CommissioningProviderTest {
     private static final String TOSCA_SERVICE_TEMPLATE_YAML =
-            "src/test/resources/servicetemplates/pmsh_multiple_cl_tosca.yaml";
+            "src/test/resources/rest/servicetemplates/pmsh_multiple_cl_tosca.yaml";
     private static final String TEMPLATE_IS_NULL = ".*serviceTemplate is marked non-null but is null";
     private static final Coder CODER = new StandardCoder();
     private static final YamlJsonTranslator yamlTranslator = new YamlJsonTranslator();
@@ -149,6 +149,9 @@ public class CommissioningProviderTest {
                     .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
                             ToscaServiceTemplate.class);
 
+            listOfTemplates = provider.getControlLoopDefinitions(null, null);
+            assertThat(listOfTemplates).isEmpty();
+
             provider.createControlLoopDefinitions(serviceTemplate);
             listOfTemplates = provider.getControlLoopDefinitions(null, null);
             assertThat(listOfTemplates).hasSize(2);
@@ -170,6 +173,8 @@ public class CommissioningProviderTest {
             ToscaServiceTemplate serviceTemplate = yamlTranslator
                     .fromYaml(ResourceUtils.getResourceAsString(TOSCA_SERVICE_TEMPLATE_YAML),
                             ToscaServiceTemplate.class);
+
+            provider.getControlLoopDefinitions(null, null);
 
             provider.createControlLoopDefinitions(serviceTemplate);
             List<ToscaNodeTemplate> controlLoopDefinitionList = provider.getControlLoopDefinitions(

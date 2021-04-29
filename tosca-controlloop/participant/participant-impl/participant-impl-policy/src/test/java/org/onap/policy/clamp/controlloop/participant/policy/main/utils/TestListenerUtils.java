@@ -25,8 +25,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -68,7 +67,7 @@ public class TestListenerUtils {
     private TestListenerUtils() {}
 
     /**
-     * Initializes participantHandler.
+     * Method to initialize participantHandler.
      */
     public static void initParticipantHandler() {
 
@@ -89,8 +88,8 @@ public class TestListenerUtils {
      */
     public static ControlLoop createControlLoop() {
         ControlLoop controlLoop = new ControlLoop();
-        List<ControlLoopElement> elements = new ArrayList<>();
-        ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead("src/test/resources/utils/servicetemplates");
+        Map<UUID, ControlLoopElement> elements = new LinkedHashMap<>();
+        ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : nodeTemplatesMap.entrySet()) {
@@ -106,7 +105,7 @@ public class TestListenerUtils {
             clElement.setState(ControlLoopState.UNINITIALISED);
             clElement.setDescription(toscaInputEntry.getValue().getDescription());
             clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
-            elements.add(clElement);
+            elements.put(clElement.getId(), clElement);
         }
         controlLoop.setElements(elements);
         controlLoop.setName("PMSHInstance0");
@@ -172,7 +171,7 @@ public class TestListenerUtils {
      *
      * @return ParticipantControlLoopUpdate message
      */
-    public static ParticipantControlLoopUpdate createControlLoopUpdateMsg(final String inputDirPath) {
+    public static ParticipantControlLoopUpdate createControlLoopUpdateMsg() {
         final ParticipantControlLoopUpdate clUpdateMsg = new ParticipantControlLoopUpdate();
         ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();
         controlLoopId.setName("PMSHInstance0");
@@ -186,8 +185,8 @@ public class TestListenerUtils {
         clUpdateMsg.setParticipantId(participantId);
 
         ControlLoop controlLoop = new ControlLoop();
-        List<ControlLoopElement> elements = new ArrayList<>();
-        ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead(inputDirPath);
+        Map<UUID, ControlLoopElement> elements = new LinkedHashMap<>();
+        ToscaServiceTemplate toscaServiceTemplate = testControlLoopRead();
         Map<String, ToscaNodeTemplate> nodeTemplatesMap =
                 toscaServiceTemplate.getToscaTopologyTemplate().getNodeTemplates();
         for (Map.Entry<String, ToscaNodeTemplate> toscaInputEntry : nodeTemplatesMap.entrySet()) {
@@ -203,7 +202,7 @@ public class TestListenerUtils {
             clElement.setState(ControlLoopState.UNINITIALISED);
             clElement.setDescription(toscaInputEntry.getValue().getDescription());
             clElement.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
-            elements.add(clElement);
+            elements.put(clElement.getId(), clElement);
         }
         controlLoop.setElements(elements);
         controlLoop.setName("PMSHInstance0");
@@ -253,9 +252,9 @@ public class TestListenerUtils {
         return participantControlLoopUpdateMsg;
     }
 
-    private static ToscaServiceTemplate testControlLoopRead(final String inputDirPath) {
+    private static ToscaServiceTemplate testControlLoopRead() {
         Set<String> controlLoopDirectoryContents =
-                ResourceUtils.getDirectoryContents(inputDirPath);
+                ResourceUtils.getDirectoryContents("src/test/resources/utils/servicetemplates");
 
         boolean atLeastOneControlLoopTested = false;
         ToscaServiceTemplate toscaServiceTemplate = null;
@@ -268,16 +267,14 @@ public class TestListenerUtils {
             toscaServiceTemplate = testControlLoopYamlSerialization(controlLoopFilePath);
         }
 
+        // Add policy_types to the toscaServiceTemplate
+        addPolicyTypesToToscaServiceTemplate(toscaServiceTemplate);
+
         assertTrue(atLeastOneControlLoopTested);
         return toscaServiceTemplate;
     }
 
-    /**
-     * Method to add polcies to the toscaServiceTemplate.
-     *
-     * @param toscaServiceTemplate to add policies
-     */
-    public static void addPolicyTypesToToscaServiceTemplate(
+    private static void addPolicyTypesToToscaServiceTemplate(
             ToscaServiceTemplate toscaServiceTemplate) {
         Set<String> policyTypeDirectoryContents = ResourceUtils.getDirectoryContents("policytypes");
 

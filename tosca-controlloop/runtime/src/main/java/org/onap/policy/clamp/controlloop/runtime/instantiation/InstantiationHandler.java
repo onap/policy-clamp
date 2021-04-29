@@ -21,13 +21,11 @@
 package org.onap.policy.clamp.controlloop.runtime.instantiation;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.ws.rs.core.Response;
 import lombok.Getter;
 import org.onap.policy.clamp.controlloop.common.handler.ControlLoopHandler;
-import org.onap.policy.clamp.controlloop.runtime.commissioning.rest.CommissioningController;
 import org.onap.policy.clamp.controlloop.runtime.instantiation.rest.InstantiationController;
 import org.onap.policy.clamp.controlloop.runtime.main.parameters.ClRuntimeParameterGroup;
 import org.onap.policy.common.endpoints.event.comm.TopicSink;
@@ -36,11 +34,9 @@ import org.onap.policy.common.utils.services.Registry;
 import org.onap.policy.models.base.PfModelRuntimeException;
 
 /**
- * This class handles instantiation of control loop instances,
- * so only one object of this type should be built at a time.
+ * This class handles instantiation of control loop instances.
  *
- * </p>
- * It is effectively a singleton that is started at system start
+ * <p/>It is effectively a singleton that is started at system start
  */
 public final class InstantiationHandler extends ControlLoopHandler {
 
@@ -68,26 +64,6 @@ public final class InstantiationHandler extends ControlLoopHandler {
     @Override
     public Set<Class<?>> getProviderClasses() {
         return Set.of(InstantiationController.class);
-    }
-
-    @Override
-    public void startAndRegisterListeners(MessageTypeDispatcher msgDispatcher) {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void startAndRegisterPublishers(List<TopicSink> topicSinks) {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void stopAndUnregisterPublishers() {
-        // No topic communication on this handler
-    }
-
-    @Override
-    public void stopAndUnregisterListeners(MessageTypeDispatcher msgDispatcher) {
-        // No topic communication on this handler
     }
 
     @Override

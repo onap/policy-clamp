@@ -24,7 +24,7 @@ import java.io.File;
 import javax.ws.rs.core.Response;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.participant.policy.main.startstop.ParticipantPolicyCommandLineArguments;
-import org.onap.policy.common.parameters.GroupValidationResult;
+import org.onap.policy.common.parameters.ValidationResult;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -65,7 +65,7 @@ public class ParticipantPolicyParameterHandler {
         }
 
         // validate the parameters
-        final GroupValidationResult validationResult = parameters.validate();
+        final ValidationResult validationResult = parameters.validate();
         if (!validationResult.isValid()) {
             String returnMessage =
                     "validation error(s) on parameters from \"" + arguments.getConfigurationFilePath() + "\"\n";

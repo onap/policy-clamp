@@ -23,7 +23,6 @@ package org.onap.policy.clamp.controlloop.models.controlloop.persistence.concept
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -67,20 +66,19 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
     // @formatter:off
     @VerifyKey
     @NotNull
-    @AttributeOverrides({
-            @AttributeOverride(name = "name",    column = @Column(name = "definition_name")),
-            @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
-        }
-    )
+    @AttributeOverride(name = "name",    column = @Column(name = "definition_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "definition_version"))
     private PfConceptKey definition;
 
     @VerifyKey
     @NotNull
-    @AttributeOverrides({
-            @AttributeOverride(name = "name",    column = @Column(name = "participant_name")),
-            @AttributeOverride(name = "version", column = @Column(name = "participant_version"))
-        }
-    )
+    @AttributeOverride(name = "name",    column = @Column(name = "participant_type_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "participant_type_version"))
+    private PfConceptKey participantType;
+
+    @NotNull
+    @AttributeOverride(name = "name",    column = @Column(name = "participant_name"))
+    @AttributeOverride(name = "version", column = @Column(name = "participant_version"))
     private PfConceptKey participantId;
     // @formatter:on
 
@@ -116,14 +114,14 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
      *
      * @param key the key
      * @param definition the TOSCA definition of the control loop element
-     * @param participantId the TOSCA definition of the participant running the control loop element
+     * @param participantType the TOSCA definition of the participant running the control loop element
      * @param state the state of the control loop
      */
     public JpaControlLoopElement(@NonNull final PfReferenceKey key, @NonNull final PfConceptKey definition,
-            @NonNull final PfConceptKey participantId, @NonNull final ControlLoopState state) {
+            @NonNull final PfConceptKey participantType, @NonNull final ControlLoopState state) {
         this.key = key;
         this.definition = definition;
-        this.participantId = participantId;
+        this.participantType = participantType;
         this.state = state;
     }
 
@@ -136,6 +134,7 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
         super(copyConcept);
         this.key = new PfReferenceKey(copyConcept.key);
         this.definition = new PfConceptKey(copyConcept.definition);
+        this.participantType = new PfConceptKey(copyConcept.participantType);
         this.participantId = new PfConceptKey(copyConcept.participantId);
         this.state = copyConcept.state;
         this.orderedState = copyConcept.orderedState;
@@ -157,6 +156,7 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
 
         element.setId(UUID.fromString(getKey().getLocalName()));
         element.setDefinition(new ToscaConceptIdentifier(definition));
+        element.setParticipantType(new ToscaConceptIdentifier(participantType));
         element.setParticipantId(new ToscaConceptIdentifier(participantId));
         element.setState(state);
         element.setOrderedState(orderedState != null ? orderedState : state.asOrderedState());
@@ -173,6 +173,7 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
         }
 
         this.definition = element.getDefinition().asConceptKey();
+        this.participantType = element.getParticipantType().asConceptKey();
         this.participantId = element.getParticipantId().asConceptKey();
         this.state = element.getState();
         this.orderedState = element.getOrderedState();
@@ -184,6 +185,7 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
         List<PfKey> keyList = getKey().getKeys();
 
         keyList.add(definition);
+        keyList.add(participantType);
         keyList.add(participantId);
 
         return keyList;
@@ -193,6 +195,7 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
     public void clean() {
         key.clean();
         definition.clean();
+        participantType.clean();
         participantId.clean();
 
         if (description != null) {
@@ -219,6 +222,11 @@ public class JpaControlLoopElement extends PfConcept implements PfAuthorative<Co
         }
 
         result = definition.compareTo(other.definition);
+        if (result != 0) {
+            return result;
+        }
+
+        result = participantType.compareTo(other.participantType);
         if (result != 0) {
             return result;
         }

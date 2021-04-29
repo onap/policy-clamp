@@ -44,6 +44,7 @@ import org.onap.policy.clamp.controlloop.runtime.commissioning.CommissioningProv
 import org.onap.policy.clamp.controlloop.runtime.main.rest.RestController;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
+import org.onap.policy.models.errors.concepts.ErrorResponse;
 import org.onap.policy.models.errors.concepts.ErrorResponseInfo;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaNodeTemplate;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
@@ -131,7 +132,9 @@ public class CommissioningController extends RestController {
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Commissioning of the control loops failed", e);
-            return createCommissioningErrorResponse(e, requestId);
+            CommissioningResponse resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
+            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
 
     }
@@ -201,7 +204,9 @@ public class CommissioningController extends RestController {
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Decommisssioning of control loop failed", e);
-            return createCommissioningErrorResponse(e, requestId);
+            CommissioningResponse resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
+            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
 
     }
@@ -255,9 +260,9 @@ public class CommissioningController extends RestController {
     // @formatter:on
     public Response query(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
                           @ApiParam(value = "Control Loop definition name", required = true)
-                              @QueryParam("name") String name,
+                          @QueryParam("name") String name,
                           @ApiParam(value = "Control Loop definition version", required = true)
-                              @QueryParam("version") String version) {
+                          @QueryParam("version") String version) {
 
         try {
             List<ToscaNodeTemplate> response = provider.getControlLoopDefinitions(name, version);
@@ -266,7 +271,9 @@ public class CommissioningController extends RestController {
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of control loop definitions failed", e);
-            return createCommissioningErrorResponse(e, requestId);
+            CommissioningResponse resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
+            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
 
     }
@@ -319,33 +326,35 @@ public class CommissioningController extends RestController {
     )
     // @formatter:on
     public Response queryElements(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-                          @ApiParam(value = "Control Loop definition name", required = true)
-                          @QueryParam("name") String name,
-                          @ApiParam(value = "Control Loop definition version", required = true)
-                          @QueryParam("version") String version) throws Exception {
+                                  @ApiParam(value = "Control Loop definition name", required = true)
+                                  @QueryParam("name") String name,
+                                  @ApiParam(value = "Control Loop definition version", required = true)
+                                  @QueryParam("version") String version) throws Exception {
 
         try {
             List<ToscaNodeTemplate> nodeTemplate = provider.getControlLoopDefinitions(name, version);
             //Prevent ambiguous queries with multiple returns
             if (nodeTemplate.size() > 1) {
-                throw new Exception();
+                CommissioningResponse resp = new CommissioningResponse();
+                resp.setErrorDetails("Multiple ControlLoops are not supported");
+                return returnResponse(Response.Status.NOT_ACCEPTABLE, requestId, resp);
             }
+
             List<ToscaNodeTemplate> response = provider.getControlLoopElementDefinitions(nodeTemplate.get(0));
             return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
                     .build();
 
         } catch (PfModelRuntimeException | PfModelException e) {
             LOGGER.warn("Get of control loop element definitions failed", e);
-            return createCommissioningErrorResponse(e, requestId);
+            CommissioningResponse resp = new CommissioningResponse();
+            resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
+            return returnResponse(e.getErrorResponse().getResponseCode(), requestId, resp);
         }
 
     }
 
-    private Response createCommissioningErrorResponse(ErrorResponseInfo e, UUID requestId) {
-        CommissioningResponse resp = new CommissioningResponse();
-        resp.setErrorDetails(e.getErrorResponse().getErrorMessage());
-        return addLoggingHeaders(addVersionControlHeaders(Response.status(e.getErrorResponse().getResponseCode())),
+    private Response returnResponse(Response.Status status, UUID requestId, CommissioningResponse resp) {
+        return addLoggingHeaders(addVersionControlHeaders(Response.status(status)),
                 requestId).entity(resp).build();
     }
-
 }
