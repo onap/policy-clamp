@@ -1,0 +1,1686 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9ea711d_a4fa4e6f",
+        "filename": "tosca-controlloop/common/src/test/resources/demo/Notes.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "change to something like ${USER} ?\n\nsame comment below",
+      "range": {
+        "startLine": 2,
+        "startChar": 8,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04e85db3_d8350618",
+        "filename": "tosca-controlloop/common/src/test/resources/demo/config/RuntimeConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "is this file used with junits?  If so, I\u0027d prefer it be reverted back to the original.  However, if it\u0027s only used when manually running a demo, then it\u0027s fine.",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f0edc94_412f8694",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "good idea, as this eliminates errors (e.g., previous code use null_key_name where it should have used null_key_version)!",
+      "range": {
+        "startLine": 45,
+        "startChar": 75,
+        "endLine": 45,
+        "endChar": 100
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9de24905_56ad9c4f",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "(elements.size())\n\nOr could change this whole method to:\n\n  values().map(xxx).toList(yyy)\n\nOne question: can \"elements\" be null?  If so, need to handle that case.  If not, then lines 91-93 should be deleted.",
+      "range": {
+        "startLine": 105,
+        "startChar": 44,
+        "endLine": 105,
+        "endChar": 46
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b823cebb_86349b20",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "this class should use HttpClient from policy endpoints instead of apache - this can be done in another review",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "229e4185_a8d1a02f",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "the use of JSONObject forces us to use gson.  Any way we could change this to use a Map (or StandardCoderObject) instead?",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e18844d_59df4c43",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "looks like this could be turned into a common method, used by several of these methods\n\nmaybe put it into the superclass, as other classes can use it, too",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 9
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "364371de_c56f6324",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "looks like string concatenation could be used instead - better performance\n\nsame comment through-out",
+      "range": {
+        "startLine": 81,
+        "startChar": 41,
+        "endLine": 81,
+        "endChar": 72
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3df85f9_5aa3df13",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "looks like this could be turned into a common method, used by several of these methods\n\nmaybe put it into the superclass, as other classes can use it, too",
+      "range": {
+        "startLine": 98,
+        "startChar": 8,
+        "endLine": 102,
+        "endChar": 9
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9317fca6_c39a7301",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ConsulDcaeHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "can use new common method from superclass",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e43588b2_08e2fb97",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "is this really an appropriate exception type, or should we define another?",
+      "range": {
+        "startLine": 110,
+        "startChar": 42,
+        "endLine": 110,
+        "endChar": 58
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59fa424d_2f18731a",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "this should be defined in a property file",
+      "range": {
+        "startLine": 146,
+        "startChar": 36,
+        "endLine": 146,
+        "endChar": 38
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b148f03a_97df64e6",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "this should be defined in a property file",
+      "range": {
+        "startLine": 148,
+        "startChar": 43,
+        "endLine": 148,
+        "endChar": 45
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "385f1a76_25b2ff0d",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "seems like we should log a warn() message here",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b043eab3_f86a9768",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "\"e\" - don\u0027t want to lose the stack trace",
+      "range": {
+        "startLine": 168,
+        "startChar": 45,
+        "endLine": 168,
+        "endChar": 59
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89194f61_b75ad1c3",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/DcaeHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "seems like we see these a lost.  Perhaps \"default\" methods should be added to the interface or the superclass",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95e87486_31d6a7f3",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/DcaeHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "add this?\n\n  finally { dcaeProvider \u003d null }",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d0f81fa_862087e6",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "sure feels like I see this sequence of try/catch \u0026 \"if\" a lot.  Is there nothing in policy-common?  If not, maybe we should add one (can be done in another review).\n\ncould be in a utility class, or possibly a super class",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2852b6af_4dea8b5b",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "delete this - it will result in a duplicate log\n\nsame comment below",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69304b73_df21c3d9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "this block seems common, too",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9be216c_603cde5c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "probably need some @Valid annotations here.  Might need to validate the client parameters manually (i.e., override super.validate())",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65db40a2_721ab119",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "I see this in a lot of our code - does it really get executed?  If the activator is not a daemon thread, then this will only be executed if \"exit(nnn)\" is invoked somewhere.  If the activator IS a daemon thread, then where\u0027s the non-daemon thread that keeps it from being invoked right off the bat?",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8035bbdd_e656ec10",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/ParticipantDcaeCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "seems like we created a common super class so that most of this can be deleted",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbe141e3_06670358",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "can use coder.convert() instead",
+      "range": {
+        "startLine": 69,
+        "startChar": 19,
+        "endLine": 69,
+        "endChar": 44
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79f34173_0954f559",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "don\u0027t need a variable",
+      "range": {
+        "startLine": 264,
+        "startChar": 15,
+        "endLine": 264,
+        "endChar": 24
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50bbd2bc_89ec2aa1",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/TestParticipantDcaeParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "aren\u0027t these methods inherited from the super class?  If so, don\u0027t need to re-test them here",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a1292fe_d6be0d38",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/TestParticipantDcaeParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "\"Groupp\" \u003d\u003e \"Group\"",
+      "range": {
+        "startLine": 112,
+        "startChar": 40,
+        "endLine": 112,
+        "endChar": 46
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a316151b_298effec",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "move this up with the rest of the constants",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b50630cb_00686625",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/TestParticipantConstants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "shouldn\u0027t need this test - seems like sonar is smart enough not to complain that the private constructor in a constant class is not invoked",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0873dbd5_b4281a69",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/resources/parameters/Unreadable.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "why hard-coded now?",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8cf0d2c_98432598",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "is this needed for debugging?  if not, it can be deleted",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 45,
+        "endChar": 15
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5716baea_4e3f031a",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "maybe cache this value\n\nsame comment below",
+      "range": {
+        "startLine": 91,
+        "startChar": 16,
+        "endLine": 91,
+        "endChar": 65
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3882a28_017561c9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "values() instead",
+      "range": {
+        "startLine": 128,
+        "startChar": 77,
+        "endLine": 128,
+        "endChar": 85
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dd80409_ec4c8868",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/ParticipantPolicyParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "I\u0027m fine with this, though could make it simply \"ValidationResult\".\n\nsame comment in other files, particularly Test files",
+      "range": {
+        "startLine": 68,
+        "startChar": 14,
+        "endLine": 68,
+        "endChar": 34
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bf0b680_273c74a2",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/TestPolicyHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "just curious as to why this is needed",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6295757b_b473e2a5",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/parameters/TestParametersStd.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "is this used in junits?  If so, the URL probably won\u0027t work",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8e3e58e_26574167",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "why re-added?",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 45,
+        "endChar": 15
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c0b6421_671bfead",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/policytypes/onap.policies.controlloop.guard.Common.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "add newline\n\nsame comment for a number of the following files",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c577ec1a_629838cb",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestSimulationRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 131,
+        "startChar": 51,
+        "endLine": 131,
+        "endChar": 52
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfad66a1_884ded27",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestSimulationRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "assertEquals",
+      "range": {
+        "startLine": 136,
+        "startChar": 80,
+        "endLine": 136,
+        "endChar": 86
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5edbd72_b9e1fa4f",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "sonar: remove \"public \"\n\nsame comment below",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 11
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49830a49_e69cac9a",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "cache this to avoid the double look-up",
+      "range": {
+        "startLine": 108,
+        "startChar": 16,
+        "endLine": 108,
+        "endChar": 49
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93557b63_867c5b6c",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ControlLoopStateChangeListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "don\u0027t log the message content more than once.  either log it here, or log it on lines 57 \u0026 60",
+      "range": {
+        "startLine": 54,
+        "startChar": 75,
+        "endLine": 54,
+        "endChar": 100
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aadc792d_9a05e740",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ControlLoopUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "same comment about double logging of message",
+      "range": {
+        "startLine": 53,
+        "startChar": 69,
+        "endLine": 53,
+        "endChar": 100
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e79237b1_60832c7b",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/MessageSender.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "I\u0027m a little unclear about what\u0027s happening here.  The name of this method, and the method on line 144, would suggest that something is being retrieved.  However, line 144 doesn\u0027t seem to do anything with any returned value.  Is line 144 getting a value that\u0027s discarded?  If so, then seems like a better name on line 140 would be something like \"validateStatistics\".  OTOH, if line 144 is actually pushing statistics to the listener, then perhaps the name on line 140 should be something like \"pushStatistics\" and line 144 should be changed to something like processStatistics or handleStatistics.\n\nEither way, the comment on line 135 should be updated to reflect the real intent of the method.",
+      "range": {
+        "startLine": 140,
+        "startChar": 16,
+        "endLine": 140,
+        "endChar": 38
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64b52e21_e276f978",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantHealthCheckListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "same comment about double logging\n\nsame comment applies to subsequent files, too",
+      "range": {
+        "startLine": 53,
+        "startChar": 82,
+        "endLine": 53,
+        "endChar": 107
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "648de107_5367c07d",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantStateChangeListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "I\u0027m seeing common code here.  Perhaps we should create one parameterized superclass from which they all subclass.  Then the methods could be removed altogether, and the constructor turned into a single line.  For that matter, if objects of this class are not created using reflection, then the class could be eliminated altogether and the superclass used instead.\n\nthis comment applies to other similar classes, including the previous one",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "170c5571_0e45a18f",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "why was elementsOnThisParticipant removed?  we want to avoid scanning lists when doing look-ups",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04283843_fdfc3bb1",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "no longer need appliesTo check?",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e18ea579_0ea48ec6",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "maybe combine 294 \u0026 295 into a single forEach()",
+      "range": {
+        "startLine": 294,
+        "startChar": 66,
+        "endLine": 294,
+        "endChar": 92
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60812ead_7ef6c09e",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "check appliesTo?",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49af38d7_231fc222",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "lost the logging \u0026 failure response",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccaae6ef_018138b5",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "maybe this should be renamed to canHandle?",
+      "range": {
+        "startLine": 224,
+        "startChar": 19,
+        "endLine": 224,
+        "endChar": 28
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f32c52b_a9b32723",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "variable isn\u0027t needed",
+      "range": {
+        "startLine": 206,
+        "startChar": 29,
+        "endLine": 206,
+        "endChar": 38
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01e604b2_b65074bd",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "what should this really throw?  or maybe it should return a createCommissioningErrorResponse()?",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9aa97b9_27ac7b9c",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "should create a nested BeanValidationResult here, named:\n\n  \"item \" + itemCount\n\nHowever, I\u0027d also be OK naming it:\n\n  \"entry \" + controlLoop.getDefinition().getId()\n\n\nthe results added below would then be added to the nested result instead of to validationResult",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aab1ced_2b996d08",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "should probably be named:\n\n  \"item \" + itemCount\n\nHowever, I\u0027d also be OK naming it:\n\n  \"entry \" + definition.getId()",
+      "range": {
+        "startLine": 188,
+        "startChar": 63,
+        "endLine": 188,
+        "endChar": 83
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82a2a65c_d21c5927",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "not needed",
+      "range": {
+        "startLine": 195,
+        "startChar": 12,
+        "endLine": 195,
+        "endChar": 53
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34a04c7d_d09d093b",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "\"p\" \u003d\u003e \"p/\"",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 5
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9572e980_0a5842bc",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "add newline",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cf7ebba_b35e01c7",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantUpdateParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "add newline",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b332f2ef_7cda1da8",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "use superclass from policy-common",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04b2b3a3_d1cae787",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "\"/p\" \u003d\u003e \"p/\"",
+      "range": {
+        "startLine": 105,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 10
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27b7a5c0_cd6aedeb",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "please create a JIRA for this \"TODO\"",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4bb90717_c78f86d6",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "can any of these throw an exception?  if so, do any of them need to be terminated after the exception?  If so, then this should probably use a ServiceManager from policy-common to manage starting and stopped.",
+      "range": {
+        "startLine": 142,
+        "startChar": 8,
+        "endLine": 145,
+        "endChar": 105
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "448edd6b_083c69ec",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "may create a common method to generate these different exception types for line 219, 224, and 233.  Can then reuse them in subsequent methods",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21c8126c_b6f82526",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "could delete this variable and use List.of(xxx) instead",
+      "range": {
+        "startLine": 339,
+        "startChar": 55,
+        "endLine": 339,
+        "endChar": 80
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9e68b18_877c9f94",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "dbControlLoop?",
+      "range": {
+        "startLine": 362,
+        "startChar": 47,
+        "endLine": 362,
+        "endChar": 58
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2067ca3e_24de36fd",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "need to use a ServiceManager in case one throws an exception?",
+      "range": {
+        "startLine": 384,
+        "startChar": 12,
+        "endLine": 385,
+        "endChar": 91
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef1ad4bc_44dda5d7",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "need to use a ServiceManager in case one throws an exception?",
+      "range": {
+        "startLine": 393,
+        "startChar": 7,
+        "endLine": 394,
+        "endChar": 36
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6c5e55d_75297d32",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "seems like the preference, these days, is to use a scheduledExecutor instead of a TimerTask",
+      "range": {
+        "startLine": 35,
+        "startChar": 40,
+        "endLine": 35,
+        "endChar": 50
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "745cdf90_b63a3d2c",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantControlLoopUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "looks like common code - maybe replace these classes with a parameterized superclass",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82a19cd8_b87caddb",
+        "filename": "tosca-controlloop/runtime/src/main/resources/CommissioningConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "normally 3306 - does it matter?",
+      "range": {
+        "startLine": 15,
+        "startChar": 45,
+        "endLine": 15,
+        "endChar": 49
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95cbe874_dee452ca",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "\"Comand\" \u003d\u003e \"Command\"\n\nsame comment",
+      "range": {
+        "startLine": 121,
+        "startChar": 20,
+        "endLine": 121,
+        "endChar": 26
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01ac318b_331d63ac",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/MainTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "delete String.format()",
+      "range": {
+        "startLine": 119,
+        "startChar": 28,
+        "endLine": 119,
+        "endChar": 41
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffa43cf1_8388d51e",
+        "filename": "tosca-controlloop/runtime/src/test/resources/META-INF/persistence.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "2021",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 26
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ba62756_0460710e",
+        "filename": "tosca-controlloop/runtime/src/test/resources/parameters/InstantiationConfigParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "${port} ?",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9627bd69_20537f23",
+        "filename": "tosca-controlloop/runtime/src/test/resources/parameters/InstantiationConfigParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "${dbName} ?",
+      "range": {
+        "startLine": 26,
+        "startChar": 24,
+        "endLine": 26,
+        "endChar": 51
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb96f3b5_95700d68",
+        "filename": "tosca-controlloop/runtime/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "delete this?",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 15
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3e72de1_247a98fb",
+        "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "license after line 1",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a44a5c_cd924565",
+        "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "tabs \u003d\u003e spaces\n\nsame comment below",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2e3403e_e1e1d524",
+        "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-04T19:20:43Z",
+      "side": 1,
+      "message": "newline",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
