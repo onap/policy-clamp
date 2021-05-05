@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8e552140_df5683c9",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyEditor.test.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cb062e8_00830632",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 17
+      },
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25e54b6c_373e70a1",
         "filename": "ui-react/src/components/dialogs/Policy/PolicyEditor.test.js",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "892fbb07_fe2c317a",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyEditor.test.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25e54b6c_373e70a1",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 1
+      },
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d03442a5_79413d79",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyModal.test.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1ed6899_1293750a",
+      "range": {
+        "startLine": 5,
+        "startChar": 21,
+        "endLine": 5,
+        "endChar": 23
+      },
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ecd8aba5_3f6ffeef",
         "filename": "ui-react/src/components/dialogs/Policy/PolicyModal.test.js",
         "patchSetId": 5
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "b70b5ce7_7c80df23",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyModal.test.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecd8aba5_3f6ffeef",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 8
+      },
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f499c043_86dda551",
         "filename": "ui-react/src/components/dialogs/Policy/PolicyModal.test.js",
         "patchSetId": 5
@@ -114,6 +210,30 @@
       "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51b5a437_10cad0d0",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyModal.test.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f499c043_86dda551",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 1
+      },
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +277,30 @@
     },
     {
       "key": {
+        "uuid": "82093c80_87a121fa",
+        "filename": "ui-react/src/components/dialogs/Policy/ToscaViewer.test.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "no toscaYaml 😊",
+      "parentUuid": "278b65f8_b0876e2a",
+      "range": {
+        "startLine": 31,
+        "startChar": 8,
+        "endLine": 31,
+        "endChar": 17
+      },
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "34d48fce_d3e9f976",
         "filename": "ui-react/src/components/dialogs/Policy/ToscaViewer.test.js",
         "patchSetId": 5
@@ -174,6 +318,24 @@
     },
     {
       "key": {
+        "uuid": "e328a5c9_f55c0d40",
+        "filename": "ui-react/src/components/dialogs/Policy/ToscaViewer.test.js",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34d48fce_d3e9f976",
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04a8746e_d6dc3c32",
         "filename": "ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
         "patchSetId": 5
@@ -185,6 +347,24 @@
       "writtenOn": "2021-05-04T19:33:46Z",
       "side": 1,
       "message": "is this generated?  if so, ignore the comments",
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f380704a_9b01196a",
+        "filename": "ui-react/src/components/dialogs/Policy/__snapshots__/PolicyEditor.test.js.snap",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Yes all snap are generated by the jest framework",
+      "parentUuid": "04a8746e_d6dc3c32",
       "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -251,6 +431,24 @@
       "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c805c7c_3c788758",
+        "filename": "ui-react/src/components/dialogs/Policy/toscaData.test.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-05T08:37:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de3d3bf0_29d8f2b4",
+      "revId": "241cbb962ad1dfd841ca84d95a7c02108303cc01",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
