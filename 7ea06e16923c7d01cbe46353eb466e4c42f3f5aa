@@ -88,6 +88,30 @@
     },
     {
       "key": {
+        "uuid": "c5c71771_dc8d6472",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 5569
+      },
+      "writtenOn": "2021-05-05T10:21:34Z",
+      "side": 1,
+      "message": "Variable name should be clElementStatisticsList instead, as its adding statistics to the list and not elements themselves . I am not sure about specifying the size of this particular array list as it would not be elements.size(). Also for my own interest, is there any benefit in providing a particular size for an ArrayList?\n\nI think it is possible code wise for elements to be null. The case should be handled.",
+      "parentUuid": "9de24905_56ad9c4f",
+      "range": {
+        "startLine": 105,
+        "startChar": 44,
+        "endLine": 105,
+        "endChar": 46
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b823cebb_86349b20",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
         "patchSetId": 1
