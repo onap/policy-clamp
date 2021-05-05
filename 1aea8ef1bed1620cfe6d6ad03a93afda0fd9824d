@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9cc13208_fccfac6f",
+        "filename": "ui-react/src/components/dialogs/Policy/PolicyModal.test.js",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-05T12:57:00Z",
+      "side": 1,
+      "message": "trailing spaces still :-D",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 8
+      },
+      "revId": "1aea8ef1bed1620cfe6d6ad03a93afda0fd9824d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
