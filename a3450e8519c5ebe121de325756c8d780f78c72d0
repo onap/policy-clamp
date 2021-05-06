@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2a5edb8_1706a577",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-06T17:31:52Z",
+      "side": 1,
+      "message": "do we need to handle the case where one of these values is null?\n\nsame comment below",
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e11b3000_11590fb5",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-06T17:31:52Z",
+      "side": 1,
+      "message": "maybe this should directly add to errorMsg rather than append a StringBuilder to another StringBuilder.\n\nanother alternative would be to follow the more typical, hierarchical structure of validation results:\n\nModify the \"checkMissing()\" method to create a BeanValidationResult, invoking addResult() for each invalid field.  It could then return null, if the result is clean, or the result otherwise.\n\nThe validate() method when then simply do two calls like:\n  result.addResult(checkMissing(\"clampClientParameters\", clampClientParameters))",
+      "range": {
+        "startLine": 69,
+        "startChar": 48,
+        "endLine": 69,
+        "endChar": 75
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48d904fc_d57b5349",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClientTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-06T17:31:52Z",
+      "side": 1,
+      "message": "prefer to use StandardCoder over jackson\n\nfor that matter, if createJsonStatus() just returned a Map, then wouldn\u0027t need to go through steps of converting it to a string and then back to a map.",
+      "range": {
+        "startLine": 88,
+        "startChar": 42,
+        "endLine": 88,
+        "endChar": 54
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dcbf536_1b34556f",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-06T17:31:52Z",
+      "side": 1,
+      "message": "use a Map instead\n\ncan use a StandardCoder to encode it as a String, where necessary",
+      "range": {
+        "startLine": 286,
+        "startChar": 18,
+        "endLine": 286,
+        "endChar": 28
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2370b75_b232caf5",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-06T17:31:52Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 4
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bca0f60_6fbc9c05",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-06T17:31:52Z",
+      "side": 1,
+      "message": "should this just re-throw a runtime exception of some sort, with \"exp\" wrapped inside?\n\nsame question for the other cases below",
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb75929b_7e2a447c",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-06T17:31:52Z",
+      "side": 1,
+      "message": "should be able to delete this",
+      "range": {
+        "startLine": 45,
+        "startChar": 32,
+        "endLine": 45,
+        "endChar": 49
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
