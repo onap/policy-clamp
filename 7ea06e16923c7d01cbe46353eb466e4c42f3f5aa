@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "264c7ee1_d0d0527b",
+        "filename": "tosca-controlloop/common/src/test/resources/demo/Notes.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9ea711d_a4fa4e6f",
+      "range": {
+        "startLine": 2,
+        "startChar": 8,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04e85db3_d8350618",
         "filename": "tosca-controlloop/common/src/test/resources/demo/config/RuntimeConfig.json",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0711752b_248a5139",
+        "filename": "tosca-controlloop/common/src/test/resources/demo/config/RuntimeConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "This file is not used in JUnits, This is the input configuration file for manually running the runtime component in demo.",
+      "parentUuid": "04e85db3_d8350618",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -62,6 +104,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ffcf3e1_4964d320",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Thank you. Done",
+      "parentUuid": "5f0edc94_412f8694",
+      "range": {
+        "startLine": 45,
+        "startChar": 75,
+        "endLine": 45,
+        "endChar": 100
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -112,6 +178,30 @@
     },
     {
       "key": {
+        "uuid": "8a29891c_befb50b5",
+        "filename": "tosca-controlloop/models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/concepts/ControlLoop.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5c71771_dc8d6472",
+      "range": {
+        "startLine": 105,
+        "startChar": 44,
+        "endLine": 105,
+        "endChar": 46
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b823cebb_86349b20",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
         "patchSetId": 1
@@ -129,6 +219,24 @@
     },
     {
       "key": {
+        "uuid": "2b545ce8_a6bc391e",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Ok, DCAE participant will see more changes in Istanbul, as the current Clamp usage towards DCAE will be changed.",
+      "parentUuid": "b823cebb_86349b20",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "229e4185_a8d1a02f",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
         "patchSetId": 1
@@ -143,6 +251,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "663c5fae_96156180",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "229e4185_a8d1a02f",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -169,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "aefa15c1_48522bab",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e18844d_59df4c43",
+      "range": {
+        "startLine": 62,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 9
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "364371de_c56f6324",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
         "patchSetId": 1
@@ -189,6 +339,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "936ed56b_efec02b1",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "364371de_c56f6324",
+      "range": {
+        "startLine": 81,
+        "startChar": 41,
+        "endLine": 81,
+        "endChar": 72
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -215,6 +389,30 @@
     },
     {
       "key": {
+        "uuid": "204fee6b_7aeeec4c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3df85f9_5aa3df13",
+      "range": {
+        "startLine": 98,
+        "startChar": 8,
+        "endLine": 102,
+        "endChar": 9
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9317fca6_c39a7301",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ConsulDcaeHttpClient.java",
         "patchSetId": 1
@@ -229,6 +427,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b5fe562_5f8e8ae4",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ConsulDcaeHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9317fca6_c39a7301",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -255,6 +471,30 @@
     },
     {
       "key": {
+        "uuid": "a181c17a_7f2a8621",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. This participant code will be discarded, as this uses CLAMP as a bypass towards DCAE. As this code will not be re-used. I prefer to leave the exception as it is for demo version. Hope that is fine.",
+      "parentUuid": "e43588b2_08e2fb97",
+      "range": {
+        "startLine": 110,
+        "startChar": 42,
+        "endLine": 110,
+        "endChar": 58
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59fa424d_2f18731a",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -275,6 +515,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5390397_7e662825",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. This is a demo tweak, to sleep for 10 seconds and recheck if DCAE is deployed. This code is for demo only, and will not be reused for DCAE participant. Here while testing, we are aware that DCAE will be deployed through clamp in 30 seconds, and hence iteration of 100 seconds for demo.",
+      "parentUuid": "59fa424d_2f18731a",
+      "range": {
+        "startLine": 146,
+        "startChar": 36,
+        "endLine": 146,
+        "endChar": 38
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -301,6 +565,30 @@
     },
     {
       "key": {
+        "uuid": "648bbf16_505cc6d6",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b148f03a_97df64e6",
+      "range": {
+        "startLine": 148,
+        "startChar": 43,
+        "endLine": 148,
+        "endChar": 45
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "385f1a76_25b2ff0d",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -315,6 +603,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b366a813_1486c1b9",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "385f1a76_25b2ff0d",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -341,6 +647,30 @@
     },
     {
       "key": {
+        "uuid": "595e9097_3df81f6d",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b043eab3_f86a9768",
+      "range": {
+        "startLine": 168,
+        "startChar": 45,
+        "endLine": 168,
+        "endChar": 59
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "89194f61_b75ad1c3",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/DcaeHandler.java",
         "patchSetId": 1
@@ -355,6 +685,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba9751a8_a12585f5",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/DcaeHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89194f61_b75ad1c3",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -375,6 +723,24 @@
     },
     {
       "key": {
+        "uuid": "891c9db9_b3d4a1ca",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/DcaeHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95e87486_31d6a7f3",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d0f81fa_862087e6",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
         "patchSetId": 1
@@ -389,6 +755,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ccd3164_44c0b78f",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Ok. Have not changed anything here. Can take up in another review. Thank you.",
+      "parentUuid": "6d0f81fa_862087e6",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -409,6 +793,24 @@
     },
     {
       "key": {
+        "uuid": "4a93c1f5_f22961c8",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2852b6af_4dea8b5b",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69304b73_df21c3d9",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
         "patchSetId": 1
@@ -423,6 +825,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "113d20d9_c1aad1e3",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Yes.",
+      "parentUuid": "69304b73_df21c3d9",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -443,6 +863,24 @@
     },
     {
       "key": {
+        "uuid": "817d420f_15aa0e52",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9be216c_603cde5c",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65db40a2_721ab119",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/Main.java",
         "patchSetId": 1
@@ -460,6 +898,24 @@
     },
     {
       "key": {
+        "uuid": "6732ec30_45d4f2bf",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "I think this needs investigation, and whether this part is really getting executed. Have added it as an investigation point to the subtask \nhttps://jira.onap.org/browse/POLICY-3268",
+      "parentUuid": "65db40a2_721ab119",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8035bbdd_e656ec10",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/ParticipantDcaeCommandLineArguments.java",
         "patchSetId": 1
@@ -474,6 +930,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b08c75ce_ddc60893",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/ParticipantDcaeCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. Yes, DCAE participant was not pushed for review earlier. The comments in Policy participant were not handled in DCAE participant. Hence the old code. Corrected now.",
+      "parentUuid": "8035bbdd_e656ec10",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -500,6 +974,30 @@
     },
     {
       "key": {
+        "uuid": "9bf2862a_f1be6b67",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbe141e3_06670358",
+      "range": {
+        "startLine": 69,
+        "startChar": 19,
+        "endLine": 69,
+        "endChar": 44
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79f34173_0954f559",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
         "patchSetId": 1
@@ -523,6 +1021,30 @@
     },
     {
       "key": {
+        "uuid": "400aec0a_2853b00c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79f34173_0954f559",
+      "range": {
+        "startLine": 264,
+        "startChar": 15,
+        "endLine": 264,
+        "endChar": 24
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "50bbd2bc_89ec2aa1",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/TestParticipantDcaeParameters.java",
         "patchSetId": 1
@@ -537,6 +1059,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f10ef8c_a88d8fdb",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/TestParticipantDcaeParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50bbd2bc_89ec2aa1",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -563,6 +1103,30 @@
     },
     {
       "key": {
+        "uuid": "ccb50749_fc585280",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/TestParticipantDcaeParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a1292fe_d6be0d38",
+      "range": {
+        "startLine": 112,
+        "startChar": 40,
+        "endLine": 112,
+        "endChar": 46
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a316151b_298effec",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
         "patchSetId": 1
@@ -580,6 +1144,24 @@
     },
     {
       "key": {
+        "uuid": "5ed0fb8d_6f743dc5",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/rest/TestListenerUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a316151b_298effec",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b50630cb_00686625",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/TestParticipantConstants.java",
         "patchSetId": 1
@@ -594,6 +1176,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b618443e_e3b5fc09",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/startstop/TestParticipantConstants.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b50630cb_00686625",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -620,6 +1220,30 @@
     },
     {
       "key": {
+        "uuid": "ac210e5d_1f63e29c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/resources/parameters/Unreadable.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Reverted.",
+      "parentUuid": "0873dbd5_b4281a69",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f8cf0d2c_98432598",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/resources/parameters/logback-test.xml",
         "patchSetId": 1
@@ -640,6 +1264,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1898d20d_a2e36efa",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8cf0d2c_98432598",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 45,
+        "endChar": 15
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -666,6 +1314,30 @@
     },
     {
       "key": {
+        "uuid": "ae510d4b_46c026e1",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5716baea_4e3f031a",
+      "range": {
+        "startLine": 91,
+        "startChar": 16,
+        "endLine": 91,
+        "endChar": 65
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3882a28_017561c9",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -686,6 +1358,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea42165a_77887f05",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3882a28_017561c9",
+      "range": {
+        "startLine": 128,
+        "startChar": 77,
+        "endLine": 128,
+        "endChar": 85
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -712,6 +1408,30 @@
     },
     {
       "key": {
+        "uuid": "20928019_1442cdfd",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/main/java/org/onap/policy/clamp/controlloop/participant/policy/main/parameters/ParticipantPolicyParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dd80409_ec4c8868",
+      "range": {
+        "startLine": 68,
+        "startChar": 14,
+        "endLine": 68,
+        "endChar": 34
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bf0b680_273c74a2",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/TestPolicyHandler.java",
         "patchSetId": 1
@@ -729,6 +1449,24 @@
     },
     {
       "key": {
+        "uuid": "4656ab52_38070ca1",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/java/org/onap/policy/clamp/controlloop/participant/policy/main/handler/TestPolicyHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "This is needed when testcases are run in parallel because of flags in maven surfire plugin. To maintain Internal Participant and ControlLoopElement States, while multiple events are handled at sametime by the handlers. More robust mechanism is needed in Handlers to take care of synchronization while several messages try to manipulate state data. This robustness is not available in demo version.",
+      "parentUuid": "9bf0b680_273c74a2",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6295757b_b473e2a5",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/parameters/TestParametersStd.json",
         "patchSetId": 1
@@ -743,6 +1481,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "078f2383_535fe634",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/parameters/TestParametersStd.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. Reverted to H2 DB. Yes, this config file is used in JUnits.",
+      "parentUuid": "6295757b_b473e2a5",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -769,6 +1525,30 @@
     },
     {
       "key": {
+        "uuid": "85bcf184_3acc540c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. Could be a copy paste error. Removed this in all logback files.",
+      "parentUuid": "b8e3e58e_26574167",
+      "range": {
+        "startLine": 39,
+        "startChar": 3,
+        "endLine": 45,
+        "endChar": 15
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6c0b6421_671bfead",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/policytypes/onap.policies.controlloop.guard.Common.yaml",
         "patchSetId": 1
@@ -783,6 +1563,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5838c15a_b7f8a899",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-policy/src/test/resources/policytypes/onap.policies.controlloop.guard.Common.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6c0b6421_671bfead",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -809,6 +1607,30 @@
     },
     {
       "key": {
+        "uuid": "656e34ee_6d868078",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestSimulationRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c577ec1a_629838cb",
+      "range": {
+        "startLine": 131,
+        "startChar": 51,
+        "endLine": 131,
+        "endChar": 52
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfad66a1_884ded27",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestSimulationRestController.java",
         "patchSetId": 1
@@ -829,6 +1651,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50298f84_83cfee9a",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/TestSimulationRestController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfad66a1_884ded27",
+      "range": {
+        "startLine": 136,
+        "startChar": 80,
+        "endLine": 136,
+        "endChar": 86
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -855,6 +1701,30 @@
     },
     {
       "key": {
+        "uuid": "6b49335a_e92d3f52",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/ParticipantIntermediaryApi.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5edbd72_b9e1fa4f",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 11
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49830a49_e69cac9a",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
         "patchSetId": 1
@@ -875,6 +1745,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "639f519f_6a036b87",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49830a49_e69cac9a",
+      "range": {
+        "startLine": 108,
+        "startChar": 16,
+        "endLine": 108,
+        "endChar": 49
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -901,6 +1795,30 @@
     },
     {
       "key": {
+        "uuid": "af10a5ee_5bc5a2eb",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ControlLoopStateChangeListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93557b63_867c5b6c",
+      "range": {
+        "startLine": 54,
+        "startChar": 75,
+        "endLine": 54,
+        "endChar": 100
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aadc792d_9a05e740",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ControlLoopUpdateListener.java",
         "patchSetId": 1
@@ -921,6 +1839,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33b066d7_0806e73e",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ControlLoopUpdateListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aadc792d_9a05e740",
+      "range": {
+        "startLine": 53,
+        "startChar": 69,
+        "endLine": 53,
+        "endChar": 100
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -947,6 +1889,30 @@
     },
     {
       "key": {
+        "uuid": "c307338a_3041d382",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/MessageSender.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "True, the name of the function is misleading. This function will enable all clElementListeners to retrieve statistics from respective ControlLoopElement, and update the controlloopelement data on Handler accordingly.",
+      "parentUuid": "e79237b1_60832c7b",
+      "range": {
+        "startLine": 140,
+        "startChar": 16,
+        "endLine": 140,
+        "endChar": 38
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64b52e21_e276f978",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantHealthCheckListener.java",
         "patchSetId": 1
@@ -970,6 +1936,30 @@
     },
     {
       "key": {
+        "uuid": "77ab6e36_1e4ff995",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantHealthCheckListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64b52e21_e276f978",
+      "range": {
+        "startLine": 53,
+        "startChar": 82,
+        "endLine": 53,
+        "endChar": 107
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "648de107_5367c07d",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantStateChangeListener.java",
         "patchSetId": 1
@@ -984,6 +1974,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31aadddd_1924e6ae",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/comm/ParticipantStateChangeListener.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Will be handled while refactoring participants using spring framework.\nCreated a subtask for the same\nhttps://jira.onap.org/browse/POLICY-3268",
+      "parentUuid": "648de107_5367c07d",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1004,6 +2012,24 @@
     },
     {
       "key": {
+        "uuid": "0f7cd946_b8d41eae",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Thanks. This got changed during demo changes. Reverted.",
+      "parentUuid": "170c5571_0e45a18f",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04283843_fdfc3bb1",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
         "patchSetId": 1
@@ -1018,6 +2044,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "619445d2_a69d6a3f",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "This check was removed while verifying demo, and allowing any participantId to pass through. But Yes, This should be reverted.",
+      "parentUuid": "04283843_fdfc3bb1",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1044,6 +2088,30 @@
     },
     {
       "key": {
+        "uuid": "fb9f1e0d_d670f3f1",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e18ea579_0ea48ec6",
+      "range": {
+        "startLine": 294,
+        "startChar": 66,
+        "endLine": 294,
+        "endChar": 92
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60812ead_7ef6c09e",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
         "patchSetId": 1
@@ -1061,6 +2129,24 @@
     },
     {
       "key": {
+        "uuid": "d3c8b317_983fee3f",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60812ead_7ef6c09e",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49af38d7_231fc222",
         "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
         "patchSetId": 1
@@ -1075,6 +2161,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08514d6c_7b8d0865",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49af38d7_231fc222",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1101,6 +2205,30 @@
     },
     {
       "key": {
+        "uuid": "45d1041e_e6e20f78",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/handler/ParticipantHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ccaae6ef_018138b5",
+      "range": {
+        "startLine": 224,
+        "startChar": 19,
+        "endLine": 224,
+        "endChar": 28
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f32c52b_a9b32723",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
         "patchSetId": 1
@@ -1124,6 +2252,30 @@
     },
     {
       "key": {
+        "uuid": "a680046e_fe993e57",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/CommissioningProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f32c52b_a9b32723",
+      "range": {
+        "startLine": 206,
+        "startChar": 29,
+        "endLine": 206,
+        "endChar": 38
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "01e604b2_b65074bd",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 1
@@ -1141,6 +2293,24 @@
     },
     {
       "key": {
+        "uuid": "25539618_38aa5a2f",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "01e604b2_b65074bd",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c9aa97b9_27ac7b9c",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 1
@@ -1155,6 +2325,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "360fd208_444f5b7f",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9aa97b9_27ac7b9c",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1181,6 +2369,30 @@
     },
     {
       "key": {
+        "uuid": "6d82d6f6_51ce28f1",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6aab1ced_2b996d08",
+      "range": {
+        "startLine": 188,
+        "startChar": 63,
+        "endLine": 188,
+        "endChar": 83
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82a2a65c_d21c5927",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
         "patchSetId": 1
@@ -1201,6 +2413,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aa136e9_b5e68186",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/ControlLoopInstantiationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82a2a65c_d21c5927",
+      "range": {
+        "startLine": 195,
+        "startChar": 12,
+        "endLine": 195,
+        "endChar": 53
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1227,6 +2463,30 @@
     },
     {
       "key": {
+        "uuid": "b089dff6_2462e2a0",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/InstantiationHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34a04c7d_d09d093b",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 5
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9572e980_0a5842bc",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationController.java",
         "patchSetId": 1
@@ -1241,6 +2501,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dddc5051_3f48b146",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9572e980_0a5842bc",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1261,6 +2539,24 @@
     },
     {
       "key": {
+        "uuid": "a6f82125_a97479a6",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/parameters/ParticipantUpdateParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cf7ebba_b35e01c7",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b332f2ef_7cda1da8",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeCommandLineArguments.java",
         "patchSetId": 1
@@ -1275,6 +2571,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b899fb3_7dbf91a1",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/ClRuntimeCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b332f2ef_7cda1da8",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1301,6 +2615,30 @@
     },
     {
       "key": {
+        "uuid": "790b6582_2f6da1fe",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04b2b3a3_d1cae787",
+      "range": {
+        "startLine": 105,
+        "startChar": 8,
+        "endLine": 105,
+        "endChar": 10
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "27b7a5c0_cd6aedeb",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
         "patchSetId": 1
@@ -1315,6 +2653,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "835d4b37_1d8906bc",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "This TODO to be handled in the subtask https://jira.onap.org/browse/POLICY-3268",
+      "parentUuid": "27b7a5c0_cd6aedeb",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1341,6 +2697,30 @@
     },
     {
       "key": {
+        "uuid": "f415073c_2564985f",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4bb90717_c78f86d6",
+      "range": {
+        "startLine": 142,
+        "startChar": 8,
+        "endLine": 145,
+        "endChar": 105
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "448edd6b_083c69ec",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
         "patchSetId": 1
@@ -1355,6 +2735,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d704fe70_2321e956",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "448edd6b_083c69ec",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1381,6 +2779,30 @@
     },
     {
       "key": {
+        "uuid": "d8ec20b9_362fd3e6",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21c8126c_b6f82526",
+      "range": {
+        "startLine": 339,
+        "startChar": 55,
+        "endLine": 339,
+        "endChar": 80
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9e68b18_877c9f94",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
         "patchSetId": 1
@@ -1401,6 +2823,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8d50fb3_58596280",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 362,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9e68b18_877c9f94",
+      "range": {
+        "startLine": 362,
+        "startChar": 47,
+        "endLine": 362,
+        "endChar": 58
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1427,6 +2873,30 @@
     },
     {
       "key": {
+        "uuid": "45d1cb55_20f12cef",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2067ca3e_24de36fd",
+      "range": {
+        "startLine": 384,
+        "startChar": 12,
+        "endLine": 385,
+        "endChar": 91
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef1ad4bc_44dda5d7",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
         "patchSetId": 1
@@ -1447,6 +2917,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9c4b86b_7c114a2c",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef1ad4bc_44dda5d7",
+      "range": {
+        "startLine": 393,
+        "startChar": 7,
+        "endLine": 394,
+        "endChar": 36
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1473,6 +2967,30 @@
     },
     {
       "key": {
+        "uuid": "c1c09e57_b7797702",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6c5e55d_75297d32",
+      "range": {
+        "startLine": 35,
+        "startChar": 40,
+        "endLine": 35,
+        "endChar": 50
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "745cdf90_b63a3d2c",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantControlLoopUpdatePublisher.java",
         "patchSetId": 1
@@ -1487,6 +3005,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c46eba4b_769825f7",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/comm/ParticipantControlLoopUpdatePublisher.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Made this part of https://jira.onap.org/browse/POLICY-3268\nThese classes once replaced should be tested end-to-end with events passing between Runtime and Participant",
+      "parentUuid": "745cdf90_b63a3d2c",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1513,6 +3049,30 @@
     },
     {
       "key": {
+        "uuid": "ab696041_1c472da2",
+        "filename": "tosca-controlloop/runtime/src/main/resources/CommissioningConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. This file is not used anywhere, either in Junits or Demo files, Removed this file.",
+      "parentUuid": "82a19cd8_b87caddb",
+      "range": {
+        "startLine": 15,
+        "startChar": 45,
+        "endLine": 15,
+        "endChar": 49
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95cbe874_dee452ca",
         "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
         "patchSetId": 1
@@ -1533,6 +3093,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "010336c5_104a45cb",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/instantiation/rest/InstantiationControllerTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95cbe874_dee452ca",
+      "range": {
+        "startLine": 121,
+        "startChar": 20,
+        "endLine": 121,
+        "endChar": 26
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1559,6 +3143,30 @@
     },
     {
       "key": {
+        "uuid": "c37664a5_78aaeda6",
+        "filename": "tosca-controlloop/runtime/src/test/java/org/onap/policy/clamp/controlloop/runtime/main/startstop/MainTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01ac318b_331d63ac",
+      "range": {
+        "startLine": 119,
+        "startChar": 28,
+        "endLine": 119,
+        "endChar": 41
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ffa43cf1_8388d51e",
         "filename": "tosca-controlloop/runtime/src/test/resources/META-INF/persistence.xml",
         "patchSetId": 1
@@ -1579,6 +3187,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32de64fe_9efdc2b0",
+        "filename": "tosca-controlloop/runtime/src/test/resources/META-INF/persistence.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ffa43cf1_8388d51e",
+      "range": {
+        "startLine": 4,
+        "startChar": 17,
+        "endLine": 4,
+        "endChar": 26
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1605,6 +3237,30 @@
     },
     {
       "key": {
+        "uuid": "4adbdf22_2c9638cd",
+        "filename": "tosca-controlloop/runtime/src/test/resources/parameters/InstantiationConfigParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. Demo manual test file, not used in JUnits, removed.",
+      "parentUuid": "0ba62756_0460710e",
+      "range": {
+        "startLine": 5,
+        "startChar": 16,
+        "endLine": 5,
+        "endChar": 20
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9627bd69_20537f23",
         "filename": "tosca-controlloop/runtime/src/test/resources/parameters/InstantiationConfigParameters.json",
         "patchSetId": 1
@@ -1625,6 +3281,30 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1814298_353a9270",
+        "filename": "tosca-controlloop/runtime/src/test/resources/parameters/InstantiationConfigParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done. Demo manual test file, not used in JUnits, removed.",
+      "parentUuid": "9627bd69_20537f23",
+      "range": {
+        "startLine": 26,
+        "startChar": 24,
+        "endLine": 26,
+        "endChar": 51
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1651,6 +3331,30 @@
     },
     {
       "key": {
+        "uuid": "5aba35de_da648261",
+        "filename": "tosca-controlloop/runtime/src/test/resources/parameters/logback-test.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb96f3b5_95700d68",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 45,
+        "endChar": 15
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3e72de1_247a98fb",
         "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
         "patchSetId": 1
@@ -1665,6 +3369,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2e410c0_ec5969a6",
+        "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3e72de1_247a98fb",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -1691,6 +3413,30 @@
     },
     {
       "key": {
+        "uuid": "89382d5c_8a268042",
+        "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3a44a5c_cd924565",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 1
+      },
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2e3403e_e1e1d524",
         "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
         "patchSetId": 1
@@ -1705,6 +3451,24 @@
       "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cf0dabb_613f9773",
+        "filename": "tosca-controlloop/runtime/src/test/resources/testscripts/listenOnTopic.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-06T13:47:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2e3403e_e1e1d524",
+      "revId": "7ea06e16923c7d01cbe46353eb466e4c42f3f5aa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
