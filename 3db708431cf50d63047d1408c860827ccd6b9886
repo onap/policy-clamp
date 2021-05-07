@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8fec509b_017097c1",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-07T14:33:47Z",
+      "side": 1,
+      "message": "log exception",
+      "revId": "3db708431cf50d63047d1408c860827ccd6b9886",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}

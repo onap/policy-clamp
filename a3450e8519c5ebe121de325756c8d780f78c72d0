@@ -304,6 +304,30 @@
       "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "47e4962e_16d90f69",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-07T14:33:47Z",
+      "side": 1,
+      "message": "yep, that works!",
+      "parentUuid": "645945d4_29b3cb99",
+      "range": {
+        "startLine": 45,
+        "startChar": 32,
+        "endLine": 45,
+        "endChar": 49
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
