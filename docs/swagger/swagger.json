@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "6.1.1-SNAPSHOT",
+    "version" : "6.1.2-SNAPSHOT",
     "title" : "Clamp Rest API"
   },
   "host" : "localhost:37747",
