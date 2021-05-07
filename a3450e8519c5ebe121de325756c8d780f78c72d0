@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "39f5cd05_cae259e0",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClient.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-07T13:55:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2a5edb8_1706a577",
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e11b3000_11590fb5",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameters.java",
         "patchSetId": 2
@@ -39,6 +57,30 @@
       "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1705f17c_dbbbddb7",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameters.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-07T13:55:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e11b3000_11590fb5",
+      "range": {
+        "startLine": 69,
+        "startChar": 48,
+        "endLine": 69,
+        "endChar": 75
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "0abfc4bc_0100494c",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ClampHttpClientTest.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-07T13:55:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48d904fc_d57b5349",
+      "range": {
+        "startLine": 88,
+        "startChar": 42,
+        "endLine": 88,
+        "endChar": 54
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1dcbf536_1b34556f",
         "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
         "patchSetId": 2
@@ -85,6 +151,30 @@
       "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa0d83b5_394bf337",
+        "filename": "tosca-controlloop/participant/participant-impl/participant-impl-dcae/src/test/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/CommonTestData.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-07T13:55:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dcbf536_1b34556f",
+      "range": {
+        "startLine": 286,
+        "startChar": 18,
+        "endLine": 286,
+        "endChar": 28
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "9f770fc0_17517930",
+        "filename": "tosca-controlloop/participant/participant-intermediary/src/main/java/org/onap/policy/clamp/controlloop/participant/intermediary/api/impl/ParticipantIntermediaryApiImpl.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-07T13:55:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2370b75_b232caf5",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 4
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7bca0f60_6fbc9c05",
         "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
         "patchSetId": 2
@@ -125,6 +239,24 @@
       "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f569be73_dda53707",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionHandler.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-07T13:55:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bca0f60_6fbc9c05",
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -148,6 +280,30 @@
       "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "645945d4_29b3cb99",
+        "filename": "tosca-controlloop/runtime/src/main/java/org/onap/policy/clamp/controlloop/runtime/supervision/SupervisionScanner.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-07T13:55:56Z",
+      "side": 1,
+      "message": "Changed the class SupervisionScanner to implement Runnable and Closeable.\n\npublic class SupervisionScanner implements Runnable, Closeable {\n\nIf not done, then i will not be able to implement run() method and I also see an error,\n\"The method scheduleAtFixedRate(Runnable, long, long, TimeUnit) in the type ScheduledExecutorService is not applicable for the arguments (SupervisionScanner, int, long, TimeUnit)\"\n\nHope this is fine.",
+      "parentUuid": "bb75929b_7e2a447c",
+      "range": {
+        "startLine": 45,
+        "startChar": 32,
+        "endLine": 45,
+        "endChar": 49
+      },
+      "revId": "a3450e8519c5ebe121de325756c8d780f78c72d0",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
