@@ -41,6 +41,11 @@ RUN mkdir -p /opt/policy/clamp && \
 VOLUME /opt/policy/clamp/config
 
 COPY --chown=onap:onap onap-policy-clamp-backend/policy-clamp-backend.jar /opt/policy/clamp/policy-clamp-backend.jar
+RUN set -x && \
+    apk add --update libintl && \
+    apk add --virtual build_deps gettext &&  \
+    cp /usr/bin/envsubst /usr/local/bin/envsubst && \
+    apk del build_deps
 
 USER onap
 WORKDIR /opt/policy/clamp/
