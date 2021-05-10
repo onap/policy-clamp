@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0628b79f_3c10fc64",
+        "filename": "releases/6.1.1.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-10T12:02:41Z",
+      "side": 1,
+      "message": "newline",
+      "revId": "39141fdc16b0cee5a1098b1655dc72172c8692b4",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
