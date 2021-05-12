@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f073195f_a147e53b",
+        "filename": "docs/swagger/swagger.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-05-12T17:30:39Z",
+      "side": 1,
+      "message": "Question: should documentation eventually be moved to policy/parent/docs, may be needs to be tracked as an item as it is not?",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ed779be_a1d4a6b7",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-05-12T17:30:39Z",
+      "side": 1,
+      "message": "Probably should remove these references to user\u0027s directory.",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "661e596b_6d406b34",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-05-12T17:30:39Z",
+      "side": 1,
+      "message": "Question: should this html be present here (there is a swagger.json as well in the documentation) ?",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
