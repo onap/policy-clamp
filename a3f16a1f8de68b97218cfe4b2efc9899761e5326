@@ -170,6 +170,24 @@
     },
     {
       "key": {
+        "uuid": "f3e4667c_e364daae",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T12:58:13Z",
+      "side": 1,
+      "message": "We\u0027ll have to experiment - this section doesn\u0027t even appear in drools-pdp or drools-apps, so maybe it isn\u0027t needed at all.",
+      "parentUuid": "6c2ccf02_028f4739",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0fc44c6_f98e2517",
         "filename": "runtime/docs/.gitignore",
         "patchSetId": 1
