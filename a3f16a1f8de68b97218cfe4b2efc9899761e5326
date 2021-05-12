@@ -188,6 +188,24 @@
     },
     {
       "key": {
+        "uuid": "42d71de3_e69df937",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-12T13:34:11Z",
+      "side": 1,
+      "message": "this is defined in the Oparent now so i guess it could be removed (probably even in your policy parent)",
+      "parentUuid": "f3e4667c_e364daae",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0fc44c6_f98e2517",
         "filename": "runtime/docs/.gitignore",
         "patchSetId": 1
@@ -263,6 +281,24 @@
     },
     {
       "key": {
+        "uuid": "297ad172_06cde10f",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-12T13:34:11Z",
+      "side": 1,
+      "message": "This is used to compute the docker images aliases. So be careful to not change the format",
+      "parentUuid": "e2503bf1_74003fc6",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b499eace_a1d94e6b",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
@@ -292,6 +328,24 @@
       "side": 1,
       "message": "They are in the original CLAMP pom",
       "parentUuid": "b499eace_a1d94e6b",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97085f49_9cf31e71",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-12T13:34:11Z",
+      "side": 1,
+      "message": "Well you need to define where you push the jars when you use the deploy goal in maven.\nI had to define this at the very beginning of Onap, so it\u0027s a legacy. May be that is now automatically provided by the settings.xml of the LF jobs ? It does not appear in your policy parent neither in the oparent\n\nAnyway, we used to define a maximum of things in the Pom because we wanted the Build to be autonomous. You could/can do all admin operations without having to add anything in the settings.xml. That was easier for all the devs (new ones).\n\nOthers projects have that as well (SO , etc ...)",
+      "parentUuid": "4f5b58f5_d0910b5b",
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -333,6 +387,24 @@
     },
     {
       "key": {
+        "uuid": "c382d3df_861fee64",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-12T13:34:11Z",
+      "side": 1,
+      "message": "same answer",
+      "parentUuid": "7e1d7376_f31a064b",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "09b223f6_227b019b",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
@@ -362,6 +434,24 @@
       "side": 1,
       "message": "They are in the original CLAMP pom",
       "parentUuid": "09b223f6_227b019b",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48299330_f0949d57",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-12T13:34:11Z",
+      "side": 1,
+      "message": "same answer",
+      "parentUuid": "74fa1959_e1a2fe51",
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
