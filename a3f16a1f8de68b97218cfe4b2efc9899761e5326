@@ -19,6 +19,52 @@
     },
     {
       "key": {
+        "uuid": "64294d35_7eb6abc5",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "trailing space",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 8
+      },
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79c9340e_6fa7e376",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "\"contains\"",
+      "range": {
+        "startLine": 39,
+        "startChar": 11,
+        "endLine": 39,
+        "endChar": 20
+      },
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de0dcd51_2c3aefc8",
         "filename": "pom.xml",
         "patchSetId": 1
@@ -53,6 +99,23 @@
     },
     {
       "key": {
+        "uuid": "9018adb7_5e43bdfb",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "what is this?",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0fc44c6_f98e2517",
         "filename": "runtime/docs/.gitignore",
         "patchSetId": 1
@@ -70,6 +133,97 @@
     },
     {
       "key": {
+        "uuid": "a58d0c78_c0782e58",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "\"required\"",
+      "range": {
+        "startLine": 39,
+        "startChar": 34,
+        "endLine": 39,
+        "endChar": 43
+      },
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e516f5e9_7f971620",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "not sure, but I would think some of these can be inherited",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b499eace_a1d94e6b",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "why are these here?  not needed in other repos",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de21265f_0e6d1c21",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "why needed?",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09b223f6_227b019b",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "same question",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4c6a8a58_be597514",
         "filename": "runtime/releases/6.0.0.yaml",
         "patchSetId": 1
@@ -81,6 +235,58 @@
       "writtenOn": "2021-05-12T09:48:46Z",
       "side": 1,
       "message": "I would not move it under runtime, this should stay at root level",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f90b5cf0_e641c1bc",
+        "filename": "runtime/releases/6.0.0.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "same is true for all of these \"releases\" files",
+      "parentUuid": "4c6a8a58_be597514",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dba3a81_e2598ef8",
+        "filename": "runtime/src/main/docker/frontend/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "add newline",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0383eb06_31c69202",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/client/CdsServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T11:59:14Z",
+      "side": 1,
+      "message": "curious why gerrit is showing changes to this file.  Did the line endings change, perhaps?  If carriage return-newline was changed to newline, then that\u0027s a good change.  If the reverse, then the change should be reverted.\n\nsame comment for the subsequent files that gerrit marked as \"similarity index 99%\"",
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
