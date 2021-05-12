@@ -116,6 +116,24 @@
     },
     {
       "key": {
+        "uuid": "2bdd769e_f223fd42",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-12T12:14:45Z",
+      "side": 1,
+      "message": "We based this POM on the PAP root pom, and this entry was in there as well. I guess we should remove it from all root POMs if it is not needed.",
+      "parentUuid": "9018adb7_5e43bdfb",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0fc44c6_f98e2517",
         "filename": "runtime/docs/.gitignore",
         "patchSetId": 1
