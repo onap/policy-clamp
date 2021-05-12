@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "ca500653_cdcdf97e",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T17:34:15Z",
+      "side": 1,
+      "message": "I wondered if this is necessary, too",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0ed779be_a1d4a6b7",
         "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
         "patchSetId": 2
