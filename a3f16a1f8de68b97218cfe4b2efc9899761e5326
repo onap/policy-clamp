@@ -812,6 +812,24 @@
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7be2b2f8_3f8f895f",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/client/CdsServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-12T14:37:51Z",
+      "side": 1,
+      "message": "Is it because the files were moved from the root directory of the repo into a subrirectory, all that\u0027s changed is the path of the file.",
+      "parentUuid": "b82552df_7009e18a",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
