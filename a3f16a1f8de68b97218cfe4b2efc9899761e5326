@@ -245,6 +245,24 @@
     },
     {
       "key": {
+        "uuid": "e2503bf1_74003fc6",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-12T13:01:58Z",
+      "side": 1,
+      "message": "We decided to move everything \"as is\" for now. There is some work to be done here to reationalize the POM properties. Is it OK to do that in a future review?",
+      "parentUuid": "e516f5e9_7f971620",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b499eace_a1d94e6b",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
@@ -256,6 +274,24 @@
       "writtenOn": "2021-05-12T11:59:14Z",
       "side": 1,
       "message": "why are these here?  not needed in other repos",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f5b58f5_d0910b5b",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-12T13:01:58Z",
+      "side": 1,
+      "message": "They are in the original CLAMP pom",
+      "parentUuid": "b499eace_a1d94e6b",
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -279,6 +315,24 @@
     },
     {
       "key": {
+        "uuid": "7e1d7376_f31a064b",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-12T13:01:58Z",
+      "side": 1,
+      "message": "They are in the original CLAMP pom",
+      "parentUuid": "de21265f_0e6d1c21",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "09b223f6_227b019b",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
@@ -290,6 +344,24 @@
       "writtenOn": "2021-05-12T11:59:14Z",
       "side": 1,
       "message": "same question",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74fa1959_e1a2fe51",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-12T13:01:58Z",
+      "side": 1,
+      "message": "They are in the original CLAMP pom",
+      "parentUuid": "09b223f6_227b019b",
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
