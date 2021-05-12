@@ -830,6 +830,24 @@
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d184ad63_329cc820",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/client/CdsServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T14:54:32Z",
+      "side": 1,
+      "message": "looks like the original files had windows line ending, carriage-return-line-feed, but the new files have unix line endings, which is preferred.",
+      "parentUuid": "7be2b2f8_3f8f895f",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
