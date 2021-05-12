@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d4c43230_320133e5",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0179d9eb_2d4af36d",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64294d35_7eb6abc5",
         "filename": "pom.xml",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfbecb17_34e04e2f",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64294d35_7eb6abc5",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 8
+      },
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "85dc16e6_43f741d7",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79c9340e_6fa7e376",
+      "range": {
+        "startLine": 39,
+        "startChar": 11,
+        "endLine": 39,
+        "endChar": 20
+      },
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de0dcd51_2c3aefc8",
         "filename": "pom.xml",
         "patchSetId": 1
@@ -82,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "72325920_2e149ce5",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de0dcd51_2c3aefc8",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fada2bb1_4e645a27",
         "filename": "pom.xml",
         "patchSetId": 1
@@ -96,6 +180,24 @@
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "857a6e38_e43b94fe",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fada2bb1_4e645a27",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -206,6 +308,24 @@
     },
     {
       "key": {
+        "uuid": "c241b078_25d85b8e",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42d71de3_e69df937",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0fc44c6_f98e2517",
         "filename": "runtime/docs/.gitignore",
         "patchSetId": 1
@@ -220,6 +340,24 @@
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "592f9c4a_f5d998f4",
+        "filename": "runtime/docs/.gitignore",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b0fc44c6_f98e2517",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -243,6 +381,30 @@
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e4fe8fc_6da7f3c4",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a58d0c78_c0782e58",
+      "range": {
+        "startLine": 39,
+        "startChar": 34,
+        "endLine": 39,
+        "endChar": 43
+      },
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -299,6 +461,24 @@
     },
     {
       "key": {
+        "uuid": "ea2a909d_f756f452",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "We can work on them and can discard any property that is either obsolete or inherited, in upcoming commits. Some properties for example sonar,docker are replicated in many of the policy repos, they should probably be moved to parent and inherited.",
+      "parentUuid": "297ad172_06cde10f",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b499eace_a1d94e6b",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
@@ -349,6 +529,24 @@
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afafe6f9_60e3dfe5",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Removed repositories from pom, as they are part of settings.xml. I see no build issues. Hope this is fine.",
+      "parentUuid": "97085f49_9cf31e71",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -405,6 +603,24 @@
     },
     {
       "key": {
+        "uuid": "8859b697_daa00efb",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Removed repositories from pom, as they are part of settings.xml. I see no build issues. Hope this is fine.",
+      "parentUuid": "c382d3df_861fee64",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "09b223f6_227b019b",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
@@ -458,6 +674,24 @@
     },
     {
       "key": {
+        "uuid": "ddc40b82_b306261d",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Removed repositories from pom, as they are part of settings.xml. I see no build issues. Hope this is fine.",
+      "parentUuid": "48299330_f0949d57",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c6a8a58_be597514",
         "filename": "runtime/releases/6.0.0.yaml",
         "patchSetId": 1
@@ -493,6 +727,24 @@
     },
     {
       "key": {
+        "uuid": "849026cd_b105fd0a",
+        "filename": "runtime/releases/6.0.0.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f90b5cf0_e641c1bc",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8dba3a81_e2598ef8",
         "filename": "runtime/src/main/docker/frontend/Dockerfile",
         "patchSetId": 1
@@ -510,6 +762,24 @@
     },
     {
       "key": {
+        "uuid": "106678cf_9479213d",
+        "filename": "runtime/src/main/docker/frontend/Dockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8dba3a81_e2598ef8",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0383eb06_31c69202",
         "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/client/CdsServices.java",
         "patchSetId": 1
@@ -521,6 +791,24 @@
       "writtenOn": "2021-05-12T11:59:14Z",
       "side": 1,
       "message": "curious why gerrit is showing changes to this file.  Did the line endings change, perhaps?  If carriage return-newline was changed to newline, then that\u0027s a good change.  If the reverse, then the change should be reverted.\n\nsame comment for the subsequent files that gerrit marked as \"similarity index 99%\"",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b82552df_7009e18a",
+        "filename": "runtime/src/main/java/org/onap/policy/clamp/clds/client/CdsServices.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-12T14:24:44Z",
+      "side": 1,
+      "message": "I am not knowing why git show this diff, when there is actually no difference at all. I copy pasted these specific files manually again to check if i can find out, but no clue.",
+      "parentUuid": "0383eb06_31c69202",
       "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
