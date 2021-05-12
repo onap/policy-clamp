@@ -1,0 +1,26 @@
+.navbar {
+  margin: 0;
+  padding: 0;
+}
+
+.container-fluid {
+  margin: 20px 0 0 10px;
+  padding: 0;
+}
+
+.navbar-brand {
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+
+.nav-tabs {
+  margin: 0 10px -20px 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin: 0;
+  padding: 0;
+}
+
+/*# sourceMappingURL=header.component.css.map */

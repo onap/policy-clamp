@@ -1,0 +1,17 @@
+<ngb-accordion activeIds="clPanel.id">
+  <ngb-panel id="{{ 'CLType' + numberToLetterConverter(i)}}"
+             title="{{ 'CL type ' + numberToLetterConverter(i) }}"
+             cardClass="cl-component-item"
+             *ngFor="let cl of clList.cls; let i = index;"
+             #clPanel>
+    <ng-template ngbPanelContent>
+      <tosca-cl-item
+        [clList]="clList"
+        [cl]="cl"
+        [title]="clPanel.title"
+        [id]="clPanel.id"
+        [index]="i">
+      </tosca-cl-item>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>

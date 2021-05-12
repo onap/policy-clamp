@@ -1,0 +1,9 @@
+<li class="list-group">
+  <div toscaStateColor [state]="cl.state" id="{{ 'CLInstance' + index }}"
+       (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed">{{ cl.name }}</div>
+  <div class="cl-inner-panel" [(ngbCollapse)]="!isCollapsed" #collapse="ngbCollapse">
+    <div class="list-group" *ngFor="let clEl of clList.clEl">
+      <button toscaStateColor [state]="clEl.state">{{ clEl.description }}</button>
+    </div>
+  </div>
+</li>

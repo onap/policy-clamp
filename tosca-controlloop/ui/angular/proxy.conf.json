@@ -1,0 +1,11 @@
+{
+  "/onap/controlloop/v2/*": {
+    "target": "http://localhost:6969",
+    "secure": false,
+    "pathRewrite": {
+      "^/onap/controlloop/v2/": "/"
+    },
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

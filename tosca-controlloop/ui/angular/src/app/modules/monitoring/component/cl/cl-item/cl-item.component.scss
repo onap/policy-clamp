@@ -1,0 +1,40 @@
+.list-group {
+  padding: 0;
+  margin: 0;
+}
+
+.btn-unitialised,
+.btn-passive,
+.btn-running,
+.btn-default {
+  border: none;
+  border-radius: 0;
+
+  .cl-inner-panel {
+    .list-group {
+      button {
+        border: solid 1px #151515;
+      }
+    }
+  }
+}
+
+.btn-unitialised {
+  background-color: grey;
+  color: black;
+}
+
+.btn-passive {
+  background-color: #ffff80;
+  color: black;
+}
+
+.btn-running {
+  background-color: #80ff80;
+  color: black;
+}
+
+.btn-default {
+  background-color: #668cff;
+  color: black;
+}

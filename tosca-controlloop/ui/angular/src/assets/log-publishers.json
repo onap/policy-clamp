@@ -1,0 +1,12 @@
+[
+  {
+    "loggerName": "console",
+    "loggerLocation": "",
+    "isActive": true
+  },
+  {
+    "loggerName": "localStorage",
+    "loggerLocation": "logging",
+    "isActive": false
+  }
+]
