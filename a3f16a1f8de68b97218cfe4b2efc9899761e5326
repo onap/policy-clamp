@@ -134,6 +134,24 @@
     },
     {
       "key": {
+        "uuid": "bd67dce8_aca43963",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-12T12:23:07Z",
+      "side": 1,
+      "message": "OK, let\u0027s create a JIRA to remove this - I don\u0027t think they\u0027re needed.  If they are needed, then we should rename the ID from \"ecomp\" to \"onap\".",
+      "parentUuid": "2bdd769e_f223fd42",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0fc44c6_f98e2517",
         "filename": "runtime/docs/.gitignore",
         "patchSetId": 1
