@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "8fa76195_02e187b0",
+        "filename": "docs/swagger/swagger.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-13T08:35:56Z",
+      "side": 1,
+      "message": "I think that there is a plan already in place to move the documentation to policy-parent as part of the activity to injest CLAMP in the Policy Framework project. Perhaps Seb and Jim could comment?",
+      "parentUuid": "dbe502b4_2360373d",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca500653_cdcdf97e",
         "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
         "patchSetId": 2
