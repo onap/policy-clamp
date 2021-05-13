@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "8e3e160d_0d0c54b5",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-13T08:57:07Z",
+      "side": 1,
+      "message": "This file and a swagger.pdf file are updated as part of the build. This could be because CLAMP is using Camel to implement its REST endpoints and some steps are needed in the build to generate the swagger, but Seb would know for sure.\n\nWe probably should open a JIRA on Swagger generation (Maybe a subtask on POLICY-3210) to investigate this.\n\nSee a local repo after a CLAMP build on master\n\u003e git status\nOn branch master\nYour branch is up to date with \u0027origin/master\u0027.\n\nChanges not staged for commit:\n  (use \"git add \u003cfile\u003e...\" to update what will be committed)\n  (use \"git restore \u003cfile\u003e...\" to discard changes in working directory)\n\tmodified:   docs/swagger/swagger.pdf\n\tmodified:   src/main/resources/META-INF/resources/swagger.html\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n\n\u003e git diff\ndiff --git a/docs/swagger/swagger.pdf b/docs/swagger/swagger.pdf\nindex 99dca188..747bd915 100644\n--- a/docs/swagger/swagger.pdf\n+++ b/docs/swagger/swagger.pdf\n@@ -4,8 +4,8 @@\n \u003c\u003c /Title (Clamp Rest API)\n /Creator (Asciidoctor PDF 1.5.0.alpha.10, based on Prawn 1.3.0)\n /Producer (Asciidoctor PDF 1.5.0.alpha.10, based on Prawn 1.3.0)\n-/CreationDate (D:20210426134156+02\u002700\u0027)\n-/ModDate (D:20210426134156+02\u002700\u0027)\n+/CreationDate (D:20210513093947+01\u002700\u0027)\n+/ModDate (D:20210513093947+01\u002700\u0027)\n \u003e\u003e\n endobj\n 2 0 obj\ndiff --git a/src/main/resources/META-INF/resources/swagger.html b/src/main/resources/META-INF/resources/swagger.html\nindex feb3b6ed..7f5d9edf 100644\n--- a/src/main/resources/META-INF/resources/swagger.html\n+++ b/src/main/resources/META-INF/resources/swagger.html\n@@ -4501,7 +4501,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1\u003eh2{page-b\n \u003c/div\u003e\n \u003cdiv id\u003d\"footer\"\u003e\n \u003cdiv id\u003d\"footer-text\"\u003e\n-Last updated 2020-12-10 09:38:32 CET\n+Last updated 2021-05-13 09:34:12 IST\n \u003c/div\u003e\n \u003c/div\u003e\n \u003c/body\u003e",
+      "parentUuid": "6c86de50_cc029489",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0ed779be_a1d4a6b7",
         "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
         "patchSetId": 2
