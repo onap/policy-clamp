@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dbe502b4_2360373d",
+        "filename": "docs/swagger/swagger.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-13T08:29:23Z",
+      "side": 1,
+      "message": "@Jim, @Liam, Can you please comment on this question.",
+      "parentUuid": "f073195f_a147e53b",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca500653_cdcdf97e",
         "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "d320486b62787af83f1607a7959de569d9e3531d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c86de50_cc029489",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-13T08:29:23Z",
+      "side": 1,
+      "message": "I will remove user references for now from the file, and keep the file intact. \n@Jim, @Liam, @Jorge, Can you please confirm if i can remove this file from resources.",
+      "parentUuid": "ca500653_cdcdf97e",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2733fef2_ef4c9951",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-13T08:29:23Z",
+      "side": 1,
+      "message": "Yes, This should not be there.",
+      "parentUuid": "0ed779be_a1d4a6b7",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "661e596b_6d406b34",
         "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "d320486b62787af83f1607a7959de569d9e3531d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e73f9bc_55b61ebd",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-13T08:29:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "661e596b_6d406b34",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
