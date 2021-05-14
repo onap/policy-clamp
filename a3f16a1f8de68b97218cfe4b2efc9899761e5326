@@ -479,6 +479,24 @@
     },
     {
       "key": {
+        "uuid": "f4840b09_cb80002a",
+        "filename": "runtime/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-14T09:49:00Z",
+      "side": 1,
+      "message": "https://jira.onap.org/browse/POLICY-3308 created to handle properties among policy repos.",
+      "parentUuid": "ea2a909d_f756f452",
+      "revId": "a3f16a1f8de68b97218cfe4b2efc9899761e5326",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b499eace_a1d94e6b",
         "filename": "runtime/pom.xml",
         "patchSetId": 1
