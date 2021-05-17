@@ -1,0 +1,12 @@
+{
+    "definition": {
+        "name": "controlLoopDefinitionName",
+        "version": "0.0.1"
+    },
+    "state": "UNINITIALISED",
+    "orderedState": null,
+    "elements": [
+    ],
+    "name": "control-loop",
+    "version": "0.0.1"
+}
