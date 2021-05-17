@@ -1,0 +1,152 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb14ef79_435b3d24",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "Do we still need the registry registration and deregistration?",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 5
+      },
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba7b098b_1536a7b5",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "And here too?",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 54,
+        "endChar": 3
+      },
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d5c3e0e_7d0747d3",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/startstop/CommonCommandLineArguments.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "New support was added in Policy Common for this. I wonder do we still need this?\n\nHave a look at this review\nhttps://gerrit.onap.org/r/c/policy/common/+/120423",
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ea84e47_479b8196",
+        "filename": "common/src/main/resources/examples/controlloop/KubernetesHelm.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "I think we should leave out the examples for now. Let\u0027s think about how to package them better. They probably should not be under this common code.\n\nThere\u0027s a JIRA on this already.\n\nhttps://jira.onap.org/browse/POLICY-3242",
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dc73524_39c6c4d3",
+        "filename": "common/src/test/resources/demo/config/DEMO.postman_collection.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "I don\u0027t think we should bring in the demo files into master. We will need to bring in examples and demo files later, but maybe we should leave them until later.",
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0922ad40_b141b774",
+        "filename": "common/src/test/resources/demo/config/PolicyAPIConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "same comment",
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00ac3db4_33e70186",
+        "filename": "common/src/test/resources/demo/config/PolicyParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "same comment",
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30ff6f68_ce2c2fb2",
+        "filename": "common/src/test/resources/demo/config/RuntimeConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T15:20:24Z",
+      "side": 1,
+      "message": "same comment",
+      "revId": "60922c75fb217b7d48c7bd36207eb3ebf530ce58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
