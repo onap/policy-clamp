@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "7fd747aa_7c7f26f0",
+        "filename": "docs/swagger/swagger.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T08:38:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "26965f1c_d9bfda42",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca500653_cdcdf97e",
         "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
         "patchSetId": 2
@@ -123,6 +141,24 @@
       "revId": "d320486b62787af83f1607a7959de569d9e3531d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5471343f_24d20925",
+        "filename": "runtime/runtime/src/main/resources/META-INF/resources/swagger.html",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-17T08:38:55Z",
+      "side": 1,
+      "message": "See JIRA https://jira.onap.org/browse/POLICY-3238",
+      "parentUuid": "8e3e160d_0d0c54b5",
+      "revId": "d320486b62787af83f1607a7959de569d9e3531d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
