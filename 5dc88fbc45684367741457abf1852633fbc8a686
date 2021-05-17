@@ -105,6 +105,23 @@
     },
     {
       "key": {
+        "uuid": "1146e774_3e0f5d3d",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T21:26:23Z",
+      "side": 1,
+      "message": "since registry is no longer used, these checks can be removed",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b91103f3_e5333312",
         "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
         "patchSetId": 3
