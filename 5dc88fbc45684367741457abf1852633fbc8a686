@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3ad4137_a47d3b63",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/exception/ControlLoopRuntimeException.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "use this(...)",
+      "range": {
+        "startLine": 86,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 69
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99231ad8_3cfa85fa",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "\"p\" -\u003e \"p/\"",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a8a3fe1_42b43a34",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "since these exception classes do \"extra\" stuff that others do not do, we should probably create separate a junit class for each one",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3801ff38_d02fa371",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "should also validate clre.getResponseCode()",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cb23439_bb554ec5",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "don\u0027t see the need for this test",
+      "range": {
+        "startLine": 69,
+        "startChar": 7,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b91103f3_e5333312",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "assertThat().isEmpty()",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 20
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90a8fb1d_cd2b904c",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "probably don\u0027t need both mockito-core and powermock-mockito2",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76d3c22e_448bdf14",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "is this needed?",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 133,
+        "endChar": 21
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85de4844_e41cf6a3",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-17T17:43:54Z",
+      "side": 1,
+      "message": "is this needed?",
+      "range": {
+        "startLine": 134,
+        "startChar": 8,
+        "endLine": 138,
+        "endChar": 21
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
