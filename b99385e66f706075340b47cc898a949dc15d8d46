@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf25e8be_afe6a0a2",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/concepts/JpaControlLoop.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-18T15:58:24Z",
+      "side": 1,
+      "message": "could use CompareToBuilder for most of these fields\n\nsame comment in subsequent files",
+      "revId": "b99385e66f706075340b47cc898a949dc15d8d46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "544d3648_53aeb32b",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/controlloop/persistence/provider/ControlLoopProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-18T15:58:24Z",
+      "side": 1,
+      "message": "in another review, we should consider combining these two loops so \"fromAuthorative()\" is only invoked once per loop\n\nsame comment below and in other files",
+      "revId": "b99385e66f706075340b47cc898a949dc15d8d46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4313fed3_66f9ac1e",
+        "filename": "models/src/main/java/org/onap/policy/clamp/controlloop/models/messages/rest/TypedSimpleResponse.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-18T15:58:24Z",
+      "side": 1,
+      "message": "hmm.  we should consider using this in the PAP (and API?) responses",
+      "revId": "b99385e66f706075340b47cc898a949dc15d8d46",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
