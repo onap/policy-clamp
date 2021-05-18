@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e18094ec_156343f2",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/exception/ControlLoopRuntimeException.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3ad4137_a47d3b63",
+      "range": {
+        "startLine": 86,
+        "startChar": 8,
+        "endLine": 89,
+        "endChar": 69
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99231ad8_3cfa85fa",
         "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandler.java",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f31bd464_dc9e42bc",
+        "filename": "common/src/main/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99231ad8_3cfa85fa",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 35,
+        "endChar": 5
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a8a3fe1_42b43a34",
         "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
         "patchSetId": 3
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "69d82c11_347e8005",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a8a3fe1_42b43a34",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3801ff38_d02fa371",
         "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
         "patchSetId": 3
@@ -79,6 +145,24 @@
       "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a968374a_01253e34",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "getResponseCode validation is performed in line66. Hope that is fine.",
+      "parentUuid": "3801ff38_d02fa371",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "e794f07c_b56d0139",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/exception/ExceptionsTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "Yes, this adds no value. Removed.",
+      "parentUuid": "9cb23439_bb554ec5",
+      "range": {
+        "startLine": 69,
+        "startChar": 7,
+        "endLine": 79,
+        "endChar": 9
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1146e774_3e0f5d3d",
         "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
         "patchSetId": 3
@@ -119,6 +227,24 @@
       "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dfbd16f_c1558db4",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1146e774_3e0f5d3d",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -145,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "f62ec4f1_5bc825f4",
+        "filename": "common/src/test/java/org/onap/policy/clamp/controlloop/common/handler/ControlLoopHandlerTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b91103f3_e5333312",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 20
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90a8fb1d_cd2b904c",
         "filename": "pom.xml",
         "patchSetId": 3
@@ -159,6 +309,24 @@
       "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de8ebf16_779962ce",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "These dependencies were used in runtime, I am removing it now, and these can be introduced on need basis while introducing respective components.",
+      "parentUuid": "90a8fb1d_cd2b904c",
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -185,6 +353,30 @@
     },
     {
       "key": {
+        "uuid": "484e7877_2915db30",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "Have not see usage of this anywhere. I am removing it now, and these can be introduced on need basis while introducing respective components.",
+      "parentUuid": "76d3c22e_448bdf14",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 133,
+        "endChar": 21
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85de4844_e41cf6a3",
         "filename": "pom.xml",
         "patchSetId": 3
@@ -205,6 +397,30 @@
       "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7466c9d0_d002a35f",
+        "filename": "pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 7504
+      },
+      "writtenOn": "2021-05-18T12:32:57Z",
+      "side": 1,
+      "message": "These dependencies were used in runtime and participants, I am removing it now, and these can be introduced on need basis while introducing respective components.",
+      "parentUuid": "85de4844_e41cf6a3",
+      "range": {
+        "startLine": 134,
+        "startChar": 8,
+        "endLine": 138,
+        "endChar": 21
+      },
+      "revId": "5dc88fbc45684367741457abf1852633fbc8a686",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
