@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify ToscaViewer Test the render method 1`] = `
+<styled.div>
+  <pre>
+    tosca_definitions_version: tosca_simple_yaml_1_1_0
+policy_types:
+  onap.policies.controlloop.Guard:
+    properties: {
+    }
+    name: onap.policies.controlloop.Guard
+    version: 1.0.0
+    derived_from: tosca.policies.Root
+    metadata: {
+    }
+    description: Guard Policies for Control Loop Operational Policies
+name: ToscaServiceTemplateSimple
+version: 1.0.0
+
+  </pre>
+  <Button
+    active={false}
+    disabled={false}
+    title="Create a new policy version from the defined parameters"
+    variant="secondary"
+  >
+    Create New Version
+  </Button>
+</styled.div>
+`;

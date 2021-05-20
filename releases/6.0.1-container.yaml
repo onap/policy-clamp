@@ -1,0 +1,10 @@
+distribution_type: 'container'
+container_release_tag: '6.0.1'
+project: 'policy-clamp'
+log_dir: 'policy-clamp-maven-docker-stage-master/63/'
+ref: eeaef28f78a23881e2f5cf0380fa1ad34472435d
+containers:
+  - name: 'policy-clamp-backend'
+    version: '6.0-STAGING-20210224T071026Z'
+  - name: 'policy-clamp-frontend'
+    version: '6.0-STAGING-20210224T071026Z'
