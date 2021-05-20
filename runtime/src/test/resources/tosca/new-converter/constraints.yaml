@@ -1,0 +1,60 @@
+tosca_definitions_version: tosca_simple_yaml_1_0_0
+policy_types:
+    onap.policies.controlloop.operational.common.Drools:
+        derived_from: onap.policies.controlloop.operational.Common
+        type_version: 1.0.0
+        version: 1.0.0
+        description: Operational policies for Drools PDP
+        properties:
+            controllerName:
+                type: String
+                description: Drools controller properties
+                required: true
+data_types:
+    onap.datatype.controlloop.Operation:
+        derived_from: tosca.datatypes.Root
+        description: An operation supported by an actor
+        properties:
+            id:
+                type: String
+                description: Unique identifier for the operation
+                required: true
+                constraints:
+                - length: 8
+            description:
+                type: Array
+                description: A user-friendly description of the intent for the operation
+                required: false
+                constraints:
+                - min_length: 5
+                - max_length: 7
+            test:
+                type: Integer
+                description: |
+                    Overall timeout for executing all the operations. This timeout should equal or exceed the total
+                    timeout for each operation listed.
+                required: true
+                constraints:
+                    - greater_than: 7
+                    - greater_or_equal: 1
+                    - less_than: 7
+                    - less_or_equal: 1
+            timeout:
+                type: Integer
+                description: The amount of time for the actor to perform the operation.
+                required: true
+                constraints:
+                - valid_values: [3,4,5.5,6,10]
+            retries:
+                type: Integer
+                description: The number of retries the actor should attempt to perform the operation.
+                required: true
+                default: 0
+                constraints:
+                - equal: 5
+            success:
+                type: String
+                description: Points to the operation to invoke on success. A value of "final_success" indicates and end to the operation.
+                required: false
+                constraints:
+                - valid_values: [VALID,TERMINATED]

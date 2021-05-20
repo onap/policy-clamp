@@ -1,10 +1,10 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright (c) 2017-2019 AT&T Intellectual Property. All rights reserved.
+.. Copyright (c) 2017-2021 AT&T Intellectual Property. All rights reserved.
 .. _master_index:
 
-CLAMP - Control Loop Automation Management Platform
-===================================================
+Policy/CLAMP - Control Loop Automation Management Platform
+==========================================================
 .. High level architecture, design, and packaging information for release planning and delivery.
 
 .. include:: architecture.rst
@@ -12,7 +12,7 @@ CLAMP - Control Loop Automation Management Platform
 
 Offered APIs
 ------------
-The list of APIs that CLAMP has offered could be find in the following table:
+The list of APIs that Policy/CLAMP has offered could be find in the following table:
 
 .. |pdf-icon| image:: images/pdf.png
               :width: 40px
@@ -33,54 +33,21 @@ The list of APIs that CLAMP has offered could be find in the following table:
 
 Consumed APIs
 -------------
-CLAMP uses the API's exposed by the following ONAP components:
+Policy/CLAMP uses the API's exposed by the following ONAP components:
 
 - SDC : REST based interface exposed by the SDC, Distribution of service to DCAE
 - DCAE: REST based interface exposed by DCAE, Common Controller Framework, DCAE microservices onboarded (TCA, Stringmatch, Holmes (optional))
-- Policy: REST based interface, Policy engine target both XACML and Drools PDP, Policy Engine trigger operations to App-C/VF-C/SDN-C
+- Policy Core: REST based interface, Policy Core engine target both XACML and Drools PDP, Policy Engine trigger operations to App-C/VF-C/SDN-C
 - CDS: REST based interface, to retrieve list of operations/actions with their corresponding payload at runtime for Operational Policies where the field 'actor' is 'CDS'.
 
 Delivery
 --------
-CLAMP component is composed of a UI layer and a backend layer and packaged into a single container (single jar).
-CLAMP also requires a database instance with 1 DB, it uses MariaDB.
-CLAMP also uses an ELK stack (Elastic Search, Logstash and Kibana) for the Dashboard.
+Policy/CLAMP component is composed of a UI layer and a backend layer, each layer having its own container.
+Policy/CLAMP also requires a database instance with 1 DB, it uses MariaDB, which is the same DB as for the core Policy.
 
-.. blockdiag::
+.. |clamp-policy-archi| image:: images/clamp-policy_archi.png
 
-
-   blockdiag layers {
-       orientation = portrait
-       CLAMP_UI -> CLAMP_BACKEND;
-       CLAMP_BACKEND -> CLDSDB;
-       CLAMP_KIBANA -> CLAMP_ELASTICSEARCH;
-       CLAMP_LOGSTASH -> CLAMP_ELASTICSEARCH;
-       group l1 {
-       color = blue;
-       label = "CLAMP container";
-       CLAMP_UI; CLAMP_BACKEND;
-       }
-       group l3 {
-       color = orange;
-       label = "MariaDB container";
-       CLDSDB;
-       }
-       group l4 {
-       color = green;
-       label = "E_Search container";
-       CLAMP_ELASTICSEARCH;
-       }
-       group l5 {
-          color = green;
-          label = "Kibana container";
-          CLAMP_KIBANA;
-       }
-       group l6 {
-          color = green;
-          label = "LogStash container";
-          CLAMP_LOGSTASH;
-       }
-   }
+|clamp-policy-archi|
 
 Logging & Diagnostic Information
 --------------------------------
@@ -103,7 +70,7 @@ Configuration
 .. What are parameters and values?
 
 
-Currently, the CLAMP docker image can be deployed with small configuration needs. Though, you might need to make small adjustments to the configuration. As CLAMP is spring based, you can use the SPRING_APPLICATION_JSON environment variable to update its parameters.
+Currently, the CLAMP docker images can be deployed with small configuration needs. Though, you might need to make small adjustments to the configuration. As CLAMP is spring based, you can use the SPRING_APPLICATION_JSON environment variable to update its parameters.
 
 .. TODO detail config parameters and the usage
 
@@ -116,14 +83,14 @@ There are one datasource for Clamp. By default, it will try to connect to the lo
         "spring.datasource.cldsdb.url": "jdbc:mariadb:sequential://clampdb.{{ include "common.namespace" . }}:3306/cldsdb4?autoReconnect=true&connectTimeout=10000&socketTimeout=10000&retriesAllDown=3",
         "clamp.config.files.sdcController": "file:/opt/clamp/sdc-controllers-config.json",
         "clamp.config.dcae.inventory.url": "https://inventory.{{ include "common.namespace" . }}:8080",
-        "clamp.config.dcae.dispatcher.url": "https4://deployment-handler.{{ include "common.namespace" . }}:8443",
-        "clamp.config.dcae.deployment.url": "https4://deployment-handler.{{ include "common.namespace" . }}:8443",
+        "clamp.config.dcae.dispatcher.url": "https://deployment-handler.{{ include "common.namespace" . }}:8443",
+        "clamp.config.dcae.deployment.url": "https://deployment-handler.{{ include "common.namespace" . }}:8443",
         "clamp.config.dcae.deployment.userName": "none",
         "clamp.config.dcae.deployment.password": "none",
-        "clamp.config.policy.api.url": "https4://policy-api.{{ include "common.namespace" . }}:6969",
+        "clamp.config.policy.api.url": "https://policy-api.{{ include "common.namespace" . }}:6969",
         "clamp.config.policy.api.userName": "healthcheck",
         "clamp.config.policy.api.password": "zb!XztG34",
-        "clamp.config.policy.pap.url": "https4://policy-pap.{{ include "common.namespace" . }}:6969",
+        "clamp.config.policy.pap.url": "https://policy-pap.{{ include "common.namespace" . }}:6969",
         "clamp.config.policy.pap.userName": "healthcheck",
         "clamp.config.policy.pap.password": "zb!XztG34",
         "clamp.config.cadi.aafLocateUrl": "https://aaf-locate.{{ include "common.namespace" . }}:8095",
@@ -178,8 +145,8 @@ If the sdcAddress is not specified or not available (connection failure) the mes
 Administration
 --------------
 
-A user can access CLAMP UI at the following URL : https://localhost:3000.
-(in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
+A user can access Policy/CLAMP UI at the following URL : https://localhost:3000.
+(in this URL 'localhost' must be replaced by the actual host where Policy/CLAMP has been installed if it is not your current localhost)
 For OOM, the URL is https://<host-ip>:30258
 
 .. code-block:: html
@@ -192,19 +159,13 @@ For OOM, the URL is https://<host-ip>:30258
      ca path: src/main/resources/clds/aaf/org.onap.clamp.p12, password "China in the Spring"
      Or get it from this page : https://wiki.onap.org/display/DW/Control+Loop+Flows+and+Models+for+Casablanca
 
-A user can access the Control-Loop DashBoard (ELK stack based) at the following URL : https://localhost:5601 .
-(in this URL 'localhost' must be replaced by the actual host where CLAMP has been installed if it is not your current localhost)
-For OOM, the URL is https://<host-ip>:30290. Since El Alto release, User access is protected using the Search Guard plugin, community Edition!,
-for Kibana and ElasticSearch. The initial users and credentials provided by the Search Guard plugins are used by default.
-(take a look at the files in the ElasticSearch docker image located in the folder: /usr/share/elasticsearch/config/sg/, 
-especially the file "sg_internal_users.yml").
-
 Human Interfaces
 ----------------
 .. Basic info on the interface type, ports/protocols provided over, etc.
 
-User Interface (CLAMP Designer) - serve to configure control loop
-CLAMP UI is used to configure the Control Loop designed and distributed by SDC. From that UI it's possible to distribute the configuration policies and control the life-cycle of the DCAE Micro Services.
+User Interface - serve to configure control loop
+Policy/CLAMP UI is used to configure the Control Loop designed and distributed by SDC. From that UI it's possible to distribute the configuration policies and control the life-cycle of the DCAE Micro Services.
+Policy/CLAMP UI is also used to manage Policies outside of a Control Loop.
 
 The following actions are done using the UI:
 
