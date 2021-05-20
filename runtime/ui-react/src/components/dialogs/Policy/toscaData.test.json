@@ -1,0 +1,179 @@
+{
+  "title": "onap.policies.monitoring.tcagen2",
+  "type": "object",
+  "required": [
+    "tca.policy"
+  ],
+  "properties": {
+    "tca.policy": {
+      "title": "onap.datatypes.monitoring.tca_policy",
+      "type": "object",
+      "required": [
+        "domain",
+        "metricsPerEventName"
+      ],
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "Domain name to which TCA needs to be applied",
+          "default": "measurementsForVfScaling",
+          "const": "measurementsForVfScaling"
+        },
+        "metricsPerEventName": {
+          "type": "array",
+          "description": "Contains eventName and threshold details that need to be applied to given eventName",
+          "items": {
+            "title": "onap.datatypes.monitoring.metricsPerEventName",
+            "type": "object",
+            "required": [
+              "controlLoopSchemaType",
+              "eventName",
+              "policyName",
+              "policyScope",
+              "policyVersion",
+              "thresholds"
+            ],
+            "properties": {
+              "controlLoopSchemaType": {
+                "type": "string",
+                "description": "Specifies Control Loop Schema Type for the event Name e.g. VNF, VM",
+                "enum": [
+                  "VM",
+                  "VNF"
+                ]
+              },
+              "eventName": {
+                "type": "string",
+                "description": "Event name to which thresholds need to be applied"
+              },
+              "policyName": {
+                "type": "string",
+                "description": "TCA Policy Scope Name"
+              },
+              "policyScope": {
+                "type": "string",
+                "description": "TCA Policy Scope"
+              },
+              "policyVersion": {
+                "type": "string",
+                "description": "TCA Policy Scope Version"
+              },
+              "thresholds": {
+                "type": "array",
+                "description": "Thresholds associated with eventName",
+                "items": {
+                  "title": "onap.datatypes.monitoring.thresholds",
+                  "type": "object",
+                  "required": [
+                    "closedLoopControlName",
+                    "closedLoopEventStatus",
+                    "direction",
+                    "fieldPath",
+                    "severity",
+                    "thresholdValue",
+                    "version"
+                  ],
+                  "properties": {
+                    "closedLoopControlName": {
+                      "type": "string",
+                      "description": "Closed Loop Control Name associated with the threshold"
+                    },
+                    "closedLoopEventStatus": {
+                      "type": "string",
+                      "description": "Closed Loop Event Status of the threshold",
+                      "enum": [
+                        "ONSET",
+                        "ABATED"
+                      ]
+                    },
+                    "direction": {
+                      "type": "string",
+                      "description": "Direction of the threshold",
+                      "enum": [
+                        "LESS",
+                        "LESS_OR_EQUAL",
+                        "GREATER",
+                        "GREATER_OR_EQUAL",
+                        "EQUAL"
+                      ]
+                    },
+                    "fieldPath": {
+                      "type": "string",
+                      "description": "Json field Path as per CEF message which needs to be analyzed for TCA",
+                      "enum": [
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedOctetsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedUnicastPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedMulticastPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedErrorPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedTotalPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedOctetsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedUnicastPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedMulticastPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedBroadcastPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedDiscardedPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].receivedErrorPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedTotalPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedOctetsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedUnicastPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedMulticastPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedBroadcastPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedDiscardedPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedErrorPacketsDelta",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedTotalPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedOctetsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedUnicastPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedMulticastPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedBroadcastPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedDiscardedPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.vNicPerformanceArray[*].transmittedErrorPacketsAccumulated",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuIdle",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageInterrupt",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageNice",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageSoftIrq",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageSteal",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuUsageSystem",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].cpuWait",
+                        "$.event.measurementsForVfScalingFields.cpuUsageArray[*].percentUsage",
+                        "$.event.measurementsForVfScalingFields.meanRequestLatency",
+                        "$.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryBuffered",
+                        "$.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryCached",
+                        "$.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryConfigured",
+                        "$.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryFree",
+                        "$.event.measurementsForVfScalingFields.memoryUsageArray[*].memoryUsed",
+                        "$.event.measurementsForVfScalingFields.additionalMeasurements[*].arrayOfFields[0].value"
+                      ]
+                    },
+                    "severity": {
+                      "type": "string",
+                      "description": "Threshold Event Severity",
+                      "enum": [
+                        "CRITICAL",
+                        "MAJOR",
+                        "MINOR",
+                        "WARNING",
+                        "NORMAL"
+                      ]
+                    },
+                    "thresholdValue": {
+                      "type": "integer",
+                      "description": "Threshold value for the field Path inside CEF message"
+                    },
+                    "version": {
+                      "type": "string",
+                      "description": "Version number associated with the threshold"
+                    }
+                  }
+                },
+                "format": "tabs-top"
+              }
+            }
+          },
+          "format": "tabs-top"
+        }
+      }
+    }
+  }
+}

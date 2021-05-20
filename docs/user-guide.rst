@@ -1,10 +1,10 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 .. http://creativecommons.org/licenses/by/4.0
-.. Copyright (c) 2017-2018 AT&T Intellectual Property.  All rights reserved.
+.. Copyright (c) 2017-2021 AT&T Intellectual Property.  All rights reserved.
 
-Control loop in CLAMP
----------------------
-There are 2 control loop levels in CLAMP:
+Control loop in Policy/CLAMP
+----------------------------
+There are 2 control loop levels in Policy/CLAMP:
 
 - Control loop template: This is created from the DCAE blueprint (designed in the DCAE designer), and distributed by SDC to CLAMP.
 - Control loop instance: Based on the template, it represents a physical control loop in the platform related to a service and a VNF.
@@ -116,8 +116,8 @@ In the *Loop Operations* menu, lists the operations to be perform to the loop.
 |clamp-loop-operation-menu|
 
 
-Submitting the Control loop to policy
--------------------------------------
+Submitting the Control loop to core policy
+------------------------------------------
 The SUBMIT operation can be used to send the configuration to policy engine.
 If everything is successful, the status to the policy will become *SENT*. Clamp should also show proper logs in logs view.
 

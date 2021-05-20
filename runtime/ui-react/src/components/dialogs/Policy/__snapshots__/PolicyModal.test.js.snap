@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Verify PolicyModal Test the render method 1`] = `
+<Styled(Modal)
+  backdrop="static"
+  keyboard={false}
+  onHide={[Function]}
+  show={true}
+  size="xl"
+>
+  <ModalHeader
+    closeButton={true}
+    closeLabel="Close"
+  >
+    <ModalTitle>
+      Edit the policy
+    </ModalTitle>
+  </ModalHeader>
+  <Alert
+    closeLabel="Close alert"
+    dismissible={true}
+    onClose={[Function]}
+    show={false}
+    transition={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "defaultProps": Object {
+          "appear": false,
+          "in": false,
+          "mountOnEnter": false,
+          "timeout": 300,
+          "unmountOnExit": false,
+        },
+        "render": [Function],
+      }
+    }
+    variant="success"
+  >
+    <styled.div />
+  </Alert>
+  <Alert
+    closeLabel="Close alert"
+    dismissible={true}
+    onClose={[Function]}
+    show={false}
+    transition={
+      Object {
+        "$$typeof": Symbol(react.forward_ref),
+        "defaultProps": Object {
+          "appear": false,
+          "in": false,
+          "mountOnEnter": false,
+          "timeout": 300,
+          "unmountOnExit": false,
+        },
+        "render": [Function],
+      }
+    }
+    variant="danger"
+  >
+    <styled.div />
+  </Alert>
+  <ModalBody>
+    <div
+      id="editor"
+    />
+    <FormGroup
+      as={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "defaultProps": Object {
+            "noGutters": false,
+          },
+          "render": [Function],
+        }
+      }
+      controlId="formPlaintextEmail"
+    >
+      <FormLabel
+        column={true}
+        sm="2"
+        srOnly={false}
+      >
+        Pdp Group Info
+      </FormLabel>
+      <Col
+        sm="3"
+      >
+        <StateManager
+          defaultInputValue=""
+          defaultMenuIsOpen={false}
+          defaultValue={null}
+          onChange={[Function]}
+          options={
+            Array [
+              Object {
+                "label": "monitoring",
+                "value": "monitoring",
+              },
+            ]
+          }
+          value={
+            Object {
+              "label": undefined,
+              "value": undefined,
+            }
+          }
+        />
+      </Col>
+      <Col
+        sm="3"
+      >
+        <StateManager
+          defaultInputValue=""
+          defaultMenuIsOpen={false}
+          defaultValue={null}
+          onChange={[Function]}
+          options={Array []}
+          value={
+            Object {
+              "label": undefined,
+              "value": undefined,
+            }
+          }
+        />
+      </Col>
+    </FormGroup>
+  </ModalBody>
+  <ModalFooter>
+    <Button
+      active={false}
+      disabled={false}
+      key="close"
+      onClick={[Function]}
+      variant="secondary"
+    >
+      Close
+    </Button>
+    <Button
+      active={false}
+      disabled={false}
+      key="save"
+      onClick={[Function]}
+      variant="primary"
+    >
+      Save Changes
+    </Button>
+    <Button
+      active={false}
+      disabled={false}
+      key="refresh"
+      onClick={[Function]}
+      variant="primary"
+    >
+      Refresh
+    </Button>
+  </ModalFooter>
+</Styled(Modal)>
+`;
