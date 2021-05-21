@@ -40,4 +40,12 @@
         <module>participant-impl-cds</module>
         <module>participant-impl-kubernetes</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.onap.policy.clamp.participant</groupId>
+            <artifactId>policy-clamp-participant-intermediary</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
