@@ -1,0 +1,59 @@
+{
+    "name":"PapGroup",
+    "restServerParameters":{
+        "host":"0.0.0.0",
+        "port":6969,
+        "userName":"healthcheck",
+        "password":"zb!XztG34"
+    },
+    "pdpParameters": {
+        "heartBeatMs": 1,
+        "updateParameters": {
+            "maxRetryCount": 1,
+            "maxWaitMs": 1
+        },
+        "stateChangeParameters": {
+            "maxRetryCount": 1,
+            "maxWaitMs": 1
+        }
+    },
+    "databaseProviderParameters": {
+        "name": "PolicyProviderParameterGroup",
+        "implementation": "org.onap.policy.models.provider.impl.DatabasePolicyModelsProviderImpl",
+        "databaseDriver": "org.h2.Driver",
+        "databaseUrl": "jdbc:h2:mem:testdb",
+        "databaseUser": "policy",
+        "databasePassword": "P01icY",
+        "persistenceUnit": "PdpGroupTest"
+    },
+    "topicParameterGroup": {
+        "topicSources" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "message-router" ],
+            "topicCommInfrastructure" : "dmaap"
+        }],
+        "topicSinks" : [{
+            "topic" : "POLICY-PDP-PAP",
+            "servers" : [ "message-router" ],
+            "topicCommInfrastructure" : "dmaap"
+        }]
+    },
+    "healthCheckRestClientParameters":[{
+        "clientName": "api",
+        "hostname": "policy-api",
+        "port": 6969,
+        "userName": "healthcheck",
+        "password": "zb!XztG34",
+        "useHttps": true,
+        "basePath": "policy/api/v1/healthcheck"
+    },
+    {
+        "clientName": "distribution",
+        "hostname": "policy-distribution",
+        "port": 6969,
+        "userName": "healthcheck",
+        "password": "zb!XztG34",
+        "useHttps": true,
+        "basePath": "healthcheck"
+    }]
+}
