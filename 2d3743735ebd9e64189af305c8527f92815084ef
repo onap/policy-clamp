@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6618567f_4eabaebb",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Changing to 2.5.0, also Ryan Sheehan is resolving maven versions across CLAMP and policy-arent (The PF parent pom), so we should switch the CLAMP runtime from 2.4.4 up to 2.5.0 as part of that work while we\u0027re at it.",
+      "parentUuid": "f382f465_5d7453dc",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "674f8873_82939a0f",
         "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "b62b5202_d20a7bda",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "674f8873_82939a0f",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "831dcce8_3235cca9",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/configurations/BeanFactory.java",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2021-05-28T09:24:55Z",
       "side": 1,
       "message": "Why http and not https ?",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "314a19a1_39a744ca",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/configurations/BeanFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "We will bring in https later, we wanted to get something up for people to try out. Sub task https://jira.onap.org/browse/POLICY-3334 covers https on the K8S participant.",
+      "parentUuid": "831dcce8_3235cca9",
       "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "c3ebd7ea_e78275b7",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Yes, Used StandardCoder and final",
+      "parentUuid": "a2d2ae02_140ee748",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b8cfa44_9e0d5af6",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
         "patchSetId": 1
@@ -84,6 +156,24 @@
       "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "197efc85_7ee1ab36",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b8cfa44_9e0d5af6",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "f2311b1f_952655ea",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e829613_29dc0f67",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fc5dae3_a161202a",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -118,6 +226,24 @@
       "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e48eee3_a318fb68",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fc5dae3_a161202a",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -138,6 +264,24 @@
     },
     {
       "key": {
+        "uuid": "15257471_ebe113d9",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa2702e6_43d5afe6",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "789bb8d1_7225f65e",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -152,6 +296,24 @@
       "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8500898_29269df2",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T11:02:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "789bb8d1_7225f65e",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
