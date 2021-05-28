@@ -116,6 +116,30 @@
     },
     {
       "key": {
+        "uuid": "55ee45ea_3a545de6",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-28T15:07:54Z",
+      "side": 1,
+      "message": "prefer \"@formatter:off\" to disable automatic formatting.  (I assume that\u0027s the purpose of the trailing \"//\" on these lines.)",
+      "parentUuid": "f49c4495_3d90ac09",
+      "range": {
+        "startLine": 106,
+        "startChar": 49,
+        "endLine": 106,
+        "endChar": 51
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6c3b5bf7_8a5f5d31",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
         "patchSetId": 3
