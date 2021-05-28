@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cefa457f_b75e7412",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cb687a4_552d76b4",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1373a501_0f855293",
         "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
         "patchSetId": 3
@@ -33,6 +51,24 @@
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1153561_3bd4e080",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1373a501_0f855293",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "8890cc62_b8174c3f",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e1022a8_b6fe9809",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ca4b57c_c69290b9",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/configurations/BeanFactory.java",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2021-05-28T14:19:23Z",
       "side": 1,
       "message": "just verifying that this will be made configurable in a future review - may create the JIRA now or add a \"TODO\" comment",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ded3822f_4cfd5436",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/configurations/BeanFactory.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "I update POLICY-3344 to say that http/https should be configurable.",
+      "parentUuid": "4ca4b57c_c69290b9",
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -140,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "c80334f9_2164b285",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "I agree, and here I think putting // @formatter comments just clutters it more so I removed all format override and went with the default.",
+      "parentUuid": "55ee45ea_3a545de6",
+      "range": {
+        "startLine": 106,
+        "startChar": 49,
+        "endLine": 106,
+        "endChar": 51
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6c3b5bf7_8a5f5d31",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
         "patchSetId": 3
@@ -187,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "bd170af1_e8e13933",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "Changed the code to return NOT_FOUND, I think that is better.",
+      "parentUuid": "694f06d6_347ce611",
+      "range": {
+        "startLine": 159,
+        "startChar": 33,
+        "endLine": 159,
+        "endChar": 38
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "787ddd4a_5b1dc888",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -207,6 +327,30 @@
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f77546a6_bb06e3dc",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "787ddd4a_5b1dc888",
+      "range": {
+        "startLine": 58,
+        "startChar": 58,
+        "endLine": 58,
+        "endChar": 94
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -313,6 +457,24 @@
       "writtenOn": "2021-05-28T14:19:23Z",
       "side": 1,
       "message": "log instead",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a96d5907_179cc68f",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T17:18:16Z",
+      "side": 1,
+      "message": "Don\u0027t know why my eclipse isn\u0027t flagging these.",
+      "parentUuid": "39fac380_95fb9b02",
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
