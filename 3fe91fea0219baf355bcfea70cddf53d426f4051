@@ -139,6 +139,30 @@
     },
     {
       "key": {
+        "uuid": "694f06d6_347ce611",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-28T14:20:18Z",
+      "side": 1,
+      "message": "never mind - it throws an exception.  Should maybe return NOT_FOUND in that case?",
+      "parentUuid": "6c3b5bf7_8a5f5d31",
+      "range": {
+        "startLine": 159,
+        "startChar": 33,
+        "endLine": 159,
+        "endChar": 38
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "787ddd4a_5b1dc888",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
