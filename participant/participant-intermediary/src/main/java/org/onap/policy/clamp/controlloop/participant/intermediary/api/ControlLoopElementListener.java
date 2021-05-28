@@ -38,9 +38,10 @@ public interface ControlLoopElementListener {
      * @param currentState the current state of the control loop element
      * @param newState the state to which the control loop element is changing to
      * @throws PfModelException in case of a model exception
+     * @throws InterruptedException on interrupts
      */
     public void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
-            ControlLoopOrderedState newState) throws PfModelException;
+            ControlLoopOrderedState newState) throws PfModelException, InterruptedException;
 
     /**
      * Handle an update on a control loop element.
