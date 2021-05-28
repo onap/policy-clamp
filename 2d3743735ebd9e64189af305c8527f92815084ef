@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f382f465_5d7453dc",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "Any specific reason to have an old springboot version?\nAs it\u0027s a new code, why not the latest one ? 2.5.0 ?",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "674f8873_82939a0f",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "I don\u0027t see the commons-io used ?\nand the latest version is 2.9.0",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "831dcce8_3235cca9",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/configurations/BeanFactory.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "Why http and not https ?",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2d2ae02_140ee748",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "final?",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b8cfa44_9e0d5af6",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "Can use addAll instead",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e829613_29dc0f67",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/controller/ChartController.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "unneeded var, can be injected directly line 74",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fc5dae3_a161202a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "Unused import",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa2702e6_43d5afe6",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "Final ?",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "789bb8d1_7225f65e",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-05-28T09:24:55Z",
+      "side": 1,
+      "message": "Both if can be merged ?",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
