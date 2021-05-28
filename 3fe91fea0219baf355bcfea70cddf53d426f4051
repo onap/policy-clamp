@@ -587,6 +587,24 @@
     },
     {
       "key": {
+        "uuid": "f4134b96_91b9e66a",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-28T18:11:50Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "95db17e8_9d22e124",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6dabcf65_3dfde7f4",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -1005,6 +1023,30 @@
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11fc808f_f1faba74",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-05-28T18:11:50Z",
+      "side": 1,
+      "message": "oh, duh, was still \"seeing\" a logging statement here :-D",
+      "parentUuid": "08990fe4_33e41294",
+      "range": {
+        "startLine": 127,
+        "startChar": 52,
+        "endLine": 127,
+        "endChar": 61
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
