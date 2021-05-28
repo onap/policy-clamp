@@ -367,6 +367,24 @@
       "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a29e8b3_d02b4437",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T12:03:58Z",
+      "side": 1,
+      "message": "It\u0027s called at line 57.",
+      "parentUuid": "57c18559_7e21ea3a",
+      "revId": "2d3743735ebd9e64189af305c8527f92815084ef",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
