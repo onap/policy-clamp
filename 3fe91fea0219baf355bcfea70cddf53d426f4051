@@ -16,6 +16,24 @@
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1698317_14af5324",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/resources/KubernetesHelm.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-05-28T13:57:30Z",
+      "side": 1,
+      "message": "It\u0027s an example TOSCA control lop file that has a kubernetes control loop element. It\u0027s to give people a guide on how to use the participant.",
+      "parentUuid": "aca5faae_c89fa0d3",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
