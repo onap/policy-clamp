@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "a02d5c74_affca4b1",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-01T14:56:08Z",
+      "side": 1,
+      "message": "good point; we certainly shouldn\u0027t be using TrustSelfSignedStrategy() by default",
+      "parentUuid": "ce0dd494_c2d7f0f3",
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f297236b_cc3f818f",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
         "patchSetId": 1
