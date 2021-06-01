@@ -26,21 +26,24 @@ import static org.junit.Assert.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.integration.ClientAndServer;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * Class to perform unit test of {@link ClampHttpClient}.
  *
  */
-public class ClampHttpClientTest {
+@ExtendWith(SpringExtension.class)
+class ClampHttpClientTest {
 
     private static final String LOOP = "pmsh_loop";
     private static final String BLUEPRINT_DEPLOYED = "BLUEPRINT_DEPLOYED";
@@ -52,7 +55,7 @@ public class ClampHttpClientTest {
     /**
      * Set up.
      */
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         CommonTestData commonTestData = new CommonTestData();
 
@@ -72,15 +75,15 @@ public class ClampHttpClientTest {
                 .respond(response().withStatusCode(202));
     }
 
-    @AfterClass
+    @AfterAll
     public static void stopServer() {
         mockServer.stop();
         mockServer = null;
     }
 
     @Test
-    public void test_getstatus() throws Exception {
-        try (ClampHttpClient client = new ClampHttpClient(parameters.getClampClientParameters())) {
+    void test_getstatus() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
 
             Loop status = client.getstatus(LOOP);
 
@@ -95,8 +98,8 @@ public class ClampHttpClientTest {
     }
 
     @Test
-    public void test_deploy() throws Exception {
-        try (ClampHttpClient client = new ClampHttpClient(parameters.getClampClientParameters())) {
+    void test_deploy() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
 
             assertTrue(client.deploy(LOOP));
 
@@ -106,8 +109,8 @@ public class ClampHttpClientTest {
     }
 
     @Test
-    public void test_undeploy() throws Exception {
-        try (ClampHttpClient client = new ClampHttpClient(parameters.getClampClientParameters())) {
+    void test_undeploy() throws Exception {
+        try (ClampHttpClient client = new ClampHttpClient(parameters)) {
 
             assertTrue(client.undeploy(LOOP));
 
@@ -117,12 +120,12 @@ public class ClampHttpClientTest {
     }
 
     @Test
-    public void test_getStatusCodeNull() {
+    void test_getStatusCodeNull() {
         assertThat(ClampHttpClient.getStatusCode(null)).isEqualTo(ClampHttpClient.STATUS_NOT_FOUND);
     }
 
     @Test
-    public void test_getStatusEmptyMap() {
+    void test_getStatusEmptyMap() {
         assertThat(ClampHttpClient.getStatusCode(new Loop())).isEqualTo(ClampHttpClient.STATUS_NOT_FOUND);
     }
 }

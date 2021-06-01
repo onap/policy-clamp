@@ -20,83 +20,45 @@
 
 package org.onap.policy.clamp.controlloop.participant.dcae.main.parameters;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameterHandler;
-import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
-import org.onap.policy.clamp.controlloop.participant.dcae.main.startstop.ParticipantDcaeCommandLineArguments;
 import org.onap.policy.common.utils.coder.CoderException;
+
 
 /**
  * Class to perform unit test of {@link ParticipantParameterHandler}.
  *
  */
-public class TestParticipantDcaeParameterHandler {
+class TestParticipantDcaeParameterHandler {
 
     @Test
-    public void testParameterHandlerNoParameterFile() throws ControlLoopException {
-        final String[] emptyArgumentString = { "-c", "src/test/resources/parameters/NoParametersFile.json" };
+    void testParameterHandlerNoParameterFile() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/NoParametersFile.json";
 
-        final ParticipantDcaeCommandLineArguments emptyArguments = new ParticipantDcaeCommandLineArguments();
-        emptyArguments.parse(emptyArgumentString);
-
-        assertThatThrownBy(() -> new ParticipantDcaeParameterHandler().getParameters(emptyArguments))
+        assertThatThrownBy(() -> new ParticipantDcaeParameterHandler().toParticipantDcaeParameters(path))
             .hasCauseInstanceOf(CoderException.class)
             .hasRootCauseInstanceOf(FileNotFoundException.class);
     }
 
     @Test
-    public void testParameterHandlerInvalidParameters() throws ControlLoopException {
-        final String[] invalidArgumentString = { "-c", "src/test/resources/parameters/InvalidParameters.json" };
+    void testParameterHandlerInvalidParameters() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/InvalidParameters.json";
 
-        final ParticipantDcaeCommandLineArguments invalidArguments =
-                new ParticipantDcaeCommandLineArguments();
-        invalidArguments.parse(invalidArgumentString);
-
-        assertThatThrownBy(() -> new ParticipantDcaeParameterHandler().getParameters(invalidArguments))
+        assertThatThrownBy(() -> new ParticipantDcaeParameterHandler().toParticipantDcaeParameters(path))
             .hasMessageStartingWith("error reading parameters from")
             .hasCauseInstanceOf(CoderException.class);
     }
 
     @Test
-    public void testParticipantParameterGroup() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-c", "src/test/resources/parameters/TestParameters.json" };
-
-        final ParticipantDcaeCommandLineArguments arguments = new ParticipantDcaeCommandLineArguments();
-        arguments.parse(participantConfigParameters);
+    void testParticipantParameterGroup() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/TestParameters.json";
 
         final ParticipantDcaeParameters parGroup = new ParticipantDcaeParameterHandler()
-                .getParameters(arguments);
-        assertTrue(arguments.checkSetConfigurationFilePath());
+                .toParticipantDcaeParameters(path);
         assertEquals(CommonTestData.PARTICIPANT_GROUP_NAME, parGroup.getName());
-    }
-
-    @Test
-    public void testParticipantVersion() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-v" };
-        final ParticipantDcaeCommandLineArguments arguments = new ParticipantDcaeCommandLineArguments();
-        assertThat(arguments.parse(participantConfigParameters)).startsWith(
-                "ONAP Tosca defined control loop Participant");
-    }
-
-    @Test
-    public void testParticipantHelp() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-h" };
-        final ParticipantDcaeCommandLineArguments arguments = new ParticipantDcaeCommandLineArguments();
-        assertThat(arguments.parse(participantConfigParameters)).startsWith("usage:");
-    }
-
-    @Test
-    public void testParticipantInvalidOption() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-d" };
-        final ParticipantDcaeCommandLineArguments arguments = new ParticipantDcaeCommandLineArguments();
-        assertThatThrownBy(() -> arguments.parse(participantConfigParameters))
-            .hasMessageStartingWith("invalid command line arguments specified");
     }
 }
