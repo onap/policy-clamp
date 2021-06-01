@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84307888_2464fdb3",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-01T14:14:07Z",
+      "side": 1,
+      "message": "this should use BusTopicParams (or create a RestClientParameters class in policy-common)\n\nI mentioned this in a previous review - is there a JIRA for it?",
+      "range": {
+        "startLine": 71,
+        "startChar": 33,
+        "endLine": 71,
+        "endChar": 54
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f297236b_cc3f818f",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-01T14:14:07Z",
+      "side": 1,
+      "message": "log the exception",
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1423161c_41f60f11",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-01T14:14:07Z",
+      "side": 1,
+      "message": "change to just use \"+\"",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
