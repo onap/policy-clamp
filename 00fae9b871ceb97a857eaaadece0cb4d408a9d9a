@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "ce0dd494_c2d7f0f3",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-01T14:48:34Z",
+      "side": 1,
+      "message": "This possibly will be flagged as a security issue, hardcoding certificate validation in the code.\nCan somebody remind me why the policy-endpoints httclient couldn\u0027t be used here and then rely on the self-signed external configuration to enable self-signed or not self-signed on a per installation basis?",
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f297236b_cc3f818f",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
         "patchSetId": 1
@@ -53,6 +70,30 @@
       "writtenOn": "2021-06-01T14:14:07Z",
       "side": 1,
       "message": "change to just use \"+\"",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7edb5b8_57ee4af0",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-01T14:48:34Z",
+      "side": 1,
+      "message": "that will allow you to to declare returnMessage final to keep it consistent with the errorMessage vars above, (although marking it final doesn\u0027t buy anything in this sections).",
+      "parentUuid": "1423161c_41f60f11",
       "range": {
         "startLine": 73,
         "startChar": 12,
