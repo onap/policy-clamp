@@ -21,15 +21,13 @@
 package org.onap.policy.clamp.controlloop.participant.dcae.httpclient;
 
 import org.apache.http.HttpStatus;
+import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.ExternalComponent;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ClampHttpClient extends AbstractHttpClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClampHttpClient.class);
 
     private static final String STATUS = "/restservices/clds/v2/loop/getstatus/";
     private static final String CREATE = "/restservices/clds/v2/loop/create/%s?templateName=%s";
@@ -44,8 +42,8 @@ public class ClampHttpClient extends AbstractHttpClient {
     /**
      * Constructor.
      */
-    public ClampHttpClient(RestServerParameters restServerParameters) {
-        super(restServerParameters);
+    public ClampHttpClient(ParticipantDcaeParameters parameters) {
+        super(parameters.getClampClientParameters());
     }
 
     /**

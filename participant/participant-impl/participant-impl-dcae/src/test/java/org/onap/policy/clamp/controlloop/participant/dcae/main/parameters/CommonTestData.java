@@ -35,6 +35,7 @@ import org.onap.policy.common.parameters.ParameterGroup;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
+import org.onap.policy.common.utils.network.NetworkUtil;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaConceptIdentifier;
 
 /**
@@ -47,10 +48,8 @@ public class CommonTestData {
     public static final List<TopicParameters> TOPIC_PARAMS = Arrays.asList(getTopicParams());
     private static final String REST_CLIENT_PASSWORD = "password";
     private static final String REST_CLIENT_USER = "admin";
-    private static final int REST_CLAMP_PORT = 8443;
-    private static final int REST_CONSUL_PORT = 31321;
-    private static final String REST_CLAMP_HOST = "localhost";
-    private static final String REST_CONSUL_HOST = "consul";
+    private static final String REST_CLAMP_HOST = "0.0.0.0";
+    private static final String REST_CONSUL_HOST = "0.0.0.0";
     private static final boolean REST_CLAMP_HTTPS = false;
     private static final boolean REST_CONSUL_HTTPS = false;
     private static final boolean REST_CLIENT_AAF = false;
@@ -104,7 +103,11 @@ public class CommonTestData {
 
         if (!isEmpty) {
             map.put("host", REST_CLAMP_HOST);
-            map.put("port", REST_CLAMP_PORT);
+            try {
+                map.put("port", NetworkUtil.allocPort());
+            } catch (IOException e) {
+                throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "not valid port", e);
+            }
             map.put("userName", REST_CLIENT_USER);
             map.put("password", REST_CLIENT_PASSWORD);
         }
@@ -125,7 +128,11 @@ public class CommonTestData {
 
         if (!isEmpty) {
             map.put("host", REST_CONSUL_HOST);
-            map.put("port", REST_CONSUL_PORT);
+            try {
+                map.put("port", NetworkUtil.allocPort());
+            } catch (IOException e) {
+                throw new ControlLoopRuntimeException(Response.Status.NOT_ACCEPTABLE, "not valid port", e);
+            }
             map.put("userName", REST_CLIENT_USER);
             map.put("password", REST_CLIENT_PASSWORD);
         }
@@ -209,7 +216,7 @@ public class CommonTestData {
      */
     public static ToscaConceptIdentifier getParticipantId() {
         final ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("CDSParticipant0");
+        participantId.setName("DCAEParticipant0");
         participantId.setVersion("1.0.0");
         return participantId;
     }
@@ -276,7 +283,7 @@ public class CommonTestData {
     }
 
     /**
-     * create Json response from getstatus call.
+     * Create Json response from getstatus call.
      *
      * @param status the status of Partecipant
      * @return the JSON

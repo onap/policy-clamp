@@ -39,6 +39,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -67,15 +68,15 @@ public abstract class AbstractHttpClient implements Closeable {
     /**
      * Constructor.
      */
-    protected AbstractHttpClient(RestServerParameters restServerParameters) {
+    protected AbstractHttpClient(RestServerParameters restClientParameters) {
         try {
-            final String scheme = restServerParameters.isHttps() ? "https" : "http";
-            target = new HttpHost(restServerParameters.getHost(), restServerParameters.getPort(), scheme);
+            final String scheme = restClientParameters.isHttps() ? "https" : "http";
+            target = new HttpHost(restClientParameters.getHost(), restClientParameters.getPort(), scheme);
 
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(new AuthScope(target.getHostName(), target.getPort()),
-                    new UsernamePasswordCredentials(restServerParameters.getUserName(),
-                            restServerParameters.getPassword()));
+                    new UsernamePasswordCredentials(restClientParameters.getUserName(),
+                            restClientParameters.getPassword()));
 
             AuthCache authCache = new BasicAuthCache();
             BasicScheme basicAuth = new BasicScheme();
@@ -84,7 +85,7 @@ public abstract class AbstractHttpClient implements Closeable {
             localContext.setAuthCache(authCache);
 
             HttpClientBuilder builder = HttpClients.custom().setDefaultCredentialsProvider(credsProvider);
-            if (restServerParameters.isHttps()) {
+            if (restClientParameters.isHttps()) {
                 final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(new SSLContextBuilder()
                         .loadTrustMaterial(null, new TrustSelfSignedStrategy()).setProtocol("TLSv1.2").build(),
                         new NoopHostnameVerifier());
@@ -94,12 +95,24 @@ public abstract class AbstractHttpClient implements Closeable {
 
         } catch (final Exception e) {
             throw new ControlLoopRuntimeException(Status.INTERNAL_SERVER_ERROR,
-                    restServerParameters.getName() + " Client failed to start", e);
+                    restClientParameters.getName() + " Client failed to start", e);
         }
     }
 
-    CloseableHttpResponse execute(HttpRequest request) throws IOException {
+    protected CloseableHttpResponse execute(HttpRequest request) throws IOException {
         return httpclient.execute(target, request, localContext);
+    }
+
+    protected boolean executePut(String path, String jsonEntity, int statusCode) {
+        try {
+            HttpPut put = new HttpPut(path);
+            put.setEntity(new StringEntity(jsonEntity));
+            try (CloseableHttpResponse response = execute(put)) {
+                return response.getStatusLine().getStatusCode() == statusCode;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     protected boolean executePut(String path, int statusCode) {

@@ -18,31 +18,23 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.dcae.httpclient;
+package org.onap.policy.clamp.controlloop.participant.dcae.config;
 
-import org.apache.http.HttpStatus;
+import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
+import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameterHandler;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Component
-public class ConsulDcaeHttpClient extends AbstractHttpClient {
+@Configuration
+public class ParametersConfig {
 
-    private static final String DEPLOY = "/v1/kv/dcae-pmsh:policy";
+    @Value("${participant.file}")
+    private String file;
 
-    /**
-     * Constructor.
-     */
-    public ConsulDcaeHttpClient(ParticipantDcaeParameters parameters) {
-        super(parameters.getConsulClientParameters());
-    }
-
-    /**
-     * Call consult.
-     *
-     * @param jsonEntity the Entity
-     * @return true
-     */
-    public boolean deploy(String jsonEntity) {
-        return executePut(DEPLOY, jsonEntity, HttpStatus.SC_OK);
+    @Bean
+    public ParticipantDcaeParameters participantDcaeParameters() throws ControlLoopException {
+        return new ParticipantDcaeParameterHandler().toParticipantDcaeParameters(file);
     }
 }

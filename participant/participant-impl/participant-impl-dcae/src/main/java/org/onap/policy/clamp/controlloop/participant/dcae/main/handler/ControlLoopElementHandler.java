@@ -20,11 +20,10 @@
 
 package org.onap.policy.clamp.controlloop.participant.dcae.main.handler;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
@@ -33,20 +32,25 @@ import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ClampHttpCl
 import org.onap.policy.clamp.controlloop.participant.dcae.httpclient.ConsulDcaeHttpClient;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * This class handles implementation of controlLoopElement updates.
  */
-public class ControlLoopElementHandler implements ControlLoopElementListener, Closeable {
+@Component
+public class ControlLoopElementHandler implements ControlLoopElementListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopElementHandler.class);
     private final ClampHttpClient clampClient;
     private final ConsulDcaeHttpClient consulClient;
+
+    @Setter
+    private ParticipantIntermediaryApi intermediaryApi;
 
     private static final String LOOP = "pmsh_loop";
     private static final String TEMPLATE = "LOOP_TEMPLATE_k8s_pmsh";
@@ -70,9 +74,9 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
     /**
      * Constructor.
      */
-    public ControlLoopElementHandler(RestServerParameters clampParameters, RestServerParameters consulParameters) {
-        clampClient = new ClampHttpClient(clampParameters);
-        consulClient = new ConsulDcaeHttpClient(consulParameters);
+    public ControlLoopElementHandler(ClampHttpClient clampClient, ConsulDcaeHttpClient consulClient) {
+        this.clampClient = clampClient;
+        this.consulClient = consulClient;
     }
 
     /**
@@ -90,17 +94,15 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
                 Loop loop = clampClient.getstatus(LOOP);
                 if (loop != null) {
                     clampClient.undeploy(LOOP);
-                    DcaeHandler.getInstance().getDcaeProvider().getIntermediaryApi()
-                        .updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.UNINITIALISED);
+                    intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState,
+                            ControlLoopState.UNINITIALISED);
                 }
                 break;
             case PASSIVE:
-                DcaeHandler.getInstance().getDcaeProvider().getIntermediaryApi()
-                    .updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE);
                 break;
             case RUNNING:
-                DcaeHandler.getInstance().getDcaeProvider().getIntermediaryApi()
-                    .updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING);
                 break;
             default:
                 LOGGER.debug("Unknown orderedstate {}", newState);
@@ -145,23 +147,21 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
                 deploy();
                 boolean deployedFlag = false;
                 for (int i = 0; i < CHECK_COUNT; i++) {
-                    //sleep 10 seconds
+                    // sleep 10 seconds
                     TimeUnit.SECONDS.sleep(CHECK_COUNT);
                     loop = getStatus();
                     String status = ClampHttpClient.getStatusCode(loop);
                     if (MICROSERVICE_INSTALLED_SUCCESSFULLY.equals(status)) {
-                        DcaeHandler.getInstance().getDcaeProvider().getIntermediaryApi()
-                            .updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                                            ControlLoopState.PASSIVE);
+                        intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
+                                ControlLoopState.PASSIVE);
                         deployedFlag = true;
                         break;
                     }
                 }
                 if (!deployedFlag) {
                     LOGGER.warn("DCAE is not deployed properly, ClElement state will be UNINITIALISED2PASSIVE");
-                    DcaeHandler.getInstance().getDcaeProvider().getIntermediaryApi()
-                        .updateControlLoopElementState(element.getId(), element.getOrderedState(),
-                                      ControlLoopState.UNINITIALISED2PASSIVE);
+                    intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
+                            ControlLoopState.UNINITIALISED2PASSIVE);
                 }
             }
         } catch (PfModelException e) {
@@ -178,20 +178,12 @@ public class ControlLoopElementHandler implements ControlLoopElementListener, Cl
      */
     @Override
     public void handleStatistics(UUID controlLoopElementId) {
-        ControlLoopElement clElement = DcaeHandler.getInstance().getDcaeProvider()
-                .getIntermediaryApi().getControlLoopElement(controlLoopElementId);
+        ControlLoopElement clElement = intermediaryApi.getControlLoopElement(controlLoopElementId);
         if (clElement != null) {
             ClElementStatistics clElementStatistics = new ClElementStatistics();
             clElementStatistics.setControlLoopState(clElement.getState());
             clElementStatistics.setTimeStamp(Instant.now());
-            DcaeHandler.getInstance().getDcaeProvider().getIntermediaryApi()
-                .updateControlLoopElementStatistics(controlLoopElementId, clElementStatistics);
+            intermediaryApi.updateControlLoopElementStatistics(controlLoopElementId, clElementStatistics);
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        clampClient.close();
-        consulClient.close();
     }
 }
