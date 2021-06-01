@@ -24,7 +24,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
+import org.onap.policy.common.endpoints.event.comm.bus.internal.BusTopicParams;
 import org.onap.policy.common.parameters.BeanValidationResult;
 import org.onap.policy.common.parameters.ParameterGroupImpl;
 import org.onap.policy.common.parameters.ValidationStatus;
@@ -40,11 +40,14 @@ import org.onap.policy.models.provider.PolicyModelsProviderParameters;
 @NotBlank
 @Getter
 public class ParticipantDcaeParameters extends ParameterGroupImpl {
-    @Valid
-    private RestServerParameters clampClientParameters;
+
+    private static final String MSG_IS_BLANK = "is blank";
 
     @Valid
-    private RestServerParameters consulClientParameters;
+    private BusTopicParams clampClientParameters;
+
+    @Valid
+    private BusTopicParams consulClientParameters;
 
     private ParticipantIntermediaryParameters intermediaryParameters;
     private PolicyModelsProviderParameters databaseProviderParameters;
@@ -71,21 +74,21 @@ public class ParticipantDcaeParameters extends ParameterGroupImpl {
         return result;
     }
 
-    private BeanValidationResult checkMissingMandatoryParams(RestServerParameters clientParameters) {
-        BeanValidationResult result = new BeanValidationResult(clientParameters.getName(), clientParameters);
-        if (StringUtils.isBlank(clientParameters.getHost())) {
-            result.addResult("Host", clientParameters.getHost(), ValidationStatus.INVALID, "is blank");
+    private BeanValidationResult checkMissingMandatoryParams(BusTopicParams clientParameters) {
+        BeanValidationResult result = new BeanValidationResult(clientParameters.getClientName(), clientParameters);
+        if (clientParameters.isHostnameInvalid()) {
+            result.addResult("Host", clientParameters.getHostname(), ValidationStatus.INVALID, MSG_IS_BLANK);
         }
-        if (StringUtils.isBlank(clientParameters.getName())) {
-            result.addResult("Name", clientParameters.getName(), ValidationStatus.INVALID, "is blank");
+        if (clientParameters.isClientNameInvalid()) {
+            result.addResult("Name", clientParameters.getClientName(), ValidationStatus.INVALID, MSG_IS_BLANK);
         }
         if (StringUtils.isBlank(clientParameters.getPassword())) {
-            result.addResult("Password", clientParameters.getPassword(), ValidationStatus.INVALID, "is blank");
+            result.addResult("Password", clientParameters.getPassword(), ValidationStatus.INVALID, MSG_IS_BLANK);
         }
         if (StringUtils.isBlank(clientParameters.getUserName())) {
-            result.addResult("UserName", clientParameters.getUserName(), ValidationStatus.INVALID, "is blank");
+            result.addResult("UserName", clientParameters.getUserName(), ValidationStatus.INVALID, MSG_IS_BLANK);
         }
-        if (clientParameters.getPort() <= 0 || clientParameters.getPort() >= 65535) {
+        if (clientParameters.isPortInvalid()) {
             result.addResult("Port", clientParameters.getPort(), ValidationStatus.INVALID, "is not valid");
         }
         return result;

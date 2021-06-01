@@ -25,7 +25,6 @@ import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import lombok.Getter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
@@ -35,10 +34,7 @@ import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.Parti
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantHealthCheck;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
-import org.onap.policy.clamp.controlloop.participant.dcae.main.handler.DcaeProvider;
 import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.CommonTestData;
-import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
-import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -54,23 +50,6 @@ public class TestListenerUtils {
     private static final Coder CODER = new StandardCoder();
     private static final String TOSCA_TEMPLATE_YAML = "examples/controlloop/PMSubscriptionHandling.yaml";
     static CommonTestData commonTestData = new CommonTestData();
-
-    @Getter
-    private static ParticipantHandler participantHandler;
-
-    /**
-     * Method to initialize participantHandler.
-     */
-    public static void initParticipantHandler() {
-
-        final ParticipantDcaeParameters parameters = commonTestData.toObject(
-                commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME),
-                ParticipantDcaeParameters.class);
-
-        DcaeProvider dcaeProvider = new DcaeProvider(parameters);
-
-        participantHandler = dcaeProvider.getIntermediaryApi().getParticipantHandler();
-    }
 
     /**
      * Method to create a controlLoop from a yaml file.
@@ -120,7 +99,7 @@ public class TestListenerUtils {
     public static ParticipantStateChange createParticipantStateChangeMsg(final ParticipantState participantState) {
         final ParticipantStateChange participantStateChangeMsg = new ParticipantStateChange();
         ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("CDSParticipant0");
+        participantId.setName("DCAEParticipant0");
         participantId.setVersion("1.0.0");
 
         participantStateChangeMsg.setParticipantId(participantId);
@@ -146,7 +125,7 @@ public class TestListenerUtils {
         controlLoopId.setVersion("1.0.0");
 
         ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("CDSParticipant0");
+        participantId.setName("DCAEParticipant0");
         participantId.setVersion("1.0.0");
 
         participantClStateChangeMsg.setControlLoopId(controlLoopId);
@@ -169,7 +148,7 @@ public class TestListenerUtils {
         controlLoopId.setVersion("1.0.0");
 
         ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("CDSParticipant0");
+        participantId.setName("DCAEParticipant0");
         participantId.setVersion("1.0.0");
 
         clUpdateMsg.setControlLoopId(controlLoopId);
@@ -212,7 +191,7 @@ public class TestListenerUtils {
      */
     public static ParticipantHealthCheck createParticipantHealthCheckMsg() {
         ToscaConceptIdentifier participantId = new ToscaConceptIdentifier();
-        participantId.setName("CDSParticipant0");
+        participantId.setName("DCAEParticipant0");
         participantId.setVersion("1.0.0");
 
         ToscaConceptIdentifier controlLoopId = new ToscaConceptIdentifier();

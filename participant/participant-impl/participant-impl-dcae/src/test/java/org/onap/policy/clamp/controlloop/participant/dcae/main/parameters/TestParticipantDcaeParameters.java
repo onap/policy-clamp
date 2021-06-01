@@ -20,14 +20,12 @@
 
 package org.onap.policy.clamp.controlloop.participant.dcae.main.parameters;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.participant.intermediary.parameters.ParticipantIntermediaryParameters;
 import org.onap.policy.common.endpoints.parameters.TopicParameterGroup;
 import org.onap.policy.common.parameters.ValidationResult;
@@ -36,17 +34,17 @@ import org.onap.policy.common.parameters.ValidationResult;
  * Class to perform unit test of {@link ParticipantParameterGroup}.
  *
  */
-public class TestParticipantDcaeParameters {
+class TestParticipantDcaeParameters {
     CommonTestData commonTestData = new CommonTestData();
 
     @Test
-    public void testParticipantParameterGroup_Named() {
+    void testParticipantParameterGroup_Named() {
         final ParticipantDcaeParameters participantParameters = new ParticipantDcaeParameters("my-name");
         assertEquals("my-name", participantParameters.getName());
     }
 
     @Test
-    public void testParticipantParameterGroup() {
+    void testParticipantParameterGroup() {
         final ParticipantDcaeParameters participantParameters = commonTestData.toObject(
                 commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME),
                 ParticipantDcaeParameters.class);
@@ -64,7 +62,7 @@ public class TestParticipantDcaeParameters {
     }
 
     @Test
-    public void testParticipantParameterGroup_EmptyParticipantIntermediaryParameters() {
+    void testParticipantParameterGroup_EmptyParticipantIntermediaryParameters() {
         final Map<String, Object> map =
                 commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME);
         map.replace("intermediaryParameters", commonTestData.getIntermediaryParametersMap(true));
@@ -75,7 +73,7 @@ public class TestParticipantDcaeParameters {
     }
 
     @Test
-    public void testParticipantParameterGroup_EmptyTopicParameters() {
+    void testParticipantParameterGroup_EmptyTopicParameters() {
         final Map<String, Object> map =
                 commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME);
         final Map<String, Object> intermediaryParametersMap = commonTestData.getIntermediaryParametersMap(false);
