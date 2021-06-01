@@ -42,7 +42,6 @@ public class ClRuntimeParameterGroup extends ParameterGroupImpl {
     private PolicyModelsProviderParameters databaseProviderParameters;
     private ParticipantParameters participantParameters;
     private TopicParameterGroup topicParameterGroup;
-    private List<BusTopicParams> healthCheckRestClientParameters;
 
     /**
      * Create the Control Loop parameter group.
