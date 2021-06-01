@@ -21,19 +21,16 @@
 package org.onap.policy.clamp.controlloop.participant.dcae.httpclient;
 
 import org.apache.http.HttpStatus;
+import org.onap.policy.clamp.controlloop.participant.dcae.main.parameters.ParticipantDcaeParameters;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.ExternalComponent;
 import org.onap.policy.clamp.controlloop.participant.dcae.model.Loop;
-import org.onap.policy.common.endpoints.parameters.RestServerParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ClampHttpClient extends AbstractHttpClient {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClampHttpClient.class);
 
     private static final String STATUS = "/restservices/clds/v2/loop/getstatus/";
     private static final String CREATE = "/restservices/clds/v2/loop/create/%s?templateName=%s";
-    private static final String UPDATE = "/restservices/clds/v2/loop/updateMicroservicePolicy/";
     private static final String DEPLOY = "/restservices/clds/v2/loop/deploy/";
     private static final String STOP = "/restservices/clds/v2/loop/stop/";
     private static final String DELETE = "/restservices/clds/v2/loop/delete/";
@@ -44,8 +41,8 @@ public class ClampHttpClient extends AbstractHttpClient {
     /**
      * Constructor.
      */
-    public ClampHttpClient(RestServerParameters restServerParameters) {
-        super(restServerParameters);
+    public ClampHttpClient(ParticipantDcaeParameters parameters) {
+        super(parameters.getClampClientParameters());
     }
 
     /**
@@ -60,23 +57,12 @@ public class ClampHttpClient extends AbstractHttpClient {
     }
 
     /**
-     * Update.
-     *
-     * @param loopName the loopName
-     * @param jsonEntity the Json entity
-     * @return true
-     */
-    public boolean update(String loopName, String jsonEntity) {
-        return executePost(UPDATE + loopName, HttpStatus.SC_OK) != null;
-    }
-
-    /**
      * Deploy.
      *
      * @param loopName the loopName
      * @return true
      */
-    public boolean deploy(String loopName) { // DCAE
+    public boolean deploy(String loopName) {
         return executePut(DEPLOY + loopName, HttpStatus.SC_ACCEPTED);
     }
 

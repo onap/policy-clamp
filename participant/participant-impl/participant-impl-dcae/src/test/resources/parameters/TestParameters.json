@@ -1,22 +1,21 @@
 {
     "name": "ControlLoopParticipantGroup",
     "clampClientParameters": {
-        "name": "Clamp",
-        "host": "0.0.0.0",
+        "clientName": "Clamp",
+        "hostname": "0.0.0.0",
         "port": 8443,
         "userName": "admin",
         "password": "password",
-        "https": true,
-        "aaf": false
+        "useHttps": true,
+        "allowSelfSignedCerts": false
     },
     "consulClientParameters": {
-        "name": "Clamp",
-        "host": "consul",
+        "clientName": "Consul",
+        "hostname": "consul",
         "port": 31321,
         "userName": "admin",
         "password": "password",
-        "https": false,
-        "aaf": false
+        "useHttps": false
     },
     "intermediaryParameters": {
         "name": "Participant parameters",
