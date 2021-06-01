@@ -20,79 +20,39 @@
 
 package org.onap.policy.clamp.controlloop.participant.policy.main.parameters;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
-import org.apache.commons.io.DirectoryWalker.CancelException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.policy.main.startstop.ParticipantPolicyCommandLineArguments;
 import org.onap.policy.common.utils.coder.CoderException;
 
-public class TestParticipantPolicyParameterHandler {
+class TestParticipantPolicyParameterHandler {
 
     @Test
-    public void testParameterHandlerNoParameterFile() throws ControlLoopException {
-        final String[] emptyArgumentString = { "-c", "src/test/resources/parameters/NoParametersFile.json" };
+    void testParameterHandlerNoParameterFile() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/NoParametersFile.json";
 
-        final ParticipantPolicyCommandLineArguments emptyArguments = new ParticipantPolicyCommandLineArguments();
-        emptyArguments.parse(emptyArgumentString);
-
-        assertThatThrownBy(() -> new ParticipantPolicyParameterHandler().getParameters(emptyArguments))
+        assertThatThrownBy(() -> new ParticipantPolicyParameterHandler().toParticipantDcaeParameters(path))
             .hasCauseInstanceOf(CoderException.class)
             .hasRootCauseInstanceOf(FileNotFoundException.class);
     }
 
     @Test
-    public void testParameterHandlerInvalidParameters() throws ControlLoopException {
-        final String[] invalidArgumentString = { "-c", "src/test/resources/parameters/InvalidParameters.json" };
+    void testParameterHandlerInvalidParameters() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/InvalidParameters.json";
 
-        final ParticipantPolicyCommandLineArguments invalidArguments =
-                new ParticipantPolicyCommandLineArguments();
-        invalidArguments.parse(invalidArgumentString);
-
-        assertThatThrownBy(() -> new ParticipantPolicyParameterHandler().getParameters(invalidArguments))
+        assertThatThrownBy(() -> new ParticipantPolicyParameterHandler().toParticipantDcaeParameters(path))
             .hasMessageStartingWith("error reading parameters from")
             .hasCauseInstanceOf(CoderException.class);
     }
 
     @Test
-    public void testParticipantPolicyParameters() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-c", "src/test/resources/parameters/TestParameters.json" };
-
-        final ParticipantPolicyCommandLineArguments arguments = new ParticipantPolicyCommandLineArguments();
-        arguments.parse(participantConfigParameters);
-
+    void testParticipantParameterGroup() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/TestParameters.json";
         final ParticipantPolicyParameters parGroup = new ParticipantPolicyParameterHandler()
-                .getParameters(arguments);
-        assertTrue(arguments.checkSetConfigurationFilePath());
+                .toParticipantDcaeParameters(path);
         assertEquals(CommonTestData.PARTICIPANT_GROUP_NAME, parGroup.getName());
-    }
-
-    @Test
-    public void testParticipantVersion() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-v" };
-        final ParticipantPolicyCommandLineArguments arguments = new ParticipantPolicyCommandLineArguments();
-        final String version = arguments.parse(participantConfigParameters);
-        assertThat(arguments.parse(participantConfigParameters)).startsWith(
-                        "ONAP Tosca defined control loop Participant");
-    }
-
-    @Test
-    public void testParticipantHelp() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-h" };
-        final ParticipantPolicyCommandLineArguments arguments = new ParticipantPolicyCommandLineArguments();
-        assertThat(arguments.parse(participantConfigParameters)).startsWith("usage:");
-    }
-
-    @Test
-    public void testParticipantInvalidOption() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-d" };
-        final ParticipantPolicyCommandLineArguments arguments = new ParticipantPolicyCommandLineArguments();
-        assertThatThrownBy(() -> arguments.parse(participantConfigParameters))
-            .hasMessageStartingWith("invalid command line arguments specified");
     }
 }

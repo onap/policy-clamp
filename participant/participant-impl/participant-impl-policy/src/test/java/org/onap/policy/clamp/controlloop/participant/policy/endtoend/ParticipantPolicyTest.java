@@ -18,117 +18,112 @@
  * ============LICENSE_END=========================================================
  */
 
-package org.onap.policy.clamp.controlloop.participant.policy.main.handler;
+package org.onap.policy.clamp.controlloop.participant.policy.endtoend;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.onap.policy.clamp.controlloop.common.ControlLoopConstants;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopStateChangeListener;
 import org.onap.policy.clamp.controlloop.participant.intermediary.comm.ControlLoopUpdateListener;
-import org.onap.policy.clamp.controlloop.participant.policy.main.parameters.CommonTestData;
-import org.onap.policy.clamp.controlloop.participant.policy.main.startstop.Main;
-import org.onap.policy.clamp.controlloop.participant.policy.main.startstop.ParticipantPolicyActivator;
 import org.onap.policy.clamp.controlloop.participant.policy.main.utils.TestListenerUtils;
 import org.onap.policy.common.endpoints.event.comm.Topic.CommInfrastructure;
-import org.onap.policy.common.utils.services.Registry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-public class TestPolicyHandler {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@TestPropertySource(properties = "participant.file=src/test/resources/parameters/TestParameters.json")
+class ParticipantPolicyTest {
 
-    private static ControlLoopUpdateListener clUpdateListener;
-    private ControlLoopStateChangeListener clStateChangeListener;
-    private static ParticipantControlLoopUpdate participantControlLoopUpdateMsg;
-    private ParticipantControlLoopStateChange participantControlLoopStateChangeMsg;
-    private static final String PARTICIPANTS_ENDPOINT = "participants";
-    private static final String ELEMENTS_ENDPOINT = "elements";
+    private static final Object lockit = new Object();
     private static final CommInfrastructure INFRA = CommInfrastructure.NOOP;
     private static final String TOPIC = "my-topic";
-    private static final Object lockit = new Object();
-    static CommonTestData commonTestData = new CommonTestData();
 
-    /**
-     * Setup before class, instantiate Main.
-     *
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        Registry.newRegistry();
-        final String[] configParameters = {"-c", "src/test/resources/parameters/TestParameters.json"};
-        Main main = new Main(configParameters);
-        assertTrue(main.isRunning());
-        TestListenerUtils.initParticipantHandler();
-
-        clUpdateListener = new ControlLoopUpdateListener(
-                PolicyHandler.getInstance()
-                .getPolicyProvider()
-                .getIntermediaryApi()
-                .getParticipantHandler());
-        participantControlLoopUpdateMsg =
-                TestListenerUtils.createControlLoopUpdateMsg();
-        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
-    }
+    @Autowired
+    private ParticipantIntermediaryApi participantIntermediaryApi;
 
     @Test
-    public void testUpdatePolicyTypes() throws Exception {
+    void testUpdatePolicyTypes() {
+        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
+
         // Verify that the ToscaServicetemplate has policy_types
         assertNotNull(participantControlLoopUpdateMsg.getControlLoopDefinition().getPolicyTypes());
 
         synchronized (lockit) {
+            ControlLoopUpdateListener clUpdateListener =
+                    new ControlLoopUpdateListener(participantIntermediaryApi.getParticipantHandler());
+
             clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
         }
         // Verify the result of GET participants with what is stored
         assertEquals("org.onap.PM_Policy",
-                TestListenerUtils.getParticipantHandler().getParticipantId().getName());
+                participantIntermediaryApi.getParticipantHandler().getParticipantId().getName());
     }
 
     @Test
-    public void testUpdatePolicies() throws Exception {
+    void testUpdatePolicies() throws Exception {
+        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
+
         // Add policies to the toscaServiceTemplate
         TestListenerUtils.addPoliciesToToscaServiceTemplate(participantControlLoopUpdateMsg.getControlLoopDefinition());
 
         // Verify that the ToscaServicetemplate has policies
-        assertNotNull(participantControlLoopUpdateMsg.getControlLoopDefinition()
-                .getToscaTopologyTemplate().getPolicies());
+        assertNotNull(
+                participantControlLoopUpdateMsg.getControlLoopDefinition().getToscaTopologyTemplate().getPolicies());
 
         synchronized (lockit) {
+            ControlLoopUpdateListener clUpdateListener =
+                    new ControlLoopUpdateListener(participantIntermediaryApi.getParticipantHandler());
+
             clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
         }
         // Verify the result of GET participants with what is stored
         assertEquals("org.onap.PM_Policy",
-                TestListenerUtils.getParticipantHandler().getParticipantId().getName());
+                participantIntermediaryApi.getParticipantHandler().getParticipantId().getName());
     }
 
     @Test
-    public void testDeletePoliciesAndPolicyTypes() throws Exception {
+    void testDeletePoliciesAndPolicyTypes() throws Exception {
+        ParticipantControlLoopUpdate participantControlLoopUpdateMsg = TestListenerUtils.createControlLoopUpdateMsg();
+        participantControlLoopUpdateMsg.getControlLoop().setOrderedState(ControlLoopOrderedState.PASSIVE);
+
         // Add policies to the toscaServiceTemplate
         TestListenerUtils.addPoliciesToToscaServiceTemplate(participantControlLoopUpdateMsg.getControlLoopDefinition());
 
         // Verify that the ToscaServicetemplate has policies
-        assertNotNull(participantControlLoopUpdateMsg.getControlLoopDefinition()
-                .getToscaTopologyTemplate().getPolicies());
+        assertNotNull(
+                participantControlLoopUpdateMsg.getControlLoopDefinition().getToscaTopologyTemplate().getPolicies());
 
         synchronized (lockit) {
+            ControlLoopUpdateListener clUpdateListener =
+                    new ControlLoopUpdateListener(participantIntermediaryApi.getParticipantHandler());
+
             clUpdateListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopUpdateMsg);
         }
         // Verify the result of GET participants with what is stored
         assertEquals("org.onap.PM_Policy",
-                TestListenerUtils.getParticipantHandler().getParticipantId().getName());
+                participantIntermediaryApi.getParticipantHandler().getParticipantId().getName());
 
-        clStateChangeListener = new ControlLoopStateChangeListener(TestListenerUtils.getParticipantHandler());
-        participantControlLoopStateChangeMsg =
+        ControlLoopStateChangeListener clStateChangeListener =
+                new ControlLoopStateChangeListener(participantIntermediaryApi.getParticipantHandler());
+        ParticipantControlLoopStateChange participantControlLoopStateChangeMsg =
                 TestListenerUtils.createControlLoopStateChangeMsg(ControlLoopOrderedState.UNINITIALISED);
         participantControlLoopStateChangeMsg.setOrderedState(ControlLoopOrderedState.UNINITIALISED);
         clStateChangeListener.onTopicEvent(INFRA, TOPIC, null, participantControlLoopStateChangeMsg);
 
         // Verify the result of GET participants with what is stored
         assertEquals("org.onap.PM_Policy",
-                TestListenerUtils.getParticipantHandler().getParticipantId().getName());
+                participantIntermediaryApi.getParticipantHandler().getParticipantId().getName());
     }
 }

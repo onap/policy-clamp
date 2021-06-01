@@ -25,11 +25,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import lombok.Setter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ClElementStatistics;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopState;
 import org.onap.policy.clamp.controlloop.participant.intermediary.api.ControlLoopElementListener;
+import org.onap.policy.clamp.controlloop.participant.intermediary.api.ParticipantIntermediaryApi;
 import org.onap.policy.models.base.PfModelException;
 import org.onap.policy.models.base.PfModelRuntimeException;
 import org.onap.policy.models.provider.PolicyModelsProvider;
@@ -38,15 +40,31 @@ import org.onap.policy.models.tosca.authorative.concepts.ToscaPolicyType;
 import org.onap.policy.models.tosca.authorative.concepts.ToscaServiceTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * This class handles implementation of controlLoopElement updates.
  */
+@Component
 public class ControlLoopElementHandler implements ControlLoopElementListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ControlLoopElementHandler.class);
-    private static final Map<String, String> policyTypeMap = new LinkedHashMap<>();
-    private static final Map<String, String> policyMap = new LinkedHashMap<>();
+    private final Map<String, String> policyTypeMap = new LinkedHashMap<>();
+    private final Map<String, String> policyMap = new LinkedHashMap<>();
+
+    private final PolicyModelsProvider databaseProvider;
+
+    @Setter
+    private ParticipantIntermediaryApi intermediaryApi;
+
+    /**
+     * constructor.
+     *
+     * @param databaseProvider the Policy Models Provider
+     */
+    public ControlLoopElementHandler(PolicyModelsProvider databaseProvider) {
+        this.databaseProvider = databaseProvider;
+    }
 
     /**
      * Callback method to handle a control loop element state change.
@@ -55,12 +73,10 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @param currentState the current state of the control loop element
      * @param newState the state to which the control loop element is changing to
      * @throws PfModelException in case of an exception
-    */
+     */
     @Override
-    public void controlLoopElementStateChange(UUID controlLoopElementId,
-            ControlLoopState currentState,
+    public void controlLoopElementStateChange(UUID controlLoopElementId, ControlLoopState currentState,
             ControlLoopOrderedState newState) throws PfModelException {
-        PolicyProvider policyProvider = PolicyHandler.getInstance().getPolicyProvider();
         switch (newState) {
             case UNINITIALISED:
                 try {
@@ -70,14 +86,10 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
                 }
                 break;
             case PASSIVE:
-                policyProvider.getIntermediaryApi()
-                    .updateControlLoopElementState(controlLoopElementId, newState,
-                            ControlLoopState.PASSIVE);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.PASSIVE);
                 break;
             case RUNNING:
-                policyProvider.getIntermediaryApi()
-                    .updateControlLoopElementState(controlLoopElementId, newState,
-                            ControlLoopState.RUNNING);
+                intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.RUNNING);
                 break;
             default:
                 LOGGER.debug("Unknown orderedstate {}", newState);
@@ -85,25 +97,16 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
         }
     }
 
-    private void deletePolicyData(UUID controlLoopElementId,
-            ControlLoopOrderedState newState) throws PfModelException {
-        PolicyModelsProvider dbProvider = PolicyHandler.getInstance().getDatabaseProvider();
-        PolicyProvider policyProvider = PolicyHandler.getInstance().getPolicyProvider();
-        if (policyMap != null) {
-            // Delete all policies of this controlLoop from policy framework
-            for (Entry<String, String> policy : policyMap.entrySet()) {
-                dbProvider.deletePolicy(policy.getKey(), policy.getValue());
-            }
+    private void deletePolicyData(UUID controlLoopElementId, ControlLoopOrderedState newState) throws PfModelException {
+        // Delete all policies of this controlLoop from policy framework
+        for (Entry<String, String> policy : policyMap.entrySet()) {
+            databaseProvider.deletePolicy(policy.getKey(), policy.getValue());
         }
-        if (policyTypeMap != null) {
-            // Delete all policy types of this control loop from policy framework
-            for (Entry<String, String> policy : policyTypeMap.entrySet()) {
-                dbProvider.deletePolicyType(policy.getKey(), policy.getValue());
-            }
+        // Delete all policy types of this control loop from policy framework
+        for (Entry<String, String> policy : policyTypeMap.entrySet()) {
+            databaseProvider.deletePolicyType(policy.getKey(), policy.getValue());
         }
-        policyProvider.getIntermediaryApi()
-            .updateControlLoopElementState(controlLoopElementId, newState,
-                    ControlLoopState.UNINITIALISED);
+        intermediaryApi.updateControlLoopElementState(controlLoopElementId, newState, ControlLoopState.UNINITIALISED);
     }
 
     /**
@@ -114,27 +117,25 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @throws PfModelException in case of an exception
      */
     @Override
-    public void controlLoopElementUpdate(ControlLoopElement element,
-            ToscaServiceTemplate controlLoopDefinition) throws PfModelException {
-        PolicyModelsProvider dbProvider = PolicyHandler.getInstance().getDatabaseProvider();
-        PolicyProvider policyProvider = PolicyHandler.getInstance().getPolicyProvider();
-
-        policyProvider.getIntermediaryApi()
-            .updateControlLoopElementState(element.getId(), element.getOrderedState(), ControlLoopState.PASSIVE);
+    public void controlLoopElementUpdate(ControlLoopElement element, ToscaServiceTemplate controlLoopDefinition)
+            throws PfModelException {
+        intermediaryApi.updateControlLoopElementState(element.getId(), element.getOrderedState(),
+                ControlLoopState.PASSIVE);
         if (controlLoopDefinition.getPolicyTypes() != null) {
             for (ToscaPolicyType policyType : controlLoopDefinition.getPolicyTypes().values()) {
                 policyTypeMap.put(policyType.getName(), policyType.getVersion());
             }
-            dbProvider.createPolicyTypes(controlLoopDefinition);
+            databaseProvider.createPolicyTypes(controlLoopDefinition);
         }
         if (controlLoopDefinition.getToscaTopologyTemplate().getPolicies() != null) {
-            for (Map<String, ToscaPolicy> foundPolicyMap : controlLoopDefinition
-                            .getToscaTopologyTemplate().getPolicies()) {
-                for (ToscaPolicy policy : foundPolicyMap.values()) {
+            for (Map<String, ToscaPolicy> foundPolicyMap : controlLoopDefinition.getToscaTopologyTemplate()
+                    .getPolicies()) {
+                for (Entry<String, ToscaPolicy> policyEntry : foundPolicyMap.entrySet()) {
+                    ToscaPolicy policy = policyEntry.getValue();
                     policyMap.put(policy.getName(), policy.getVersion());
                 }
             }
-            dbProvider.createPolicies(controlLoopDefinition);
+            databaseProvider.createPolicies(controlLoopDefinition);
         }
     }
 
@@ -144,16 +145,13 @@ public class ControlLoopElementHandler implements ControlLoopElementListener {
      * @param controlLoopElementId controlloop element id
      */
     @Override
-    public void handleStatistics(UUID controlLoopElementId) {
-        PolicyProvider policyProvider = PolicyHandler.getInstance().getPolicyProvider();
-        ControlLoopElement clElement = policyProvider.getIntermediaryApi()
-               .getControlLoopElement(controlLoopElementId);
+    public void handleStatistics(UUID controlLoopElementId) throws PfModelException {
+        ControlLoopElement clElement = intermediaryApi.getControlLoopElement(controlLoopElementId);
         if (clElement != null) {
             ClElementStatistics clElementStatistics = new ClElementStatistics();
             clElementStatistics.setControlLoopState(clElement.getState());
             clElementStatistics.setTimeStamp(Instant.now());
-            policyProvider.getIntermediaryApi()
-                .updateControlLoopElementStatistics(controlLoopElementId, clElementStatistics);
+            intermediaryApi.updateControlLoopElementStatistics(controlLoopElementId, clElementStatistics);
         }
     }
 }

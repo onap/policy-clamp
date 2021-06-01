@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: prod
+
+participant:
+  file: src/main/resources/config/PolicyParticipantConfig.json
