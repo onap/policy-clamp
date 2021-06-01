@@ -47,27 +47,7 @@
                 "topicCommInfrastructure": "dmaap"
             }
         ]
-    },
-    "healthCheckRestClientParameters": [
-        {
-            "clientName": "api",
-            "hostname": "policy-api",
-            "port": 6969,
-            "userName": "healthcheck",
-            "password": "zb!XztG34",
-            "useHttps": true,
-            "basePath": "policy/api/v1/healthcheck"
-        },
-        {
-            "clientName": "distribution",
-            "hostname": "policy-distribution",
-            "port": 6969,
-            "userName": "healthcheck",
-            "password": "zb!XztG34",
-            "useHttps": true,
-            "basePath": "healthcheck"
-        }
-    ]
+    }
 }
 
 
