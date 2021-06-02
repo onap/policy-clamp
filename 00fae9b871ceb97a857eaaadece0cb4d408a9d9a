@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6522b31a_5ebdab46",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/Application.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-02T10:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8785090_fe43e9fb",
+      "range": {
+        "startLine": 36,
+        "startChar": 13,
+        "endLine": 36,
+        "endChar": 24
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "84307888_2464fdb3",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8796fd7_19aaff96",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-02T10:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84307888_2464fdb3",
+      "range": {
+        "startLine": 71,
+        "startChar": 33,
+        "endLine": 71,
+        "endChar": 54
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -83,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "ad8be84f_2a67b37b",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-02T10:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a02d5c74_affca4b1",
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f297236b_cc3f818f",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
         "patchSetId": 1
@@ -97,6 +163,24 @@
       "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a761f6f_542ef47a",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-02T10:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f297236b_cc3f818f",
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -123,6 +207,30 @@
     },
     {
       "key": {
+        "uuid": "97f285d1_0ad04423",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/ConsulDcaeHttpClient.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-02T10:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e6d5a5c_280f6d5c",
+      "range": {
+        "startLine": 30,
+        "startChar": 41,
+        "endLine": 30,
+        "endChar": 66
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69ce8983_da8112bd",
         "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
         "patchSetId": 1
@@ -143,6 +251,30 @@
       "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "583f47f4_f88e1cdb",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-02T10:38:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "69ce8983_da8112bd",
+      "range": {
+        "startLine": 55,
+        "startChar": 4,
+        "endLine": 56,
+        "endChar": 68
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -190,6 +322,30 @@
       "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b284ce3e_a1858a3d",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-02T10:38:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7edb5b8_57ee4af0",
+      "range": {
+        "startLine": 73,
+        "startChar": 12,
+        "endLine": 73,
+        "endChar": 28
+      },
+      "revId": "00fae9b871ceb97a857eaaadece0cb4d408a9d9a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
