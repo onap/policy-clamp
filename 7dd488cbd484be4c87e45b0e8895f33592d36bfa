@@ -16,6 +16,24 @@
       "revId": "7dd488cbd484be4c87e45b0e8895f33592d36bfa",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c7d85b2_3e1466eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-03T17:29:13Z",
+      "side": 1,
+      "message": "Please see:\nhttps://wiki.onap.org/display/DW/Commit+Messages",
+      "parentUuid": "4973d941_bac6d1dc",
+      "revId": "7dd488cbd484be4c87e45b0e8895f33592d36bfa",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
