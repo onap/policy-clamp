@@ -22,6 +22,30 @@
       "revId": "a428f971bc84168f92c3cdbe70f74aa59c60f00d",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21d23947_854a500c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 7565
+      },
+      "writtenOn": "2021-06-03T14:06:59Z",
+      "side": 1,
+      "message": "the Story POLICY-3209 has been divided in POLICY-3244 (I64cef98a4b1a405160d533983baf7a860f1816f5), POLICY-3245 (Iadacaba3b2a30c67adbe77b8b17debce2f2abb39) and POLICY-3246 (is under way)",
+      "parentUuid": "ed41bd87_ba572c0e",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 10,
+        "endChar": 52
+      },
+      "revId": "a428f971bc84168f92c3cdbe70f74aa59c60f00d",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
