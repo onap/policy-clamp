@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c9328c9f_8946f0b5",
+        "filename": "participant/participant-impl/participant-impl-policy/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-04T14:40:53Z",
+      "side": 1,
+      "message": "should it be moved to policy/parent?",
+      "revId": "03b3a0fc637e768adc67a0d6ce5b71b8ba295463",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
