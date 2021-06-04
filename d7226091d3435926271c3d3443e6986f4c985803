@@ -39,6 +39,30 @@
       "revId": "d7226091d3435926271c3d3443e6986f4c985803",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ac899e8_ceed51af",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-04T15:13:36Z",
+      "side": 1,
+      "message": "Agreed, the apis doesn\u0027t seem very restful in general, looking a little closer to them.",
+      "parentUuid": "a0106763_0576c2c2",
+      "range": {
+        "startLine": 331,
+        "startChar": 26,
+        "endLine": 331,
+        "endChar": 58
+      },
+      "revId": "d7226091d3435926271c3d3443e6986f4c985803",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
