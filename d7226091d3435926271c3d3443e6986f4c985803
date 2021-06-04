@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0106763_0576c2c2",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 3239
+      },
+      "writtenOn": "2021-06-04T14:57:18Z",
+      "side": 1,
+      "message": "In PAP \u0026 API components, we have kept name \u0026 version of entities as path param instead. But I see in this file, other api\u0027s are also using query param. Not sure if we want to have a common approach.",
+      "range": {
+        "startLine": 331,
+        "startChar": 26,
+        "endLine": 331,
+        "endChar": 58
+      },
+      "revId": "d7226091d3435926271c3d3443e6986f4c985803",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
