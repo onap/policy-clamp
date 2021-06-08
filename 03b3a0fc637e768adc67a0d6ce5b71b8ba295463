@@ -16,6 +16,23 @@
       "revId": "03b3a0fc637e768adc67a0d6ce5b71b8ba295463",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c58c4b0_a2548efa",
+        "filename": "participant/participant-impl/participant-impl-policy/src/main/resources/config/application.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-08T07:22:05Z",
+      "side": 1,
+      "message": "May be I missed it but where is the Spring profile Prod defined ?",
+      "revId": "03b3a0fc637e768adc67a0d6ce5b71b8ba295463",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
     }
   ]
 }
