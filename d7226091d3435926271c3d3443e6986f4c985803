@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ceb3fb00_065254d1",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-08T08:57:10Z",
+      "side": 1,
+      "message": "As this would require a number of planned changes, I have raised a JIRA to investigate a restructure in future. https://jira.onap.org/browse/POLICY-3368",
+      "parentUuid": "20520f45_07f5aafa",
+      "revId": "d7226091d3435926271c3d3443e6986f4c985803",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a0106763_0576c2c2",
         "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
         "patchSetId": 2
@@ -54,6 +72,30 @@
       "side": 1,
       "message": "Agreed, the apis doesn\u0027t seem very restful in general, looking a little closer to them.",
       "parentUuid": "a0106763_0576c2c2",
+      "range": {
+        "startLine": 331,
+        "startChar": 26,
+        "endLine": 331,
+        "endChar": 58
+      },
+      "revId": "d7226091d3435926271c3d3443e6986f4c985803",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddb28a95_cd0f9d75",
+        "filename": "runtime-controlloop/src/main/java/org/onap/policy/clamp/controlloop/runtime/commissioning/rest/CommissioningController.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 7603
+      },
+      "writtenOn": "2021-06-08T08:57:10Z",
+      "side": 1,
+      "message": "As this would require a number of planned changes, I have raised a JIRA to investigate a restructure in future. https://jira.onap.org/browse/POLICY-3368",
+      "parentUuid": "8ac899e8_ceed51af",
       "range": {
         "startLine": 331,
         "startChar": 26,
