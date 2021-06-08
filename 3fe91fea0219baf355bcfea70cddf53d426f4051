@@ -561,6 +561,30 @@
     },
     {
       "key": {
+        "uuid": "f3fb0c21_67c752b4",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:21:08Z",
+      "side": 1,
+      "message": "Done, methods should be synchronized",
+      "parentUuid": "7c75c275_cb12eab2",
+      "range": {
+        "startLine": 61,
+        "startChar": 63,
+        "endLine": 61,
+        "endChar": 70
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "95012f98_0b1958aa",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -1165,6 +1189,24 @@
       "side": 1,
       "message": "Yes, this class should be restructured to spawn a thread in which the command is run, and the standard output/error should be monitored, otherwise it could hang.\n\nMaybe also have a configured timeout value for the command.",
       "parentUuid": "80148dea_b3010662",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8f6371c_29ffe2c9",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:21:08Z",
+      "side": 1,
+      "message": "I will raise another review to add supervision of the command execution.",
+      "parentUuid": "436e4e41_4c02eb34",
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
