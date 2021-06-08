@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "996de441_7e571a1e",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/httpclient/AbstractHttpClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-08T07:52:57Z",
+      "side": 1,
+      "message": "You can create a String constant for this value: \"\"request to {} failed\" as it\u0027s used 4 times",
+      "revId": "5c63701203f71ea6f1bedaf54fbbcae78153ee58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "555282f6_b94b6ba3",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-08T07:52:57Z",
+      "side": 1,
+      "message": "Create a config in application.yaml for that instead of hardcoding it",
+      "revId": "5c63701203f71ea6f1bedaf54fbbcae78153ee58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fea80302_884d5885",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-08T07:52:57Z",
+      "side": 1,
+      "message": "Could we have Json file in the resource folder instead of hardcoding it here ?",
+      "revId": "5c63701203f71ea6f1bedaf54fbbcae78153ee58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ea0838a_e28571ff",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/java/org/onap/policy/clamp/controlloop/participant/dcae/main/parameters/ParticipantDcaeParameters.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-08T07:52:57Z",
+      "side": 1,
+      "message": "You can create a String constant for this \"is blank\" as it\u0027s used 4 times",
+      "revId": "5c63701203f71ea6f1bedaf54fbbcae78153ee58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "347b919a_91cc3285",
+        "filename": "participant/participant-impl/participant-impl-dcae/src/main/resources/config/application.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-08T07:52:57Z",
+      "side": 1,
+      "message": "Where s this profile defined ?",
+      "revId": "5c63701203f71ea6f1bedaf54fbbcae78153ee58",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
