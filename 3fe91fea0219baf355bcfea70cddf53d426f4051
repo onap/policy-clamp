@@ -513,6 +513,54 @@
     },
     {
       "key": {
+        "uuid": "d55aa224_aaee981d",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "This variable should not be static because each control loop element can have multiple charts and there can be more than one control loop element in each participant, particularly the K8S one.\n\nIt is changed to not be static.",
+      "parentUuid": "e5213be2_5305498b",
+      "range": {
+        "startLine": 61,
+        "startChar": 12,
+        "endLine": 61,
+        "endChar": 18
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0bb86eb_5a4e10cb",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Yes, changed to use UUID",
+      "parentUuid": "c0ad6390_97cc640b",
+      "range": {
+        "startLine": 61,
+        "startChar": 29,
+        "endLine": 61,
+        "endChar": 35
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "95012f98_0b1958aa",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
         "patchSetId": 3
@@ -589,6 +637,24 @@
       "side": 1,
       "message": "Don\u0027t know why my eclipse isn\u0027t flagging these.",
       "parentUuid": "39fac380_95fb9b02",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58500b40_c0a7aeca",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/handler/ControlLoopElementHandler.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a96d5907_179cc68f",
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -1052,6 +1118,24 @@
     },
     {
       "key": {
+        "uuid": "84f0c4df_76e01a80",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a8ac3105_f221c47a",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80148dea_b3010662",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 3
@@ -1063,6 +1147,24 @@
       "writtenOn": "2021-05-28T14:19:23Z",
       "side": 1,
       "message": "if the process were to generate a lot of output, this could potentially block forever - need to read stdout \u0026 stderr before waiting for exit",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "436e4e41_4c02eb34",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Yes, this class should be restructured to spawn a thread in which the command is run, and the standard output/error should be monitored, otherwise it could hang.\n\nMaybe also have a configured timeout value for the command.",
+      "parentUuid": "80148dea_b3010662",
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
@@ -1398,6 +1500,30 @@
     },
     {
       "key": {
+        "uuid": "1fc52418_e0bd0680",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f4fcee8_e6899f2f",
+      "range": {
+        "startLine": 166,
+        "startChar": 33,
+        "endLine": 166,
+        "endChar": 50
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "146ddd7a_4a058d19",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 3
@@ -1409,6 +1535,30 @@
       "writtenOn": "2021-05-28T14:19:23Z",
       "side": 1,
       "message": "delete Arrays.asList()",
+      "range": {
+        "startLine": 171,
+        "startChar": 44,
+        "endLine": 171,
+        "endChar": 58
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ba3472a_fe6d9a48",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "146ddd7a_4a058d19",
       "range": {
         "startLine": 171,
         "startChar": 44,
@@ -1444,6 +1594,30 @@
     },
     {
       "key": {
+        "uuid": "a0c67b7e_f68f30cf",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7c543378_6d1b776b",
+      "range": {
+        "startLine": 178,
+        "startChar": 33,
+        "endLine": 178,
+        "endChar": 47
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1768c43e_f8784efe",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 3
@@ -1467,6 +1641,30 @@
     },
     {
       "key": {
+        "uuid": "8bed630e_5a291d60",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1768c43e_f8784efe",
+      "range": {
+        "startLine": 188,
+        "startChar": 8,
+        "endLine": 189,
+        "endChar": 46
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "56bc5190_528faad2",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 3
@@ -1478,6 +1676,30 @@
       "writtenOn": "2021-05-28T14:19:23Z",
       "side": 1,
       "message": "could use String.join() and shrink this to a one-liner (and avoid the need to call trim())",
+      "range": {
+        "startLine": 207,
+        "startChar": 8,
+        "endLine": 209,
+        "endChar": 37
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dd39b7f_e10e7e85",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-08T14:17:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56bc5190_528faad2",
       "range": {
         "startLine": 207,
         "startChar": 8,
