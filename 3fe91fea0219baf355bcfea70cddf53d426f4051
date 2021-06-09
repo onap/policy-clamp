@@ -1953,6 +1953,30 @@
     },
     {
       "key": {
+        "uuid": "f0dd7f84_12a184a4",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-09T11:30:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12dbbf54_091da8e0",
+      "range": {
+        "startLine": 46,
+        "startChar": 49,
+        "endLine": 46,
+        "endChar": 77
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "15d99290_35cef56f",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
         "patchSetId": 3
@@ -2157,6 +2181,29 @@
         "startChar": 78,
         "endLine": 164,
         "endChar": 92
+      },
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2c58700_dd127e4d",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/service/ChartStore.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-09T11:30:56Z",
+      "side": 1,
+      "message": "I didn\u0027t like the use of \"Database\" in this class as this is not a database, it is using a local file system to cache/store charts.",
+      "range": {
+        "startLine": 173,
+        "startChar": 41,
+        "endLine": 173,
+        "endChar": 49
       },
       "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
