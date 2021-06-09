@@ -30,26 +30,32 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.ResponseHeader;
 import java.util.List;
 import java.util.UUID;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant;
-import org.onap.policy.clamp.controlloop.models.messages.rest.SimpleResponse;
 import org.onap.policy.clamp.controlloop.models.messages.rest.TypedSimpleResponse;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.RestController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.onap.policy.clamp.controlloop.participant.simulator.main.rest.AbstractRestController;
+import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationProvider;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Class to provide REST end points for participant simulator to query/update details of all participants.
  */
-public class SimulationParticipantController extends RestController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimulationParticipantController.class);
+@RestController
+public class SimulationParticipantController extends AbstractRestController {
+
+    /**
+     * Constructor.
+     *
+     * @param simulationProvider the Simulation Provider
+     */
+    public SimulationParticipantController(SimulationProvider simulationProvider) {
+        super(simulationProvider);
+    }
 
     /**
      * Queries details of all participants within the simulator.
@@ -60,8 +66,7 @@ public class SimulationParticipantController extends RestController {
      * @return the participants
      */
     // @formatter:off
-    @GET
-    @Path("/participants/{name}/{version}")
+    @GetMapping("/participants/{name}/{version}")
     @ApiOperation(value = "Query details of the requested simulated participants",
             notes = "Queries details of the requested simulated participants, "
                     + "returning all participant details",
@@ -98,24 +103,14 @@ public class SimulationParticipantController extends RestController {
             }
     )
     // @formatter:on
-    public Response participants(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Participant name", required = true) @PathParam("name") String name,
-            @ApiParam(value = "Participant version", required = true) @PathParam("version") String version) {
+    public ResponseEntity<List<Participant>> participants(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Participant name", required = true) @PathVariable("name") String name,
+            @ApiParam(value = "Participant version", required = true) @PathVariable("version") String version) {
 
-        try {
-            List<Participant> response = getSimulationProvider().getParticipants(name, version);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
-
-        } catch (ControlLoopException cle) {
-            LOGGER.warn("get of participants failed", cle);
-            SimpleResponse resp = new SimpleResponse();
-            resp.setErrorDetails(cle.getErrorResponse().getErrorMessage());
-            return addLoggingHeaders(
-                    addVersionControlHeaders(Response.status(cle.getErrorResponse().getResponseCode())), requestId)
-                            .entity(resp).build();
-        }
-
+        return ResponseEntity.ok().body(getSimulationProvider().getParticipants(name, version));
     }
 
     /**
@@ -126,8 +121,7 @@ public class SimulationParticipantController extends RestController {
      * @return a response
      */
     // @formatter:off
-    @PUT
-    @Path("/participants")
+    @PutMapping("/participants")
     @ApiOperation(
             value = "Updates simulated participants",
             notes = "Updates simulated participants, returning the updated control loop definition IDs",
@@ -172,21 +166,12 @@ public class SimulationParticipantController extends RestController {
             }
         )
     // @formatter:on
-    public Response update(@HeaderParam(REQUEST_ID_NAME) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
-            @ApiParam(value = "Body of a participant", required = true) Participant body) {
+    public ResponseEntity<TypedSimpleResponse<Participant>> update(
+            @RequestHeader(
+                    name = REQUEST_ID_NAME,
+                    required = false) @ApiParam(REQUEST_ID_PARAM_DESCRIPTION) UUID requestId,
+            @ApiParam(value = "Body of a participant", required = true) @RequestBody Participant body) {
 
-        try {
-            TypedSimpleResponse<Participant> response = getSimulationProvider().updateParticipant(body);
-            return addLoggingHeaders(addVersionControlHeaders(Response.status(Status.OK)), requestId).entity(response)
-                    .build();
-
-        } catch (ControlLoopException cle) {
-            LOGGER.warn("update of participant failed", cle);
-            TypedSimpleResponse<Participant> resp = new TypedSimpleResponse<>();
-            resp.setErrorDetails(cle.getErrorResponse().getErrorMessage());
-            return addLoggingHeaders(
-                    addVersionControlHeaders(Response.status(cle.getErrorResponse().getResponseCode())), requestId)
-                            .entity(resp).build();
-        }
+        return ResponseEntity.ok().body(getSimulationProvider().updateParticipant(body));
     }
 }

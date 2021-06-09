@@ -27,34 +27,29 @@ import io.swagger.annotations.SecurityDefinition;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 import java.net.HttpURLConnection;
-import java.util.UUID;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationHandler;
 import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationProvider;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Common superclass to provide REST endpoints for the participant simulator.
  */
 // @formatter:off
-@Path("/onap/participantsim/v2")
+@RequestMapping(value = "/v2", produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML})
 @Api(value = "Participant Simulator API")
-@Produces({MediaType.APPLICATION_JSON, RestController.APPLICATION_YAML})
 @SwaggerDefinition(
     info = @Info(description =
                     "Participant Simulator", version = "v1.0",
                     title = "Participant Simulator"),
-    consumes = {MediaType.APPLICATION_JSON, RestController.APPLICATION_YAML},
-    produces = {MediaType.APPLICATION_JSON, RestController.APPLICATION_YAML},
+    consumes = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML},
+    produces = {MediaType.APPLICATION_JSON, AbstractRestController.APPLICATION_YAML},
     schemes = {SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS},
     tags = {@Tag(name = "participantsim", description = "Participant Simulator")},
     securityDefinition = @SecurityDefinition(basicAuthDefinitions = {@BasicAuthDefinition(key = "basicAuth")}))
 // @formatter:on
-public class RestController {
+public abstract class AbstractRestController {
     public static final String APPLICATION_YAML = "application/yaml";
 
     public static final String EXTENSION_NAME = "interface info";
@@ -90,41 +85,16 @@ public class RestController {
     public static final String AUTHENTICATION_ERROR_MESSAGE = "Authentication Error";
     public static final String AUTHORIZATION_ERROR_MESSAGE = "Authorization Error";
     public static final String SERVER_ERROR_MESSAGE = "Internal Server Error";
+
     @Getter(AccessLevel.PROTECTED)
     // The provider for simulation requests
     private SimulationProvider simulationProvider;
 
-
     /**
      * create a Rest Controller.
      */
-    public RestController() {
-        simulationProvider = SimulationHandler.getInstance().getSimulationProvider();
+    protected AbstractRestController(SimulationProvider simulationProvider) {
+        this.simulationProvider = simulationProvider;
     }
 
-    /**
-     * Adds version headers to the response.
-     *
-     * @param respBuilder response builder
-     * @return the response builder, with version headers
-     */
-    public ResponseBuilder addVersionControlHeaders(ResponseBuilder respBuilder) {
-        return respBuilder.header(VERSION_MINOR_NAME, "0").header(VERSION_PATCH_NAME, "0").header(VERSION_LATEST_NAME,
-                API_VERSION);
-    }
-
-    /**
-     * Adds logging headers to the response.
-     *
-     * @param respBuilder response builder
-     * @return the response builder, with version logging
-     */
-    public ResponseBuilder addLoggingHeaders(ResponseBuilder respBuilder, UUID requestId) {
-        if (requestId == null) {
-            // Generate a random uuid if client does not embed requestId in rest request
-            return respBuilder.header(REQUEST_ID_NAME, UUID.randomUUID());
-        }
-
-        return respBuilder.header(REQUEST_ID_NAME, requestId);
-    }
 }
