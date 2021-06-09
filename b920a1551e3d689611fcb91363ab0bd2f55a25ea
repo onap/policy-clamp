@@ -310,6 +310,24 @@
     },
     {
       "key": {
+        "uuid": "b70c5c0a_d18f167b",
+        "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T21:00:37Z",
+      "side": 1,
+      "message": "For now, I\u0027m OK with this, as that\u0027s how the other policy components do it.  Nevertheless, that\u0027s something we should keep in mind as we consider migrating to Spring.",
+      "parentUuid": "492be23e_d1fe6cf5",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e6c27d7_d9893860",
         "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
         "patchSetId": 1
