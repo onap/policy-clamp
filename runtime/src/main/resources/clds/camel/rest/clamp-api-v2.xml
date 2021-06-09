@@ -1461,6 +1461,44 @@
             </route>
         </post>
 
+        <get uri="/v2/toscaControlLoop/getToscaTemplate" outType="java.lang.String" bindingMode="off" produces="application/json">
+            <route>
+                <removeHeaders pattern="*"
+                               excludePattern="name|version"/>
+                <doTry>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=startLog(*, 'GET Tosca Service Template ')"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.authorization.AuthorizationController?method=authorize(*,'controlloop','','read')"/>
+                    <setHeader name="Content-Type">
+                        <constant>application/json</constant>
+                    </setHeader>
+                    <setProperty name="raiseHttpExceptionFlag">
+                        <simple resultType="java.lang.Boolean">true</simple>
+                    </setProperty>
+                    <to uri="direct:get-service-template"/>
+                    <to
+                            uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=endLog()"/>
+                    <doCatch>
+                        <exception>java.lang.Exception</exception>
+                        <handled>
+                            <constant>true</constant>
+                        </handled>
+                        <to
+                                uri="bean:org.onap.policy.clamp.flow.log.FlowLogOperation?method=errorLog()"/>
+                        <log loggingLevel="ERROR"
+                             message="GET Tosca Service Template JSON request failed: ${exception.stacktrace}"/>
+                        <setHeader name="CamelHttpResponseCode">
+                            <constant>500</constant>
+                        </setHeader>
+                        <setBody>
+                            <simple>GET Tosca Service Template JSON FAILED</simple>
+                        </setBody>
+                    </doCatch>
+                </doTry>
+            </route>
+        </get>
+
         <get uri="/v2/clampInformation" outType="org.onap.policy.clamp.clds.model.ClampInformation"
              produces="application/json">
             <route>
