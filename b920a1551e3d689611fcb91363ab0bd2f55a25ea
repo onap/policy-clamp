@@ -76,6 +76,24 @@
     },
     {
       "key": {
+        "uuid": "dcc15e2f_29ef57a9",
+        "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 477
+      },
+      "writtenOn": "2021-06-09T14:20:16Z",
+      "side": 1,
+      "message": "take a look at the same section in pap for reference on what would be expected:  https://git.onap.org/policy/pap/tree/packages/policy-pap-tarball/src/main/resources/etc/defaultConfig.json#n22",
+      "parentUuid": "0553f584_f11fa0d7",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4809eb97_e498467c",
         "filename": "packages/policy-clamp-docker/src/main/config/RuntimeParameters.json",
         "patchSetId": 1
