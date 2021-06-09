@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55a83092_575bf523",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/parameters/ParticipantK8sParameters.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-09T11:16:30Z",
+      "side": 1,
+      "message": "@Jim, does the @NotNull/@NotBlank at class level will apply to these two fields?",
+      "revId": "2413294bfdf818758dc453e1b5237d59b27c6034",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
