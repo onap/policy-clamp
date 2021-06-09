@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "ae45c1ab_827f68d3",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-09T20:08:42Z",
+      "side": 1,
+      "message": "agreed as it\u0027s common",
+      "parentUuid": "fb6b399b_5a35e350",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e48d490_c154531f",
         "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
         "patchSetId": 1
@@ -215,6 +233,24 @@
       "side": 1,
       "message": "this image is based on the integration image ;-)",
       "parentUuid": "76d68b07_1d6d0636",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24015a5d_b828b3eb",
+        "filename": "packages/policy-clamp-docker/src/main/docker/RuntimeDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-09T20:08:42Z",
+      "side": 1,
+      "message": "lol ok sorry... forgot that 😄",
+      "parentUuid": "97dafa15_136b92d3",
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
