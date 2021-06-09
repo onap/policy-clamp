@@ -20,101 +20,52 @@
 
 package org.onap.policy.clamp.controlloop.participant.simulator.main.parameters;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import org.apache.commons.io.DirectoryWalker.CancelException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.onap.policy.clamp.controlloop.common.exception.ControlLoopException;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.startstop.ParticipantSimulatorCommandLineArguments;
 import org.onap.policy.common.utils.coder.CoderException;
 
 /**
  * Class to perform unit test of {@link ParticipantParameterHandler}.
  */
-public class TestParticipantSimulatorParameterHandler {
+class TestParticipantSimulatorParameterHandler {
 
     @Test
-    public void testParameterHandlerNoParameterFile() throws ControlLoopException {
-        final String[] emptyArgumentString = { "-c", "src/test/resources/parameters/NoParametersFile.json" };
+    void testParameterHandlerNoParameterFile() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/NoParametersFile.json";
 
-        final ParticipantSimulatorCommandLineArguments emptyArguments = new ParticipantSimulatorCommandLineArguments();
-        emptyArguments.parse(emptyArgumentString);
-
-        assertThatThrownBy(() -> new ParticipantSimulatorParameterHandler().getParameters(emptyArguments))
+        assertThatThrownBy(() -> new ParticipantSimulatorParameterHandler().toParticipantSimulatorParameters(path))
             .hasCauseInstanceOf(CoderException.class)
             .hasRootCauseInstanceOf(FileNotFoundException.class);
     }
 
     @Test
-    public void testParameterHandlerInvalidParameters() throws ControlLoopException {
-        final String[] invalidArgumentString = { "-c", "src/test/resources/parameters/InvalidParameters.json" };
+    void testParameterHandlerInvalidParameters() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/InvalidParameters.json";
 
-        final ParticipantSimulatorCommandLineArguments invalidArguments =
-                new ParticipantSimulatorCommandLineArguments();
-        invalidArguments.parse(invalidArgumentString);
-
-        assertThatThrownBy(() -> new ParticipantSimulatorParameterHandler().getParameters(invalidArguments))
+        assertThatThrownBy(() -> new ParticipantSimulatorParameterHandler().toParticipantSimulatorParameters(path))
             .hasMessageStartingWith("error reading parameters from")
             .hasCauseInstanceOf(CoderException.class);
     }
 
     @Test
-    public void testParameterHandlerNoParameters() throws CancelException, ControlLoopException {
-        final String[] noArgumentString = { "-c", "src/test/resources/parameters/EmptyParameters.json" };
+    void testParameterHandlerNoParameters() throws CancelException, ControlLoopException {
+        final String path = "src/test/resources/parameters/EmptyParameters.json";
 
-        final ParticipantSimulatorCommandLineArguments noArguments = new ParticipantSimulatorCommandLineArguments();
-        noArguments.parse(noArgumentString);
-
-        assertThatThrownBy(() -> new ParticipantSimulatorParameterHandler().getParameters(noArguments))
+        assertThatThrownBy(() -> new ParticipantSimulatorParameterHandler().toParticipantSimulatorParameters(path))
             .hasMessageContaining("no parameters found");
     }
 
     @Test
-    public void testParticipantParameterGroup() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-c", "src/test/resources/parameters/TestParameters.json"};
-
-        final ParticipantSimulatorCommandLineArguments arguments = new ParticipantSimulatorCommandLineArguments();
-        arguments.parse(participantConfigParameters);
+    void testParticipantParameterGroup() throws ControlLoopException {
+        final String path = "src/test/resources/parameters/TestParameters.json";
 
         final ParticipantSimulatorParameters parGroup = new ParticipantSimulatorParameterHandler()
-                .getParameters(arguments);
-        assertTrue(arguments.checkSetConfigurationFilePath());
+                .toParticipantSimulatorParameters(path);
         assertEquals(CommonTestData.PARTICIPANT_GROUP_NAME, parGroup.getName());
-    }
-
-    @Test
-    public void testParticipantVersion() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-v" };
-        final ParticipantSimulatorCommandLineArguments arguments = new ParticipantSimulatorCommandLineArguments();
-        assertThat(arguments.parse(participantConfigParameters)).startsWith(
-                        "ONAP Tosca defined control loop Participant");
-    }
-
-    @Test
-    public void testParticipantHelp() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-h" };
-        final ParticipantSimulatorCommandLineArguments arguments = new ParticipantSimulatorCommandLineArguments();
-        assertThat(arguments.parse(participantConfigParameters)).startsWith("usage:");
-    }
-
-    @Test
-    public void testParticipant_TooManyArguments() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-c", "src/test/resources/parameters/TestParameters.json",
-                                                       "TooMany"};
-        final ParticipantSimulatorCommandLineArguments arguments = new ParticipantSimulatorCommandLineArguments();
-        assertThatThrownBy(() -> arguments.parse(participantConfigParameters))
-            .hasMessageStartingWith("too many command line arguments specified");
-    }
-
-    @Test
-    public void testParticipantInvalidOption() throws ControlLoopException {
-        final String[] participantConfigParameters = { "-d" };
-        final ParticipantSimulatorCommandLineArguments arguments = new ParticipantSimulatorCommandLineArguments();
-        assertThatThrownBy(() -> arguments.parse(participantConfigParameters))
-            .hasMessageStartingWith("invalid command line arguments specified");
     }
 }
