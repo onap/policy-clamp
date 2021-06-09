@@ -1,0 +1,306 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e1b6e83_5a8e7560",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/config/AafConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "missing newline at the end of the file",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45f52a50_d310ac4a",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/config/YamlHttpMessageConverter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "specify utf_8",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8007539b_84984df6",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "remove this - double logging",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b297d166_9e135044",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/ParticipantSimulatorParameterHandler.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "remove this - double logging",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a671ce54_d96e04d0",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/main/rest/RequestResponseLoggingFilter.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "this is cool - no more addLoggingXxx() calls!",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "246151c0_dd38e888",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/java/org/onap/policy/clamp/controlloop/participant/simulator/simulation/SimulationProvider.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "param",
+      "range": {
+        "startLine": 45,
+        "startChar": 8,
+        "endLine": 45,
+        "endChar": 14
+      },
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4b8b67c_4c7ea596",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "message-router - same comment below",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 34
+      },
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb6cf4ef_b778902b",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/CDSParticipantConfig.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "should use mariadb",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a36c515_6d5729aa",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/main/resources/config/application.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "is this profile defined anywhere?",
+      "range": {
+        "startLine": 3,
+        "startChar": 12,
+        "endLine": 3,
+        "endChar": 16
+      },
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9aaa648e_0c3aebf5",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/endtoend/ParticipantSimulatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "should rename this, as it is not used \"before class\"",
+      "range": {
+        "startLine": 96,
+        "startChar": 17,
+        "endLine": 96,
+        "endChar": 33
+      },
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3fc4a0e_3da8e536",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/endtoend/ParticipantSimulatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "why is this needed?",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cc3e983_5477930f",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/endtoend/ParticipantSimulatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "change all of these to equals?\n\nsame question below",
+      "range": {
+        "startLine": 207,
+        "startChar": 89,
+        "endLine": 207,
+        "endChar": 97
+      },
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b173eba3_128398f6",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/endtoend/ParticipantSimulatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "swap arguments - semantics are that the \"expected\" value should be on the left",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da2b61a8_28fda7ae",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/endtoend/ParticipantSimulatorTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "sonar: need some type of assertion here",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb1ea75c_21d4f9a1",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/java/org/onap/policy/clamp/controlloop/participant/simulator/main/parameters/TestParticipantSimulatorParameters.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "please put the \"public\" modifier back, unless the jupiter Test framework doesn\u0027t work with it\n\nsame comment for each of the test methods",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e75f5e88_ff1ad134",
+        "filename": "participant/participant-impl/participant-impl-simulator/src/test/resources/application_test.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T18:40:15Z",
+      "side": 1,
+      "message": "missing newline at the end of the file",
+      "revId": "351b116a1501bad35c2e8c800a6cf3e9f1e353d3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
