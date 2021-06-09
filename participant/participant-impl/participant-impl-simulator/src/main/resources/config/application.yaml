@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: prod
+  security:
+    user:
+      name: healthcheck
+      password: zb!XztG34
+
+server:
+  port: 6969
+  servlet:
+    context-path: /onap/participantsim
+  error:
+    path: /error
+
+participant:
+  file: src/main/resources/config/CDSParticipantConfig.json

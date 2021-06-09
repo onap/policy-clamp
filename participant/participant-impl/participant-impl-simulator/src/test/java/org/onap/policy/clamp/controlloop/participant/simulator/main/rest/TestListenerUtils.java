@@ -25,13 +25,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import lombok.Getter;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoop;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopElement;
 import org.onap.policy.clamp.controlloop.models.controlloop.concepts.ControlLoopOrderedState;
@@ -40,10 +37,7 @@ import org.onap.policy.clamp.controlloop.models.controlloop.concepts.Participant
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopStateChange;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantControlLoopUpdate;
 import org.onap.policy.clamp.controlloop.models.messages.dmaap.participant.ParticipantStateChange;
-import org.onap.policy.clamp.controlloop.participant.intermediary.handler.ParticipantHandler;
 import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.CommonTestData;
-import org.onap.policy.clamp.controlloop.participant.simulator.main.parameters.ParticipantSimulatorParameters;
-import org.onap.policy.clamp.controlloop.participant.simulator.simulation.SimulationProvider;
 import org.onap.policy.common.utils.coder.Coder;
 import org.onap.policy.common.utils.coder.CoderException;
 import org.onap.policy.common.utils.coder.StandardCoder;
@@ -63,24 +57,6 @@ public class TestListenerUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestListenerUtils.class);
 
     private TestListenerUtils() {}
-
-    @Getter
-    private static ParticipantHandler participantHandler;
-
-    /**
-     * Method to initialize participantHandler.
-     */
-    public static void initParticipantHandler() {
-
-        final ParticipantSimulatorParameters participantParameters = commonTestData.toObject(
-                commonTestData.getParticipantParameterGroupMap(CommonTestData.PARTICIPANT_GROUP_NAME),
-                ParticipantSimulatorParameters.class);
-
-        SimulationProvider simulationProvider =
-                new SimulationProvider(participantParameters.getIntermediaryParameters());
-
-        participantHandler = simulationProvider.getIntermediaryApi().getParticipantHandler();
-    }
 
     /**
      * Method to create a controlLoop from a yaml file.
