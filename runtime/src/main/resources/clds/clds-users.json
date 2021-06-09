@@ -13,7 +13,9 @@
       "org.onap.clamp.clds.tosca|dev|read",
       "org.onap.clamp.clds.tosca|dev|update",
       "org.onap.clamp.clds.policies|dev|read",
-      "org.onap.clamp.clds.policies|dev|update"
+      "org.onap.clamp.clds.policies|dev|update",
+      "org.onap.clamp.clds.controlloop|dev|read",
+      "org.onap.clamp.clds.controlloop|dev|update"
     ]
   },
   {
