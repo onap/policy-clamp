@@ -1178,6 +1178,24 @@
     },
     {
       "key": {
+        "uuid": "10040215_de99b423",
+        "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 2787
+      },
+      "writtenOn": "2021-06-09T13:35:33Z",
+      "side": 1,
+      "message": "It is done on line 116 of this file in Patch Set 9",
+      "parentUuid": "60b5ea17_900c45f1",
+      "revId": "3fe91fea0219baf355bcfea70cddf53d426f4051",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80148dea_b3010662",
         "filename": "participant/participant-impl/participant-impl-kubernetes/src/main/java/org/onap/policy/clamp/controlloop/participant/kubernetes/helm/HelmClient.java",
         "patchSetId": 3
