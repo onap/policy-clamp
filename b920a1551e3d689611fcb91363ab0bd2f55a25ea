@@ -256,6 +256,24 @@
     },
     {
       "key": {
+        "uuid": "492be23e_d1fe6cf5",
+        "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 23
+      },
+      "writtenOn": "2021-06-09T20:05:41Z",
+      "side": 1,
+      "message": "Right but these can be defined in Spring only so that you can isolate the SSL servlet params from the others \"apps\" that may run within the same JVM.\nWhen you set the system props, it\u0027s for entire JVM.\n\nIt can also be easier to have all the config in a single file (application.yml) instead of having different params scattered here and there 😊",
+      "parentUuid": "43dd2f32_3501307e",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e6c27d7_d9893860",
         "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
         "patchSetId": 1
