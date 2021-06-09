@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "cfab1a15_385644a8",
+        "filename": "packages/policy-clamp-docker/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T13:03:59Z",
+      "side": 1,
+      "message": "I\u0027ve created POLICY-3374 to add properties to policy-parent for these registries, as they appear in most of the repos",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e48d490_c154531f",
+        "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T13:03:59Z",
+      "side": 1,
+      "message": "this is normally put in src/main/resources/etc\n\nsame comment for the other parameter files",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d657979c_c5be446f",
         "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
         "patchSetId": 1
@@ -19,6 +53,97 @@
         "endLine": 38,
         "endChar": 35
       },
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0553f584_f11fa0d7",
+        "filename": "packages/policy-clamp-docker/src/main/config/DcaeParticipantParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T13:03:59Z",
+      "side": 1,
+      "message": "should use mariadb\n\nsame comment for the other parameter files",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4809eb97_e498467c",
+        "filename": "packages/policy-clamp-docker/src/main/config/RuntimeParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T13:03:59Z",
+      "side": 1,
+      "message": "is this used?",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80293522_4275c1e1",
+        "filename": "packages/policy-clamp-docker/src/main/config/RuntimeParameters.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T13:03:59Z",
+      "side": 1,
+      "message": "should this just be PAP, as PAP will check the other policy components?",
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4be69906_b6b87ea1",
+        "filename": "packages/policy-clamp-docker/src/main/docker/DcaeParticipantDockerfile",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T13:03:59Z",
+      "side": 1,
+      "message": "policy repos typically use \"etc\" instead of \"config\"",
+      "range": {
+        "startLine": 47,
+        "startChar": 39,
+        "endLine": 47,
+        "endChar": 45
+      },
+      "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e6c27d7_d9893860",
+        "filename": "packages/policy-clamp-docker/src/main/docker/dcae-participant.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 811
+      },
+      "writtenOn": "2021-06-09T13:03:59Z",
+      "side": 1,
+      "message": "maybe separate the arguments onto separate lines using \"\\\"\n\nsame comment for the other \"sh\" files",
       "revId": "b920a1551e3d689611fcb91363ab0bd2f55a25ea",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
